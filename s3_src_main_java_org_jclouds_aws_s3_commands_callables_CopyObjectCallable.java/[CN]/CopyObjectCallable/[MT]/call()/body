@@ -1,0 +1,29 @@
+{
+  if (getResponse().getStatusCode() == 404 || getResponse().getStatusCode() == 400) {
+    String reason=null;
+    try {
+      reason=Utils.toStringAndClose(getResponse().getContent());
+    }
+ catch (    IOException e) {
+      logger.error(e,"error consuming content");
+    }
+    throw new HttpException("Error copying source " + reason);
+  }
+ else   if (getResponse().getStatusCode() == 200) {
+    String response=null;
+    InputStream content=getResponse().getContent();
+    if (content != null) {
+      try {
+        response=Utils.toStringAndClose(content);
+        System.err.println("Copy response: " + response);
+      }
+ catch (      IOException e) {
+        logger.error(e,"error consuming content");
+      }
+    }
+    return true;
+  }
+ else {
+    throw new HttpException("Error copying object " + getResponse());
+  }
+}

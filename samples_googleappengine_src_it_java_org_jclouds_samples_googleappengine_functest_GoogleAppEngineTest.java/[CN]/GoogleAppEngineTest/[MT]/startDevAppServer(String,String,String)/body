@@ -1,0 +1,16 @@
+{
+  url=new URL(String.format("http://%1s:%2s",address,port));
+  Properties props=new Properties();
+  props.put("jclouds.http.address",address);
+  props.put("jclouds.http.port",port + "");
+  props.put("jclouds.http.secure","false");
+  props.store(new FileOutputStream(String.format("%1s/WEB-INF/jclouds.properties",warfile)),"test");
+  this.server=new Thread(new Runnable(){
+    public void run(){
+      KickStart.main(new String[]{"com.google.appengine.tools.development.DevAppServerMain","--disable_update_check","-a",address,"-p",port,warfile});
+    }
+  }
+);
+  server.start();
+  Thread.sleep(7 * 1000);
+}

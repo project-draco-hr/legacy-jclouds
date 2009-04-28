@@ -1,0 +1,28 @@
+{
+  install(new SaxModule());
+  bind(S3CommandFactory.CopyObjectFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.CopyObjectFactory.class,CopyObject.class));
+  bind(S3CommandFactory.DeleteBucketFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.DeleteBucketFactory.class,DeleteBucket.class));
+  bind(S3CommandFactory.DeleteObjectFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.DeleteObjectFactory.class,DeleteObject.class));
+  bind(S3CommandFactory.HeadBucketFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.HeadBucketFactory.class,HeadBucket.class));
+  final TypeLiteral<S3CommandFactory.GenericParseFactory<List<S3Bucket>>> listBucketsTypeLiteral=new TypeLiteral<S3CommandFactory.GenericParseFactory<List<S3Bucket>>>(){
+  }
+;
+  final TypeLiteral<S3CommandFactory.GenericParseFactory<S3Bucket>> bucketTypeLiteral=new TypeLiteral<S3CommandFactory.GenericParseFactory<S3Bucket>>(){
+  }
+;
+  bind(listBucketsTypeLiteral).toProvider(FactoryProvider.newFactory(listBucketsTypeLiteral,new TypeLiteral<ParseSax<List<S3Bucket>>>(){
+  }
+));
+  bind(bucketTypeLiteral).toProvider(FactoryProvider.newFactory(bucketTypeLiteral,new TypeLiteral<ParseSax<S3Bucket>>(){
+  }
+));
+  bind(new TypeLiteral<ParseSax.HandlerWithResult<List<S3Bucket>>>(){
+  }
+).to(ListAllMyBucketsHandler.class);
+  bind(new TypeLiteral<ParseSax.HandlerWithResult<S3Bucket>>(){
+  }
+).to(ListBucketHandler.class);
+  bind(S3CommandFactory.PutBucketFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.PutBucketFactory.class,PutBucket.class));
+  bind(S3CommandFactory.PutObjectFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.PutObjectFactory.class,PutObject.class));
+  bind(S3CommandFactory.RetrieveObjectFactory.class).toProvider(FactoryProvider.newFactory(S3CommandFactory.RetrieveObjectFactory.class,RetrieveObject.class));
+}

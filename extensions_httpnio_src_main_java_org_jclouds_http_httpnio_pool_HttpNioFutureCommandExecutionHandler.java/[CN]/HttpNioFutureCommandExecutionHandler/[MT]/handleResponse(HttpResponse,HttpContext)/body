@@ -1,0 +1,26 @@
+{
+  HttpNioFutureCommandConnectionHandle handle=(HttpNioFutureCommandConnectionHandle)context.removeAttribute("operation-handle");
+  if (handle != null) {
+    try {
+      FutureCommand command=handle.getOperation();
+      int code=response.getStatusLine().getStatusCode();
+      if ((code >= 200 && code < 300) || code == 404) {
+        processResponse(response,command);
+      }
+ else {
+        if (isRetryable(response)) {
+          futureOperationRetry.shutdownConnectionAndRetryOperation((NHttpClientConnection)context.getAttribute(ExecutionContext.HTTP_CONNECTION));
+        }
+ else {
+          operationFailed(command);
+        }
+      }
+    }
+  finally {
+      releaseConnectionToPool(handle);
+    }
+  }
+ else {
+    throw new IllegalStateException(String.format("No operation-handle associated with operation %1s",context));
+  }
+}

@@ -1,0 +1,9 @@
+{
+  requestInjection(this);
+  if (isSecure)   install(new SSLHttpNioConnectionPoolClientModule());
+ else   install(new NonSSLHttpNioConnectionPoolClientModule());
+  bind(new TypeLiteral<FutureCommandConnectionRetry<NHttpConnection>>(){
+  }
+).to(HttpNioFutureCommandConnectionRetry.class);
+  bind(HttpFutureCommandClient.class).to(HttpNioConnectionPoolClient.class);
+}

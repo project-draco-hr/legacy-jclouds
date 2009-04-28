@@ -1,0 +1,36 @@
+{
+  URL url=new URL(target,request.getUri());
+  HttpURLConnection connection=(HttpURLConnection)url.openConnection();
+  connection.setDoOutput(true);
+  connection.setRequestMethod(request.getMethod());
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header))     connection.setRequestProperty(header,value);
+  }
+  connection.setRequestProperty(HttpConstants.CONTENT_TYPE,request.getContentType());
+  if (request.getContent() != null) {
+    OutputStream out=connection.getOutputStream();
+    try {
+      if (request.getContent() instanceof String) {
+        OutputStreamWriter writer=new OutputStreamWriter(out);
+        writer.write((String)request.getContent());
+        writer.close();
+      }
+ else       if (request.getContent() instanceof InputStream) {
+        IOUtils.copy((InputStream)request.getContent(),out);
+      }
+ else       if (request.getContent() instanceof File) {
+        IOUtils.copy(new FileInputStream((File)request.getContent()),out);
+      }
+ else       if (request.getContent() instanceof byte[]) {
+        IOUtils.write((byte[])request.getContent(),out);
+      }
+ else {
+        throw new UnsupportedOperationException("Content not supported " + request.getContent().getClass());
+      }
+    }
+  finally {
+      IOUtils.closeQuietly(out);
+    }
+  }
+  return connection;
+}

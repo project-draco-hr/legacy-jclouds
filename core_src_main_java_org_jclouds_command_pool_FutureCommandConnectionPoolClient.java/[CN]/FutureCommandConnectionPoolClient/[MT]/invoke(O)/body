@@ -1,0 +1,23 @@
+{
+  exceptionIfNotActive();
+  FutureCommandConnectionHandle<C> connectionHandle=null;
+  try {
+    connectionHandle=futureCommandConnectionPool.getHandle(operation);
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"Interrupted getting a connection for operation %1s; retrying",operation);
+    commandQueue.add(operation);
+    return;
+  }
+catch (  TimeoutException e) {
+    logger.warn(e,"Timeout getting a connection for operation %1s; retrying",operation);
+    commandQueue.add(operation);
+    return;
+  }
+  if (connectionHandle == null) {
+    logger.error("Failed to obtain connection for operation %1s; retrying",operation);
+    commandQueue.add(operation);
+    return;
+  }
+  connectionHandle.startConnection();
+}

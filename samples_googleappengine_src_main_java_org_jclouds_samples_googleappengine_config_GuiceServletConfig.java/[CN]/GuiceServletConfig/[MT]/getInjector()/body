@@ -1,0 +1,29 @@
+{
+  return Guice.createInjector(new HttpCommandsModule(){
+    @Override protected void configure(){
+      super.configure();
+      Properties props=new Properties();
+      InputStream input=null;
+      try {
+        input=context.getResourceAsStream("/WEB-INF/jclouds.properties");
+        if (input != null)         props.load(input);
+ else         throw new RuntimeException("not found in classloader");
+      }
+ catch (      IOException e) {
+        throw new RuntimeException(e);
+      }
+ finally {
+        IOUtils.closeQuietly(input);
+      }
+      Names.bindProperties(binder(),props);
+      install(new JavaUrlHttpFutureCommandClientModule());
+    }
+  }
+,new ServletModule(){
+    @Override protected void configureServlets(){
+      serve("/*").with(JCloudsServlet.class);
+      requestInjection(this);
+    }
+  }
+);
+}

@@ -1,0 +1,20 @@
+{
+  if (getResponse().getStatusCode() == 200) {
+    try {
+      getResponse().getContent().close();
+    }
+ catch (    IOException e) {
+      logger.error(e,"error consuming content");
+    }
+    return getResponse().getHeaders().get("ETag").iterator().next();
+  }
+ else {
+    try {
+      String reason=s3Utils.toStringAndClose(getResponse().getContent());
+      throw new HttpException(getResponse().getStatusCode() + ": Problem uploading content.\n" + reason);
+    }
+ catch (    IOException e) {
+      throw new HttpException(getResponse().getStatusCode() + ": Problem uploading content",e);
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  CallingFormat callingFormat=Utils.getCallingFormatForBucket(this.callingFormat,bucket);
+  if (isSecure && callingFormat != CallingFormat.getPathCallingFormat() && bucket.indexOf(".") != -1) {
+    System.err.println("You are making an SSL connection, however, the bucket contains periods and the wildcard certificate will not match by default.  Please consider using HTTP.");
+  }
+  URL url=callingFormat.getURL(isSecure,server,this.port,bucket,key,pathArgs);
+  HttpURLConnection connection=(HttpURLConnection)url.openConnection();
+  connection.setRequestMethod(method);
+  if (!connection.getInstanceFollowRedirects() && callingFormat.supportsLocatedBuckets())   throw new RuntimeException("HTTP redirect support required.");
+  addHeaders(connection,headers);
+  if (object != null)   addMetadataHeaders(connection,object.metadata);
+  addAuthHeader(connection,method,bucket,key,pathArgs);
+  return connection;
+}

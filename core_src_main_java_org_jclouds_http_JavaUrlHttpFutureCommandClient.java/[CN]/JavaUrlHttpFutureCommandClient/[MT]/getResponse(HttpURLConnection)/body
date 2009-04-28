@@ -1,0 +1,11 @@
+{
+  HttpResponse response=new HttpResponse();
+  response.setStatusCode(connection.getResponseCode());
+  for (  String header : connection.getHeaderFields().keySet()) {
+    response.getHeaders().putAll(header,connection.getHeaderFields().get(header));
+  }
+  response.setMessage(connection.getResponseMessage());
+  response.setContent(connection.getInputStream());
+  response.setContentType(connection.getHeaderField(HttpConstants.CONTENT_TYPE));
+  return response;
+}

@@ -1,0 +1,21 @@
+{
+  logger.info("starting %1s",this);
+synchronized (this.statusLock) {
+    if (this.status.compareTo(Status.SHUTDOWN_REQUEST) >= 0) {
+      doShutdown();
+      this.status=Status.SHUT_DOWN;
+      this.statusLock.notifyAll();
+      return;
+    }
+    if (this.status.compareTo(Status.ACTIVE) == 0) {
+      this.statusLock.notifyAll();
+      return;
+    }
+    if (this.status.compareTo(Status.INACTIVE) != 0) {
+      throw new IllegalStateException("Illegal state: " + this.status);
+    }
+    exceptionIfDepedenciesNotActive();
+    this.status=Status.ACTIVE;
+  }
+  executor.execute(this);
+}

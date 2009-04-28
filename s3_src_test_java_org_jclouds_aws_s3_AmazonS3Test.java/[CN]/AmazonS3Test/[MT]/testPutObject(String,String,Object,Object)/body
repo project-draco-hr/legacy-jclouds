@@ -1,0 +1,13 @@
+{
+  S3Bucket s3Bucket=new S3Bucket();
+  s3Bucket.setName(bucketPrefix + "filetestsforadrian");
+  client.createBucketIfNotExists(s3Bucket).get();
+  S3Object object=new S3Object();
+  object.setKey(key);
+  object.setContentType(type);
+  object.setContent(content);
+  assertNotNull(client.addObject(s3Bucket,object).get());
+  object=client.getObject(s3Bucket,object.getKey()).get();
+  returnedString=S3Utils.getContentAsStringAndClose(object);
+  assertEquals(returnedString,realObject);
+}

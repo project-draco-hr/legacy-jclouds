@@ -1,0 +1,21 @@
+{
+  String realObject=IOUtils.toString(new FileInputStream("pom.xml"));
+  S3Bucket sourceBucket=new S3Bucket();
+  sourceBucket.setName(bucketPrefix + "copysource");
+  client.createBucketIfNotExists(sourceBucket).get();
+  S3Object sourceObject=new S3Object();
+  sourceObject.setKey("file");
+  sourceObject.setContentType("text/xml");
+  sourceObject.setContent(new File("pom.xml"));
+  client.addObject(sourceBucket,sourceObject).get();
+  sourceObject=client.getObject(sourceBucket,sourceObject.getKey()).get();
+  assertEquals(S3Utils.getContentAsStringAndClose(sourceObject),realObject);
+  S3Bucket destinationBucket=new S3Bucket();
+  destinationBucket.setName(bucketPrefix + "copydestination");
+  client.createBucketIfNotExists(destinationBucket).get();
+  S3Object destinationObject=new S3Object();
+  destinationObject.setKey(sourceObject.getKey());
+  client.copyObject(sourceBucket,sourceObject,destinationBucket,destinationObject).get();
+  destinationObject=client.getObject(destinationBucket,destinationObject.getKey()).get();
+  assertEquals(S3Utils.getContentAsStringAndClose(destinationObject),realObject);
+}

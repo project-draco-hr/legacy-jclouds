@@ -1,0 +1,13 @@
+{
+synchronized (this.statusLock) {
+    if (this.status.compareTo(Status.ACTIVE) > 0) {
+      return;
+    }
+    this.status=Status.SHUTDOWN_REQUEST;
+    try {
+      awaitShutdown(waitMs);
+    }
+ catch (    InterruptedException ignore) {
+    }
+  }
+}

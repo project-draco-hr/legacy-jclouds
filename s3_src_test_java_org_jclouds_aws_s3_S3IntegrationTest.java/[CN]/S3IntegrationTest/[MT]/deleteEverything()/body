@@ -1,0 +1,23 @@
+{
+  try {
+    List<S3Bucket> buckets=client.getBuckets().get();
+    List<Future<Boolean>> results=new ArrayList<Future<Boolean>>();
+    for (    S3Bucket bucket : buckets) {
+      if (bucket.getName().startsWith(bucketPrefix.toLowerCase())) {
+        bucket=client.getBucket(bucket).get();
+        for (        S3Object object : bucket.getContents()) {
+          results.add(client.deleteObject(bucket,object.getKey()));
+        }
+        Iterator<Future<Boolean>> iterator=results.iterator();
+        while (iterator.hasNext()) {
+          iterator.next().get();
+          iterator.remove();
+        }
+        client.deleteBucket(bucket).get();
+      }
+    }
+  }
+ catch (  CancellationException e) {
+    throw e;
+  }
+}

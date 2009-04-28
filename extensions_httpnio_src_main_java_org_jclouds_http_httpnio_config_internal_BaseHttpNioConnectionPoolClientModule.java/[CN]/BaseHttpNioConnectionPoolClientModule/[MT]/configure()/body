@@ -1,0 +1,13 @@
+{
+  super.configure();
+  bind(HttpNioFutureCommandExecutionHandler.ConsumingNHttpEntityFactory.class).toProvider(FactoryProvider.newFactory(HttpNioFutureCommandExecutionHandler.ConsumingNHttpEntityFactory.class,InjectableBufferingNHttpEntity.class)).in(Scopes.SINGLETON);
+  bind(NHttpRequestExecutionHandler.class).to(HttpNioFutureCommandExecutionHandler.class).in(Scopes.SINGLETON);
+  bind(ConnectionReuseStrategy.class).to(DefaultConnectionReuseStrategy.class).in(Scopes.SINGLETON);
+  bind(ByteBufferAllocator.class).to(HeapByteBufferAllocator.class);
+  bind(FutureCommandConnectionRetry.class).to(HttpNioFutureCommandConnectionRetry.class);
+  bind(HttpNioFutureCommandConnectionPool.FutureCommandConnectionHandleFactory.class).toProvider(FactoryProvider.newFactory(new TypeLiteral<HttpNioFutureCommandConnectionPool.FutureCommandConnectionHandleFactory>(){
+  }
+,new TypeLiteral<HttpNioFutureCommandConnectionHandle>(){
+  }
+));
+}

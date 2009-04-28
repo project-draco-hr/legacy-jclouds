@@ -1,0 +1,20 @@
+{
+  exceptionIfNotActive();
+  if (!hitBottom) {
+    hitBottom=available.size() == 0 && allConnections.availablePermits() == 0;
+    if (hitBottom)     logger.warn("%1s - saturated connection pool",this);
+  }
+  logger.debug("%1s - attempting to acquire connection; %d currently available",this,available.size());
+  C conn=available.poll(1,TimeUnit.SECONDS);
+  if (conn == null)   throw new TimeoutException("could not obtain a pooled connection within 1 seconds");
+  logger.trace("%1s - %2d - aquired",conn,conn.hashCode());
+  if (connectionValid(conn)) {
+    logger.debug("%1s - %2d - reusing",conn,conn.hashCode());
+    return conn;
+  }
+ else {
+    logger.debug("%1s - %2d - unusable",conn,conn.hashCode());
+    allConnections.release();
+    return getConnection();
+  }
+}

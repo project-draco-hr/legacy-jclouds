@@ -1,0 +1,13 @@
+{
+  final ExecutorService executor=Executors.newCachedThreadPool();
+  bind(ExecutorService.class).toInstance(executor);
+  Closer closer=new Closer();
+  closer.addToClose(new Closeable(){
+    public void close() throws IOException {
+      executor.shutdownNow();
+    }
+  }
+);
+  bind(Closer.class).toInstance(closer);
+  bindPostInjectionInvoke(closer);
+}

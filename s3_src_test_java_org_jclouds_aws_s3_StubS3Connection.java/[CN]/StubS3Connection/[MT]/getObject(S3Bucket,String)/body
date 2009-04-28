@@ -1,0 +1,14 @@
+{
+  return new FutureBase<S3Object>(){
+    public S3Object get() throws InterruptedException, ExecutionException {
+      if (!bucketToContents.containsKey(s3Bucket))       return S3Object.NOT_FOUND;
+      Map<String,Object> realContents=bucketToContents.get(s3Bucket);
+      if (!realContents.containsKey(key))       return S3Object.NOT_FOUND;
+      S3Object object=new S3Object();
+      object.setKey(key);
+      object.setContent(realContents.get(key));
+      return object;
+    }
+  }
+;
+}

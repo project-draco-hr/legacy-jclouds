@@ -1,0 +1,20 @@
+{
+synchronized (this.statusLock) {
+    if (this.status.compareTo(Status.INACTIVE) == 0) {
+      executor.execute(new Runnable(){
+        public void run(){
+          try {
+            ioReactor.execute(dispatch);
+          }
+ catch (          IOException e) {
+            exception=e;
+            logger.error(e,"Error dispatching %1s",dispatch);
+            status=Status.SHUTDOWN_REQUEST;
+          }
+        }
+      }
+);
+    }
+    super.start();
+  }
+}

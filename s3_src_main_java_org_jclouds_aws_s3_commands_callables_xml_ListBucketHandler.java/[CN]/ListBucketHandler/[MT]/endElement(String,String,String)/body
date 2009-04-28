@@ -1,0 +1,37 @@
+{
+  if (qName.equals("ID")) {
+    currentOwner.setId(currentText.toString());
+  }
+ else   if (qName.equals("DisplayName")) {
+    currentOwner.setDisplayName(currentText.toString());
+  }
+ else   if (qName.equals("Key")) {
+    currentObject.setKey(currentText.toString());
+  }
+ else   if (qName.equals("LastModified")) {
+    currentObject.setLastModified(dateParser.dateTimeFromXMLFormat(currentText.toString()));
+  }
+ else   if (qName.equals("ETag")) {
+    currentObject.setETag(currentText.toString());
+  }
+ else   if (qName.equals("Size")) {
+    currentObject.setSize(Long.parseLong(currentText.toString()));
+  }
+ else   if (qName.equals("Owner")) {
+    currentObject.setOwner(currentOwner);
+  }
+ else   if (qName.equals("StorageClass")) {
+    currentObject.setStorageClass(currentText.toString());
+  }
+ else   if (qName.equals("Contents")) {
+    s3Bucket.getContents().add(currentObject);
+  }
+ else   if (qName.equals("Name")) {
+    s3Bucket.setName(currentText.toString());
+  }
+ else   if (qName.equals("IsTruncated")) {
+    boolean isTruncated=Boolean.parseBoolean(currentText.toString());
+    s3Bucket.setComplete(!isTruncated);
+  }
+  currentText=new StringBuilder();
+}

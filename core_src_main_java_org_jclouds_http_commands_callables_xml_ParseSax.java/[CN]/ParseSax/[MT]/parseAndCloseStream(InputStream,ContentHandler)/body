@@ -1,0 +1,26 @@
+{
+  parser.setContentHandler(handler);
+  String response=null;
+  try {
+    if (suckFirst) {
+      response=IOUtils.toString(xml);
+      logger.trace("received content %n%s",response);
+      IOUtils.closeQuietly(xml);
+      xml=IOUtils.toInputStream(response);
+    }
+    parser.parse(new InputSource(xml));
+  }
+ catch (  Exception e) {
+    StringBuilder message=new StringBuilder();
+    message.append("Error parsing input for ").append(handler);
+    if (response != null) {
+      message.append("\n").append(response);
+    }
+    logger.error(e,message.toString());
+    Utils.<HttpException>rethrowIfRuntimeOrSameType(e);
+    throw new HttpException(message.toString(),e);
+  }
+ finally {
+    IOUtils.closeQuietly(xml);
+  }
+}

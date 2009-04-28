@@ -1,0 +1,13 @@
+{
+  FutureCommandConnectionHandle<C> handle=getHandleFromConnection(connection);
+  if (handle != null) {
+    try {
+      logger.info("%1s - shutting down connection",connection);
+      handle.shutdownConnection();
+      incrementErrorCountAndRetry(handle.getOperation());
+    }
+ catch (    IOException e) {
+      logger.error(e,"%1s - error shutting down connection",connection);
+    }
+  }
+}

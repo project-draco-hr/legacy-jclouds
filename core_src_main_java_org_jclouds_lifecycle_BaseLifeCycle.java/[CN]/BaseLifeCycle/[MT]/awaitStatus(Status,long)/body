@@ -1,0 +1,15 @@
+{
+synchronized (this.statusLock) {
+    long deadline=System.currentTimeMillis() + timeout;
+    long remaining=timeout;
+    while (this.status != intended) {
+      this.statusLock.wait(remaining);
+      if (timeout > 0) {
+        remaining=deadline - System.currentTimeMillis();
+        if (remaining <= 0) {
+          break;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  try {
+    bucket=connection.getBucket(bucket).get();
+    return bucket.getContents().size();
+  }
+ catch (  Exception e) {
+    S3Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error clearing bucket" + bucket,e);
+  }
+}

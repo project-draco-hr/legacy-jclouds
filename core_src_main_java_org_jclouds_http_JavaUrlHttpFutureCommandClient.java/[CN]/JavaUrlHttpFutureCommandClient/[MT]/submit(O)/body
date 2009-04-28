@@ -1,0 +1,31 @@
+{
+  HttpRequest request=(HttpRequest)operation.getRequest();
+  HttpURLConnection connection=null;
+  try {
+    for (    HttpRequestFilter filter : getRequestFilters()) {
+      filter.filter(request);
+    }
+    logger.trace("%1s - submitting request %2s",target,request);
+    connection=openJavaConnection(request);
+    HttpResponse response=getResponse(connection);
+    logger.trace("%1s - received response %2s",target,response);
+    operation.getResponseFuture().setResponse(response);
+    operation.getResponseFuture().run();
+  }
+ catch (  Exception e) {
+    if (connection != null) {
+      InputStream errorStream=connection.getErrorStream();
+      if (errorStream != null) {
+        try {
+          String errorMessage=Utils.toStringAndClose(connection.getErrorStream());
+          logger.error(e,"error encountered during the exception: %1s",errorMessage);
+        }
+ catch (        IOException e1) {
+        }
+      }
+    }
+    operation.setException(e);
+  }
+ finally {
+  }
+}

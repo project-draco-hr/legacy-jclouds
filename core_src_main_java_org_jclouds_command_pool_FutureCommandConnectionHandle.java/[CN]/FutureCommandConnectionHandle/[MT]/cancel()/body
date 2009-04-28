@@ -1,0 +1,17 @@
+{
+  if (isCompleted()) {
+    return;
+  }
+  if (conn != null) {
+    logger.trace("%1s - %2d - cancelled; shutting down connection",conn,conn.hashCode());
+    try {
+      shutdownConnection();
+    }
+  finally {
+      conn=null;
+      operation=null;
+      maxConnections.release();
+    }
+  }
+  completed.release();
+}

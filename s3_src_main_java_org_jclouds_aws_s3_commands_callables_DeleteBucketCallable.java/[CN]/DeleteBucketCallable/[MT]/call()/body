@@ -1,0 +1,18 @@
+{
+  if (getResponse().getStatusCode() == 404) {
+    return true;
+  }
+ else   if (getResponse().getStatusCode() == 409) {
+    try {
+      String reason=s3Utils.toStringAndClose(getResponse().getContent());
+      if (reason.indexOf("BucketNotEmpty") >= 0)       return false;
+ else       throw new HttpException("Error deleting bucket.\n" + reason);
+    }
+ catch (    IOException e) {
+      throw new HttpException("Error deleting bucket",e);
+    }
+  }
+ else {
+    return super.call();
+  }
+}

@@ -1,0 +1,10 @@
+{
+  if (isCompleted()) {
+    return;
+  }
+  logger.trace("%1s - %2d - releasing to pool",conn,conn.hashCode());
+  available.put(conn);
+  conn=null;
+  operation=null;
+  completed.release();
+}

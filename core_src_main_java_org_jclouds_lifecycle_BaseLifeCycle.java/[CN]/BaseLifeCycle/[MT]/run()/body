@@ -1,0 +1,15 @@
+{
+  try {
+    while (shouldDoWork()) {
+      doWork();
+    }
+  }
+ catch (  Exception e) {
+    logger.error(e,"Exception doing work");
+    this.exception=e;
+  }
+  this.status=Status.SHUTTING_DOWN;
+  doShutdown();
+  this.status=Status.SHUT_DOWN;
+  logger.info("%1s",this);
+}

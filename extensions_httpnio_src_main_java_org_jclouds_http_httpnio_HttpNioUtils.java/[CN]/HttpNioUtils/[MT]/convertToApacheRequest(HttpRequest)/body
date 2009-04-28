@@ -1,0 +1,11 @@
+{
+  BasicHttpEntityEnclosingRequest apacheRequest=new BasicHttpEntityEnclosingRequest(object.getMethod(),object.getUri(),HttpVersion.HTTP_1_1);
+  for (  String header : object.getHeaders().keySet()) {
+    for (    String value : object.getHeaders().get(header))     apacheRequest.addHeader(header,value);
+  }
+  Object content=object.getContent();
+  if (content != null) {
+    addEntityForContent(apacheRequest,content,object.getContentType(),object.getContentLength());
+  }
+  return apacheRequest;
+}
