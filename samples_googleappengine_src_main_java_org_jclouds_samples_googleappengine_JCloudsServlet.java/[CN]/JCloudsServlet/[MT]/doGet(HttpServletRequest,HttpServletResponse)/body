@@ -1,9 +1,11 @@
 {
-  GetString get=factory.createGetString(httpServletRequest.getParameter("uri"));
-  client.submit(get);
   Writer writer=httpServletResponse.getWriter();
   try {
-    writer.write(get.get().trim());
+    List<S3Bucket> myBuckets=client.getBuckets().get(10,TimeUnit.SECONDS);
+    writer.write("List:\n");
+    for (    S3Bucket bucket : myBuckets) {
+      writer.write(String.format("    Name: %1s%n",bucket.getName()));
+    }
   }
  catch (  Exception e) {
     throw new ServletException(e);

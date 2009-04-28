@@ -1,7 +1,6 @@
 {
-  return Guice.createInjector(new HttpCommandsModule(){
+  return Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
-      super.configure();
       Properties props=new Properties();
       InputStream input=null;
       try {
@@ -15,14 +14,13 @@
  finally {
         IOUtils.closeQuietly(input);
       }
+      props.putAll(S3ConnectionFactory.DEFAULT_PROPERTIES);
       Names.bindProperties(binder(),props);
-      install(new JavaUrlHttpFutureCommandClientModule());
     }
   }
-,new ServletModule(){
+,new JavaUrlHttpFutureCommandClientModule(),new S3ConnectionModule(),new ServletModule(){
     @Override protected void configureServlets(){
-      serve("*.jclouds").with(JCloudsServlet.class);
-      serve("*.url").with(GetServlet.class);
+      serve("*.s3").with(JCloudsServlet.class);
       requestInjection(this);
     }
   }
