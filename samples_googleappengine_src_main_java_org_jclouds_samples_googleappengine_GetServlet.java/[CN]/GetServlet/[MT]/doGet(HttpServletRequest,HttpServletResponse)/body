@@ -1,0 +1,17 @@
+{
+  URL url=new URL(httpServletRequest.getParameter("uri"));
+  Writer writer=httpServletResponse.getWriter();
+  InputStream in=null;
+  try {
+    in=url.openStream();
+    writer.write(IOUtils.toString(in));
+  }
+ catch (  Exception e) {
+    throw new ServletException(e);
+  }
+ finally {
+    IOUtils.closeQuietly(in);
+  }
+  writer.flush();
+  writer.close();
+}
