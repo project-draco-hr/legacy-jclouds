@@ -1,24 +1,5 @@
 {
-  return Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      Properties props=new Properties();
-      InputStream input=null;
-      try {
-        input=context.getResourceAsStream("/WEB-INF/jclouds.properties");
-        if (input != null)         props.load(input);
- else         throw new RuntimeException("not found in classloader");
-      }
- catch (      IOException e) {
-        throw new RuntimeException(e);
-      }
- finally {
-        IOUtils.closeQuietly(input);
-      }
-      props.putAll(S3ContextFactory.DEFAULT_PROPERTIES);
-      Names.bindProperties(binder(),props);
-    }
-  }
-,new JavaUrlHttpFutureCommandClientModule(),new S3ContextModule(),new ServletModule(){
+  return S3ContextFactory.createInjector(accessKeyId,secretAccessKey,false,new URLFetchServiceClientModule(),new ServletModule(){
     @Override protected void configureServlets(){
       serve("*.s3").with(JCloudsServlet.class);
       requestInjection(this);

@@ -1,0 +1,27 @@
+{
+  URL url=new URL(target,request.getUri());
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate().doNotFollowRedirects());
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header))     gaeRequest.addHeader(new HTTPHeader(header,value));
+  }
+  if (request.getContent() != null) {
+    gaeRequest.addHeader(new HTTPHeader(HttpConstants.CONTENT_TYPE,request.getContentType()));
+    if (request.getContent() instanceof String) {
+      String string=(String)request.getContent();
+      gaeRequest.setPayload(string.getBytes());
+    }
+ else     if (request.getContent() instanceof InputStream) {
+      gaeRequest.setPayload(IOUtils.toByteArray((InputStream)request.getContent()));
+    }
+ else     if (request.getContent() instanceof File) {
+      gaeRequest.setPayload(IOUtils.toByteArray(new FileInputStream((File)request.getContent())));
+    }
+ else     if (request.getContent() instanceof byte[]) {
+      gaeRequest.setPayload((byte[])request.getContent());
+    }
+ else {
+      throw new UnsupportedOperationException("Content not supported " + request.getContent().getClass());
+    }
+  }
+  return gaeRequest;
+}
