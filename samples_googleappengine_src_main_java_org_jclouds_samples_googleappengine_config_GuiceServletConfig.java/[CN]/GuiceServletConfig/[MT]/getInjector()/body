@@ -14,11 +14,11 @@
  finally {
         IOUtils.closeQuietly(input);
       }
-      props.putAll(S3ConnectionFactory.DEFAULT_PROPERTIES);
+      props.putAll(S3ContextFactory.DEFAULT_PROPERTIES);
       Names.bindProperties(binder(),props);
     }
   }
-,new JavaUrlHttpFutureCommandClientModule(),new S3ConnectionModule(),new ServletModule(){
+,new JavaUrlHttpFutureCommandClientModule(),new S3ContextModule(),new ServletModule(){
     @Override protected void configureServlets(){
       serve("*.s3").with(JCloudsServlet.class);
       requestInjection(this);

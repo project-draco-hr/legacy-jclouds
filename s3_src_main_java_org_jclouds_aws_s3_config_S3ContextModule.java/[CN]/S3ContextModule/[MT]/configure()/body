@@ -1,0 +1,6 @@
+{
+  install(new S3CommandsModule());
+  bind(S3Connection.class).to(LiveS3Connection.class).in(Scopes.SINGLETON);
+  bind(GuiceS3Context.S3ObjectMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceS3Context.S3ObjectMapFactory.class,LiveS3ObjectMap.class));
+  bind(S3Context.class).to(GuiceS3Context.class);
+}

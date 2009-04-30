@@ -1,0 +1,15 @@
+{
+  try {
+    List<Future<Boolean>> deletes=new ArrayList<Future<Boolean>>();
+    for (    String key : keySet()) {
+      deletes.add(connection.deleteObject(bucket,key));
+    }
+    for (    Future<Boolean> isdeleted : deletes)     if (!isdeleted.get()) {
+      throw new S3RuntimeException("failed to delete entry");
+    }
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error clearing bucket" + bucket,e);
+  }
+}

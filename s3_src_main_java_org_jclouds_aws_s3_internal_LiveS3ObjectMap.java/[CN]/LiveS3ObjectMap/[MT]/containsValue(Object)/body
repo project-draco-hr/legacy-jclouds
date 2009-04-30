@@ -1,0 +1,29 @@
+{
+  try {
+    byte[] md5;
+    if (value instanceof InputStream) {
+      md5=S3Utils.md5((InputStream)value);
+    }
+ else     if (value instanceof byte[]) {
+      md5=S3Utils.md5((byte[])value);
+    }
+ else     if (value instanceof String) {
+      md5=S3Utils.md5(((String)value).getBytes());
+    }
+ else     if (value instanceof File) {
+      md5=S3Utils.md5(new FileInputStream((File)value));
+    }
+ else {
+      throw new IllegalArgumentException("unsupported value type: " + value.getClass());
+    }
+    String eTagOfValue=S3Utils.getHexString(md5);
+    for (    S3Object object : refreshBucket().getContents()) {
+      if (object.getETag().equals(eTagOfValue))       return true;
+    }
+    return false;
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error searching for ETAG of value: [%2s] in bucket:%1s",bucket,value),e);
+  }
+}

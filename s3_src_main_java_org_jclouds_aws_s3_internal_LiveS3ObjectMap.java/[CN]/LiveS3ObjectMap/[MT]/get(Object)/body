@@ -1,0 +1,9 @@
+{
+  try {
+    return (InputStream)(connection.getObject(bucket,o.toString()).get()).getContent();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error geting object %1s:%2s",bucket,o),e);
+  }
+}

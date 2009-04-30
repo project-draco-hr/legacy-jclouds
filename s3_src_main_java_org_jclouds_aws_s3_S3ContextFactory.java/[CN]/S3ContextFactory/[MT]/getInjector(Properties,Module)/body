@@ -1,0 +1,10 @@
+{
+  final List<? extends Module> modules=httpModules.length != 0 ? Arrays.asList(httpModules) : Collections.singletonList(new JavaUrlHttpFutureCommandClientModule());
+  return Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      Names.bindProperties(binder(),properties);
+      for (      Module module : modules)       install(module);
+    }
+  }
+,new S3ContextModule());
+}

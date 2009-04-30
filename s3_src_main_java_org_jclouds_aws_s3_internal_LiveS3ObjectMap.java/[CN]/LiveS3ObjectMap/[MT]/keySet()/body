@@ -1,0 +1,11 @@
+{
+  try {
+    Set<String> keys=new HashSet<String>();
+    for (    S3Object object : refreshBucket().getContents())     keys.add(object.getKey());
+    return keys;
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error getting keys in bucket: " + bucket,e);
+  }
+}

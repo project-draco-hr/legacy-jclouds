@@ -13,20 +13,29 @@
     operation.getResponseFuture().setResponse(response);
     operation.getResponseFuture().run();
   }
- catch (  Exception e) {
+ catch (  FileNotFoundException e) {
+    HttpResponse response=new HttpResponse();
+    response.setStatusCode(404);
+    operation.getResponseFuture().setResponse(response);
+    operation.getResponseFuture().run();
+  }
+catch (  Exception e) {
     if (connection != null) {
-      InputStream errorStream=connection.getErrorStream();
-      if (errorStream != null) {
-        try {
-          String errorMessage=Utils.toStringAndClose(connection.getErrorStream());
-          logger.error(e,"error encountered during the exception: %1s",errorMessage);
+      StringBuilder errors=new StringBuilder();
+      try {
+        for (        InputStream in : new InputStream[]{connection.getErrorStream(),connection.getInputStream()}) {
+          if (in != null) {
+            errors.append(Utils.toStringAndClose(in)).append("\n");
+          }
         }
- catch (        IOException e1) {
-        }
+        logger.error(e,"error encountered during the exception: %1s",errors.toString());
+      }
+ catch (      IOException e2) {
       }
     }
     operation.setException(e);
   }
  finally {
+    if (request.getMethod().equals("HEAD"))     connection.disconnect();
   }
 }

@@ -5,7 +5,9 @@
     response.getHeaders().putAll(header,connection.getHeaderFields().get(header));
   }
   response.setMessage(connection.getResponseMessage());
-  response.setContent(connection.getInputStream());
-  response.setContentType(connection.getHeaderField(HttpConstants.CONTENT_TYPE));
+  if (!connection.getRequestMethod().equals("HEAD")) {
+    response.setContent(connection.getInputStream());
+    response.setContentType(connection.getHeaderField(HttpConstants.CONTENT_TYPE));
+  }
   return response;
 }

@@ -1,0 +1,9 @@
+{
+  try {
+    return connection.headObject(bucket,key.toString()).get() != S3Object.NOT_FOUND;
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error searching for %1s:%2s",bucket,key),e);
+  }
+}

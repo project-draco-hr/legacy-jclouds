@@ -1,0 +1,13 @@
+{
+  try {
+    List<Future<String>> puts=new ArrayList<Future<String>>();
+    for (    S3Object object : objects) {
+      puts.add(connection.addObject(bucket,object));
+    }
+    for (    Future<String> put : puts)     put.get();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error putting into bucket" + bucket,e);
+  }
+}
