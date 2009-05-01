@@ -1,0 +1,25 @@
+{
+  byte[] md5;
+  if (value instanceof InputStream) {
+    md5=S3Utils.md5((InputStream)value);
+  }
+ else   if (value instanceof byte[]) {
+    md5=S3Utils.md5((byte[])value);
+  }
+ else   if (value instanceof String) {
+    md5=S3Utils.md5(((String)value).getBytes());
+  }
+ else   if (value instanceof File) {
+    md5=S3Utils.md5(new FileInputStream((File)value));
+  }
+ else   if (value instanceof S3Object) {
+    S3Object object=(S3Object)value;
+    object=connection.headObject(bucket,object.getKey()).get();
+    if (S3Object.NOT_FOUND.equals(object))     throw new FileNotFoundException("not found: " + object.getKey());
+    md5=S3Utils.fromHexString(object.getETag());
+  }
+ else {
+    throw new IllegalArgumentException("unsupported value type: " + value.getClass());
+  }
+  return md5;
+}

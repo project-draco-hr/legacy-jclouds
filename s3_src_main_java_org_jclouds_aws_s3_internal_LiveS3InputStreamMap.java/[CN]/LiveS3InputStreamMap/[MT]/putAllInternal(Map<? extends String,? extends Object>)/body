@@ -1,0 +1,16 @@
+{
+  try {
+    List<Future<String>> puts=new ArrayList<Future<String>>();
+    for (    String key : map.keySet()) {
+      S3Object object=new S3Object(key);
+      object.setContent(map.get(key));
+      setSizeIfContentIsInputStream(object);
+      puts.add(connection.addObject(bucket,object));
+    }
+    for (    Future<String> put : puts)     put.get();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error putting into bucket" + bucket,e);
+  }
+}

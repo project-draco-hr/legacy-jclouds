@@ -1,0 +1,13 @@
+{
+  tmpDirectory=basedir + File.separator + "target"+ File.separator+ "testFiles"+ File.separator+ getClass().getSimpleName();
+  new File(tmpDirectory).mkdirs();
+  fiveFiles=ImmutableMap.of("one",new File(tmpDirectory,"apple"),"two",new File(tmpDirectory,"bear"),"three",new File(tmpDirectory,"candy"),"four",new File(tmpDirectory,"dogma"),"five",new File(tmpDirectory,"emma"));
+  for (  File file : fiveFiles.values()) {
+    IOUtils.write(file.getName(),new FileOutputStream(file));
+  }
+  fiveInputs=ImmutableMap.of("one",IOUtils.toInputStream("apple"),"two",IOUtils.toInputStream("bear"),"three",IOUtils.toInputStream("candy"),"four",IOUtils.toInputStream("dogma"),"five",IOUtils.toInputStream("emma"));
+  bucket=new S3Bucket(bucketPrefix + ".mimi");
+  client.createBucketIfNotExists(bucket).get();
+  map=createMap(context,bucket);
+  map.clear();
+}

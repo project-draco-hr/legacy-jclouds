@@ -1,20 +1,3 @@
 {
-  Collection<InputStream> values=new LinkedList<InputStream>();
-  Set<Future<S3Object>> futureObjects=new HashSet<Future<S3Object>>();
-  for (  String key : keySet()) {
-    futureObjects.add(connection.getObject(bucket,key));
-  }
-  for (  Future<S3Object> futureObject : futureObjects) {
-    S3Object object=null;
-    try {
-      object=futureObject.get();
-    }
- catch (    Exception e) {
-      Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
-      throw new S3RuntimeException(String.format("Error getting value from bucket %1s:%2s",bucket,object != null ? object.getKey() : "unknown"),e);
-    }
-    System.err.printf("key: %1s, MD5: %2s",object.getKey(),object.getContentMD5());
-    values.add((InputStream)object.getContent());
-  }
-  return values;
+  return getAllObjects();
 }

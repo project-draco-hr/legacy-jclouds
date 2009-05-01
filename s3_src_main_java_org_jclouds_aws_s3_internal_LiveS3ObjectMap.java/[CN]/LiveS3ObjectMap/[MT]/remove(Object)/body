@@ -1,11 +1,11 @@
 {
-  InputStream old=get(o);
+  S3Object old=get(key);
   try {
-    connection.deleteObject(bucket,o.toString()).get();
+    connection.deleteObject(bucket,key.toString()).get();
   }
  catch (  Exception e) {
     Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new S3RuntimeException(String.format("Error removing object %1s:%2s",bucket,o),e);
+    throw new S3RuntimeException(String.format("Error removing object %1s:%2s",bucket,key),e);
   }
   return old;
 }

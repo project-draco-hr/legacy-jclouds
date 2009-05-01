@@ -1,0 +1,11 @@
+{
+  try {
+    byte[] md5=getMd5(value);
+    String eTagOfValue=S3Utils.toHexString(md5);
+    return containsETag(eTagOfValue);
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error searching for ETAG of value: [%2s] in bucket:%1s",bucket,value),e);
+  }
+}

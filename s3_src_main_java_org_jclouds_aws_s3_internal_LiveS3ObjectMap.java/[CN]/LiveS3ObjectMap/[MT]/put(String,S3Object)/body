@@ -1,0 +1,11 @@
+{
+  S3Object returnVal=get(key);
+  try {
+    connection.addObject(bucket,value).get();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error putting object %1s:%2s%n%1s",bucket,key,value),e);
+  }
+  return returnVal;
+}

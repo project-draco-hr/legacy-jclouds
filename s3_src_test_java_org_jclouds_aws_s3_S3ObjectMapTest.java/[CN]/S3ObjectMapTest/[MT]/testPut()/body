@@ -1,6 +1,11 @@
 {
-  InputStream old=map.put("one",IOUtils.toInputStream("apple"));
+  S3Object object=new S3Object("one");
+  object.setContent(IOUtils.toInputStream("apple"));
+  object.setSize("apple".getBytes().length);
+  S3Object old=map.put(object.getKey(),object);
   getOneReturnsAppleAndOldValueIsNull(old);
-  InputStream apple=map.put("one",IOUtils.toInputStream("bear"));
+  object.setContent(IOUtils.toInputStream("bear"));
+  object.setSize("bear".getBytes().length);
+  S3Object apple=map.put(object.getKey(),object);
   getOneReturnsBearAndOldValueIsApple(apple);
 }

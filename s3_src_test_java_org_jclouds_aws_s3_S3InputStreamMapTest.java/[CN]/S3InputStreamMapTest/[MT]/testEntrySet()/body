@@ -1,0 +1,13 @@
+{
+  map.putAllStrings(this.fiveStrings);
+  Set<Entry<String,InputStream>> entries=map.entrySet();
+  assertEquals(entries.size(),5);
+  for (  Entry<String,InputStream> entry : entries) {
+    assertEquals(IOUtils.toString(entry.getValue()),fiveStrings.get(entry.getKey()));
+    entry.setValue(IOUtils.toInputStream(""));
+  }
+  assertEquals(map.size(),5);
+  for (  InputStream value : map.values()) {
+    assertEquals(IOUtils.toString(value),"");
+  }
+}

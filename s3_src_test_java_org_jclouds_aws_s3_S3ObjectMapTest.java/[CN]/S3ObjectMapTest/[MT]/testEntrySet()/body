@@ -1,13 +1,15 @@
 {
-  map.putAllStrings(this.fiveStrings);
-  Set<Entry<String,InputStream>> entries=map.entrySet();
+  putFiveStrings();
+  Set<Entry<String,S3Object>> entries=map.entrySet();
   assertEquals(entries.size(),5);
-  for (  Entry<String,InputStream> entry : entries) {
-    assertEquals(IOUtils.toString(entry.getValue()),fiveStrings.get(entry.getKey()));
-    entry.setValue(IOUtils.toInputStream(""));
+  for (  Entry<String,S3Object> entry : entries) {
+    assertEquals(S3Utils.getContentAsStringAndClose(entry.getValue()),fiveStrings.get(entry.getKey()));
+    S3Object value=entry.getValue();
+    value.setContent("");
+    entry.setValue(value);
   }
   assertEquals(map.size(),5);
-  for (  InputStream value : map.values()) {
-    assertEquals(IOUtils.toString(value),"");
+  for (  S3Object value : map.values()) {
+    assertEquals(S3Utils.getContentAsStringAndClose(value),"");
   }
 }
