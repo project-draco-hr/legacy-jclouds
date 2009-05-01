@@ -1,6 +1,6 @@
 {
   if (getResponse().getStatusCode() == 200) {
-    S3Object object=new S3Object();
+    S3Object object=new S3Object(key);
     String md5Header=getResponse().getFirstHeaderOrNull("x-amz-meta-object-md5");
     if (md5Header != null)     object.setContentMD5(md5Header);
     object.setLastModified(dateParser.dateTimeFromHeaderFormat(getResponse().getFirstHeaderOrNull("Last-Modified")));

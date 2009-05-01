@@ -1,14 +1,6 @@
 {
-  super("PUT","/" + object.getKey(),callable);
-  getRequest().getHeaders().put("Host",s3Bucket.getName() + "." + amazonHost);
-  if (object.getContentType() == null) {
-    throw new IllegalArgumentException("PUT requests need content type set");
-  }
-  Object o=object.getContent();
-  if (o == null) {
-    throw new IllegalArgumentException("PUT requests need object");
-  }
-  getRequest().setContent(o);
-  getRequest().setContentType(object.getContentType());
+  super("PUT","/" + checkNotNull(object.getKey()),callable,amazonHost,s3Bucket);
+  getRequest().setContent(checkNotNull(object.getContent(),"object.getContent()"));
+  getRequest().setContentType(checkNotNull(object.getContentType(),"object.getContentType()"));
   getRequest().setContentLength(object.getSize());
 }

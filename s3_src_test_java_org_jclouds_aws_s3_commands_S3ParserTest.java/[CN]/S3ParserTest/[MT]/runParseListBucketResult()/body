@@ -1,3 +1,6 @@
 {
-  return commandFactory.createListBucketParser().parse(IOUtils.toInputStream(listBucketResult));
+  ParseSax<S3Bucket> parser=commandFactory.createListBucketParser();
+  ListBucketHandler handler=(ListBucketHandler)parser.getHandler();
+  handler.setBucket(new S3Bucket("adrianjbosstest"));
+  return parser.parse(IOUtils.toInputStream(listBucketResult));
 }
