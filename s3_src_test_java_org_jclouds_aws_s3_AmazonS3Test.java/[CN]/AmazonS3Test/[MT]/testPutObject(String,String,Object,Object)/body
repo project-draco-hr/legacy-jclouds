@@ -1,14 +1,14 @@
 {
   S3Bucket s3Bucket=new S3Bucket(bucketPrefix + "filetestsforadrian");
-  client.createBucketIfNotExists(s3Bucket).get();
+  client.createBucketIfNotExists(s3Bucket).get(10,TimeUnit.SECONDS);
   context.createS3ObjectMap(s3Bucket).clear();
-  assertEquals(client.getBucket(s3Bucket).get().getContents().size(),0);
+  assertEquals(client.getBucket(s3Bucket).get(10,TimeUnit.SECONDS).getContents().size(),0);
   S3Object object=new S3Object(key);
   object.setContentType(type);
   object.setContent(content);
-  assertNotNull(client.addObject(s3Bucket,object).get());
-  object=client.getObject(s3Bucket,object.getKey()).get();
+  assertNotNull(client.addObject(s3Bucket,object).get(10,TimeUnit.SECONDS));
+  object=client.getObject(s3Bucket,object.getKey()).get(10,TimeUnit.SECONDS);
   returnedString=S3Utils.getContentAsStringAndClose(object);
   assertEquals(returnedString,realObject);
-  assertEquals(client.getBucket(s3Bucket).get().getContents().size(),1);
+  assertEquals(client.getBucket(s3Bucket).get(10,TimeUnit.SECONDS).getContents().size(),1);
 }

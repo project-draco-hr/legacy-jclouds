@@ -4,7 +4,7 @@
     for (    String key : keySet()) {
       deletes.add(connection.deleteObject(bucket,key));
     }
-    for (    Future<Boolean> isdeleted : deletes)     if (!isdeleted.get()) {
+    for (    Future<Boolean> isdeleted : deletes)     if (!isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)) {
       throw new S3RuntimeException("failed to delete entry");
     }
   }

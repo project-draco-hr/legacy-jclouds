@@ -1,19 +1,19 @@
 {
   try {
-    List<S3Bucket> buckets=client.getBuckets().get();
+    List<S3Bucket> buckets=client.getBuckets().get(10,TimeUnit.SECONDS);
     List<Future<Boolean>> results=new ArrayList<Future<Boolean>>();
     for (    S3Bucket bucket : buckets) {
       if (bucket.getName().startsWith(bucketPrefix.toLowerCase())) {
-        bucket=client.getBucket(bucket).get();
+        bucket=client.getBucket(bucket).get(10,TimeUnit.SECONDS);
         for (        S3Object object : bucket.getContents()) {
           results.add(client.deleteObject(bucket,object.getKey()));
         }
         Iterator<Future<Boolean>> iterator=results.iterator();
         while (iterator.hasNext()) {
-          iterator.next().get();
+          iterator.next().get(10,TimeUnit.SECONDS);
           iterator.remove();
         }
-        client.deleteBucket(bucket).get();
+        client.deleteBucket(bucket).get(10,TimeUnit.SECONDS);
       }
     }
   }

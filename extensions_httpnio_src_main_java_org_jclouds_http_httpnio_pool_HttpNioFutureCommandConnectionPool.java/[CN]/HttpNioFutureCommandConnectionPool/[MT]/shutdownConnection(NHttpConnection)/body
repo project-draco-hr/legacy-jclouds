@@ -1,0 +1,11 @@
+{
+  if (conn.getMetrics().getRequestCount() >= maxConnectionReuse)   logger.debug("%1s - %2d - closing connection due to overuse %1s/%2s",conn,conn.hashCode(),conn.getMetrics().getRequestCount(),maxConnectionReuse);
+  if (conn.getStatus() == NHttpConnection.ACTIVE) {
+    try {
+      conn.shutdown();
+    }
+ catch (    IOException e) {
+      logger.error(e,"Error shutting down connection");
+    }
+  }
+}

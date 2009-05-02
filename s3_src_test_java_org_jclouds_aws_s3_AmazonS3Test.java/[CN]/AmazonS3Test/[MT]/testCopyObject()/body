@@ -1,21 +1,21 @@
 {
   String realObject=IOUtils.toString(new FileInputStream("pom.xml"));
   S3Bucket sourceBucket=new S3Bucket(bucketPrefix + "copysource");
-  client.createBucketIfNotExists(sourceBucket).get();
-  assertEquals(client.getBucket(sourceBucket).get().getContents().size(),0);
+  client.createBucketIfNotExists(sourceBucket).get(10,TimeUnit.SECONDS);
+  assertEquals(client.getBucket(sourceBucket).get(10,TimeUnit.SECONDS).getContents().size(),0);
   S3Object sourceObject=new S3Object("file");
   sourceObject.setContentType("text/xml");
   sourceObject.setContent(new File("pom.xml"));
-  client.addObject(sourceBucket,sourceObject).get();
-  assertEquals(client.getBucket(sourceBucket).get().getContents().size(),1);
-  sourceObject=client.getObject(sourceBucket,sourceObject.getKey()).get();
+  client.addObject(sourceBucket,sourceObject).get(10,TimeUnit.SECONDS);
+  assertEquals(client.getBucket(sourceBucket).get(10,TimeUnit.SECONDS).getContents().size(),1);
+  sourceObject=client.getObject(sourceBucket,sourceObject.getKey()).get(10,TimeUnit.SECONDS);
   assertEquals(S3Utils.getContentAsStringAndClose(sourceObject),realObject);
   S3Bucket destinationBucket=new S3Bucket(bucketPrefix + "copydestination");
-  client.createBucketIfNotExists(destinationBucket).get();
-  assertEquals(client.getBucket(destinationBucket).get().getContents().size(),0);
+  client.createBucketIfNotExists(destinationBucket).get(10,TimeUnit.SECONDS);
+  assertEquals(client.getBucket(destinationBucket).get(10,TimeUnit.SECONDS).getContents().size(),0);
   S3Object destinationObject=new S3Object(sourceObject.getKey());
-  client.copyObject(sourceBucket,sourceObject,destinationBucket,destinationObject).get();
-  assertEquals(client.getBucket(destinationBucket).get().getContents().size(),1);
-  destinationObject=client.getObject(destinationBucket,destinationObject.getKey()).get();
+  client.copyObject(sourceBucket,sourceObject,destinationBucket,destinationObject).get(10,TimeUnit.SECONDS);
+  assertEquals(client.getBucket(destinationBucket).get(10,TimeUnit.SECONDS).getContents().size(),1);
+  destinationObject=client.getObject(destinationBucket,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
   assertEquals(S3Utils.getContentAsStringAndClose(destinationObject),realObject);
 }

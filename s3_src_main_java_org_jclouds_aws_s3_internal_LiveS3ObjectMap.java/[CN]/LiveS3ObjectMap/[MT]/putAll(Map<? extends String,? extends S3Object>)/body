@@ -4,7 +4,7 @@
     for (    S3Object object : map.values()) {
       puts.add(connection.addObject(bucket,object));
     }
-    for (    Future<String> put : puts)     put.get();
+    for (    Future<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
     Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);

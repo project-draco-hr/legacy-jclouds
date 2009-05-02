@@ -7,7 +7,7 @@
   }
   fiveInputs=ImmutableMap.of("one",IOUtils.toInputStream("apple"),"two",IOUtils.toInputStream("bear"),"three",IOUtils.toInputStream("candy"),"four",IOUtils.toInputStream("dogma"),"five",IOUtils.toInputStream("emma"));
   bucket=new S3Bucket(bucketPrefix + ".mimi");
-  client.createBucketIfNotExists(bucket).get();
+  client.createBucketIfNotExists(bucket).get(10,TimeUnit.SECONDS);
   map=createMap(context,bucket);
   map.clear();
 }
