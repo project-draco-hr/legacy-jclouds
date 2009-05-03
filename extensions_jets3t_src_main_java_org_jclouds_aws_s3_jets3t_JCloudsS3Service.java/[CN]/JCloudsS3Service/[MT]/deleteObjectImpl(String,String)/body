@@ -1,3 +1,9 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    connection.deleteObject(new org.jclouds.aws.s3.domain.S3Bucket(bucketName),objectKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException(String.format("error deleting object: %1s:%2s",bucketName,objectKey),e);
+  }
 }

@@ -1,8 +1,9 @@
 {
   try {
-    context.getConnection().deleteBucket(new org.jclouds.aws.s3.domain.S3Bucket(bucketName)).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    connection.deleteBucket(new org.jclouds.aws.s3.domain.S3Bucket(bucketName)).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
     throw new S3ServiceException("error deleting bucket: " + bucketName,e);
   }
 }
