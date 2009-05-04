@@ -1,0 +1,9 @@
+{
+  Class<? super I> type=injectableType.getRawType();
+  Set<Field> loggerFields=getLoggerFieldsAnnotatedWithResource(type);
+  if (loggerFields.size() == 0)   return;
+  Logger logger=loggerFactory.getLogger(type.getName());
+  for (  Field field : loggerFields) {
+    encounter.register(new AssignLoggerToField<I>(logger,field));
+  }
+}

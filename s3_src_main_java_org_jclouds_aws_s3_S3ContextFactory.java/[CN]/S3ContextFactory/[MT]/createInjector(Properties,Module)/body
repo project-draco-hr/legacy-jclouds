@@ -1,5 +1,7 @@
 {
-  final List<? extends Module> modules=httpModules.length != 0 ? Arrays.asList(httpModules) : Collections.singletonList(new JavaUrlHttpFutureCommandClientModule());
+  final List<Module> modules=Lists.newArrayList(configModules);
+  addLoggingModuleIfNotPresent(modules);
+  addHttpModuleIfNotPresent(modules);
   return Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       Names.bindProperties(binder(),checkNotNull(properties,"properties"));
