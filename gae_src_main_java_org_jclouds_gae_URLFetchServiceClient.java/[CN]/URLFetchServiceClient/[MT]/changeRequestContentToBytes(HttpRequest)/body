@@ -1,0 +1,22 @@
+{
+  Object content=request.getContent();
+  if (content == null || content instanceof byte[]) {
+    return;
+  }
+ else   if (content instanceof String) {
+    String string=(String)content;
+    request.setContent(string.getBytes());
+  }
+ else   if (content instanceof InputStream || content instanceof File) {
+    InputStream i=content instanceof InputStream ? (InputStream)content : new FileInputStream((File)content);
+    try {
+      request.setContent(IOUtils.toByteArray(i));
+    }
+  finally {
+      IOUtils.closeQuietly(i);
+    }
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + content.getClass());
+  }
+}

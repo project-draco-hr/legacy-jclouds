@@ -1,4 +1,5 @@
 {
-  logger.warn("%1s - %2d - timeout  %2d",conn,conn.hashCode(),conn.getSocketTimeout());
-  resubmitCommand(conn);
+  String message=String.format("%1s - %2d - timeout  %2d",conn,conn.hashCode(),conn.getSocketTimeout());
+  logger.warn(message);
+  resubmitIfRequestIsReplayable(conn,new TimeoutException(message));
 }

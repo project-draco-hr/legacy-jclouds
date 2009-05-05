@@ -9,10 +9,11 @@
       }
  else {
         if (isRetryable(response)) {
-          commandQueue.add(command);
+          attemptReplay(command);
         }
  else {
-          commandFailed(command);
+          String message=String.format("response is not retryable: %1s;  Command: %2s failed",response.getStatusLine(),command);
+          command.setException(new IOException(message));
         }
       }
     }
