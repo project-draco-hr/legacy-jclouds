@@ -1,0 +1,12 @@
+{
+  O command=getCommandFromConnection(connection);
+  if (command != null) {
+    if (isReplayable(command)) {
+      logger.info("resubmitting command: %1s",command);
+      commandQueue.add(command);
+    }
+ else {
+      command.setException(e);
+    }
+  }
+}
