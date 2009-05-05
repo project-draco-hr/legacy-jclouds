@@ -1,10 +1,4 @@
 {
-  exception.set(ex);
   logger.error(ex,"%3s-%1d{%2s} - io error",conn,conn.hashCode(),target);
-  if (!futureCommandConnectionRetry.shutdownConnectionAndRetryOperation(conn))   try {
-    conn.shutdown();
-  }
- catch (  IOException e) {
-    logger.error(e,"%3s-%1d{%2s} - error shutting down connection",conn,conn.hashCode(),target);
-  }
+  resubmitCommand(conn);
 }

@@ -1,0 +1,12 @@
+{
+  HttpRequest request=(HttpRequest)command.getRequest();
+  try {
+    for (    HttpRequestFilter filter : getRequestFilters()) {
+      filter.filter(request);
+    }
+    super.invoke(command);
+  }
+ catch (  HttpException e) {
+    command.setException(e);
+  }
+}

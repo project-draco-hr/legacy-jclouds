@@ -1,7 +1,7 @@
 {
   exception.compareAndSet(null,futureCommandConnectionPool.getException());
   while (!commandQueue.isEmpty()) {
-    FutureCommand command=commandQueue.remove();
+    FutureCommand<?,?,?> command=(FutureCommand<?,?,?>)commandQueue.remove();
     if (command != null) {
       if (exception.get() != null)       command.setException(exception.get());
  else       command.cancel(true);
