@@ -6,16 +6,15 @@
     currentOwner.setDisplayName(currentText.toString());
   }
  else   if (qName.equals("Bucket")) {
-    currentS3Bucket.setCanonicalUser(currentOwner);
+    currentS3Bucket.getMetaData().setCanonicalUser(currentOwner);
     buckets.add(currentS3Bucket);
   }
  else   if (qName.equals("Name")) {
     currentS3Bucket=new S3Bucket(currentText.toString());
-    currentS3Bucket.setHasData(false);
     currentS3Bucket.setComplete(false);
   }
  else   if (qName.equals("CreationDate")) {
-    currentS3Bucket.setCreationDate(dateParser.dateTimeFromXMLFormat(currentText.toString()));
+    currentS3Bucket.getMetaData().setCreationDate(dateParser.dateTimeFromXMLFormat(currentText.toString()));
   }
   currentText=new StringBuilder();
 }

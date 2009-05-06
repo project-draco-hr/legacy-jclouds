@@ -1,0 +1,18 @@
+{
+  metaDataParser.setResponse(getResponse());
+  S3Object.MetaData metaData=metaDataParser.call();
+  if (metaData == S3Object.MetaData.NOT_FOUND)   return S3Object.NOT_FOUND;
+  if (getResponse().getContent() != null) {
+    return new S3Object(metaData,getResponse().getContent());
+  }
+ else {
+    String reason=null;
+    try {
+      reason=Utils.toStringAndClose(getResponse().getContent());
+    }
+ catch (    IOException e) {
+      logger.error(e,"error parsing reason");
+    }
+    throw new HttpException("No content retrieving object " + key + ":"+ getResponse()+ " reason: "+ reason);
+  }
+}

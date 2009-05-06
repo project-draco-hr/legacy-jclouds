@@ -1,13 +1,12 @@
 {
   return new FutureBase<S3Bucket>(){
     public S3Bucket get() throws InterruptedException, ExecutionException {
-      Set<S3Object> contents=new HashSet<S3Object>();
+      Set<S3Object.MetaData> contents=new HashSet<S3Object.MetaData>();
       Map<String,Object> realContents=bucketToContents.get(s3Bucket);
       if (realContents != null) {
         for (        String key : realContents.keySet()) {
-          S3Object object=new S3Object(key);
-          object.setContent(realContents.get(key));
-          contents.add(object);
+          S3Object.MetaData metaData=new S3Object.MetaData(key);
+          contents.add(metaData);
         }
       }
       s3Bucket.setContents(contents);

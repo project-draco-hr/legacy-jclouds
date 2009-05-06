@@ -1,11 +1,11 @@
 {
   S3Object object=new S3Object("one");
-  object.setContent(IOUtils.toInputStream("apple"));
-  object.setSize("apple".getBytes().length);
+  object.setData(IOUtils.toInputStream("apple"));
+  object.getMetaData().setSize("apple".getBytes().length);
   S3Object old=map.put(object.getKey(),object);
   getOneReturnsAppleAndOldValueIsNull(old);
-  object.setContent(IOUtils.toInputStream("bear"));
-  object.setSize("bear".getBytes().length);
+  object.setData(IOUtils.toInputStream("bear"));
+  object.getMetaData().setSize("bear".getBytes().length);
   S3Object apple=map.put(object.getKey(),object);
   getOneReturnsBearAndOldValueIsApple(apple);
 }

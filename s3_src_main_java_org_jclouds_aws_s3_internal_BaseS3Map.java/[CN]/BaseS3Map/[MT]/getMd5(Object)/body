@@ -14,9 +14,9 @@
   }
  else   if (value instanceof S3Object) {
     S3Object object=(S3Object)value;
-    object=connection.headObject(bucket,object.getKey()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    object=connection.getObject(bucket,object.getKey()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     if (S3Object.NOT_FOUND.equals(object))     throw new FileNotFoundException("not found: " + object.getKey());
-    md5=S3Utils.fromHexString(object.getETag());
+    md5=S3Utils.fromHexString(object.getMetaData().getETag());
   }
  else {
     throw new IllegalArgumentException("unsupported value type: " + value.getClass());
