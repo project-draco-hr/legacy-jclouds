@@ -1,0 +1,19 @@
+{
+  if (qName.equals("ID")) {
+    currentOwner.setId(currentText.toString());
+  }
+ else   if (qName.equals("DisplayName")) {
+    currentOwner.setDisplayName(currentText.toString());
+  }
+ else   if (qName.equals("Bucket")) {
+    currentS3Bucket.setCanonicalUser(currentOwner);
+    buckets.add(currentS3Bucket);
+  }
+ else   if (qName.equals("Name")) {
+    currentS3Bucket=new S3Bucket.MetaData(currentText.toString());
+  }
+ else   if (qName.equals("CreationDate")) {
+    currentS3Bucket.setCreationDate(dateParser.dateTimeFromXMLFormat(currentText.toString()));
+  }
+  currentText=new StringBuilder();
+}

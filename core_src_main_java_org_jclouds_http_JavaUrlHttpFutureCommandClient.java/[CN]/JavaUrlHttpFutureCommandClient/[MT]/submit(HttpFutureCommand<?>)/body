@@ -1,5 +1,5 @@
 {
-  HttpRequest request=(HttpRequest)command.getRequest();
+  HttpRequest request=command.getRequest();
   HttpURLConnection connection=null;
   try {
     for (    HttpRequestFilter filter : getRequestFilters()) {
@@ -7,49 +7,21 @@
     }
     HttpResponse response=null;
     for (; ; ) {
-      try {
-        logger.trace("%1s - converting request %2s",target,request);
-        connection=openJavaConnection(request);
-        logger.trace("%1s - submitting request %2s",target,connection);
-        response=getResponse(connection);
-        logger.trace("%1s - received response %2s",target,response);
-        if (request.isReplayable() && response.getStatusCode() >= 500) {
-          logger.info("resubmitting command: %1s",command);
-          continue;
-        }
-        break;
+      logger.trace("%1s - converting request %2s",target,request);
+      connection=openJavaConnection(request);
+      logger.trace("%1s - submitting request %2s",target,connection);
+      response=getResponse(connection);
+      logger.trace("%1s - received response %2s",target,response);
+      if (command.getRequest().isReplayable() && response.getStatusCode() >= 500) {
+        logger.info("resubmitting command: %1s",command);
+        continue;
       }
- catch (      IOException e) {
-        if (request.isReplayable() && e.getMessage().indexOf("Server returned HTTP response code: 5") >= 0) {
-          logger.info("resubmitting command: %1s",command);
-          continue;
-        }
-        throw e;
-      }
+      break;
     }
     command.getResponseFuture().setResponse(response);
     command.getResponseFuture().run();
   }
- catch (  FileNotFoundException e) {
-    HttpResponse response=new HttpResponse();
-    response.setStatusCode(404);
-    command.getResponseFuture().setResponse(response);
-    command.getResponseFuture().run();
-  }
-catch (  Exception e) {
-    if (connection != null) {
-      StringBuilder errors=new StringBuilder();
-      try {
-        for (        InputStream in : new InputStream[]{connection.getErrorStream(),connection.getInputStream()}) {
-          if (in != null) {
-            errors.append(Utils.toStringAndClose(in)).append("\n");
-          }
-        }
-        logger.error(e,"error encountered during the exception: %1s",errors.toString());
-      }
- catch (      IOException e2) {
-      }
-    }
+ catch (  Exception e) {
     command.setException(e);
   }
  finally {

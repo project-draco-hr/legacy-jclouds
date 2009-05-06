@@ -2,11 +2,13 @@
   if (getResponse().getStatusCode() == 200) {
     S3Object.MetaData metaData=new S3Object.MetaData(key);
     String md5Header=getResponse().getFirstHeaderOrNull("x-amz-meta-object-md5");
-    if (md5Header != null)     metaData.setContentMD5(md5Header);
+    if (md5Header != null) {
+      metaData.setMd5(S3Utils.fromHexString(md5Header));
+    }
     metaData.setLastModified(dateParser.dateTimeFromHeaderFormat(getResponse().getFirstHeaderOrNull("Last-Modified")));
     String eTag=getResponse().getFirstHeaderOrNull("ETag");
     if (eTag != null) {
-      metaData.setETag(eTag.replaceAll("\"",""));
+      metaData.setMd5(S3Utils.fromHexString(eTag.replaceAll("\"","")));
     }
     metaData.setContentType(getResponse().getFirstHeaderOrNull("Content-Type"));
     metaData.setSize(Long.parseLong(getResponse().getFirstHeaderOrNull("Content-Length")));

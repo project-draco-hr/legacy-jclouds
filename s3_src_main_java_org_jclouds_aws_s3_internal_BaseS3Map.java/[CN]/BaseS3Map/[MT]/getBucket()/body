@@ -1,3 +1,9 @@
 {
-  return bucket;
+  try {
+    return refreshBucket();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error getting bucket" + bucket,e);
+  }
 }

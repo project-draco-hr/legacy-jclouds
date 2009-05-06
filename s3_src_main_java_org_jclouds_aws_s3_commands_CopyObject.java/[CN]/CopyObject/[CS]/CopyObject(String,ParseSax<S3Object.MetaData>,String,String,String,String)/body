@@ -1,0 +1,6 @@
+{
+  super("PUT","/" + checkNotNull(destinationObject,"destinationObject"),callable,amazonHost,destinationBucket);
+  CopyObjectHandler handler=(CopyObjectHandler)callable.getHandler();
+  handler.setKey(destinationObject);
+  getRequest().getHeaders().put("x-amz-copy-source",String.format("/%1s/%2s",checkNotNull(sourceBucket,"sourceBucket").toLowerCase(),checkNotNull(sourceObject,"sourceObject")));
+}

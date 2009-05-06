@@ -16,7 +16,7 @@
     S3Object object=(S3Object)value;
     object=connection.getObject(bucket,object.getKey()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     if (S3Object.NOT_FOUND.equals(object))     throw new FileNotFoundException("not found: " + object.getKey());
-    md5=S3Utils.fromHexString(object.getMetaData().getETag());
+    md5=object.getMetaData().getMd5();
   }
  else {
     throw new IllegalArgumentException("unsupported value type: " + value.getClass());

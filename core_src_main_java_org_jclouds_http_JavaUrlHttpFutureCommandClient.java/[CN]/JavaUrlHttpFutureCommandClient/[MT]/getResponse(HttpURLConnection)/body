@@ -1,13 +1,20 @@
 {
   HttpResponse response=new HttpResponse();
+  InputStream in;
+  try {
+    in=connection.getInputStream();
+  }
+ catch (  IOException e) {
+    in=connection.getErrorStream();
+  }
+  if (in != null) {
+    response.setContent(in);
+    response.setContentType(connection.getHeaderField(HttpConstants.CONTENT_TYPE));
+  }
   response.setStatusCode(connection.getResponseCode());
   for (  String header : connection.getHeaderFields().keySet()) {
     response.getHeaders().putAll(header,connection.getHeaderFields().get(header));
   }
   response.setMessage(connection.getResponseMessage());
-  if (!connection.getRequestMethod().equals("HEAD")) {
-    response.setContent(connection.getInputStream());
-    response.setContentType(connection.getHeaderField(HttpConstants.CONTENT_TYPE));
-  }
   return response;
 }

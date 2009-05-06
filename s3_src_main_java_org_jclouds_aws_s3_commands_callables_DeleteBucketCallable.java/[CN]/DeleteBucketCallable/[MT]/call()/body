@@ -4,6 +4,9 @@
   }
  else   if (getResponse().getStatusCode() == 409) {
     try {
+      if (getResponse().getContent() == null) {
+        throw new HttpException("cannot determine error as there is no content");
+      }
       String reason=S3Utils.toStringAndClose(getResponse().getContent());
       if (reason.indexOf("BucketNotEmpty") >= 0)       return false;
  else       throw new HttpException("Error deleting bucket.\n" + reason);
