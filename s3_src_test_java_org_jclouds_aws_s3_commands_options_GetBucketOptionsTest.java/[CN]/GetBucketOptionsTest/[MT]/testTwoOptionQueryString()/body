@@ -1,10 +1,7 @@
 {
   GetBucketOptions options=new GetBucketOptions();
   options.prefix("test").maxKeys(1);
-  try {
-    assertEquals(options.toQueryString(),"?prefix=test&max-keys=1");
-  }
- catch (  AssertionError e) {
-    assertEquals(options.toQueryString(),"?max-keys=1&prefix=test");
-  }
+  String query=options.toQueryString();
+  checkQuery(query);
+  checkQuery(checkNotNull(query));
 }

@@ -28,6 +28,20 @@
   }
  else   if (qName.equals("Name")) {
   }
+ else   if (qName.equals("Prefix")) {
+    String prefix=currentText.toString().trim();
+    if (inCommonPrefixes)     s3Bucket.getCommonPrefixes().add(prefix);
+ else     s3Bucket.setPrefix(prefix);
+  }
+ else   if (qName.equals("Delimiter")) {
+    if (!currentText.toString().equals(""))     s3Bucket.setDelimiter(currentText.toString().trim());
+  }
+ else   if (qName.equals("Marker")) {
+    if (!currentText.toString().equals(""))     s3Bucket.setMarker(currentText.toString());
+  }
+ else   if (qName.equals("MaxKeys")) {
+    s3Bucket.setMaxKeys(Long.parseLong(currentText.toString()));
+  }
  else   if (qName.equals("IsTruncated")) {
     boolean isTruncated=Boolean.parseBoolean(currentText.toString());
     s3Bucket.setComplete(!isTruncated);
