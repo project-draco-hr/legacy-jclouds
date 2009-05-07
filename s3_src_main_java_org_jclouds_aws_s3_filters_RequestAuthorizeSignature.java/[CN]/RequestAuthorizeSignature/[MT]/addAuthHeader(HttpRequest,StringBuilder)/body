@@ -1,0 +1,10 @@
+{
+  String signature;
+  try {
+    signature=S3Utils.hmacSha1Base64(toSign.toString(),secretKey.getBytes());
+  }
+ catch (  Exception e) {
+    throw new HttpException("error signing request",e);
+  }
+  request.getHeaders().put(S3Constants.AUTH,"AWS " + accessKey + ":"+ signature);
+}
