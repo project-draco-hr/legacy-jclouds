@@ -1,10 +1,10 @@
 {
   try {
-    List<Future<String>> puts=new ArrayList<Future<String>>();
+    List<Future<byte[]>> puts=new ArrayList<Future<byte[]>>();
     for (    S3Object object : map.values()) {
-      puts.add(connection.addObject(bucket,object));
+      puts.add(connection.putObject(bucket,object));
     }
-    for (    Future<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    for (    Future<byte[]> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
     Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);

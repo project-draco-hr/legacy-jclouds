@@ -1,22 +1,18 @@
 {
   if (getResponse().getStatusCode() == 200) {
-    S3Object.MetaData metaData=new S3Object.MetaData(key);
-    String md5Header=getResponse().getFirstHeaderOrNull("x-amz-meta-object-md5");
-    if (md5Header != null) {
-      metaData.setMd5(S3Utils.fromHexString(md5Header));
-    }
-    metaData.setLastModified(dateParser.dateTimeFromHeaderFormat(getResponse().getFirstHeaderOrNull("Last-Modified")));
-    String eTag=getResponse().getFirstHeaderOrNull("ETag");
-    if (eTag != null) {
-      metaData.setMd5(S3Utils.fromHexString(eTag.replaceAll("\"","")));
-    }
-    metaData.setContentType(getResponse().getFirstHeaderOrNull("Content-Type"));
-    metaData.setSize(Long.parseLong(getResponse().getFirstHeaderOrNull("Content-Length")));
-    metaData.setServer(getResponse().getFirstHeaderOrNull("Server"));
+    S3Object.Metadata metaData=new S3Object.Metadata(key);
+    extractUserMetadata(metaData);
+    addMd5(metaData);
+    metaData.setLastModified(dateParser.dateTimeFromHeaderFormat(getResponse().getFirstHeaderOrNull(HttpHeaders.LAST_MODIFIED)));
+    metaData.setContentType(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE));
+    metaData.setSize(Long.parseLong(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH)));
+    metaData.setCacheControl(getResponse().getFirstHeaderOrNull(HttpHeaders.CACHE_CONTROL));
+    metaData.setContentDisposition(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_DISPOSITION));
+    metaData.setContentEncoding(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_ENCODING));
     return metaData;
   }
  else   if (getResponse().getStatusCode() == 404) {
-    return S3Object.MetaData.NOT_FOUND;
+    return S3Object.Metadata.NOT_FOUND;
   }
  else {
     String reason=null;

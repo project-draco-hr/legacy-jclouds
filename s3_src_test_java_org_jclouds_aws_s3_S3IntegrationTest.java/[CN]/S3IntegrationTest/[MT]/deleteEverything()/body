@@ -1,11 +1,11 @@
 {
   try {
-    List<S3Bucket.MetaData> metaData=client.getMetaDataOfOwnedBuckets().get(10,TimeUnit.SECONDS);
+    List<S3Bucket.Metadata> metaData=client.getOwnedBuckets().get(10,TimeUnit.SECONDS);
     List<Future<Boolean>> results=new ArrayList<Future<Boolean>>();
-    for (    S3Bucket.MetaData metaDatum : metaData) {
+    for (    S3Bucket.Metadata metaDatum : metaData) {
       if (metaDatum.getName().startsWith(bucketPrefix.toLowerCase())) {
-        S3Bucket bucket=client.getBucket(metaDatum.getName()).get(10,TimeUnit.SECONDS);
-        for (        S3Object.MetaData objectMeta : bucket.getContents()) {
+        S3Bucket bucket=client.listBucket(metaDatum.getName()).get(10,TimeUnit.SECONDS);
+        for (        S3Object.Metadata objectMeta : bucket.getContents()) {
           results.add(client.deleteObject(metaDatum.getName(),objectMeta.getKey()));
         }
         Iterator<Future<Boolean>> iterator=results.iterator();

@@ -1,16 +1,16 @@
 {
-  Object content=request.getContent();
+  Object content=request.getPayload();
   if (content == null || content instanceof byte[]) {
     return;
   }
  else   if (content instanceof String) {
     String string=(String)content;
-    request.setContent(string.getBytes());
+    request.setPayload(string.getBytes());
   }
  else   if (content instanceof InputStream || content instanceof File) {
     InputStream i=content instanceof InputStream ? (InputStream)content : new FileInputStream((File)content);
     try {
-      request.setContent(IOUtils.toByteArray(i));
+      request.setPayload(IOUtils.toByteArray(i));
     }
   finally {
       IOUtils.closeQuietly(i);

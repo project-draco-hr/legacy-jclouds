@@ -1,0 +1,10 @@
+{
+  String sourceBucket=bucketPrefix + "testCopyObject";
+  String sourceKey="apples";
+  String destinationBucket=bucketPrefix + "testCopyObjectDestination";
+  String destinationKey="pears";
+  setupSourceBucket(sourceBucket,sourceKey);
+  createBucketAndEnsureEmpty(destinationBucket);
+  client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
+  validateContent(destinationBucket,destinationKey);
+}

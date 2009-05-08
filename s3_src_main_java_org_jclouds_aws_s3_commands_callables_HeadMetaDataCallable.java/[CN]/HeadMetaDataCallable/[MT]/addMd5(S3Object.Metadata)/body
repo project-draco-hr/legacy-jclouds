@@ -1,0 +1,10 @@
+{
+  String md5Header=getResponse().getFirstHeaderOrNull(S3Headers.AMZ_MD5);
+  if (md5Header != null) {
+    metaData.setMd5(S3Utils.fromHexString(md5Header));
+  }
+  String eTag=getResponse().getFirstHeaderOrNull(S3Headers.ETAG);
+  if (metaData.getMd5() == null && eTag != null) {
+    metaData.setMd5(S3Utils.fromHexString(eTag.replaceAll("\"","")));
+  }
+}

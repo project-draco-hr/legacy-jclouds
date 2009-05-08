@@ -6,7 +6,11 @@
  catch (    IOException e) {
       logger.error(e,"error consuming content");
     }
-    return getResponse().getHeaders().get("ETag").iterator().next();
+    String eTag=getResponse().getFirstHeaderOrNull("ETag");
+    if (eTag != null) {
+      return S3Utils.fromHexString(eTag.replaceAll("\"",""));
+    }
+    throw new HttpException("did not receive ETag");
   }
  else {
     try {

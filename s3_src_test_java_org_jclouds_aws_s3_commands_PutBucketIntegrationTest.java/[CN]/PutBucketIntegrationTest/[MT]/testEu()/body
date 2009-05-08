@@ -1,0 +1,6 @@
+{
+  String bucketName=(bucketPrefix + "wow").toLowerCase();
+  client.putBucketIfNotExists(bucketName,createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+  URL url=new URL(String.format("http://%1s.s3.amazonaws.com",bucketName));
+  S3Utils.toStringAndClose(url.openStream());
+}

@@ -1,0 +1,22 @@
+{
+  String bucketName=bucketPrefix + "header";
+  createBucketAndEnsureEmpty(bucketName);
+  String key="hello";
+  S3Object object=new S3Object(key,TEST_STRING);
+  object.getMetaData().setCacheControl("no-cache");
+  object.getMetaData().setContentType("text/plain");
+  object.getMetaData().setContentEncoding("x-compress");
+  object.getMetaData().setSize(TEST_STRING.length());
+  object.getMetaData().setContentDisposition("attachment; filename=hello.txt");
+  object.getMetaData().getUserMetadata().put(S3Headers.USER_METADATA_PREFIX + "adrian","powderpuff");
+  object.getMetaData().setMd5(S3Utils.md5(TEST_STRING.getBytes()));
+  addObjectToBucket(bucketName,object);
+  object=validateContent(bucketName,key);
+  assertEquals(object.getMetaData().getContentType(),"binary/octet-stream");
+  assertEquals(object.getMetaData().getContentEncoding(),"x-compress");
+  assertEquals(object.getMetaData().getContentDisposition(),"attachment; filename=hello.txt");
+  assertEquals(object.getMetaData().getCacheControl(),"no-cache");
+  assertEquals(object.getMetaData().getSize(),TEST_STRING.length());
+  assertEquals(object.getMetaData().getUserMetadata().values().iterator().next(),"powderpuff");
+  assertEquals(object.getMetaData().getMd5(),S3Utils.md5(TEST_STRING.getBytes()));
+}

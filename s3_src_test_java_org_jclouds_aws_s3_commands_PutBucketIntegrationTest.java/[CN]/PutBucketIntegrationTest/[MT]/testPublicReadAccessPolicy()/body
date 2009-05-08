@@ -1,0 +1,6 @@
+{
+  String bucketName=bucketPrefix + "public";
+  client.putBucketIfNotExists(bucketName,withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+  URL url=new URL(String.format("http://%1s.s3.amazonaws.com",bucketName));
+  S3Utils.toStringAndClose(url.openStream());
+}

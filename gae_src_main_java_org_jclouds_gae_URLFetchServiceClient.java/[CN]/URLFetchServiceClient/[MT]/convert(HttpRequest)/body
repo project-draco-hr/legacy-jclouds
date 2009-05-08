@@ -1,13 +1,12 @@
 {
   URL url=new URL(target,request.getUri());
-  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate().doNotFollowRedirects());
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate());
   for (  String header : request.getHeaders().keySet()) {
     for (    String value : request.getHeaders().get(header))     gaeRequest.addHeader(new HTTPHeader(header,value));
   }
-  if (request.getContent() != null) {
+  if (request.getPayload() != null) {
     changeRequestContentToBytes(request);
-    gaeRequest.addHeader(new HTTPHeader(HttpConstants.CONTENT_TYPE,request.getContentType()));
-    gaeRequest.setPayload((byte[])request.getContent());
+    gaeRequest.setPayload((byte[])request.getPayload());
   }
   return gaeRequest;
 }

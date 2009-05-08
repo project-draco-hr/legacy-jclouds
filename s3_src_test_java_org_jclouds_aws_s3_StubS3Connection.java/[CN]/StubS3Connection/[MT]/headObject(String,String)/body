@@ -1,0 +1,12 @@
+{
+  return new FutureBase<S3Object.Metadata>(){
+    public S3Object.Metadata get() throws InterruptedException, ExecutionException {
+      if (!bucketToContents.containsKey(s3Bucket))       return S3Object.Metadata.NOT_FOUND;
+      Map<String,Object> realContents=bucketToContents.get(s3Bucket);
+      if (!realContents.containsKey(key))       return S3Object.Metadata.NOT_FOUND;
+      S3Object.Metadata metaData=new S3Object.Metadata(key);
+      return metaData;
+    }
+  }
+;
+}

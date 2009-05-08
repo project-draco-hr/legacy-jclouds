@@ -1,6 +1,6 @@
 {
-  checkState(ifMatch == null,"ifMd5Matches() is not compatible with ifModifiedSince()");
-  checkState(ifUnmodifiedSince == null,"ifUnmodifiedSince() is not compatible with ifModifiedSince()");
-  this.ifModifiedSince=dateService.toHeaderString(checkNotNull(ifModifiedSince,"ifModifiedSince"));
+  checkState(getIfMatch() == null,"ifMd5Matches() is not compatible with ifModifiedSince()");
+  checkState(getIfUnmodifiedSince() == null,"ifUnmodifiedSince() is not compatible with ifModifiedSince()");
+  this.headers.put(S3Headers.OBJECT_IF_MODIFIED_SINCE,dateService.toHeaderString(checkNotNull(ifModifiedSince,"ifModifiedSince")));
   return this;
 }
