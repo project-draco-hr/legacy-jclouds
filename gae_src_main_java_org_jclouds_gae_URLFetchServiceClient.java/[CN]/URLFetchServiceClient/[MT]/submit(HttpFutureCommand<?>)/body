@@ -1,30 +1,27 @@
 {
-  HttpRequest request=operation.getRequest();
+  HttpRequest request=command.getRequest();
   HTTPResponse gaeResponse=null;
   try {
-    for (    HttpRequestFilter filter : getRequestFilters()) {
+    for (    HttpRequestFilter filter : requestFilters) {
       filter.filter(request);
     }
     HttpResponse response=null;
     for (; ; ) {
       logger.trace("%1s - converting request %2s",target,request);
       HTTPRequest gaeRequest=convert(request);
-      logger.trace("%1s - submitting request %2s",target,gaeRequest);
+      if (logger.isTraceEnabled())       logger.trace("%1s - submitting request %2s, headers: %3s",target,gaeRequest.getURL(),headersAsString(gaeRequest.getHeaders()));
       gaeResponse=this.urlFetchService.fetch(gaeRequest);
-      logger.trace("%1s - received response %2s",target,gaeResponse);
+      if (logger.isTraceEnabled())       logger.trace("%1s - received response code %2s, headers: %3s",target,gaeResponse.getResponseCode(),headersAsString(gaeResponse.getHeaders()));
       response=convert(gaeResponse);
-      if (response.getStatusCode() >= 500) {
-        continue;
-      }
+      if (isRetryable(command,response))       continue;
       break;
     }
-    operation.getResponseFuture().setResponse(response);
-    operation.getResponseFuture().run();
+    handleResponse(command,response);
   }
  catch (  Exception e) {
     if (gaeResponse != null && gaeResponse.getContent() != null) {
       logger.error(e,"error encountered during the execution: %1s%n%2s",gaeResponse,new String(gaeResponse.getContent()));
     }
-    operation.setException(e);
+    command.setException(e);
   }
 }

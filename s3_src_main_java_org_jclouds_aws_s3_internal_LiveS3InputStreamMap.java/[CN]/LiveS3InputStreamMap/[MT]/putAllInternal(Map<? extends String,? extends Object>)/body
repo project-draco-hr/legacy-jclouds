@@ -4,7 +4,7 @@
     for (    String key : map.keySet()) {
       S3Object object=new S3Object(key);
       object.setData(map.get(key));
-      setSizeIfContentIsInputStream(object);
+      object.generateMd5();
       puts.add(connection.putObject(bucket,object));
     }
     for (    Future<byte[]> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);

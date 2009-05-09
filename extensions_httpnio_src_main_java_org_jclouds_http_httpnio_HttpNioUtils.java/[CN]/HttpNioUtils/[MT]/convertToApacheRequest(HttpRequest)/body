@@ -1,11 +1,15 @@
 {
   BasicHttpEntityEnclosingRequest apacheRequest=new BasicHttpEntityEnclosingRequest(object.getMethod(),object.getUri(),HttpVersion.HTTP_1_1);
-  for (  String header : object.getHeaders().keySet()) {
-    for (    String value : object.getHeaders().get(header))     apacheRequest.addHeader(header,value);
-  }
   Object content=object.getPayload();
   if (content != null) {
-    addEntityForContent(apacheRequest,content,object.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),Long.parseLong(object.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH)));
+    long contentLength=Long.parseLong(object.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH));
+    object.getHeaders().removeAll(HttpHeaders.CONTENT_LENGTH);
+    String contentType=object.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE);
+    object.getHeaders().removeAll(HttpHeaders.CONTENT_TYPE);
+    addEntityForContent(apacheRequest,content,contentType,contentLength);
+  }
+  for (  String header : object.getHeaders().keySet()) {
+    for (    String value : object.getHeaders().get(header))     apacheRequest.addHeader(header,value);
   }
   return apacheRequest;
 }

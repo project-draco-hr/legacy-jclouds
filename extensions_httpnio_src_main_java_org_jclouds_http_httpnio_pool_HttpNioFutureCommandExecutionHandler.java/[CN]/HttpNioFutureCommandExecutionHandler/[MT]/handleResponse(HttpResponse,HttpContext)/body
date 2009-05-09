@@ -3,18 +3,24 @@
   if (handle != null) {
     try {
       HttpFutureCommand<?> command=handle.getCommand();
-      int code=response.getStatusLine().getStatusCode();
-      if ((code >= 200 && code < 300) || code == 404) {
-        processResponse(response,command);
+      org.jclouds.http.HttpResponse response=HttpNioUtils.convertToJavaCloudsResponse(apacheResponse);
+      int code=response.getStatusCode();
+      if (code >= 500) {
+        if (isRetryable(command)) {
+          commandQueue.add(command);
+        }
+ else {
+          this.serverErrorHandler.handle(command,response);
+        }
+      }
+ else       if (code >= 400 && code < 500) {
+        this.clientErrorHandler.handle(command,response);
+      }
+ else       if (code >= 300 && code < 400) {
+        this.redirectHandler.handle(command,response);
       }
  else {
-        if (isRetryable(response)) {
-          attemptReplay(command);
-        }
- else {
-          String message=String.format("response is not retryable: %1s;  Command: %2s failed",response.getStatusLine(),command);
-          command.setException(new IOException(message));
-        }
+        processResponse(response,command);
       }
     }
   finally {

@@ -1,0 +1,22 @@
+{
+  int code=response.getStatusCode();
+  if (code >= 300) {
+    InputStream errorStream=response.getContent();
+    if (errorStream != null) {
+      try {
+        S3Error error=parserFactory.createErrorParser().parse(errorStream);
+        logger.trace("received the following error from s3: %1s",error);
+        command.setException(new S3ResponseException(command,response,error));
+      }
+ catch (      HttpException he) {
+        logger.error(he,"error parsing response %1s",response);
+      }
+ finally {
+        IOUtils.closeQuietly(errorStream);
+      }
+    }
+ else {
+      command.setException(new S3ResponseException(command,response));
+    }
+  }
+}

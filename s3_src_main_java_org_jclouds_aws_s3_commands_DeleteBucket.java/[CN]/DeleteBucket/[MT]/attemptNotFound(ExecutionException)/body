@@ -1,0 +1,12 @@
+{
+  if (e.getCause() != null && e.getCause() instanceof S3ResponseException) {
+    S3ResponseException responseException=(S3ResponseException)e.getCause();
+    if (responseException.getResponse().getStatusCode() == 404) {
+      return true;
+    }
+ else     if ("BucketNotEmpty".equals(responseException.getError().getCode())) {
+      return false;
+    }
+  }
+  throw e;
+}

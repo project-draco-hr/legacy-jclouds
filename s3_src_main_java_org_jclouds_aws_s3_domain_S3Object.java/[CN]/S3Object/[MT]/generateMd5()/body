@@ -1,34 +1,12 @@
 {
-  checkState(data != null,"data must be set before calling generateMd5()");
-  byte[] md5;
-  if (data == null || data instanceof byte[]) {
-    md5=S3Utils.md5((byte[])data);
-  }
- else   if (data instanceof String) {
-    this.data=((String)data).getBytes();
-    md5=S3Utils.md5((byte[])data);
-  }
- else   if (data instanceof File) {
-    InputStream i=new FileInputStream((File)data);
-    try {
-      md5=S3Utils.md5(i);
-    }
-  finally {
-      IOUtils.closeQuietly(i);
-    }
-  }
- else   if (data instanceof InputStream) {
-    InputStream i=(InputStream)data;
-    try {
-      this.data=(IOUtils.toByteArray(i));
-      md5=S3Utils.md5(i);
-    }
-  finally {
-      IOUtils.closeQuietly(i);
-    }
+  checkState(data != null,"data");
+  if (data instanceof InputStream) {
+    Md5InputStreamResult result=S3Utils.generateMd5Result((InputStream)data);
+    getMetaData().setSize(result.length);
+    getMetaData().setMd5(result.md5);
+    setData(result.data);
   }
  else {
-    throw new UnsupportedOperationException("Content not supported " + data.getClass());
+    getMetaData().setMd5(S3Utils.md5(data));
   }
-  getMetaData().setMd5(md5);
 }

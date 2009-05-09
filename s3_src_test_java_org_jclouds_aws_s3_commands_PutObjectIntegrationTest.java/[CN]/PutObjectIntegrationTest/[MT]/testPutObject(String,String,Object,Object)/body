@@ -6,6 +6,9 @@
   S3Object object=new S3Object(key);
   object.getMetaData().setContentType(type);
   object.setData(content);
+  if (content instanceof InputStream) {
+    object.generateMd5();
+  }
   assertNotNull(client.putObject(bucketName,object).get(10,TimeUnit.SECONDS));
   object=client.getObject(bucketName,object.getKey()).get(10,TimeUnit.SECONDS);
   String returnedString=S3Utils.getContentAsStringAndClose(object);

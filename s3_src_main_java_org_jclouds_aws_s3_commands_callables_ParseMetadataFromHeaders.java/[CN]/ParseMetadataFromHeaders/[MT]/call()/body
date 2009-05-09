@@ -1,0 +1,12 @@
+{
+  checkCode();
+  S3Object.Metadata metaData=new S3Object.Metadata(key);
+  extractUserMetadata(metaData);
+  addMd5(metaData);
+  parseLastModifiedOrThrowException(metaData);
+  setContentTypeOrThrowException(metaData);
+  metaData.setCacheControl(getResponse().getFirstHeaderOrNull(HttpHeaders.CACHE_CONTROL));
+  metaData.setContentDisposition(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_DISPOSITION));
+  metaData.setContentEncoding(getResponse().getFirstHeaderOrNull(HttpHeaders.CONTENT_ENCODING));
+  return metaData;
+}
