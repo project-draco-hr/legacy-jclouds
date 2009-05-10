@@ -1,10 +1,8 @@
 {
-  String sourceBucket=bucketPrefix + "testCopyIfNoneMatch";
-  String sourceKey="apples";
+  String sourceBucket=bucketPrefix + "tcinm";
   byte[] realMd5=S3Utils.md5(TEST_STRING);
   byte[] badMd5=S3Utils.md5("alf");
-  String destinationBucket=bucketPrefix + "testCopyIfNoneMatchDestination";
-  String destinationKey="pears";
+  String destinationBucket=sourceBucket + "dest";
   setupSourceBucket(sourceBucket,sourceKey);
   createBucketAndEnsureEmpty(destinationBucket);
   client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,ifSourceMd5DoesntMatch(badMd5)).get(10,TimeUnit.SECONDS);

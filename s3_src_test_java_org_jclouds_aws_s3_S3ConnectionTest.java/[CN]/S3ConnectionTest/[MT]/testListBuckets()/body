@@ -1,3 +1,6 @@
 {
-  listAllMyBuckets();
+  List<S3Bucket.Metadata> myBuckets=client.getOwnedBuckets().get(10,TimeUnit.SECONDS);
+  for (  S3Bucket.Metadata bucket : myBuckets) {
+    context.createInputStreamMap(bucket.getName()).size();
+  }
 }
