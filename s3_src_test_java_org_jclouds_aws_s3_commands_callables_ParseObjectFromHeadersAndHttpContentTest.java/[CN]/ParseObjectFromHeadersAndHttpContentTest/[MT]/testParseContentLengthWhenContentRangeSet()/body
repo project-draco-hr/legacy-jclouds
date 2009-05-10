@@ -1,0 +1,22 @@
+{
+  HttpResponse response=createMock(HttpResponse.class);
+  metadataParser.setResponse(response);
+  Metadata meta=createMock(Metadata.class);
+  expect(metadataParser.call()).andReturn(meta);
+  expect(meta.getSize()).andReturn(-1l);
+  meta.setSize(-1l);
+  expect(response.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH)).andReturn("10485760").atLeastOnce();
+  expect(response.getFirstHeaderOrNull(HttpHeaders.CONTENT_RANGE)).andReturn("0-10485759/20232760").atLeastOnce();
+  meta.setSize(20232760l);
+  expect(meta.getSize()).andReturn(20232760l);
+  expect(response.getStatusCode()).andReturn(200).atLeastOnce();
+  expect(response.getContent()).andReturn(IOUtils.toInputStream("test"));
+  replay(response);
+  replay(metadataParser);
+  replay(meta);
+  callable.setResponse(response);
+  S3Object object=callable.call();
+  assertEquals(object.getContentLength(),10485760);
+  assertEquals(object.getMetadata().getSize(),20232760);
+  assertEquals(object.getContentRange(),"0-10485759/20232760");
+}

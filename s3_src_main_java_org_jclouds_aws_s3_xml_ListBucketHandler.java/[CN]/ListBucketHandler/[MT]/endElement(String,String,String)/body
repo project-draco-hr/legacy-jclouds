@@ -1,30 +1,30 @@
 {
   if (qName.equals("ID")) {
-    currentOwner.setId(currentText.toString());
+    currentOwner=new CanonicalUser(currentText.toString());
   }
  else   if (qName.equals("DisplayName")) {
     currentOwner.setDisplayName(currentText.toString());
   }
  else   if (qName.equals("Key")) {
-    currentObjectMetaData=new S3Object.Metadata(currentText.toString());
+    currentObjectMetadata=new S3Object.Metadata(currentText.toString());
   }
  else   if (qName.equals("LastModified")) {
-    currentObjectMetaData.setLastModified(dateParser.dateTimeFromXMLFormat(currentText.toString()));
+    currentObjectMetadata.setLastModified(dateParser.dateTimeFromXMLFormat(currentText.toString()));
   }
  else   if (qName.equals("ETag")) {
-    currentObjectMetaData.setMd5(S3Utils.fromHexString(currentText.toString().replaceAll("\"","")));
+    currentObjectMetadata.setMd5(S3Utils.fromHexString(currentText.toString().replaceAll("\"","")));
   }
  else   if (qName.equals("Size")) {
-    currentObjectMetaData.setSize(Long.parseLong(currentText.toString()));
+    currentObjectMetadata.setSize(Long.parseLong(currentText.toString()));
   }
  else   if (qName.equals("Owner")) {
-    currentObjectMetaData.setOwner(currentOwner);
+    currentObjectMetadata.setOwner(currentOwner);
   }
  else   if (qName.equals("StorageClass")) {
-    currentObjectMetaData.setStorageClass(currentText.toString());
+    currentObjectMetadata.setStorageClass(currentText.toString());
   }
  else   if (qName.equals("Contents")) {
-    s3Bucket.getContents().add(currentObjectMetaData);
+    s3Bucket.getContents().add(currentObjectMetadata);
   }
  else   if (qName.equals("Name")) {
   }

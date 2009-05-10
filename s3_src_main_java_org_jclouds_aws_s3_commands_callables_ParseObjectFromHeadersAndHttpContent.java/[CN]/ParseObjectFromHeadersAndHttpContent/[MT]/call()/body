@@ -1,7 +1,8 @@
 {
   checkCode();
-  metaDataParser.setResponse(getResponse());
-  S3Object.Metadata metaData=metaDataParser.call();
-  parseContentLengthOrThrowException(metaData);
-  return new S3Object(metaData,getResponse().getContent());
+  metadataParser.setResponse(getResponse());
+  S3Object.Metadata metadata=metadataParser.call();
+  S3Object object=new S3Object(metadata,getResponse().getContent());
+  parseContentLengthOrThrowException(object);
+  return object;
 }

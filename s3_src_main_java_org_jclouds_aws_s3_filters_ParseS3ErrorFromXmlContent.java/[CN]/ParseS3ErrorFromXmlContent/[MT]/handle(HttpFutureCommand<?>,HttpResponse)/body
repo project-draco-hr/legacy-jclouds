@@ -1,23 +1,20 @@
 {
-  int code=response.getStatusCode();
-  if (code >= 300) {
-    InputStream errorStream=response.getContent();
+  S3Error error=new S3Error();
+  error.setRequestId(response.getFirstHeaderOrNull(S3Headers.REQUEST_ID));
+  error.setRequestToken(response.getFirstHeaderOrNull(S3Headers.REQUEST_TOKEN));
+  InputStream errorStream=response.getContent();
+  try {
     if (errorStream != null) {
-      try {
-        S3Error error=parserFactory.createErrorParser().parse(errorStream);
-        if ("SignatureDoesNotMatch".equals(error.getCode()))         error.setStringSigned(RequestAuthorizeSignature.createStringToSign(command.getRequest()));
-        logger.trace("received the following error from s3: %1s",error);
-        command.setException(new S3ResponseException(command,response,error));
-      }
- catch (      HttpException he) {
-        logger.error(he,"error parsing response %1s",response);
-      }
+      error=parserFactory.createErrorParser().parse(errorStream);
+      if ("SignatureDoesNotMatch".equals(error.getCode()))       error.setStringSigned(RequestAuthorizeSignature.createStringToSign(command.getRequest()));
+      error.setRequestToken(response.getFirstHeaderOrNull(S3Headers.REQUEST_TOKEN));
+    }
+  }
+ catch (  Exception e) {
+    logger.warn(e,"error parsing XML reponse: %1$s",response);
+  }
  finally {
-        IOUtils.closeQuietly(errorStream);
-      }
-    }
- else {
-      command.setException(new S3ResponseException(command,response));
-    }
+    command.setException(new S3ResponseException(command,response,error));
+    IOUtils.closeQuietly(errorStream);
   }
 }

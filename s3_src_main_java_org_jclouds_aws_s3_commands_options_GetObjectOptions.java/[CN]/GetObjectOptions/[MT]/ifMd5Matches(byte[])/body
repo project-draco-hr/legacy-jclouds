@@ -1,6 +1,6 @@
 {
-  checkState(getIfNoneMatch() == null,"ifMd5DoesntMatch() is not compatible with ifMd5Matches()");
-  checkState(getIfModifiedSince() == null,"ifModifiedSince() is not compatible with ifMd5Matches()");
-  this.headers.put(S3Headers.OBJECT_IF_MATCH,String.format("\"%1s\"",S3Utils.toHexString(checkNotNull(md5,"md5"))));
+  checkArgument(getIfNoneMatch() == null,"ifMd5DoesntMatch() is not compatible with ifMd5Matches()");
+  checkArgument(getIfModifiedSince() == null,"ifModifiedSince() is not compatible with ifMd5Matches()");
+  this.headers.put(HttpHeaders.IF_MATCH,String.format("\"%1$s\"",S3Utils.toHexString(checkNotNull(md5,"md5"))));
   return this;
 }

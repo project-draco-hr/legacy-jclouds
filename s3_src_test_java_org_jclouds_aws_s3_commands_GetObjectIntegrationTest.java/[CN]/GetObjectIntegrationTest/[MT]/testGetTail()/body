@@ -1,0 +1,9 @@
+{
+  String bucket=bucketPrefix + "testGetTail".toLowerCase();
+  String key="apples";
+  setUpBucket(bucket,key);
+  S3Object object=client.getObject(bucket,key,tail(5)).get(10,TimeUnit.SECONDS);
+  assertEquals(S3Utils.getContentAsStringAndClose(object),TEST_STRING.substring(TEST_STRING.length() - 5));
+  assertEquals(object.getContentLength(),5);
+  assertEquals(object.getMetadata().getSize(),TEST_STRING.length());
+}

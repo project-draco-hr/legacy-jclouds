@@ -4,9 +4,9 @@
   bind(GuiceS3Context.S3ObjectMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceS3Context.S3ObjectMapFactory.class,LiveS3ObjectMap.class));
   bind(GuiceS3Context.S3InputStreamMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceS3Context.S3InputStreamMapFactory.class,LiveS3InputStreamMap.class));
   bind(S3Context.class).to(GuiceS3Context.class);
-  bind(HttpResponseHandler.class).annotatedWith(RedirectHandler.class).to(ParseS3ErrorFromXmlContent.class).in(Scopes.SINGLETON);
+  bind(HttpResponseHandler.class).annotatedWith(RedirectHandler.class).to(CloseContentAndSetExceptionHandler.class).in(Scopes.SINGLETON);
   bind(HttpResponseHandler.class).annotatedWith(ClientErrorHandler.class).to(ParseS3ErrorFromXmlContent.class).in(Scopes.SINGLETON);
   bind(HttpResponseHandler.class).annotatedWith(ServerErrorHandler.class).to(ParseS3ErrorFromXmlContent.class).in(Scopes.SINGLETON);
   requestInjection(this);
-  logger.info("S3 Context = %1s://%2s:%3s",(isSecure ? "https" : "http"),address,port);
+  logger.info("S3 Context = %1$s://%2$s:%3$s",(isSecure ? "https" : "http"),address,port);
 }

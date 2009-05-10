@@ -1,8 +1,8 @@
 {
   try {
-    List<S3Bucket.Metadata> metaData=client.getOwnedBuckets().get(10,TimeUnit.SECONDS);
+    List<S3Bucket.Metadata> metadata=client.listOwnedBuckets().get(10,TimeUnit.SECONDS);
     List<Future<Boolean>> results=new ArrayList<Future<Boolean>>();
-    for (    S3Bucket.Metadata metaDatum : metaData) {
+    for (    S3Bucket.Metadata metaDatum : metadata) {
       if (metaDatum.getName().startsWith(bucketPrefix.toLowerCase())) {
         S3Bucket bucket=client.listBucket(metaDatum.getName()).get(10,TimeUnit.SECONDS);
         for (        S3Object.Metadata objectMeta : bucket.getContents()) {
