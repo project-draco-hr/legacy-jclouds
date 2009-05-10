@@ -1,0 +1,11 @@
+{
+  HttpResponse response=new HttpResponse();
+  response.setStatusCode(gaeResponse.getResponseCode());
+  for (  HTTPHeader header : gaeResponse.getHeaders()) {
+    response.getHeaders().put(header.getName(),header.getValue());
+  }
+  if (gaeResponse.getContent() != null) {
+    response.setContent(new ByteArrayInputStream(gaeResponse.getContent()));
+  }
+  return response;
+}

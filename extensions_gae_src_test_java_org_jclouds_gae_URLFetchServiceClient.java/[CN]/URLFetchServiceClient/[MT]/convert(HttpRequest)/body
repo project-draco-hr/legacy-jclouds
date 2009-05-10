@@ -1,0 +1,12 @@
+{
+  URL url=new URL(target,request.getUri());
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate());
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header))     gaeRequest.addHeader(new HTTPHeader(header,value));
+  }
+  if (request.getPayload() != null) {
+    changeRequestContentToBytes(request);
+    gaeRequest.setPayload((byte[])request.getPayload());
+  }
+  return gaeRequest;
+}
