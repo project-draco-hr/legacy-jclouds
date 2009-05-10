@@ -1,0 +1,24 @@
+{
+  httpServletResponse.setContentType("text/plain");
+  Writer writer=httpServletResponse.getWriter();
+  try {
+    List<S3Bucket.Metadata> myBuckets=context.getConnection().listOwnedBuckets().get(10,TimeUnit.SECONDS);
+    writer.write("List:\n");
+    for (    S3Bucket.Metadata bucket : myBuckets) {
+      writer.write(String.format("  %1$s",bucket));
+      try {
+        writer.write(String.format(": %1$s entries%n",context.createInputStreamMap(bucket.getName()).size()));
+      }
+ catch (      S3ResponseException e) {
+        String message=String.format(": unable to list entries due to: %1$s%n",e.getError().getCode());
+        writer.write(message);
+        logger.warn(e,"message");
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new ServletException(e);
+  }
+  writer.flush();
+  writer.close();
+}

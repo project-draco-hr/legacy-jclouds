@@ -1,0 +1,12 @@
+{
+  url=new URL(String.format("http://%1$s:%2$s",address,port));
+  props.store(new FileOutputStream(String.format("%1$s/WEB-INF/jclouds.properties",warfile)),"test");
+  this.server=new Thread(new Runnable(){
+    public void run(){
+      KickStart.main(new String[]{"com.google.appengine.tools.development.DevAppServerMain","--disable_update_check","-a",address,"-p",port,warfile});
+    }
+  }
+);
+  server.start();
+  Thread.sleep(7 * 1000);
+}
