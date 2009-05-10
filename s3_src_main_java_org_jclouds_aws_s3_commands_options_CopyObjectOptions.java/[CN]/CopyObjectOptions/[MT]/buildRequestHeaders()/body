@@ -1,6 +1,9 @@
 {
   Multimap<String,String> returnVal=HashMultimap.create();
   returnVal.putAll(headers);
-  if (metadata != null)   returnVal.putAll(metadata);
+  if (metadata != null) {
+    returnVal.putAll(metadata);
+    returnVal.put("x-amz-metadata-directive","REPLACE");
+  }
   return returnVal;
 }

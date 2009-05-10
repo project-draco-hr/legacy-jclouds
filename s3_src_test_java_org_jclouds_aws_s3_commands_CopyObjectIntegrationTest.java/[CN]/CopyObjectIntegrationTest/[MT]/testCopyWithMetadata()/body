@@ -1,2 +1,14 @@
 {
+  String sourceBucket=bucketPrefix + "testCopyWithMetadata";
+  String sourceKey="apples";
+  String destinationBucket=bucketPrefix + "testCopyWithMetadataDestination";
+  String destinationKey="pears";
+  setupSourceBucket(sourceBucket,sourceKey);
+  Multimap<String,String> metadata=HashMultimap.create();
+  metadata.put(S3Headers.USER_METADATA_PREFIX + "adrian","cole");
+  createBucketAndEnsureEmpty(destinationBucket);
+  client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
+  validateContent(destinationBucket,destinationKey);
+  S3Object.Metadata objectMeta=client.headObject(destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
+  assertEquals(objectMeta.getUserMetadata(),metadata);
 }
