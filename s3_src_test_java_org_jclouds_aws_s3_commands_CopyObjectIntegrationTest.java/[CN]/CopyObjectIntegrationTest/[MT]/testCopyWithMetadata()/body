@@ -1,11 +1,10 @@
 {
-  String sourceBucket=bucketPrefix + "tcwm";
-  String destinationBucket=sourceBucket + "dest";
-  setupSourceBucket(sourceBucket,sourceKey);
+  String destinationBucket=bucketName + "dest";
+  addToBucketAndValidate(bucketName,sourceKey);
   Multimap<String,String> metadata=HashMultimap.create();
   metadata.put(S3Headers.USER_METADATA_PREFIX + "adrian","cole");
   createBucketAndEnsureEmpty(destinationBucket);
-  client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
+  client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
   validateContent(destinationBucket,destinationKey);
   S3Object.Metadata objectMeta=client.headObject(destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
   assertEquals(objectMeta.getUserMetadata(),metadata);

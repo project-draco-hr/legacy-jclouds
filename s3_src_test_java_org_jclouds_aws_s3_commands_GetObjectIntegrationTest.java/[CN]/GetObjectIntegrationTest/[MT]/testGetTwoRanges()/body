@@ -1,7 +1,6 @@
 {
-  String bucket=bucketPrefix + "testGetTwoRanges".toLowerCase();
   String key="apples";
-  setUpBucket(bucket,key);
-  S3Object object=client.getObject(bucket,key,range(0,5).range(5,TEST_STRING.length())).get(10,TimeUnit.SECONDS);
+  addObjectAndValidateContent(bucketName,key);
+  S3Object object=client.getObject(bucketName,key,range(0,5).range(6,TEST_STRING.length())).get(10,TimeUnit.SECONDS);
   assertEquals(S3Utils.getContentAsStringAndClose(object),TEST_STRING);
 }

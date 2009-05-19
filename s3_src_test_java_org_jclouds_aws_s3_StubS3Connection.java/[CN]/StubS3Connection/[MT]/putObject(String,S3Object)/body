@@ -1,12 +1,3 @@
 {
-  return new FutureBase<byte[]>(){
-    public byte[] get() throws InterruptedException, ExecutionException {
-      if (!bucketToContents.containsKey(s3Bucket)) {
-        throw new ExecutionException(new RuntimeException("bucket not found: " + s3Bucket));
-      }
-      bucketToContents.get(s3Bucket).put(object.getKey(),object.getClass());
-      return object.getKey().getBytes();
-    }
-  }
-;
+  return putObject(s3Bucket,object,new PutObjectOptions());
 }

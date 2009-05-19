@@ -1,0 +1,19 @@
+{
+  String key="apples";
+  addObjectAndValidateContent(bucketName,key);
+  client.getObject(bucketName,key,ifMd5Matches(goodMd5)).get(10,TimeUnit.SECONDS);
+  validateContent(bucketName,key);
+  try {
+    client.getObject(bucketName,key,ifMd5Matches(badMd5)).get(10,TimeUnit.SECONDS);
+    validateContent(bucketName,key);
+  }
+ catch (  ExecutionException e) {
+    if (e.getCause() instanceof HttpResponseException) {
+      HttpResponseException ex=(HttpResponseException)e.getCause();
+      assertEquals(ex.getResponse().getStatusCode(),412);
+    }
+ else {
+      throw e;
+    }
+  }
+}

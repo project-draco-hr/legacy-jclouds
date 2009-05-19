@@ -1,0 +1,19 @@
+{
+  checkNotNull(data,"data must be set before calling generateMd5()");
+  byte[] bytes=null;
+  if (data == null || data instanceof byte[]) {
+    bytes=(byte[])data;
+  }
+ else   if (data instanceof String) {
+    bytes=((String)data).getBytes();
+  }
+ else   if (data instanceof File || data instanceof InputStream) {
+    InputStream io=(data instanceof InputStream) ? (InputStream)data : new FileInputStream((File)data);
+    bytes=IOUtils.toByteArray(io);
+    IOUtils.closeQuietly(io);
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + data.getClass());
+  }
+  return bytes;
+}

@@ -1,7 +1,8 @@
 {
   final List<Module> modules=Lists.newArrayList(configModules);
   addLoggingModuleIfNotPresent(modules);
-  addHttpModuleIfNotPresent(modules);
+  addHttpModuleIfNeededAndNotPresent(modules);
+  addS3ConnectionModuleIfNotPresent(modules);
   return Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       Names.bindProperties(binder(),checkNotNull(properties,"properties"));

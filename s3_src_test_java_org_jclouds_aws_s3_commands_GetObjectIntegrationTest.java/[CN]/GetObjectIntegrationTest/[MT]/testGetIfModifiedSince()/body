@@ -1,0 +1,21 @@
+{
+  String key="apples";
+  DateTime before=new DateTime();
+  addObjectAndValidateContent(bucketName,key);
+  DateTime after=new DateTime().plusSeconds(1);
+  client.getObject(bucketName,key,ifModifiedSince(before)).get(10,TimeUnit.SECONDS);
+  validateContent(bucketName,key);
+  try {
+    client.getObject(bucketName,key,ifModifiedSince(after)).get(10,TimeUnit.SECONDS);
+    validateContent(bucketName,key);
+  }
+ catch (  ExecutionException e) {
+    if (e.getCause() instanceof HttpResponseException) {
+      HttpResponseException ex=(HttpResponseException)e.getCause();
+      assertEquals(ex.getResponse().getStatusCode(),304);
+    }
+ else {
+      throw e;
+    }
+  }
+}

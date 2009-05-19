@@ -1,12 +1,11 @@
 {
-  String sourceBucket=bucketPrefix + "tcinm";
-  String destinationBucket=sourceBucket + "dest";
-  setupSourceBucket(sourceBucket,sourceKey);
+  String destinationBucket=bucketName + "dest";
+  addToBucketAndValidate(bucketName,sourceKey);
   createBucketAndEnsureEmpty(destinationBucket);
-  client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,ifSourceMd5DoesntMatch(badMd5)).get(10,TimeUnit.SECONDS);
+  client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceMd5DoesntMatch(badMd5)).get(10,TimeUnit.SECONDS);
   validateContent(destinationBucket,destinationKey);
   try {
-    client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,ifSourceMd5DoesntMatch(goodMd5)).get(10,TimeUnit.SECONDS);
+    client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceMd5DoesntMatch(goodMd5)).get(10,TimeUnit.SECONDS);
   }
  catch (  ExecutionException e) {
     HttpResponseException ex=(HttpResponseException)e.getCause();
