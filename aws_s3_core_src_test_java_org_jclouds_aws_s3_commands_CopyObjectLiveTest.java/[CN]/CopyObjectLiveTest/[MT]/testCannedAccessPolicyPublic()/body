@@ -1,0 +1,10 @@
+{
+  String destinationBucket=bucketName + "dest";
+  addObjectToBucket(bucketName,sourceKey);
+  validateContent(bucketName,sourceKey);
+  createBucketAndEnsureEmpty(destinationBucket);
+  client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,overrideAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+  validateContent(destinationBucket,destinationKey);
+  URL url=new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s",destinationBucket,destinationKey));
+  S3Utils.toStringAndClose(url.openStream());
+}

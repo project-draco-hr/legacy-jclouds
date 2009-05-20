@@ -1,9 +1,9 @@
 {
   try {
     List<Future<byte[]>> puts=new ArrayList<Future<byte[]>>();
-    for (    String key : map.keySet()) {
-      S3Object object=new S3Object(key);
-      object.setData(map.get(key));
+    for (    Map.Entry<? extends String,? extends Object> entry : map.entrySet()) {
+      S3Object object=new S3Object(entry.getKey());
+      object.setData(entry.getValue());
       object.generateMd5();
       puts.add(connection.putObject(bucket,object));
     }
@@ -11,6 +11,6 @@
   }
  catch (  Exception e) {
     Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new S3RuntimeException("Error putting into bucket" + bucket,e);
+    throw new S3RuntimeException("Error putting into bucketName" + bucket,e);
   }
 }

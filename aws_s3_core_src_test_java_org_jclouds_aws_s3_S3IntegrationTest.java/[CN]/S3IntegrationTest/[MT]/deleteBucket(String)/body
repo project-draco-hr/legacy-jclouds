@@ -1,0 +1,15 @@
+{
+  if (client.bucketExists(name).get(10,TimeUnit.SECONDS)) {
+    List<Future<Boolean>> results=new ArrayList<Future<Boolean>>();
+    S3Bucket bucket=client.listBucket(name).get(10,TimeUnit.SECONDS);
+    for (    S3Object.Metadata objectMeta : bucket.getContents()) {
+      results.add(client.deleteObject(name,objectMeta.getKey()));
+    }
+    Iterator<Future<Boolean>> iterator=results.iterator();
+    while (iterator.hasNext()) {
+      iterator.next().get(10,TimeUnit.SECONDS);
+      iterator.remove();
+    }
+    client.deleteBucketIfEmpty(name).get(10,TimeUnit.SECONDS);
+  }
+}

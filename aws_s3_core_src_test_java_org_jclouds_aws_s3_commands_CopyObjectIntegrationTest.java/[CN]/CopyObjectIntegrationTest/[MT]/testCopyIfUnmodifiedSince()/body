@@ -1,14 +1,13 @@
 {
-  String sourceBucket=bucketPrefix + "tcius";
-  String destinationBucket=sourceBucket + "dest";
+  String destinationBucket=bucketName + "dest";
   DateTime before=new DateTime();
-  setupSourceBucket(sourceBucket,sourceKey);
+  addToBucketAndValidate(bucketName,sourceKey);
   DateTime after=new DateTime().plusSeconds(1);
   createBucketAndEnsureEmpty(destinationBucket);
-  client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,ifSourceUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
+  client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
   validateContent(destinationBucket,destinationKey);
   try {
-    client.copyObject(sourceBucket,sourceKey,destinationBucket,destinationKey,ifSourceModifiedSince(before)).get(10,TimeUnit.SECONDS);
+    client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceModifiedSince(before)).get(10,TimeUnit.SECONDS);
   }
  catch (  ExecutionException e) {
     HttpResponseException ex=(HttpResponseException)e.getCause();

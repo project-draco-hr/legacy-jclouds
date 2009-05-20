@@ -1,3 +1,36 @@
 {
-  return null;
+  return new FutureBase<S3Object.Metadata>(){
+    public S3Object.Metadata get() throws InterruptedException, ExecutionException {
+      Map<String,S3Object> source=bucketToContents.get(sourceBucket);
+      Map<String,S3Object> dest=bucketToContents.get(destinationBucket);
+      if (source.containsKey(sourceObject)) {
+        S3Object object=source.get(sourceObject);
+        if (options.getIfMatch() != null) {
+          if (!Arrays.equals(object.getMetadata().getMd5(),S3Utils.fromHexString(options.getIfMatch().replaceAll("\"",""))))           throwResponseException(412);
+        }
+        if (options.getIfNoneMatch() != null) {
+          if (Arrays.equals(object.getMetadata().getMd5(),S3Utils.fromHexString(options.getIfNoneMatch().replaceAll("\"",""))))           throwResponseException(412);
+        }
+        if (options.getIfModifiedSince() != null) {
+          DateTime modifiedSince=dateService.dateTimeFromHeaderFormat(options.getIfModifiedSince());
+          if (modifiedSince.isAfter(object.getMetadata().getLastModified()))           throw new ExecutionException(new RuntimeException("after"));
+        }
+        if (options.getIfUnmodifiedSince() != null) {
+          DateTime unmodifiedSince=dateService.dateTimeFromHeaderFormat(options.getIfUnmodifiedSince());
+          if (unmodifiedSince.isAfter(object.getMetadata().getLastModified()))           throw new ExecutionException(new RuntimeException("after"));
+        }
+        S3Object sourceS3=source.get(sourceObject);
+        S3Object.Metadata newMd=copy(sourceS3.getMetadata(),destinationObject);
+        if (options.getAcl() != null)         keyToAcl.put(destinationBucket + destinationObject,options.getAcl());
+        if (options.getMetadata() != null) {
+          newMd.setUserMetadata(options.getMetadata());
+        }
+        newMd.setLastModified(new DateTime());
+        dest.put(destinationObject,new S3Object(newMd,sourceS3.getData()));
+        return copy(newMd);
+      }
+      return S3Object.Metadata.NOT_FOUND;
+    }
+  }
+;
 }
