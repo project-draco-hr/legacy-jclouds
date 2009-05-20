@@ -1,0 +1,12 @@
+{
+  List<Module> modules=new ArrayList<Module>();
+  LoggingModule loggingModule=new NullLoggingModule();
+  modules.add(loggingModule);
+  HttpModule httpModule=new HttpModule();
+  modules.add(httpModule);
+  S3ContextFactory.addHttpModuleIfNotPresent(modules);
+  S3ContextFactory.addLoggingModuleIfNotPresent(modules);
+  assertEquals(modules.size(),2);
+  assertEquals(modules.remove(0),loggingModule);
+  assertEquals(modules.remove(0),httpModule);
+}

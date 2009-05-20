@@ -1,0 +1,9 @@
+{
+  String bucketName=bucketPrefix + "tcapp";
+  createBucketAndEnsureEmpty(bucketName);
+  String key="hello";
+  client.putBucketIfNotExists(bucketName,withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+  client.putObject(bucketName,new S3Object(key,TEST_STRING),withAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+  URL url=new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s",bucketName,key));
+  S3Utils.toStringAndClose(url.openStream());
+}

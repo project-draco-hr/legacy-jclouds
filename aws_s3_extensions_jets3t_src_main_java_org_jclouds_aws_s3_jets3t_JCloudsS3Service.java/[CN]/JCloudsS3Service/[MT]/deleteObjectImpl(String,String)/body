@@ -1,0 +1,9 @@
+{
+  try {
+    connection.deleteObject(bucketName,objectKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException(String.format("error deleting object: %1$s:%2$s",bucketName,objectKey),e);
+  }
+}

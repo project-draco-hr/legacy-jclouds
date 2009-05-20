@@ -1,0 +1,11 @@
+{
+  try {
+    S3Bucket bucket=refreshBucket();
+    Set<S3Object.Metadata> contents=bucket.getContents();
+    return contents.size();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException("Error getting size of bucket" + bucket,e);
+  }
+}

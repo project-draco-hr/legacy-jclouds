@@ -1,0 +1,16 @@
+{
+  putFiveStrings();
+  Set<Entry<String,S3Object>> entries=map.entrySet();
+  assertEquals(entries.size(),5);
+  for (  Entry<String,S3Object> entry : entries) {
+    assertEquals(S3Utils.getContentAsStringAndClose(entry.getValue()),fiveStrings.get(entry.getKey()));
+    S3Object value=entry.getValue();
+    value.setData("");
+    value.generateMd5();
+    entry.setValue(value);
+  }
+  assertEquals(map.size(),5);
+  for (  S3Object value : map.values()) {
+    assertEquals(S3Utils.getContentAsStringAndClose(value),"");
+  }
+}

@@ -1,0 +1,9 @@
+{
+  try {
+    return (InputStream)(connection.getObject(bucket,o.toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)).getData();
+  }
+ catch (  Exception e) {
+    Utils.<S3RuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new S3RuntimeException(String.format("Error geting object %1$s:%2$s",bucket,o),e);
+  }
+}

@@ -1,0 +1,10 @@
+{
+  injector=Guice.createInjector(new S3CommandsModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named("jclouds.http.address")).to("localhost");
+      super.configure();
+    }
+  }
+);
+  commandFactory=injector.getInstance(S3CommandFactory.class);
+}

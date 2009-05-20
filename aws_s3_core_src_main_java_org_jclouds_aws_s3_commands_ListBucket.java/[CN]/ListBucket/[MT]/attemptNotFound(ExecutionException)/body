@@ -1,0 +1,9 @@
+{
+  if (e.getCause() != null && e.getCause() instanceof HttpResponseException) {
+    S3ResponseException responseException=(S3ResponseException)e.getCause();
+    if ("NoSuchBucket".equals(responseException.getError().getCode())) {
+      return S3Bucket.NOT_FOUND;
+    }
+  }
+  throw e;
+}

@@ -1,0 +1,14 @@
+{
+  return new FutureBase<S3Object.Metadata>(){
+    public S3Object.Metadata get() throws InterruptedException, ExecutionException {
+      Map<String,Object> source=bucketToContents.get(sourceBucket);
+      Map<String,Object> dest=bucketToContents.get(destinationBucket);
+      if (source.containsKey(sourceObject)) {
+        dest.put(destinationObject,source.get(sourceObject));
+        return new S3Object.Metadata(destinationObject);
+      }
+      return S3Object.Metadata.NOT_FOUND;
+    }
+  }
+;
+}

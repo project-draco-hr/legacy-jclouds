@@ -1,0 +1,12 @@
+{
+  final List<Module> modules=Lists.newArrayList(configModules);
+  addLoggingModuleIfNotPresent(modules);
+  addHttpModuleIfNotPresent(modules);
+  return Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      Names.bindProperties(binder(),checkNotNull(properties,"properties"));
+      for (      Module module : modules)       install(module);
+    }
+  }
+,new S3ContextModule());
+}

@@ -1,0 +1,21 @@
+{
+  MD5Digest md5=new MD5Digest();
+  byte[] resBuf=new byte[md5.getDigestSize()];
+  byte[] buffer=new byte[1024];
+  int numRead=-1;
+  InputStream i=new FileInputStream(toEncode);
+  try {
+    do {
+      numRead=i.read(buffer);
+      if (numRead > 0) {
+        md5.update(buffer,0,numRead);
+      }
+    }
+ while (numRead != -1);
+  }
+  finally {
+    IOUtils.closeQuietly(i);
+  }
+  md5.doFinal(resBuf,0);
+  return resBuf;
+}

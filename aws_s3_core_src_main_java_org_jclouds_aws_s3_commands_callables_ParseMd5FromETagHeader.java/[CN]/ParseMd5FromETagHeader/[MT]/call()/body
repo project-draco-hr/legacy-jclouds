@@ -1,0 +1,9 @@
+{
+  checkCode();
+  IOUtils.closeQuietly(getResponse().getContent());
+  String eTag=getResponse().getFirstHeaderOrNull(S3Headers.ETAG);
+  if (eTag != null) {
+    return S3Utils.fromHexString(eTag.replaceAll("\"",""));
+  }
+  throw new HttpException("did not receive ETag");
+}

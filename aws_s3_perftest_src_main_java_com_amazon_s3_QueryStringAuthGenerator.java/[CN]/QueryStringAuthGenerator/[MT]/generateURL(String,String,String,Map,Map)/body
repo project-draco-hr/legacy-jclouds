@@ -1,0 +1,31 @@
+{
+  long expires=0L;
+  if (this.expiresIn != null) {
+    expires=System.currentTimeMillis() + this.expiresIn.longValue();
+  }
+ else   if (this.expires != null) {
+    expires=this.expires.longValue();
+  }
+ else {
+    throw new RuntimeException("Illegal expires state");
+  }
+  expires/=1000;
+  String canonicalString=Utils.makeCanonicalString(method,bucketName,key,pathArgs,headers,"" + expires);
+  String encodedCanonical=Utils.encode(this.awsSecretAccessKey,canonicalString,true);
+  pathArgs.put("Signature",encodedCanonical);
+  pathArgs.put("Expires",Long.toString(expires));
+  pathArgs.put("AWSAccessKeyId",this.awsAccessKeyId);
+  CallingFormat callingFormat=Utils.getCallingFormatForBucket(this.callingFormat,bucketName);
+  if (isSecure && callingFormat != CallingFormat.getPathCallingFormat() && bucketName.indexOf(".") != -1) {
+    System.err.println("You are making an SSL connection, however, the bucket contains periods and the wildcard certificate will not match by default.  Please consider using HTTP.");
+  }
+  String returnString;
+  try {
+    URL url=callingFormat.getURL(isSecure,server,port,bucketName,key,pathArgs);
+    returnString=url.toString();
+  }
+ catch (  MalformedURLException e) {
+    returnString="Exception generating url " + e;
+  }
+  return returnString;
+}

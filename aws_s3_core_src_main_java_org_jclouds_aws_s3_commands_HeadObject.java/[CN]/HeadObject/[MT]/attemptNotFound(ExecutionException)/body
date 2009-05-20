@@ -1,0 +1,9 @@
+{
+  if (e.getCause() != null && e.getCause() instanceof HttpResponseException) {
+    HttpResponseException responseException=(HttpResponseException)e.getCause();
+    if (responseException.getResponse().getStatusCode() == 404) {
+      return S3Object.Metadata.NOT_FOUND;
+    }
+  }
+  throw e;
+}

@@ -1,0 +1,18 @@
+{
+  String body;
+  if (location == null) {
+    body=null;
+  }
+ else   if (LOCATION_EU.equals(location)) {
+    if (!callingFormat.supportsLocatedBuckets())     throw new IllegalArgumentException("Creating location-constrained bucket with unsupported calling-format");
+    body="<CreateBucketConstraint><LocationConstraint>" + location + "</LocationConstraint></CreateBucketConstraint>";
+  }
+ else   throw new IllegalArgumentException("Invalid Location: " + location);
+  if (!Utils.validateBucketName(bucket,callingFormat,location != null))   throw new IllegalArgumentException("Invalid S3Bucket Name: " + bucket);
+  HttpURLConnection request=makeRequest("PUT",bucket,"",null,headers);
+  if (body != null) {
+    request.setDoOutput(true);
+    request.getOutputStream().write(body.getBytes("UTF-8"));
+  }
+  return new Response(request);
+}

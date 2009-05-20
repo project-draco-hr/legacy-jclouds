@@ -1,0 +1,11 @@
+{
+  S3Object object=null;
+  if (value instanceof S3Object) {
+    object=(S3Object)value;
+  }
+ else {
+    object=new S3Object("dummy",value);
+  }
+  if (object.getMetadata().getMd5() == null)   object.generateMd5();
+  return object.getMetadata().getMd5();
+}
