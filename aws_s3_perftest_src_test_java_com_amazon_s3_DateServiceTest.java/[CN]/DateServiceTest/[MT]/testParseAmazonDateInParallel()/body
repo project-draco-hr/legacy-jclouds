@@ -1,2 +1,13 @@
 {
+  CompletionService<Boolean> completer=new ExecutorCompletionService<Boolean>(exec);
+  startClock();
+  for (int i=0; i < LOOP_COUNT; i++)   completer.submit(new Callable<Boolean>(){
+    public Boolean call(){
+      AWSAuthConnection.httpDate();
+      return true;
+    }
+  }
+);
+  for (int i=0; i < LOOP_COUNT; i++)   assertTrue(completer.take().get());
+  printElapsedClockTime("testParseAmazonDateInParallel");
 }

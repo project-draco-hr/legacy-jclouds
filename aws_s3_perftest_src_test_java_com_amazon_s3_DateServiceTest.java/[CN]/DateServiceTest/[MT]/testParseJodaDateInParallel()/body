@@ -1,2 +1,17 @@
 {
+  CompletionService<Boolean> completer=new ExecutorCompletionService<Boolean>(exec);
+  startClock();
+  for (int i=0; i < LOOP_COUNT; i++) {
+    final TestData myData=testData[i % testData.length];
+    completer.submit(new Callable<Boolean>(){
+      public Boolean call(){
+        Date jodaDate=jodaParseIso8601(myData.iso8601DateString).toDate();
+        assertEquals(jodaDate,myData.date);
+        return true;
+      }
+    }
+);
+  }
+  for (int i=0; i < LOOP_COUNT; i++)   assertTrue(completer.take().get());
+  printElapsedClockTime("testParseJodaDateInParallel");
 }

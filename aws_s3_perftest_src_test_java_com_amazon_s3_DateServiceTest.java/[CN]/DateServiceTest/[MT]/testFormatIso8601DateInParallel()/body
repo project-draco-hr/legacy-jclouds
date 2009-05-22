@@ -1,2 +1,17 @@
 {
+  CompletionService<Boolean> completer=new ExecutorCompletionService<Boolean>(exec);
+  startClock();
+  for (int i=0; i < LOOP_COUNT; i++) {
+    final TestData myData=testData[i % testData.length];
+    completer.submit(new Callable<Boolean>(){
+      public Boolean call() throws ExecutionException, InterruptedException {
+        String dsString=dateService.iso8601DateFormat(myData.date);
+        assertEquals(dsString,myData.iso8601DateString);
+        return true;
+      }
+    }
+);
+  }
+  for (int i=0; i < LOOP_COUNT; i++)   assertTrue(completer.take().get());
+  printElapsedClockTime("testFormatIso8601DateInParallel");
 }
