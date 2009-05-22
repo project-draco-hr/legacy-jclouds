@@ -12,11 +12,11 @@
         if (Arrays.equals(object.getMetadata().getMd5(),S3Utils.fromHexString(options.getIfNoneMatch().replaceAll("\"",""))))         throwResponseException(304);
       }
       if (options.getIfModifiedSince() != null) {
-        DateTime modifiedSince=dateService.dateTimeFromHeaderFormat(options.getIfModifiedSince());
+        DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());
         if (modifiedSince.isAfter(object.getMetadata().getLastModified()))         throw new ExecutionException(new RuntimeException("after"));
       }
       if (options.getIfUnmodifiedSince() != null) {
-        DateTime unmodifiedSince=dateService.dateTimeFromHeaderFormat(options.getIfUnmodifiedSince());
+        DateTime unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
         if (unmodifiedSince.isAfter(object.getMetadata().getLastModified()))         throw new ExecutionException(new RuntimeException("after"));
       }
       S3Object returnVal=new S3Object(copy(object.getMetadata()),object.getData());
