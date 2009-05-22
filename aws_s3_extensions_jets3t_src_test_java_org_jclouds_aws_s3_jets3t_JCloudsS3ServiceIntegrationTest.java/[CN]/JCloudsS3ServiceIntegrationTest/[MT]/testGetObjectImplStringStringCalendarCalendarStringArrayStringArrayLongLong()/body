@@ -1,3 +1,12 @@
 {
-  fail("Not yet implemented");
+  String bucketName=bucketPrefix + ".testGetObjectImplStringStringCalendarCalendarStringArrayStringArrayLongLong";
+  String objectKey="key";
+  String objectValue="test";
+  addNewObject(bucketName,objectKey,objectValue);
+  S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
+  assertEquals(object.getKey(),objectKey);
+  assertNotNull(object.getDataInputStream());
+  assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);
+  client.deleteObject(bucketName,objectKey);
+  client.deleteBucketIfEmpty(bucketName);
 }

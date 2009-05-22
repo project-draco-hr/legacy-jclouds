@@ -2,5 +2,11 @@
   createBucket(name);
   org.jclouds.aws.s3.domain.S3Object jcloudsObject=new org.jclouds.aws.s3.domain.S3Object(objectKey);
   jcloudsObject.setData(objectValue);
+  Multimap<String,String> userMetadata=HashMultimap.create();
+  userMetadata.put("metadata-name","metadata-value");
+  jcloudsObject.getMetadata().setUserMetadata(userMetadata);
   client.putObject(name,jcloudsObject).get(10,TimeUnit.SECONDS);
+  org.jclouds.aws.s3.domain.S3Object createdObject=client.getObject(name,jcloudsObject.getKey()).get(10,TimeUnit.SECONDS);
+  assertTrue(createdObject != org.jclouds.aws.s3.domain.S3Object.NOT_FOUND,"object should exist but doesn't");
+  assertEquals(createdObject.getMetadata().getKey(),objectKey,"object misnamed");
 }

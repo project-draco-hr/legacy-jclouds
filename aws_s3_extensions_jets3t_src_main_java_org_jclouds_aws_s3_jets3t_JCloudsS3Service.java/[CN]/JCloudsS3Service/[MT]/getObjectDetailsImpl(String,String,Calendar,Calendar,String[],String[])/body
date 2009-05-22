@@ -1,3 +1,13 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    if (ifModifiedSince != null)     throw new IllegalArgumentException("ifModifiedSince");
+    if (ifUnmodifiedSince != null)     throw new IllegalArgumentException("ifUnmodifiedSince");
+    if (ifMatchTags != null)     throw new IllegalArgumentException("ifMatchTags");
+    if (ifNoneMatchTags != null)     throw new IllegalArgumentException("ifNoneMatchTags");
+    return Util.convertObjectHead(connection.headObject(bucketName,objectKey).get());
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException(String.format("error retrieving object head: %1$s:%2$s",bucketName,objectKey),e);
+  }
 }

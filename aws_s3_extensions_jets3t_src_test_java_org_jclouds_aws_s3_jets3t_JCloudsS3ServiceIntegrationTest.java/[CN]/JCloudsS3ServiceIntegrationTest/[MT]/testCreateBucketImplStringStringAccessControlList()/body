@@ -1,3 +1,7 @@
 {
-  fail("Not yet implemented");
+  String bucketName=bucketPrefix + ".testCreateBucketImplStringStringAccessControlList";
+  S3Bucket bucket=service.createBucket(new S3Bucket(bucketName));
+  assertEquals(bucket.getName(),bucketName);
+  assertTrue(client.bucketExists(bucketName).get());
+  client.deleteBucketIfEmpty(bucketName);
 }

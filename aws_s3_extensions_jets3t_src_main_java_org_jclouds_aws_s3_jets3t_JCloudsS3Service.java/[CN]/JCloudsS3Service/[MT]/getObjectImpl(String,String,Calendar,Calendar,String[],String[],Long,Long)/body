@@ -1,3 +1,10 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    GetObjectOptions options=Util.convertOptions(ifModifiedSince,ifUnmodifiedSince,ifMatchTags,ifNoneMatchTags);
+    return Util.convertObject(connection.getObject(bucketName,objectKey,options).get());
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException(String.format("error retrieving object: %1$s:%2$s",bucketName,objectKey),e);
+  }
 }
