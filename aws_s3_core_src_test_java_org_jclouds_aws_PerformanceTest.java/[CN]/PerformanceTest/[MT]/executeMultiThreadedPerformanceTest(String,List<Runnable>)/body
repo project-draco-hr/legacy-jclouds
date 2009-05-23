@@ -1,0 +1,38 @@
+{
+  CompletionService<Throwable> completer=new ExecutorCompletionService<Throwable>(exec);
+  final CountDownLatch startGate=new CountDownLatch(1);
+  final CountDownLatch endGate=new CountDownLatch(THREAD_COUNT);
+  for (int i=0; i < THREAD_COUNT; i++) {
+    final Runnable task=tasks.get(i % tasks.size());
+    completer.submit(new Callable<Throwable>(){
+      public Throwable call(){
+        try {
+          startGate.await();
+          task.run();
+          return null;
+        }
+ catch (        Throwable t) {
+          return t;
+        }
+ finally {
+          endGate.countDown();
+        }
+      }
+    }
+);
+  }
+  long startTime=System.nanoTime();
+  startGate.countDown();
+  endGate.await();
+  long endTime=System.nanoTime() - startTime;
+  Throwable t;
+  for (int i=0; i < THREAD_COUNT; i++) {
+    t=completer.take().get();
+    if (t != null) {
+      throw t;
+    }
+  }
+  if (performanceTestName != null) {
+    System.out.printf("TIMING: Multi-threaded %s took %.3fms for %d threads\n",performanceTestName,((double)endTime / 1000000),THREAD_COUNT);
+  }
+}

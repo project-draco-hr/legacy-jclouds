@@ -1,0 +1,13 @@
+{
+  List<Runnable> tasks=new ArrayList<Runnable>(testData.length);
+  for (  final TestData myData : testData) {
+    tasks.add(new Runnable(){
+      public void run(){
+        String dsString=dateService.iso8601DateFormat(myData.date);
+        assertEquals(dsString,myData.iso8601DateString);
+      }
+    }
+);
+  }
+  executeMultiThreadedCorrectnessTest(tasks);
+}
