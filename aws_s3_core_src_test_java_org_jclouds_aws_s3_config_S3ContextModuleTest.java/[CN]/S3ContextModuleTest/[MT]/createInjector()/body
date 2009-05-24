@@ -1,0 +1,13 @@
+{
+  return Guice.createInjector(new LiveS3ConnectionModule(),new S3ContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("localhost");
+      bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("localhost");
+      bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_HTTP_ADDRESS)).to("localhost");
+      bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_HTTP_PORT)).to("1000");
+      bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_HTTP_SECURE)).to("false");
+      super.configure();
+    }
+  }
+,new JavaUrlHttpFutureCommandClientModule());
+}
