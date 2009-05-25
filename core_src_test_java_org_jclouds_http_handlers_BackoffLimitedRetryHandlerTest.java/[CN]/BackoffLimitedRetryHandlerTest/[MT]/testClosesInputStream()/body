@@ -1,0 +1,25 @@
+{
+  HttpFutureCommand<String> command=new HttpFutureCommand<String>("method","uri",new ReturnStringIf200());
+  HttpResponse response=new HttpResponse();
+  InputStream inputStream=new InputStream(){
+    boolean isOpen=true;
+    @Override public void close(){
+      this.isOpen=false;
+    }
+    @Override public int read() throws IOException {
+      if (this.isOpen)       return 1;
+ else       return -1;
+    }
+    @Override public int available() throws IOException {
+      if (this.isOpen)       return 1;
+ else       return 0;
+    }
+  }
+;
+  response.setContent(inputStream);
+  assertEquals(response.getContent().available(),1);
+  assertEquals(response.getContent().read(),1);
+  handler.retryRequest(command,response);
+  assertEquals(response.getContent().available(),0);
+  assertEquals(response.getContent().read(),-1);
+}

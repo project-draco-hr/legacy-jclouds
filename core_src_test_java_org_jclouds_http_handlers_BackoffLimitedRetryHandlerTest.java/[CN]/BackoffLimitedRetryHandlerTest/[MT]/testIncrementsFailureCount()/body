@@ -1,0 +1,10 @@
+{
+  HttpFutureCommand<String> command=new HttpFutureCommand<String>("method","uri",new ReturnStringIf200());
+  HttpResponse response=new HttpResponse();
+  handler.retryRequest(command,response);
+  assertEquals(command.getFailureCount(),1);
+  handler.retryRequest(command,response);
+  assertEquals(command.getFailureCount(),2);
+  handler.retryRequest(command,response);
+  assertEquals(command.getFailureCount(),3);
+}
