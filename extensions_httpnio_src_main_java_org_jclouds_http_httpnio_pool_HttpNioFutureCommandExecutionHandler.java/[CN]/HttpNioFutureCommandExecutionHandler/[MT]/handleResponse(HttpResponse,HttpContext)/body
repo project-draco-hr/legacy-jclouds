@@ -6,7 +6,13 @@
       org.jclouds.http.HttpResponse response=HttpNioUtils.convertToJavaCloudsResponse(apacheResponse);
       int code=response.getStatusCode();
       if (code >= 500) {
-        if (isRetryable(command)) {
+        boolean retryRequest=false;
+        try {
+          retryRequest=httpRetryHandler.retryRequest(command,response);
+        }
+ catch (        InterruptedException ie) {
+        }
+        if (retryRequest) {
           commandQueue.add(command);
         }
  else {

@@ -13,7 +13,8 @@
       gaeResponse=this.urlFetchService.fetch(gaeRequest);
       if (logger.isTraceEnabled())       logger.trace("%1$s - received response code %2$s, headers: %3$s",target,gaeResponse.getResponseCode(),headersAsString(gaeResponse.getHeaders()));
       response=convert(gaeResponse);
-      if (isRetryable(command,response))       continue;
+      int statusCode=response.getStatusCode();
+      if (statusCode >= 500 && httpRetryHandler.retryRequest(command,response))       continue;
       break;
     }
     handleResponse(command,response);
