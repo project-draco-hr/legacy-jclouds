@@ -1,0 +1,12 @@
+{
+  requestCount++;
+  boolean shouldFail=requestCount >= beginToFailOnRequestNumber && requestCount <= endFailuresOnRequestNumber;
+  if (shouldFail) {
+    response.sendError(500);
+    ((Request)request).setHandled(true);
+    return true;
+  }
+ else {
+    return false;
+  }
+}

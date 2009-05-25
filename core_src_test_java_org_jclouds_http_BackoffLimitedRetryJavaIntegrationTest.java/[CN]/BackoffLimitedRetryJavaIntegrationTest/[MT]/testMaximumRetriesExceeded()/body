@@ -1,0 +1,14 @@
+{
+  beginToFailOnRequestNumber=0;
+  endFailuresOnRequestNumber=6;
+  requestCount=0;
+  try {
+    submitGetRequest();
+    fail("Request should not succeed within " + endFailuresOnRequestNumber + " requests");
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    HttpResponseException responseException=(HttpResponseException)e.getCause();
+    assertEquals(responseException.getResponse().getStatusCode(),500);
+  }
+}
