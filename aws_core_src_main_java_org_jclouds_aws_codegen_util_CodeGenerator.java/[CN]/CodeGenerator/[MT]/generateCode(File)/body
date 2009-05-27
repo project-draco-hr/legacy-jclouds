@@ -1,0 +1,17 @@
+{
+  Model model=parseModelFromJSON(objectModelFile);
+  for (  Package pkg : model.getPackages()) {
+    for (    Command command : pkg.getCommands()) {
+      generateClassFile(command,COMMAND_TEMPLATE_FILENAME);
+      if (command.getHandler() != null) {
+        generateClassFile(command.getHandler(),BEAN_TEMPLATE_FILENAME);
+      }
+      if (command.getOptions() != null) {
+        generateClassFile(command.getOptions(),BEAN_TEMPLATE_FILENAME);
+      }
+      if (command.getResponse() != null) {
+        generateClassFile(command.getResponse(),BEAN_TEMPLATE_FILENAME);
+      }
+    }
+  }
+}

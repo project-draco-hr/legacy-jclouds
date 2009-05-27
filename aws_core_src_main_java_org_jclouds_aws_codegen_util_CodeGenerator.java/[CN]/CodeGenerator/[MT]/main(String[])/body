@@ -1,9 +1,9 @@
 {
-  if (args.length != 2) {
-    System.out.println("Usage: CodeGenerator objectModelFile rootPackage");
-    System.out.println("  E.g: CodeGenerator ec2.json org.jclouds.aws.ec2");
+  if (args.length != 4) {
+    System.out.println("Usage: CodeGenerator objectModelFile rootPackage templatesDir targetDir");
+    System.out.println("  E.g: CodeGenerator ec2.json org.jclouds.aws.ec2 aws/codegen/templates aws/ec2/api/src");
     System.exit(1);
   }
-  CodeGenerator codeGenerator=new CodeGenerator();
-  codeGenerator.generateCode(new File(args[0]),args[1]);
+  CodeGenerator codeGenerator=new CodeGenerator(args[1],new File(args[2]),new File(args[3]));
+  codeGenerator.generateCode(new File(args[0]));
 }
