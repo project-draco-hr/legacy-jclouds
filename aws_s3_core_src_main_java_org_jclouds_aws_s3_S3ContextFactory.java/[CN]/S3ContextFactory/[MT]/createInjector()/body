@@ -1,8 +1,15 @@
 {
-  final List<Module> modules=Lists.newArrayList(configModules);
+  if (!properties.containsKey(PROPERTY_HTTP_PORT)) {
+    if (Boolean.parseBoolean(properties.getProperty(PROPERTY_HTTP_SECURE))) {
+      properties.setProperty(PROPERTY_HTTP_PORT,DEFAULT_SECURE_HTTP_PORT);
+    }
+ else {
+      properties.setProperty(PROPERTY_HTTP_PORT,DEFAULT_NON_SECURE_HTTP_PORT);
+    }
+  }
   addLoggingModuleIfNotPresent(modules);
-  addHttpModuleIfNeededAndNotPresent(modules);
   addS3ConnectionModuleIfNotPresent(modules);
+  addHttpModuleIfNeededAndNotPresent(modules);
   return Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       Names.bindProperties(binder(),checkNotNull(properties,"properties"));
