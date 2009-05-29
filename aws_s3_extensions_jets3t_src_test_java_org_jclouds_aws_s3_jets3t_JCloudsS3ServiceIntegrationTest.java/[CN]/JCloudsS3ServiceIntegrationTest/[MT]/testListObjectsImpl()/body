@@ -1,0 +1,29 @@
+{
+  String bucketName=bucketPrefix + ".testListAllBucketsImplString".toLowerCase();
+  createBucket(bucketName);
+  addObjectToBucket(bucketName,"item1/subobject2");
+  addObjectToBucket(bucketName,"item2");
+  addObjectToBucket(bucketName,"object1");
+  addObjectToBucket(bucketName,"object2/subobject1");
+  S3Object[] objects;
+  objects=service.listObjects(bucketName,null,null,1000);
+  assertEquals(objects.length,4);
+  objects=service.listObjects(bucketName,null,null,2);
+  assertEquals(objects.length,4);
+  assertEquals(objects[0].getKey(),"item1/subobject2");
+  assertEquals(objects[3].getKey(),"object2/subobject1");
+  objects=service.listObjects(bucketName,"item",null,1000);
+  assertEquals(objects.length,2);
+  objects=service.listObjects(bucketName,null,"/",1000);
+  assertEquals(objects.length,2);
+  assertEquals(objects[0].getKey(),"item2");
+  assertEquals(objects[1].getKey(),"object1");
+  objects=service.listObjects(bucketName,"item","/",1000);
+  assertEquals(objects.length,1);
+  assertEquals(objects[0].getKey(),"item2");
+  client.deleteObject(bucketName,"item1/subobject2");
+  client.deleteObject(bucketName,"item2");
+  client.deleteObject(bucketName,"object1");
+  client.deleteObject(bucketName,"object2/subobject1");
+  client.deleteBucketIfEmpty(bucketName);
+}
