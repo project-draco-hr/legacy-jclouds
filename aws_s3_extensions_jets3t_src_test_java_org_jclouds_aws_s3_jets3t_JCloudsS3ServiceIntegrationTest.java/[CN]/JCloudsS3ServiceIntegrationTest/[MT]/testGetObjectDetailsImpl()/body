@@ -1,13 +1,15 @@
 {
-  String bucketName=bucketPrefix + ".testGetObjectDetailsImplStringStringCalendarCalendarStringArrayStringArray";
-  String objectKey="key";
+  String objectKey="key-testGetObjectDetailsImpl";
   String objectValue="test";
-  bucketName=bucketName.toLowerCase();
-  addNewObject(bucketName,objectKey,objectValue);
-  S3Object objectDetails=service.getObjectDetails(new S3Bucket(bucketName),objectKey);
+  String metadataName="metadata-name-1";
+  String metadataValue="metadata-value-1";
+  org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
+  s3Object.getMetadata().getUserMetadata().put(S3Constants.USER_METADATA_PREFIX + metadataName,metadataValue);
+  addObjectToBucket(commonTestingBucketName,s3Object);
+  S3Object objectDetails=service.getObjectDetails(new S3Bucket(commonTestingBucketName),objectKey);
   assertEquals(objectDetails.getKey(),objectKey);
-  assertEquals(objectDetails.getContentLength(),0);
+  assertEquals(objectDetails.getContentLength(),4);
   assertNull(objectDetails.getDataInputStream());
-  client.deleteObject(bucketName,objectKey);
-  client.deleteBucketIfEmpty(bucketName);
+  assertEquals(objectDetails.getMetadata(metadataName),metadataValue);
+  emptyBucket(commonTestingBucketName);
 }

@@ -3,6 +3,22 @@
   if (jcObjectMD.getOwner() != null) {
     jsObject.setOwner(new S3Owner(jcObjectMD.getOwner().getId(),jcObjectMD.getOwner().getDisplayName()));
   }
-  jsObject.addAllMetadata(jcObjectMD.getAllHeaders().asMap());
+  DateService dateService=new DateService();
+  for (  Entry<String,Collection<String>> entry : jcObjectMD.getAllHeaders().asMap().entrySet()) {
+    String key=entry.getKey();
+    if (key != null) {
+      Object value=Iterables.get(entry.getValue(),0);
+      if (S3Object.METADATA_HEADER_LAST_MODIFIED_DATE.equals(key)) {
+        value=dateService.rfc822DateParse(value.toString()).toDate();
+      }
+ else       if (S3Object.METADATA_HEADER_DATE.equals(key)) {
+        value=dateService.rfc822DateParse(value.toString()).toDate();
+      }
+      if (key.startsWith(S3Constants.USER_METADATA_PREFIX)) {
+        key=key.substring(S3Constants.USER_METADATA_PREFIX.length());
+      }
+      jsObject.addMetadata(key,value);
+    }
+  }
   return jsObject;
 }
