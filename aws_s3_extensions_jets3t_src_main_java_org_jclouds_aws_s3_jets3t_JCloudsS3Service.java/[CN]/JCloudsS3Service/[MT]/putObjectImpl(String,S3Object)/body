@@ -1,3 +1,12 @@
 {
-  return null;
+  try {
+    PutObjectOptions options=Util.convertPutObjectOptions(jsObject.getAcl());
+    org.jclouds.aws.s3.domain.S3Object jcObject=Util.convertObject(jsObject);
+    byte md5[]=connection.putObject(bucketName,jcObject,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    return jsObject;
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException("error putting object",e);
+  }
 }
