@@ -11,6 +11,13 @@
     newMd.setContentType(object.getMetadata().getContentType());
     if (options.getAcl() != null)     keyToAcl.put(bucketName + object,options.getAcl());
     bucketToContents.get(bucketName).put(object.getKey(),new S3Object(newMd,data));
+    newMd.getAllHeaders().put(HttpConstants.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
+    newMd.getAllHeaders().put(HttpConstants.CONTENT_MD5,S3Utils.toHexString(md5));
+    newMd.getAllHeaders().put(HttpConstants.CONTENT_TYPE,newMd.getContentType());
+    newMd.getAllHeaders().put(HttpConstants.CONTENT_LENGTH,newMd.getSize() + "");
+    for (    Entry<String,String> userMD : newMd.getUserMetadata().entries()) {
+      newMd.getAllHeaders().put(userMD.getKey(),userMD.getValue());
+    }
     return new FutureBase<byte[]>(){
       public byte[] get() throws InterruptedException, ExecutionException {
         return md5;
