@@ -1,0 +1,28 @@
+{
+  CopyObjectOptions options=new CopyObjectOptions();
+  if (acl != null) {
+    options.overrideAcl(convertAcl(acl));
+  }
+  if (ifModifiedSince != null) {
+    options.ifSourceModifiedSince(new DateTime(ifModifiedSince));
+  }
+  if (ifUnmodifiedSince != null) {
+    options.ifSourceUnmodifiedSince(new DateTime(ifUnmodifiedSince));
+  }
+  if (ifMatchTags != null && ifMatchTags.length > 0) {
+    options.ifSourceMd5Matches(Utils.encodeString(ifMatchTags[0]));
+  }
+  if (ifNoneMatchTags != null && ifNoneMatchTags.length > 0) {
+    options.ifSourceMd5DoesntMatch(Utils.encodeString(ifNoneMatchTags[0]));
+  }
+  if (destinationMetadata != null) {
+    Multimap<String,String> newMetadata=HashMultimap.create();
+    for (    Object maybeUserMetadataObj : destinationMetadata.entrySet()) {
+      String name=((Entry<String,String>)maybeUserMetadataObj).getKey();
+      String value=((Entry<String,String>)maybeUserMetadataObj).getValue();
+      newMetadata.put(name,value);
+    }
+    options.overrideMetadataWith(newMetadata);
+  }
+  return options;
+}

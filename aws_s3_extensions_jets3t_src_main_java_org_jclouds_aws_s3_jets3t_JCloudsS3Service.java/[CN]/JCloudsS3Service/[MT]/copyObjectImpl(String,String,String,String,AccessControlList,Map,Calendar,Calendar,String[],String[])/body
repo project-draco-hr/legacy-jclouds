@@ -1,3 +1,14 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    CopyObjectOptions options=Util.convertCopyObjectOptions(acl,destinationMetadata,ifModifiedSince,ifUnmodifiedSince,ifMatchTags,ifNoneMatchTags);
+    org.jclouds.aws.s3.domain.S3Object.Metadata jcObjectMetadata=connection.copyObject(sourceBucketName,sourceObjectKey,destinationBucketName,destinationObjectKey,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    Map map=new HashMap();
+    map.put("Last-Modified",jcObjectMetadata.getLastModified().toDate());
+    map.put("ETag",S3Utils.toHexString(jcObjectMetadata.getMd5()));
+    return map;
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException("error copying object",e);
+  }
 }

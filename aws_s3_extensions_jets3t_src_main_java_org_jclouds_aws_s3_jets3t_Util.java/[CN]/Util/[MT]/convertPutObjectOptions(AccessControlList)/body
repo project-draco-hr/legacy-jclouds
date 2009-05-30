@@ -1,16 +1,7 @@
 {
   PutObjectOptions options=new PutObjectOptions();
-  if (acl == AccessControlList.REST_CANNED_AUTHENTICATED_READ) {
-    options.withAcl(CannedAccessPolicy.AUTHENTICATED_READ);
-  }
- else   if (acl == AccessControlList.REST_CANNED_PRIVATE) {
-    options.withAcl(CannedAccessPolicy.PRIVATE);
-  }
- else   if (acl == AccessControlList.REST_CANNED_PUBLIC_READ) {
-    options.withAcl(CannedAccessPolicy.PUBLIC_READ);
-  }
- else   if (acl == AccessControlList.REST_CANNED_PUBLIC_READ_WRITE) {
-    options.withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE);
+  if (acl != null) {
+    options.withAcl(convertAcl(acl));
   }
   return options;
 }
