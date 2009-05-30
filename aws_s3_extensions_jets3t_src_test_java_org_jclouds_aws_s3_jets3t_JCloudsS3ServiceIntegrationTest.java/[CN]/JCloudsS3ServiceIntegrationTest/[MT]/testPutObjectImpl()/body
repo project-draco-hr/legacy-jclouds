@@ -39,5 +39,12 @@
   jsResultObject=service.putObject(new S3Bucket(commonTestingBucketName),requestObject);
   jcObject=client.getObject(commonTestingBucketName,objectKey).get(10,TimeUnit.SECONDS);
   assertEquals(jsResultObject.getAcl(),AccessControlList.REST_CANNED_PUBLIC_READ);
+  requestObject=new S3Object(objectKey);
+  data="Here is some d?t? for you";
+  requestObject.setDataInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));
+  jsResultObject=service.putObject(new S3Bucket(commonTestingBucketName),requestObject);
+  jcObject=client.getObject(commonTestingBucketName,objectKey).get(10,TimeUnit.SECONDS);
+  assertTrue(jsResultObject.verifyData(data.getBytes("UTF-8")));
+  assertEquals(jsResultObject.getMd5HashAsHex(),S3Utils.toHexString(jcObject.getMetadata().getMd5()));
   emptyBucket(commonTestingBucketName);
 }
