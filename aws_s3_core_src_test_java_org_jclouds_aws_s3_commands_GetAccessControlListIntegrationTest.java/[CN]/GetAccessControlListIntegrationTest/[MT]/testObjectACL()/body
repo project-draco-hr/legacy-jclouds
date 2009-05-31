@@ -1,0 +1,34 @@
+{
+  bucketName=bucketPrefix + ".testObjectACL".toLowerCase();
+  createBucketAndEnsureEmpty(bucketName);
+  String privateObjectKey="pr?vate-acl";
+  String publicReadObjectKey="p?blic-read-acl";
+  String publicReadWriteObjectKey="p?blic-read-write-acl";
+  addObjectToBucket(bucketName,privateObjectKey);
+  AccessControlList acl=client.getObjectACL(bucketName,privateObjectKey).get(10,TimeUnit.SECONDS);
+  assertEquals(acl.getGrants().size(),1);
+  assertTrue(acl.getOwner() != null);
+  String ownerId=acl.getOwner().getId();
+  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+  client.putObject(bucketName,new S3Object(publicReadObjectKey,""),new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ));
+  acl=client.getObjectACL(bucketName,publicReadObjectKey).get(10,TimeUnit.SECONDS);
+  assertEquals(acl.getGrants().size(),2);
+  assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),1);
+  assertTrue(acl.getOwner() != null);
+  ownerId=acl.getOwner().getId();
+  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+  client.putObject(bucketName,new S3Object(publicReadWriteObjectKey,""),new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE));
+  acl=client.getObjectACL(bucketName,publicReadWriteObjectKey).get(10,TimeUnit.SECONDS);
+  assertEquals(acl.getGrants().size(),3);
+  assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),2);
+  assertTrue(acl.getOwner() != null);
+  ownerId=acl.getOwner().getId();
+  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE));
+  assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ_ACP));
+  assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE_ACP));
+  assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.FULL_CONTROL));
+  emptyBucket(bucketName);
+}

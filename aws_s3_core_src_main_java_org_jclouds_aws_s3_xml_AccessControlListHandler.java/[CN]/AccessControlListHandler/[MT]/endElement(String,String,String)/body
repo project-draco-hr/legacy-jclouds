@@ -1,0 +1,31 @@
+{
+  if (qName.equals("Owner")) {
+    CanonicalUser owner=new CanonicalUser(currentId);
+    owner.setDisplayName(currentDisplayName);
+    acl.setOwner(owner);
+  }
+ else   if (qName.equals("Grantee")) {
+    if ("AmazonCustomerByEmail".equals(currentGranteeType)) {
+      currentGrantee=new EmailAddressGrantee(currentId);
+    }
+ else     if ("CanonicalUser".equals(currentGranteeType)) {
+      currentGrantee=new CanonicalUserGrantee(currentId,currentDisplayName);
+    }
+ else     if ("Group".equals(currentGranteeType)) {
+      currentGrantee=new GroupGrantee(GroupGranteeURI.fromURI(currentId));
+    }
+  }
+ else   if (qName.equals("Grant")) {
+    acl.addPermission(currentGrantee,Permission.valueOf(currentPermission));
+  }
+ else   if (qName.equals("ID") || qName.equals("EmailAddress") || qName.equals("URI")) {
+    currentId=currentText.toString();
+  }
+ else   if (qName.equals("DisplayName")) {
+    currentDisplayName=currentText.toString();
+  }
+ else   if (qName.equals("Permission")) {
+    currentPermission=currentText.toString();
+  }
+  currentText=new StringBuilder();
+}

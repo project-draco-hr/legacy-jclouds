@@ -9,7 +9,7 @@
     final byte[] md5=S3Utils.md5(data);
     newMd.setMd5(md5);
     newMd.setContentType(object.getMetadata().getContentType());
-    if (options.getAcl() != null)     keyToAcl.put(bucketName + object,options.getAcl());
+    if (options.getAcl() != null)     keyToAcl.put(bucketName + "/" + object.getKey(),options.getAcl());
     bucketToContents.get(bucketName).put(object.getKey(),new S3Object(newMd,data));
     newMd.getAllHeaders().put(HttpConstants.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
     newMd.getAllHeaders().put(HttpConstants.CONTENT_MD5,S3Utils.toHexString(md5));

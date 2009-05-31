@@ -1,0 +1,18 @@
+{
+  AccessControlList acl=new AccessControlList();
+  acl.setOwner(new CanonicalUser(ownerId));
+  acl.addPermission(new CanonicalUserGrantee(ownerId),Permission.FULL_CONTROL);
+  if (CannedAccessPolicy.PRIVATE == cannedAP) {
+  }
+ else   if (CannedAccessPolicy.AUTHENTICATED_READ == cannedAP) {
+    acl.addPermission(GroupGranteeURI.AUTHENTICATED_USERS,Permission.READ);
+  }
+ else   if (CannedAccessPolicy.PUBLIC_READ == cannedAP) {
+    acl.addPermission(GroupGranteeURI.ALL_USERS,Permission.READ);
+  }
+ else   if (CannedAccessPolicy.PUBLIC_READ_WRITE == cannedAP) {
+    acl.addPermission(GroupGranteeURI.ALL_USERS,Permission.READ);
+    acl.addPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE);
+  }
+  return acl;
+}

@@ -1,0 +1,9 @@
+{
+  bucketName=bucketPrefix + ".testPrivateBucketACL".toLowerCase();
+  createBucketAndEnsureEmpty(bucketName);
+  AccessControlList acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
+  assertEquals(acl.getGrants().size(),1);
+  assertTrue(acl.getOwner() != null);
+  String ownerId=acl.getOwner().getId();
+  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+}
