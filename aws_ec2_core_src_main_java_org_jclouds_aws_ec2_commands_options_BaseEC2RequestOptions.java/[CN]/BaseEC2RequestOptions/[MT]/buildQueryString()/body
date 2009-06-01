@@ -1,0 +1,27 @@
+{
+  checkState(awsSecretAccessKey != null,"request is not ready to sign; awsSecretAccessKey not present");
+  checkState(awsAccessKeyId != null,"request is not ready to sign; awsAccessKeyId not present");
+  String host=getFirstHeaderOrNull(HttpHeaders.HOST);
+  checkState(host != null,"request is not ready to sign; host not present");
+  if (parameters.get(EXPIRES) == null) {
+    timeStamp();
+  }
+  for (  String parameter : mandatoryParametersForSignature) {
+    checkState(parameters.get(parameter) != null,"parameter " + parameter + " is required for signature");
+  }
+  parameters.remove(SIGNATURE);
+  encodeAndReplaceParameter(AWS_ACCESS_KEY_ID,awsAccessKeyId);
+  StringBuilder toSign=new StringBuilder();
+  toSign.append("GET").append("\n").append(host.toLowerCase()).append("\n").append("/").append("\n");
+  String canonicalizedQueryString=super.buildQueryString().replaceFirst("\\?","");
+  toSign.append(canonicalizedQueryString);
+  String signature;
+  try {
+    signature=AWSUtils.hmacSha256Base64(toSign.toString(),awsSecretAccessKey.getBytes());
+    encodeAndReplaceParameter(SIGNATURE,signature);
+    return super.buildQueryString();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("error signing request [" + toSign.toString() + "]");
+  }
+}
