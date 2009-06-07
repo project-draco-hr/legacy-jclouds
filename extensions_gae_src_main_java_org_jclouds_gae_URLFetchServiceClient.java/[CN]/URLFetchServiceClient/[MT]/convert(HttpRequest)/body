@@ -1,8 +1,19 @@
 {
-  URL url=new URL(target,request.getUri());
+  String hostHeader=request.getFirstHeaderOrNull(HttpConstants.HOST);
+  URL url;
+  if (hostHeader != null) {
+    url=new URL(new URL(isSecure ? "https" : "http",hostHeader,port,"/"),request.getUri());
+  }
+ else {
+    url=new URL(target,request.getUri());
+  }
   HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate().doNotFollowRedirects());
   for (  String header : request.getHeaders().keySet()) {
-    for (    String value : request.getHeaders().get(header))     gaeRequest.addHeader(new HTTPHeader(header,value));
+    if (!header.equals(HttpConstants.HOST)) {
+      for (      String value : request.getHeaders().get(header)) {
+        gaeRequest.addHeader(new HTTPHeader(header,value));
+      }
+    }
   }
   if (request.getPayload() != null) {
     changeRequestContentToBytes(request);
