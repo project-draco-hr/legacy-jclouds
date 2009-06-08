@@ -1,25 +1,18 @@
 {
-  httpServletResponse.setContentType("text/plain");
-  Writer writer=httpServletResponse.getWriter();
-  writer.write(className + "\n");
   try {
-    List<S3Bucket.Metadata> myBuckets=context.getConnection().listOwnedBuckets().get(10,TimeUnit.SECONDS);
-    writer.write("List:\n");
-    for (    S3Bucket.Metadata bucket : myBuckets) {
-      writer.write(String.format("  %1$s",bucket));
-      try {
-        writer.write(String.format(": %1$s entries%n",context.createInputStreamMap(bucket.getName()).size()));
-      }
- catch (      AWSResponseException e) {
-        String message=String.format(": unable to list entries due to: %1$s%n",e.getError().getCode());
-        writer.write(message);
-        logger.warn(e,"message");
-      }
+    List<S3Bucket.Metadata> myBucketMetadata=context.getConnection().listOwnedBuckets().get(25,TimeUnit.SECONDS);
+    List<S3Bucket> myBuckets=new ArrayList<S3Bucket>();
+    for (    S3Bucket.Metadata metadata : myBucketMetadata) {
+      S3Bucket bucket=context.getConnection().listBucket(metadata.getName()).get(10,TimeUnit.SECONDS);
+      myBuckets.add(bucket);
     }
+    request.setAttribute("buckets",myBuckets);
+    request.setAttribute("className",className);
+    String nextJSP="/WEB-INF/jsp/buckets.jsp";
+    RequestDispatcher dispatcher=getServletContext().getRequestDispatcher(nextJSP);
+    dispatcher.forward(request,response);
   }
  catch (  Exception e) {
     throw new ServletException(e);
   }
-  writer.flush();
-  writer.close();
 }
