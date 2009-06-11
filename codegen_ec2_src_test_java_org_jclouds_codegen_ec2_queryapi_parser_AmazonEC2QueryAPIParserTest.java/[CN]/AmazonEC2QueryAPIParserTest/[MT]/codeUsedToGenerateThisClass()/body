@@ -1,0 +1,58 @@
+{
+  StringBuilder builder=new StringBuilder();
+  builder.append("   private Map<String, Set<String>> expectedQueryNamesForCategoryName = new ImmutableMap.Builder");
+  builder.append("<String, Set<String>>()").append("\n");
+  for (  Category category : getModel().getCategories().values()) {
+    builder.append(String.format(".put(\"%1$s\",%n   ImmutableSet.of(",category.getName()));
+    for (    String string : category.getQueries().keySet()) {
+      builder.append(String.format("\"%1$s\",",string));
+    }
+    builder.append(String.format("))%n"));
+  }
+  builder.append(String.format(".build();"));
+  System.out.println(builder.toString().replaceAll(",\\)",")"));
+  builder=new StringBuilder();
+  builder.append("   private Map<String, Set<String>> expectedFieldNamesForBeanName = new ImmutableMap.Builder");
+  builder.append("<String, Set<String>>()").append("\n");
+  for (  DataType bean : getModel().getDataTypes().values()) {
+    builder.append(String.format(".put(\"%1$s\",%n   ImmutableSet.of(",bean.getType()));
+    for (    Content field : bean.getContents()) {
+      builder.append(String.format("\"%1$s\",",field.getName()));
+    }
+    builder.append(String.format("))%n"));
+  }
+  for (  Category category : getModel().getCategories().values()) {
+    for (    DataType bean : category.getQueries().values()) {
+      builder.append(String.format(".put(\"%1$s\",%n   ImmutableSet.of(",bean.getType()));
+      for (      Content field : bean.getContents()) {
+        builder.append(String.format("\"%1$s\",",field.getName()));
+      }
+      builder.append(String.format("))%n"));
+    }
+  }
+  builder.append(String.format(".build();"));
+  System.out.println(builder.toString().replaceAll(",\\)",")"));
+  for (  String string : getModel().getCategories().keySet()) {
+    System.out.printf("   @Test%n   public void test%1$sQueryNames(){%n  " + "validateQueriesInCategory(\"%2$s\");" + "}%n",string.replaceAll(" ",""),string);
+  }
+  for (  Category cat : getModel().getCategories().values()) {
+    for (    Query bean : cat.getQueries().values()) {
+      System.out.printf("   @Test%n   public void test%1$sQuery(){%n  " + "validateQueryInCategory(\"%1$s\", \"%2$s\");%n}%n",bean.getType(),cat.getName());
+    }
+  }
+  for (  DataType bean : getModel().getDataTypes().values()) {
+    System.out.printf("   @Test%n   public void test%1$sBean(){%n  " + "validateFieldsOfBean(getModel().getDomain().get(\"%1$s\"));%n}%n",bean.getType());
+  }
+  System.out.printf("         public EC2ModelValidator validateCommands() {%n");
+  for (  Category cat : getModel().getCategories().values()) {
+    for (    Query bean : cat.getQueries().values()) {
+      System.out.printf("validateQueryInCategory(\"%1$s\", \"%2$s\");%n",bean.getType(),cat.getName());
+    }
+  }
+  System.out.printf("return this;%n         }%n");
+  System.out.printf("         public EC2ModelValidator validateDomain() {%n");
+  for (  DataType bean : getModel().getDataTypes().values()) {
+    System.out.printf("validateFieldsOfBean(getModel().getDomain().get(\"%1$s\"));%n",bean.getType());
+  }
+  System.out.printf("return this;%n         }%n");
+}

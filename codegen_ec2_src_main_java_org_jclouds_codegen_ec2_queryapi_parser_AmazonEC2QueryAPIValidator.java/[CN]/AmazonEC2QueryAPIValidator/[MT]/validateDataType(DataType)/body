@@ -1,0 +1,11 @@
+{
+  checkState(dataType.getSee().size() >= 1,"see should have at least one entry");
+  Set<String> fieldNames=Sets.newTreeSet(Iterables.transform(dataType.getContents(),new Function<Content,String>(){
+    public String apply(    Content field){
+      return field.getName();
+    }
+  }
+));
+  checkState(Sets.difference(fieldNames,expectedFieldNamesForDataTypeName.get(dataType.getType())).size() == 0,String.format("%1$s hasn't the correct fields.  has [%2$s] should have [%3$s]",dataType.getType(),fieldNames,expectedFieldNamesForDataTypeName.get(dataType.getType())));
+  return this;
+}
