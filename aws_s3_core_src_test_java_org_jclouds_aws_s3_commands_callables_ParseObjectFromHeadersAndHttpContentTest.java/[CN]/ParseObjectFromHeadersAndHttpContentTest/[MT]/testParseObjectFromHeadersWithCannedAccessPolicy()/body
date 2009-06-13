@@ -1,0 +1,24 @@
+{
+  DateService dateService=new DateService();
+  ParseMetadataFromHeaders metadataParser=new ParseMetadataFromHeaders(dateService);
+  metadataParser.setKey("object-key");
+  ParseObjectFromHeadersAndHttpContent callable=new ParseObjectFromHeadersAndHttpContent(metadataParser);
+  HttpResponse response=createNiceMock(HttpResponse.class);
+  callable.setResponse(response);
+  S3Object object;
+  buildDefaultResponseMock(response);
+  expect(response.getFirstHeaderOrNull(S3Headers.CANNED_ACL)).andReturn(null);
+  replay(response);
+  object=callable.call();
+  assertEquals(object.getMetadata().getCannedAccessPolicy(),null);
+  buildDefaultResponseMock(response);
+  expect(response.getFirstHeaderOrNull(S3Headers.CANNED_ACL)).andReturn(CannedAccessPolicy.PRIVATE.toString());
+  replay(response);
+  object=callable.call();
+  assertEquals(object.getMetadata().getCannedAccessPolicy(),CannedAccessPolicy.PRIVATE);
+  buildDefaultResponseMock(response);
+  expect(response.getFirstHeaderOrNull(S3Headers.CANNED_ACL)).andReturn(CannedAccessPolicy.AUTHENTICATED_READ.toString());
+  replay(response);
+  object=callable.call();
+  assertEquals(object.getMetadata().getCannedAccessPolicy(),CannedAccessPolicy.AUTHENTICATED_READ);
+}
