@@ -1,0 +1,14 @@
+{
+  AccessControlList acl=null;
+  Object aclObj=keyToAcl.get(bucketAndObjectKey);
+  if (aclObj instanceof AccessControlList) {
+    acl=(AccessControlList)aclObj;
+  }
+ else   if (aclObj instanceof CannedAccessPolicy) {
+    acl=AccessControlList.fromCannedAccessPolicy((CannedAccessPolicy)aclObj,DEFAULT_OWNER_ID);
+  }
+ else   if (aclObj == null) {
+    acl=AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE,DEFAULT_OWNER_ID);
+  }
+  return acl;
+}

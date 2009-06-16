@@ -1,11 +1,7 @@
 {
   return new FutureBase<AccessControlList>(){
     public AccessControlList get() throws InterruptedException, ExecutionException {
-      CannedAccessPolicy cannedAP=keyToAcl.get(bucket);
-      if (cannedAP == null) {
-        cannedAP=CannedAccessPolicy.PRIVATE;
-      }
-      return AccessControlList.fromCannedAccessPolicy(cannedAP,DEFAULT_OWNER_ID);
+      return getACLforS3Item(bucket);
     }
   }
 ;

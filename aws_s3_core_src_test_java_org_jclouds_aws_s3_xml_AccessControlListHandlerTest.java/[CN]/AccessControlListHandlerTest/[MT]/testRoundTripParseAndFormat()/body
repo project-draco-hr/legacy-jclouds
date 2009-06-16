@@ -1,0 +1,10 @@
+{
+  AccessControlList parsedAcl;
+  String formattedAcl;
+  parsedAcl=createParser().parse(IOUtils.toInputStream(aclOwnerOnly));
+  formattedAcl=new AccessControlListBuilder(parsedAcl).getXmlString();
+  assertEquals(formattedAcl,aclOwnerOnly);
+  parsedAcl=createParser().parse(IOUtils.toInputStream(aclExtreme));
+  formattedAcl=new AccessControlListBuilder(parsedAcl).getXmlString();
+  assertEquals(formattedAcl,aclExtreme);
+}
