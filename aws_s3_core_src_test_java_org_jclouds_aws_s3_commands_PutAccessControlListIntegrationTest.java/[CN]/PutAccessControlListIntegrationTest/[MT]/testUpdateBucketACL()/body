@@ -5,16 +5,10 @@
   String ownerId=acl.getOwner().getId();
   assertEquals(acl.getGrants().size(),1);
   assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
-  acl.addPermission(GroupGranteeURI.ALL_USERS,Permission.READ);
-  acl.addPermission(new EmailAddressGrantee("james@misterm.org"),Permission.READ_ACP);
-  acl.addPermission(new CanonicalUserGrantee(ownerId),Permission.WRITE_ACP);
+  addGrantsToACL(acl);
   assertEquals(acl.getGrants().size(),4);
   assertTrue(client.putBucketACL(bucketName,acl).get(10,TimeUnit.SECONDS));
   acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
-  assertEquals(acl.getGrants().size(),4);
-  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
-  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
-  assertTrue(acl.hasPermission(ownerId,Permission.WRITE_ACP));
-  assertTrue(acl.hasPermission(ownerId,Permission.READ_ACP));
+  checkGrants(acl);
   emptyBucket(bucketName);
 }
