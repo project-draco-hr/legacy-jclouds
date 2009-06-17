@@ -1,6 +1,4 @@
 {
-  bucketName=bucketPrefix + ".testPrivateBucketACL".toLowerCase();
-  createBucketAndEnsureEmpty(bucketName);
   AccessControlList acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
   String ownerId=acl.getOwner().getId();
   assertEquals(acl.getGrants().size(),1);
@@ -10,5 +8,4 @@
   assertTrue(client.putBucketACL(bucketName,acl).get(10,TimeUnit.SECONDS));
   acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
   checkGrants(acl);
-  emptyBucket(bucketName);
 }

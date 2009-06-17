@@ -1,6 +1,4 @@
 {
-  bucketName=bucketPrefix + ".testObjectACL".toLowerCase();
-  createBucketAndEnsureEmpty(bucketName);
   String objectKey="pr?vate-acl";
   addObjectToBucket(bucketName,objectKey);
   AccessControlList acl=client.getObjectACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
@@ -20,6 +18,5 @@
   acl=client.getObjectACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
   assertEquals(acl.getGrants().size(),1);
   assertEquals(acl.getPermissions(ownerId).size(),0);
-  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
-  emptyBucket(bucketName);
+  assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
 }
