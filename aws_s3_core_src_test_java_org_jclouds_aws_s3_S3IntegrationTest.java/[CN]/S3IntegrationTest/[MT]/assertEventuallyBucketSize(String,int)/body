@@ -1,0 +1,13 @@
+{
+  assertEventually(new Runnable(){
+    public void run(){
+      try {
+        assertEquals(client.listBucket(bucketName).get(10,TimeUnit.SECONDS).getContents().size(),count);
+      }
+ catch (      Exception e) {
+        Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+      }
+    }
+  }
+);
+}
