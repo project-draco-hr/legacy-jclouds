@@ -1,7 +1,9 @@
 {
   for (  Grant grant : acl.getGrants()) {
     if (grant.getGrantee() instanceof EmailAddressGrantee) {
-      grant.setGrantee(new CanonicalUserGrantee(acl.getOwner().getId(),acl.getOwner().getDisplayName()));
+      EmailAddressGrantee emailGrantee=(EmailAddressGrantee)grant.getGrantee();
+      String id=emailGrantee.getEmailAddress().equals(TEST_ACL_EMAIL) ? TEST_ACL_ID : acl.getOwner().getId();
+      grant.setGrantee(new CanonicalUserGrantee(id,acl.getOwner().getDisplayName()));
     }
   }
   return acl;

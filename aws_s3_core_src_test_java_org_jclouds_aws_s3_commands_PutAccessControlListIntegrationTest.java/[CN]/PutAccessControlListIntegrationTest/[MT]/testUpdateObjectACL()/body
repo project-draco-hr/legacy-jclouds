@@ -11,7 +11,7 @@
   acl=client.getObjectACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
   checkGrants(acl);
   acl.revokeAllPermissions(new CanonicalUserGrantee(ownerId));
-  if (!ownerId.equals(jamesId))   acl.revokeAllPermissions(new CanonicalUserGrantee(jamesId));
+  if (!ownerId.equals(TEST_ACL_ID))   acl.revokeAllPermissions(new CanonicalUserGrantee(TEST_ACL_ID));
   assertEquals(acl.getGrants().size(),1);
   assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
   assertTrue(client.putObjectACL(bucketName,objectKey,acl).get(10,TimeUnit.SECONDS));
