@@ -1,0 +1,9 @@
+{
+  if (e.getCause() != null && e.getCause() instanceof AWSResponseException) {
+    AWSResponseException responseException=(AWSResponseException)e.getCause();
+    if ("BucketAlreadyOwnedByYou".equals(responseException.getError().getCode())) {
+      return true;
+    }
+  }
+  throw e;
+}
