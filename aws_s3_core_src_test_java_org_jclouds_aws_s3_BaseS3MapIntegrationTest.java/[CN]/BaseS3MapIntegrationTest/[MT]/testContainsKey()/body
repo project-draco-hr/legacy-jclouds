@@ -1,5 +1,12 @@
 {
-  assertEventuallyDoesntContainKey();
-  putString("one","apple");
-  assertEventuallyContainsKey();
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<T> map=createMap(context,bucketName);
+    assertEventuallyDoesntContainKey(map);
+    putString(map,"one","apple");
+    assertEventuallyContainsKey(map);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

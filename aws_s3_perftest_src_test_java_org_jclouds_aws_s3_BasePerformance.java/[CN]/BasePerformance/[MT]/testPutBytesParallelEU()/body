@@ -1,4 +1,9 @@
 {
-  client.putBucketIfNotExists(bucketNameEU,createIn(LocationConstraint.EU)).get(10,TimeUnit.SECONDS);
-  doParallel(new PutBytesCallable(this.bucketNameEU),loopCount);
+  String euBucketName=createScratchBucketInEU();
+  try {
+    doParallel(new PutBytesCallable(euBucketName),loopCount);
+  }
+  finally {
+    returnBucket(euBucketName);
+  }
 }

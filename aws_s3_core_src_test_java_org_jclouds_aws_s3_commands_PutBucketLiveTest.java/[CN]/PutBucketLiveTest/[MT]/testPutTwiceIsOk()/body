@@ -1,3 +1,9 @@
 {
-  client.putBucketIfNotExists(bucketName).get(10,TimeUnit.SECONDS);
+  String bucketName=getBucketName();
+  try {
+    client.putBucketIfNotExists(bucketName).get(10,TimeUnit.SECONDS);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

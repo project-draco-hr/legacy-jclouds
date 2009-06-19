@@ -1,11 +1,17 @@
 {
-  AccessControlList acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
-  String ownerId=acl.getOwner().getId();
-  assertEquals(acl.getGrants().size(),1);
-  assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
-  addGrantsToACL(acl);
-  assertEquals(acl.getGrants().size(),4);
-  assertTrue(client.putBucketACL(bucketName,acl).get(10,TimeUnit.SECONDS));
-  acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
-  checkGrants(acl);
+  String bucketName=getScratchBucketName();
+  try {
+    AccessControlList acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
+    String ownerId=acl.getOwner().getId();
+    assertEquals(acl.getGrants().size(),1);
+    assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+    addGrantsToACL(acl);
+    assertEquals(acl.getGrants().size(),4);
+    assertTrue(client.putBucketACL(bucketName,acl).get(10,TimeUnit.SECONDS));
+    acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
+    checkGrants(acl);
+  }
+  finally {
+    returnScratchBucket(bucketName);
+  }
 }

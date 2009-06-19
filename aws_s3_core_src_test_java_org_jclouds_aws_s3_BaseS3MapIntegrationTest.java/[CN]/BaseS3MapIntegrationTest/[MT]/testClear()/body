@@ -1,8 +1,14 @@
 {
-  map.clear();
-  assertEventuallyMapSize(0);
-  putString("one","apple");
-  assertEventuallyMapSize(1);
-  map.clear();
-  assertEventuallyMapSize(0);
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<T> map=createMap(context,bucketName);
+    assertEventuallyMapSize(map,0);
+    putString(map,"one","apple");
+    assertEventuallyMapSize(map,1);
+    map.clear();
+    assertEventuallyMapSize(map,0);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

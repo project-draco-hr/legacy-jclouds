@@ -1,5 +1,12 @@
 {
-  assertEventuallyEmpty();
-  putString("one","apple");
-  assertEventuallyNotEmpty();
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<T> map=createMap(context,bucketName);
+    assertEventuallyEmpty(map);
+    putString(map,"one","apple");
+    assertEventuallyNotEmpty(map);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

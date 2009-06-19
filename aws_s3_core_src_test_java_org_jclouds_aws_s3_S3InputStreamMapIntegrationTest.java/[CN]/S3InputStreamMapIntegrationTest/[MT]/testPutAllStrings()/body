@@ -1,6 +1,13 @@
 {
-  map.putAllStrings(this.fiveStrings);
-  assertEventuallyMapSize(5);
-  assertEventuallyKeySetEquals(new TreeSet<String>(fiveStrings.keySet()));
-  fourLeftRemovingOne();
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<InputStream> map=createMap(context,bucketName);
+    ((S3InputStreamMap)map).putAllStrings(this.fiveStrings);
+    assertEventuallyMapSize(map,5);
+    assertEventuallyKeySetEquals(map,new TreeSet<String>(fiveStrings.keySet()));
+    fourLeftRemovingOne(map);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

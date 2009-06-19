@@ -1,6 +1,13 @@
 {
-  InputStream old=map.putBytes("one","apple".getBytes());
-  getOneReturnsAppleAndOldValueIsNull(old);
-  InputStream apple=map.putBytes("one","bear".getBytes());
-  getOneReturnsBearAndOldValueIsApple(apple);
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<InputStream> map=createMap(context,bucketName);
+    InputStream old=((S3InputStreamMap)map).putBytes("one","apple".getBytes());
+    getOneReturnsAppleAndOldValueIsNull(map,old);
+    InputStream apple=((S3InputStreamMap)map).putBytes("one","bear".getBytes());
+    getOneReturnsBearAndOldValueIsApple(map,apple);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

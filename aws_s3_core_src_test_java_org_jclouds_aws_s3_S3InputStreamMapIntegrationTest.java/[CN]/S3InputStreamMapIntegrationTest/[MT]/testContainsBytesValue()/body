@@ -1,4 +1,11 @@
 {
-  map.putString("one","apple");
-  assertEventuallyContainsValue(this.fiveBytes.get("one"));
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<InputStream> map=createMap(context,bucketName);
+    ((S3InputStreamMap)map).putString("one","apple");
+    assertEventuallyContainsValue(map,this.fiveBytes.get("one"));
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

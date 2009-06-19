@@ -1,17 +1,19 @@
 {
-  String bucketName=bucketPrefix + "tpo";
-  client.putBucketIfNotExists(bucketName).get(10,TimeUnit.SECONDS);
-  context.createS3ObjectMap(bucketName).clear();
-  assertEquals(client.listBucket(bucketName).get(10,TimeUnit.SECONDS).getContents().size(),0);
   S3Object object=new S3Object(key);
   object.getMetadata().setContentType(type);
   object.setData(content);
   if (content instanceof InputStream) {
     object.generateMd5();
   }
-  assertNotNull(client.putObject(bucketName,object).get(10,TimeUnit.SECONDS));
-  object=client.getObject(bucketName,object.getKey()).get(10,TimeUnit.SECONDS);
-  String returnedString=S3Utils.getContentAsStringAndClose(object);
-  assertEquals(returnedString,realObject);
-  assertEquals(client.listBucket(bucketName).get(10,TimeUnit.SECONDS).getContents().size(),1);
+  String bucketName=getBucketName();
+  try {
+    assertNotNull(client.putObject(bucketName,object).get(10,TimeUnit.SECONDS));
+    object=client.getObject(bucketName,object.getKey()).get(10,TimeUnit.SECONDS);
+    String returnedString=S3Utils.getContentAsStringAndClose(object);
+    assertEquals(returnedString,realObject);
+    assertEquals(client.listBucket(bucketName).get(10,TimeUnit.SECONDS).getContents().size(),1);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

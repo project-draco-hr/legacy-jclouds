@@ -1,3 +1,10 @@
 {
-  assertEventuallyBucketNameCorrect();
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<T> map=createMap(context,bucketName);
+    assertEventuallyBucketNameCorrect(map,bucketName);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

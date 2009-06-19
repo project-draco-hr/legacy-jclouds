@@ -1,19 +1,25 @@
 {
-  String key="apples";
-  addObjectAndValidateContent(bucketName,key);
-  client.getObject(bucketName,key,ifMd5DoesntMatch(badMd5)).get(10,TimeUnit.SECONDS);
-  validateContent(bucketName,key);
+  String bucketName=getBucketName();
   try {
-    client.getObject(bucketName,key,ifMd5DoesntMatch(goodMd5)).get(10,TimeUnit.SECONDS);
+    String key="apples";
+    addObjectAndValidateContent(bucketName,key);
+    client.getObject(bucketName,key,ifMd5DoesntMatch(badMd5)).get(10,TimeUnit.SECONDS);
     validateContent(bucketName,key);
-  }
- catch (  ExecutionException e) {
-    if (e.getCause() instanceof HttpResponseException) {
-      HttpResponseException ex=(HttpResponseException)e.getCause();
-      assertEquals(ex.getResponse().getStatusCode(),304);
+    try {
+      client.getObject(bucketName,key,ifMd5DoesntMatch(goodMd5)).get(10,TimeUnit.SECONDS);
+      validateContent(bucketName,key);
     }
+ catch (    ExecutionException e) {
+      if (e.getCause() instanceof HttpResponseException) {
+        HttpResponseException ex=(HttpResponseException)e.getCause();
+        assertEquals(ex.getResponse().getStatusCode(),304);
+      }
  else {
-      throw e;
+        throw e;
+      }
     }
+  }
+  finally {
+    returnBucket(bucketName);
   }
 }

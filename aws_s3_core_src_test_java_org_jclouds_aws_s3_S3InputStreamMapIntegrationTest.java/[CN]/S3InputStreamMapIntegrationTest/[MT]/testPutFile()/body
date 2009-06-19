@@ -1,6 +1,13 @@
 {
-  InputStream old=map.putFile("one",fiveFiles.get("one"));
-  getOneReturnsAppleAndOldValueIsNull(old);
-  InputStream apple=map.putFile("one",fiveFiles.get("two"));
-  getOneReturnsBearAndOldValueIsApple(apple);
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<InputStream> map=createMap(context,bucketName);
+    InputStream old=((S3InputStreamMap)map).putFile("one",fiveFiles.get("one"));
+    getOneReturnsAppleAndOldValueIsNull(map,old);
+    InputStream apple=((S3InputStreamMap)map).putFile("one",fiveFiles.get("two"));
+    getOneReturnsBearAndOldValueIsApple(map,apple);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

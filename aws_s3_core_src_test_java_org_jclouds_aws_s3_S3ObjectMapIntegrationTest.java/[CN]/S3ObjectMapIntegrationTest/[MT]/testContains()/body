@@ -1,6 +1,13 @@
 {
-  putString("one","apple");
-  S3Object object=new S3Object("one");
-  object.setData("apple");
-  assertEventuallyContainsValue(object);
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<S3Object> map=createMap(context,bucketName);
+    putString(map,"one","apple");
+    S3Object object=new S3Object("one");
+    object.setData("apple");
+    assertEventuallyContainsValue(map,object);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

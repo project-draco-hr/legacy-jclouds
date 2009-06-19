@@ -1,3 +1,9 @@
 {
-  doParallel(new PutStringCallable(this.bucketName),loopCount);
+  String bucketName=getBucketName();
+  try {
+    doParallel(new PutStringCallable(bucketName),loopCount);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }

@@ -5,12 +5,12 @@
   String metadataValue="metadata-value-2";
   org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
   s3Object.getMetadata().getUserMetadata().put(S3Constants.USER_METADATA_PREFIX + metadataName,metadataValue);
-  addObjectToBucket(commonTestingBucketName,s3Object);
-  S3Object object=service.getObject(new S3Bucket(commonTestingBucketName),objectKey);
+  addObjectToBucket(bucketName,s3Object);
+  S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
   assertEquals(object.getKey(),objectKey);
   assertNotNull(object.getDataInputStream());
   assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);
   assertEquals(object.getContentLength(),objectValue.length());
   assertEquals(object.getMetadata(metadataName),metadataValue);
-  emptyBucket(commonTestingBucketName);
+  emptyBucket(bucketName);
 }

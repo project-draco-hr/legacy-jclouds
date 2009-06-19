@@ -1,21 +1,29 @@
 {
-  String key="apples";
-  DateTime before=new DateTime();
-  addObjectAndValidateContent(bucketName,key);
-  DateTime after=new DateTime().plusSeconds(1);
-  client.getObject(bucketName,key,ifUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
-  validateContent(bucketName,key);
+  String bucketName=getBucketName();
   try {
-    client.getObject(bucketName,key,ifUnmodifiedSince(before)).get(10,TimeUnit.SECONDS);
+    String key="apples";
+    DateTime before=new DateTime();
+    addObjectAndValidateContent(bucketName,key);
+    DateTime after=new DateTime().plusSeconds(1);
+    client.getObject(bucketName,key,ifUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
     validateContent(bucketName,key);
-  }
- catch (  ExecutionException e) {
-    if (e.getCause() instanceof HttpResponseException) {
-      HttpResponseException ex=(HttpResponseException)e.getCause();
-      assertEquals(ex.getResponse().getStatusCode(),412);
+    try {
+      client.getObject(bucketName,key,ifUnmodifiedSince(before)).get(10,TimeUnit.SECONDS);
+      validateContent(bucketName,key);
     }
+ catch (    ExecutionException e) {
+      if (e.getCause() instanceof HttpResponseException) {
+        HttpResponseException ex=(HttpResponseException)e.getCause();
+        assertEquals(ex.getResponse().getStatusCode(),412);
+      }
+ else       if (e.getCause() instanceof RuntimeException) {
+      }
  else {
-      throw e;
+        throw e;
+      }
     }
+  }
+  finally {
+    returnBucket(bucketName);
   }
 }

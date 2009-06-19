@@ -1,7 +1,13 @@
 {
-  String destinationBucket=bucketName + "dest";
-  addToBucketAndValidate(bucketName,sourceKey);
-  createBucketAndEnsureEmpty(destinationBucket);
-  client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
-  validateContent(destinationBucket,destinationKey);
+  String bucketName=getBucketName();
+  String destinationBucket=getScratchBucketName();
+  try {
+    addToBucketAndValidate(bucketName,sourceKey);
+    client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
+    validateContent(destinationBucket,destinationKey);
+  }
+  finally {
+    returnBucket(bucketName);
+    returnScratchBucket(destinationBucket);
+  }
 }
