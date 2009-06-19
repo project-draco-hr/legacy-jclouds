@@ -7,7 +7,9 @@
  else {
     url=new URL(target,request.getUri());
   }
-  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),disallowTruncate().doNotFollowRedirects());
+  FetchOptions options=disallowTruncate();
+  followRedirectsUnlessRequestContainsPayload(request,options);
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod()),options);
   for (  String header : request.getHeaders().keySet()) {
     if (!header.equals(HttpConstants.HOST)) {
       for (      String value : request.getHeaders().get(header)) {
