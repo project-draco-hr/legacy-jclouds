@@ -1,5 +1,11 @@
 {
-  S3Bucket bucket=service.createBucket(new S3Bucket(bucketName));
-  assertEquals(bucket.getName(),bucketName);
-  assertTrue(client.bucketExists(bucketName).get());
+  String bucketName=getScratchBucketName();
+  try {
+    S3Bucket bucket=service.createBucket(new S3Bucket(bucketName));
+    assertEquals(bucket.getName(),bucketName);
+    assertTrue(client.bucketExists(bucketName).get());
+  }
+  finally {
+    returnScratchBucket(bucketName);
+  }
 }

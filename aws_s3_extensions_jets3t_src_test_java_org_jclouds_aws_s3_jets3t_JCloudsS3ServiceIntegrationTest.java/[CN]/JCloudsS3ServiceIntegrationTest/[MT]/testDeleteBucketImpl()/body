@@ -1,5 +1,10 @@
 {
-  emptyBucket(bucketName);
-  service.deleteBucket(bucketName);
-  assertFalse(client.bucketExists(bucketName).get(10,TimeUnit.SECONDS));
+  String bucketName=getScratchBucketName();
+  try {
+    service.deleteBucket(bucketName);
+    assertFalse(client.bucketExists(bucketName).get(10,TimeUnit.SECONDS));
+  }
+  finally {
+    returnScratchBucket(bucketName);
+  }
 }

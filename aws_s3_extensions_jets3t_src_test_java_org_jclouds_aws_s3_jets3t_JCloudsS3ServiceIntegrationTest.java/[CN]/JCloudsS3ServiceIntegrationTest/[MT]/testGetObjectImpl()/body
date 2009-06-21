@@ -1,16 +1,21 @@
 {
-  String objectKey="key-testGetObjectImpl";
-  String objectValue="test";
-  String metadataName="metadata-name-2";
-  String metadataValue="metadata-value-2";
-  org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
-  s3Object.getMetadata().getUserMetadata().put(S3Constants.USER_METADATA_PREFIX + metadataName,metadataValue);
-  addObjectToBucket(bucketName,s3Object);
-  S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
-  assertEquals(object.getKey(),objectKey);
-  assertNotNull(object.getDataInputStream());
-  assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);
-  assertEquals(object.getContentLength(),objectValue.length());
-  assertEquals(object.getMetadata(metadataName),metadataValue);
-  emptyBucket(bucketName);
+  String bucketName=getBucketName();
+  try {
+    String objectKey="key-testGetObjectImpl";
+    String objectValue="test";
+    String metadataName="metadata-name-2";
+    String metadataValue="metadata-value-2";
+    org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
+    s3Object.getMetadata().getUserMetadata().put(S3Constants.USER_METADATA_PREFIX + metadataName,metadataValue);
+    addObjectToBucket(bucketName,s3Object);
+    S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
+    assertEquals(object.getKey(),objectKey);
+    assertNotNull(object.getDataInputStream());
+    assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);
+    assertEquals(object.getContentLength(),objectValue.length());
+    assertEquals(object.getMetadata(metadataName),metadataValue);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }
