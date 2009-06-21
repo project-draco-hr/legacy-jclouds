@@ -1,0 +1,12 @@
+{
+  super(endPoint,HttpMethod.PUT,"/" + objectKey + "?acl",callable,bucket);
+  String aclPayload="";
+  try {
+    aclPayload=(new AccessControlListBuilder(acl)).getXmlString();
+  }
+ catch (  Exception e) {
+    logger.error(e,"Unable to build XML document for Access Control List: " + acl);
+  }
+  getRequest().setPayload(aclPayload);
+  getRequest().getHeaders().put(HttpHeaders.CONTENT_LENGTH,aclPayload.getBytes().length + "");
+}
