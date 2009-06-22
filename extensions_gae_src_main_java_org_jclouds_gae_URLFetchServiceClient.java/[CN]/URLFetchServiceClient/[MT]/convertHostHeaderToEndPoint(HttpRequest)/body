@@ -1,0 +1,7 @@
+{
+  String hostHeader=request.getFirstHeaderOrNull(HttpConstants.HOST);
+  if (hostHeader != null) {
+    request.setEndPoint(URI.create(String.format("%1$s://%2$s:%3$d",request.getEndPoint().getScheme(),hostHeader,request.getEndPoint().getPort())));
+    request.getHeaders().removeAll(HttpHeaders.HOST);
+  }
+}

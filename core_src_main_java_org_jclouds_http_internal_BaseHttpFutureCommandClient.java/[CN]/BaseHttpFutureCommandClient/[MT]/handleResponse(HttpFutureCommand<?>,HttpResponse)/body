@@ -1,13 +1,7 @@
 {
   int code=response.getStatusCode();
-  if (code >= 500) {
-    serverErrorHandler.handle(command,response);
-  }
- else   if (code >= 400 && code < 500) {
-    clientErrorHandler.handle(command,response);
-  }
- else   if (code >= 300 && code < 400) {
-    redirectHandler.handle(command,response);
+  if (code >= 300) {
+    httpErrorHandler.handle(command,response);
   }
  else {
     command.getResponseFuture().setResponse(response);

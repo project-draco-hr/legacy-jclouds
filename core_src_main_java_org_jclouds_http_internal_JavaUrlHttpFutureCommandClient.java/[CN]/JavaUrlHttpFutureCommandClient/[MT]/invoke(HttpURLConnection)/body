@@ -1,0 +1,21 @@
+{
+  HttpResponse response=new HttpResponse();
+  if (logger.isTraceEnabled())   logger.trace("%1$s - submitting request %2$s, headers: %3$s",connection.getURL().getHost(),connection.getURL(),connection.getRequestProperties());
+  InputStream in;
+  try {
+    in=connection.getInputStream();
+  }
+ catch (  IOException e) {
+    in=connection.getErrorStream();
+  }
+  if (logger.isTraceEnabled())   logger.info("%1$s - received response code %2$s, headers: %3$s",connection.getURL().getHost(),connection.getResponseCode(),connection.getHeaderFields());
+  if (in != null) {
+    response.setContent(in);
+  }
+  response.setStatusCode(connection.getResponseCode());
+  for (  String header : connection.getHeaderFields().keySet()) {
+    response.getHeaders().putAll(header,connection.getHeaderFields().get(header));
+  }
+  response.setMessage(connection.getResponseMessage());
+  return response;
+}

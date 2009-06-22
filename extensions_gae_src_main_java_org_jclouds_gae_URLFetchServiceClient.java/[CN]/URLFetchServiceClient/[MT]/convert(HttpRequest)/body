@@ -1,20 +1,12 @@
 {
-  String hostHeader=request.getFirstHeaderOrNull(HttpConstants.HOST);
-  URL url;
-  if (hostHeader != null) {
-    url=new URL(new URL(isSecure ? "https" : "http",hostHeader,port,"/"),request.getUri());
-  }
- else {
-    url=new URL(target.toURL(),request.getUri());
-  }
+  convertHostHeaderToEndPoint(request);
+  URL url=new URL(request.getEndPoint().toURL(),request.getUri());
   FetchOptions options=disallowTruncate();
   followRedirectsUnlessRequestContainsPayload(request,options);
   HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
   for (  String header : request.getHeaders().keySet()) {
-    if (!header.equals(HttpConstants.HOST)) {
-      for (      String value : request.getHeaders().get(header)) {
-        gaeRequest.addHeader(new HTTPHeader(header,value));
-      }
+    for (    String value : request.getHeaders().get(header)) {
+      gaeRequest.addHeader(new HTTPHeader(header,value));
     }
   }
   if (request.getPayload() != null) {
