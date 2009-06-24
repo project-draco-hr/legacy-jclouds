@@ -1,0 +1,13 @@
+{
+  super(executor);
+  this.poolFactory=pf;
+  poolMap=new MapMaker().makeComputingMap(new Function<E,FutureCommandConnectionPool<E,C,O>>(){
+    public FutureCommandConnectionPool<E,C,O> apply(    E endPoint){
+      FutureCommandConnectionPool<E,C,O> pool=poolFactory.create(endPoint);
+      addDependency(pool);
+      return pool;
+    }
+  }
+);
+  this.commandQueue=commandQueue;
+}

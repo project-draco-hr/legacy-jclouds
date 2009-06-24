@@ -1,21 +1,27 @@
 {
   exceptionIfNotActive();
-  FutureCommandConnectionHandle<C,O> connectionHandle=null;
+  FutureCommandConnectionPool<E,C,O> pool=poolMap.get(command.getRequest().getEndPoint());
+  if (pool == null) {
+    logger.warn("pool not available for command %s; retrying",command);
+    commandQueue.add(command);
+    return;
+  }
+  FutureCommandConnectionHandle<E,C,O> connectionHandle=null;
   try {
-    connectionHandle=futureCommandConnectionPool.getHandle(command);
+    connectionHandle=pool.getHandle(command);
   }
  catch (  InterruptedException e) {
-    logger.warn(e,"Interrupted getting a connection for command %1$s; retrying",command);
+    logger.warn(e,"Interrupted getting a connection for command %s; retrying",command);
     commandQueue.add(command);
     return;
   }
 catch (  TimeoutException e) {
-    logger.warn(e,"Timeout getting a connection for command %1$s; retrying",command);
+    logger.warn(e,"Timeout getting a connection for command %s on pool %s; retrying",command,pool);
     commandQueue.add(command);
     return;
   }
   if (connectionHandle == null) {
-    logger.error("Failed to obtain connection for command %1$s; retrying",command);
+    logger.error("Failed to obtain connection for command %s; retrying",command);
     commandQueue.add(command);
     return;
   }

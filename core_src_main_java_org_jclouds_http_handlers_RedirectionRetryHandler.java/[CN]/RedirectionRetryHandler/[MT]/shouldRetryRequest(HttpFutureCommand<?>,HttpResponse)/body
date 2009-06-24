@@ -1,0 +1,13 @@
+{
+  IOUtils.closeQuietly(response.getContent());
+  command.incrementRedirectCount();
+  String hostHeader=response.getFirstHeaderOrNull(HttpHeaders.LOCATION);
+  if (hostHeader != null && command.getRedirectCount() < retryCountLimit) {
+    URI redirectURI=URI.create(hostHeader);
+    command.getRequest().setEndPoint(redirectURI);
+    return true;
+  }
+ else {
+    return false;
+  }
+}

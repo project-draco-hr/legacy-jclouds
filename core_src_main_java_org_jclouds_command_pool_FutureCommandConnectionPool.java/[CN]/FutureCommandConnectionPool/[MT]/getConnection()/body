@@ -4,7 +4,7 @@
     hitBottom=available.size() == 0 && allConnections.availablePermits() == 0;
     if (hitBottom)     logger.warn("%1$s - saturated connection pool",this);
   }
-  logger.debug("%1$s - attempting to acquire connection; %d currently available",this,available.size());
+  logger.debug("%s - attempting to acquire connection; %s currently available",this,available.size());
   C conn=available.poll(5,TimeUnit.SECONDS);
   if (conn == null)   throw new TimeoutException("could not obtain a pooled connection within 5 seconds");
   logger.trace("%1$s - %2$d - aquired",conn,conn.hashCode());

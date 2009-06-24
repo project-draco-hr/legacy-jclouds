@@ -1,0 +1,14 @@
+{
+  int statusCode=response.getStatusCode();
+  boolean retryRequest=false;
+  if (statusCode >= 300 && statusCode < 400) {
+    retryRequest=redirectionRetryHandler.shouldRetryRequest(command,response);
+  }
+ else   if (statusCode >= 400 && statusCode < 500) {
+    retryRequest=clientErrorRetryHandler.shouldRetryRequest(command,response);
+  }
+ else   if (statusCode >= 500) {
+    retryRequest=serverErrorRetryHandler.shouldRetryRequest(command,response);
+  }
+  return retryRequest;
+}
