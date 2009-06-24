@@ -11,11 +11,12 @@
   addS3ParserModuleIfNotPresent(modules);
   addS3ConnectionModuleIfNotPresent(modules);
   addHttpModuleIfNeededAndNotPresent(modules);
-  return Guice.createInjector(new AbstractModule(){
+  modules.add(new AbstractModule(){
     @Override protected void configure(){
       Names.bindProperties(binder(),checkNotNull(properties,"properties"));
-      for (      Module module : modules)       install(module);
     }
   }
-,new S3ContextModule());
+);
+  modules.add(new S3ContextModule());
+  return Guice.createInjector(modules);
 }

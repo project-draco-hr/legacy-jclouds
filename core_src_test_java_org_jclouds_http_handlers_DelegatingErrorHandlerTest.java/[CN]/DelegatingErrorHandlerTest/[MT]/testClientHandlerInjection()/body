@@ -1,0 +1,11 @@
+{
+  DelegatingErrorHandler handler=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(DelegatingErrorHandler.class);
+    }
+  }
+).getInstance(DelegatingErrorHandler.class);
+  assertEquals(handler.getClientErrorHandler().getClass(),DelegatingErrorHandler.class);
+  assertEquals(handler.getServerErrorHandler().getClass(),CloseContentAndSetExceptionErrorHandler.class);
+  assertEquals(handler.getRedirectionHandler().getClass(),CloseContentAndSetExceptionErrorHandler.class);
+}

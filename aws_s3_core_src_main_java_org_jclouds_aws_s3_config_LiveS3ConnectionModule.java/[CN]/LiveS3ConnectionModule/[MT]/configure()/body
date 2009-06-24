@@ -1,7 +1,6 @@
 {
   bind(S3Connection.class).to(LiveS3Connection.class).in(Scopes.SINGLETON);
-  bind(HttpRetryHandler.class).to(BackoffLimitedRetryHandler.class).in(Scopes.SINGLETON);
-  bindErrorHandler();
+  bindErrorHandlers();
   requestInjection(this);
   logger.info("S3 Context = %1$s://%2$s:%3$s",(isSecure ? "https" : "http"),address,port);
 }
