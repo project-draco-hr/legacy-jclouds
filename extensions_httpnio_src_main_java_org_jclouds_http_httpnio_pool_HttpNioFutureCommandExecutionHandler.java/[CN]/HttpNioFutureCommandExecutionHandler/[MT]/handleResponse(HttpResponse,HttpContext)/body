@@ -4,26 +4,14 @@
     try {
       HttpFutureCommand<?> command=handle.getCommand();
       org.jclouds.http.HttpResponse response=HttpNioUtils.convertToJavaCloudsResponse(apacheResponse);
-      int code=response.getStatusCode();
-      if (code >= 500) {
-        boolean retryRequest=false;
-        try {
-          retryRequest=httpRetryHandler.shouldRetryRequest(command,response);
-        }
- catch (        InterruptedException ie) {
-        }
-        if (retryRequest) {
-          commandQueue.add(command);
+      int statusCode=response.getStatusCode();
+      if (statusCode >= 300) {
+        if (retryHandler.shouldRetryRequest(command,response)) {
+          resubmitQueue.add(command);
         }
  else {
-          serverErrorHandler.handle(command,response);
+          errorHandler.handleError(command,response);
         }
-      }
- else       if (code >= 400 && code < 500) {
-        serverErrorHandler.handle(command,response);
-      }
- else       if (code >= 300 && code < 400) {
-        serverErrorHandler.handle(command,response);
       }
  else {
         processResponse(response,command);
