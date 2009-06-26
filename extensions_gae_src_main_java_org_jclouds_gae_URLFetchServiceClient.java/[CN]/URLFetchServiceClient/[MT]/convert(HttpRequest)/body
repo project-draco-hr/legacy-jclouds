@@ -2,7 +2,7 @@
   convertHostHeaderToEndPoint(request);
   URL url=new URL(request.getEndPoint().toURL(),request.getUri());
   FetchOptions options=disallowTruncate();
-  followRedirectsUnlessRequestContainsPayload(request,options);
+  options.doNotFollowRedirects();
   HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
   for (  String header : request.getHeaders().keySet()) {
     for (    String value : request.getHeaders().get(header)) {

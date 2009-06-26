@@ -1,0 +1,17 @@
+{
+  if (command.getFailureCount() > retryCountLimit)   return false;
+  if (response.getStatusCode() == 400) {
+    byte[] content=S3Utils.closeConnectionButKeepContentStream(response);
+    command.incrementRedirectCount();
+    try {
+      AWSError error=S3Utils.parseAWSErrorFromContent(parserFactory,command,response,new String(content));
+      if ("RequestTimeout".equals(error.getCode())) {
+        return true;
+      }
+    }
+ catch (    HttpException e) {
+      logger.warn(e,"error parsing response: %s",new String(content));
+    }
+  }
+  return false;
+}

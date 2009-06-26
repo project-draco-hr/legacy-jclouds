@@ -1,0 +1,31 @@
+{
+  if (response.getStatusCode() == 301) {
+    byte[] content=S3Utils.closeConnectionButKeepContentStream(response);
+    if (command.getRequest().getMethod() == HttpMethod.HEAD) {
+      command.getRequest().setMethod(HttpMethod.GET);
+      return true;
+    }
+ else {
+      command.incrementRedirectCount();
+      try {
+        AWSError error=S3Utils.parseAWSErrorFromContent(parserFactory,command,response,new String(content));
+        String host=error.getDetails().get(S3Constants.ENDPOINT);
+        if (host != null) {
+          URI endPoint=command.getRequest().getEndPoint();
+          endPoint=Utils.replaceHostInEndPoint(endPoint,host);
+          command.getRequest().setEndPoint(endPoint);
+          return true;
+        }
+ else {
+          return false;
+        }
+      }
+ catch (      HttpException e) {
+        return false;
+      }
+    }
+  }
+ else {
+    return super.shouldRetryRequest(command,response);
+  }
+}
