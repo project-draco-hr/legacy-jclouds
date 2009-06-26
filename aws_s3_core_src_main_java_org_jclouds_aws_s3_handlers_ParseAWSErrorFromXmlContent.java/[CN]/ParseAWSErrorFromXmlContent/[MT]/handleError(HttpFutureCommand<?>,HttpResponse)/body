@@ -1,20 +1,28 @@
 {
-  AWSError error=new AWSError();
-  error.setRequestId(response.getFirstHeaderOrNull(S3Headers.REQUEST_ID));
-  error.setRequestToken(response.getFirstHeaderOrNull(S3Headers.REQUEST_TOKEN));
-  InputStream errorStream=response.getContent();
+  String content;
   try {
-    if (errorStream != null) {
-      error=parserFactory.createErrorParser().parse(errorStream);
-      if ("SignatureDoesNotMatch".equals(error.getCode()))       error.setStringSigned(RequestAuthorizeSignature.createStringToSign(command.getRequest()));
-      error.setRequestToken(response.getFirstHeaderOrNull(S3Headers.REQUEST_TOKEN));
+    content=response.getContent() != null ? Utils.toStringAndClose(response.getContent()) : null;
+    if (content != null) {
+      try {
+        if (content.indexOf('<') >= 0) {
+          AWSError error=parseAWSErrorFromContent(command,response,content);
+          command.setException(new AWSResponseException(command,response,error));
+        }
+ else {
+          command.setException(new HttpResponseException(command,response,content));
+        }
+      }
+ catch (      Exception he) {
+        command.setException(new HttpResponseException(command,response,content));
+        Utils.rethrowIfRuntime(he);
+      }
+    }
+ else {
+      command.setException(new HttpResponseException(command,response));
     }
   }
  catch (  Exception e) {
-    logger.warn(e,"error parsing XML reponse: %1$s",response);
-  }
- finally {
-    command.setException(new AWSResponseException(command,response,error));
-    IOUtils.closeQuietly(errorStream);
+    command.setException(new HttpResponseException(command,response));
+    Utils.rethrowIfRuntime(e);
   }
 }

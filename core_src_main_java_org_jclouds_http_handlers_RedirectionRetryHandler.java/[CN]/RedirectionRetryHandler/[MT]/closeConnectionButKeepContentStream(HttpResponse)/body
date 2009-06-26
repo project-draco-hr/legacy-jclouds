@@ -1,0 +1,14 @@
+{
+  if (response.getContent() != null) {
+    try {
+      byte[] data=IOUtils.toByteArray(response.getContent());
+      response.setContent(new ByteArrayInputStream(data));
+    }
+ catch (    IOException e) {
+      logger.error(e,"Error consuming input");
+    }
+ finally {
+      IOUtils.closeQuietly(response.getContent());
+    }
+  }
+}
