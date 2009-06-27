@@ -2,12 +2,12 @@
   HttpRequest request=command.getRequest();
   Q nativeRequest=null;
   try {
-    for (    HttpRequestFilter filter : requestFilters) {
-      filter.filter(request);
-    }
     HttpResponse response=null;
     for (; ; ) {
       logger.trace("%s - converting request %s",request.getEndPoint(),request);
+      for (      HttpRequestFilter filter : requestFilters) {
+        filter.filter(request);
+      }
       nativeRequest=convert(request);
       response=invoke(nativeRequest);
       int statusCode=response.getStatusCode();
@@ -27,7 +27,7 @@
     }
   }
  catch (  Exception e) {
-    command.setException(e);
+    command.setException(new ExecutionException(String.format("error invoking request %s",request),e));
   }
  finally {
     cleanup(nativeRequest);
