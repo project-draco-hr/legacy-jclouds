@@ -1,7 +1,12 @@
 {
 synchronized (bucketNames) {
     if (bucketNames.peek() == null) {
-      this.deleteEverything();
+      try {
+        deleteEverything();
+      }
+ catch (      AssertionError e) {
+        deleteEverything();
+      }
       for (; bucketIndex < bucketCount; bucketIndex++) {
         String bucketName=bucketPrefix + bucketIndex;
         try {
