@@ -1,7 +1,7 @@
 {
-  super(endPoint,HttpMethod.PUT,"/" + checkNotNull(destinationObject,"destinationObject"),callable,destinationBucket);
+  super(endPoint,HttpMethod.PUT,"/" + urlEncode(checkNotNull(destinationObject,"destinationObject")),callable,destinationBucket);
   CopyObjectHandler handler=(CopyObjectHandler)callable.getHandler();
   handler.setKey(destinationObject);
-  getRequest().getHeaders().put("x-amz-copy-source",String.format("/%1$s/%2$s",checkNotNull(sourceBucket,"sourceBucket"),Utils.encodeUriPath(checkNotNull(sourceObject,"sourceObject"))));
+  getRequest().getHeaders().put("x-amz-copy-source",String.format("/%1$s/%2$s",checkNotNull(sourceBucket,"sourceBucket"),urlEncode(checkNotNull(sourceObject,"sourceObject"))));
   getRequest().getHeaders().putAll(options.buildRequestHeaders());
 }
