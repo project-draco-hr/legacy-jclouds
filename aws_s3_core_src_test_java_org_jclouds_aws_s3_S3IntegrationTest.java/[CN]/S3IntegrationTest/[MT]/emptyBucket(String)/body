@@ -3,8 +3,12 @@
     assertEventually(new Runnable(){
       public void run(){
         try {
-          context.createInputStreamMap(name).clear();
-          assertEventuallyBucketEmpty(name);
+          Map<String,InputStream> map=context.createInputStreamMap(name);
+          Set<String> keys=map.keySet();
+          if (keys.size() > 0) {
+            map.clear();
+            assertEquals(map.size(),0,String.format("deleting %s, we still have %s left",keys,map.keySet()));
+          }
         }
  catch (        Exception e) {
           Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
