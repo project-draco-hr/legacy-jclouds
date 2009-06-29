@@ -1,7 +1,7 @@
 {
   HttpRequest request=command.getRequest();
+  HttpResponse response=null;
   try {
-    HttpResponse response=null;
     for (; ; ) {
       Q nativeRequest=null;
       try {
@@ -32,6 +32,6 @@
     }
   }
  catch (  Exception e) {
-    command.setException(new ExecutionException(String.format("error invoking request %s",request),e));
+    command.setException(new HttpResponseException(command,response,e));
   }
 }
