@@ -1,2 +1,14 @@
 {
+  String bucketName=getBucketName();
+  try {
+    BaseS3Map<S3Object> map=createMap(context,bucketName);
+    putString(map,"one","two");
+    assertEventuallyContentEquals(map,"one","two");
+    assertEventuallyRemoveEquals(map,"one",S3Object.NOT_FOUND);
+    assertEventuallyGetEquals(map,"one",S3Object.NOT_FOUND);
+    assertEventuallyKeySize(map,0);
+  }
+  finally {
+    returnBucket(bucketName);
+  }
 }
