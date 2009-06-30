@@ -19,15 +19,24 @@
     assertEquals(jcDestinationObject.getKey(),destinationObjectKey);
     assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(S3Constants.USER_METADATA_PREFIX + metadataName).iterator()),sourceMetadataValue);
     assertEquals(copyResult.get("ETag"),S3Utils.toHexString(jcDestinationObject.getMetadata().getMd5()));
+    org.jclouds.aws.s3.domain.AccessControlList jcACL=client.getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),1);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
     destinationObject=new S3Object(destinationObjectKey);
     destinationObject.addMetadata(S3Constants.USER_METADATA_PREFIX + metadataName,destinationMetadataValue);
     copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,true);
     jcDestinationObject=client.getObject(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(S3Constants.USER_METADATA_PREFIX + metadataName).iterator()),destinationMetadataValue);
+    jcACL=client.getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),1);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
     destinationObject=new S3Object(destinationObjectKey);
     destinationObject.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
     copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,false);
-    jcDestinationObject=client.getObject(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    jcACL=client.getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),2);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
+    assertTrue(jcACL.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
   }
   finally {
     returnBucket(bucketName);

@@ -1,3 +1,10 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    org.jclouds.aws.s3.domain.AccessControlList jcACL=connection.getObjectACL(bucketName,objectKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    return Util.convertAccessControlList(jcACL);
+  }
+ catch (  Exception e) {
+    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    throw new S3ServiceException("error getting object's ACL",e);
+  }
 }

@@ -39,8 +39,10 @@
     requestObject=new S3Object(objectKey);
     requestObject.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
-    assertEquals(jsResultObject.getAcl(),AccessControlList.REST_CANNED_PUBLIC_READ);
+    org.jclouds.aws.s3.domain.AccessControlList jcACL=client.getObjectACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    assertTrue(jcACL.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
+    assertEquals(jcACL.getGrants().size(),2);
     requestObject=new S3Object(objectKey);
     data="Here is some d?t? for you";
     requestObject.setDataInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));

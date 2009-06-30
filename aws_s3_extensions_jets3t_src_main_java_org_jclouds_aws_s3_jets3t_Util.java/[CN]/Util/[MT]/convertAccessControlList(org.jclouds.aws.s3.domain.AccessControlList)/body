@@ -1,0 +1,38 @@
+{
+  AccessControlList jsACL=new AccessControlList();
+  if (jcACL.getOwner() != null) {
+    jsACL.setOwner(new S3Owner(jcACL.getOwner().getId(),jcACL.getOwner().getDisplayName()));
+  }
+  for (  org.jclouds.aws.s3.domain.AccessControlList.Grant jcGrant : jcACL.getGrants()) {
+    Permission jsPermission=null;
+    org.jclouds.aws.s3.domain.AccessControlList.Permission jcPerm=jcGrant.getPermission();
+    if (org.jclouds.aws.s3.domain.AccessControlList.Permission.FULL_CONTROL == jcPerm) {
+      jsPermission=Permission.PERMISSION_FULL_CONTROL;
+    }
+ else     if (org.jclouds.aws.s3.domain.AccessControlList.Permission.READ == jcPerm) {
+      jsPermission=Permission.PERMISSION_READ;
+    }
+ else     if (org.jclouds.aws.s3.domain.AccessControlList.Permission.READ_ACP == jcPerm) {
+      jsPermission=Permission.PERMISSION_READ_ACP;
+    }
+ else     if (org.jclouds.aws.s3.domain.AccessControlList.Permission.WRITE == jcPerm) {
+      jsPermission=Permission.PERMISSION_WRITE;
+    }
+ else     if (org.jclouds.aws.s3.domain.AccessControlList.Permission.WRITE_ACP == jcPerm) {
+      jsPermission=Permission.PERMISSION_WRITE_ACP;
+    }
+    GranteeInterface jsGrantee=null;
+    org.jclouds.aws.s3.domain.AccessControlList.Grantee jcGrantee=jcGrant.getGrantee();
+    if (jcGrantee instanceof org.jclouds.aws.s3.domain.AccessControlList.EmailAddressGrantee) {
+      jsGrantee=new EmailAddressGrantee(jcGrantee.getIdentifier());
+    }
+ else     if (jcGrantee instanceof org.jclouds.aws.s3.domain.AccessControlList.CanonicalUserGrantee) {
+      jsGrantee=new CanonicalGrantee(jcGrantee.getIdentifier());
+    }
+ else     if (jcGrantee instanceof org.jclouds.aws.s3.domain.AccessControlList.GroupGrantee) {
+      jsGrantee=new GroupGrantee(jcGrantee.getIdentifier());
+    }
+    jsACL.grantPermission(jsGrantee,jsPermission);
+  }
+  return jsACL;
+}
