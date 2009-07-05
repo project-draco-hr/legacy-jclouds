@@ -1,9 +1,9 @@
 {
-  return S3ContextFactory.createInjector(accessKeyId,secretAccessKey,false,new URLFetchServiceClientModule(),new ServletModule(){
+  return S3ContextBuilder.newBuilder(accessKeyId,secretAccessKey).withHttpSecure(false).withModules(new URLFetchServiceClientModule(),new ServletModule(){
     @Override protected void configureServlets(){
       serve("*.s3").with(GetAllBucketsController.class);
       requestInjection(this);
     }
   }
-);
+).buildInjector();
 }
