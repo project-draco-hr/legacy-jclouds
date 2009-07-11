@@ -1,0 +1,11 @@
+{
+  checkState(!shutdown,"shutdown!");
+  List<Future<T>> results=new ArrayList<Future<T>>(tasks.size());
+  for (  Callable<T> task : tasks) {
+    checkNotNull(task,"task");
+    RunnableFutureTask<T> future=new RunnableFutureTask<T>(task);
+    future.run();
+    results.add(future);
+  }
+  return results;
+}

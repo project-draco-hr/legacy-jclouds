@@ -7,7 +7,7 @@
   object.getMetadata().setSize(TEST_STRING.length());
   object.getMetadata().setContentDisposition("attachment; filename=hello.txt");
   object.getMetadata().getUserMetadata().put(S3Headers.USER_METADATA_PREFIX + "adrian","powderpuff");
-  object.getMetadata().setMd5(S3Utils.md5(TEST_STRING.getBytes()));
+  object.getMetadata().setETag(HttpUtils.eTag(TEST_STRING.getBytes()));
   String bucketName=getBucketName();
   try {
     addObjectToBucket(bucketName,object);
@@ -18,7 +18,7 @@
     assertEquals(newObject.getMetadata().getCacheControl(),"no-cache");
     assertEquals(newObject.getMetadata().getSize(),TEST_STRING.length());
     assertEquals(newObject.getMetadata().getUserMetadata().values().iterator().next(),"powderpuff");
-    assertEquals(newObject.getMetadata().getMd5(),S3Utils.md5(TEST_STRING.getBytes()));
+    assertEquals(newObject.getMetadata().getETag(),HttpUtils.eTag(TEST_STRING.getBytes()));
   }
   finally {
     returnBucket(bucketName);

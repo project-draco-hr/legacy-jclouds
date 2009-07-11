@@ -1,0 +1,19 @@
+{
+  URL url=request.getEndpoint().toURL();
+  FetchOptions options=disallowTruncate();
+  options.doNotFollowRedirects();
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header)) {
+      gaeRequest.addHeader(new HTTPHeader(header,value));
+    }
+  }
+  if (request.getEntity() != null) {
+    changeRequestContentToBytes(request);
+    gaeRequest.setPayload((byte[])request.getEntity());
+  }
+ else {
+    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
+  }
+  return gaeRequest;
+}

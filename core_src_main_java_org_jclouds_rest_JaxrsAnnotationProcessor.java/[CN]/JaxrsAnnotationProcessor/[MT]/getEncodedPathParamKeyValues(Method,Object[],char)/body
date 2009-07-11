@@ -1,0 +1,25 @@
+{
+  Map<String,Object> pathParamValues=Maps.newHashMap();
+  Map<Integer,Set<Annotation>> indexToPathParam=methodToindexOfParamToPathParamAnnotations.get(method);
+  Map<Integer,Set<Annotation>> indexToPathParamExtractor=methodToindexOfParamToPathParamParserAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToPathParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      Set<Annotation> extractors=indexToPathParamExtractor.get(entry.getKey());
+      if (extractors != null && extractors.size() > 0) {
+        PathParamParser extractor=(PathParamParser)extractors.iterator().next();
+        pathParamValues.put(((PathParam)key).value(),injector.getInstance(extractor.value()).apply(args[entry.getKey()]));
+      }
+ else {
+        String paramKey=((PathParam)key).value();
+        String paramValue=URLEncoder.encode(args[entry.getKey()].toString(),"UTF-8");
+        for (        char c : skipEncode) {
+          String value=Character.toString(c);
+          String encoded=URLEncoder.encode(value,"UTF-8");
+          paramValue=paramValue.replaceAll(encoded,value);
+        }
+        pathParamValues.put(paramKey,paramValue);
+      }
+    }
+  }
+  return pathParamValues;
+}

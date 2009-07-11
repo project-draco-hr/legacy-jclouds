@@ -6,10 +6,10 @@
       if (source.containsKey(sourceObject)) {
         S3Object object=source.get(sourceObject);
         if (options.getIfMatch() != null) {
-          if (!Arrays.equals(object.getMetadata().getMd5(),S3Utils.fromHexString(options.getIfMatch().replaceAll("\"",""))))           throwResponseException(412);
+          if (!Arrays.equals(object.getMetadata().getETag(),HttpUtils.fromHexString(options.getIfMatch().replaceAll("\"",""))))           throwResponseException(412);
         }
         if (options.getIfNoneMatch() != null) {
-          if (Arrays.equals(object.getMetadata().getMd5(),S3Utils.fromHexString(options.getIfNoneMatch().replaceAll("\"",""))))           throwResponseException(412);
+          if (Arrays.equals(object.getMetadata().getETag(),HttpUtils.fromHexString(options.getIfNoneMatch().replaceAll("\"",""))))           throwResponseException(412);
         }
         if (options.getIfModifiedSince() != null) {
           DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());

@@ -1,0 +1,11 @@
+{
+  HttpCommandRendezvous<?> rendezvous=(HttpCommandRendezvous<?>)context.removeAttribute("command");
+  if (rendezvous != null) {
+    HttpRequest request=rendezvous.getCommand().getRequest();
+    for (    HttpRequestFilter filter : getRequestFilters()) {
+      filter.filter(request);
+    }
+    return NioHttpUtils.convertToApacheRequest(request);
+  }
+  return null;
+}

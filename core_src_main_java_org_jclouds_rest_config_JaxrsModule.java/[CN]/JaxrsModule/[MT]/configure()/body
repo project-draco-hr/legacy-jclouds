@@ -1,0 +1,9 @@
+{
+  install(new SaxModule());
+  RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+  bind(RestClientProxy.RestClientProxyFactory.class).toProvider(FactoryProvider.newFactory(RestClientProxy.RestClientProxyFactory.class,RestClientProxy.class));
+  bind(JaxrsAnnotationProcessor.Factory.class).toProvider(FactoryProvider.newFactory(JaxrsAnnotationProcessor.Factory.class,JaxrsAnnotationProcessor.class));
+  bind(httpCommandFactoryLiteral).toProvider(FactoryProvider.newFactory(httpCommandFactoryLiteral,new TypeLiteral<TransformingHttpCommandImpl<?>>(){
+  }
+));
+}

@@ -1,0 +1,17 @@
+{
+  closeConnectionButKeepContentStream(response);
+  String hostHeader=response.getFirstHeaderOrNull(HttpHeaders.LOCATION);
+  if (hostHeader != null && command.incrementRedirectCount() < retryCountLimit) {
+    URI redirectionUrl=UriBuilder.fromUri(hostHeader).build();
+    if (redirectionUrl.getHost().equals(command.getRequest().getEndpoint().getHost()) && redirectionUrl.getPort() == command.getRequest().getEndpoint().getPort()) {
+      return backoffHandler.shouldRetryRequest(command,response);
+    }
+ else {
+      command.setHostAndPort(redirectionUrl.getHost(),redirectionUrl.getPort());
+    }
+    return true;
+  }
+ else {
+    return false;
+  }
+}

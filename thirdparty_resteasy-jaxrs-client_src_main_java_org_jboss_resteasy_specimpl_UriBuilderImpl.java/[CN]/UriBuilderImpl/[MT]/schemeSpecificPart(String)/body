@@ -1,0 +1,20 @@
+{
+  if (ssp == null)   throw new IllegalArgumentException("schemeSpecificPart was null");
+  StringBuilder sb=new StringBuilder();
+  if (scheme != null)   sb.append(scheme).append(':');
+  if (ssp != null)   sb.append(ssp);
+  if (fragment != null && fragment.length() > 0)   sb.append('#').append(fragment);
+  URI uri=URI.create(sb.toString());
+  if (uri.getRawSchemeSpecificPart() != null && uri.getRawPath() == null) {
+    this.ssp=uri.getRawSchemeSpecificPart();
+  }
+ else {
+    this.ssp=null;
+    userInfo=uri.getRawUserInfo();
+    host=uri.getHost();
+    port=uri.getPort();
+    path=uri.getRawPath();
+    query=uri.getRawQuery();
+  }
+  return this;
+}

@@ -1,5 +1,5 @@
 {
-  GetObjectOptions options=new GetObjectOptions();
+  GetOptions options=new GetOptions();
   if (ifModifiedSince != null) {
     options.ifModifiedSince(new DateTime(ifModifiedSince));
   }
@@ -7,10 +7,10 @@
     options.ifUnmodifiedSince(new DateTime(ifUnmodifiedSince));
   }
   if (ifMatchTags != null && ifMatchTags.length > 0) {
-    options.ifMd5Matches(Utils.encodeString(ifMatchTags[0]));
+    options.ifETagMatches(Utils.encodeString(ifMatchTags[0]));
   }
   if (ifNoneMatchTags != null && ifNoneMatchTags.length > 0) {
-    options.ifMd5DoesntMatch(Utils.encodeString(ifNoneMatchTags[0]));
+    options.ifETagDoesntMatch(Utils.encodeString(ifNoneMatchTags[0]));
   }
   return options;
 }

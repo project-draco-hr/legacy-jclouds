@@ -18,7 +18,7 @@
     jcDestinationObject=client.getObject(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcDestinationObject.getKey(),destinationObjectKey);
     assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(S3Constants.USER_METADATA_PREFIX + metadataName).iterator()),sourceMetadataValue);
-    assertEquals(copyResult.get("ETag"),S3Utils.toHexString(jcDestinationObject.getMetadata().getMd5()));
+    assertEquals(copyResult.get("ETag"),HttpUtils.toHexString(jcDestinationObject.getMetadata().getETag()));
     org.jclouds.aws.s3.domain.AccessControlList jcACL=client.getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcACL.getGrants().size(),1);
     assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));

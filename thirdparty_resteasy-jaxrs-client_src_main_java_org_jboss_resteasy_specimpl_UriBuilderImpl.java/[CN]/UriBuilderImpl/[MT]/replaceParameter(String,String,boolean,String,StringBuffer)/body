@@ -1,0 +1,14 @@
+{
+  Matcher matcher=createUriParamMatcher(string);
+  while (matcher.find()) {
+    String param=matcher.group(1);
+    if (!param.equals(name))     continue;
+    if (!isEncoded) {
+      value=Encode.encodeSegment(value,false);
+      value=Encode.encodeNonCodes(value);
+    }
+    matcher.appendReplacement(buffer,value);
+  }
+  matcher.appendTail(buffer);
+  return buffer;
+}

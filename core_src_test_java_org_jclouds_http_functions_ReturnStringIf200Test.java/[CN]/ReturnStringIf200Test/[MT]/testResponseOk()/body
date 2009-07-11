@@ -1,0 +1,9 @@
+{
+  Function<HttpResponse,String> function=new ReturnStringIf200();
+  HttpResponse response=createMock(HttpResponse.class);
+  expect(response.getStatusCode()).andReturn(200).atLeastOnce();
+  expect(response.getContent()).andReturn(IOUtils.toInputStream("hello"));
+  replay(response);
+  assertEquals(function.apply(response),"hello");
+  verify(response);
+}

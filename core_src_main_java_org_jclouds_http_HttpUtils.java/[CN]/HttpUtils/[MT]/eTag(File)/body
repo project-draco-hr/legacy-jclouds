@@ -1,0 +1,21 @@
+{
+  MD5Digest eTag=new MD5Digest();
+  byte[] resBuf=new byte[eTag.getDigestSize()];
+  byte[] buffer=new byte[1024];
+  int numRead=-1;
+  InputStream i=new FileInputStream(toEncode);
+  try {
+    do {
+      numRead=i.read(buffer);
+      if (numRead > 0) {
+        eTag.update(buffer,0,numRead);
+      }
+    }
+ while (numRead != -1);
+  }
+  finally {
+    IOUtils.closeQuietly(i);
+  }
+  eTag.doFinal(resBuf,0);
+  return resBuf;
+}

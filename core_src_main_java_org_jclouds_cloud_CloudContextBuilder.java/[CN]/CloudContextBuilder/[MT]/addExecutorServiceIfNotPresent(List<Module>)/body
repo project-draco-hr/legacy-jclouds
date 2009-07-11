@@ -1,0 +1,20 @@
+{
+  if (!Iterables.any(modules,new Predicate<Module>(){
+    public boolean apply(    Module input){
+      return input.getClass().isAnnotationPresent(ConfiguresExecutorService.class);
+    }
+  }
+)) {
+    if (Iterables.any(modules,new Predicate<Module>(){
+      public boolean apply(      Module input){
+        return input.getClass().isAnnotationPresent(SingleThreaded.class);
+      }
+    }
+)) {
+      modules.add(new ExecutorServiceModule(new WithinThreadExecutorService()));
+    }
+ else {
+      modules.add(new ExecutorServiceModule(Executors.newCachedThreadPool()));
+    }
+  }
+}

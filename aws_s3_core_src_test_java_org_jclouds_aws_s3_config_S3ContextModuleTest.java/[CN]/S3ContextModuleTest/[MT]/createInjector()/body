@@ -1,5 +1,5 @@
 {
-  return Guice.createInjector(new LiveS3ConnectionModule(),new S3ParserModule(),new S3ContextModule(){
+  return Guice.createInjector(new RestS3ConnectionModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new S3ParserModule(),new S3ContextModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("localhost");
       bindConstant().annotatedWith(Names.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("localhost");
@@ -11,5 +11,5 @@
       super.configure();
     }
   }
-,new JavaUrlHttpFutureCommandClientModule());
+,new JavaUrlHttpCommandExecutorServiceModule());
 }

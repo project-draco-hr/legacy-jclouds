@@ -1,0 +1,26 @@
+{
+  if (method.getName().equals("equals")) {
+    return this.equals(o);
+  }
+ else   if (method.getName().equals("hashCode")) {
+    return this.hashCode();
+  }
+  logger.trace("%s - converting method to request",method);
+  HttpRequest request=util.createRequest(endPoint,method,args);
+  logger.trace("%s - converted method to request %s",method,request);
+  Function<HttpResponse,?> transformer=util.createResponseParser(method);
+  Function<Exception,?> exceptionParser=util.createExceptionParserOrNullIfNotFound(method);
+  logger.trace("%s - creating command for request %s, transformer %s, exceptionParser %s",method,request,transformer,exceptionParser);
+  Future<?> result=commandFactory.create(request,transformer,exceptionParser).execute();
+  if (exceptionParser != null) {
+    logger.trace("%s - wrapping future for request %s in exceptionParser %s",method,request,exceptionParser);
+    result=new FutureExceptionParser(result,exceptionParser);
+  }
+  if (method.getReturnType().isAssignableFrom(Future.class)) {
+    return result;
+  }
+ else {
+    logger.trace("%s - invoking request synchronously %s",method,request,exceptionParser);
+    return result.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+  }
+}

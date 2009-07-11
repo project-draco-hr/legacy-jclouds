@@ -1,5 +1,6 @@
 {
-  this.redirectionRetryHandler=new RedirectionRetryHandler(5);
-  this.clientErrorRetryHandler=new CannotRetryHandler();
-  this.serverErrorRetryHandler=new BackoffLimitedRetryHandler(5);
+  BackoffLimitedRetryHandler backOff=new BackoffLimitedRetryHandler(5);
+  this.serverErrorRetryHandler=backOff;
+  this.redirectionRetryHandler=new RedirectionRetryHandler(backOff,5);
+  this.clientErrorRetryHandler=HttpRetryHandler.NEVER_RETRY;
 }

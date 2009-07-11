@@ -7,7 +7,7 @@
     metadata.put(S3Headers.USER_METADATA_PREFIX + "adrian","cole");
     client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
     validateContent(destinationBucket,destinationKey);
-    S3Object.Metadata objectMeta=client.headObject(destinationBucket,destinationKey).get(10,TimeUnit.SECONDS);
+    S3Object.Metadata objectMeta=client.headObject(destinationBucket,destinationKey);
     assertEquals(objectMeta.getUserMetadata(),metadata);
   }
   finally {

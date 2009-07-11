@@ -4,7 +4,7 @@
     org.jclouds.aws.s3.domain.S3Object.Metadata jcObjectMetadata=connection.copyObject(sourceBucketName,sourceObjectKey,destinationBucketName,destinationObjectKey,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     Map map=new HashMap();
     map.put("Last-Modified",jcObjectMetadata.getLastModified().toDate());
-    map.put("ETag",S3Utils.toHexString(jcObjectMetadata.getMd5()));
+    map.put("ETag",HttpUtils.toHexString(jcObjectMetadata.getETag()));
     return map;
   }
  catch (  Exception e) {

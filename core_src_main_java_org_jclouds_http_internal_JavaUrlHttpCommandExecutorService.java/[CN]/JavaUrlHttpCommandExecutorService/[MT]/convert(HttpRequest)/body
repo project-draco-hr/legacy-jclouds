@@ -1,0 +1,45 @@
+{
+  URL url=request.getEndpoint().toURL();
+  HttpURLConnection connection=(HttpURLConnection)url.openConnection();
+  if (relaxHostname && connection instanceof HttpsURLConnection) {
+    HttpsURLConnection sslCon=(HttpsURLConnection)connection;
+    sslCon.setHostnameVerifier(new LogToMapHostnameVerifier());
+  }
+  connection.setDoOutput(true);
+  connection.setAllowUserInteraction(false);
+  connection.setInstanceFollowRedirects(false);
+  connection.setRequestMethod(request.getMethod().toString());
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header))     connection.setRequestProperty(header,value);
+  }
+  connection.setRequestProperty(HttpHeaders.HOST,request.getEndpoint().getHost());
+  if (request.getEntity() != null) {
+    OutputStream out=connection.getOutputStream();
+    try {
+      if (request.getEntity() instanceof String) {
+        OutputStreamWriter writer=new OutputStreamWriter(out);
+        writer.write((String)request.getEntity());
+        writer.close();
+      }
+ else       if (request.getEntity() instanceof InputStream) {
+        IOUtils.copy((InputStream)request.getEntity(),out);
+      }
+ else       if (request.getEntity() instanceof File) {
+        IOUtils.copy(new FileInputStream((File)request.getEntity()),out);
+      }
+ else       if (request.getEntity() instanceof byte[]) {
+        IOUtils.write((byte[])request.getEntity(),out);
+      }
+ else {
+        throw new UnsupportedOperationException("Content not supported " + request.getEntity().getClass());
+      }
+    }
+  finally {
+      IOUtils.closeQuietly(out);
+    }
+  }
+ else {
+    connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,"0");
+  }
+  return connection;
+}

@@ -1,0 +1,12 @@
+{
+  Map<Integer,Set<Annotation>> indexToEntityAnnotation=Maps.filterValues(methodToIndexOfParamToEntityAnnotation.get(method),new Predicate<Set<Annotation>>(){
+    public boolean apply(    Set<Annotation> input){
+      return input.size() == 1;
+    }
+  }
+);
+  if (indexToEntityAnnotation.size() > 1) {
+    throw new IllegalStateException(String.format("You must not specify more than one @Entity annotation on: %s; found %s",method.toString(),indexToEntityAnnotation));
+  }
+  return indexToEntityAnnotation;
+}

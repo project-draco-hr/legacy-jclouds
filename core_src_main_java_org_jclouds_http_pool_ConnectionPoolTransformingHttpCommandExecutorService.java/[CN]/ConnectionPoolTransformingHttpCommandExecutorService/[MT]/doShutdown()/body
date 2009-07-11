@@ -1,0 +1,15 @@
+{
+  exception.compareAndSet(null,getExceptionFromDependenciesOrNull());
+  while (!commandQueue.isEmpty()) {
+    HttpCommandRendezvous<?> rendezvous=(HttpCommandRendezvous<?>)commandQueue.remove();
+    if (rendezvous != null) {
+      try {
+        if (exception.get() != null)         rendezvous.setException(exception.get());
+ else         rendezvous.setException(new CancellationException("shutdown"));
+      }
+ catch (      InterruptedException e) {
+        logger.error(e,"Error cancelling command %s",rendezvous.getCommand());
+      }
+    }
+  }
+}

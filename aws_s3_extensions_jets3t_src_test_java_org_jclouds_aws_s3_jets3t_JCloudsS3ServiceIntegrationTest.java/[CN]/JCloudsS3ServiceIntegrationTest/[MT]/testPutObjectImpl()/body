@@ -9,19 +9,19 @@
     jcObject=client.getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getKey(),objectKey);
     assertEquals(jcObject.getMetadata().getSize(),0);
-    assertEquals(jcObject.getMetadata().getContentType(),ContentTypes.BINARY);
+    assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
-    assertEquals(jsResultObject.getContentType(),ContentTypes.BINARY);
+    assertEquals(jsResultObject.getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     requestObject=new S3Object("?n???d?-object");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=client.getObject(bucketName,requestObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getKey(),requestObject.getKey());
     assertEquals(jcObject.getMetadata().getSize(),0);
-    assertEquals(jcObject.getMetadata().getContentType(),ContentTypes.BINARY);
+    assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
-    assertEquals(jsResultObject.getContentType(),ContentTypes.BINARY);
+    assertEquals(jsResultObject.getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     String data="This is my ?n???d? data";
     requestObject=new S3Object(objectKey,data);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
@@ -49,7 +49,7 @@
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=client.getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertTrue(jsResultObject.verifyData(data.getBytes("UTF-8")));
-    assertEquals(jsResultObject.getMd5HashAsHex(),S3Utils.toHexString(jcObject.getMetadata().getMd5()));
+    assertEquals(jsResultObject.getMd5HashAsHex(),HttpUtils.toHexString(jcObject.getMetadata().getETag()));
   }
   finally {
     returnBucket(bucketName);

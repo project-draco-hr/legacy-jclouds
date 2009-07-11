@@ -1,0 +1,18 @@
+{
+  S3Object object=(S3Object)entity;
+  checkArgument(object.getMetadata().getSize() >= 0,"size must be set");
+  request.setEntity(checkNotNull(object.getData(),"object.getContent()"));
+  request.getHeaders().put(HttpHeaders.CONTENT_TYPE,checkNotNull(object.getMetadata().getContentType(),"object.metadata.contentType()"));
+  request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getMetadata().getSize() + "");
+  if (object.getMetadata().getCacheControl() != null) {
+    request.getHeaders().put(HttpHeaders.CACHE_CONTROL,object.getMetadata().getCacheControl());
+  }
+  if (object.getMetadata().getContentDisposition() != null) {
+    request.getHeaders().put("Content-Disposition",object.getMetadata().getContentDisposition());
+  }
+  if (object.getMetadata().getContentEncoding() != null) {
+    request.getHeaders().put(HttpHeaders.CONTENT_ENCODING,object.getMetadata().getContentEncoding());
+  }
+  if (object.getMetadata().getETag() != null)   request.getHeaders().put(HttpHeaders.ETAG,HttpUtils.toBase64String(object.getMetadata().getETag()));
+  request.getHeaders().putAll(object.getMetadata().getUserMetadata());
+}

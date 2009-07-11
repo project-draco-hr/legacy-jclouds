@@ -1,0 +1,6 @@
+{
+  Multimap<String,String> headers=ifSourceModifiedSince(now).ifSourceETagDoesntMatch(testBytes).overrideMetadataWith(goodMeta).buildRequestHeaders();
+  assertEquals(headers.get("x-amz-copy-source-if-modified-since").iterator().next(),new DateService().rfc822DateFormat(now));
+  assertEquals(headers.get("x-amz-copy-source-if-none-match").iterator().next(),"\"" + HttpUtils.toHexString(testBytes) + "\"");
+  for (  String value : goodMeta.values())   assertTrue(headers.containsValue(value));
+}

@@ -1,0 +1,13 @@
+{
+  String path=basePath;
+  if (path == null)   path="";
+  for (  String segment : segments) {
+    if ("".equals(segment))     continue;
+    if (!path.endsWith("/"))     path+="/";
+    if (segment.equals("/"))     continue;
+    if (segment.startsWith("/"))     segment=segment.substring(1);
+    if (encode)     segment=Encode.encodePath(segment,true);
+    path+=segment;
+  }
+  return path;
+}

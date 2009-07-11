@@ -1,0 +1,22 @@
+{
+  Object content=request.getEntity();
+  if (content == null || content instanceof byte[]) {
+    return;
+  }
+ else   if (content instanceof String) {
+    String string=(String)content;
+    request.setEntity(string.getBytes());
+  }
+ else   if (content instanceof InputStream || content instanceof File) {
+    InputStream i=content instanceof InputStream ? (InputStream)content : new FileInputStream((File)content);
+    try {
+      request.setEntity(IOUtils.toByteArray(i));
+    }
+  finally {
+      IOUtils.closeQuietly(i);
+    }
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + content.getClass());
+  }
+}

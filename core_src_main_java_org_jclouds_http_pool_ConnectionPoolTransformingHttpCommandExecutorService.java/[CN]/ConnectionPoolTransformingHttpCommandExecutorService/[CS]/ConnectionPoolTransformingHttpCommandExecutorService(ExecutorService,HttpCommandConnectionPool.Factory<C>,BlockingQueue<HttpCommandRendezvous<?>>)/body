@@ -1,0 +1,19 @@
+{
+  super(executor);
+  this.poolFactory=pf;
+  poolMap=new MapMaker().makeComputingMap(new Function<URI,HttpCommandConnectionPool<C>>(){
+    public HttpCommandConnectionPool<C> apply(    URI endPoint){
+      try {
+        HttpCommandConnectionPool<C> pool=poolFactory.create(endPoint);
+        addDependency(pool);
+        return pool;
+      }
+ catch (      RuntimeException e) {
+        logger.error(e,"error creating entry for %s",endPoint);
+        throw e;
+      }
+    }
+  }
+);
+  this.commandQueue=commandQueue;
+}

@@ -1,0 +1,33 @@
+{
+  HttpResponse response=null;
+  for (; ; ) {
+    HttpRequest request=command.getRequest();
+    Q nativeRequest=null;
+    try {
+      logger.trace("%s - converting request %s",request.getEndpoint(),request);
+      for (      HttpRequestFilter filter : requestFilters) {
+        filter.filter(request);
+      }
+      nativeRequest=convert(request);
+      response=invoke(nativeRequest);
+      int statusCode=response.getStatusCode();
+      if (statusCode >= 300) {
+        if (retryHandler.shouldRetryRequest(command,response)) {
+          continue;
+        }
+ else {
+          errorHandler.handleError(command,response);
+          break;
+        }
+      }
+ else {
+        break;
+      }
+    }
+  finally {
+      cleanup(nativeRequest);
+    }
+  }
+  if (command.getException() != null)   throw command.getException();
+  return response;
+}

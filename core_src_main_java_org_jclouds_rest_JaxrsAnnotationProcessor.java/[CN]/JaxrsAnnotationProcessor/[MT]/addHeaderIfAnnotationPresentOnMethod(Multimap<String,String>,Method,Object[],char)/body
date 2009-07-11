@@ -1,0 +1,10 @@
+{
+  if (method.isAnnotationPresent(Header.class)) {
+    Header header=method.getAnnotation(Header.class);
+    String value=header.value();
+    for (    Entry<String,Object> tokenValue : getEncodedPathParamKeyValues(method,args).entrySet()) {
+      value=value.replaceAll("\\{" + tokenValue.getKey() + "\\}",tokenValue.getValue().toString());
+    }
+    headers.put(header.key(),value);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  S3Object object=null;
+  if (value instanceof S3Object) {
+    object=(S3Object)value;
+  }
+ else {
+    object=new S3Object("dummy",value);
+  }
+  if (object.getMetadata().getETag() == null)   object.generateETag();
+  return object.getMetadata().getETag();
+}

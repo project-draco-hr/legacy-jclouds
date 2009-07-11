@@ -1,0 +1,29 @@
+{
+  StringBuffer buffer=new StringBuffer();
+  if (scheme != null)   replaceParameter(paramMap,isEncoded,scheme,buffer).append(":");
+  if (ssp != null) {
+    buffer.append(ssp);
+  }
+ else   if (userInfo != null || host != null || port != -1) {
+    buffer.append("//");
+    if (userInfo != null)     replaceParameter(paramMap,isEncoded,userInfo,buffer).append("@");
+    if (host != null)     replaceParameter(paramMap,isEncoded,host,buffer);
+    if (port != -1)     buffer.append(":").append(Integer.toString(port));
+  }
+  if (path != null)   replaceParameter(paramMap,isEncoded,path,buffer);
+  if (query != null) {
+    buffer.append("?");
+    replaceParameter(paramMap,isEncoded,query,buffer);
+  }
+  if (fragment != null) {
+    buffer.append("#");
+    replaceParameter(paramMap,isEncoded,fragment,buffer);
+  }
+  String buf=buffer.toString();
+  try {
+    return URI.create(buf);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("Failed to create URI: " + buf,e);
+  }
+}

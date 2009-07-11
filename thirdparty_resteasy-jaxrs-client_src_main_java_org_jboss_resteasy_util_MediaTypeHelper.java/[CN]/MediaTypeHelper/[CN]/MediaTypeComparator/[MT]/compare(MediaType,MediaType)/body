@@ -1,0 +1,33 @@
+{
+  float q=getQWithParamInfo(mediaType);
+  boolean wasQ=q != 2.0f;
+  if (q == 2.0f)   q=1.0f;
+  float q2=getQWithParamInfo(mediaType2);
+  boolean wasQ2=q2 != 2.0f;
+  if (q2 == 2.0f)   q2=1.0f;
+  if (q < q2)   return -1;
+  if (q > q2)   return 1;
+  if (mediaType.isWildcardType() && !mediaType2.isWildcardType())   return -1;
+  if (!mediaType.isWildcardType() && mediaType2.isWildcardType())   return 1;
+  if (mediaType.isWildcardSubtype() && !mediaType2.isWildcardSubtype())   return -1;
+  if (!mediaType.isWildcardSubtype() && mediaType2.isWildcardSubtype())   return 1;
+  if (isComposite(mediaType.getSubtype()) && !isComposite(mediaType2.getSubtype()))   return -1;
+  if (!isComposite(mediaType.getSubtype()) && isComposite(mediaType2.getSubtype()))   return 1;
+  if (isCompositeWildcardSubtype(mediaType.getSubtype()) && !isCompositeWildcardSubtype(mediaType2.getSubtype()))   return -1;
+  if (!isCompositeWildcardSubtype(mediaType.getSubtype()) && isCompositeWildcardSubtype(mediaType2.getSubtype()))   return 1;
+  if (isWildcardCompositeSubtype(mediaType.getSubtype()) && !isWildcardCompositeSubtype(mediaType2.getSubtype()))   return -1;
+  if (!isWildcardCompositeSubtype(mediaType.getSubtype()) && isWildcardCompositeSubtype(mediaType2.getSubtype()))   return 1;
+  int numNonQ=0;
+  if (mediaType.getParameters() != null) {
+    numNonQ=mediaType.getParameters().size();
+    if (wasQ)     numNonQ--;
+  }
+  int numNonQ2=0;
+  if (mediaType2.getParameters() != null) {
+    numNonQ2=mediaType2.getParameters().size();
+    if (wasQ2)     numNonQ2--;
+  }
+  if (numNonQ < numNonQ2)   return -1;
+  if (numNonQ > numNonQ2)   return 1;
+  return 0;
+}

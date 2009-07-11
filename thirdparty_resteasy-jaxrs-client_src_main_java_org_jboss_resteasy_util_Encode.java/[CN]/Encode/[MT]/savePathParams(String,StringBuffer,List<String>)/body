@@ -1,0 +1,13 @@
+{
+  boolean foundParam=false;
+  segment=PathHelper.replaceEnclosedCurlyBraces(segment);
+  Matcher matcher=PathHelper.URI_TEMPLATE_PATTERN.matcher(segment);
+  while (matcher.find()) {
+    foundParam=true;
+    String group=matcher.group();
+    params.add(PathHelper.recoverEnclosedCurlyBraces(group));
+    matcher.appendReplacement(newSegment,"_resteasy_uri_parameter");
+  }
+  matcher.appendTail(newSegment);
+  return foundParam;
+}

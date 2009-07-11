@@ -1,0 +1,10 @@
+{
+  String eTagHeader=from.getFirstHeaderOrNull(S3Headers.AMZ_MD5);
+  if (eTagHeader != null) {
+    metadata.setETag(HttpUtils.fromHexString(eTagHeader));
+  }
+  String eTag=from.getFirstHeaderOrNull(HttpHeaders.ETAG);
+  if (metadata.getETag() == null && eTag != null) {
+    metadata.setETag(HttpUtils.fromHexString(eTag.replaceAll("\"","")));
+  }
+}

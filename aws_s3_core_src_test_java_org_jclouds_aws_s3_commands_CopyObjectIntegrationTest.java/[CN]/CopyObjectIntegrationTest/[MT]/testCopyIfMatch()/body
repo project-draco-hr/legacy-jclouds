@@ -3,10 +3,10 @@
   String destinationBucket=getScratchBucketName();
   try {
     addToBucketAndValidate(bucketName,sourceKey);
-    client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceMd5Matches(goodMd5)).get(10,TimeUnit.SECONDS);
+    client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceETagMatches(goodETag)).get(10,TimeUnit.SECONDS);
     validateContent(destinationBucket,destinationKey);
     try {
-      client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceMd5Matches(badMd5)).get(10,TimeUnit.SECONDS);
+      client.copyObject(bucketName,sourceKey,destinationBucket,destinationKey,ifSourceETagMatches(badETag)).get(10,TimeUnit.SECONDS);
     }
  catch (    ExecutionException e) {
       HttpResponseException ex=(HttpResponseException)e.getCause();

@@ -3,10 +3,10 @@
   try {
     String key="apples";
     addObjectAndValidateContent(bucketName,key);
-    client.getObject(bucketName,key,ifMd5Matches(goodMd5)).get(10,TimeUnit.SECONDS);
+    client.getObject(bucketName,key,ifETagMatches(goodETag)).get(10,TimeUnit.SECONDS);
     validateContent(bucketName,key);
     try {
-      client.getObject(bucketName,key,ifMd5Matches(badMd5)).get(10,TimeUnit.SECONDS);
+      client.getObject(bucketName,key,ifETagMatches(badETag)).get(10,TimeUnit.SECONDS);
       validateContent(bucketName,key);
     }
  catch (    ExecutionException e) {

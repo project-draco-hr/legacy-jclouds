@@ -1,0 +1,19 @@
+{
+  checkNotNull(data,"data must be set before calling generateETag()");
+  byte[] eTag=null;
+  if (data == null) {
+  }
+ else   if (data instanceof byte[]) {
+    eTag=eTag((byte[])data);
+  }
+ else   if (data instanceof String) {
+    eTag=eTag(((String)data).getBytes());
+  }
+ else   if (data instanceof File) {
+    eTag=eTag(((File)data));
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + data.getClass());
+  }
+  return eTag;
+}

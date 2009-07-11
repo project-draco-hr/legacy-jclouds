@@ -7,7 +7,7 @@
       String hashKey=(String)i.next();
       if (hashKey == null)       continue;
       String lk=hashKey.toLowerCase();
-      if (lk.equals("content-type") || lk.equals("content-md5") || lk.equals("date")|| lk.startsWith(AMAZON_HEADER_PREFIX)) {
+      if (lk.equals("content-type") || lk.equals("content-eTag") || lk.equals("date")|| lk.startsWith(AMAZON_HEADER_PREFIX)) {
         List s=(List)headers.get(hashKey);
         interestingHeaders.put(lk,concatenateList(s));
       }
@@ -22,8 +22,8 @@
   if (!interestingHeaders.containsKey("content-type")) {
     interestingHeaders.put("content-type","");
   }
-  if (!interestingHeaders.containsKey("content-md5")) {
-    interestingHeaders.put("content-md5","");
+  if (!interestingHeaders.containsKey("content-eTag")) {
+    interestingHeaders.put("content-eTag","");
   }
   for (Iterator i=interestingHeaders.keySet().iterator(); i.hasNext(); ) {
     String headerKey=(String)i.next();

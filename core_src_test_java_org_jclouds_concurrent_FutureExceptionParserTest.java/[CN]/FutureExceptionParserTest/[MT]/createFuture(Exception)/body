@@ -1,0 +1,15 @@
+{
+  Future<?> future=executorService.submit(new Callable<String>(){
+    public String call() throws Exception {
+      throw exception;
+    }
+  }
+);
+  future=new FutureExceptionParser(future,new Function<Exception,String>(){
+    public String apply(    Exception from){
+      return (from instanceof RuntimeException) ? from.getMessage() : null;
+    }
+  }
+);
+  return future;
+}

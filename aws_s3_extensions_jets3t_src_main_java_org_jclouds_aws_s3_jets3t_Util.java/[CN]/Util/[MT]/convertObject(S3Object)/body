@@ -7,7 +7,7 @@
   jcObject.getMetadata().setSize(jsObject.getContentLength());
   jcObject.getMetadata().setStorageClass(jsObject.getStorageClass());
   if (jsObject.getMd5HashAsHex() != null) {
-    jcObject.getMetadata().setMd5(S3Utils.fromHexString(jsObject.getMd5HashAsHex()));
+    jcObject.getMetadata().setETag(HttpUtils.fromHexString(jsObject.getMd5HashAsHex()));
   }
   if (jsObject.getOwner() != null) {
     jcObject.getMetadata().setOwner(new CanonicalUser(jsObject.getOwner().getId()));
@@ -22,8 +22,8 @@
     jcObject.getMetadata().setContentType(jsObject.getContentType());
   }
  else {
-    jcObject.getMetadata().setContentType(ContentTypes.BINARY);
-    jsObject.setContentType(ContentTypes.BINARY);
+    jcObject.getMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    jsObject.setContentType(MediaType.APPLICATION_OCTET_STREAM);
   }
   DateService dateService=new DateService();
   for (  Object maybeUserMetadataObj : jsObject.getMetadataMap().entrySet()) {

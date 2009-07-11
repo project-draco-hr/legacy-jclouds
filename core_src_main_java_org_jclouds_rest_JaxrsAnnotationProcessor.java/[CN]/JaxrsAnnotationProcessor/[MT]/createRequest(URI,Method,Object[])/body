@@ -1,0 +1,38 @@
+{
+  HttpMethod httpMethod=getHttpMethodOrThrowException(method);
+  UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
+  builder.path(method);
+  if (method.isAnnotationPresent(Query.class)) {
+    Query query=method.getAnnotation(Query.class);
+    if (query.value().equals(Query.NULL))     builder.replaceQuery(query.key());
+ else     builder.queryParam(query.key(),query.value());
+  }
+  Multimap<String,String> headers=buildHeaders(method,args);
+  HttpRequestOptions options=findOptionsIn(method,args);
+  if (options != null) {
+    headers.putAll(options.buildRequestHeaders());
+    for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
+      builder.queryParam(query.getKey(),query.getValue());
+    }
+    for (    Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
+      builder.matrixParam(matrix.getKey(),matrix.getValue());
+    }
+  }
+  URI endPoint;
+  try {
+    addHeaderIfAnnotationPresentOnMethod(headers,method,args);
+    if (declaring.isAnnotationPresent(SkipEncoding.class)) {
+      endPoint=builder.buildFromEncodedMap(getEncodedPathParamKeyValues(method,args,declaring.getAnnotation(SkipEncoding.class).value()));
+    }
+ else {
+      endPoint=builder.buildFromEncodedMap(getEncodedPathParamKeyValues(method,args));
+    }
+  }
+ catch (  Exception e) {
+    throw new IllegalStateException("problem encoding parameters",e);
+  }
+  HttpRequest request=new HttpRequest(httpMethod,endPoint,headers);
+  addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
+  buildEntityIfPostOrPutRequest(method,args,request);
+  return request;
+}

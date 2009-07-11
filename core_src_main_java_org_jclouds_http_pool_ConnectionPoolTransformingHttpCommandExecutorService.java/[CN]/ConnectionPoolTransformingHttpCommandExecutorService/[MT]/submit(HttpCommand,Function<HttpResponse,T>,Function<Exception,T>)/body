@@ -1,0 +1,18 @@
+{
+  exceptionIfNotActive();
+  final SynchronousQueue<?> channel=new SynchronousQueue<Object>();
+  Future<T> future=executorService.submit(new Callable<T>(){
+    public T call() throws Exception {
+      Object o=channel.take();
+      if (o instanceof Exception)       throw (Exception)o;
+      return responseTransformer.apply((HttpResponse)o);
+    }
+  }
+);
+  HttpCommandRendezvous<T> rendezvous=new HttpCommandRendezvous<T>(command,channel,future);
+  commandQueue.add(rendezvous);
+  if (exceptionTransformer != null) {
+    return new FutureExceptionParser<T>(rendezvous.getFuture(),exceptionTransformer);
+  }
+  return rendezvous.getFuture();
+}

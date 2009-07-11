@@ -1,0 +1,31 @@
+{
+  exceptionIfNotActive();
+  URI endpoint=command.getCommand().getRequest().getEndpoint();
+  URI specificEndpoint=URI.create(endpoint.getScheme() + "://" + endpoint.getHost()+ ":"+ endpoint.getPort());
+  HttpCommandConnectionPool<C> pool=poolMap.get(specificEndpoint);
+  if (pool == null) {
+    logger.warn("pool not available for command %s; retrying",command);
+    commandQueue.add(command);
+    return;
+  }
+  HttpCommandConnectionHandle<C> connectionHandle=null;
+  try {
+    connectionHandle=pool.getHandle(command);
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"Interrupted getting a connection for command %s; retrying",command);
+    commandQueue.add(command);
+    return;
+  }
+catch (  TimeoutException e) {
+    logger.warn(e,"Timeout getting a connection for command %s on pool %s; retrying",command,pool);
+    commandQueue.add(command);
+    return;
+  }
+  if (connectionHandle == null) {
+    logger.error("Failed to obtain connection for command %s; retrying",command);
+    commandQueue.add(command);
+    return;
+  }
+  connectionHandle.startConnection();
+}

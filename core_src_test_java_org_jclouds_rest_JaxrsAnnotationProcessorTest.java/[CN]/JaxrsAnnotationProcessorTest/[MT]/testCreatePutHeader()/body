@@ -1,0 +1,13 @@
+{
+  Method method=TestRequest.class.getMethod("putHeader",String.class,String.class);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=factory.create(TestRequest.class).createRequest(endpoint,method,new Object[]{"1","data"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/1");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),3);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("data".getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get("foo"),Collections.singletonList("--1--"));
+  assertEquals(httpMethod.getEntity(),"data");
+}

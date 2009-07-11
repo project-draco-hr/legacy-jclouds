@@ -1,0 +1,15 @@
+{
+  ResponseParser annotation=method.getAnnotation(ResponseParser.class);
+  if (annotation == null) {
+    if (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Boolean.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureBooleanLiteral)) {
+      return ReturnTrueIf2xx.class;
+    }
+ else     if (method.getReturnType().equals(String.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureStringLiteral)) {
+      return ReturnStringIf200.class;
+    }
+ else {
+      throw new IllegalStateException("You must specify a ResponseTransformer annotation on: " + method.toString());
+    }
+  }
+  return annotation.value();
+}
