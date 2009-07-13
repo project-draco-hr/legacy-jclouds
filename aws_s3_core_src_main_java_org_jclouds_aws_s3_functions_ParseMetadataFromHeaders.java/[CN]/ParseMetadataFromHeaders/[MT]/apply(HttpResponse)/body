@@ -1,5 +1,9 @@
 {
-  S3Object.Metadata to=new S3Object.Metadata("TODO");
+  String objectKey=from.getRequestURL().getPath();
+  if (objectKey.startsWith("/")) {
+    objectKey=objectKey.substring(1);
+  }
+  S3Object.Metadata to=new S3Object.Metadata(objectKey);
   addAllHeadersTo(from,to);
   addUserMetadataTo(from,to);
   addETagTo(from,to);
