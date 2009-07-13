@@ -13,6 +13,8 @@
   if (object.getMetadata().getContentEncoding() != null) {
     request.getHeaders().put(HttpHeaders.CONTENT_ENCODING,object.getMetadata().getContentEncoding());
   }
-  if (object.getMetadata().getETag() != null)   request.getHeaders().put(HttpHeaders.ETAG,HttpUtils.toBase64String(object.getMetadata().getETag()));
+  if (object.getMetadata().getETag() != null) {
+    request.getHeaders().put("Content-MD5",HttpUtils.toBase64String(object.getMetadata().getETag()));
+  }
   request.getHeaders().putAll(object.getMetadata().getUserMetadata());
 }
