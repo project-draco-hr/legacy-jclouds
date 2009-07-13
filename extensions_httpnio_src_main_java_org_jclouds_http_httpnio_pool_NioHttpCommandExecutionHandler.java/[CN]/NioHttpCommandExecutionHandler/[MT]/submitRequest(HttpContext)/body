@@ -2,7 +2,7 @@
   HttpCommandRendezvous<?> rendezvous=(HttpCommandRendezvous<?>)context.removeAttribute("command");
   if (rendezvous != null) {
     HttpRequest request=rendezvous.getCommand().getRequest();
-    for (    HttpRequestFilter filter : getRequestFilters()) {
+    for (    HttpRequestFilter filter : request.getFilters()) {
       filter.filter(request);
     }
     return NioHttpUtils.convertToApacheRequest(request);

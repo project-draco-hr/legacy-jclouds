@@ -1,0 +1,12 @@
+{
+  if (declaring.isAnnotationPresent(RequestFilters.class)) {
+    for (    Class<? extends HttpRequestFilter> clazz : declaring.getAnnotation(RequestFilters.class).value()) {
+      request.getFilters().add(injector.getInstance(clazz));
+    }
+  }
+  if (method.isAnnotationPresent(RequestFilters.class)) {
+    for (    Class<? extends HttpRequestFilter> clazz : method.getAnnotation(RequestFilters.class).value()) {
+      request.getFilters().add(injector.getInstance(clazz));
+    }
+  }
+}

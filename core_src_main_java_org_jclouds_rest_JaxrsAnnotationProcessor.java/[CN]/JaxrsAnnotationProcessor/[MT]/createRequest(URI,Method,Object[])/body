@@ -1,6 +1,7 @@
 {
-  HttpMethod httpMethod=getHttpMethodOrThrowException(method);
+  HttpMethod httpMethod=getHttpMethodOrConstantOrThrowException(method);
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
+  builder.path(declaring);
   builder.path(method);
   if (method.isAnnotationPresent(Query.class)) {
     Query query=method.getAnnotation(Query.class);
@@ -33,6 +34,7 @@
   }
   HttpRequest request=new HttpRequest(httpMethod,endPoint,headers);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
+  addFiltersIfAnnotated(method,request);
   buildEntityIfPostOrPutRequest(method,args,request);
   return request;
 }
