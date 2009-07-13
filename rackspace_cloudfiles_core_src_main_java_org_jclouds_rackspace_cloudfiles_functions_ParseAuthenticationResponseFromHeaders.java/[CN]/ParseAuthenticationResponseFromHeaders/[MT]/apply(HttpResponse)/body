@@ -1,0 +1,16 @@
+{
+  return new AuthenticationResponse(){
+    public String getAuthToken(){
+      return checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.AUTH_TOKEN),CloudFilesHeaders.AUTH_TOKEN);
+    }
+    public URI getCDNManagementUrl(){
+      String cdnManagementUrl=checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_MANAGEMENT_URL),CloudFilesHeaders.CDN_MANAGEMENT_URL);
+      return URI.create(cdnManagementUrl);
+    }
+    public URI getStorageUrl(){
+      String storageUrl=checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.STORAGE_URL),CloudFilesHeaders.STORAGE_URL);
+      return URI.create(storageUrl);
+    }
+  }
+;
+}
