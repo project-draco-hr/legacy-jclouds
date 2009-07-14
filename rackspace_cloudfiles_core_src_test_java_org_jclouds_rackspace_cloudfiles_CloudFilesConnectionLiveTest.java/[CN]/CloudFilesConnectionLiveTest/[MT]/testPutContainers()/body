@@ -1,8 +1,21 @@
 {
   CloudFilesConnection connection=CloudFilesContextBuilder.newBuilder(sysRackspaceUser,sysRackspaceKey).withJsonDebug().buildContext().getConnection();
-  assertTrue(connection.putContainer(bucketPrefix + ".hello"));
-  List<ContainerMetadata> response=connection.listOwnedContainers();
+  String containerName1=bucketPrefix + ".hello";
+  assertTrue(connection.putContainer(containerName1));
+  List<ContainerMetadata> response=connection.listOwnedContainers(ListContainerOptions.Builder.afterMarker(containerName1.substring(0,containerName1.length() - 1)).maxResults(1));
   assertNotNull(response);
   assertEquals(response.size(),1);
   assertEquals(response.get(0).getName(),bucketPrefix + ".hello");
+  String containerName2=bucketPrefix + "?should-be-illegal-question-char";
+  connection.putContainer(containerName2);
+  response=connection.listOwnedContainers(ListContainerOptions.Builder.afterMarker(containerName2.substring(0,containerName2.length() - 1)).maxResults(1));
+  assertEquals(response.size(),1);
+  try {
+    connection.putContainer(bucketPrefix + "/illegal-slash-char");
+    fail("Should not be able to create container with illegal '/' character");
+  }
+ catch (  Exception e) {
+  }
+  assertTrue(connection.deleteContainerIfEmpty(containerName1));
+  assertTrue(connection.deleteContainerIfEmpty(containerName2));
 }
