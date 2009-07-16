@@ -1,0 +1,12 @@
+{
+  RackSpaceAuthentication authentication=injector.getInstance(RackSpaceAuthentication.class);
+  try {
+    authentication.authenticate("foo","bar");
+  }
+ catch (  UndeclaredThrowableException e) {
+    HttpResponseException ew=(HttpResponseException)e.getCause().getCause();
+    assertEquals(ew.getResponse().getStatusCode(),401);
+    throw ew;
+  }
+  fail();
+}
