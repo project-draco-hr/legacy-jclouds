@@ -1,0 +1,53 @@
+{
+  String containerName=bucketPrefix + ".testObjectOperations";
+  String data="Here is my data";
+  assertTrue(connection.putContainer(containerName));
+  CFObject object=new CFObject("object",data);
+  object.setContentLength(data.length());
+  object.generateETag();
+  object.getMetadata().setContentType("text/plain");
+  object.getMetadata().getUserMetadata().put(CloudFilesHeaders.USER_METADATA_PREFIX + "metadata","metadata-value");
+  byte[] md5=connection.putObject(containerName,object).get(10,TimeUnit.SECONDS);
+  assertEquals(HttpUtils.toHexString(md5),HttpUtils.toHexString(object.getMetadata().getETag()));
+  CFObject.Metadata metadata=connection.headObject(containerName,"non-existent-object");
+  assertEquals(metadata,CFObject.Metadata.NOT_FOUND);
+  metadata=connection.headObject(containerName,object.getKey());
+  assertEquals(metadata.getKey(),object.getKey());
+  assertEquals(metadata.getSize(),data.length());
+  assertEquals(metadata.getContentType(),"text/plain");
+  assertEquals(metadata.getETag(),object.getMetadata().getETag());
+  assertEquals(metadata.getUserMetadata().entries().size(),1);
+  assertEquals(Iterables.getLast(metadata.getUserMetadata().get(CloudFilesHeaders.USER_METADATA_PREFIX + "Metadata")),"metadata-value");
+  Multimap<String,String> userMetadata=HashMultimap.create();
+  userMetadata.put(CloudFilesHeaders.USER_METADATA_PREFIX + "new-metadata-1","value-1");
+  userMetadata.put(CloudFilesHeaders.USER_METADATA_PREFIX + "new-metadata-2","value-2");
+  assertTrue(connection.setObjectMetadata(containerName,object.getKey(),userMetadata));
+  CFObject getObject=connection.getObject(containerName,"non-existent-object").get(10,TimeUnit.SECONDS);
+  assertEquals(getObject,CFObject.NOT_FOUND);
+  getObject=connection.getObject(containerName,object.getKey()).get(10,TimeUnit.SECONDS);
+  assertEquals(IOUtils.toString((InputStream)getObject.getData()),data);
+  assertEquals(getObject.getKey(),object.getKey());
+  assertEquals(getObject.getContentLength(),data.length());
+  assertEquals(getObject.getMetadata().getContentType(),"text/plain");
+  assertEquals(getObject.getMetadata().getETag(),object.getMetadata().getETag());
+  assertEquals(getObject.getMetadata().getUserMetadata().entries().size(),2);
+  assertEquals(Iterables.getLast(getObject.getMetadata().getUserMetadata().get(CloudFilesHeaders.USER_METADATA_PREFIX + "New-Metadata-1")),"value-1");
+  assertEquals(Iterables.getLast(getObject.getMetadata().getUserMetadata().get(CloudFilesHeaders.USER_METADATA_PREFIX + "New-Metadata-2")),"value-2");
+  String correctEtag=HttpUtils.toHexString(object.getMetadata().getETag());
+  String incorrectEtag="0" + correctEtag.substring(1);
+  object.getMetadata().setETag(HttpUtils.fromHexString(incorrectEtag));
+  try {
+    connection.putObject(containerName,object).get(10,TimeUnit.SECONDS);
+  }
+ catch (  Throwable e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),422);
+  }
+  ByteArrayInputStream bais=new ByteArrayInputStream(data.getBytes("UTF-8"));
+  object=new CFObject("chunked-object",bais);
+  md5=connection.putObject(containerName,object).get(10,TimeUnit.SECONDS);
+  assertEquals(HttpUtils.toHexString(md5),correctEtag);
+  assertTrue(connection.deleteObject(containerName,"object"));
+  assertTrue(connection.deleteObject(containerName,"chunked-object"));
+  assertTrue(connection.deleteContainerIfEmpty(containerName));
+}

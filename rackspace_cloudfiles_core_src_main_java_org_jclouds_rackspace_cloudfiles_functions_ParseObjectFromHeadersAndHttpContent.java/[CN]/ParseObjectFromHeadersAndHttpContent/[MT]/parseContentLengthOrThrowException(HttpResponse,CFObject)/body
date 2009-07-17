@@ -1,0 +1,13 @@
+{
+  String contentLength=from.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH);
+  String contentRange=from.getFirstHeaderOrNull("Content-Range");
+  if (contentLength == null)   throw new HttpException(HttpHeaders.CONTENT_LENGTH + " header not present in headers: " + from.getHeaders());
+  object.setContentLength(Long.parseLong(contentLength));
+  if (contentRange == null) {
+    object.getMetadata().setSize(object.getContentLength());
+  }
+ else {
+    object.setContentRange(contentRange);
+    object.getMetadata().setSize(Long.parseLong(contentRange.substring(contentRange.lastIndexOf('/') + 1)));
+  }
+}
