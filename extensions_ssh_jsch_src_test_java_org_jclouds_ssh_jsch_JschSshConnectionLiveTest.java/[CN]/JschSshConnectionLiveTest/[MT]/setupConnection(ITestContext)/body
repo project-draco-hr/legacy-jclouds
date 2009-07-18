@@ -1,0 +1,26 @@
+{
+  int port=(sshPort != null) ? Integer.parseInt(sshPort) : 22;
+  InetAddress host=(sshHost != null) ? InetAddress.getByName(sshHost) : InetAddress.getLocalHost();
+  if (sshUser == null || sshPass == null || sshUser.trim().equals("") || sshPass.trim().equals("")) {
+    System.err.println("ssh credentials not present.  Tests will be lame");
+    connection=new SshConnection(){
+      public void connect(){
+      }
+      public void disconnect(){
+      }
+      public InputStream get(      String path){
+        if (path.equals("/etc/passwd")) {
+          return IOUtils.toInputStream("root");
+        }
+        throw new RuntimeException("path " + path + " not stubbed");
+      }
+    }
+;
+  }
+ else {
+    Injector i=Guice.createInjector(new JschSshConnectionModule());
+    SshConnection.Factory factory=i.getInstance(SshConnection.Factory.class);
+    connection=factory.create(host,port,sshUser,sshPass);
+    connection.connect();
+  }
+}
