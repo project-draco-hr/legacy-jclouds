@@ -1,0 +1,17 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_get_server_detail.json");
+  ParseServerFromGsonResponse parser=new ParseServerFromGsonResponse(i.getInstance(Gson.class));
+  Server response=parser.apply(is);
+  assertEquals(response.getId(),1234);
+  assertEquals(response.getName(),"sample-server");
+  assertEquals(response.getImageId(),new Integer(2));
+  assertEquals(response.getFlavorId(),new Integer(1));
+  assertEquals(response.getHostId(),"e4d909c290d0fb1ca068ffaddf22cbd0");
+  assertEquals(response.getStatus(),ServerStatus.BUILD);
+  assertEquals(response.getProgress(),new Integer(60));
+  List<InetAddress> publicAddresses=Lists.newArrayList(InetAddress.getByName("67.23.10.132"),InetAddress.getByName("67.23.10.131"));
+  List<InetAddress> privateAddresses=Lists.newArrayList(InetAddress.getByName("10.176.42.16"));
+  Addresses addresses1=new Addresses(publicAddresses,privateAddresses);
+  assertEquals(response.getAddresses(),addresses1);
+  assertEquals(response.getMetadata(),ImmutableMap.of("Server Label","Web Head 1","Image Version","2.1"));
+}
