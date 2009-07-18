@@ -1,0 +1,12 @@
+{
+  Method method=TestPost.class.getMethod("postAsJson",String.class);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=factory.create(TestPost.class).createRequest(endpoint,method,new Object[]{"data"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/json"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("\"data\"".getBytes().length + ""));
+  assertEquals(httpMethod.getEntity(),"\"data\"");
+}

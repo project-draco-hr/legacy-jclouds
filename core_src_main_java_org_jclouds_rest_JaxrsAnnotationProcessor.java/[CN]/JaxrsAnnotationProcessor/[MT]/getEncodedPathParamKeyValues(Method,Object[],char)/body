@@ -2,12 +2,12 @@
   Map<String,Object> pathParamValues=Maps.newHashMap();
   pathParamValues.putAll(constants);
   Map<Integer,Set<Annotation>> indexToPathParam=methodToindexOfParamToPathParamAnnotations.get(method);
-  Map<Integer,Set<Annotation>> indexToPathParamExtractor=methodToindexOfParamToPathParamParserAnnotations.get(method);
+  Map<Integer,Set<Annotation>> indexToParamExtractor=methodToindexOfParamToParamParserAnnotations.get(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToPathParam.entrySet()) {
     for (    Annotation key : entry.getValue()) {
-      Set<Annotation> extractors=indexToPathParamExtractor.get(entry.getKey());
+      Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());
       if (extractors != null && extractors.size() > 0) {
-        PathParamParser extractor=(PathParamParser)extractors.iterator().next();
+        ParamParser extractor=(ParamParser)extractors.iterator().next();
         pathParamValues.put(((PathParam)key).value(),injector.getInstance(extractor.value()).apply(args[entry.getKey()]));
       }
  else {

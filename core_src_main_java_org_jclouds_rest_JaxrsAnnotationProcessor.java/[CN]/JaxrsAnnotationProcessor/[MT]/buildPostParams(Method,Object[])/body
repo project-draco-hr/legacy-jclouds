@@ -1,0 +1,20 @@
+{
+  Map<String,String> postParams=Maps.newHashMap();
+  Map<Integer,Set<Annotation>> indexToPathParam=methodToindexOfParamToPostParamAnnotations.get(method);
+  Map<Integer,Set<Annotation>> indexToParamExtractor=methodToindexOfParamToParamParserAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToPathParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());
+      if (extractors != null && extractors.size() > 0) {
+        ParamParser extractor=(ParamParser)extractors.iterator().next();
+        postParams.put(((PathParam)key).value(),injector.getInstance(extractor.value()).apply(args[entry.getKey()]));
+      }
+ else {
+        String paramKey=((PostParam)key).value();
+        String paramValue=args[entry.getKey()].toString();
+        postParams.put(paramKey,paramValue);
+      }
+    }
+  }
+  return postParams;
+}

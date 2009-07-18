@@ -1,0 +1,13 @@
+{
+  Method method=TestPost.class.getMethod("postWithMethodBinder",String.class);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=factory.create(TestPost.class).createRequest(endpoint,method,new Object[]{"data"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/data");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/json"));
+  String expected="{\"fooble\":\"data\"}";
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(expected.getBytes().length + ""));
+  assertEquals(httpMethod.getEntity(),expected);
+}
