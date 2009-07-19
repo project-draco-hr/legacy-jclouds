@@ -1,6 +1,22 @@
 {
   for (  int index : methodToIndexesOfOptions.get(method)) {
-    return (HttpRequestOptions)args[index];
+    if (args.length >= index + 1) {
+      if (optionsVarArgsClass.isAssignableFrom(args[index].getClass())) {
+        HttpRequestOptions[] options=(HttpRequestOptions[])args[index];
+        if (options.length == 0) {
+          return null;
+        }
+ else         if (options.length == 1) {
+          return options[0];
+        }
+ else {
+          throw new IllegalArgumentException("we currently do not support multiple varargs options in: " + method.getName());
+        }
+      }
+ else {
+        return (HttpRequestOptions)args[index];
+      }
+    }
   }
   return null;
 }
