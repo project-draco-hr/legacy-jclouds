@@ -1,6 +1,23 @@
 {
   for (  Object arg : args) {
-    if (arg instanceof PostEntityBinder) {
+    if (arg instanceof Object[]) {
+      Object[] postBinders=(Object[])arg;
+      if (postBinders.length == 0) {
+      }
+ else       if (postBinders.length == 1) {
+        if (postBinders[0] instanceof PostEntityBinder) {
+          PostEntityBinder binder=(PostEntityBinder)postBinders[0];
+          injector.injectMembers(binder);
+          return binder;
+        }
+      }
+ else {
+        if (postBinders[0] instanceof PostEntityBinder) {
+          throw new IllegalArgumentException("we currently do not support multiple varargs postBinders in: " + method.getName());
+        }
+      }
+    }
+ else     if (arg instanceof PostEntityBinder) {
       PostEntityBinder binder=(PostEntityBinder)arg;
       injector.injectMembers(binder);
       return binder;

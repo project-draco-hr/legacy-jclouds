@@ -1,16 +1,21 @@
 {
   for (  int index : methodToIndexesOfOptions.get(method)) {
     if (args.length >= index + 1) {
-      if (optionsVarArgsClass.isAssignableFrom(args[index].getClass())) {
-        HttpRequestOptions[] options=(HttpRequestOptions[])args[index];
+      if (args[index] instanceof Object[]) {
+        Object[] options=(Object[])args[index];
         if (options.length == 0) {
-          return null;
         }
  else         if (options.length == 1) {
-          return options[0];
+          if (options[0] instanceof HttpRequestOptions) {
+            HttpRequestOptions binder=(HttpRequestOptions)options[0];
+            injector.injectMembers(binder);
+            return binder;
+          }
         }
  else {
-          throw new IllegalArgumentException("we currently do not support multiple varargs options in: " + method.getName());
+          if (options[0] instanceof HttpRequestOptions) {
+            throw new IllegalArgumentException("we currently do not support multiple varargs options in: " + method.getName());
+          }
         }
       }
  else {
