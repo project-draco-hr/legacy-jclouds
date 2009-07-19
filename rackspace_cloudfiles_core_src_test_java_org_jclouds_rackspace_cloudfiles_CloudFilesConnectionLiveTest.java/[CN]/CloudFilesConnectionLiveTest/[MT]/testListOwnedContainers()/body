@@ -8,6 +8,12 @@
   assertTrue(connection.putContainer(containerNames[1]));
   response=connection.listOwnedContainers();
   assertEquals(response.size(),initialContainerCount + 2);
+  response=connection.listOwnedContainers(ListContainerOptions.Builder.afterMarker(containerNames[0].substring(0,containerNames[0].length() - 1)).maxResults(1));
+  assertEquals(response.size(),1);
+  assertEquals(response.get(0).getName(),containerNames[0]);
+  response=connection.listOwnedContainers(ListContainerOptions.Builder.afterMarker(containerNames[0]).maxResults(1));
+  assertEquals(response.size(),1);
+  assertEquals(response.get(0).getName(),containerNames[1]);
   assertTrue(connection.deleteContainerIfEmpty(containerNames[0]));
   assertTrue(connection.deleteContainerIfEmpty(containerNames[1]));
   response=connection.listOwnedContainers();
