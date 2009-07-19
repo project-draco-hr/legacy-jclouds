@@ -1,0 +1,12 @@
+{
+  Method method=CloudServersConnection.class.getMethod("listServers",listOptionsVarargsClass);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{changesSince(now).maxResults(1).startAt(2)});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json" + "&limit=1&changes-since=" + now.getMillis() / 1000 + "&offset=2");
+  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
+  assertEquals(httpMethod.getHeaders().size(),0);
+  assertEquals(processor.createResponseParser(method).getClass(),ParseServerListFromGsonResponse.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+}

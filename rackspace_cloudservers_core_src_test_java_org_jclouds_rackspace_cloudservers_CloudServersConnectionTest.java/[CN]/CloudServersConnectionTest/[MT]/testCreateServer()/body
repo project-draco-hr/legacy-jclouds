@@ -1,14 +1,7 @@
 {
-  Method method=CloudServersConnection.class.getMethod("createServer",String.class,int.class,int.class);
+  Method method=CloudServersConnection.class.getMethod("createServer",String.class,int.class,int.class,createServerOptionsVarargsClass);
   URI endpoint=URI.create("http://localhost");
-  HttpRequest httpMethod=factory.create(CloudServersConnection.class).createRequest(endpoint,method,new Object[]{"ralphie",2,1});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/servers");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{"ralphie",2,1});
   assertEquals("{\"server\":{\"name\":\"ralphie\",\"imageId\":2,\"flavorId\":1}}",httpMethod.getEntity());
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals(JaxrsAnnotationProcessor.getParserOrThrowException(method),ParseServerFromGsonResponse.class);
+  validateCreateServer(method,httpMethod);
 }

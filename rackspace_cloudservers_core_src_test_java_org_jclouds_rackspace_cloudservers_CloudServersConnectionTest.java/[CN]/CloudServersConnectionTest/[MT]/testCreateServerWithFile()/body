@@ -1,0 +1,7 @@
+{
+  Method method=CloudServersConnection.class.getMethod("createServer",String.class,int.class,int.class,createServerOptionsVarargsClass);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{"ralphie",2,1,new CreateServerOptions[]{withFile("/etc/jclouds","foo".getBytes())}});
+  assertEquals("{\"server\":{\"name\":\"ralphie\",\"imageId\":2,\"flavorId\":1,\"personality\":[{\"path\":\"/etc/jclouds\",\"contents\":\"Zm9v\"}]}}",httpMethod.getEntity());
+  validateCreateServer(method,httpMethod);
+}
