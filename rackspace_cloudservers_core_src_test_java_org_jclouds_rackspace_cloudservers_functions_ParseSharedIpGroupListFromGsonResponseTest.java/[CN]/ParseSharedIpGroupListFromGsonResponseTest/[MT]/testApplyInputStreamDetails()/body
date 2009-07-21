@@ -1,0 +1,11 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_list_sharedipgroups_detail.json");
+  ParseSharedIpGroupListFromGsonResponse parser=new ParseSharedIpGroupListFromGsonResponse(i.getInstance(Gson.class));
+  List<SharedIpGroup> response=parser.apply(is);
+  assertEquals(response.get(0).getId(),1234);
+  assertEquals(response.get(0).getName(),"Shared IP Group 1");
+  assertEquals(response.get(0).getServers(),ImmutableList.of(422,3445));
+  assertEquals(response.get(1).getId(),5678);
+  assertEquals(response.get(1).getName(),"Shared IP Group 2");
+  assertEquals(response.get(1).getServers(),ImmutableList.of(23203,2456,9891));
+}
