@@ -1,0 +1,24 @@
+{
+  ChannelExec executor=null;
+  try {
+    try {
+      executor=(ChannelExec)session.openChannel("exec");
+    }
+ catch (    JSchException e) {
+      throw new SshException(String.format("%s@%s:%d: Error connecting to exec.",username,host.getHostAddress(),port),e);
+    }
+    executor.setCommand(command);
+    ByteArrayOutputStream error=new ByteArrayOutputStream();
+    executor.setErrStream(error);
+    try {
+      executor.connect();
+      return new ExecResponse(Utils.toStringAndClose(executor.getInputStream()),error.toString());
+    }
+ catch (    Exception e) {
+      throw new SshException(String.format("%s@%s:%d: Error executing command: ",username,host.getHostAddress(),port,command),e);
+    }
+  }
+  finally {
+    if (executor != null)     executor.disconnect();
+  }
+}
