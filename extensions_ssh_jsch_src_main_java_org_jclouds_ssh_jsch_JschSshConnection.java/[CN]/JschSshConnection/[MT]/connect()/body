@@ -1,8 +1,7 @@
 {
-  if (sftp != null && sftp.isConnected())   return;
+  disconnect();
   JSch jsch=new JSch();
   session=null;
-  Channel channel=null;
   try {
     session=jsch.getSession(username,host.getHostAddress(),port);
   }
@@ -21,13 +20,4 @@
     throw new SshException(String.format("%s@%s:%d: Error connecting to session.",username,host.getHostAddress(),port),e);
   }
   logger.debug("%s@%s:%d: Session connected.",username,host.getHostAddress(),port);
-  logger.debug("%s@%s:%d: Opening sftp Channel.",username,host.getHostAddress(),port);
-  try {
-    channel=session.openChannel("sftp");
-    channel.connect();
-  }
- catch (  JSchException e) {
-    throw new SshException(String.format("%s@%s:%d: Error connecting to sftp.",username,host.getHostAddress(),port),e);
-  }
-  sftp=(ChannelSftp)channel;
 }
