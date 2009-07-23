@@ -1,0 +1,14 @@
+{
+  Method method=CloudServersConnection.class.getMethod("replaceBackupSchedule",int.class,BackupSchedule.class);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{2,new BackupSchedule(WeeklyBackup.MONDAY,DailyBackup.H_0800_1000,true)});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/backup_schedule");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals("{\"backupSchedule\":{\"daily\":\"H_0800_1000\",\"enabled\":true,\"weekly\":\"MONDAY\"}}",httpMethod.getEntity());
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnFalseOn404.class);
+  assertEquals(processor.createResponseParser(method).getClass(),ReturnTrueIf2xx.class);
+}

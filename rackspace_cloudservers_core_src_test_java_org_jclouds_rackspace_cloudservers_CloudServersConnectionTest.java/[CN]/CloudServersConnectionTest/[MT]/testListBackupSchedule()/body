@@ -1,0 +1,11 @@
+{
+  Method method=CloudServersConnection.class.getMethod("listBackupSchedule",int.class);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{2});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/backup_schedule");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
+  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
+  assertEquals(httpMethod.getHeaders().size(),0);
+  assertEquals(processor.createResponseParser(method).getClass(),ParseBackupScheduleFromGsonResponse.class);
+}
