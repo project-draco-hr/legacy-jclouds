@@ -2,9 +2,9 @@
 switch (request.getMethod()) {
 case POST:
 case PUT:
-    MapEntityBinder mapBinder=null;
+    MapEntityBinder mapBinder=getMapEntityBinderOrNull(method,args);
   Map<String,String> mapParams=buildPostParams(method,args);
-if (mapParams.size() > 0 && (mapBinder=this.getMapEntityBinderOrNull(method,args)) != null) {
+if (mapBinder != null) {
   mapBinder.addEntityToRequest(mapParams,request);
   break;
 }
