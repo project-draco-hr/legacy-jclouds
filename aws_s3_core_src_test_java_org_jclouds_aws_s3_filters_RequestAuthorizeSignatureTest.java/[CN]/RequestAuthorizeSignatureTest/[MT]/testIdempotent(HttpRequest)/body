@@ -1,0 +1,11 @@
+{
+  filter.filter(request);
+  String signature=request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION);
+  String date=request.getFirstHeaderOrNull(HttpHeaders.DATE);
+  int iterations=1;
+  while (filter.filter(request).getFirstHeaderOrNull(HttpHeaders.DATE).equals(date)) {
+    iterations++;
+    assertEquals(signature,request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION));
+  }
+  System.out.printf("%s: %d iterations before the timestamp updated %n",Thread.currentThread().getName(),iterations);
+}
