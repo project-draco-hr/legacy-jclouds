@@ -3,8 +3,8 @@
   try {
     deleteBucket(bucketName);
     client.putBucketIfNotExists(bucketName,createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
-    URL url=new URL(String.format("http://%s.s3.amazonaws.com",bucketName));
-    Utils.toStringAndClose(url.openStream());
+    AccessControlList acl=client.getBucketACL(bucketName).get(10,TimeUnit.SECONDS);
+    assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
   }
   finally {
     returnScratchBucket(bucketName);
