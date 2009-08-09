@@ -1,4 +1,9 @@
 {
   String euBucketName=createScratchBucketInEU();
-  doSerial(new PutBytesCallable(euBucketName),loopCount / 10);
+  try {
+    doSerial(new PutBytesCallable(euBucketName),loopCount);
+  }
+  finally {
+    returnBucket(euBucketName);
+  }
 }
