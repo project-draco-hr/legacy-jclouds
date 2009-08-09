@@ -1,6 +1,6 @@
 {
   httpStreamUrl=checkNotNull(httpStreamUrl != null ? httpStreamUrl : sysHttpStreamUrl,"httpStreamUrl");
-  httpStreamETag=checkNotNull(httpStreamETag != null ? httpStreamETag : sysHttpStreamETag,"httpStreamETag");
+  httpStreamETag=checkNotNull(httpStreamETag != null ? httpStreamETag : sysHttpStreamETag,"httpStreamMd5");
   String key="hello";
   URL url=new URL(httpStreamUrl);
   byte[] eTag=HttpUtils.fromHexString(httpStreamETag);
@@ -13,7 +13,7 @@
   object.getMetadata().setSize(length);
   String bucketName=getBucketName();
   try {
-    byte[] newETag=client.putObject(bucketName,object).get(30,TimeUnit.SECONDS);
+    byte[] newETag=client.putObject(bucketName,object).get(180,TimeUnit.SECONDS);
     assertEquals(newETag,eTag);
   }
   finally {
