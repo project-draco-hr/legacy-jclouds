@@ -17,12 +17,23 @@
   cdnMetadata=cdnConnection.getCDNMetadata("DoesNotExist");
   assertEquals(cdnMetadata,ContainerCDNMetadata.NOT_FOUND);
   List<ContainerCDNMetadata> cdnMetadataList=cdnConnection.listCDNContainers();
+  assertTrue(cdnMetadataList.size() >= 1);
   assertTrue(Iterables.any(cdnMetadataList,new Predicate<ContainerCDNMetadata>(){
     public boolean apply(    ContainerCDNMetadata cdnMetadata){
       return (cdnMetadata.getName().equals(containerNameWithCDN) && cdnMetadata.isCdnEnabled() && cdnMetadata.getTtl() == initialTTL && cdnMetadata.getCdnUri().equals(cdnUri));
     }
   }
 ));
+  cdnMetadataList=cdnConnection.listCDNContainers(ListCdnContainerOptions.Builder.enabledOnly());
+  assertTrue(Iterables.all(cdnMetadataList,new Predicate<ContainerCDNMetadata>(){
+    public boolean apply(    ContainerCDNMetadata cdnMetadata){
+      return cdnMetadata.isCdnEnabled();
+    }
+  }
+));
+  cdnMetadataList=cdnConnection.listCDNContainers(ListCdnContainerOptions.Builder.afterMarker(containerNameWithCDN.substring(0,containerNameWithCDN.length() - 1)).maxResults(1));
+  assertEquals(cdnMetadataList.size(),1);
+  assertEquals(cdnMetadataList.get(0).getName(),containerNameWithCDN);
   long ttl=4000;
   cdnConnection.enableCDN(containerNameWithCDN,ttl);
   cdnMetadata=cdnConnection.getCDNMetadata(containerNameWithCDN);
