@@ -1,0 +1,12 @@
+{
+  String containerName=null;
+  String cdnUri=checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_URI),CloudFilesHeaders.CDN_URI);
+  String cdnTTL=checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_TTL),CloudFilesHeaders.CDN_TTL);
+  String cdnEnabled=checkNotNull(from.getFirstHeaderOrNull(CloudFilesHeaders.CDN_ENABLED),CloudFilesHeaders.CDN_ENABLED);
+  if (cdnUri == null) {
+    return ContainerCDNMetadata.NOT_FOUND;
+  }
+ else {
+    return new ContainerCDNMetadata(containerName,Boolean.parseBoolean(cdnEnabled),Long.parseLong(cdnTTL),cdnUri);
+  }
+}
