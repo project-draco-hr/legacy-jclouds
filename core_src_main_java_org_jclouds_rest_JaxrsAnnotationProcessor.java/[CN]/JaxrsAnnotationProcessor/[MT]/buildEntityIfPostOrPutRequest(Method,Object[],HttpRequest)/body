@@ -1,34 +1,31 @@
 {
-switch (request.getMethod()) {
-case POST:
-case PUT:
+  OUTER:   if (request.getMethod().toUpperCase().equals("POST") || request.getMethod().toUpperCase().equals("PUT")) {
     MapEntityBinder mapBinder=getMapEntityBinderOrNull(method,args);
-  Map<String,String> mapParams=buildPostParams(method,args);
-if (mapBinder != null) {
-  mapBinder.addEntityToRequest(mapParams,request);
-  break;
-}
-HttpRequestOptions options=findOptionsIn(method,args);
-if (options != null) {
-optionsBinder.addEntityToRequest(options,request);
-}
-if (request.getEntity() == null) {
-Map<Integer,Set<Annotation>> indexToEntityAnnotation=getIndexToEntityAnnotation(method);
-if (indexToEntityAnnotation.size() == 1) {
-Entry<Integer,Set<Annotation>> entry=indexToEntityAnnotation.entrySet().iterator().next();
-EntityParam entityAnnotation=(EntityParam)entry.getValue().iterator().next();
-Object entity=args[entry.getKey()];
-EntityBinder binder=injector.getInstance(entityAnnotation.value());
-binder.addEntityToRequest(entity,request);
-}
- else if (indexToEntityAnnotation.size() > 1) {
-throw new IllegalStateException("cannot have multiple @Entity annotations on " + method);
-}
+    Map<String,String> mapParams=buildPostParams(method,args);
+    if (mapBinder != null) {
+      mapBinder.addEntityToRequest(mapParams,request);
+      break OUTER;
+    }
+    HttpRequestOptions options=findOptionsIn(method,args);
+    if (options != null) {
+      optionsBinder.addEntityToRequest(options,request);
+    }
+    if (request.getEntity() == null) {
+      Map<Integer,Set<Annotation>> indexToEntityAnnotation=getIndexToEntityAnnotation(method);
+      if (indexToEntityAnnotation.size() == 1) {
+        Entry<Integer,Set<Annotation>> entry=indexToEntityAnnotation.entrySet().iterator().next();
+        EntityParam entityAnnotation=(EntityParam)entry.getValue().iterator().next();
+        Object entity=args[entry.getKey()];
+        EntityBinder binder=injector.getInstance(entityAnnotation.value());
+        binder.addEntityToRequest(entity,request);
+      }
+ else       if (indexToEntityAnnotation.size() > 1) {
+        throw new IllegalStateException("cannot have multiple @Entity annotations on " + method);
+      }
  else {
-request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Lists.newArrayList("0"));
-}
-}
-break;
-}
-return request;
+        request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Lists.newArrayList("0"));
+      }
+    }
+  }
+  return request;
 }
