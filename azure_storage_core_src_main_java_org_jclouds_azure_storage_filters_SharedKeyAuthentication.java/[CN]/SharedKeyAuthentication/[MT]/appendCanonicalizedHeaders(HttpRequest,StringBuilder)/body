@@ -1,0 +1,20 @@
+{
+  Set<String> matchingHeaders=Sets.filter(request.getHeaders().keySet(),new Predicate<String>(){
+    public boolean apply(    String input){
+      return input.startsWith("x-ms-");
+    }
+  }
+);
+  SortedSet<String> lowercaseHeaders=Sets.newTreeSet(Iterables.transform(matchingHeaders,new Function<String,String>(){
+    public String apply(    String from){
+      return from.toLowerCase();
+    }
+  }
+));
+  for (  String header : lowercaseHeaders) {
+    toSign.append(header).append(":");
+    for (    String value : request.getHeaders().get(header))     toSign.append(value.replaceAll("\r?\n"," ")).append(",");
+    toSign.deleteCharAt(toSign.lastIndexOf(","));
+    toSign.append("\n");
+  }
+}

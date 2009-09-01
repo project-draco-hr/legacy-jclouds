@@ -1,0 +1,12 @@
+{
+  injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to(sysAzureStorageAccount);
+      bindConstant().annotatedWith(Names.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(sysAzureStorageKey);
+    }
+  }
+,new JaxrsModule(),new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  RestClientFactory factory=injector.getInstance(RestClientFactory.class);
+  uri="http://" + sysAzureStorageAccount + ".blob.core.windows.net";
+  client=factory.create(URI.create(uri),IntegrationTestClient.class);
+}
