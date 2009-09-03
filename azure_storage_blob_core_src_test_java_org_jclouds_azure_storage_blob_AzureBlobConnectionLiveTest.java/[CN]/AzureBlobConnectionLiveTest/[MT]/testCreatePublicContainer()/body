@@ -1,0 +1,14 @@
+{
+  boolean created=false;
+  while (!created) {
+    publicContainer=containerPrefix + new SecureRandom().nextInt();
+    try {
+      created=connection.createContainer(publicContainer,CreateContainerOptions.Builder.withPublicAcl());
+    }
+ catch (    UndeclaredThrowableException e) {
+      throw e;
+    }
+  }
+  URL url=new URL(String.format("http://%s.blob.core.windows.net/%s",sysAzureStorageAccount,publicContainer));
+  Utils.toStringAndClose(url.openStream());
+}
