@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_list_queues.xml");
+  MetadataList<QueueMetadata> list=new MetadataList<QueueMetadata>("q",null,3,ImmutableList.of(new QueueMetadata("q1",URI.create("http://myaccount.queue.core.windows.net/q1")),new QueueMetadata("q2",URI.create("http://myaccount.queue.core.windows.net/q2")),new QueueMetadata("q3",URI.create("http://myaccount.queue.core.windows.net/q3"))),"q4");
+  ParseSax<MetadataList<QueueMetadata>> parser=parserFactory.createContainerMetadataListParser();
+  MetadataList<QueueMetadata> result=parser.parse(is);
+  assertEquals(result,list);
+}

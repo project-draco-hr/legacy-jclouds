@@ -1,0 +1,29 @@
+{
+  if (qName.equals("MaxResults")) {
+    maxResults=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("Marker")) {
+    marker=currentText.toString().trim();
+    marker=(marker.equals("")) ? null : marker;
+  }
+ else   if (qName.equals("Prefix")) {
+    prefix=currentText.toString().trim();
+    prefix=(prefix.equals("")) ? null : prefix;
+  }
+ else   if (qName.equals("NextMarker")) {
+    nextMarker=currentText.toString().trim();
+    nextMarker=(nextMarker.equals("")) ? null : nextMarker;
+  }
+ else   if (qName.equals("Queue")) {
+    metadata.add(new QueueMetadata(currentName,currentUrl));
+    currentUrl=null;
+    currentName=null;
+  }
+ else   if (qName.equals("Url")) {
+    currentUrl=URI.create(currentText.toString().trim());
+  }
+ else   if (qName.equals("QueueName")) {
+    currentName=currentText.toString().trim();
+  }
+  currentText=new StringBuilder();
+}
