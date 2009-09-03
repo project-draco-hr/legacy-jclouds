@@ -1,0 +1,24 @@
+{
+  if (qName.equals("MaxResults")) {
+    maxResults=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("NextMarker")) {
+    nextMarker=currentText.toString().trim();
+  }
+ else   if (qName.equals("Container")) {
+    containers.add(new ContainerMetadata(currentUrl,currentLastModified,currentETag));
+    currentUrl=null;
+    currentLastModified=null;
+    currentETag=null;
+  }
+ else   if (qName.equals("Url")) {
+    currentUrl=URI.create(currentText.toString().trim());
+  }
+ else   if (qName.equals("LastModified")) {
+    currentLastModified=dateParser.rfc822DateParse(currentText.toString().trim());
+  }
+ else   if (qName.equals("Etag")) {
+    currentETag=HttpUtils.fromHexString(currentText.toString().trim());
+  }
+  currentText=new StringBuilder();
+}
