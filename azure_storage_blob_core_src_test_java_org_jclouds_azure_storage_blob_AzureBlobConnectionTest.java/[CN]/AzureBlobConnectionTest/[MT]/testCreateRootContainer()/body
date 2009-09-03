@@ -1,0 +1,14 @@
+{
+  Method method=AzureBlobConnection.class.getMethod("createRootContainer",createContainerOptionsVarargsClass);
+  URI endpoint=URI.create("http://localhost");
+  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-07-17"));
+  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
+  assertEquals(processor.createResponseParser(method).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+}

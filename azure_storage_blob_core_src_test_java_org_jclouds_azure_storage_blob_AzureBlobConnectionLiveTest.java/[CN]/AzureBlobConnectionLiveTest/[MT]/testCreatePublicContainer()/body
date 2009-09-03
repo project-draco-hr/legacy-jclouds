@@ -6,6 +6,8 @@
       created=connection.createContainer(publicContainer,CreateContainerOptions.Builder.withPublicAcl());
     }
  catch (    UndeclaredThrowableException e) {
+      HttpResponseException htpe=(HttpResponseException)e.getCause().getCause();
+      if (htpe.getResponse().getStatusCode() == 409)       continue;
       throw e;
     }
   }

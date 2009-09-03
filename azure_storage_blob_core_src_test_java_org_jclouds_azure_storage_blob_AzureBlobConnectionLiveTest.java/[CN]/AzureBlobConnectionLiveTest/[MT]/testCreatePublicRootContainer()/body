@@ -1,0 +1,21 @@
+{
+  try {
+    connection.deleteRootContainer();
+  }
+ catch (  Exception e) {
+  }
+  boolean created=false;
+  while (!created) {
+    try {
+      created=connection.createRootContainer();
+    }
+ catch (    UndeclaredThrowableException e) {
+      AzureStorageResponseException htpe=(AzureStorageResponseException)e.getCause().getCause();
+      if (htpe.getError().getCode().equals("ContainerBeingDeleted")) {
+        Thread.sleep(5000);
+        continue;
+      }
+      throw e;
+    }
+  }
+}
