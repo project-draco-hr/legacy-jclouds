@@ -1,6 +1,16 @@
 {
   toSign.append(request.getEndpoint().getRawPath());
   if (request.getEndpoint().getQuery() != null) {
-    toSign.append("?").append(request.getEndpoint().getQuery());
+    StringBuilder paramsToSign=new StringBuilder("?");
+    String[] params=request.getEndpoint().getQuery().split("&");
+    for (    String param : params) {
+      String[] paramNameAndValue=param.split("=");
+      if ("comp".equals(paramNameAndValue[0])) {
+        paramsToSign.append(param);
+      }
+    }
+    if (paramsToSign.length() > 1) {
+      toSign.append(paramsToSign);
+    }
   }
 }
