@@ -1,12 +1,16 @@
 {
   if (declaring.isAnnotationPresent(RequestFilters.class)) {
     for (    Class<? extends HttpRequestFilter> clazz : declaring.getAnnotation(RequestFilters.class).value()) {
-      request.getFilters().add(injector.getInstance(clazz));
+      HttpRequestFilter instance=injector.getInstance(clazz);
+      request.getFilters().add(instance);
+      logger.debug("%s - adding filter  %s from annotation on %s",request,instance,declaring.getName());
     }
   }
   if (method.isAnnotationPresent(RequestFilters.class)) {
     for (    Class<? extends HttpRequestFilter> clazz : method.getAnnotation(RequestFilters.class).value()) {
-      request.getFilters().add(injector.getInstance(clazz));
+      HttpRequestFilter instance=injector.getInstance(clazz);
+      request.getFilters().add(instance);
+      logger.debug("%s - adding filter  %s from annotation on %s",request,instance,method.getName());
     }
   }
 }

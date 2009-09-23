@@ -3,17 +3,18 @@
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
   builder.path(declaring);
   builder.path(method);
-  if (declaring.isAnnotationPresent(Query.class)) {
-    Query query=declaring.getAnnotation(Query.class);
+  if (declaring.isAnnotationPresent(QueryParams.class)) {
+    QueryParams query=declaring.getAnnotation(QueryParams.class);
     addQuery(builder,query);
   }
-  if (method.isAnnotationPresent(Query.class)) {
-    Query query=method.getAnnotation(Query.class);
+  if (method.isAnnotationPresent(QueryParams.class)) {
+    QueryParams query=method.getAnnotation(QueryParams.class);
     addQuery(builder,query);
   }
   Multimap<String,String> headers=buildHeaders(method,args);
   HttpRequestOptions options=findOptionsIn(method,args);
   if (options != null) {
+    injector.injectMembers(options);
     headers.putAll(options.buildRequestHeaders());
     for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
       builder.queryParam(query.getKey(),query.getValue());
