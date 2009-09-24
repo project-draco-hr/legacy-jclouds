@@ -1,15 +1,11 @@
 {
-  return Guice.createInjector(new RestS3ConnectionModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new S3ParserModule(),new S3ContextModule(){
+  return Guice.createInjector(new RestS3ConnectionModule(),new S3ContextModule(){
     @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("localhost");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("localhost");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_HTTP_ADDRESS)).to("localhost");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_HTTP_PORT)).to("1000");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_HTTP_SECURE)).to("false");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_HTTP_MAX_RETRIES)).to("5");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_HTTP_MAX_REDIRECTS)).to("5");
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_ENDPOINT)).to("http://localhost");
       super.configure();
     }
   }
-,new JavaUrlHttpCommandExecutorServiceModule());
+,new JavaUrlHttpCommandExecutorServiceModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
 }
