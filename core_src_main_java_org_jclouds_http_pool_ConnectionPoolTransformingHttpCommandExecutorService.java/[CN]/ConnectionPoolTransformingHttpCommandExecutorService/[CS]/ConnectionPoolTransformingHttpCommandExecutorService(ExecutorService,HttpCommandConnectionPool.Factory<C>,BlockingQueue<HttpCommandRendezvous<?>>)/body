@@ -3,6 +3,7 @@
   this.poolFactory=pf;
   poolMap=new MapMaker().makeComputingMap(new Function<URI,HttpCommandConnectionPool<C>>(){
     public HttpCommandConnectionPool<C> apply(    URI endPoint){
+      checkArgument(endPoint.getHost() != null,String.format("endPoint.getHost() is null for %s",endPoint));
       try {
         HttpCommandConnectionPool<C> pool=poolFactory.create(endPoint);
         addDependency(pool);

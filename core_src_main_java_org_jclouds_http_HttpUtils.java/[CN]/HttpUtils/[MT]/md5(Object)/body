@@ -1,0 +1,19 @@
+{
+  checkNotNull(data,"data must be set before calling generateETag()");
+  byte[] md5=null;
+  if (data == null) {
+  }
+ else   if (data instanceof byte[]) {
+    md5=md5((byte[])data);
+  }
+ else   if (data instanceof String) {
+    md5=md5(((String)data).getBytes());
+  }
+ else   if (data instanceof File) {
+    md5=md5(((File)data));
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + data.getClass());
+  }
+  return md5;
+}

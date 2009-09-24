@@ -1,9 +1,19 @@
 {
   super(executor,allConnections,commandQueue,maxConnectionReuse,available,endPoint);
+  String host=checkNotNull(checkNotNull(endPoint,"endPoint").getHost(),String.format("Host null for endpoint %s",endPoint));
+  int port=endPoint.getPort();
+  if (endPoint.getScheme().equals("https")) {
+    this.dispatch=provideSSLClientEventDispatch(clientHandler,params);
+    if (port == -1)     port=443;
+  }
+ else {
+    this.dispatch=provideClientEventDispatch(clientHandler,params);
+    if (port == -1)     port=80;
+  }
+  checkArgument(port > 0,String.format("Port %d not in range for endpoint %s",endPoint.getPort(),endPoint));
   this.ioReactor=ioReactor;
-  this.dispatch=endPoint.getScheme().equals("https") ? provideSSLClientEventDispatch(clientHandler,params) : provideClientEventDispatch(clientHandler,params);
   this.maxSessionFailures=maxSessionFailures;
   this.sessionCallback=new NHttpClientConnectionPoolSessionRequestCallback();
-  this.target=new InetSocketAddress(endPoint.getHost(),endPoint.getPort());
+  this.target=new InetSocketAddress(host,port);
   clientHandler.setEventListener(this);
 }

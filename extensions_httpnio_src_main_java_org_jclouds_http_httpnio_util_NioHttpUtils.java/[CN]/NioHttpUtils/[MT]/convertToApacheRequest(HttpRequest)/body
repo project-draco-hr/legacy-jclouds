@@ -1,6 +1,7 @@
 {
-  String path=request.getEndpoint().getPath() + request.getEndpoint().getQuery();
-  BasicHttpEntityEnclosingRequest apacheRequest=new BasicHttpEntityEnclosingRequest(request.getMethod().toString(),path,HttpVersion.HTTP_1_1);
+  String path=request.getEndpoint().getRawPath();
+  if (request.getEndpoint().getQuery() != null)   path+="?" + request.getEndpoint().getQuery();
+  BasicHttpEntityEnclosingRequest apacheRequest=new BasicHttpEntityEnclosingRequest(request.getMethod(),path,HttpVersion.HTTP_1_1);
   Object content=request.getEntity();
   if (content != null) {
     String lengthString=request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH);

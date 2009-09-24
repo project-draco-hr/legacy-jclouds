@@ -6,7 +6,7 @@
   expect(gaeResponse.getHeaders()).andReturn(headers);
   expect(gaeResponse.getContent()).andReturn(null).atLeastOnce();
   replay(gaeResponse);
-  HttpResponse response=client.convert(new URL("file:///unused"),gaeResponse);
+  HttpResponse response=client.convert(URI.create("http://localhost"),gaeResponse);
   assertEquals(response.getStatusCode(),200);
   assertEquals(response.getContent(),null);
   assertEquals(response.getHeaders().size(),1);

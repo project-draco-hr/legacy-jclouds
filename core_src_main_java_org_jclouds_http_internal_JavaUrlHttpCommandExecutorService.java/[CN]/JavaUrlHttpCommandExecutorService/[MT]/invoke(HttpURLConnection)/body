@@ -1,6 +1,12 @@
 {
   logger.trace("%s - submitting request %s; %s",connection.getURL().getHost(),connection.getURL(),connection.getHeaderFields().toString());
-  HttpResponse response=new HttpResponse(connection.getURL());
+  HttpResponse response;
+  try {
+    response=new HttpResponse(connection.getURL().toURI());
+  }
+ catch (  URISyntaxException e1) {
+    throw new RuntimeException(e1);
+  }
   InputStream in;
   try {
     in=connection.getInputStream();

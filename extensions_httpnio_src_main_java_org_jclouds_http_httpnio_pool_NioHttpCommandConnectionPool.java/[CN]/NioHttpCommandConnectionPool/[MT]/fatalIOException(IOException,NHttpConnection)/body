@@ -1,4 +1,12 @@
 {
-  logger.error(ex,"%3$s-%1$s{%2$d} - io error",conn,conn.hashCode(),target);
-  resubmitIfRequestIsReplayable(conn,ex);
+  logger.error(ex,"%3$s-%1$s{%2$d} - io error",conn,conn.hashCode(),getTarget());
+  HttpCommandRendezvous<?> rendezvous=getCommandFromConnection(conn);
+  if (rendezvous != null) {
+    if (ex instanceof UnmappableCharacterException) {
+      setExceptionOnCommand(ex,rendezvous);
+    }
+ else {
+      resubmitIfRequestIsReplayable(conn,ex);
+    }
+  }
 }

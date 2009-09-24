@@ -1,8 +1,7 @@
 {
   exceptionIfNotActive();
-  URI endpoint=command.getCommand().getRequest().getEndpoint();
-  URI specificEndpoint=URI.create(endpoint.getScheme() + "://" + endpoint.getHost()+ ":"+ endpoint.getPort());
-  HttpCommandConnectionPool<C> pool=poolMap.get(specificEndpoint);
+  URI endpoint=createBaseEndpointFor(command);
+  HttpCommandConnectionPool<C> pool=poolMap.get(endpoint);
   if (pool == null) {
     logger.warn("pool not available for command %s; retrying",command);
     commandQueue.add(command);
@@ -19,6 +18,12 @@
   }
 catch (  TimeoutException e) {
     logger.warn(e,"Timeout getting a connection for command %s on pool %s; retrying",command,pool);
+    commandQueue.add(command);
+    return;
+  }
+catch (  RuntimeException e) {
+    logger.warn(e,"Error getting a connection for command %s on pool %s; retrying",command,pool);
+    discardPool(endpoint,pool);
     commandQueue.add(command);
     return;
   }

@@ -1,0 +1,11 @@
+{
+  HttpResponse response=new HttpResponse(uri);
+  if (apacheResponse.getEntity() != null) {
+    response.setContent(apacheResponse.getEntity().getContent());
+  }
+  for (  Header header : apacheResponse.getAllHeaders()) {
+    response.getHeaders().put(header.getName(),header.getValue());
+  }
+  response.setStatusCode(apacheResponse.getStatusLine().getStatusCode());
+  return response;
+}
