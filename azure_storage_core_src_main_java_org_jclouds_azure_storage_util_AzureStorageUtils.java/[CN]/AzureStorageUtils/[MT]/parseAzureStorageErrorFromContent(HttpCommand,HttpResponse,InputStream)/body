@@ -1,0 +1,9 @@
+{
+  AzureStorageError error=(AzureStorageError)factory.create(errorHandlerProvider.get()).parse(content);
+  error.setRequestId(response.getFirstHeaderOrNull(AzureStorageHeaders.REQUEST_ID));
+  if ("AuthenticationFailed".equals(error.getCode())) {
+    error.setStringSigned(signer.createStringToSign(command.getRequest()));
+    error.setSignature(signer.signString(error.getStringSigned()));
+  }
+  return error;
+}

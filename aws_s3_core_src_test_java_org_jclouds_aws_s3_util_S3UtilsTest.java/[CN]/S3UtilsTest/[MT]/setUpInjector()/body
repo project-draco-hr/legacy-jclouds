@@ -1,0 +1,46 @@
+{
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
+    }
+  }
+);
+  utils=injector.getInstance(S3Utils.class);
+  response=new HttpResponse(URI.create("http://localhost"));
+  response.setStatusCode(400);
+  response.getHeaders().put(S3Headers.REQUEST_ID,"requestid");
+  response.getHeaders().put(S3Headers.REQUEST_TOKEN,"requesttoken");
+  command=new HttpCommand(){
+    public int getRedirectCount(){
+      return 0;
+    }
+    public int incrementRedirectCount(){
+      return 0;
+    }
+    public boolean isReplayable(){
+      return false;
+    }
+    public HttpRequest setHostAndPort(    String host,    int port){
+      return null;
+    }
+    public HttpRequest setMethod(    String method){
+      return null;
+    }
+    public Exception getException(){
+      return null;
+    }
+    public int getFailureCount(){
+      return 0;
+    }
+    public HttpRequest getRequest(){
+      return null;
+    }
+    public int incrementFailureCount(){
+      return 0;
+    }
+    public void setException(    Exception exception){
+    }
+  }
+;
+}
