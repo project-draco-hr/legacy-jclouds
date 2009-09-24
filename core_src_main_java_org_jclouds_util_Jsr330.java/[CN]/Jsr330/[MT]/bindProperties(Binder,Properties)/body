@@ -1,0 +1,8 @@
+{
+  binder=binder.skipSources(Jsr330.class);
+  for (Enumeration<?> e=properties.propertyNames(); e.hasMoreElements(); ) {
+    String propertyName=(String)e.nextElement();
+    String value=properties.getProperty(propertyName);
+    binder.bind(Key.get(String.class,com.google.inject.util.Jsr330.named(propertyName))).toInstance(value);
+  }
+}
