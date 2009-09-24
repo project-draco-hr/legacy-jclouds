@@ -1,0 +1,23 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,B> map=createMap(context,bucketName);
+    putFiveStrings(map);
+    Set<Entry<String,B>> entries=map.entrySet();
+    assertEquals(entries.size(),5);
+    for (    Entry<String,B> entry : entries) {
+      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtils.getContentAsStringAndClose(entry.getValue()));
+      B value=entry.getValue();
+      value.setData("");
+      value.generateMD5();
+      entry.setValue(value);
+    }
+    assertEventuallyMapSize(map,5);
+    for (    B value : map.values()) {
+      assertEquals(BlobStoreUtils.getContentAsStringAndClose(value),"");
+    }
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

@@ -1,8 +1,11 @@
 {
+  checkState(metadataPrefix != null,"metadataPrefix should have been injected!");
   Multimap<String,String> returnVal=HashMultimap.create();
   returnVal.putAll(headers);
   if (metadata != null) {
-    returnVal.putAll(metadata);
+    for (    String key : metadata.keySet()) {
+      returnVal.putAll(key.startsWith(metadataPrefix) ? key : metadataPrefix + key,metadata.get(key));
+    }
     returnVal.put("x-amz-metadata-directive","REPLACE");
   }
   return returnVal;

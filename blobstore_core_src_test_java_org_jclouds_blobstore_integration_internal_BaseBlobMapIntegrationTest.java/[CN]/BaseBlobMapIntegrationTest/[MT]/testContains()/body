@@ -1,0 +1,13 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,B> map=createMap(context,bucketName);
+    putString(map,"one","apple");
+    B object=objectFactory.createBlob("one");
+    object.setData("apple");
+    assertEventuallyContainsValue(map,object);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

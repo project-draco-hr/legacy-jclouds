@@ -1,4 +1,6 @@
 {
-  Multimap<String,String> headers=overrideAcl(CannedAccessPolicy.AUTHENTICATED_READ).buildRequestHeaders();
+  CopyObjectOptions options=overrideAcl(CannedAccessPolicy.AUTHENTICATED_READ);
+  options.setMetadataPrefix("x-amz-meta-");
+  Multimap<String,String> headers=options.buildRequestHeaders();
   assertEquals(headers.get(S3Headers.CANNED_ACL).iterator().next(),CannedAccessPolicy.AUTHENTICATED_READ.toString());
 }

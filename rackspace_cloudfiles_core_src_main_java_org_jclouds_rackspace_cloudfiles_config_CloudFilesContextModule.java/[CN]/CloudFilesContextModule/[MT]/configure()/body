@@ -1,0 +1,12 @@
+{
+  this.requireBinding(CloudFilesBlobStore.class);
+  bind(GuiceCloudFilesContext.CloudFilesObjectMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceCloudFilesContext.CloudFilesObjectMapFactory.class,LiveCloudFilesObjectMap.class));
+  bind(GuiceCloudFilesContext.CloudFilesInputStreamMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceCloudFilesContext.CloudFilesInputStreamMapFactory.class,LiveCloudFilesInputStreamMap.class));
+  bind(objectMetadataFactoryLiteral).toProvider(FactoryProvider.newFactory(objectMetadataFactoryLiteral,new TypeLiteral<BlobMetadata>(){
+  }
+));
+  bind(objectFactoryLiteral).toProvider(FactoryProvider.newFactory(objectFactoryLiteral,new TypeLiteral<Blob<BlobMetadata>>(){
+  }
+));
+  bind(CloudFilesContext.class).to(GuiceCloudFilesContext.class);
+}

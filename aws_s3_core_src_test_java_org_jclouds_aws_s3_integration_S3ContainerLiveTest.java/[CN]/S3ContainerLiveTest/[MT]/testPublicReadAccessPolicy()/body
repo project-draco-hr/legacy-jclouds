@@ -1,0 +1,11 @@
+{
+  String containerName=getScratchContainerName();
+  try {
+    client.createContainer(containerName,withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+    AccessControlList acl=client.getContainerACL(containerName).get(10,TimeUnit.SECONDS);
+    assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
+  }
+  finally {
+    destroyContainer(containerName);
+  }
+}

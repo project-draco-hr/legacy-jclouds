@@ -1,0 +1,23 @@
+{
+  httpStreamUrl=checkNotNull(httpStreamUrl != null ? httpStreamUrl : sysHttpStreamUrl,"httpStreamUrl");
+  httpStreamETag=checkNotNull(httpStreamETag != null ? httpStreamETag : sysHttpStreamETag,"httpStreamMd5");
+  String key="hello";
+  URL url=new URL(httpStreamUrl);
+  byte[] md5=HttpUtils.fromHexString(httpStreamETag);
+  URLConnection connection=url.openConnection();
+  int length=connection.getContentLength();
+  InputStream input=connection.getInputStream();
+  B object=objectFactory.createBlob(key);
+  object.setData(input);
+  object.setContentLength(length);
+  object.getMetadata().setContentMD5(md5);
+  object.getMetadata().setSize(length);
+  String bucketName=getContainerName();
+  try {
+    client.putBlob(bucketName,object).get(180,TimeUnit.SECONDS);
+    assertEquals(client.blobMetadata(bucketName,key).getContentMD5(),md5);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

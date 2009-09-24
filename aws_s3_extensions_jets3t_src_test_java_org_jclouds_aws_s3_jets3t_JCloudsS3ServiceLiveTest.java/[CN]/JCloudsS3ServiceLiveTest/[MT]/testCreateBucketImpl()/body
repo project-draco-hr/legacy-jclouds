@@ -1,0 +1,11 @@
+{
+  String bucketName=getContainerName();
+  try {
+    S3Bucket bucket=service.createBucket(new S3Bucket(bucketName));
+    assertEquals(bucket.getName(),bucketName);
+    assertTrue(client.containerExists(bucketName));
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

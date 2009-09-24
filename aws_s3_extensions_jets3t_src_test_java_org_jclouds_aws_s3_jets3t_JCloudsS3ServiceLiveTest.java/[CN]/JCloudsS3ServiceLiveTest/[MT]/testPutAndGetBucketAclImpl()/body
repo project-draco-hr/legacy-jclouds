@@ -1,0 +1,47 @@
+{
+  String bucketName=getContainerName();
+  try {
+    S3Bucket bucket=new S3Bucket(bucketName);
+    AccessControlList acl=null;
+    acl=service.getBucketAcl(bucket);
+    final String ownerId=acl.getOwner().getId();
+    assertEquals(acl.getGrants().size(),1);
+    GrantAndPermission gap=(GrantAndPermission)Iterables.find(acl.getGrants(),new Predicate<GrantAndPermission>(){
+      public boolean apply(      GrantAndPermission gap){
+        return gap.getGrantee().getIdentifier().equals(ownerId);
+      }
+    }
+);
+    assertNotNull(gap);
+    assertEquals(gap.getPermission(),org.jets3t.service.acl.Permission.PERMISSION_FULL_CONTROL);
+    acl.grantPermission(GroupGrantee.ALL_USERS,org.jets3t.service.acl.Permission.PERMISSION_READ);
+    acl.grantPermission(GroupGrantee.AUTHENTICATED_USERS,org.jets3t.service.acl.Permission.PERMISSION_READ_ACP);
+    service.putBucketAcl(bucketName,acl);
+    acl=service.getBucketAcl(bucket);
+    assertEquals(acl.getGrants().size(),3);
+    gap=(GrantAndPermission)Iterables.find(acl.getGrants(),new Predicate<GrantAndPermission>(){
+      public boolean apply(      GrantAndPermission gap){
+        return gap.getGrantee().getIdentifier().equals(ownerId);
+      }
+    }
+);
+    assertEquals(gap.getPermission(),org.jets3t.service.acl.Permission.PERMISSION_FULL_CONTROL);
+    gap=(GrantAndPermission)Iterables.find(acl.getGrants(),new Predicate<GrantAndPermission>(){
+      public boolean apply(      GrantAndPermission gap){
+        return gap.getGrantee().getIdentifier().equals(GroupGrantee.ALL_USERS.getIdentifier());
+      }
+    }
+);
+    assertEquals(gap.getPermission(),org.jets3t.service.acl.Permission.PERMISSION_READ);
+    gap=(GrantAndPermission)Iterables.find(acl.getGrants(),new Predicate<GrantAndPermission>(){
+      public boolean apply(      GrantAndPermission gap){
+        return gap.getGrantee().getIdentifier().equals(GroupGrantee.AUTHENTICATED_USERS.getIdentifier());
+      }
+    }
+);
+    assertEquals(gap.getPermission(),org.jets3t.service.acl.Permission.PERMISSION_READ_ACP);
+  }
+  finally {
+    destroyContainer(bucketName);
+  }
+}

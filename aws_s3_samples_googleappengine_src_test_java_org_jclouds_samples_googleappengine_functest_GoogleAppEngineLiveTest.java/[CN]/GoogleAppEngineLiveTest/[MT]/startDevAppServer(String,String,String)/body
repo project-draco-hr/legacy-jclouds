@@ -1,0 +1,12 @@
+{
+  url=new URL(String.format("http://%1$s:%2$s",address,port));
+  String account=System.getProperty("jclouds.test.user");
+  String key=System.getProperty("jclouds.test.key");
+  checkNotNull(account,"account");
+  checkNotNull(key,"key");
+  Properties props=new Properties();
+  props.put(S3Constants.PROPERTY_AWS_ACCESSKEYID,account);
+  props.put(S3Constants.PROPERTY_AWS_SECRETACCESSKEY,key);
+  server=new GoogleDevServer();
+  server.writePropertiesAndStartServer(address,port,warfile,props);
+}

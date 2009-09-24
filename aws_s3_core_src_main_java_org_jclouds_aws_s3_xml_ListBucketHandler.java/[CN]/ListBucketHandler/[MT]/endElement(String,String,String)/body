@@ -6,7 +6,7 @@
     currentOwner.setDisplayName(currentText.toString());
   }
  else   if (qName.equals("Key")) {
-    currentObjectMetadata=new S3Object.Metadata(currentText.toString());
+    currentObjectMetadata=new ObjectMetadata(currentText.toString());
   }
  else   if (qName.equals("LastModified")) {
     currentObjectMetadata.setLastModified(dateParser.iso8601DateParse(currentText.toString()));
@@ -24,28 +24,27 @@
     currentObjectMetadata.setStorageClass(currentText.toString());
   }
  else   if (qName.equals("Contents")) {
-    s3Bucket.getContents().add(currentObjectMetadata);
+    contents.add(currentObjectMetadata);
   }
  else   if (qName.equals("Name")) {
-    s3Bucket.setName(currentText.toString());
+    this.bucketName=currentText.toString();
   }
  else   if (qName.equals("Prefix")) {
     String prefix=currentText.toString().trim();
-    if (inCommonPrefixes)     s3Bucket.getCommonPrefixes().add(prefix);
- else     s3Bucket.setPrefix(prefix);
+    if (inCommonPrefixes)     commonPrefixes.add(prefix);
+ else     this.prefix=prefix;
   }
  else   if (qName.equals("Delimiter")) {
-    if (!currentText.toString().equals(""))     s3Bucket.setDelimiter(currentText.toString().trim());
+    if (!currentText.toString().equals(""))     this.delimiter=currentText.toString().trim();
   }
  else   if (qName.equals("Marker")) {
-    if (!currentText.toString().equals(""))     s3Bucket.setMarker(currentText.toString());
+    if (!currentText.toString().equals(""))     this.marker=currentText.toString();
   }
  else   if (qName.equals("MaxKeys")) {
-    s3Bucket.setMaxKeys(Long.parseLong(currentText.toString()));
+    this.maxResults=Integer.parseInt(currentText.toString());
   }
  else   if (qName.equals("IsTruncated")) {
-    boolean isTruncated=Boolean.parseBoolean(currentText.toString());
-    s3Bucket.setTruncated(isTruncated);
+    this.isTruncated=Boolean.parseBoolean(currentText.toString());
   }
   currentText=new StringBuilder();
 }

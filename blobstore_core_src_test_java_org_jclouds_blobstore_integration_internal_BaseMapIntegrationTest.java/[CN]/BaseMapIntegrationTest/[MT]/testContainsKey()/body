@@ -1,0 +1,12 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,V> map=createMap(context,bucketName);
+    assertEventuallyDoesntContainKey(map);
+    putString(map,"one","apple");
+    assertEventuallyContainsKey(map);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

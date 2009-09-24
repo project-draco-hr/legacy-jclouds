@@ -1,0 +1,12 @@
+{
+  ParseBlobMetadataFromHeaders<BlobMetadata> metadataParser=createMock(ParseBlobMetadataFromHeaders.class);
+  ParseBlobFromHeadersAndHttpContent.BlobFactory<BlobMetadata,Blob<BlobMetadata>> objectFactory=createMock(ParseBlobFromHeadersAndHttpContent.BlobFactory.class);
+  ParseBlobFromHeadersAndHttpContent<BlobMetadata,Blob<BlobMetadata>> callable=new ParseBlobFromHeadersAndHttpContent(metadataParser,objectFactory);
+  HttpResponse response=createMock(HttpResponse.class);
+  expect(response.getFirstHeaderOrNull("Content-Length")).andReturn("100");
+  expect(response.getFirstHeaderOrNull("Content-Range")).andReturn(null);
+  expect(response.getHeaders()).andReturn(ImmutableMultimap.of("Content-Length","100"));
+  expect(response.getContent()).andReturn(null);
+  replay(response);
+  callable.apply(response);
+}

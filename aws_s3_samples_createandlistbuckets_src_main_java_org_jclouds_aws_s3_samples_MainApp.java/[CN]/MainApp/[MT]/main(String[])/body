@@ -2,7 +2,7 @@
   if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
   S3Context context=null;
   CreateListOwnedBuckets listMyOwnBuckets=null;
-  List<S3Bucket.Metadata> myBuckets=null;
+  List<BucketMetadata> myBuckets=null;
   String accesskeyid=args[0];
   String secretkey=args[1];
   String bucketName=args[2];
@@ -11,7 +11,7 @@
   try {
     listMyOwnBuckets.createBucket(bucketName);
     myBuckets=listMyOwnBuckets.list();
-    for (    S3Bucket.Metadata bucketObj : myBuckets) {
+    for (    BucketMetadata bucketObj : myBuckets) {
       System.out.println(String.format("  %1$s",bucketObj));
       System.out.println(String.format(": %1$s entries%n",context.createInputStreamMap(bucketObj.getName()).size()));
     }

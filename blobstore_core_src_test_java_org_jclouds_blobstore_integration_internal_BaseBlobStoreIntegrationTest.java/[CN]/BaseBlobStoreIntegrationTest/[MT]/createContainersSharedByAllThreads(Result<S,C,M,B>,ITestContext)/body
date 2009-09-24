@@ -1,0 +1,31 @@
+{
+  while (!initialized) {
+synchronized (BaseBlobStoreIntegrationTest.class) {
+      if (!initialized) {
+        S client=result.getClient();
+        BlobStoreContext<S,M,B> context=result.getContext();
+        deleteEverything(client,context);
+        for (; containerIndex.get() < containerCount; containerIndex.incrementAndGet()) {
+          String containerName=CONTAINER_PREFIX + containerIndex;
+          if (blackListContainers.contains(containerName)) {
+            containerCount++;
+          }
+ else {
+            try {
+              createContainerAndEnsureEmpty(client,context,containerName);
+              containerNames.put(containerName);
+            }
+ catch (            Throwable e) {
+              deleteContainerOrWarnIfUnable(client,context,containerName);
+              containerCount++;
+            }
+          }
+        }
+        testContext.setAttribute("containerNames",containerNames);
+        System.err.printf("*** containers to test: %s%n",containerNames);
+        context.close();
+        initialized=true;
+      }
+    }
+  }
+}

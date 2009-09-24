@@ -1,0 +1,61 @@
+{
+  if (qName.equals("MaxResults")) {
+    maxResults=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("Marker")) {
+    marker=currentText.toString().trim();
+    marker=(marker.equals("")) ? null : marker;
+  }
+ else   if (qName.equals("Prefix")) {
+    prefix=currentText.toString().trim();
+    prefix=(prefix.equals("")) ? null : prefix;
+  }
+ else   if (qName.equals("Delimiter")) {
+    delimiter=currentText.toString().trim();
+    delimiter=(prefix.equals("")) ? null : delimiter;
+  }
+ else   if (qName.equals("NextMarker")) {
+    nextMarker=currentText.toString().trim();
+    nextMarker=(nextMarker.equals("")) ? null : nextMarker;
+  }
+ else   if (qName.equals("Blob")) {
+    BlobMetadata md=new BlobMetadata(currentName,currentUrl,currentLastModified,currentETag,currentSize,currentContentType,null,currentContentEncoding,currentContentLanguage);
+    blobMetadata.add(md);
+    currentName=null;
+    currentUrl=null;
+    currentLastModified=null;
+    currentETag=null;
+    currentSize=-1;
+    currentContentType=null;
+    currentContentEncoding=null;
+    currentContentLanguage=null;
+  }
+ else   if (qName.equals("Url")) {
+    currentUrl=URI.create(currentText.toString().trim());
+  }
+ else   if (qName.equals("LastModified")) {
+    currentLastModified=dateParser.rfc822DateParse(currentText.toString().trim());
+  }
+ else   if (qName.equals("Etag")) {
+    currentETag=HttpUtils.fromHexString(currentText.toString().trim());
+  }
+ else   if (qName.equals("Name")) {
+    if (inBlob)     currentName=currentText.toString().trim();
+ else     if (inBlobPrefix)     blobPrefix=currentText.toString().trim();
+  }
+ else   if (qName.equals("Size")) {
+    currentSize=Long.parseLong(currentText.toString().trim());
+  }
+ else   if (qName.equals("ContentType")) {
+    currentContentType=currentText.toString().trim();
+  }
+ else   if (qName.equals("ContentEncoding")) {
+    currentContentEncoding=currentText.toString().trim();
+    if (currentContentEncoding.equals(""))     currentContentEncoding=null;
+  }
+ else   if (qName.equals("ContentLanguage")) {
+    currentContentLanguage=currentText.toString().trim();
+    if (currentContentLanguage.equals(""))     currentContentLanguage=null;
+  }
+  currentText=new StringBuilder();
+}

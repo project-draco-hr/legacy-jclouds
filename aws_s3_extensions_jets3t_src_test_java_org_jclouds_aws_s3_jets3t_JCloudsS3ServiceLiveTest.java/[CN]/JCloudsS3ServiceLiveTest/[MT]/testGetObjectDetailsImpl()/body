@@ -1,0 +1,19 @@
+{
+  String bucketName=getContainerName();
+  try {
+    String objectKey="key-testGetObjectDetailsImpl".toLowerCase();
+    String objectValue="test";
+    String metadataName="metadata-name-1";
+    String metadataValue="metadata-value-1";
+    org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
+    s3Object.getMetadata().getUserMetadata().put("x-amz-meta-" + metadataName,metadataValue);
+    addBlobToContainer(bucketName,s3Object);
+    S3Object objectDetails=service.getObjectDetails(new S3Bucket(bucketName),objectKey);
+    assertEquals(objectDetails.getContentLength(),4);
+    assertNull(objectDetails.getDataInputStream());
+    assertEquals(objectDetails.getMetadata(metadataName),metadataValue);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

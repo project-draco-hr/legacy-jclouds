@@ -1,0 +1,31 @@
+{
+  final String publicReadWriteObjectKey="public-read-write-acl";
+  final String containerName=getContainerName();
+  try {
+    client.putBlob(containerName,new S3Object(publicReadWriteObjectKey,""),new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE)).get(10,TimeUnit.SECONDS);
+    assertEventually(new Runnable(){
+      public void run(){
+        try {
+          AccessControlList acl=client.getBlobACL(containerName,publicReadWriteObjectKey).get(10,TimeUnit.SECONDS);
+          assertEquals(acl.getGrants().size(),3);
+          assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),2);
+          assertTrue(acl.getOwner() != null);
+          String ownerId=acl.getOwner().getId();
+          assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ_ACP));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE_ACP));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.FULL_CONTROL));
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

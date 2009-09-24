@@ -1,0 +1,16 @@
+{
+  boolean created=false;
+  while (!created) {
+    publicContainer=containerPrefix + new SecureRandom().nextInt();
+    try {
+      created=connection.createContainer(publicContainer,CreateContainerOptions.Builder.withPublicAcl()).get(10,TimeUnit.SECONDS);
+    }
+ catch (    UndeclaredThrowableException e) {
+      HttpResponseException htpe=(HttpResponseException)e.getCause().getCause();
+      if (htpe.getResponse().getStatusCode() == 409)       continue;
+      throw e;
+    }
+  }
+  URL url=new URL(String.format("http://%s.blob.core.windows.net/%s",account,publicContainer));
+  Utils.toStringAndClose(url.openStream());
+}

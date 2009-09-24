@@ -1,0 +1,8 @@
+{
+  Multimap<String,String> allHeaders=ImmutableMultimap.of("key","value");
+  HttpResponse from=new HttpResponse(URI.create("http://localhost"));
+  from.setHeaders(allHeaders);
+  BlobMetadata metadata=new BlobMetadata("test");
+  parser.addAllHeadersTo(from,metadata);
+  assertEquals(metadata.getAllHeaders().get("key"),Collections.singletonList("value"));
+}

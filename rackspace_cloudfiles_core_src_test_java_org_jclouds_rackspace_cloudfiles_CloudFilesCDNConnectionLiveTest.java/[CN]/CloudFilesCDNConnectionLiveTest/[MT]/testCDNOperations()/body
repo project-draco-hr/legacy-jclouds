@@ -2,8 +2,8 @@
   final long minimumTTL=60 * 60;
   final String containerNameWithCDN=bucketPrefix + ".testCDNOperationsContainerWithCDN";
   final String containerNameWithoutCDN=bucketPrefix + ".testCDNOperationsContainerWithoutCDN";
-  assertTrue(filesConnection.putContainer(containerNameWithCDN));
-  assertTrue(filesConnection.putContainer(containerNameWithoutCDN));
+  assertTrue(filesConnection.createContainer(containerNameWithCDN).get(10,TimeUnit.SECONDS));
+  assertTrue(filesConnection.createContainer(containerNameWithoutCDN).get(10,TimeUnit.SECONDS));
   ContainerCDNMetadata cdnMetadata=null;
   final String cdnUri=cdnConnection.enableCDN(containerNameWithCDN);
   assertTrue(cdnUri != null);
@@ -13,9 +13,9 @@
   assertEquals(cdnMetadata.getCdnUri(),cdnUri);
   final long initialTTL=cdnMetadata.getTtl();
   cdnMetadata=cdnConnection.getCDNMetadata(containerNameWithoutCDN);
-  assertEquals(cdnMetadata,ContainerCDNMetadata.NOT_FOUND);
+  assertEquals(cdnMetadata,null);
   cdnMetadata=cdnConnection.getCDNMetadata("DoesNotExist");
-  assertEquals(cdnMetadata,ContainerCDNMetadata.NOT_FOUND);
+  assertEquals(cdnMetadata,null);
   List<ContainerCDNMetadata> cdnMetadataList=cdnConnection.listCDNContainers();
   assertTrue(cdnMetadataList.size() >= 1);
   assertTrue(Iterables.any(cdnMetadataList,new Predicate<ContainerCDNMetadata>(){
@@ -50,6 +50,6 @@
   assertTrue(cdnConnection.disableCDN(containerNameWithCDN));
   cdnMetadata=cdnConnection.getCDNMetadata(containerNameWithCDN);
   assertEquals(cdnMetadata.isCdnEnabled(),false);
-  assertTrue(filesConnection.deleteContainerIfEmpty(containerNameWithCDN));
-  assertTrue(filesConnection.deleteContainerIfEmpty(containerNameWithoutCDN));
+  assertTrue(filesConnection.deleteContainer(containerNameWithCDN).get(10,TimeUnit.SECONDS));
+  assertTrue(filesConnection.deleteContainer(containerNameWithoutCDN).get(10,TimeUnit.SECONDS));
 }

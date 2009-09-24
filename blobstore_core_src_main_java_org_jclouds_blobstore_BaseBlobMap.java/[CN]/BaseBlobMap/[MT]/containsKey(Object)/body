@@ -1,0 +1,12 @@
+{
+  try {
+    return connection.blobMetadata(container,key.toString()) != null;
+  }
+ catch (  KeyNotFoundException e) {
+    return false;
+  }
+catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException(String.format("Error searching for %1$s:%2$s",container,key),e);
+  }
+}

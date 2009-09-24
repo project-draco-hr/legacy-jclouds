@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_list_addresses.json");
+  ParseAddressesFromJsonResponse parser=new ParseAddressesFromJsonResponse(i.getInstance(Gson.class));
+  Addresses response=parser.apply(is);
+  List<InetAddress> publicAddresses=ImmutableList.of(InetAddress.getByAddress(new byte[]{67,23,10,(byte)132}),InetAddress.getByAddress(new byte[]{67,23,10,(byte)131}));
+  List<InetAddress> privateAddresses=ImmutableList.of(InetAddress.getByAddress(new byte[]{10,(byte)176,42,16}));
+  assertEquals(response.getPublicAddresses(),publicAddresses);
+  assertEquals(response.getPrivateAddresses(),privateAddresses);
+}

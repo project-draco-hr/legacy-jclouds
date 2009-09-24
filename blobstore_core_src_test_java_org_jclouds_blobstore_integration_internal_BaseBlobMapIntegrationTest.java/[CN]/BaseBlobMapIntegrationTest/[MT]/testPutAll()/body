@@ -1,0 +1,20 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,B> map=createMap(context,bucketName);
+    Map<String,B> newMap=new HashMap<String,B>();
+    for (    String key : fiveInputs.keySet()) {
+      B object=objectFactory.createBlob(key);
+      object.setData(fiveInputs.get(key));
+      object.getMetadata().setSize(fiveBytes.get(key).length);
+      newMap.put(key,object);
+    }
+    map.putAll(newMap);
+    assertEventuallyMapSize(map,5);
+    assertEventuallyKeySetEquals(map,new TreeSet<String>(fiveInputs.keySet()));
+    fourLeftRemovingOne(map);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  B old=getLastValue(key);
+  try {
+    connection.removeBlob(container,key.toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException(String.format("Error removing object %1$s:%2$s",container,key),e);
+  }
+  return old;
+}

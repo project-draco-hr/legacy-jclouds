@@ -1,0 +1,20 @@
+{
+  String key="hello";
+  B object=objectFactory.createBlob(key);
+  object.setData(TEST_STRING);
+  object.getMetadata().setContentType("text/plain");
+  object.getMetadata().setSize(TEST_STRING.length());
+  object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
+  object.getMetadata().setContentMD5(HttpUtils.md5(TEST_STRING.getBytes()));
+  String containerName=getContainerName();
+  try {
+    addBlobToContainer(containerName,object);
+    B newObject=validateContent(containerName,key);
+    M metadata=newObject.getMetadata();
+    validateMetadata(metadata);
+    validateMetadata(client.blobMetadata(containerName,key));
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

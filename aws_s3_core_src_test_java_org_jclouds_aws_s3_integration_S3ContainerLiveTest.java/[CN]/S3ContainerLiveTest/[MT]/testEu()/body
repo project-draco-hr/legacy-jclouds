@@ -1,0 +1,21 @@
+{
+  final String containerName=getScratchContainerName();
+  try {
+    client.createContainer(containerName + "eu",createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(30,TimeUnit.SECONDS);
+    assertEventually(new Runnable(){
+      public void run(){
+        try {
+          AccessControlList acl=client.getContainerACL(containerName + "eu").get(30,TimeUnit.SECONDS);
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+  }
+  finally {
+    destroyContainer(containerName + "eu");
+  }
+}

@@ -1,0 +1,11 @@
+{
+  try {
+    Set<String> keys=new HashSet<String>();
+    for (    BlobMetadata object : refreshContainer())     keys.add(object.getKey());
+    return keys;
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException("Error getting keys in container: " + container,e);
+  }
+}

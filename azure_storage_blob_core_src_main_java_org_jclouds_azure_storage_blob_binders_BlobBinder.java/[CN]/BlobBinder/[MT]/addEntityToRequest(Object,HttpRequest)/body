@@ -1,0 +1,14 @@
+{
+  Blob<?> object=(Blob<?>)entity;
+  checkArgument(object.getMetadata().getSize() >= 0,"size must be set");
+  if (object.getMetadata() instanceof BlobMetadata) {
+    BlobMetadata md=(BlobMetadata)object.getMetadata();
+    if (md.getContentLanguage() != null) {
+      request.getHeaders().put(HttpHeaders.CONTENT_LANGUAGE,md.getContentLanguage());
+    }
+    if (md.getContentEncoding() != null) {
+      request.getHeaders().put(HttpHeaders.CONTENT_ENCODING,md.getContentEncoding());
+    }
+  }
+  super.addEntityToRequest(entity,request);
+}

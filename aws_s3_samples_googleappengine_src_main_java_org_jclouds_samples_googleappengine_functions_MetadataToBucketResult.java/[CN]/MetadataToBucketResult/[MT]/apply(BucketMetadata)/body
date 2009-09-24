@@ -1,0 +1,18 @@
+{
+  BucketResult result=new BucketResult();
+  result.setName(from.getName());
+  try {
+    try {
+      ListBucketResponse bucket=connection.listBlobs(from.getName()).get(10,TimeUnit.SECONDS);
+      result.setSize(bucket.size() + "");
+    }
+ catch (    ContainerNotFoundException ex) {
+      result.setStatus("not found");
+    }
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error listing bucket %1$s",result.getName());
+    result.setStatus(e.getMessage());
+  }
+  return result;
+}

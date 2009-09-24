@@ -1,0 +1,32 @@
+{
+  Map<String,B> container=getContainerToBlobs().get(bucketName);
+  if (container == null) {
+    new RuntimeException("bucketName not found: " + bucketName);
+  }
+  try {
+    M newMd=copy(object.getMetadata());
+    newMd.setLastModified(new DateTime());
+    byte[] data=toByteArray(object.getData());
+    final byte[] eTag=HttpUtils.md5(data);
+    newMd.setETag(eTag);
+    newMd.setContentType(object.getMetadata().getContentType());
+    B blob=createBlob(newMd,data);
+    container.put(object.getKey(),blob);
+    newMd.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
+    newMd.getAllHeaders().put(HttpHeaders.ETAG,HttpUtils.toHexString(eTag));
+    newMd.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,newMd.getContentType());
+    newMd.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,newMd.getSize() + "");
+    for (    Entry<String,String> userMD : newMd.getUserMetadata().entries()) {
+      newMd.getAllHeaders().put(userMD.getKey(),userMD.getValue());
+    }
+    return new FutureBase<byte[]>(){
+      public byte[] get() throws InterruptedException, ExecutionException {
+        return eTag;
+      }
+    }
+;
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}

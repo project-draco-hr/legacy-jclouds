@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_list_containers.xml");
-  MetadataList<ContainerMetadata> list=new MetadataList<ContainerMetadata>(null,null,3,ImmutableList.of(new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/audio"),dateService.rfc822DateParse("Wed, 13 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7C6B1B2")),new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/images"),dateService.rfc822DateParse("Wed, 14 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7C1EEEC")),new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/textfiles"),dateService.rfc822DateParse("Wed, 15 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7BACAC3"))),"video");
-  ParseSax<MetadataList<ContainerMetadata>> parser=parserFactory.createContainerMetadataListParser();
-  MetadataList<ContainerMetadata> result=parser.parse(is);
+  BoundedList<ContainerMetadata> list=new ArrayBoundedList<ContainerMetadata>(ImmutableList.of(new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/audio"),dateService.rfc822DateParse("Wed, 13 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7C6B1B2")),new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/images"),dateService.rfc822DateParse("Wed, 14 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7C1EEEC")),new ContainerMetadata(URI.create("http://myaccount.blob.core.windows.net/textfiles"),dateService.rfc822DateParse("Wed, 15 Aug 2008 20:39:39 GMT"),HttpUtils.fromHexString("0x8CACB9BD7BACAC3"))),null,null,3,"video");
+  ParseSax<BoundedList<ContainerMetadata>> parser=parserFactory.createContainerMetadataListParser();
+  BoundedList<ContainerMetadata> result=parser.parse(is);
   assertEquals(result,list);
 }

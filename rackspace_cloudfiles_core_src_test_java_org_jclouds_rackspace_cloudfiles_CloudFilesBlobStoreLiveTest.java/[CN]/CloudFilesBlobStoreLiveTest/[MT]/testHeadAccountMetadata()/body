@@ -1,0 +1,11 @@
+{
+  AccountMetadata metadata=connection.getAccountMetadata();
+  assertNotNull(metadata);
+  long initialContainerCount=metadata.getContainerCount();
+  String containerName=bucketPrefix + ".testHeadAccountMetadata";
+  assertTrue(connection.createContainer(containerName).get(10,TimeUnit.SECONDS));
+  metadata=connection.getAccountMetadata();
+  assertNotNull(metadata);
+  assertTrue(metadata.getContainerCount() >= initialContainerCount);
+  assertTrue(connection.deleteContainer(containerName).get(10,TimeUnit.SECONDS));
+}

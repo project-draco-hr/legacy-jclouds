@@ -1,0 +1,17 @@
+{
+  Set<B> objects=new HashSet<B>();
+  Map<String,Future<B>> futureObjects=Maps.newHashMap();
+  for (  String key : keySet()) {
+    futureObjects.put(key,connection.getBlob(container,key));
+  }
+  for (  Entry<String,Future<B>> futureObjectEntry : futureObjects.entrySet()) {
+    try {
+      ifNotFoundRetryOtherwiseAddToSet(futureObjectEntry.getKey(),futureObjectEntry.getValue(),objects);
+    }
+ catch (    Exception e) {
+      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      throw new BlobRuntimeException(String.format("Error getting value from blob %1$s",container),e);
+    }
+  }
+  return objects;
+}

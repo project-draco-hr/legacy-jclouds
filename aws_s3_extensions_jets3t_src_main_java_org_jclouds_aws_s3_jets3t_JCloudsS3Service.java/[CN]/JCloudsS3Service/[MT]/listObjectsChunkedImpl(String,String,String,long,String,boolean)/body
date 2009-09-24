@@ -2,11 +2,11 @@
   try {
     List<S3Object> jsObjects=new ArrayList<S3Object>();
     List<String> commonPrefixes=new ArrayList<String>();
-    org.jclouds.aws.s3.domain.S3Bucket jcBucket=null;
+    ListBucketResponse jcBucket=null;
     do {
       ListBucketOptions options=Util.convertListObjectOptions(prefix,priorLastKey,delimiter,maxListingLength);
-      jcBucket=connection.listBucket(bucketName,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-      jsObjects.addAll(Arrays.asList(Util.convertObjectHeads(jcBucket.getContents())));
+      jcBucket=connection.listBlobs(bucketName,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+      jsObjects.addAll(Arrays.asList(Util.convertObjectHeads(jcBucket)));
       commonPrefixes.addAll(jcBucket.getCommonPrefixes());
       if (jcBucket.isTruncated()) {
         priorLastKey=jsObjects.get(jsObjects.size() - 1).getKey();

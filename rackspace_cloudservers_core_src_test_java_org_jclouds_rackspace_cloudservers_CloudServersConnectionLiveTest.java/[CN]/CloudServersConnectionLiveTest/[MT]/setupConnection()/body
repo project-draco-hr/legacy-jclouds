@@ -1,5 +1,7 @@
 {
-  Injector injector=CloudServersContextBuilder.newBuilder(sysRackspaceUser,sysRackspaceKey).withModules(new Log4JLoggingModule(),new JschSshConnectionModule()).withJsonDebug().buildInjector();
+  String account=System.getProperty("jclouds.test.user");
+  String key=System.getProperty("jclouds.test.key");
+  Injector injector=CloudServersContextBuilder.newBuilder(account,key).withModules(new Log4JLoggingModule(),new JschSshConnectionModule()).withJsonDebug().buildInjector();
   connection=injector.getInstance(CloudServersConnection.class);
   sshFactory=injector.getInstance(SshConnection.Factory.class);
 }

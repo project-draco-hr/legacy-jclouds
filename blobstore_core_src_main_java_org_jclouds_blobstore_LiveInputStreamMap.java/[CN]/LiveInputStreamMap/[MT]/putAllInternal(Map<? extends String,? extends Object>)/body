@@ -1,0 +1,16 @@
+{
+  try {
+    List<Future<byte[]>> puts=new ArrayList<Future<byte[]>>();
+    for (    Map.Entry<? extends String,? extends Object> entry : map.entrySet()) {
+      B object=createBlob(entry.getKey());
+      object.setData(entry.getValue());
+      object.generateMD5();
+      puts.add(connection.putBlob(container,object));
+    }
+    for (    Future<byte[]> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException("Error putting into containerName" + container,e);
+  }
+}

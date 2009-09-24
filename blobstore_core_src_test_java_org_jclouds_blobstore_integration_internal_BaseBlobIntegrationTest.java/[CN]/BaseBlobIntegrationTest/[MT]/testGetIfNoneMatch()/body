@@ -1,0 +1,25 @@
+{
+  String containerName=getContainerName();
+  try {
+    String key="apples";
+    addObjectAndValidateContent(containerName,key);
+    client.getBlob(containerName,key,ifETagDoesntMatch(badETag)).get(10,TimeUnit.SECONDS);
+    validateContent(containerName,key);
+    try {
+      client.getBlob(containerName,key,ifETagDoesntMatch(goodETag)).get(10,TimeUnit.SECONDS);
+      validateContent(containerName,key);
+    }
+ catch (    ExecutionException e) {
+      if (e.getCause() instanceof HttpResponseException) {
+        HttpResponseException ex=(HttpResponseException)e.getCause();
+        assertEquals(ex.getResponse().getStatusCode(),304);
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

@@ -1,0 +1,43 @@
+{
+  String bucketName=getContainerName();
+  try {
+    String data="This is my data";
+    String sourceObjectKey="?riginalObject";
+    String destinationObjectKey="d?stinationObject";
+    String metadataName="metadata-name";
+    String sourceMetadataValue="souce-metadata-value";
+    String destinationMetadataValue="destination-metadata-value";
+    org.jclouds.aws.s3.domain.S3Object sourceObject=new org.jclouds.aws.s3.domain.S3Object(sourceObjectKey,data);
+    sourceObject.getMetadata().getUserMetadata().put("x-amz-meta-" + metadataName,sourceMetadataValue);
+    addBlobToContainer(bucketName,sourceObject);
+    S3Object destinationObject;
+    Map copyResult;
+    org.jclouds.aws.s3.domain.S3Object jcDestinationObject;
+    destinationObject=new S3Object(destinationObjectKey);
+    copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,false);
+    jcDestinationObject=client.getBlob(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName).iterator()),sourceMetadataValue);
+    assertEquals(copyResult.get("ETag"),HttpUtils.toHexString(jcDestinationObject.getMetadata().getETag()));
+    org.jclouds.aws.s3.domain.AccessControlList jcACL=client.getBlobACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),1);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
+    destinationObject=new S3Object(destinationObjectKey);
+    destinationObject.addMetadata("x-amz-meta-" + metadataName,destinationMetadataValue);
+    copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,true);
+    jcDestinationObject=client.getBlob(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName).iterator()),destinationMetadataValue);
+    jcACL=client.getBlobACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),1);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
+    destinationObject=new S3Object(destinationObjectKey);
+    destinationObject.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
+    copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,false);
+    jcACL=client.getBlobACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
+    assertEquals(jcACL.getGrants().size(),2);
+    assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
+    assertTrue(jcACL.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

@@ -1,0 +1,19 @@
+{
+  List<ContainerMetadata> response=connection.listContainers();
+  assertNotNull(response);
+  long initialContainerCount=response.size();
+  assertTrue(initialContainerCount >= 0);
+  String[] containerNames=new String[]{bucketPrefix + ".testListOwnedContainers1",bucketPrefix + ".testListOwnedContainers2"};
+  assertTrue(connection.createContainer(containerNames[0]).get(10,TimeUnit.SECONDS));
+  assertTrue(connection.createContainer(containerNames[1]).get(10,TimeUnit.SECONDS));
+  response=connection.listContainers();
+  response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerNames[0].substring(0,containerNames[0].length() - 1)).maxResults(1));
+  assertEquals(response.size(),1);
+  assertEquals(response.get(0).getName(),containerNames[0]);
+  response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerNames[0]).maxResults(1));
+  assertEquals(response.size(),1);
+  assertEquals(response.get(0).getName(),containerNames[1]);
+  assertTrue(connection.deleteContainer(containerNames[0]).get(10,TimeUnit.SECONDS));
+  assertTrue(connection.deleteContainer(containerNames[1]).get(10,TimeUnit.SECONDS));
+  response=connection.listContainers();
+}

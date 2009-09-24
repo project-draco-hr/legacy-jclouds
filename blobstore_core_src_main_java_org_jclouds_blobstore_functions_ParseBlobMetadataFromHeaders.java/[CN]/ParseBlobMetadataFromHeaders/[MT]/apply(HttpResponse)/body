@@ -1,0 +1,15 @@
+{
+  String objectKey=from.getRequestURL().getPath();
+  if (objectKey.startsWith("/")) {
+    objectKey=objectKey.substring(1);
+  }
+  M to=metadataFactory.create(objectKey);
+  addAllHeadersTo(from,to);
+  addUserMetadataTo(from,to);
+  addETagTo(from,to);
+  addContentMD5To(from,to);
+  parseLastModifiedOrThrowException(from,to);
+  setContentTypeOrThrowException(from,to);
+  setContentLengthOrThrowException(from,to);
+  return to;
+}

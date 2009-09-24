@@ -1,0 +1,19 @@
+{
+  B object=objectFactory.createBlob(key);
+  object.getMetadata().setContentType(type);
+  object.setData(content);
+  if (content instanceof InputStream) {
+    object.generateMD5();
+  }
+  String containerName=getContainerName();
+  try {
+    assertNotNull(client.putBlob(containerName,object).get(10,TimeUnit.SECONDS));
+    object=client.getBlob(containerName,object.getKey()).get(10,TimeUnit.SECONDS);
+    String returnedString=BlobStoreUtils.getContentAsStringAndClose(object);
+    assertEquals(returnedString,realObject);
+    assertEquals(client.listBlobs(containerName).get(10,TimeUnit.SECONDS).size(),1);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

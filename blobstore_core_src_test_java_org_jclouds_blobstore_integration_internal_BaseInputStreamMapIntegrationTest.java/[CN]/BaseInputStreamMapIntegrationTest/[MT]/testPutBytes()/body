@@ -1,0 +1,13 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,InputStream> map=createMap(context,bucketName);
+    InputStream old=((InputStreamMap)map).putBytes("one","apple".getBytes());
+    getOneReturnsAppleAndOldValueIsNull(map,old);
+    InputStream apple=((InputStreamMap)map).putBytes("one","bear".getBytes());
+    getOneReturnsBearAndOldValueIsApple(map,apple);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  String bucketName=getContainerName();
+  try {
+    Map<String,V> map=createMap(context,bucketName);
+    assertEventuallyMapSize(map,0);
+    putString(map,"one","apple");
+    assertEventuallyMapSize(map,1);
+    map.clear();
+    assertEventuallyMapSize(map,0);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}
