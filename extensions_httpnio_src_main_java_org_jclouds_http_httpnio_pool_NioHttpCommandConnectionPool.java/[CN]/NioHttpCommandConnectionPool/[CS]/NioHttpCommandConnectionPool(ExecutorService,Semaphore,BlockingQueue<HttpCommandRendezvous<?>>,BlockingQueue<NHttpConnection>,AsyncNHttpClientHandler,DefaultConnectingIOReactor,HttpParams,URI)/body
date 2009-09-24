@@ -1,5 +1,5 @@
 {
-  super(executor,allConnections,commandQueue,maxConnectionReuse,available,endPoint);
+  super(executor,allConnections,commandQueue,available,endPoint);
   String host=checkNotNull(checkNotNull(endPoint,"endPoint").getHost(),String.format("Host null for endpoint %s",endPoint));
   int port=endPoint.getPort();
   if (endPoint.getScheme().equals("https")) {
@@ -12,7 +12,6 @@
   }
   checkArgument(port > 0,String.format("Port %d not in range for endpoint %s",endPoint.getPort(),endPoint));
   this.ioReactor=ioReactor;
-  this.maxSessionFailures=maxSessionFailures;
   this.sessionCallback=new NHttpClientConnectionPoolSessionRequestCallback();
   this.target=new InetSocketAddress(host,port);
   clientHandler.setEventListener(this);
