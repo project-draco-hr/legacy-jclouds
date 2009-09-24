@@ -1,0 +1,11 @@
+{
+  UriBuilder builder=UriBuilder.fromUri(request.getEndpoint());
+  builder.queryParam(SIGNATURE_METHOD,"HmacSHA256");
+  builder.queryParam(SIGNATURE_VERSION,"2");
+  builder.queryParam(VERSION,"2009-04-04");
+  if (request.getEndpoint().getQuery().contains(EXPIRES)) {
+    builder.queryParam(TIMESTAMP,dateService.iso8601DateFormat());
+  }
+  builder.queryParam(AWS_ACCESS_KEY_ID,accessKey);
+  return new HttpRequest(request.getMethod(),builder.build(),request.getHeaders(),request.getEntity());
+}
