@@ -1,0 +1,10 @@
+{
+  try {
+    SessionTokenResponse response=gson.fromJson(new InputStreamReader(stream,"UTF-8"),SessionTokenResponse.class);
+    if (response.ResponseCode == null || response.ResponseCode != 0)     throw new RuntimeException("bad response code: " + response.ResponseCode);
+    return response.SessionToken;
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException("jclouds requires UTF-8 encoding",e);
+  }
+}
