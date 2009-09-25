@@ -12,6 +12,9 @@
     QueryParams query=method.getAnnotation(QueryParams.class);
     addQuery(builder,query);
   }
+  for (  Entry<String,String> query : getQueryParamKeyValues(method,args).entrySet()) {
+    builder.queryParam(query.getKey(),query.getValue());
+  }
   Multimap<String,String> headers=buildHeaders(method,args);
   HttpRequestOptions options=findOptionsIn(method,args);
   if (options != null) {
