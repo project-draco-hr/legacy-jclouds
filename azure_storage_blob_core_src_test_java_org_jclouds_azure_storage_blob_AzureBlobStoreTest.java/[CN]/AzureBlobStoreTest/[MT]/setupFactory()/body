@@ -1,7 +1,7 @@
 {
   factory=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
-      bind(URI.class).toInstance(URI.create("http://blob.core.windows.net"));
+      bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("http://myaccount.blob.core.windows.net"));
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("myaccount");
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(HttpUtils.toBase64String("key".getBytes()));
     }

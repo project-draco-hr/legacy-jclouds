@@ -1,7 +1,7 @@
 {
   factory=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
-      bind(URI.class).toInstance(URI.create("http://localhost:8080"));
+      bind(URI.class).annotatedWith(Authentication.class).toInstance(URI.create("http://localhost:8080"));
     }
   }
 ,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule()).getInstance(JaxrsAnnotationProcessor.Factory.class);

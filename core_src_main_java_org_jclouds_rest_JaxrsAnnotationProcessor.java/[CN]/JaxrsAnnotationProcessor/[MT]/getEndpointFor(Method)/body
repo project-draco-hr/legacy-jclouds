@@ -1,0 +1,13 @@
+{
+  Endpoint endpoint;
+  if (method.isAnnotationPresent(Endpoint.class)) {
+    endpoint=method.getAnnotation(Endpoint.class);
+  }
+ else   if (declaring.isAnnotationPresent(Endpoint.class)) {
+    endpoint=declaring.getAnnotation(Endpoint.class);
+  }
+ else {
+    throw new IllegalStateException("There must be an @Endpoint annotation on type or method: " + method);
+  }
+  return injector.getInstance(Key.get(URI.class,endpoint.value()));
+}

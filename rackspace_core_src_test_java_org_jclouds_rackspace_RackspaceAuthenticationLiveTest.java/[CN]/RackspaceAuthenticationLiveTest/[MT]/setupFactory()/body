@@ -1,9 +1,10 @@
 {
   injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
+      bind(URI.class).annotatedWith(Authentication.class).toInstance(URI.create("https://api.mosso.com"));
     }
     @SuppressWarnings("unused") @Provides @Singleton protected RackspaceAuthentication provideCloudFilesAuthentication(    RestClientFactory factory){
-      return factory.create(URI.create("https://api.mosso.com"),RackspaceAuthentication.class);
+      return factory.create(RackspaceAuthentication.class);
     }
   }
 ,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());

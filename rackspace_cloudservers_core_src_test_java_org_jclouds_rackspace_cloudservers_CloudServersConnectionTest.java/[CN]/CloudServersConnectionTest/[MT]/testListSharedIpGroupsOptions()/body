@@ -1,7 +1,6 @@
 {
   Method method=CloudServersConnection.class.getMethod("listSharedIpGroups",listOptionsVarargsClass);
-  URI endpoint=URI.create("http://localhost");
-  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{changesSince(now).maxResults(1).startAt(2)});
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{changesSince(now).maxResults(1).startAt(2)});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/shared_ip_groups");
   assertEquals(httpMethod.getEndpoint().getQuery(),"format=json" + "&limit=1&changes-since=" + now.getMillis() / 1000 + "&offset=2");

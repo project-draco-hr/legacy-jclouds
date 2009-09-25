@@ -1,7 +1,6 @@
 {
   Method method=CloudServersConnection.class.getMethod("shareIp",InetAddress.class,int.class,int.class,boolean.class);
-  URI endpoint=URI.create("http://localhost");
-  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{InetAddress.getByAddress(new byte[]{127,0,0,1}),2,3,true});
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{InetAddress.getByAddress(new byte[]{127,0,0,1}),2,3,true});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/ips/public/127.0.0.1");
   assertEquals(httpMethod.getMethod(),HttpMethod.PUT);

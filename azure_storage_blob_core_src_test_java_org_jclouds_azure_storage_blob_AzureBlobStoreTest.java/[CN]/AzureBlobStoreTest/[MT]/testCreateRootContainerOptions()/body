@@ -1,7 +1,6 @@
 {
   Method method=AzureBlobStore.class.getMethod("createRootContainer",CreateOptions.class);
-  URI endpoint=URI.create("http://myaccount.blob.core.windows.net");
-  HttpRequest httpMethod=processor.createRequest(endpoint,method,new Object[]{withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar"))});
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar"))});
   assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
   assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
   assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
