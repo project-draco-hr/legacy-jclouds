@@ -41,8 +41,14 @@
       endPoint=builder.buildFromEncodedMap(getEncodedPathParamKeyValues(method,args));
     }
   }
- catch (  Exception e) {
-    throw new IllegalStateException("problem encoding parameters",e);
+ catch (  IllegalArgumentException e) {
+    throw new IllegalStateException(e);
+  }
+catch (  UriBuilderException e) {
+    throw new IllegalStateException(e);
+  }
+catch (  UnsupportedEncodingException e) {
+    throw new IllegalStateException(e);
   }
   HttpRequest request=new HttpRequest(httpMethod,endPoint,headers);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);

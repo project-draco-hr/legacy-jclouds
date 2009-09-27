@@ -1,5 +1,5 @@
 {
-  Map<String,Object> pathParamValues=Maps.newHashMap();
+  Map<String,String> pathParamValues=Maps.newHashMap();
   pathParamValues.putAll(constants);
   Map<Integer,Set<Annotation>> indexToPathParam=methodToindexOfParamToPathParamAnnotations.get(method);
   Map<Integer,Set<Annotation>> indexToParamExtractor=methodToindexOfParamToParamParserAnnotations.get(method);
@@ -15,15 +15,30 @@
  else {
         paramValue=args[entry.getKey()].toString();
       }
-      paramValue=URLEncoder.encode(paramValue,"UTF-8");
-      paramValue=paramValue.replaceAll("\\+","%20");
-      for (      char c : skipEncode) {
-        String value=Character.toString(c);
-        String encoded=URLEncoder.encode(value,"UTF-8");
-        paramValue=paramValue.replaceAll(encoded,value);
-      }
       pathParamValues.put(paramKey,paramValue);
     }
   }
-  return pathParamValues;
+  if (method.isAnnotationPresent(PathParam.class) && method.isAnnotationPresent(ParamParser.class)) {
+    String paramKey=method.getAnnotation(PathParam.class).value();
+    String paramValue=injector.getInstance(method.getAnnotation(ParamParser.class).value()).apply(args);
+    pathParamValues.put(paramKey,paramValue);
+  }
+  return Maps.transformValues(pathParamValues,new Function<String,String>(){
+    public String apply(    String paramValue){
+      try {
+        paramValue=URLEncoder.encode(paramValue,"UTF-8");
+        paramValue=paramValue.replaceAll("\\+","%20");
+        for (        char c : skipEncode) {
+          String value=Character.toString(c);
+          String encoded=URLEncoder.encode(value,"UTF-8");
+          paramValue=paramValue.replaceAll(encoded,value);
+        }
+      }
+ catch (      UnsupportedEncodingException e) {
+        throw new RuntimeException("jclouds only supports UTF-8",e);
+      }
+      return paramValue;
+    }
+  }
+);
 }
