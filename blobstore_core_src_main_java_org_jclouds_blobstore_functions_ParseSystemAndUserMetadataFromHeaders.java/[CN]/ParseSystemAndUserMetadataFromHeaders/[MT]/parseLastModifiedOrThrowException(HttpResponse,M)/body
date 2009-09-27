@@ -1,0 +1,6 @@
+{
+  String lastModified=from.getFirstHeaderOrNull(HttpHeaders.LAST_MODIFIED);
+  if (lastModified == null)   throw new HttpException(HttpHeaders.LAST_MODIFIED + " header not present in response: " + from);
+  metadata.setLastModified(dateParser.rfc822DateParse(lastModified));
+  if (metadata.getLastModified() == null)   throw new HttpException("could not parse: " + HttpHeaders.LAST_MODIFIED + ": "+ lastModified);
+}

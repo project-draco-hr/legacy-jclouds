@@ -2,10 +2,5 @@
   logger.trace("%s - submitting request %s, headers: %s",request.getURL().getHost(),request.getURL(),headersAsString(request.getHeaders()));
   HTTPResponse response=urlFetchService.fetch(request);
   logger.trace("%s - received response code %s, headers: %s",request.getURL().getHost(),response.getResponseCode(),headersAsString(response.getHeaders()));
-  try {
-    return convert(request.getURL().toURI(),response);
-  }
- catch (  URISyntaxException e) {
-    throw new RuntimeException(e);
-  }
+  return convert(response);
 }
