@@ -1,5 +1,5 @@
 {
-  factory=Guice.createInjector(new AbstractModule(){
+  Injector injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       bind(URI.class).annotatedWith(CloudServers.class).toInstance(URI.create("http://localhost:8080"));
     }
@@ -7,6 +7,8 @@
       return "testtoken";
     }
   }
-,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule()).getInstance(JaxrsAnnotationProcessor.Factory.class);
-  processor=factory.create(CloudServersConnection.class);
+,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<CloudServersConnection>>(){
+  }
+));
 }

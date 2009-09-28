@@ -1,7 +1,7 @@
 {
   Method method=TestEntity.class.getMethod("putWithPath",String.class,String.class);
   HttpRequest request=new HttpRequest(HttpMethod.PUT,URI.create("http://localhost:8080"));
-  factory.create(TestEntity.class).buildEntityIfPostOrPutRequest(method,new Object[]{"rabble","test"},request);
+  factory(TestEntity.class).buildEntityIfPostOrPutRequest(method,new Object[]{"rabble","test"},request);
   assertEquals(request.getEntity(),"test");
   assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
   assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("test".getBytes().length + ""));

@@ -1,12 +1,11 @@
 {
   Method method=RackspaceAuthentication.class.getMethod("authenticate",String.class,String.class);
-  HttpRequest httpMethod=factory.create(RackspaceAuthentication.class).createRequest(method,new Object[]{"foo","bar"});
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{"foo","bar"});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/auth");
   assertEquals(httpMethod.getMethod(),HttpMethod.GET);
   assertEquals(httpMethod.getHeaders().size(),2);
   assertEquals(httpMethod.getHeaders().get(RackspaceHeaders.AUTH_USER),Collections.singletonList("foo"));
   assertEquals(httpMethod.getHeaders().get(RackspaceHeaders.AUTH_KEY),Collections.singletonList("bar"));
-  factory.create(RackspaceAuthentication.class);
   assertEquals(JaxrsAnnotationProcessor.getParserOrThrowException(method),ParseAuthenticationResponseFromHeaders.class);
 }

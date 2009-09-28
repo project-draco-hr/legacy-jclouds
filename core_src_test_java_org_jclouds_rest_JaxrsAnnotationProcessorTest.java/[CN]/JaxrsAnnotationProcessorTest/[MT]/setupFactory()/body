@@ -1,10 +1,10 @@
 {
-  factory=Guice.createInjector(new AbstractModule(){
+  injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named("testaccount")).to("ralphie");
       bind(URI.class).annotatedWith(Localhost.class).toInstance(URI.create("http://localhost:8080"));
       bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:8081"));
     }
   }
-,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule()).getInstance(JaxrsAnnotationProcessor.Factory.class);
+,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
 }

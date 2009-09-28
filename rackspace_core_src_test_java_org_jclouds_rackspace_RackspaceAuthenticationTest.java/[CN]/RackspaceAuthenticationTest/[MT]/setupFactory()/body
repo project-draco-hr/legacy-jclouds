@@ -1,8 +1,11 @@
 {
-  factory=Guice.createInjector(new AbstractModule(){
+  Injector injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       bind(URI.class).annotatedWith(Authentication.class).toInstance(URI.create("http://localhost:8080"));
     }
   }
-,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule()).getInstance(JaxrsAnnotationProcessor.Factory.class);
+,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<RackspaceAuthentication>>(){
+  }
+));
 }

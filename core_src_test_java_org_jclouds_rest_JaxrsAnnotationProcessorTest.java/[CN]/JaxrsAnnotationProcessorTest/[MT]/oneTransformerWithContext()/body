@@ -2,7 +2,7 @@
   Method method=TestTransformers.class.getMethod("oneTransformerWithContext");
   HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
   Object[] args=new Object[]{};
-  Function<HttpResponse,?> transformer=factory.create(TestTransformers.class).createResponseParser(method,request,args);
+  Function<HttpResponse,?> transformer=factory(TestTransformers.class).createResponseParser(method,request,args);
   assertEquals(transformer.getClass(),ReturnStringIf200Context.class);
   assertEquals(((ReturnStringIf200Context)transformer).getArgs(),args);
   assertEquals(((ReturnStringIf200Context)transformer).getRequest(),request);
