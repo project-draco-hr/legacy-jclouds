@@ -1,0 +1,11 @@
+{
+  List<FileMetadata> response;
+  try {
+    response=connection.listBlobs(key.getContainer()).get(10,TimeUnit.SECONDS);
+  }
+ catch (  Exception e) {
+    Utils.<ContainerNotFoundException>rethrowIfRuntimeOrSameType(e);
+    throw new HttpException("could not list blobs for " + Arrays.asList(key.getContainer()),e);
+  }
+  return idForNameInListOrException(key.getContainer(),key.getKey(),response);
+}

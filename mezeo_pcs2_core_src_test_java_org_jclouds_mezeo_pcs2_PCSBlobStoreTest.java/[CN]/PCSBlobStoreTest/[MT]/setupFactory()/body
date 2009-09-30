@@ -1,0 +1,42 @@
+{
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
+      bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
+      bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_USER)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_PASSWORD)).to("password");
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public PCSBlobStore getPCSConnection(){
+      return new StubPCSConnection();
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public PCSUtil getPCSUtil(){
+      return new PCSUtil(){
+        public String get(        URI resource){
+          return null;
+        }
+        public boolean put(        URI resource,        String value){
+          return true;
+        }
+      }
+;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication(    @Named(PCSConstants.PROPERTY_PCS2_USER) String user,    @Named(PCSConstants.PROPERTY_PCS2_PASSWORD) String password) throws UnsupportedEncodingException {
+      return new BasicAuthentication(user,password);
+    }
+  }
+,new JaxrsModule(),new BlobStoreMapsModule(new TypeLiteral<PCSBlobStore>(){
+  }
+,new TypeLiteral<ContainerMetadata>(){
+  }
+,new TypeLiteral<FileMetadata>(){
+  }
+,new TypeLiteral<PCSFile>(){
+  }
+),new PCSContextModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSBlobStore>>(){
+  }
+));
+  utilProcessor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSUtil>>(){
+  }
+));
+}

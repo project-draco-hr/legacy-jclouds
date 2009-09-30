@@ -1,0 +1,22 @@
+{
+  checkState(args != null,"args should be initialized at this point");
+  PCSFile file=null;
+  for (  Object arg : args) {
+    if (arg instanceof PCSFile)     file=(PCSFile)arg;
+  }
+  checkState(file != null,"No PCSFile found in args, improper method declarations");
+  checkState(request != null,"request should be initialized at this point");
+  try {
+    String toParse=Utils.toStringAndClose(from.getContent());
+    logger.trace("%s: received the following response: %s",from,toParse);
+    URI uri=URI.create(toParse.trim());
+    for (    Entry<String,String> entry : file.getMetadata().getUserMetadata().entries()) {
+      URI key=UriBuilder.fromUri(uri).path(String.format("metadata/%s",entry.getKey())).build();
+      util.put(key,entry.getValue());
+    }
+    return PCSUtils.getEtag(uri);
+  }
+ catch (  IOException e) {
+    throw new HttpResponseException("couldn't parse url from response",null,from,e);
+  }
+}

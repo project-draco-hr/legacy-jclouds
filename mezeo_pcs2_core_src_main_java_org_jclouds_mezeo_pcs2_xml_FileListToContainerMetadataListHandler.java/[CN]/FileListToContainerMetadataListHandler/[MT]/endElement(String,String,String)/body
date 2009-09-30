@@ -1,0 +1,43 @@
+{
+  if (qName.equals("name")) {
+    currentName=currentText.toString().trim();
+  }
+ else   if (qName.equals("created")) {
+    currentCreated=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+  }
+ else   if (qName.equals("inproject")) {
+    currentInproject=Boolean.parseBoolean(currentText.toString().trim());
+  }
+ else   if (qName.equals("modified")) {
+    currentModified=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+  }
+ else   if (qName.equals("owner")) {
+    currentOwner=currentText.toString().trim();
+  }
+ else   if (qName.equals("version")) {
+    currentVersion=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("shared")) {
+    currentShared=Boolean.parseBoolean(currentText.toString().trim());
+  }
+ else   if (qName.equals("accessed")) {
+    currentAccessed=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+  }
+ else   if (qName.equals("bytes")) {
+    currentBytes=Long.parseLong(currentText.toString().trim());
+  }
+ else   if (qName.equals("container")) {
+    containerMetadata.add(new ContainerMetadata(currentName,currentUrl,currentCreated,currentModified,currentAccessed,currentOwner,currentShared,currentInproject,currentVersion,currentBytes));
+    currentUrl=null;
+    currentName=null;
+    currentCreated=null;
+    currentInproject=false;
+    currentModified=null;
+    currentOwner=null;
+    currentVersion=0;
+    currentShared=false;
+    currentAccessed=null;
+    currentBytes=0;
+  }
+  currentText=new StringBuilder();
+}

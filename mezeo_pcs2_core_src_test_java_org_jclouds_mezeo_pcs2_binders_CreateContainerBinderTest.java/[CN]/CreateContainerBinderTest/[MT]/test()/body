@@ -1,0 +1,8 @@
+{
+  CreateContainerBinder binder=new CreateContainerBinder();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  binder.addEntityToRequest("foo",request);
+  assertEquals(request.getEntity(),"<container><name>foo</name></container>");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),"<container><name>foo</name></container>".getBytes().length + "");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),"application/vnd.csp.container-info+xml");
+}

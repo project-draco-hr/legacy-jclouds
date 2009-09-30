@@ -1,0 +1,9 @@
+{
+  PCSUtil connection=createPCSUtil();
+  AddMetadataAndParseResourceIdIntoBytes function=new AddMetadataAndParseResourceIdIntoBytes(connection);
+  function.setContext(new HttpRequest("GET",URI.create("http://localhost:8080")),new Object[]{new PCSFile("key")});
+  response.setContent(IOUtils.toInputStream("http://localhost/contents/7F143552-AAF5-11DE-BBB0-0BC388ED913B"));
+  byte[] eTag=function.apply(response);
+  byte[] expected=HttpUtils.fromHexString("7F143552AAF511DEBBB00BC388ED913B");
+  assertEquals(eTag,expected);
+}

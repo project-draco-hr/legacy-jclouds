@@ -1,0 +1,17 @@
+{
+  FileMetadata metadata=new FileMetadata("blob");
+  metadata.setSize(103);
+  ConcurrentMap<Key,FileMetadata> mdCache=createMock(ConcurrentMap.class);
+  InputStream data=createMock(InputStream.class);
+  AssembleBlobFromContentAndMetadataCache callable=new AssembleBlobFromContentAndMetadataCache(mdCache);
+  HttpResponse response=createMock(HttpResponse.class);
+  expect(mdCache.get(new Key("container","blob"))).andReturn(metadata);
+  expect(response.getContent()).andReturn(data);
+  replay(mdCache);
+  replay(response);
+  PCSFile file=callable.apply(response);
+  assertEquals(file.getMetadata(),metadata);
+  assertEquals(file.getKey(),"blob");
+  assertEquals(file.getData(),data);
+  assertEquals(file.getContentLength(),metadata.getSize());
+}

@@ -1,0 +1,13 @@
+{
+  Method method=PCSUtil.class.getMethod("put",URI.class,String.class);
+  HttpRequest httpMethod=utilProcessor.createRequest(method,new Object[]{URI.create("http://localhost/pow"),"bar"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/pow");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals("bar",httpMethod.getEntity());
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnFalseOn404.class);
+  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ReturnTrueIf2xx.class);
+}
