@@ -1,5 +1,8 @@
 {
   install(new ParserModule());
-  bind(S3BlobStore.class).to(StubS3BlobStore.class);
-  bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("http://localhost:8080"));
+  bind(new TypeLiteral<Map<String,Map<String,S3Object>>>(){
+  }
+).toInstance(map);
+  bind(S3BlobStore.class).to(StubS3BlobStore.class).asEagerSingleton();
+  bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("https://localhost/s3stub"));
 }

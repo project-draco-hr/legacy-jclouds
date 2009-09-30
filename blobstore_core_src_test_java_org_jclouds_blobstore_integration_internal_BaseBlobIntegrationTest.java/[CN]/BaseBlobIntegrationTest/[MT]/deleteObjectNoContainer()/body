@@ -1,2 +1,9 @@
 {
+  try {
+    context.getApi().removeBlob("donb","test").get(10,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assert(e.getCause() instanceof HttpResponseException || e.getCause() instanceof ContainerNotFoundException);
+    if (e.getCause() instanceof HttpResponseException)     assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),404);
+  }
 }

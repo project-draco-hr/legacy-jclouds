@@ -3,9 +3,9 @@
   try {
     String key="apples";
     addObjectAndValidateContent(containerName,key);
-    B object1=client.getBlob(containerName,key,range(0,5)).get(10,TimeUnit.SECONDS);
+    B object1=context.getApi().getBlob(containerName,key,range(0,5)).get(10,TimeUnit.SECONDS);
     assertEquals(BlobStoreUtils.getContentAsStringAndClose(object1),TEST_STRING.substring(0,6));
-    B object2=client.getBlob(containerName,key,range(6,TEST_STRING.length())).get(10,TimeUnit.SECONDS);
+    B object2=context.getApi().getBlob(containerName,key,range(6,TEST_STRING.length())).get(10,TimeUnit.SECONDS);
     assertEquals(BlobStoreUtils.getContentAsStringAndClose(object2),TEST_STRING.substring(6,TEST_STRING.length()));
   }
   finally {

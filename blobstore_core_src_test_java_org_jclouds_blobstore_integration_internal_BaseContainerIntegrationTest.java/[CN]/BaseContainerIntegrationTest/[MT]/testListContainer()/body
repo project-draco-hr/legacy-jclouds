@@ -1,10 +1,9 @@
 {
   String containerName=getContainerName();
   try {
-    String prefix="apps";
-    addTenObjectsUnderPrefix(containerName,prefix);
-    List<M> container=client.listBlobs(containerName).get(10,TimeUnit.SECONDS);
-    assertEquals(container.size(),10);
+    add15UnderRoot(containerName);
+    List<M> container=context.getApi().listBlobs(containerName).get(10,TimeUnit.SECONDS);
+    assertEquals(container.size(),15);
   }
   finally {
     returnContainer(containerName);

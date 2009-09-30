@@ -10,7 +10,9 @@
     final byte[] eTag=HttpUtils.md5(data);
     newMd.setETag(eTag);
     newMd.setContentType(object.getMetadata().getContentType());
-    B blob=createBlob(newMd,data);
+    B blob=blobProvider.get();
+    blob.setMetadata(newMd);
+    blob.setData(data);
     container.put(object.getKey(),blob);
     newMd.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
     newMd.getAllHeaders().put(HttpHeaders.ETAG,HttpUtils.toHexString(eTag));

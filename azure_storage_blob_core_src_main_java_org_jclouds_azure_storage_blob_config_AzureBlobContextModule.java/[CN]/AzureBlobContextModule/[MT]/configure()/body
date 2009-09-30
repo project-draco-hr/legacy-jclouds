@@ -1,12 +1,3 @@
 {
-  this.requireBinding(AzureBlobStore.class);
-  bind(GuiceAzureBlobContext.AzureBlobObjectMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceAzureBlobContext.AzureBlobObjectMapFactory.class,LiveAzureBlobObjectMap.class));
-  bind(GuiceAzureBlobContext.AzureBlobInputStreamMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceAzureBlobContext.AzureBlobInputStreamMapFactory.class,LiveAzureBlobInputStreamMap.class));
-  bind(AzureBlobContext.class).to(GuiceAzureBlobContext.class);
-  bind(objectMetadataFactoryLiteral).toProvider(FactoryProvider.newFactory(objectMetadataFactoryLiteral,new TypeLiteral<BlobMetadata>(){
-  }
-));
-  bind(objectFactoryLiteral).toProvider(FactoryProvider.newFactory(objectFactoryLiteral,new TypeLiteral<Blob>(){
-  }
-));
+  bind(AzureBlobContext.class).to(AzureBlobContextImpl.class).in(Scopes.SINGLETON);
 }

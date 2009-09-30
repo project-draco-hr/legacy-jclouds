@@ -5,10 +5,10 @@
     DateTime before=new DateTime();
     addToContainerAndValidate(containerName,sourceKey + "un");
     DateTime after=new DateTime().plusSeconds(1);
-    client.copyBlob(containerName,sourceKey + "un",destinationContainer,destinationKey,ifSourceUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
+    context.getApi().copyBlob(containerName,sourceKey + "un",destinationContainer,destinationKey,ifSourceUnmodifiedSince(after)).get(10,TimeUnit.SECONDS);
     validateContent(destinationContainer,destinationKey);
     try {
-      client.copyBlob(containerName,sourceKey + "un",destinationContainer,destinationKey,ifSourceModifiedSince(before)).get(10,TimeUnit.SECONDS);
+      context.getApi().copyBlob(containerName,sourceKey + "un",destinationContainer,destinationKey,ifSourceModifiedSince(before)).get(10,TimeUnit.SECONDS);
     }
  catch (    ExecutionException e) {
       HttpResponseException ex=(HttpResponseException)e.getCause();

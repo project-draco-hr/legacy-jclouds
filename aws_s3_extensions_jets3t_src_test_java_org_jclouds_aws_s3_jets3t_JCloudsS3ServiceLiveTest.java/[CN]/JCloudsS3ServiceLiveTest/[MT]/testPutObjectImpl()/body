@@ -6,7 +6,7 @@
     org.jclouds.aws.s3.domain.S3Object jcObject;
     requestObject=new S3Object(objectKey);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    jcObject=context.getApi().getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getMetadata().getSize(),0);
     assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
@@ -14,7 +14,7 @@
     assertEquals(jsResultObject.getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     requestObject=new S3Object("?n???d?-object");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getBlob(bucketName,requestObject.getKey()).get(10,TimeUnit.SECONDS);
+    jcObject=context.getApi().getBlob(bucketName,requestObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getMetadata().getSize(),0);
     assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
@@ -23,7 +23,7 @@
     String data="This is my ?n???d? data";
     requestObject=new S3Object(objectKey,data);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    jcObject=context.getApi().getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getMetadata().getSize(),data.getBytes("UTF-8").length);
     assertTrue(jcObject.getMetadata().getContentType().startsWith("text/plain"));
     assertEquals(jsResultObject.getContentLength(),data.getBytes("UTF-8").length);
@@ -31,13 +31,13 @@
     requestObject=new S3Object(objectKey);
     requestObject.addMetadata("x-amz-meta-" + "my-metadata-1","value-1");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    jcObject=context.getApi().getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertEquals(Iterables.getLast(jcObject.getMetadata().getUserMetadata().get("my-metadata-1")),"value-1");
     assertEquals(jsResultObject.getMetadata("x-amz-meta-" + "my-metadata-1"),"value-1");
     requestObject=new S3Object(objectKey);
     requestObject.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    org.jclouds.aws.s3.domain.AccessControlList jcACL=client.getBlobACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    org.jclouds.aws.s3.domain.AccessControlList jcACL=context.getApi().getBlobACL(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertTrue(jcACL.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
     assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
     assertEquals(jcACL.getGrants().size(),2);
@@ -45,7 +45,7 @@
     data="Here is some d?t? for you";
     requestObject.setDataInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
-    jcObject=client.getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
+    jcObject=context.getApi().getBlob(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertTrue(jsResultObject.verifyData(data.getBytes("UTF-8")));
     assertEquals(jsResultObject.getMd5HashAsHex(),HttpUtils.toHexString(jcObject.getMetadata().getETag()));
   }

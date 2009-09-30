@@ -2,11 +2,11 @@
   final String publicReadObjectKey="public-read-acl";
   final String containerName=getContainerName();
   try {
-    client.putBlob(containerName,new S3Object(publicReadObjectKey,""),new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+    context.getApi().putBlob(containerName,new S3Object(publicReadObjectKey,""),new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
     assertEventually(new Runnable(){
       public void run(){
         try {
-          AccessControlList acl=client.getBlobACL(containerName,publicReadObjectKey).get(10,TimeUnit.SECONDS);
+          AccessControlList acl=context.getApi().getBlobACL(containerName,publicReadObjectKey).get(10,TimeUnit.SECONDS);
           assertEquals(acl.getGrants().size(),2);
           assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),1);
           assertTrue(acl.getOwner() != null);

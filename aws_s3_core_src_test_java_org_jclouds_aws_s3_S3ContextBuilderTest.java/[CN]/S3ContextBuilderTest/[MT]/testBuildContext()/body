@@ -1,6 +1,6 @@
 {
-  CloudContext<S3BlobStore> context=S3ContextBuilder.newBuilder("id","secret").buildContext();
-  assertEquals(context.getClass(),GuiceS3Context.class);
+  S3Context context=new S3ContextBuilder("id","secret").withModules(new StubS3BlobStoreModule()).buildContext();
+  assertEquals(context.getClass(),S3ContextImpl.class);
   assertEquals(context.getAccount(),"id");
-  assertEquals(context.getEndPoint(),URI.create("https://s3.amazonaws.com"));
+  assertEquals(context.getEndPoint(),URI.create("https://localhost/s3stub"));
 }

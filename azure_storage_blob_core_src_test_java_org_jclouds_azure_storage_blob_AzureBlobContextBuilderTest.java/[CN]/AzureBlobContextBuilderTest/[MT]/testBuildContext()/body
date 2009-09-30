@@ -1,6 +1,6 @@
 {
-  CloudContext<AzureBlobStore> context=AzureBlobContextBuilder.newBuilder("id","secret").buildContext();
-  assertEquals(context.getClass(),GuiceAzureBlobContext.class);
+  CloudContext<AzureBlobStore> context=new AzureBlobContextBuilder("id","secret").withModules(new StubAzureBlobStoreModule()).buildContext();
+  assertEquals(context.getClass(),AzureBlobContextImpl.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("https://id.blob.core.windows.net"));
 }

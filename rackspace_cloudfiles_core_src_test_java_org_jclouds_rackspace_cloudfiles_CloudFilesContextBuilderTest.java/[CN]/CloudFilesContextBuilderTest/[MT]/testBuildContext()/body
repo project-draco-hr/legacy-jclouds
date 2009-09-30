@@ -1,6 +1,6 @@
 {
-  CloudContext<CloudFilesBlobStore> context=CloudFilesContextBuilder.newBuilder("id","secret").buildContext();
-  assertEquals(context.getClass(),GuiceCloudFilesContext.class);
+  CloudContext<CloudFilesBlobStore> context=new CloudFilesContextBuilder("id","secret").withModules(new StubCloudFilesConnectionModule(),new StubRackspaceAuthenticationModule()).buildContext();
+  assertEquals(context.getClass(),CloudFilesContextImpl.class);
   assertEquals(context.getAccount(),"id");
-  assertEquals(context.getEndPoint(),URI.create("https://api.mosso.com"));
+  assertEquals(context.getEndPoint(),URI.create("http://localhost/rackspacestub/cloudfiles"));
 }

@@ -1,0 +1,29 @@
+{
+  while (!initialized) {
+synchronized (BaseBlobStoreIntegrationTest.class) {
+      if (!initialized) {
+        deleteEverything(context);
+        for (; containerIndex.get() < containerCount; containerIndex.incrementAndGet()) {
+          String containerName=CONTAINER_PREFIX + containerIndex;
+          if (blackListContainers.contains(containerName)) {
+            containerCount++;
+          }
+ else {
+            try {
+              createContainerAndEnsureEmpty(context,containerName);
+              containerJsr330.put(containerName);
+            }
+ catch (            Throwable e) {
+              deleteContainerOrWarnIfUnable(context,containerName);
+              containerCount++;
+            }
+          }
+        }
+        testContext.setAttribute("containerJsr330",containerJsr330);
+        System.err.printf("*** containers to test: %s%n",containerJsr330);
+        context.close();
+        initialized=true;
+      }
+    }
+  }
+}

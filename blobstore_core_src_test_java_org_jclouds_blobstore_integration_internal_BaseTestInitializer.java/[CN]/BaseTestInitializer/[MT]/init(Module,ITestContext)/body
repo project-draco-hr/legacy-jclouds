@@ -1,0 +1,16 @@
+{
+  String endpoint=System.getProperty("jclouds.test.endpoint");
+  String app=System.getProperty("jclouds.test.app");
+  String account=System.getProperty("jclouds.test.user");
+  String key=System.getProperty("jclouds.test.key");
+  if (endpoint != null)   testContext.setAttribute("jclouds.test.endpoint",endpoint);
+  if (app != null)   testContext.setAttribute("jclouds.test.app",app);
+  if (account != null)   testContext.setAttribute("jclouds.test.user",account);
+  if (key != null)   testContext.setAttribute("jclouds.test.key",key);
+  if (account != null) {
+    return createLiveContext(configurationModule,endpoint,app,account,key);
+  }
+ else {
+    return createStubContext();
+  }
+}

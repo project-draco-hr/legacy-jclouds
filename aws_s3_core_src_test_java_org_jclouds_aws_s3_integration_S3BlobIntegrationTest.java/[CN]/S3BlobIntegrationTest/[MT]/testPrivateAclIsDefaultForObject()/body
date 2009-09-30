@@ -3,7 +3,7 @@
   String containerName=getContainerName();
   try {
     addBlobToContainer(containerName,privateObjectKey);
-    AccessControlList acl=client.getBlobACL(containerName,privateObjectKey).get(10,TimeUnit.SECONDS);
+    AccessControlList acl=context.getApi().getBlobACL(containerName,privateObjectKey).get(10,TimeUnit.SECONDS);
     assertEquals(acl.getGrants().size(),1);
     assertTrue(acl.getOwner() != null);
     String ownerId=acl.getOwner().getId();

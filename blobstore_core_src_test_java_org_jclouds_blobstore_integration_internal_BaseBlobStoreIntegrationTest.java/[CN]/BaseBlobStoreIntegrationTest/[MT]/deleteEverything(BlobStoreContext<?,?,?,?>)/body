@@ -1,0 +1,28 @@
+{
+  try {
+    for (int i=0; i < 2; i++) {
+      Iterable<ContainerMetadata> testContainers=Iterables.filter((List<ContainerMetadata>)context.getApi().listContainers(),new Predicate<ContainerMetadata>(){
+        public boolean apply(        ContainerMetadata input){
+          return input.getName().startsWith(CONTAINER_PREFIX.toLowerCase());
+        }
+      }
+);
+      if (testContainers.iterator().hasNext()) {
+        ExecutorService executor=Executors.newCachedThreadPool();
+        for (        final ContainerMetadata metaDatum : testContainers) {
+          executor.execute(new Runnable(){
+            public void run(){
+              deleteContainerOrWarnIfUnable(context,metaDatum.getName());
+            }
+          }
+);
+        }
+        executor.shutdown();
+        executor.awaitTermination(60,TimeUnit.SECONDS);
+      }
+    }
+  }
+ catch (  CancellationException e) {
+    throw e;
+  }
+}

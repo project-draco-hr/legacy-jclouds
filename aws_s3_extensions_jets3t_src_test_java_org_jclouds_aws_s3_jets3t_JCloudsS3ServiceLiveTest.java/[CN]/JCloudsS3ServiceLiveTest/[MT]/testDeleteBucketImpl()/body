@@ -1,10 +1,10 @@
 {
-  String bucketName=getContainerName();
-  try {
-    service.deleteBucket(bucketName);
-    assertFalse(client.containerExists(bucketName));
+  final String bucketName=getContainerName();
+  service.deleteBucket(bucketName);
+  assertEventually(new Runnable(){
+    public void run(){
+      assertFalse(context.getApi().containerExists(bucketName));
+    }
   }
-  finally {
-    returnContainer(bucketName);
-  }
+);
 }

@@ -20,7 +20,7 @@
         DateTime unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
         if (object.getMetadata().getLastModified().isAfter(unmodifiedSince))         throw new ExecutionException(new RuntimeException(String.format("%1$s is after %2$s",object.getMetadata().getLastModified(),unmodifiedSince)));
       }
-      B returnVal=createBlob(copy(object.getMetadata()),object.getData());
+      B returnVal=copyBlob(object);
       if (options.getRange() != null) {
         byte[] data=(byte[])returnVal.getData();
         ByteArrayOutputStream out=new ByteArrayOutputStream();

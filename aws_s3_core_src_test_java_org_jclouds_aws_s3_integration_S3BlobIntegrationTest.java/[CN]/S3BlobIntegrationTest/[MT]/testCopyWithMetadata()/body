@@ -5,9 +5,9 @@
     addToContainerAndValidate(containerName,sourceKey);
     Multimap<String,String> metadata=HashMultimap.create();
     metadata.put("adrian","cole");
-    client.copyBlob(containerName,sourceKey,destinationContainer,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
+    context.getApi().copyBlob(containerName,sourceKey,destinationContainer,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
     validateContent(destinationContainer,destinationKey);
-    ObjectMetadata objectMeta=client.blobMetadata(destinationContainer,destinationKey);
+    ObjectMetadata objectMeta=context.getApi().blobMetadata(destinationContainer,destinationKey);
     assertEquals(objectMeta.getUserMetadata(),metadata);
   }
   finally {

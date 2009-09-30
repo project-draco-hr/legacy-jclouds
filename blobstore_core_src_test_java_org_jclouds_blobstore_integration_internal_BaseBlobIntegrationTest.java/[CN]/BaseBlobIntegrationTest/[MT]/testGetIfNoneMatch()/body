@@ -3,10 +3,10 @@
   try {
     String key="apples";
     addObjectAndValidateContent(containerName,key);
-    client.getBlob(containerName,key,ifETagDoesntMatch(badETag)).get(10,TimeUnit.SECONDS);
+    context.getApi().getBlob(containerName,key,ifETagDoesntMatch(badETag)).get(10,TimeUnit.SECONDS);
     validateContent(containerName,key);
     try {
-      client.getBlob(containerName,key,ifETagDoesntMatch(goodETag)).get(10,TimeUnit.SECONDS);
+      context.getApi().getBlob(containerName,key,ifETagDoesntMatch(goodETag)).get(10,TimeUnit.SECONDS);
       validateContent(containerName,key);
     }
  catch (    ExecutionException e) {

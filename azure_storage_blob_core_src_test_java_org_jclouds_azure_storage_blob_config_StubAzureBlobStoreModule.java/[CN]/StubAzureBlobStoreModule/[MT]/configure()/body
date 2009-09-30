@@ -1,5 +1,8 @@
 {
   install(new ParserModule());
-  bind(AzureBlobStore.class).to(StubAzureBlobStore.class);
-  bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("http://localhost:8080"));
+  bind(new TypeLiteral<Map<String,Map<String,Blob>>>(){
+  }
+).toInstance(map);
+  bind(AzureBlobStore.class).to(StubAzureBlobStore.class).asEagerSingleton();
+  bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("https://id.blob.core.windows.net"));
 }

@@ -5,8 +5,9 @@
       Map<String,B> realContents=getContainerToBlobs().get(bucketName);
       if (!realContents.containsKey(key))       throw new KeyNotFoundException(bucketName,key);
       B object=realContents.get(key);
-      B returnVal=createBlob(copy(object.getMetadata()),object.getData());
-      returnVal.setData(new ByteArrayInputStream((byte[])returnVal.getData()));
+      B returnVal=blobProvider.get();
+      returnVal.setMetadata(copy(object.getMetadata()));
+      returnVal.setData(new ByteArrayInputStream((byte[])object.getData()));
       return returnVal;
     }
   }

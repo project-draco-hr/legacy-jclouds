@@ -1,12 +1,3 @@
 {
-  this.requireBinding(S3BlobStore.class);
-  bind(GuiceS3Context.S3ObjectMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceS3Context.S3ObjectMapFactory.class,LiveS3ObjectMap.class));
-  bind(GuiceS3Context.S3InputStreamMapFactory.class).toProvider(FactoryProvider.newFactory(GuiceS3Context.S3InputStreamMapFactory.class,LiveS3InputStreamMap.class));
-  bind(objectMetadataFactoryLiteral).toProvider(FactoryProvider.newFactory(objectMetadataFactoryLiteral,new TypeLiteral<ObjectMetadata>(){
-  }
-));
-  bind(objectFactoryLiteral).toProvider(FactoryProvider.newFactory(objectFactoryLiteral,new TypeLiteral<S3Object>(){
-  }
-));
-  bind(S3Context.class).to(GuiceS3Context.class);
+  bind(S3Context.class).to(S3ContextImpl.class).in(Scopes.SINGLETON);
 }

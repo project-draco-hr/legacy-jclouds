@@ -3,6 +3,7 @@
     return getBlob(container,key).get().getMetadata();
   }
  catch (  Exception e) {
+    Utils.<ContainerNotFoundException>rethrowIfRuntimeOrSameType(e);
     Utils.<KeyNotFoundException>rethrowIfRuntimeOrSameType(e);
     throw new RuntimeException(e);
   }

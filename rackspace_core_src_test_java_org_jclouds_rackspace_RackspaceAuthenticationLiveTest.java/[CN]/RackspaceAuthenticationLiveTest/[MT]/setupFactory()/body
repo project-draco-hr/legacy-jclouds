@@ -1,11 +1,14 @@
 {
-  injector=Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      bind(URI.class).annotatedWith(Authentication.class).toInstance(URI.create("https://api.mosso.com"));
+  context=new RackspaceContextBuilder<RackspaceAuthentication>(new TypeLiteral<RackspaceAuthentication>(){
+  }
+,account,key){
+    @Override protected void addConnectionModule(    List<Module> modules){
+      super.addConnectionModule(modules);
+      modules.add(new RestRackspaceAuthenticationConnectionModule());
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected RackspaceAuthentication provideCloudFilesAuthentication(    RestClientFactory factory){
-      return factory.create(RackspaceAuthentication.class);
+    public void addContextModule(    List<Module> modules){
+      modules.add(new RackspaceAuthenticationContextModule());
     }
   }
-,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+.withModules(new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService())).buildContext();
 }

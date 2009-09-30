@@ -1,14 +1,14 @@
 {
   String containerName=getContainerName();
   try {
-    AccessControlList acl=client.getContainerACL(containerName).get(10,TimeUnit.SECONDS);
+    AccessControlList acl=context.getApi().getContainerACL(containerName).get(10,TimeUnit.SECONDS);
     String ownerId=acl.getOwner().getId();
     assertEquals(acl.getGrants().size(),1);
     assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
     addGrantsToACL(acl);
     assertEquals(acl.getGrants().size(),4);
-    assertTrue(client.putContainerACL(containerName,acl).get(10,TimeUnit.SECONDS));
-    acl=client.getContainerACL(containerName).get(10,TimeUnit.SECONDS);
+    assertTrue(context.getApi().putContainerACL(containerName,acl).get(10,TimeUnit.SECONDS));
+    acl=context.getApi().getContainerACL(containerName).get(10,TimeUnit.SECONDS);
     checkGrants(acl);
   }
   finally {
