@@ -1,23 +1,17 @@
 {
   if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
-  S3Context context=null;
-  CreateListOwnedBuckets listMyOwnBuckets=null;
-  List<BucketMetadata> myBuckets=null;
   String accesskeyid=args[0];
   String secretkey=args[1];
   String bucketName=args[2];
-  context=S3ContextFactory.createS3Context(accesskeyid,secretkey);
-  listMyOwnBuckets=new CreateListOwnedBuckets(context);
+  S3Context context=S3ContextFactory.createContext(accesskeyid,secretkey);
   try {
-    listMyOwnBuckets.createBucket(bucketName);
-    myBuckets=listMyOwnBuckets.list();
-    for (    BucketMetadata bucketObj : myBuckets) {
+    context.getApi().createContainer(bucketName).get(10,TimeUnit.SECONDS);
+    for (    BucketMetadata bucketObj : context.getApi().listContainers()) {
       System.out.println(String.format("  %1$s",bucketObj));
       System.out.println(String.format(": %1$s entries%n",context.createInputStreamMap(bucketObj.getName()).size()));
     }
   }
   finally {
     context.close();
-    context=null;
   }
 }
