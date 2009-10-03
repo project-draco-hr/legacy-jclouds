@@ -1,5 +1,5 @@
 {
-  return Guice.createInjector(new RestPCSBlobStoreModule(),new BlobStoreMapsModule<PCSBlobStore,ContainerMetadata,FileMetadata,PCSFile>(new TypeLiteral<PCSBlobStore>(){
+  return Guice.createInjector(new RestPCSBlobStoreModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<PCSBlobStore>(){
   }
 ,new TypeLiteral<ContainerMetadata>(){
   }
@@ -7,7 +7,7 @@
   }
 ,new TypeLiteral<PCSFile>(){
   }
-),new PCSContextModule(){
+).build(),new PCSContextModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_USER)).to("user");
       bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_PASSWORD)).to("key");

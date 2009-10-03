@@ -1,10 +1,10 @@
 {
   String containerName1=bucketPrefix + ".hello";
   assertTrue(connection.createContainer(containerName1).get(10,TimeUnit.SECONDS));
-  List<ContainerMetadata> response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerName1.substring(0,containerName1.length() - 1)).maxResults(1));
+  SortedSet<ContainerMetadata> response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerName1.substring(0,containerName1.length() - 1)).maxResults(1));
   assertNotNull(response);
   assertEquals(response.size(),1);
-  assertEquals(response.get(0).getName(),bucketPrefix + ".hello");
+  assertEquals(response.first().getName(),bucketPrefix + ".hello");
   String containerName2=bucketPrefix + "?should-be-illegal-question-char";
   try {
     connection.createContainer(containerName2).get(10,TimeUnit.MILLISECONDS);

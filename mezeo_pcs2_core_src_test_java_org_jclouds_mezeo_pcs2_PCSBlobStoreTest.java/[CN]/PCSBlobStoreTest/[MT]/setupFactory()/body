@@ -24,7 +24,7 @@
       return new BasicAuthentication(user,password);
     }
   }
-,new JaxrsModule(),new BlobStoreMapsModule(new TypeLiteral<PCSBlobStore>(){
+,new JaxrsModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<PCSBlobStore>(){
   }
 ,new TypeLiteral<ContainerMetadata>(){
   }
@@ -32,7 +32,7 @@
   }
 ,new TypeLiteral<PCSFile>(){
   }
-),new PCSContextModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+).build(),new PCSContextModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
   processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSBlobStore>>(){
   }
 ));

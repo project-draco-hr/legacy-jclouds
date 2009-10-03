@@ -1,6 +1,6 @@
 {
-  return new FutureBase<List<M>>(){
-    public List<M> get() throws InterruptedException, ExecutionException {
+  return new FutureBase<SortedSet<M>>(){
+    public SortedSet<M> get() throws InterruptedException, ExecutionException {
       final Map<String,B> realContents=getContainerToBlobs().get(name);
       if (realContents == null)       throw new ContainerNotFoundException(name);
       SortedSet<M> contents=Sets.newTreeSet(Iterables.transform(realContents.keySet(),new Function<String,M>(){
@@ -9,7 +9,7 @@
         }
       }
 ));
-      return Lists.newArrayList(contents);
+      return Sets.newTreeSet(contents);
     }
   }
 ;

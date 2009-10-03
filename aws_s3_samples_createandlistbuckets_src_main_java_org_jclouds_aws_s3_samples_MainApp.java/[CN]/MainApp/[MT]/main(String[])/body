@@ -3,10 +3,14 @@
   String accesskeyid=args[0];
   String secretkey=args[1];
   String bucketName=args[2];
-  S3Context context=S3ContextFactory.createContext(accesskeyid,secretkey);
+  BlobStoreContext context=S3ContextFactory.createContext(accesskeyid,secretkey);
   try {
-    context.getApi().createContainer(bucketName).get(10,TimeUnit.SECONDS);
-    for (    BucketMetadata bucketObj : context.getApi().listContainers()) {
+    ((S3Context)context).getApi().createContainer(bucketName).get(10,TimeUnit.SECONDS);
+    BlobMap blobMap=context.createBlobMap(bucketName);
+    Blob blob=context.newBlob("test");
+    blob.setData("testdata");
+    blobMap.put("test",blob);
+    for (    BucketMetadata bucketObj : ((S3Context)context).getApi().listContainers()) {
       System.out.println(String.format("  %1$s",bucketObj));
       System.out.println(String.format(": %1$s entries%n",context.createInputStreamMap(bucketObj.getName()).size()));
     }
