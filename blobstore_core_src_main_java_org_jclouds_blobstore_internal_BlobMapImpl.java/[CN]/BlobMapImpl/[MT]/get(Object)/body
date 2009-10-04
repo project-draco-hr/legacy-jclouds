@@ -1,12 +1,12 @@
 {
   try {
-    return connection.getBlob(container,key.toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    return connection.getBlob(containerName,key.toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  KeyNotFoundException e) {
     return null;
   }
 catch (  Exception e) {
     Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException(String.format("Error geting object %1$s:%2$s",container,key),e);
+    throw new BlobRuntimeException(String.format("Error geting object %1$s:%2$s",containerName,key),e);
   }
 }

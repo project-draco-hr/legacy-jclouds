@@ -1,13 +1,13 @@
 {
   try {
-    List<Future<byte[]>> puts=new ArrayList<Future<byte[]>>();
+    Set<Future<byte[]>> puts=Sets.newHashSet();
     for (    B object : map.values()) {
-      puts.add(connection.putBlob(container,object));
+      puts.add(connection.putBlob(containerName,object));
     }
     for (    Future<byte[]> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
     Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException("Error putting into containerName" + container,e);
+    throw new BlobRuntimeException("Error putting into containerName" + containerName,e);
   }
 }
