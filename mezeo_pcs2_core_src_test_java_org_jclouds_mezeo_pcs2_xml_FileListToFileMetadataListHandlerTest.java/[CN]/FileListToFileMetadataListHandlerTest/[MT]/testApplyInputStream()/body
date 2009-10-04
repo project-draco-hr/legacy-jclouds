@@ -1,6 +1,6 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_file_list.xml");
-  List<FileMetadata> list=ImmutableList.of(new FileMetadata("more",URI.create("https://pcsbeta.mezeo.net/v2/files/5C81DADC-AAEE-11DE-9D55-B39340AEFF3A"),dateService.fromSeconds(1254005157),dateService.fromSeconds(1254005158),dateService.fromSeconds(1254005159),"adrian@jclouds.org",false,false,1,254288,MediaType.APPLICATION_OCTET_STREAM,true),new FileMetadata("testfile.txt",URI.create("https://pcsbeta.mezeo.net/v2/files/9E4C5AFA-A98B-11DE-8B4C-C3884B4A2DA3"),dateService.fromSeconds(1254000180),dateService.fromSeconds(1254000181),dateService.fromSeconds(1254000182),"adrian@jclouds.org",false,true,3,5,MediaType.TEXT_PLAIN,false));
-  List<FileMetadata> result=(List<FileMetadata>)factory.create(injector.getInstance(FileListToFileMetadataListHandler.class)).parse(is);
+  SortedSet<FileMetadata> list=ImmutableSortedSet.of(new FileMetadata("more",URI.create("https://pcsbeta.mezeo.net/v2/files/5C81DADC-AAEE-11DE-9D55-B39340AEFF3A"),dateService.fromSeconds(1254005157),dateService.fromSeconds(1254005158),dateService.fromSeconds(1254005159),"adrian@jclouds.org",false,false,1,254288,MediaType.APPLICATION_OCTET_STREAM,true),new FileMetadata("testfile.txt",URI.create("https://pcsbeta.mezeo.net/v2/files/9E4C5AFA-A98B-11DE-8B4C-C3884B4A2DA3"),dateService.fromSeconds(1254000180),dateService.fromSeconds(1254000181),dateService.fromSeconds(1254000182),"adrian@jclouds.org",false,true,3,5,MediaType.TEXT_PLAIN,false));
+  SortedSet<FileMetadata> result=(SortedSet<FileMetadata>)factory.create(injector.getInstance(FileListToFileMetadataListHandler.class)).parse(is);
   assertEquals(result,list);
 }

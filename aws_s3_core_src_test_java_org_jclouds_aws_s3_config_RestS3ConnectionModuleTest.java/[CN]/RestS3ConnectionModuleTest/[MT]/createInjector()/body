@@ -1,18 +1,9 @@
 {
-  return Guice.createInjector(new StubS3BlobStoreModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<S3BlobStore>(){
-  }
-,new TypeLiteral<BucketMetadata>(){
-  }
-,new TypeLiteral<ObjectMetadata>(){
-  }
-,new TypeLiteral<S3Object>(){
-  }
-).build(),new S3ContextModule(){
+  return Guice.createInjector(new RestS3ConnectionModule(),new ParserModule(),new AbstractModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_ENDPOINT)).to("http://localhost");
-      super.configure();
     }
   }
 );
