@@ -1,13 +1,13 @@
 {
   try {
-    SortedSet<BucketMetadata> myBucketMetadata=context.getApi().listContainers();
+    SortedSet<BucketMetadata> myBucketMetadata=context.getApi().listOwnedBuckets();
     SortedSet<BucketResult> myBuckets=Sets.newTreeSet();
     for (    BucketMetadata metadata : myBucketMetadata) {
       BucketResult result=new BucketResult();
       result.setName(metadata.getName());
       try {
         try {
-          ListBucketResponse bucket=context.getApi().listBlobs(metadata.getName()).get(10,TimeUnit.SECONDS);
+          ListBucketResponse bucket=context.getApi().listBucket(metadata.getName()).get(10,TimeUnit.SECONDS);
           result.setSize(bucket.size() + "");
         }
  catch (        ContainerNotFoundException ex) {

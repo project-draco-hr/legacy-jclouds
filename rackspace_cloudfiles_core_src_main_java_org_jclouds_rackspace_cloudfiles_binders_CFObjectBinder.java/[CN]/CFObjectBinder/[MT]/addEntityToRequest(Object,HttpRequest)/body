@@ -1,6 +1,7 @@
 {
   Blob<?> object=(Blob<?>)entity;
   if (object.getMetadata().getSize() >= 0) {
+    checkArgument(object.getContentLength() <= 5 * 1024 * 1024* 1024,"maximum size for put object is 5GB");
     request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getMetadata().getSize() + "");
   }
  else {

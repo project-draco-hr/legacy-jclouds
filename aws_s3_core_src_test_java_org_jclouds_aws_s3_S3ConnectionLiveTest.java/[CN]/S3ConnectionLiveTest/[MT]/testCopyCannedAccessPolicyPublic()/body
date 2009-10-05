@@ -1,0 +1,16 @@
+{
+  String containerName=getContainerName();
+  String destinationContainer=getContainerName();
+  try {
+    addBlobToContainer(containerName,sourceKey);
+    validateContent(containerName,sourceKey);
+    context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,overrideAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+    validateContent(destinationContainer,destinationKey);
+    URL url=new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s",destinationContainer,destinationKey));
+    Utils.toStringAndClose(url.openStream());
+  }
+  finally {
+    returnContainer(containerName);
+    returnContainer(destinationContainer);
+  }
+}

@@ -1,0 +1,41 @@
+{
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
+      bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public PCSUtil getPCSUtil(){
+      return new PCSUtil(){
+        public String get(        URI resource){
+          return null;
+        }
+        public boolean put(        URI resource,        String value){
+          return true;
+        }
+      }
+;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.mezeo.pcs2.functions.Key,String> giveMap(){
+      ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,String> map=new ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,String>();
+      map.put(new org.jclouds.mezeo.pcs2.functions.Key("mycontainer","testfile.txt"),"9E4C5AFA-A98B-11DE-8B4C-C3884B4A2DA3");
+      return map;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata> giveMap2(){
+      ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata> map=new ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata>();
+      map.put(new org.jclouds.mezeo.pcs2.functions.Key("mycontainer","testfile.txt"),new FileMetadata("testfile.txt"));
+      return map;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<String,String> giveMap3(){
+      ConcurrentHashMap<String,String> map=new ConcurrentHashMap<String,String>();
+      map.put("mycontainer","7F143552-AAF5-11DE-BBB0-0BC388ED913B");
+      return map;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication() throws UnsupportedEncodingException {
+      return new BasicAuthentication("foo","bar");
+    }
+  }
+,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSConnection>>(){
+  }
+));
+}

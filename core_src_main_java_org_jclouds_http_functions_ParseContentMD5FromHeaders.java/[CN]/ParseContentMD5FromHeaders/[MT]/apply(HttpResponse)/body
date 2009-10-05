@@ -1,0 +1,8 @@
+{
+  IOUtils.closeQuietly(from.getContent());
+  String contentMD5=from.getFirstHeaderOrNull("Content-MD5");
+  if (contentMD5 != null) {
+    return HttpUtils.fromBase64String(contentMD5);
+  }
+  throw new NoContentMD5Exception(request,from);
+}

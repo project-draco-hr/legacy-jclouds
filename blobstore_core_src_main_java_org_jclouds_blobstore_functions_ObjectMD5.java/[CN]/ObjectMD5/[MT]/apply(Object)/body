@@ -1,0 +1,17 @@
+{
+  Blob<?> object;
+  if (from instanceof Blob<?>) {
+    object=(Blob<?>)from;
+  }
+ else {
+    object=blobFactory.get();
+    object.setData(from);
+  }
+  if (object.getMetadata().getContentMD5() == null)   try {
+    object.generateMD5();
+  }
+ catch (  IOException e) {
+    throw new BlobRuntimeException("couldn't get MD5 for: " + from,e);
+  }
+  return object.getMetadata().getContentMD5();
+}

@@ -7,11 +7,11 @@
   }
   String containerName=getContainerName();
   try {
-    assertNotNull(context.getApi().putBlob(containerName,object).get(10,TimeUnit.SECONDS));
-    object=context.getApi().getBlob(containerName,object.getKey()).get(10,TimeUnit.SECONDS);
+    assertNotNull(context.getBlobStore().putBlob(containerName,object).get(10,TimeUnit.SECONDS));
+    object=context.getBlobStore().getBlob(containerName,object.getKey()).get(10,TimeUnit.SECONDS);
     String returnedString=BlobStoreUtils.getContentAsStringAndClose(object);
     assertEquals(returnedString,realObject);
-    assertEquals(context.getApi().listBlobs(containerName).get(10,TimeUnit.SECONDS).size(),1);
+    assertEquals(context.getBlobStore().listBlobs(containerName).get(10,TimeUnit.SECONDS).size(),1);
   }
   finally {
     returnContainer(containerName);

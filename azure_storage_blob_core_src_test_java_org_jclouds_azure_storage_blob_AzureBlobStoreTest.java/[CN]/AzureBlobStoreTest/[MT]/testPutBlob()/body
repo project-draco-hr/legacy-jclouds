@@ -1,0 +1,17 @@
+{
+  Method method=AzureBlobStore.class.getMethod("putBlob",String.class,Blob.class);
+  Blob blob=new Blob("test");
+  blob.setData("test");
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{"mycontainer",blob});
+  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/mycontainer/test");
+  assertEquals(httpMethod.getEndpoint().getQuery(),null);
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),4);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-07-17"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("test".length() + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/octet-stream"));
+  assertEquals(httpMethod.getHeaders().get("Content-MD5"),Collections.singletonList(HttpUtils.toBase64String(HttpUtils.md5("test"))));
+  assertEquals(httpMethod.getEntity(),"test");
+  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ParseETagHeader.class);
+}

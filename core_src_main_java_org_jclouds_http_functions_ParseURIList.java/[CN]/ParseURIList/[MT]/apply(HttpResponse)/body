@@ -1,0 +1,10 @@
+{
+  try {
+    checkState("text/uri-list".equals(from.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE)),"response should have content type test/uri-list");
+    String toParse=Utils.toStringAndClose(from.getContent());
+    return URI.create(toParse.trim());
+  }
+ catch (  IOException e) {
+    throw new HttpResponseException("couldn't parse url from response",null,from,e);
+  }
+}

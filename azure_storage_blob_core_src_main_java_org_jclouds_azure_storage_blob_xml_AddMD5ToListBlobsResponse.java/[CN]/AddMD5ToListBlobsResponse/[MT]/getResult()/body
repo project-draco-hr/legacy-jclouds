@@ -1,0 +1,9 @@
+{
+  ListBlobsResponse response=super.getResult();
+  checkNotNull(response.getContainerUrl(),"containerUrl");
+  for (  BlobMetadata md : response) {
+    checkNotNull(md.getKey(),"key");
+    md.setContentMD5(util.getMD5(response.getContainerUrl(),md.getKey()));
+  }
+  return response;
+}

@@ -3,6 +3,11 @@
   bind(new TypeLiteral<Map<String,Map<String,S3Object>>>(){
   }
 ).toInstance(map);
-  bind(S3BlobStore.class).to(StubS3BlobStore.class).asEagerSingleton();
+  bind(new TypeLiteral<BlobStore<BucketMetadata,ObjectMetadata,S3Object>>(){
+  }
+).to(new TypeLiteral<StubBlobStore<BucketMetadata,ObjectMetadata,S3Object>>(){
+  }
+).asEagerSingleton();
+  bind(S3Connection.class).to(StubS3Connection.class).asEagerSingleton();
   bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("https://localhost/s3stub"));
 }

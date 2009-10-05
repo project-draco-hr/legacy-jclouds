@@ -1,0 +1,10 @@
+{
+  return Guice.createInjector(new RestAzureBlobStoreModule(),new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_KEY)).to(HttpUtils.toBase64String("secret".getBytes()));
+      bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZUREBLOB_ENDPOINT)).to("http://localhost");
+    }
+  }
+);
+}

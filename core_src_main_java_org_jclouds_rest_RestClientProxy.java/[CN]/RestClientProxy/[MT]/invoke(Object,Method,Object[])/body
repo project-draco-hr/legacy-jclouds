@@ -9,9 +9,15 @@
     method=util.getDelegateOrNull(method);
     logger.trace("%s - converting method to request",method);
     Function<Exception,?> exceptionParser=util.createExceptionParserOrNullIfNotFound(method);
+    if (exceptionParser instanceof RestContext) {
+      ((RestContext)exceptionParser).setContext(null,args);
+    }
     HttpRequest request;
     try {
       request=util.createRequest(method,args);
+      if (exceptionParser instanceof RestContext) {
+        ((RestContext)exceptionParser).setContext(request,args);
+      }
     }
  catch (    RuntimeException e) {
       if (exceptionParser != null) {

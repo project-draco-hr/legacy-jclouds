@@ -1,0 +1,15 @@
+{
+  SortedSet<ContainerMetadata> response=connection.listContainers();
+  assertNotNull(response);
+  long initialContainerCount=response.size();
+  assertTrue(initialContainerCount >= 0);
+  String[] containerJsr330=new String[]{containerPrefix + ".testListOwnedContainers1",containerPrefix + ".testListOwnedContainers2"};
+  container1=connection.createContainer(containerJsr330[0]).get(10,TimeUnit.SECONDS);
+  container2=connection.createContainer(containerJsr330[1]).get(10,TimeUnit.SECONDS);
+  response=connection.listContainers();
+  connection.listFiles(container1).get(10,TimeUnit.SECONDS);
+  connection.listFiles(container2).get(10,TimeUnit.SECONDS);
+  connection.deleteContainer(container1).get(10,TimeUnit.SECONDS);
+  connection.deleteContainer(container2).get(10,TimeUnit.SECONDS);
+  response=connection.listContainers();
+}

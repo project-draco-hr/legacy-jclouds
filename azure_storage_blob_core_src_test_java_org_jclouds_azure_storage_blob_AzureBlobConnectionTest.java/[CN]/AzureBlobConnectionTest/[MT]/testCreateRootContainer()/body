@@ -1,0 +1,13 @@
+{
+  Method method=AzureBlobConnection.class.getMethod("createRootContainer",Array.newInstance(CreateContainerOptions.class,0).getClass());
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{});
+  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-07-17"));
+  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
+  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnTrueIfContainerAlreadyExists.class);
+}

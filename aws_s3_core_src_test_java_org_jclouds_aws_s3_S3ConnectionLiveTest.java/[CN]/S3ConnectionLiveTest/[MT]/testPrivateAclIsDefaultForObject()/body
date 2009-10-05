@@ -1,0 +1,15 @@
+{
+  String privateObjectKey="private-acl";
+  String containerName=getContainerName();
+  try {
+    addBlobToContainer(containerName,privateObjectKey);
+    AccessControlList acl=context.getApi().getObjectACL(containerName,privateObjectKey).get(10,TimeUnit.SECONDS);
+    assertEquals(acl.getGrants().size(),1);
+    assertTrue(acl.getOwner() != null);
+    String ownerId=acl.getOwner().getId();
+    assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

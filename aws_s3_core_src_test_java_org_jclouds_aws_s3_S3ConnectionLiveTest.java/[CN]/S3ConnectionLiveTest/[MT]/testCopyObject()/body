@@ -1,0 +1,13 @@
+{
+  String containerName=getContainerName();
+  String destinationContainer=getContainerName();
+  try {
+    addToContainerAndValidate(containerName,sourceKey);
+    context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey).get(10,TimeUnit.SECONDS);
+    validateContent(destinationContainer,destinationKey);
+  }
+  finally {
+    returnContainer(containerName);
+    returnContainer(destinationContainer);
+  }
+}

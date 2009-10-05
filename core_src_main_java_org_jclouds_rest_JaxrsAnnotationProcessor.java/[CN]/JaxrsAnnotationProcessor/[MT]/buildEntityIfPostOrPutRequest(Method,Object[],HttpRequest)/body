@@ -15,9 +15,13 @@
       if (indexToEntityAnnotation.size() == 1) {
         Entry<Integer,Set<Annotation>> entry=indexToEntityAnnotation.entrySet().iterator().next();
         EntityParam entityAnnotation=(EntityParam)entry.getValue().iterator().next();
-        Object entity=args[entry.getKey()];
         EntityBinder binder=injector.getInstance(entityAnnotation.value());
-        binder.addEntityToRequest(entity,request);
+        Object entity=args[entry.getKey()];
+        if (entity.getClass().isArray()) {
+          Object[] entityArray=(Object[])entity;
+          entity=entityArray.length > 0 ? entityArray[0] : null;
+        }
+        if (entity != null)         binder.addEntityToRequest(entity,request);
       }
  else       if (indexToEntityAnnotation.size() > 1) {
         throw new IllegalStateException("cannot have multiple @Entity annotations on " + method);

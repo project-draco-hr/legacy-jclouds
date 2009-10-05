@@ -1,0 +1,14 @@
+{
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("http://myaccount.blob.core.windows.net"));
+      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("myaccount");
+      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(HttpUtils.toBase64String("key".getBytes()));
+      bindConstant().annotatedWith(Jsr330.named(BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX)).to("x-ms-meta-");
+    }
+  }
+,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<AzureBlobConnection>>(){
+  }
+));
+}

@@ -3,6 +3,11 @@
   bind(new TypeLiteral<Map<String,Map<String,Blob>>>(){
   }
 ).toInstance(map);
-  bind(AzureBlobStore.class).to(StubAzureBlobStore.class).asEagerSingleton();
+  bind(new TypeLiteral<BlobStore<ContainerMetadata,BlobMetadata,Blob>>(){
+  }
+).to(new TypeLiteral<StubBlobStore<ContainerMetadata,BlobMetadata,Blob>>(){
+  }
+).asEagerSingleton();
+  bind(AzureBlobConnection.class).to(StubAzureBlobConnection.class).asEagerSingleton();
   bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("https://id.blob.core.windows.net"));
 }

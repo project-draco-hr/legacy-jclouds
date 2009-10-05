@@ -1,0 +1,25 @@
+{
+  byte[] content=Utils.closeConnectionButKeepContentStream(response);
+  command.incrementFailureCount();
+  if (!command.isReplayable()) {
+    logger.warn("Cannot retry after server error, command is not replayable: %1$s",command);
+    return false;
+  }
+ else   if (command.getFailureCount() > retryCountLimit) {
+    logger.warn("Cannot retry after server error, command has exceeded retry limit %1$d: %2$s",retryCountLimit,command);
+    return false;
+  }
+ else   if (response.getStatusCode() == 409) {
+    try {
+      AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,new String(content));
+      if ("ContainerBeingDeleted".equals(error.getCode())) {
+        backoffHandler.imposeBackoffExponentialDelay(100L,3,command.getFailureCount(),command.toString());
+        return true;
+      }
+    }
+ catch (    HttpException e) {
+      logger.warn(e,"error parsing response: %s",new String(content));
+    }
+  }
+  return false;
+}

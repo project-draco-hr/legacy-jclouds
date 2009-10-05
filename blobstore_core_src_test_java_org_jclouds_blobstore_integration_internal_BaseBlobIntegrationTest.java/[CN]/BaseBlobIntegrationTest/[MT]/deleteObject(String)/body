@@ -1,2 +1,11 @@
 {
+  String containerName=getContainerName();
+  try {
+    addBlobToContainer(containerName,key);
+    context.getBlobStore().removeBlob(containerName,key).get(10,TimeUnit.SECONDS);
+    assertContainerEmptyDeleting(containerName,key);
+  }
+  finally {
+    returnContainer(containerName);
+  }
 }

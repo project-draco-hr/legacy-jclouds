@@ -1,0 +1,15 @@
+{
+  Set<Future<Void>> deletes=Sets.newHashSet();
+  for (  M md : getAllBlobMetadata.execute(connection,containerName)) {
+    deletes.add(connection.removeBlob(containerName,md.getKey()));
+  }
+  for (  Future<Void> isdeleted : deletes) {
+    try {
+      isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    }
+ catch (    Exception e) {
+      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      throw new BlobRuntimeException("Error deleting blob in container: " + containerName,e);
+    }
+  }
+}

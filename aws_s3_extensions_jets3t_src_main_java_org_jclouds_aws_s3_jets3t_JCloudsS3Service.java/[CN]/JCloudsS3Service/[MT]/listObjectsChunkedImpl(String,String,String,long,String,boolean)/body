@@ -5,7 +5,7 @@
     ListBucketResponse jcBucket=null;
     do {
       ListBucketOptions options=Util.convertListObjectOptions(prefix,priorLastKey,delimiter,maxListingLength);
-      jcBucket=connection.listBlobs(bucketName,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+      jcBucket=connection.listBucket(bucketName,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
       jsObjects.addAll(Arrays.asList(Util.convertObjectHeads(jcBucket)));
       commonPrefixes.addAll(jcBucket.getCommonPrefixes());
       if (jcBucket.isTruncated()) {

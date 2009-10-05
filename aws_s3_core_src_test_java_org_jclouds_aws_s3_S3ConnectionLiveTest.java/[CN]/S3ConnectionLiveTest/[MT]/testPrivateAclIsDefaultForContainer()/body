@@ -1,0 +1,13 @@
+{
+  String containerName=getContainerName();
+  try {
+    AccessControlList acl=context.getApi().getBucketACL(containerName).get(10,TimeUnit.SECONDS);
+    assertEquals(acl.getGrants().size(),1);
+    assertTrue(acl.getOwner() != null);
+    String ownerId=acl.getOwner().getId();
+    assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

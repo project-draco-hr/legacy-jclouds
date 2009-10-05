@@ -1,0 +1,16 @@
+{
+  return Guice.createInjector(new StubCloudFilesBlobStoreModule(),new StubRackspaceAuthenticationModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<ContainerMetadata>(){
+  }
+,new TypeLiteral<BlobMetadata>(){
+  }
+,new TypeLiteral<Blob<BlobMetadata>>(){
+  }
+).build(),new CloudFilesContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(CloudFilesConstants.PROPERTY_RACKSPACE_USER)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(CloudFilesConstants.PROPERTY_RACKSPACE_KEY)).to("key");
+      super.configure();
+    }
+  }
+);
+}

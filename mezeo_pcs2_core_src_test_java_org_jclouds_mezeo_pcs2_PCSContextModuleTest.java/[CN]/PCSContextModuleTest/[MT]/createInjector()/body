@@ -1,0 +1,17 @@
+{
+  return Guice.createInjector(new StubPCSBlobStoreModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<ContainerMetadata>(){
+  }
+,new TypeLiteral<FileMetadata>(){
+  }
+,new TypeLiteral<PCSFile>(){
+  }
+).build(),new PCSContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_USER)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_PASSWORD)).to("key");
+      bindConstant().annotatedWith(Jsr330.named(PCSConstants.PROPERTY_PCS2_ENDPOINT)).to("http://localhost");
+      super.configure();
+    }
+  }
+);
+}

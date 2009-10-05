@@ -3,7 +3,7 @@
   try {
     String key="apples";
     addObjectAndValidateContent(containerName,key);
-    B object=context.getApi().getBlob(containerName,key,tail(5)).get(10,TimeUnit.SECONDS);
+    B object=context.getBlobStore().getBlob(containerName,key,tail(5)).get(10,TimeUnit.SECONDS);
     assertEquals(BlobStoreUtils.getContentAsStringAndClose(object),TEST_STRING.substring(TEST_STRING.length() - 5));
     assertEquals(object.getContentLength(),5);
     assertEquals(object.getMetadata().getSize(),TEST_STRING.length());

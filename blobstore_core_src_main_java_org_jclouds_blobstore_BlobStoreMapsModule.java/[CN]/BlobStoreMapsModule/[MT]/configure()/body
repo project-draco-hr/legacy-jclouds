@@ -1,6 +1,7 @@
 {
   bind(blobMapFactoryType).toProvider(FactoryProvider.newFactory(blobMapFactoryType,blobMapImplType)).in(Scopes.SINGLETON);
   bind(inputStreamMapFactoryType).toProvider(FactoryProvider.newFactory(inputStreamMapFactoryType,inputStreamMapImplType)).in(Scopes.SINGLETON);
-  bind(getAllBlobsStrategyType).to(getAllBlobsStrategyImplType).in(Scopes.SINGLETON);
-  bind(getAllBlobMetadataStrategyType).to(getAllBlobMetadataStrategyImplType).in(Scopes.SINGLETON);
+  for (  Entry<TypeLiteral,TypeLiteral> entry : strategyImplMap.entrySet()) {
+    bind(entry.getKey()).to(entry.getValue()).in(Scopes.SINGLETON);
+  }
 }

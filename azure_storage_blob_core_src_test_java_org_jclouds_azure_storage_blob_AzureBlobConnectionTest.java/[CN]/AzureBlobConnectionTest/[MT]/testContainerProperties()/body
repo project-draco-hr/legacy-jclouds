@@ -1,0 +1,12 @@
+{
+  Method method=AzureBlobConnection.class.getMethod("getContainerProperties",String.class);
+  HttpRequest httpMethod=processor.createRequest(method,new Object[]{"container"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/container");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
+  assertEquals(httpMethod.getMethod(),HttpMethod.HEAD);
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-07-17"));
+  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ParseContainerMetadataFromHeaders.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+}

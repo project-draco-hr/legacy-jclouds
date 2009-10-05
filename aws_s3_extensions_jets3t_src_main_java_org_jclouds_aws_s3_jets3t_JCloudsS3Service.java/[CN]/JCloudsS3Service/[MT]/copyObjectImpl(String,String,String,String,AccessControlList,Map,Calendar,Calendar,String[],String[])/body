@@ -1,7 +1,7 @@
 {
   try {
     CopyObjectOptions options=Util.convertCopyObjectOptions(acl,destinationMetadata,ifModifiedSince,ifUnmodifiedSince,ifMatchTags,ifNoneMatchTags);
-    org.jclouds.aws.s3.domain.ObjectMetadata jcObjectMetadata=connection.copyBlob(sourceBucketName,sourceObjectKey,destinationBucketName,destinationObjectKey,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    org.jclouds.aws.s3.domain.ObjectMetadata jcObjectMetadata=connection.copyObject(sourceBucketName,sourceObjectKey,destinationBucketName,destinationObjectKey,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     Map map=new HashMap();
     map.put("Last-Modified",jcObjectMetadata.getLastModified().toDate());
     map.put("ETag",HttpUtils.toHexString(jcObjectMetadata.getETag()));

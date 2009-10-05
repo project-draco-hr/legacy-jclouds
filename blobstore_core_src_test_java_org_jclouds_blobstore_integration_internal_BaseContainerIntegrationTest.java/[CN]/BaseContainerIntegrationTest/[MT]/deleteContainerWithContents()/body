@@ -1,0 +1,11 @@
+{
+  String containerName=getContainerName();
+  try {
+    addBlobToContainer(containerName,"test");
+    context.getBlobStore().deleteContainer(containerName).get(10,TimeUnit.SECONDS);
+    assertNotExists(containerName);
+  }
+  finally {
+    recycleContainer(containerName);
+  }
+}

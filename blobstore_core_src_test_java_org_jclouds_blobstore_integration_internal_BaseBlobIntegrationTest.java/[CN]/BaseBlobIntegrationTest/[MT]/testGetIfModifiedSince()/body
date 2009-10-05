@@ -6,10 +6,10 @@
     addObjectAndValidateContent(containerName,key);
     addObjectAndValidateContent(containerName,key);
     DateTime after=new DateTime().plusSeconds(1);
-    context.getApi().getBlob(containerName,key,ifModifiedSince(before)).get(10,TimeUnit.SECONDS);
+    context.getBlobStore().getBlob(containerName,key,ifModifiedSince(before)).get(10,TimeUnit.SECONDS);
     validateContent(containerName,key);
     try {
-      context.getApi().getBlob(containerName,key,ifModifiedSince(after)).get(10,TimeUnit.SECONDS);
+      context.getBlobStore().getBlob(containerName,key,ifModifiedSince(after)).get(10,TimeUnit.SECONDS);
       validateContent(containerName,key);
     }
  catch (    ExecutionException e) {
