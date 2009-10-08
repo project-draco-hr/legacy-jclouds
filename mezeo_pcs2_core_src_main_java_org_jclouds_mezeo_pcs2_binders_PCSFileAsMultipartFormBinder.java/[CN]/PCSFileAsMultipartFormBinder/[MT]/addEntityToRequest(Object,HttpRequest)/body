@@ -1,6 +1,7 @@
 {
   Blob<?> object=(Blob<?>)entity;
-  Multimap<String,String> partHeaders=ImmutableMultimap.of("Content-Disposition",String.format("form-data; name=\"%s\"; filename=\"%s\"",object.getKey(),object.getKey()),HttpHeaders.CONTENT_TYPE,checkNotNull(object.getMetadata().getContentType(),"object.metadata.contentType()"));
+  Key key=PCSUtils.parseKey(new Key("junk",object.getKey()));
+  Multimap<String,String> partHeaders=ImmutableMultimap.of("Content-Disposition",String.format("form-data; name=\"%s\"; filename=\"%s\"",key.getKey(),key.getKey()),HttpHeaders.CONTENT_TYPE,checkNotNull(object.getMetadata().getContentType(),"object.metadata.contentType()"));
   Object data=checkNotNull(object.getData(),"object.getData()");
   Part part;
   try {

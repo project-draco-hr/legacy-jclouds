@@ -10,9 +10,19 @@
     String toParse=Utils.toStringAndClose(from.getContent());
     logger.trace("%s: received the following response: %s",from,toParse);
     URI uri=URI.create(toParse.trim());
+    Set<Future<Void>> puts=Sets.newHashSet();
     for (    Entry<String,String> entry : file.getMetadata().getUserMetadata().entries()) {
       URI key=UriBuilder.fromUri(uri).path(String.format("metadata/%s",entry.getKey())).build();
-      util.put(key,entry.getValue());
+      puts.add(util.put(key,entry.getValue()));
+    }
+    for (    Future<Void> put : puts) {
+      try {
+        put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+      }
+ catch (      Exception e) {
+        Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+        throw new BlobRuntimeException("Error putting metadata for file: " + file,e);
+      }
     }
     return PCSUtils.getEtag(uri);
   }

@@ -1,5 +1,33 @@
 {
-  if (qName.equals("name")) {
+  if (ignore) {
+    currentText=new StringBuilder();
+    if (qName.equals("container")) {
+      ignore=false;
+    }
+    return;
+  }
+  if (qName.equals("container")) {
+    inContainer=false;
+    try {
+      containerMetadata.add(new ContainerMetadata(currentName,currentUrl,currentParent,currentCreated,currentModified,currentAccessed,currentOwner,currentShared,currentInproject,currentVersion,currentBytes));
+    }
+ catch (    RuntimeException e) {
+      logger.error(e,"error creating object!  current state %s",this);
+      throw e;
+    }
+    currentUrl=null;
+    currentParent=null;
+    currentName=null;
+    currentCreated=null;
+    currentInproject=false;
+    currentModified=null;
+    currentOwner=null;
+    currentVersion=0;
+    currentShared=false;
+    currentAccessed=null;
+    currentBytes=0;
+  }
+ else   if (qName.equals("name")) {
     currentName=currentText.toString().trim();
   }
  else   if (qName.equals("created")) {
@@ -25,19 +53,6 @@
   }
  else   if (qName.equals("bytes")) {
     currentBytes=Long.parseLong(currentText.toString().trim());
-  }
- else   if (qName.equals("container")) {
-    containerMetadata.add(new ContainerMetadata(currentName,currentUrl,currentCreated,currentModified,currentAccessed,currentOwner,currentShared,currentInproject,currentVersion,currentBytes));
-    currentUrl=null;
-    currentName=null;
-    currentCreated=null;
-    currentInproject=false;
-    currentModified=null;
-    currentOwner=null;
-    currentVersion=0;
-    currentShared=false;
-    currentAccessed=null;
-    currentBytes=0;
   }
   currentText=new StringBuilder();
 }

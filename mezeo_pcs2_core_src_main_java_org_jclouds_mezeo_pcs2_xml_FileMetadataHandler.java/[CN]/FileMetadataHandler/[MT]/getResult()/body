@@ -1,3 +1,12 @@
 {
+  for (  Future<Void> put : puts) {
+    try {
+      put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    }
+ catch (    Exception e) {
+      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      throw new BlobRuntimeException("Error getting metadata",e);
+    }
+  }
   return fileMetadata;
 }

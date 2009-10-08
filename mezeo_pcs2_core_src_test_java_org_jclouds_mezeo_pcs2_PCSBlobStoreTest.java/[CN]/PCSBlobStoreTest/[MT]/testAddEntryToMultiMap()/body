@@ -1,0 +1,10 @@
+{
+  Method method=PCSUtil.class.getMethod("addEntryToMultiMap",Multimap.class,String.class,URI.class);
+  HttpRequest httpMethod=utilProcessor.createRequest(method,new Object[]{ImmutableMultimap.of("key","value"),"newkey",URI.create("http://localhost/pow")});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/pow");
+  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
+  assertEquals(httpMethod.getHeaders().size(),0);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),AddEntryIntoMultiMap.class);
+}
