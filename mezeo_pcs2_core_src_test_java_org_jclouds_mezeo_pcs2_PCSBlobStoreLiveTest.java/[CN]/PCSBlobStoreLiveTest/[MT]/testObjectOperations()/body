@@ -1,0 +1,13 @@
+{
+  String containerName=containerPrefix + ".testObjectOperations";
+  String data="Here is my data";
+  connection.createContainer(containerName).get(10,TimeUnit.SECONDS);
+  PCSFile object=new PCSFile("path/object");
+  object.setData(data);
+  object.setContentLength(data.length());
+  connection.putBlob(containerName,object).get(60,TimeUnit.SECONDS);
+  InputStream file=(InputStream)connection.getBlob(containerName,"path/object").get(30,TimeUnit.SECONDS).getData();
+  assertEquals(IOUtils.toString(file),data);
+  connection.removeBlob(containerName,"path/object").get(10,TimeUnit.SECONDS);
+  connection.deleteContainer(containerName).get(10,TimeUnit.SECONDS);
+}

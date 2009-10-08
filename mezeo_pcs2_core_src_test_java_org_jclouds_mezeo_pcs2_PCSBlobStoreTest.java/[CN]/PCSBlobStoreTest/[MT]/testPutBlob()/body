@@ -2,12 +2,11 @@
   Method method=PCSBlobStore.class.getMethod("putBlob",String.class,PCSFile.class);
   HttpRequest httpMethod=processor.createRequest(method,new Object[]{"mycontainer",PCSFileAsMultipartFormBinderTest.TEST_BLOB});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/containers/7F143552-AAF5-11DE-BBB0-0BC388ED913B/contents");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/files/o/content");
   assertEquals(httpMethod.getEndpoint().getQuery(),null);
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(PCSFileAsMultipartFormBinderTest.EXPECTS.length() + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("multipart/form-data; boundary=" + PCSFileAsMultipartFormBinderTest.BOUNDRY));
-  assertEquals(Utils.toStringAndClose((InputStream)httpMethod.getEntity()),PCSFileAsMultipartFormBinderTest.EXPECTS);
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(PCSFileAsMultipartFormBinderTest.TEST_BLOB.getData().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getEntity(),PCSFileAsMultipartFormBinderTest.TEST_BLOB.getData());
   assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),AddMetadataAndParseResourceIdIntoBytes.class);
 }

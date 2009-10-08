@@ -1,8 +1,8 @@
 {
-  Method method=PCSUtil.class.getMethod("put",URI.class,String.class);
-  HttpRequest httpMethod=utilProcessor.createRequest(method,new Object[]{URI.create("http://localhost/pow"),"bar"});
+  Method method=PCSUtil.class.getMethod("putMetadata",String.class,String.class,String.class);
+  HttpRequest httpMethod=utilProcessor.createRequest(method,new Object[]{"id","pow","bar"});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/pow");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/files/id/metadata/pow");
   assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
   assertEquals(httpMethod.getHeaders().size(),2);
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
