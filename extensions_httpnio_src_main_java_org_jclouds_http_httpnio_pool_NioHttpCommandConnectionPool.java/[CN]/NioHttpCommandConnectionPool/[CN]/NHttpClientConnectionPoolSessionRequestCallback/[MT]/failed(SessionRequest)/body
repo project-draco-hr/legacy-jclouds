@@ -1,9 +1,8 @@
 {
   int count=currentSessionFailures.getAndIncrement();
-  logger.warn("%1$s->%2$s[%3$s] - SessionRequest failed",request.getLocalAddress(),request.getRemoteAddress(),request.getAttachment());
   releaseConnectionAndSetResponseException(request,request.getException());
   if (count >= maxSessionFailures) {
-    logger.error(request.getException(),"%1$s->%2$s[%3$s] - SessionRequest failures: %4$s, Disabling pool for %5$s",request.getLocalAddress(),request.getRemoteAddress(),maxSessionFailures,getTarget());
+    logger.error(request.getException(),"Exceeded maximum Session failures: %d, Disabling pool for %s",maxSessionFailures,getTarget());
     exception.set(request.getException());
   }
 }

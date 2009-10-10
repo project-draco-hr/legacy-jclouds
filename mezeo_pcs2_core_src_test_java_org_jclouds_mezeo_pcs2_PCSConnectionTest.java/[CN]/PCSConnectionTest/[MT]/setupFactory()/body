@@ -3,6 +3,12 @@
     @Override protected void configure(){
       bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
       bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
     }
     @SuppressWarnings("unused") @Provides @Singleton public PCSUtil getPCSUtil(){
       return new PCSUtil(){

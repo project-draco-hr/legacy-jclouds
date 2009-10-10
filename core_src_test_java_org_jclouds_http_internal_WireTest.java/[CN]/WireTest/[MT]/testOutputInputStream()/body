@@ -1,0 +1,8 @@
+{
+  Wire wire=setUp();
+  InputStream in=wire.output(new ByteArrayInputStream("foo".getBytes()));
+  String compare=Utils.toStringAndClose(in);
+  Thread.sleep(100);
+  assertEquals(compare,"foo");
+  assertEquals(((BufferLogger)wire.wireLog).buff.toString(),">> \"foo\"");
+}

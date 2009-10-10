@@ -1,21 +1,11 @@
 {
   InputStream gson=from.getContent();
-  String response=null;
   try {
-    if (suckFirst) {
-      response=IOUtils.toString(gson);
-      logger.trace("received content %n%s",response);
-      IOUtils.closeQuietly(gson);
-      gson=IOUtils.toInputStream(response);
-    }
     return apply(gson);
   }
  catch (  Exception e) {
     StringBuilder message=new StringBuilder();
     message.append("Error parsing input");
-    if (response != null) {
-      message.append("\n").append(response);
-    }
     logger.error(e,message.toString());
     throw new HttpResponseException(message.toString() + "\n" + from,null,from,e);
   }

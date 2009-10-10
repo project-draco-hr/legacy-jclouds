@@ -1,0 +1,13 @@
+{
+  try {
+    byte[] data=IOUtils.toByteArray(instream);
+    wire(header,new ByteArrayInputStream(data));
+    return new ByteArrayInputStream(data);
+  }
+ catch (  IOException e) {
+    throw new RuntimeException("Error tapping line",e);
+  }
+ finally {
+    IOUtils.closeQuietly(instream);
+  }
+}

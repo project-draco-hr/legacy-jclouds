@@ -4,6 +4,12 @@
   if (loggerFields.size() == 0)   return;
   Logger logger=loggerFactory.getLogger(type.getName());
   for (  Field field : loggerFields) {
-    encounter.register(new AssignLoggerToField<I>(logger,field));
+    if (field.isAnnotationPresent(Named.class)) {
+      Named name=field.getAnnotation(Named.class);
+      encounter.register(new AssignLoggerToField<I>(loggerFactory.getLogger(name.value()),field));
+    }
+ else {
+      encounter.register(new AssignLoggerToField<I>(logger,field));
+    }
   }
 }

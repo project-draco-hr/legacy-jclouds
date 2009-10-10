@@ -2,6 +2,12 @@
   Injector injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://localhost:8080"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
     }
   }
 ,new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());

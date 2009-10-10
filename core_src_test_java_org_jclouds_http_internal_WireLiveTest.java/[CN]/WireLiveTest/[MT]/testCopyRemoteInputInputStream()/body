@@ -1,0 +1,7 @@
+{
+  URL url=new URL(checkNotNull(sysHttpStreamUrl,"sysHttpStreamUrl"));
+  URLConnection connection=url.openConnection();
+  Callable<Void> callable=new ConnectionTester(connection.getInputStream());
+  Future<Void> result=Executors.newCachedThreadPool().submit(callable);
+  result.get(30,TimeUnit.SECONDS);
+}

@@ -5,6 +5,12 @@
       bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
       bind(URI.class).annotatedWith(WebDAV.class).toInstance(URI.create("http://localhost:8080/webdav"));
       bind(PCSConnection.class).to(StubPCSConnection.class).asEagerSingleton();
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
     }
     @SuppressWarnings("unused") @Provides @Singleton public PCSUtil getPCSUtil(){
       return new PCSUtil(){

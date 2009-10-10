@@ -4,13 +4,27 @@
     HttpRequest request=command.getRequest();
     Q nativeRequest=null;
     try {
-      logger.trace("%s - filtering request %s",request.getEndpoint(),request);
       for (      HttpRequestFilter filter : request.getFilters()) {
         request=filter.filter(request);
       }
-      logger.trace("%s - request now %s",request.getEndpoint(),request);
+      logger.debug("Sending request: %s",request.getRequestLine());
+      if (request.getEntity() != null && wire.enabled())       request.setEntity(wire.output(request.getEntity()));
       nativeRequest=convert(request);
+      if (headerLog.isDebugEnabled()) {
+        headerLog.debug(">> %s",request.getRequestLine().toString());
+        for (        Entry<String,String> header : request.getHeaders().entries()) {
+          if (header.getKey() != null)           headerLog.debug(">> %s: %s",header.getKey(),header.getValue());
+        }
+      }
       response=invoke(nativeRequest);
+      logger.debug("Receiving response: " + response.getStatusLine());
+      if (headerLog.isDebugEnabled()) {
+        headerLog.debug("<< " + response.getStatusLine().toString());
+        for (        Entry<String,String> header : response.getHeaders().entries()) {
+          if (header.getKey() != null)           headerLog.debug("<< %s: %s",header.getKey(),header.getValue());
+        }
+      }
+      if (response.getContent() != null && wire.enabled())       response.setContent(wire.input(response.getContent()));
       int statusCode=response.getStatusCode();
       if (statusCode >= 300) {
         if (retryHandler.shouldRetryRequest(command,response)) {

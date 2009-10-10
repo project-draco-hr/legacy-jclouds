@@ -2,18 +2,16 @@
   exceptionIfNotActive();
   if (!hitBottom) {
     hitBottom=available.size() == 0 && allConnections.availablePermits() == 0;
-    if (hitBottom)     logger.warn("%1$s - saturated connection pool",this);
+    if (hitBottom)     logger.warn("saturated connection pool");
   }
-  logger.debug("%s - attempting to acquire connection; %s currently available",this,available.size());
+  logger.trace("Blocking up to %ds for a connection to %s",5,getEndPoint());
   C conn=available.poll(5,TimeUnit.SECONDS);
-  if (conn == null)   throw new TimeoutException("could not obtain a pooled connection within 5 seconds");
-  logger.trace("%1$s - %2$d - aquired",conn,conn.hashCode());
+  if (conn == null)   throw new TimeoutException(String.format("Timeout after %ds for a connection to %s",5,getEndPoint()));
   if (connectionValid(conn)) {
-    logger.debug("%1$s - %2$d - reusing",conn,conn.hashCode());
     return conn;
   }
  else {
-    logger.debug("%1$s - %2$d - unusable",conn,conn.hashCode());
+    logger.debug("Connection %s unusable for endpoint %s",conn.hashCode(),getEndPoint());
     shutdownConnection(conn);
     allConnections.release();
     return getConnection();
