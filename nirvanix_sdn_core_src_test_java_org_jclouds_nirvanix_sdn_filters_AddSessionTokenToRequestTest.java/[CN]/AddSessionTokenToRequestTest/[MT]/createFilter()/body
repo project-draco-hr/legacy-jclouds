@@ -1,0 +1,13 @@
+{
+  injector=Guice.createInjector(new AbstractModule(){
+    protected void configure(){
+      RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+      bind(DateService.class);
+    }
+    @SuppressWarnings("unused") @SessionToken @Provides String authTokenProvider(){
+      return System.currentTimeMillis() + "";
+    }
+  }
+);
+  filter=injector.getInstance(AddSessionTokenToRequest.class);
+}

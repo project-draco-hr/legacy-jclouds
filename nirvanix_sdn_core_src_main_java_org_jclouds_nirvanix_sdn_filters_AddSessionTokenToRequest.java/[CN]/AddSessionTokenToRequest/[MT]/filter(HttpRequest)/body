@@ -1,0 +1,8 @@
+{
+  UriBuilder builder=UriBuilder.fromUri(request.getEndpoint());
+  builder.replaceQueryParam(SDNQueryParams.SESSIONTOKEN,getSessionToken());
+  List<HttpRequestFilter> oldFilters=request.getFilters();
+  request=new HttpRequest(request.getMethod(),builder.build(),request.getHeaders(),request.getEntity());
+  request.getFilters().addAll(oldFilters);
+  return request;
+}
