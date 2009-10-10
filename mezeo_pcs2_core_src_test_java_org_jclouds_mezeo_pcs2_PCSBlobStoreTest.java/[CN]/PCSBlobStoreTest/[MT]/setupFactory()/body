@@ -17,14 +17,14 @@
       }
 ;
     }
-    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.mezeo.pcs2.functions.Key,String> giveMap(){
-      ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,String> map=new ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,String>();
-      map.put(new org.jclouds.mezeo.pcs2.functions.Key("mycontainer","testfile.txt"),"9E4C5AFA-A98B-11DE-8B4C-C3884B4A2DA3");
+    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.blobstore.domain.Key,String> giveMap(){
+      ConcurrentHashMap<org.jclouds.blobstore.domain.Key,String> map=new ConcurrentHashMap<org.jclouds.blobstore.domain.Key,String>();
+      map.put(new org.jclouds.blobstore.domain.Key("mycontainer","testfile.txt"),"9E4C5AFA-A98B-11DE-8B4C-C3884B4A2DA3");
       return map;
     }
-    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata> giveMap2(){
-      ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata> map=new ConcurrentHashMap<org.jclouds.mezeo.pcs2.functions.Key,FileMetadata>();
-      map.put(new org.jclouds.mezeo.pcs2.functions.Key("mycontainer","testfile.txt"),new FileMetadata("testfile.txt"));
+    @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<org.jclouds.blobstore.domain.Key,FileMetadata> giveMap2(){
+      ConcurrentHashMap<org.jclouds.blobstore.domain.Key,FileMetadata> map=new ConcurrentHashMap<org.jclouds.blobstore.domain.Key,FileMetadata>();
+      map.put(new org.jclouds.blobstore.domain.Key("mycontainer","testfile.txt"),new FileMetadata("testfile.txt"));
       return map;
     }
     @SuppressWarnings("unused") @Provides @Singleton ConcurrentMap<String,String> giveMap3(){
@@ -36,11 +36,11 @@
       return new BasicAuthentication("foo","bar");
     }
   }
-,new JaxrsModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
-  processor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSBlobStore>>(){
+,new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<PCSBlobStore>>(){
   }
 ));
-  utilProcessor=injector.getInstance(Key.get(new TypeLiteral<JaxrsAnnotationProcessor<PCSUtil>>(){
+  utilProcessor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<PCSUtil>>(){
   }
 ));
 }

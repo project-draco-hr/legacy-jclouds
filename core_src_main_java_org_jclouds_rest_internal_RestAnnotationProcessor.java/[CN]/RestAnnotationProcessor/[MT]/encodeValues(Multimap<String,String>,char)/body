@@ -1,0 +1,19 @@
+{
+  Multimap<String,String> encoded=HashMultimap.create();
+  for (  Entry<String,String> entry : unencoded.entries()) {
+    try {
+      String value=URLEncoder.encode(entry.getValue(),"UTF-8");
+      value=value.replaceAll("\\+","%20");
+      for (      char c : skipEncode) {
+        String toSkip=Character.toString(c);
+        String encodedValueToSkip=URLEncoder.encode(toSkip,"UTF-8");
+        value=value.replaceAll(encodedValueToSkip,toSkip);
+      }
+      encoded.put(entry.getKey(),value);
+    }
+ catch (    UnsupportedEncodingException e) {
+      throw new RuntimeException("jclouds only supports UTF-8",e);
+    }
+  }
+  return encoded;
+}

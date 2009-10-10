@@ -1,0 +1,13 @@
+{
+  Multimap<String,String> queryParamValues=HashMultimap.create();
+  queryParamValues.putAll(constants);
+  Map<Integer,Set<Annotation>> indexToMatrixParam=methodToindexOfParamToMatrixParamAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToMatrixParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      String paramKey=((MatrixParam)key).value();
+      String paramValue=args[entry.getKey()].toString();
+      queryParamValues.put(paramKey,paramValue);
+    }
+  }
+  return queryParamValues;
+}

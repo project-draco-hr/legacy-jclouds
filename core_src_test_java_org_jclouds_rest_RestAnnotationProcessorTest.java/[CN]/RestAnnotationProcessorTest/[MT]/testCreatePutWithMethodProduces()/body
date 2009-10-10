@@ -1,0 +1,11 @@
+{
+  Method method=TestPut.class.getMethod("putWithMethodBinderProduces",String.class);
+  HttpRequest httpMethod=factory(TestPut.class).createRequest(method,new Object[]{"data"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/data");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("text/plain"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("data".getBytes().length + ""));
+  assertEquals(httpMethod.getEntity(),"data");
+}

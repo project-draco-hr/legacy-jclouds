@@ -1,0 +1,71 @@
+{
+  if (method.getName().equals("equals")) {
+    return this.equals(o);
+  }
+ else   if (method.getName().equals("hashCode")) {
+    return this.hashCode();
+  }
+ else   if (util.getDelegateOrNull(method) != null) {
+    method=util.getDelegateOrNull(method);
+    logger.trace("%s - converting method to request",method);
+    Function<Exception,?> exceptionParser=util.createExceptionParserOrNullIfNotFound(method);
+    if (exceptionParser instanceof InvocationContext) {
+      ((InvocationContext)exceptionParser).setContext(null,args);
+    }
+    HttpRequest request;
+    try {
+      request=util.createRequest(method,args);
+      if (exceptionParser instanceof InvocationContext) {
+        ((InvocationContext)exceptionParser).setContext(request,args);
+      }
+    }
+ catch (    RuntimeException e) {
+      if (exceptionParser != null) {
+        final Object toReturn=exceptionParser.apply(e);
+        if (toReturn == null)         throw e;
+        if (method.getReturnType().isAssignableFrom(Future.class)) {
+          return new Future<Object>(){
+            public boolean cancel(            boolean mayInterruptIfRunning){
+              return false;
+            }
+            public Object get() throws InterruptedException, ExecutionException {
+              return toReturn;
+            }
+            public Object get(            long timeout,            TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+              return get();
+            }
+            public boolean isCancelled(){
+              return false;
+            }
+            public boolean isDone(){
+              return true;
+            }
+          }
+;
+        }
+ else {
+          return toReturn;
+        }
+      }
+      throw e;
+    }
+    logger.trace("%s - converted method to request %s",method,request);
+    Function<HttpResponse,?> transformer=util.createResponseParser(method,request,args);
+    logger.trace("%s - creating command for request %s, transformer %s, exceptionParser %s",method,request,transformer,exceptionParser);
+    Future<?> result=commandFactory.create(request,transformer,exceptionParser).execute();
+    if (exceptionParser != null) {
+      logger.trace("%s - wrapping future for request %s in exceptionParser %s",method,request,exceptionParser);
+      result=new FutureExceptionParser(result,exceptionParser);
+    }
+    if (method.getReturnType().isAssignableFrom(Future.class)) {
+      return result;
+    }
+ else {
+      logger.trace("%s - invoking request synchronously %s",method,request,exceptionParser);
+      return result.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    }
+  }
+ else {
+    throw new RuntimeException("method is intended solely to set constants: " + method);
+  }
+}

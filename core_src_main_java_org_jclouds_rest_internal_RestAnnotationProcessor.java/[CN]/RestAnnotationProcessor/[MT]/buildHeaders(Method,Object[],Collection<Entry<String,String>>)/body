@@ -1,0 +1,15 @@
+{
+  Multimap<String,String> headers=HashMultimap.create();
+  addHeaderIfAnnotationPresentOnMethod(headers,method,tokenValues);
+  Map<Integer,Set<Annotation>> indexToHeaderParam=methodToIndexOfParamToHeaderParamAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToHeaderParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      String value=args[entry.getKey()].toString();
+      value=replaceTokens(value,tokenValues);
+      headers.put(((HeaderParam)key).value(),value);
+    }
+  }
+  addProducesIfPresentOnTypeOrMethod(headers,method);
+  addConsumesIfPresentOnTypeOrMethod(headers,method);
+  return headers;
+}

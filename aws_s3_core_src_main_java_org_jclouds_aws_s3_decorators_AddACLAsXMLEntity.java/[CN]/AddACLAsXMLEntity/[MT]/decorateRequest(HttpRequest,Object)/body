@@ -1,0 +1,16 @@
+{
+  AccessControlList from=(AccessControlList)entity;
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  try {
+    String stringEntity=generateBuilder(from).asString(outputProperties);
+    request.getHeaders().put(HttpHeaders.CONTENT_TYPE,MediaType.TEXT_XML);
+    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,stringEntity.getBytes().length + "");
+    request.setEntity(stringEntity);
+  }
+ catch (  Exception e) {
+    Utils.rethrowIfRuntime(e);
+    throw new RuntimeException("error transforming acl: " + from,e);
+  }
+  return request;
+}

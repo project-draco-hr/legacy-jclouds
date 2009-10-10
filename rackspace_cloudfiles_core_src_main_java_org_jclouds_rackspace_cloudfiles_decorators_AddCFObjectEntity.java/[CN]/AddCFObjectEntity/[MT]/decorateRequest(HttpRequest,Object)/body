@@ -1,0 +1,14 @@
+{
+  Blob<?> object=(Blob<?>)entity;
+  if (object.getMetadata().getSize() >= 0) {
+    checkArgument(object.getContentLength() <= 5 * 1024 * 1024* 1024,"maximum size for put object is 5GB");
+    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getMetadata().getSize() + "");
+  }
+ else {
+    request.getHeaders().put("Transfer-Encoding","chunked");
+  }
+  if (object.getMetadata().getContentMD5() != null) {
+    request.getHeaders().put(HttpHeaders.ETAG,HttpUtils.toBase64String(object.getMetadata().getContentMD5()));
+  }
+  return super.decorateRequest(request,entity);
+}

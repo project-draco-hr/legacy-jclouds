@@ -1,0 +1,13 @@
+{
+  if (declaring.isAnnotationPresent(MatrixParams.class)) {
+    MatrixParams query=declaring.getAnnotation(MatrixParams.class);
+    addMatrix(builder,query,tokenValues);
+  }
+  if (method.isAnnotationPresent(MatrixParams.class)) {
+    MatrixParams query=method.getAnnotation(MatrixParams.class);
+    addMatrix(builder,query,tokenValues);
+  }
+  for (  Entry<String,String> query : getMatrixParamKeyValues(method,args).entries()) {
+    builder.queryParam(query.getKey(),replaceTokens(query.getValue(),tokenValues));
+  }
+}

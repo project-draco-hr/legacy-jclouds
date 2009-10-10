@@ -1,0 +1,13 @@
+{
+  Method method=TestPut.class.getMethod("putWithMethodBinderConsumes",String.class);
+  HttpRequest httpMethod=factory(TestPut.class).createRequest(method,new Object[]{"data"});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/data");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),3);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/json"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.ACCEPT),Collections.singletonList("application/json"));
+  String expected="{\"fooble\":\"data\"}";
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(expected.getBytes().length + ""));
+  assertEquals(httpMethod.getEntity(),expected);
+}

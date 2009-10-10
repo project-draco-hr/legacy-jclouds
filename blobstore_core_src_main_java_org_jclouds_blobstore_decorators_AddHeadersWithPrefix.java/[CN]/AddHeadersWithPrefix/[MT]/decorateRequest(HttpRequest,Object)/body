@@ -1,0 +1,12 @@
+{
+  Multimap<String,String> userMetadata=(Multimap<String,String>)entity;
+  for (  Entry<String,String> entry : userMetadata.entries()) {
+    if (entry.getKey().startsWith(metadataPrefix)) {
+      request.getHeaders().put(entry.getKey().toLowerCase(),entry.getValue());
+    }
+ else {
+      request.getHeaders().put((metadataPrefix + entry.getKey()).toLowerCase(),entry.getValue());
+    }
+  }
+  return request;
+}

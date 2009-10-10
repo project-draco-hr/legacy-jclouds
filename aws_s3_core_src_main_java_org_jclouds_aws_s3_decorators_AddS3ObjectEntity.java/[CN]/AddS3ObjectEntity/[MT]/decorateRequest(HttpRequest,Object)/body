@@ -1,0 +1,18 @@
+{
+  Blob<?> object=(Blob<?>)entity;
+  checkArgument(object.getMetadata().getSize() >= 0,"size must be set");
+  checkArgument(object.getContentLength() <= 5 * 1024 * 1024* 1024,"maximum size for put object is 5GB");
+  if (object instanceof S3Object) {
+    S3Object s3Object=(S3Object)object;
+    if (s3Object.getMetadata().getCacheControl() != null) {
+      request.getHeaders().put(HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl());
+    }
+    if (s3Object.getMetadata().getContentDisposition() != null) {
+      request.getHeaders().put("Content-Disposition",s3Object.getMetadata().getContentDisposition());
+    }
+    if (s3Object.getMetadata().getContentEncoding() != null) {
+      request.getHeaders().put(HttpHeaders.CONTENT_ENCODING,s3Object.getMetadata().getContentEncoding());
+    }
+  }
+  return super.decorateRequest(request,entity);
+}
