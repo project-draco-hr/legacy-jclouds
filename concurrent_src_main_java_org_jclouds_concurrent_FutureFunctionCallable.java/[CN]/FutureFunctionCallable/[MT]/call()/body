@@ -1,6 +1,10 @@
 {
   try {
-    return function.apply(future.get());
+    F input=future.get();
+    logger.debug("Processing intermediate result for: %s",input);
+    T result=function.apply(input);
+    logger.debug("Processed intermediate result for: %s",input);
+    return result;
   }
  catch (  ExecutionException e) {
     throw (Exception)e.getCause();
