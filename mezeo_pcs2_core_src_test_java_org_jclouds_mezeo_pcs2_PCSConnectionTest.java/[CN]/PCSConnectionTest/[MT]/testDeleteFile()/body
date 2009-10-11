@@ -1,11 +1,11 @@
 {
   Method method=PCSConnection.class.getMethod("deleteFile",URI.class);
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/contents/file")});
+  GeneratedHttpRequest<PCSConnection> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/contents/file")});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/contents/file");
   assertEquals(httpMethod.getEndpoint().getQuery(),null);
   assertEquals(httpMethod.getMethod(),HttpMethod.DELETE);
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ReturnVoidIf2xx.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnVoidOnNotFoundOr404.class);
 }

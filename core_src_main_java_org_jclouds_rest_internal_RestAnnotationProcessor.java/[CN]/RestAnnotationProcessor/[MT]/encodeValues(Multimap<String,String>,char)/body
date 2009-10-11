@@ -4,10 +4,8 @@
     try {
       String value=URLEncoder.encode(entry.getValue(),"UTF-8");
       value=value.replaceAll("\\+","%20");
-      for (      char c : skipEncode) {
-        String toSkip=Character.toString(c);
-        String encodedValueToSkip=URLEncoder.encode(toSkip,"UTF-8");
-        value=value.replaceAll(encodedValueToSkip,toSkip);
+      if (skipEncode.length > 0) {
+        value=unEncode(value,skipEncode);
       }
       encoded.put(entry.getKey(),value);
     }

@@ -1,11 +1,11 @@
 {
   Method method=CloudServersConnection.class.getMethod("getServer",int.class);
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{2});
+  GeneratedHttpRequest<CloudServersConnection> httpMethod=processor.createRequest(method,new Object[]{2});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2");
   assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
   assertEquals(httpMethod.getMethod(),HttpMethod.GET);
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ParseServerFromJsonResponse.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseServerFromJsonResponse.class);
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnServerNotFoundOn404.class);
 }

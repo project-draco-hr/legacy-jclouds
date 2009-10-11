@@ -2,7 +2,7 @@
   Method method=PCSBlobStore.class.getMethod("putBlob",String.class,PCSFile.class);
   PCSFile file=new PCSFile("hello");
   file.setData("wonkers");
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{"mycontainer",file});
+  GeneratedHttpRequest<PCSBlobStore> httpMethod=processor.createRequest(method,new Object[]{"mycontainer",file});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/files/o/content");
   assertEquals(httpMethod.getEndpoint().getQuery(),null);
@@ -10,5 +10,5 @@
   assertEquals(httpMethod.getHeaders().size(),1);
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(file.getData().toString().getBytes().length + ""));
   assertEquals(httpMethod.getEntity(),file.getData());
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),AddMetadataAndParseResourceIdIntoBytes.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),AddMetadataAndParseResourceIdIntoBytes.class);
 }

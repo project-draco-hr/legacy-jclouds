@@ -1,0 +1,54 @@
+{
+  URI endpoint=getEndpointFor(method,args);
+  String httpMethod=getHttpMethodOrConstantOrThrowException(method);
+  UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
+  builder.path(declaring);
+  builder.path(method);
+  Multimap<String,String> tokenValues=encodeValues(getPathParamKeyValues(method,args),skipEncode);
+  addQueryParams(builder,tokenValues.entries(),method,args);
+  addMatrixParams(builder,tokenValues.entries(),method,args);
+  Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
+  String stringEntity=null;
+  HttpRequestOptions options=findOptionsIn(method,args);
+  if (options != null) {
+    injector.injectMembers(options);
+    for (    Entry<String,String> header : options.buildRequestHeaders().entries()) {
+      headers.put(header.getKey(),replaceTokens(header.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
+      builder.queryParam(query.getKey(),replaceTokens(query.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
+      builder.matrixParam(matrix.getKey(),replaceTokens(matrix.getValue(),tokenValues.entries()));
+    }
+    String pathSuffix=options.buildPathSuffix();
+    if (pathSuffix != null) {
+      builder.path(pathSuffix);
+    }
+    stringEntity=options.buildStringEntity();
+    if (stringEntity != null) {
+      headers.put(HttpHeaders.CONTENT_LENGTH,stringEntity.getBytes().length + "");
+    }
+  }
+  URI endPoint;
+  try {
+    endPoint=builder.buildFromEncodedMap(convertUnsafe(tokenValues));
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalStateException(e);
+  }
+catch (  UriBuilderException e) {
+    throw new IllegalStateException(e);
+  }
+  endPoint=replaceQuery(endPoint,endPoint.getQuery());
+  GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(httpMethod,endPoint,this,declaring,method,args);
+  request.setHeaders(headers);
+  addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
+  addFiltersIfAnnotated(method,request);
+  if (stringEntity != null) {
+    request.setEntity(stringEntity);
+    if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,"application/unknown");
+  }
+  decorateRequest(request);
+  return request;
+}

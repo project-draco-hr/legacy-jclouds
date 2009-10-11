@@ -1,11 +1,11 @@
 {
   Method method=PCSBlobStore.class.getMethod("getBlob",String.class,String.class);
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{"mycontainer","testfile.txt"});
+  GeneratedHttpRequest<PCSBlobStore> httpMethod=processor.createRequest(method,new Object[]{"mycontainer","testfile.txt"});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/webdav/mycontainer/testfile.txt");
   assertEquals(httpMethod.getEndpoint().getQuery(),null);
   assertEquals(httpMethod.getMethod(),HttpMethod.GET);
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),AssembleBlobFromContentAndMetadataCache.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),AssembleBlobFromContentAndMetadataCache.class);
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ThrowKeyNotFoundOn404.class);
 }

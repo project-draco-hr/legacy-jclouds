@@ -1,11 +1,11 @@
 {
   if (from.getStatusCode() > 204)   throw new BlobRuntimeException("Incorrect code for: " + from);
   checkState(request != null,"request should be initialized at this point");
-  checkState(args != null,"args should be initialized at this point");
-  checkArgument(args[0] instanceof String,"arg[0] must be a container name");
-  checkArgument(args[1] instanceof PCSFile,"arg[1] must be a pcsfile");
-  String container=args[0].toString();
-  PCSFile file=(PCSFile)args[1];
+  checkState(request.getArgs() != null,"request.getArgs() should be initialized at this point");
+  checkArgument(request.getArgs()[0] instanceof String,"arg[0] must be a container name");
+  checkArgument(request.getArgs()[1] instanceof PCSFile,"arg[1] must be a pcsfile");
+  String container=request.getArgs()[0].toString();
+  PCSFile file=(PCSFile)request.getArgs()[1];
   Key key=new Key(container,file.getKey());
   String id=checkNotNull(fileCache.get(key),String.format("file %s should have an id in cache by now",key));
   IOUtils.closeQuietly(from.getContent());

@@ -1,0 +1,8 @@
+{
+  RestAnnotationProcessor<TestTransformers> processor=factory(TestTransformers.class);
+  Method method=TestTransformers.class.getMethod("oneTransformerWithContext");
+  GeneratedHttpRequest<TestTransformers> request=new GeneratedHttpRequest<TestTransformers>("GET",URI.create("http://localhost"),processor,TestTransformers.class,method);
+  Function<HttpResponse,?> transformer=processor.createResponseParser(method,request);
+  assertEquals(transformer.getClass(),ReturnStringIf200Context.class);
+  assertEquals(((ReturnStringIf200Context)transformer).request,request);
+}

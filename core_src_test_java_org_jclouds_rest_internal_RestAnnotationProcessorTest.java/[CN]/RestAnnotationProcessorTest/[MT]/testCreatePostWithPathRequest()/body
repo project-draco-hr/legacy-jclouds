@@ -1,0 +1,17 @@
+{
+  Method method=TestPost.class.getMethod("postWithPath",String.class,MapBinder.class);
+  HttpRequest httpMethod=factory(TestPost.class).createRequest(method,new Object[]{"data",new org.jclouds.rest.MapBinder(){
+    public void bindToRequest(    HttpRequest request,    Map<String,String> postParams){
+      request.setEntity(postParams.get("fooble"));
+    }
+    public void bindToRequest(    HttpRequest request,    Object toBind){
+      throw new RuntimeException("this shouldn't be used in POST");
+    }
+  }
+});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/data");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),0);
+  assertEquals(httpMethod.getEntity(),"data");
+}

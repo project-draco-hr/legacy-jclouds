@@ -1,7 +1,7 @@
 {
   PCSUtil connection=createPCSUtil();
   AddMetadataAndParseResourceIdIntoBytes function=new AddMetadataAndParseResourceIdIntoBytes(fileCache,connection);
-  function.setContext(new HttpRequest("GET",URI.create("http://localhost:8080")),new Object[]{"container",new PCSFile("key")});
+  function.setContext(factory.createRequest(method,"container",new PCSFile("key"),URI.create("http://localhost:8080")));
   response.setContent(IOUtils.toInputStream("http://localhost/contents/7F143552-AAF5-11DE-BBB0-0BC388ED913B"));
   byte[] eTag=function.apply(response);
   byte[] expected=HttpUtils.fromHexString("7F143552AAF511DEBBB00BC388ED913B");

@@ -1,14 +1,14 @@
 {
   Method method=SDNConnection.class.getMethod("upload",URI.class,String.class,String.class,Blob.class);
-  Blob<BlobMetadata> blob=AddBlobEntityAsMultipartFormTest.TEST_BLOB;
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{URI.create("http://uploader"),"token","adriansmovies",blob});
+  Blob<BlobMetadata> blob=BindBlobToMultipartFormTest.TEST_BLOB;
+  GeneratedHttpRequest<SDNConnection> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://uploader"),"token","adriansmovies",blob});
   assertEquals(httpMethod.getEndpoint().getHost(),"uploader");
   assertEquals(httpMethod.getEndpoint().getPath(),"/Upload.ashx");
   assertEquals(httpMethod.getEndpoint().getQuery(),"output=json&uploadToken=token&destFolderPath=adriansmovies");
   assertEquals(httpMethod.getMethod(),HttpMethod.POST);
   assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(AddBlobEntityAsMultipartFormTest.EXPECTS.length() + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("multipart/form-data; boundary=" + AddBlobEntityAsMultipartFormTest.BOUNDRY));
-  assertEquals(Utils.toStringAndClose((InputStream)httpMethod.getEntity()),AddBlobEntityAsMultipartFormTest.EXPECTS);
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ReturnVoidIf2xx.class);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(BindBlobToMultipartFormTest.EXPECTS.length() + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("multipart/form-data; boundary=" + BindBlobToMultipartFormTest.BOUNDRY));
+  assertEquals(Utils.toStringAndClose((InputStream)httpMethod.getEntity()),BindBlobToMultipartFormTest.EXPECTS);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
 }

@@ -1,0 +1,10 @@
+{
+  checkArgument(checkNotNull(request,"input") instanceof GeneratedHttpRequest,"this decorator is only valid for GeneratedHttpRequests!");
+  checkArgument(checkNotNull(input,"input") instanceof Multimap,"this decorator is only valid for Multimaps!");
+  Multimap<String,String> userMetadata=(Multimap<String,String>)input;
+  List<String> metadata=Lists.newArrayList();
+  for (  Entry<String,String> entry : userMetadata.entries()) {
+    metadata.add(String.format("%s:%s",entry.getKey().toLowerCase(),entry.getValue()));
+  }
+  ((GeneratedHttpRequest)request).replaceQueryParam("metadata",metadata.toArray());
+}

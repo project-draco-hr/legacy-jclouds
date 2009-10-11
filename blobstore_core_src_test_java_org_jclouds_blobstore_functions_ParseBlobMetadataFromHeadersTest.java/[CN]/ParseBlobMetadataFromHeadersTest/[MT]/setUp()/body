@@ -1,4 +1,7 @@
 {
   parser=new ParseSystemAndUserMetadataFromHeaders<BlobMetadata>(new DateService(),"prefix",blobMetadataProvider);
-  parser.setContext(new HttpRequest("GET",URI.create("http://localhost/key")),new Object[]{});
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
+  replay(request);
+  parser.setContext(request);
 }

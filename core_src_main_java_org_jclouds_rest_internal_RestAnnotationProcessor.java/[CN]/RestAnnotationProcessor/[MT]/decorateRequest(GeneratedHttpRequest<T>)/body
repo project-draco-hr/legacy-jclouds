@@ -1,0 +1,30 @@
+{
+  org.jclouds.rest.MapBinder mapBinder=getMapEntityBinderOrNull(request.getJavaMethod(),request.getArgs());
+  Map<String,String> mapParams=buildPostParams(request.getJavaMethod(),request.getArgs());
+  if (mapBinder != null) {
+    mapBinder.bindToRequest(request,mapParams);
+    return;
+  }
+  for (  Entry<Integer,Set<Annotation>> entry : Maps.filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
+    public boolean apply(    Set<Annotation> input){
+      return input.size() >= 1;
+    }
+  }
+).entrySet()) {
+    BinderParam entityAnnotation=(BinderParam)entry.getValue().iterator().next();
+    Binder binder=injector.getInstance(entityAnnotation.value());
+    Object input=request.getArgs()[entry.getKey()];
+    if (input.getClass().isArray()) {
+      Object[] entityArray=(Object[])input;
+      input=entityArray.length > 0 ? entityArray[0] : null;
+    }
+    Object oldEntity=request.getEntity();
+    binder.bindToRequest(request,input);
+    if (oldEntity != null && !oldEntity.equals(request.getEntity())) {
+      throw new IllegalStateException(String.format("binder %s replaced the previous entity on request: %s",binder,request));
+    }
+  }
+  if (request.getMethod().equals("PUT") && request.getEntity() == null) {
+    request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singletonList(0 + ""));
+  }
+}

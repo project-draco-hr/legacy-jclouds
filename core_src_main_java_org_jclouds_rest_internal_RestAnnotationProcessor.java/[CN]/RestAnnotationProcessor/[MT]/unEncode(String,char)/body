@@ -1,0 +1,13 @@
+{
+  for (  char c : skipEncode) {
+    String toSkip=Character.toString(c);
+    try {
+      String encodedValueToSkip=URLEncoder.encode(toSkip,"UTF-8");
+      value=value.replaceAll(encodedValueToSkip,toSkip);
+    }
+ catch (    UnsupportedEncodingException e) {
+      throw new RuntimeException("jclouds only supports UTF-8",e);
+    }
+  }
+  return value;
+}

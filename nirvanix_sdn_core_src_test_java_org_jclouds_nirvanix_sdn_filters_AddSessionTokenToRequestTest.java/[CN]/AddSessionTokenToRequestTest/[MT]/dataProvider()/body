@@ -1,3 +1,7 @@
 {
-  return new Object[][]{{new HttpRequest(HttpMethod.GET,URI.create("https://host:443"))},{new HttpRequest(HttpMethod.GET,URI.create("https://host/path"))},{new HttpRequest(HttpMethod.GET,URI.create("https://host/?query"))}};
+  RestAnnotationProcessor<TestService> factory=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<TestService>>(){
+  }
+));
+  Method method=TestService.class.getMethod("foo",URI.class);
+  return new Object[][]{{factory.createRequest(method,new Object[]{URI.create("https://host:443")})},{factory.createRequest(method,new Object[]{URI.create("https://host/path")})},{factory.createRequest(method,new Object[]{URI.create("https://host/?query")})}};
 }

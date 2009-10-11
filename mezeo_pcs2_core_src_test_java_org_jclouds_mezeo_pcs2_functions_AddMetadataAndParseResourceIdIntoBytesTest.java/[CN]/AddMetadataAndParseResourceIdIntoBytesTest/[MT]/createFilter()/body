@@ -1,0 +1,18 @@
+{
+  Injector injector=Guice.createInjector(new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule(),new AbstractModule(){
+    protected void configure(){
+      RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+  }
+);
+  factory=injector.getInstance(com.google.inject.Key.get(new TypeLiteral<RestAnnotationProcessor<TestService>>(){
+  }
+));
+  method=TestService.class.getMethod("foo",String.class,PCSFile.class,URI.class);
+}

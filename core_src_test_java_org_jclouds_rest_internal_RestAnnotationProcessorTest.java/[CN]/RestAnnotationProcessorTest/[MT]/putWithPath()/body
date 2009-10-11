@@ -1,0 +1,9 @@
+{
+  RestAnnotationProcessor<TestEntity> processor=factory(TestEntity.class);
+  Method method=TestEntity.class.getMethod("putWithPath",String.class,String.class);
+  GeneratedHttpRequest<TestEntity> request=new GeneratedHttpRequest<TestEntity>("GET",URI.create("http://localhost"),processor,TestEntity.class,method,"rabble","test");
+  processor.decorateRequest(request);
+  assertEquals(request.getEntity(),"test");
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("test".getBytes().length + ""));
+}

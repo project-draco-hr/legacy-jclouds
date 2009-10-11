@@ -3,7 +3,9 @@
   String signature=request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION);
   String date=request.getFirstHeaderOrNull(HttpHeaders.DATE);
   int iterations=1;
-  while (filter.filter(request).getFirstHeaderOrNull(HttpHeaders.DATE).equals(date)) {
+  while (request.getFirstHeaderOrNull(HttpHeaders.DATE).equals(date)) {
+    date=request.getFirstHeaderOrNull(HttpHeaders.DATE);
+    filter.filter(request);
     iterations++;
     assertEquals(signature,request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION));
   }

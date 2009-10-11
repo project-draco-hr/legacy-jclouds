@@ -1,0 +1,12 @@
+{
+  Map<Integer,Set<Annotation>> map=indexWithOnlyOneAnnotation(method,"@Endpoint",methodToindexOfParamToEndpointAnnotations);
+  if (map.size() == 1 && args.length > 0) {
+    Endpoint annotation=(Endpoint)map.values().iterator().next().iterator().next();
+    int index=map.keySet().iterator().next();
+    checkState(annotation.value() == Endpoint.NONE.class,String.format("@Endpoint annotation at index %d on method %s should not have a value() except Endpoint.NONE ",index,method));
+    Object arg=checkNotNull(args[index],String.format("argument at index %d on method %s",index,method));
+    checkArgument(arg instanceof URI,String.format("argument at index %d must be a URI for method %s",index,method));
+    return (URI)arg;
+  }
+  return null;
+}

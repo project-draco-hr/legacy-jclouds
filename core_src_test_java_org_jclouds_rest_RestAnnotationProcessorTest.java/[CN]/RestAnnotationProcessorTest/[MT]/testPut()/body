@@ -1,9 +1,0 @@
-{
-  Method method=TestEntity.class.getMethod("put",String.class);
-  HttpRequest request=new HttpRequest(HttpMethod.PUT,URI.create("http://localhost:8080"));
-  factory(TestEntity.class).decorateRequest(method,new Object[]{"test"},request);
-  assertEquals(request.getEntity(),"test");
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("test".getBytes().length + ""));
-  assertEquals(factory(TestEntity.class).createResponseParser(method,request,null).getClass(),ReturnVoidIf2xx.class);
-}

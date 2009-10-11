@@ -1,11 +1,11 @@
 {
   Method method=CloudServersConnection.class.getMethod("listImages",listOptionsVarargsClass);
-  HttpRequest httpMethod=processor.createRequest(method,new Object[]{withDetails().changesSince(now).maxResults(1).startAt(2)});
+  GeneratedHttpRequest<CloudServersConnection> httpMethod=processor.createRequest(method,new Object[]{withDetails().changesSince(now).maxResults(1).startAt(2)});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
   assertEquals(httpMethod.getEndpoint().getPath(),"/images/detail");
   assertEquals(httpMethod.getEndpoint().getQuery(),"format=json" + "&limit=1&changes-since=" + now.getMillis() / 1000 + "&offset=2");
   assertEquals(httpMethod.getMethod(),HttpMethod.GET);
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,httpMethod,null).getClass(),ParseImageListFromJsonResponse.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseImageListFromJsonResponse.class);
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
 }
