@@ -3,7 +3,7 @@
   String destinationContainer=getContainerName();
   try {
     addToContainerAndValidate(containerName,sourceKey);
-    Multimap<String,String> metadata=HashMultimap.create();
+    Map<String,String> metadata=Maps.newHashMap();
     metadata.put("adrian","cole");
     context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,overrideMetadataWith(metadata)).get(10,TimeUnit.SECONDS);
     validateContent(destinationContainer,destinationKey);

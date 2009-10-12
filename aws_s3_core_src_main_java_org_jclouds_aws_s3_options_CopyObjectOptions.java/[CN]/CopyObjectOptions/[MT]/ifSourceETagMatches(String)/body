@@ -1,0 +1,6 @@
+{
+  checkState(getIfNoneMatch() == null,"ifETagDoesntMatch() is not compatible with ifETagMatches()");
+  checkState(getIfModifiedSince() == null,"ifModifiedSince() is not compatible with ifETagMatches()");
+  replaceHeader("x-amz-copy-source-if-match",String.format("\"%1$s\"",checkNotNull(eTag,"eTag")));
+  return this;
+}

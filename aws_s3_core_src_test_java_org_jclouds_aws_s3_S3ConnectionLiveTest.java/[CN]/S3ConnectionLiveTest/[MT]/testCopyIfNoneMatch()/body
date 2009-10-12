@@ -2,8 +2,8 @@
   String containerName=getContainerName();
   String destinationContainer=getContainerName();
   try {
-    addToContainerAndValidate(containerName,sourceKey);
-    context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagDoesntMatch(badETag)).get(10,TimeUnit.SECONDS);
+    String goodETag=addToContainerAndValidate(containerName,sourceKey);
+    context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagDoesntMatch("asfasdf")).get(10,TimeUnit.SECONDS);
     validateContent(destinationContainer,destinationKey);
     try {
       context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagDoesntMatch(goodETag)).get(10,TimeUnit.SECONDS);

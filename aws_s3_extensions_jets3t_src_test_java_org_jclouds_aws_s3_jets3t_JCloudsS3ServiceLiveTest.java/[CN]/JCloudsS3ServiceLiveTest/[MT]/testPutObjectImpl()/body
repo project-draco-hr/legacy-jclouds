@@ -32,7 +32,7 @@
     requestObject.addMetadata("x-amz-meta-" + "my-metadata-1","value-1");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
-    assertEquals(Iterables.getLast(jcObject.getMetadata().getUserMetadata().get("my-metadata-1")),"value-1");
+    assertEquals(jcObject.getMetadata().getUserMetadata().get("my-metadata-1"),"value-1");
     assertEquals(jsResultObject.getMetadata("x-amz-meta-" + "my-metadata-1"),"value-1");
     requestObject=new S3Object(objectKey);
     requestObject.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
@@ -47,7 +47,7 @@
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
     assertTrue(jsResultObject.verifyData(data.getBytes("UTF-8")));
-    assertEquals(jsResultObject.getMd5HashAsHex(),HttpUtils.toHexString(jcObject.getMetadata().getETag()));
+    assertEquals(jsResultObject.getETag(),jcObject.getMetadata().getETag().replaceAll("\"",""));
   }
   finally {
     returnContainer(bucketName);

@@ -7,10 +7,10 @@
       if (!realContents.containsKey(key))       throw new KeyNotFoundException(bucketName,key);
       B object=realContents.get(key);
       if (options.getIfMatch() != null) {
-        if (!Arrays.equals(object.getMetadata().getETag(),HttpUtils.fromHexString(options.getIfMatch().replaceAll("\"",""))))         throwResponseException(412);
+        if (object.getMetadata().getETag().equals(options.getIfMatch()))         throwResponseException(412);
       }
       if (options.getIfNoneMatch() != null) {
-        if (Arrays.equals(object.getMetadata().getETag(),HttpUtils.fromHexString(options.getIfNoneMatch().replaceAll("\"",""))))         throwResponseException(304);
+        if (object.getMetadata().getETag().equals(options.getIfNoneMatch()))         throwResponseException(304);
       }
       if (options.getIfModifiedSince() != null) {
         DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());

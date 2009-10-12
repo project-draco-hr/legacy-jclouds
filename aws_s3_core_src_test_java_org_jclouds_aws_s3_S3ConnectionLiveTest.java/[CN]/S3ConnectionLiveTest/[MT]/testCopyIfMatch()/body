@@ -2,11 +2,11 @@
   String containerName=getContainerName();
   String destinationContainer=getContainerName();
   try {
-    addToContainerAndValidate(containerName,sourceKey);
+    String goodETag=addToContainerAndValidate(containerName,sourceKey);
     context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagMatches(goodETag)).get(10,TimeUnit.SECONDS);
     validateContent(destinationContainer,destinationKey);
     try {
-      context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagMatches(badETag)).get(10,TimeUnit.SECONDS);
+      context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,ifSourceETagMatches("setsds")).get(10,TimeUnit.SECONDS);
     }
  catch (    ExecutionException e) {
       HttpResponseException ex=(HttpResponseException)e.getCause();

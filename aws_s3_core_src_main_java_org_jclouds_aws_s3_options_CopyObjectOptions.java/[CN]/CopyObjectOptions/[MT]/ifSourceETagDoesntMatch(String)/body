@@ -1,0 +1,6 @@
+{
+  checkState(getIfMatch() == null,"ifETagMatches() is not compatible with ifETagDoesntMatch()");
+  Preconditions.checkState(getIfUnmodifiedSince() == null,"ifUnmodifiedSince() is not compatible with ifETagDoesntMatch()");
+  replaceHeader("x-amz-copy-source-if-none-match",String.format("\"%1$s\"",checkNotNull(eTag,"ifETagDoesntMatch")));
+  return this;
+}

@@ -2,11 +2,11 @@
   String containerName=getContainerName();
   try {
     String key="apples";
-    addObjectAndValidateContent(containerName,key);
+    String goodETag=addObjectAndValidateContent(containerName,key);
     context.getBlobStore().getBlob(containerName,key,ifETagMatches(goodETag)).get(30,TimeUnit.SECONDS);
     validateContent(containerName,key);
     try {
-      context.getBlobStore().getBlob(containerName,key,ifETagMatches(badETag)).get(30,TimeUnit.SECONDS);
+      context.getBlobStore().getBlob(containerName,key,ifETagMatches("powerfrisbee")).get(30,TimeUnit.SECONDS);
       validateContent(containerName,key);
     }
  catch (    ExecutionException e) {

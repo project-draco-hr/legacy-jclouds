@@ -1,0 +1,13 @@
+{
+  checkState(request.getArgs() != null,"args should be initialized at this point");
+  Map<String,String> map=null;
+  String key=null;
+  for (  Object arg : request.getArgs()) {
+    if (arg instanceof Map)     map=(Map<String,String>)arg;
+ else     if (arg instanceof String)     key=arg.toString();
+  }
+  checkState(map != null,"No Map found in args, improper method declarations");
+  checkState(key != null,"No String found in args, improper method declarations");
+  map.put(key,returnIf200.apply(from).trim());
+  return v;
+}

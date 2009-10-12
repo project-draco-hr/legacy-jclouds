@@ -16,8 +16,8 @@
     destinationObject=new S3Object(destinationObjectKey);
     copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,false);
     jcDestinationObject=context.getApi().getObject(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
-    assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName).iterator()),sourceMetadataValue);
-    assertEquals(copyResult.get("ETag"),HttpUtils.toHexString(jcDestinationObject.getMetadata().getETag()));
+    assertEquals(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName),sourceMetadataValue);
+    assertEquals(copyResult.get("ETag"),jcDestinationObject.getMetadata().getETag());
     org.jclouds.aws.s3.domain.AccessControlList jcACL=context.getApi().getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcACL.getGrants().size(),1);
     assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
@@ -25,7 +25,7 @@
     destinationObject.addMetadata("x-amz-meta-" + metadataName,destinationMetadataValue);
     copyResult=service.copyObject(bucketName,sourceObjectKey,bucketName,destinationObject,true);
     jcDestinationObject=context.getApi().getObject(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
-    assertEquals(Iterators.getLast(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName).iterator()),destinationMetadataValue);
+    assertEquals(jcDestinationObject.getMetadata().getUserMetadata().get(metadataName),destinationMetadataValue);
     jcACL=context.getApi().getObjectACL(bucketName,destinationObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcACL.getGrants().size(),1);
     assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));

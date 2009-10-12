@@ -1,8 +1,8 @@
 {
-  CopyObjectOptions options=ifSourceModifiedSince(now).ifSourceETagDoesntMatch(testBytes).overrideMetadataWith(goodMeta);
+  CopyObjectOptions options=ifSourceModifiedSince(now).ifSourceETagDoesntMatch(etag).overrideMetadataWith(goodMeta);
   options.setMetadataPrefix("x-amz-meta-");
   Multimap<String,String> headers=options.buildRequestHeaders();
   assertEquals(headers.get("x-amz-copy-source-if-modified-since").iterator().next(),new DateService().rfc822DateFormat(now));
-  assertEquals(headers.get("x-amz-copy-source-if-none-match").iterator().next(),"\"" + HttpUtils.toHexString(testBytes) + "\"");
+  assertEquals(headers.get("x-amz-copy-source-if-none-match").iterator().next(),"\"" + etag + "\"");
   for (  String value : goodMeta.values())   assertTrue(headers.containsValue(value));
 }

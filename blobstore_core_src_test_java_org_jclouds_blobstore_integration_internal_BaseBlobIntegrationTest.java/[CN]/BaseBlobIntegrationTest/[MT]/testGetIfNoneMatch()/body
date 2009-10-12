@@ -2,8 +2,8 @@
   String containerName=getContainerName();
   try {
     String key="apples";
-    addObjectAndValidateContent(containerName,key);
-    context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch(badETag)).get(30,TimeUnit.SECONDS);
+    String goodETag=addObjectAndValidateContent(containerName,key);
+    context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch("powerfrisbee")).get(30,TimeUnit.SECONDS);
     validateContent(containerName,key);
     try {
       context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch(goodETag)).get(30,TimeUnit.SECONDS);

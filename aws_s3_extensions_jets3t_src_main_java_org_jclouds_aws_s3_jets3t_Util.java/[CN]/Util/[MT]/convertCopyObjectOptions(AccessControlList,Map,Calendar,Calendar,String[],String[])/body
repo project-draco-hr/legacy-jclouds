@@ -10,13 +10,13 @@
     options.ifSourceUnmodifiedSince(new DateTime(ifUnmodifiedSince));
   }
   if (ifMatchTags != null && ifMatchTags.length > 0) {
-    options.ifSourceETagMatches(Utils.encodeString(ifMatchTags[0]));
+    options.ifSourceETagMatches(ifMatchTags[0]);
   }
   if (ifNoneMatchTags != null && ifNoneMatchTags.length > 0) {
-    options.ifSourceETagDoesntMatch(Utils.encodeString(ifNoneMatchTags[0]));
+    options.ifSourceETagDoesntMatch(ifNoneMatchTags[0]);
   }
   if (destinationMetadata != null) {
-    Multimap<String,String> newMetadata=HashMultimap.create();
+    Map<String,String> newMetadata=Maps.newHashMap();
     for (    Object maybeUserMetadataObj : destinationMetadata.entrySet()) {
       String name=((Entry<String,String>)maybeUserMetadataObj).getKey();
       String value=((Entry<String,String>)maybeUserMetadataObj).getValue();
