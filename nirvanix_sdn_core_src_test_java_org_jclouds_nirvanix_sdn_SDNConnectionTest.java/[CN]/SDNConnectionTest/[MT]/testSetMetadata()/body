@@ -2,11 +2,13 @@
   Method method=SDNConnection.class.getMethod("setMetadata",String.class,Multimap.class);
   GeneratedHttpRequest<SDNConnection> httpMethod=processor.createRequest(method,new Object[]{"adriansmovies/sushi.avi",ImmutableMultimap.of("Chef","Kawasaki")});
   assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/Metadata/SetMetadata.ashx");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/ws/Metadata/SetMetadata.ashx");
   assertEquals(httpMethod.getEndpoint().getQuery(),"output=json&path=adriansmovies/sushi.avi&metadata=chef:Kawasaki");
   assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
   assertEquals(httpMethod.getHeaders().size(),1);
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(0 + ""));
   assertEquals(httpMethod.getEntity(),null);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),AddSessionTokenToRequest.class);
 }

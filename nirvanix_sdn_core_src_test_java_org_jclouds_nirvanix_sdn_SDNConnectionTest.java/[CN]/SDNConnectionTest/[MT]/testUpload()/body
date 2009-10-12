@@ -11,4 +11,6 @@
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("multipart/form-data; boundary=" + BindBlobToMultipartFormTest.BOUNDRY));
   assertEquals(Utils.toStringAndClose((InputStream)httpMethod.getEntity()),BindBlobToMultipartFormTest.EXPECTS);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),AddSessionTokenToRequest.class);
 }
