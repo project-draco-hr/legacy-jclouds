@@ -1,0 +1,10 @@
+{
+  Method method=VCloudXConnection.class.getMethod("getOrganization");
+  HttpRequest httpMethod=processor.createRequest(method);
+  assertEquals(httpMethod.getRequestLine(),"GET http://org HTTP/1.1");
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getFirstHeaderOrNull(HttpHeaders.ACCEPT),MediaType.APPLICATION_XML);
+  assertEquals(RestAnnotationProcessor.getXMLTransformerOrNull(method),OrgLinksHandler.class);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),SetVCloudTokenCookie.class);
+}

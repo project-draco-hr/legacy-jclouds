@@ -1,0 +1,20 @@
+{
+  context=new CloudContextBuilder<VCloudXLogin>(new TypeLiteral<VCloudXLogin>(){
+  }
+,new Properties()){
+    public void addContextModule(    List<Module> modules){
+      modules.add(new VCloudXLoginContextModule());
+    }
+    @Override protected void addConnectionModule(    List<Module> modules){
+      properties.setProperty(VCloudXConstants.PROPERTY_VCLOUDX_ENDPOINT,checkNotNull(endpoint,"endpoint").toString());
+      properties.setProperty(PROPERTY_VCLOUDX_USER,checkNotNull(account,"user"));
+      properties.setProperty(PROPERTY_VCLOUDX_KEY,checkNotNull(key,"key"));
+      properties.setProperty(PROPERTY_VCLOUDX_SESSIONINTERVAL,"4");
+      modules.add(new RestVCloudXAuthenticationModule());
+    }
+    @Override public CloudContextBuilder<VCloudXLogin> withEndpoint(    URI endpoint){
+      return this;
+    }
+  }
+.withModules(new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService())).buildContext();
+}

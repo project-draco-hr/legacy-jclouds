@@ -1,0 +1,23 @@
+{
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(VCloudX.class).toInstance(URI.create("http://localhost:8080"));
+      try {
+        bind(BasicAuthentication.class).toInstance(new BasicAuthentication("user","pass"));
+      }
+ catch (      UnsupportedEncodingException e) {
+        throw new RuntimeException(e);
+      }
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+  }
+,new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<VCloudXLogin>>(){
+  }
+));
+}

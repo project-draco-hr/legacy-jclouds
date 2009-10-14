@@ -1,0 +1,10 @@
+{
+  Method method=VCloudXLogin.class.getMethod("login");
+  HttpRequest httpMethod=processor.createRequest(method);
+  assertEquals(httpMethod.getRequestLine(),"POST http://localhost:8080/login HTTP/1.1");
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getFirstHeaderOrNull(HttpHeaders.ACCEPT),MediaType.APPLICATION_XML);
+  assertEquals(RestAnnotationProcessor.getParserOrThrowException(method),ParseLoginResponseFromHeaders.class);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),BasicAuthentication.class);
+}
