@@ -1,9 +1,10 @@
 {
-  injector=Guice.createInjector(new AbstractModule(){
+  injector=Guice.createInjector(new RestS3ConnectionModule(),new ParserModule(),new AbstractModule(){
     protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
-      bind(DateService.class);
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_SESSIONINTERVAL)).to("2");
+      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_ENDPOINT)).to("https://s3.amazonaws.com");
     }
   }
 );

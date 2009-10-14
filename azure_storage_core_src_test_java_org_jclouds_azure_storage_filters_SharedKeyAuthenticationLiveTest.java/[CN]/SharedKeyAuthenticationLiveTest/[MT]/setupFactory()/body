@@ -7,9 +7,10 @@
       bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create(uri));
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to(account);
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(key);
+      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_SESSIONINTERVAL)).to(1l);
     }
   }
-,new RestModule(),new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+,new RestAzureStorageConnectionModule(),new RestModule(),new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
   RestClientFactory factory=injector.getInstance(RestClientFactory.class);
   client=factory.create(IntegrationTestClient.class);
 }
