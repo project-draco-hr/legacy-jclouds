@@ -1,0 +1,23 @@
+{
+  final Matcher matcher=actionPattern.matcher(request.getRequestURI());
+  boolean matchFound=matcher.find();
+  if (matchFound) {
+    String objectId=matcher.group(1);
+    String action=matcher.group(2);
+    Map<String,String> options=Maps.newHashMap();
+    if (matcher.groupCount() == 3) {
+      String optionsGroup=matcher.group(3);
+      for (      String entry : optionsGroup.split(";")) {
+        if (entry.indexOf('=') >= 0) {
+          String[] keyValue=entry.split("=");
+          options.put(keyValue[0],keyValue[1]);
+        }
+      }
+    }
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.getWriter().println(objectId + "->" + action+ ":"+ options);
+  }
+ else {
+    response.sendError(500,"no content");
+  }
+}
