@@ -4,7 +4,7 @@
   UploadInfo uploadInfo=connection.getStorageNode(containerName,size);
   assertNotNull(uploadInfo.getHost());
   assertNotNull(uploadInfo.getToken());
-  connection.upload(uploadInfo.getHost(),uploadInfo.getToken(),containerName,new Blob<BlobMetadata>("test.txt","value")).get(30,TimeUnit.SECONDS);
+  connection.upload(uploadInfo.getHost(),uploadInfo.getToken(),containerName,new BlobImpl<BlobMetadata>("test.txt","value")).get(30,TimeUnit.SECONDS);
   String metadataS=connection.getMetadata(containerName + "/test.txt").get(30,TimeUnit.SECONDS);
   System.err.println(metadataS);
   String content=connection.getFile(containerName + "/test.txt").get(30,TimeUnit.SECONDS);

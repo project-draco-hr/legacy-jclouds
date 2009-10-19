@@ -1,5 +1,11 @@
 {
-  return Sets.newTreeSet(Iterables.transform(getContainerToBlobs().keySet(),new Function<String,C>(){
+  SortedSet<C> returnVal=Sets.newTreeSet(new Comparator<C>(){
+    public int compare(    C o1,    C o2){
+      return (o1 == o2) ? 0 : o1.getName().compareTo(o2.getName());
+    }
+  }
+);
+  Iterables.addAll(returnVal,Iterables.transform(getContainerToBlobs().keySet(),new Function<String,C>(){
     public C apply(    String name){
       C cmd=containerMetaProvider.get();
       cmd.setName(name);
@@ -7,4 +13,5 @@
     }
   }
 ));
+  return returnVal;
 }

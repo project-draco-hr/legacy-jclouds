@@ -4,9 +4,15 @@
 .getType();
   try {
     SortedSet<CloudFilesMetadata> list=gson.fromJson(new InputStreamReader(stream,"UTF-8"),listType);
-    return Sets.newTreeSet(Iterables.transform(list,new Function<CloudFilesMetadata,BlobMetadata>(){
+    SortedSet<BlobMetadata> returnVal=Sets.newTreeSet(new Comparator<BlobMetadata>(){
+      public int compare(      BlobMetadata o1,      BlobMetadata o2){
+        return (o1 == o2) ? 0 : o1.getName().compareTo(o2.getName());
+      }
+    }
+);
+    Iterables.addAll(returnVal,Iterables.transform(list,new Function<CloudFilesMetadata,BlobMetadata>(){
       public BlobMetadata apply(      CloudFilesMetadata from){
-        BlobMetadata metadata=new BlobMetadata(from.name);
+        BlobMetadata metadata=new BlobMetadataImpl(from.name);
         metadata.setSize(from.bytes);
         metadata.setLastModified(from.last_modified);
         metadata.setContentType(from.content_type);
@@ -16,6 +22,7 @@
       }
     }
 ));
+    return returnVal;
   }
  catch (  UnsupportedEncodingException e) {
     throw new RuntimeException("jclouds requires UTF-8 encoding",e);

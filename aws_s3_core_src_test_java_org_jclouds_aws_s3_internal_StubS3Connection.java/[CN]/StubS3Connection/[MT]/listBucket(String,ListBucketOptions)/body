@@ -15,7 +15,7 @@
         final String finalMarker=marker;
         ObjectMetadata lastMarkerMetadata=Iterables.find(contents,new Predicate<ObjectMetadata>(){
           public boolean apply(          ObjectMetadata metadata){
-            return metadata.getKey().equals(finalMarker);
+            return metadata.getName().equals(finalMarker);
           }
         }
 );
@@ -26,7 +26,7 @@
       if (prefix != null) {
         contents=Sets.newTreeSet(Iterables.filter(contents,new Predicate<ObjectMetadata>(){
           public boolean apply(          ObjectMetadata o){
-            return (o != null && o.getKey().startsWith(prefix));
+            return (o != null && o.getName().startsWith(prefix));
           }
         }
 ));
@@ -48,7 +48,7 @@
         maxResults=maxKeys;
         if (!contentsSlice.contains(contents.last())) {
           truncated=true;
-          marker=contentsSlice.last().getKey();
+          marker=contentsSlice.last().getName();
         }
  else {
           marker=null;

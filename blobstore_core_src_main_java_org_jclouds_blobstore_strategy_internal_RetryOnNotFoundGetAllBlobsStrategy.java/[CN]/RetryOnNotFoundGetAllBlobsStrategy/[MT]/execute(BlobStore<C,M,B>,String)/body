@@ -1,8 +1,13 @@
 {
-  SortedSet<B> objects=Sets.<B>newTreeSet();
+  SortedSet<B> objects=Sets.<B>newTreeSet(new Comparator<B>(){
+    public int compare(    B o1,    B o2){
+      return (o1 == o2) ? 0 : o1.getName().compareTo(o2.getName());
+    }
+  }
+);
   Map<String,Future<B>> futureObjects=Maps.newHashMap();
   for (  M md : getAllBlobMetadata.execute(connection,container)) {
-    futureObjects.put(md.getKey(),connection.getBlob(container,md.getKey()));
+    futureObjects.put(md.getName(),connection.getBlob(container,md.getName()));
   }
   for (  Entry<String,Future<B>> futureObjectEntry : futureObjects.entrySet()) {
     try {
