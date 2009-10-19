@@ -1,0 +1,15 @@
+{
+  ParseURIFromListOrLocationHeaderIf20x function=new ParseURIFromListOrLocationHeaderIf20x();
+  HttpResponse response=createMock(HttpResponse.class);
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  function.setContext(request);
+  expect(request.getEndpoint()).andReturn(URI.create("http://new:8080/fd")).atLeastOnce();
+  expect(response.getStatusCode()).andReturn(200).atLeastOnce();
+  expect(response.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE)).andReturn("text/plain");
+  expect(response.getFirstHeaderOrNull(HttpHeaders.LOCATION)).andReturn("path");
+  replay(request);
+  replay(response);
+  assertEquals(function.apply(response),URI.create("http://new:8080/path"));
+  verify(request);
+  verify(response);
+}

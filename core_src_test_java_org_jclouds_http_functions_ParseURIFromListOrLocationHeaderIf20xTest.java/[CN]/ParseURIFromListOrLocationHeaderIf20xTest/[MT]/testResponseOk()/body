@@ -1,0 +1,10 @@
+{
+  Function<HttpResponse,URI> function=new ParseURIFromListOrLocationHeaderIf20x();
+  HttpResponse response=createMock(HttpResponse.class);
+  expect(response.getStatusCode()).andReturn(200).atLeastOnce();
+  expect(response.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE)).andReturn("text/uri-list");
+  expect(response.getContent()).andReturn(IOUtils.toInputStream("http://locahost")).atLeastOnce();
+  replay(response);
+  assertEquals(function.apply(response),URI.create("http://locahost"));
+  verify(response);
+}
