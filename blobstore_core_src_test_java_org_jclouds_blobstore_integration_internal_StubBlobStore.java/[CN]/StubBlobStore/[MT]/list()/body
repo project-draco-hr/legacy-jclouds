@@ -1,0 +1,16 @@
+{
+  return new FutureBase<SortedSet<? extends ResourceMetadata>>(){
+    public TreeSet<ResourceMetadata> get() throws InterruptedException, ExecutionException {
+      return Sets.newTreeSet(Iterables.transform(getContainerToBlobs().keySet(),new Function<String,ResourceMetadata>(){
+        public ResourceMetadata apply(        String name){
+          MutableResourceMetadata cmd=create();
+          cmd.setName(name);
+          cmd.setType(ResourceType.CONTAINER);
+          return cmd;
+        }
+      }
+));
+    }
+  }
+;
+}

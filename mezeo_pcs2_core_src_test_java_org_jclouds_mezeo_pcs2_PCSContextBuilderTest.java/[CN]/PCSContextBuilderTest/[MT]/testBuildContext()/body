@@ -1,8 +1,6 @@
 {
-  PCSContext context=new PCSContextBuilder(URI.create("https://localhost/pcsblob"),"id","secret").withModule(new StubPCSBlobStoreModule()).buildContext();
-  assertEquals(context.getClass(),PCSContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubPCSConnection.class);
-  assertEquals(context.getBlobStore().getClass(),StubBlobStore.class);
+  RestContext<PCSClient> context=newBuilder().buildContext();
+  assertEquals(context.getClass(),RestContextImpl.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("https://localhost/pcsblob"));
 }

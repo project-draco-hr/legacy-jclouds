@@ -1,0 +1,12 @@
+{
+  checkState(data != null,"data");
+  if (data instanceof InputStream) {
+    MD5InputStreamResult result=generateMD5Result.apply((InputStream)data);
+    getProperties().setContentMD5(result.md5);
+    setContentLength(result.length);
+    setData(result.data);
+  }
+ else {
+    getProperties().setContentMD5(generateMD5.apply(data));
+  }
+}

@@ -1,8 +1,8 @@
 {
-  Blob<?> object=(Blob<?>)entity;
+  Blob object=(Blob)entity;
   request.setEntity(checkNotNull(object.getData(),"object.getContent()"));
   request.getHeaders().put(HttpHeaders.CONTENT_TYPE,checkNotNull(object.getMetadata().getContentType(),"object.metadata.contentType()"));
-  request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getMetadata().getSize() + "");
+  request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getContentLength() + "");
   if (object.getMetadata().getContentMD5() != null) {
     request.getHeaders().put("Content-MD5",HttpUtils.toBase64String(object.getMetadata().getContentMD5()));
   }

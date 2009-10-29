@@ -2,10 +2,10 @@
   String bucketName=getContainerName();
   try {
     Map<String,V> map=createMap(context,bucketName);
-    assertEventuallyKeySize(map,0);
+    assertConsistencyAwareKeySize(map,0);
     putString(map,"one","two");
-    assertEventuallyKeySize(map,1);
-    assertEventuallyKeySetEquals(map,ImmutableSet.of("one"));
+    assertConsistencyAwareKeySize(map,1);
+    assertConsistencyAwareKeySetEquals(map,ImmutableSet.of("one"));
   }
   finally {
     returnContainer(bucketName);

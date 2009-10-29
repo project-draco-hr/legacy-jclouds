@@ -1,34 +1,33 @@
 {
   if (qName.equals("ID")) {
-    currentOwner=new CanonicalUser(currentText.toString());
+    currentOwner=new CanonicalUser(currentText.toString().trim());
   }
  else   if (qName.equals("DisplayName")) {
-    currentOwner.setDisplayName(currentText.toString());
+    currentOwner.setDisplayName(currentText.toString().trim());
   }
  else   if (qName.equals("Key")) {
-    currentObjectMetadata=new ObjectMetadata(currentText.toString());
+    currentKey=currentText.toString().trim();
   }
  else   if (qName.equals("LastModified")) {
-    currentObjectMetadata.setLastModified(dateParser.iso8601DateParse(currentText.toString()));
+    currentLastModified=dateParser.iso8601DateParse(currentText.toString().trim());
   }
  else   if (qName.equals("ETag")) {
-    currentObjectMetadata.setETag(currentText.toString());
-    currentObjectMetadata.setContentMD5(HttpUtils.fromHexString(currentObjectMetadata.getETag().replaceAll("\"","")));
+    currentETag=currentText.toString().trim();
+    currentMD5=HttpUtils.fromHexString(currentETag.replaceAll("\"",""));
   }
  else   if (qName.equals("Size")) {
-    currentObjectMetadata.setSize(Long.parseLong(currentText.toString()));
+    currentSize=new Long(currentText.toString().trim());
   }
  else   if (qName.equals("Owner")) {
-    currentObjectMetadata.setOwner(currentOwner);
   }
  else   if (qName.equals("StorageClass")) {
-    currentObjectMetadata.setStorageClass(currentText.toString());
+    currentStorageClass=ObjectMetadata.StorageClass.valueOf(currentText.toString().trim());
   }
  else   if (qName.equals("Contents")) {
-    contents.add(currentObjectMetadata);
+    contents.add(new BucketListObjectMetadata(currentKey,currentLastModified,currentETag,currentMD5,currentSize,currentOwner,currentStorageClass));
   }
  else   if (qName.equals("Name")) {
-    this.bucketName=currentText.toString();
+    this.bucketName=currentText.toString().trim();
   }
  else   if (qName.equals("Prefix")) {
     String prefix=currentText.toString().trim();
@@ -39,13 +38,13 @@
     if (!currentText.toString().equals(""))     this.delimiter=currentText.toString().trim();
   }
  else   if (qName.equals("Marker")) {
-    if (!currentText.toString().equals(""))     this.marker=currentText.toString();
+    if (!currentText.toString().equals(""))     this.marker=currentText.toString().trim();
   }
  else   if (qName.equals("MaxKeys")) {
-    this.maxResults=Integer.parseInt(currentText.toString());
+    this.maxResults=Integer.parseInt(currentText.toString().trim());
   }
  else   if (qName.equals("IsTruncated")) {
-    this.isTruncated=Boolean.parseBoolean(currentText.toString());
+    this.isTruncated=Boolean.parseBoolean(currentText.toString().trim());
   }
   currentText=new StringBuilder();
 }

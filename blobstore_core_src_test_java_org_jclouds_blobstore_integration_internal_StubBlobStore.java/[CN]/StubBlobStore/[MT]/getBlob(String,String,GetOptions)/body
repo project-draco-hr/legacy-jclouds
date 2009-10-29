@@ -1,36 +1,36 @@
 {
-  final GetOptions options=(nullableOptions == null) ? new GetOptions() : nullableOptions;
-  return new FutureBase<B>(){
-    public B get() throws InterruptedException, ExecutionException {
+  final GetOptions options=(optionsList.length == 0) ? new GetOptions() : optionsList[0];
+  return new FutureBase<Blob>(){
+    public Blob get() throws InterruptedException, ExecutionException {
       if (!getContainerToBlobs().containsKey(bucketName))       throw new ContainerNotFoundException(bucketName);
-      Map<String,B> realContents=getContainerToBlobs().get(bucketName);
+      Map<String,Blob> realContents=getContainerToBlobs().get(bucketName);
       if (!realContents.containsKey(key))       throw new KeyNotFoundException(bucketName,key);
-      B object=realContents.get(key);
+      Blob object=realContents.get(key);
       if (options.getIfMatch() != null) {
-        if (object.getMetadata().getETag().equals(options.getIfMatch()))         throwResponseException(412);
+        if (!object.getMetadata().getETag().equals(options.getIfMatch()))         throwResponseException(412);
       }
       if (options.getIfNoneMatch() != null) {
         if (object.getMetadata().getETag().equals(options.getIfNoneMatch()))         throwResponseException(304);
       }
       if (options.getIfModifiedSince() != null) {
-        DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());
+        DateTime modifiedSince=options.getIfModifiedSince();
         if (object.getMetadata().getLastModified().isBefore(modifiedSince))         throw new ExecutionException(new RuntimeException(String.format("%1$s is before %2$s",object.getMetadata().getLastModified(),modifiedSince)));
       }
       if (options.getIfUnmodifiedSince() != null) {
-        DateTime unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
+        DateTime unmodifiedSince=options.getIfUnmodifiedSince();
         if (object.getMetadata().getLastModified().isAfter(unmodifiedSince))         throw new ExecutionException(new RuntimeException(String.format("%1$s is after %2$s",object.getMetadata().getLastModified(),unmodifiedSince)));
       }
-      B returnVal=copyBlob(object);
-      if (options.getRange() != null) {
+      Blob returnVal=copyBlob(object);
+      if (options.getRanges() != null && options.getRanges().size() > 0) {
         byte[] data=(byte[])returnVal.getData();
         ByteArrayOutputStream out=new ByteArrayOutputStream();
-        for (        String s : options.getRange().replaceAll("bytes=","").split(",")) {
+        for (        String s : options.getRanges()) {
           if (s.startsWith("-")) {
-            int length=Integer.parseInt(s.replaceAll("\\-",""));
+            int length=Integer.parseInt(s);
             out.write(data,data.length - length,length);
           }
  else           if (s.endsWith("-")) {
-            int offset=Integer.parseInt(s.replaceAll("\\-",""));
+            int offset=Integer.parseInt(s);
             out.write(data,offset,data.length - offset);
           }
  else           if (s.contains("-")) {
@@ -46,7 +46,7 @@
         }
         returnVal.setData(out.toByteArray());
         returnVal.setContentLength(out.size());
-        returnVal.getMetadata().setSize(data.length);
+        returnVal.getMetadata().setSize(new Long(data.length));
       }
       returnVal.setData(new ByteArrayInputStream((byte[])returnVal.getData()));
       return returnVal;

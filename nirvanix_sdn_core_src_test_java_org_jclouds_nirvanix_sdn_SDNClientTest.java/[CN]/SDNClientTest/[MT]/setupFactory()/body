@@ -1,0 +1,23 @@
+{
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://localhost:8080"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPKEY)).to("appKey");
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPNAME)).to("appname");
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_USERNAME)).to("username");
+    }
+    @SuppressWarnings("unused") @SessionToken @Provides String authTokenProvider(){
+      return "session-token";
+    }
+  }
+,new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
+  processor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<SDNClient>>(){
+  }
+));
+}

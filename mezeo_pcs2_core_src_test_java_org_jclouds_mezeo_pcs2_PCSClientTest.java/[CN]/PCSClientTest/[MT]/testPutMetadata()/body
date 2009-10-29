@@ -1,0 +1,12 @@
+{
+  Method method=PCSClient.class.getMethod("putMetadataItem",URI.class,String.class,String.class);
+  GeneratedHttpRequest<PCSClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/contents/file"),"pow","bar"});
+  assertEquals(httpMethod.getRequestLine(),"PUT http://localhost/contents/file/metadata/pow HTTP/1.1");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals("bar",httpMethod.getEntity());
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
+}

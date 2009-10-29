@@ -1,0 +1,75 @@
+{
+  if (qName.equals("contents") && attributes.getIndex("count") != -1) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      rootUrl=URI.create(attributes.getValue(index).replace("/contents",""));
+    }
+    inContents=true;
+    return;
+  }
+ else   if (qName.equals("container")) {
+    if (inContents)     inContainer=true;
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentUrl=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("parent")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentParent=URI.create(attributes.getValue(index));
+      if (!inContents)       rootParent=currentParent;
+    }
+  }
+ else   if (qName.equals("file")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentUrl=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("content")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentContent=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("contents")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentContents=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("permissions")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentPermissions=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("tags")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentTags=URI.create(attributes.getValue(index));
+      if (!inContents)       rootTags=currentTags;
+    }
+  }
+ else   if (qName.equals("thumbnail")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentThumbnail=URI.create(attributes.getValue(index));
+    }
+  }
+ else   if (qName.equals("metadata")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      currentMetadata=URI.create(attributes.getValue(index));
+      if (!inContents)       rootMetadata=currentMetadata;
+    }
+  }
+ else   if (qName.equals("metadata-item")) {
+    int index=attributes.getIndex("xlink:href");
+    if (index != -1) {
+      String key=attributes.getValue(index).replaceAll(".*/metadata/","");
+      metadataItems.put(key.toLowerCase(),URI.create(attributes.getValue(index)));
+    }
+  }
+}

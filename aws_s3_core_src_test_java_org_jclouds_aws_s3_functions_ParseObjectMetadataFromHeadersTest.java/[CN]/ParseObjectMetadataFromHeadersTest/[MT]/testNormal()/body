@@ -1,0 +1,9 @@
+{
+  HttpResponse http=new HttpResponse();
+  http.getHeaders().put(HttpHeaders.CACHE_CONTROL,"cacheControl");
+  http.getHeaders().put("Content-Disposition","contentDisposition");
+  http.getHeaders().put(HttpHeaders.CONTENT_ENCODING,"encoding");
+  ParseObjectMetadataFromHeaders parser=new ParseObjectMetadataFromHeaders(blobParser(http,"\"abc\""),blobToObjectMetadata);
+  MutableObjectMetadata response=parser.apply(http);
+  assertEquals(response,expects);
+}

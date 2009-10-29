@@ -6,13 +6,9 @@
 ).to(new TypeLiteral<LinkedBlockingQueue<HttpCommandRendezvous<?>>>(){
   }
 ).in(Scopes.SINGLETON);
-  bind(NioHttpCommandExecutionHandler.ConsumingNHttpEntityFactory.class).toProvider(FactoryProvider.newFactory(NioHttpCommandExecutionHandler.ConsumingNHttpEntityFactory.class,InjectableBufferingNHttpEntity.class));
+  bind(NioHttpCommandExecutionHandler.ConsumingNHttpEntityFactory.class).to(ConsumingNHttpEntityFactoryImpl.class).in(Scopes.SINGLETON);
   bind(NHttpRequestExecutionHandler.class).to(NioHttpCommandExecutionHandler.class).in(Scopes.SINGLETON);
   bind(ConnectionReuseStrategy.class).to(DefaultConnectionReuseStrategy.class).in(Scopes.SINGLETON);
   bind(ByteBufferAllocator.class).to(HeapByteBufferAllocator.class);
-  bind(NioHttpCommandConnectionPool.Factory.class).toProvider(FactoryProvider.newFactory(new TypeLiteral<NioHttpCommandConnectionPool.Factory>(){
-  }
-,new TypeLiteral<NioHttpCommandConnectionPool>(){
-  }
-));
+  bind(NioHttpCommandConnectionPool.Factory.class).to(Factory.class).in(Scopes.SINGLETON);
 }

@@ -1,0 +1,18 @@
+{
+  ListBucketOptions httpOptions=new ListBucketOptions();
+  if (optionsList.length != 0) {
+    if (!optionsList[0].getRecursive()) {
+      httpOptions.delimiter("/");
+    }
+    if (optionsList[0].getPath() != null) {
+      httpOptions.withPrefix(optionsList[0].getPath());
+    }
+    if (optionsList[0].getMarker() != null) {
+      httpOptions.afterMarker(optionsList[0].getMarker());
+    }
+    if (optionsList[0].getMaxResults() != null) {
+      httpOptions.maxResults(optionsList[0].getMaxResults());
+    }
+  }
+  return httpOptions;
+}

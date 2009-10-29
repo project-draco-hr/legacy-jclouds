@@ -1,17 +1,17 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,B> map=createMap(context,bucketName);
-    Map<String,B> newMap=new HashMap<String,B>();
+    Map<String,Blob> map=createMap(context,bucketName);
+    Map<String,Blob> newMap=new HashMap<String,Blob>();
     for (    String key : fiveInputs.keySet()) {
-      B object=context.newBlob(key);
+      Blob object=newBlob(key);
       object.setData(fiveInputs.get(key));
-      object.getMetadata().setSize(fiveBytes.get(key).length);
+      object.setContentLength(new Long(fiveBytes.get(key).length));
       newMap.put(key,object);
     }
     map.putAll(newMap);
-    assertEventuallyMapSize(map,5);
-    assertEventuallyKeySetEquals(map,new TreeSet<String>(fiveInputs.keySet()));
+    assertConsistencyAwareMapSize(map,5);
+    assertConsistencyAwareKeySetEquals(map,new TreeSet<String>(fiveInputs.keySet()));
     fourLeftRemovingOne(map);
   }
   finally {

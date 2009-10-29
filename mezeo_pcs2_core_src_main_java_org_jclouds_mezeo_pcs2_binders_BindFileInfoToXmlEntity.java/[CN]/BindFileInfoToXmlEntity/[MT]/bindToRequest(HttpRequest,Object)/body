@@ -1,7 +1,6 @@
 {
-  Blob<?> blob=(Blob<?>)toBind;
-  String bareKey=BlobStoreUtils.parseKey(new Key("trash",blob.getName())).getKey();
-  String file=String.format("<file><name>%s</name><mime_type>%s</mime_type><public>false</public></file>",bareKey,blob.getMetadata().getContentType());
+  PCSFile blob=(PCSFile)toBind;
+  String file=String.format("<file><name>%s</name><mime_type>%s</mime_type><public>false</public></file>",new File(blob.getMetadata().getName()).getName(),blob.getMetadata().getMimeType());
   request.setEntity(file);
   request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singletonList(file.getBytes().length + ""));
   request.getHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,Collections.singletonList("application/vnd.csp.file-info+xml"));

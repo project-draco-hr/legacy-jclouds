@@ -1,0 +1,36 @@
+{
+  final CopyObjectOptions options=(nullableOptions.length == 0) ? new CopyObjectOptions() : nullableOptions[0];
+  return new FutureBase<ObjectMetadata>(){
+    public ObjectMetadata get() throws InterruptedException, ExecutionException {
+      ConcurrentMap<String,Blob> source=blobStore.getContainerToBlobs().get(sourceBucket);
+      ConcurrentMap<String,Blob> dest=blobStore.getContainerToBlobs().get(destinationBucket);
+      if (source.containsKey(sourceObject)) {
+        Blob object=source.get(sourceObject);
+        if (options.getIfMatch() != null) {
+          if (!object.getMetadata().getETag().equals(options.getIfMatch()))           blobStore.throwResponseException(412);
+        }
+        if (options.getIfNoneMatch() != null) {
+          if (object.getMetadata().getETag().equals(options.getIfNoneMatch()))           blobStore.throwResponseException(412);
+        }
+        if (options.getIfModifiedSince() != null) {
+          DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());
+          if (modifiedSince.isAfter(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
+        }
+        if (options.getIfUnmodifiedSince() != null) {
+          DateTime unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
+          if (unmodifiedSince.isBefore(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
+        }
+        Blob sourceS3=source.get(sourceObject);
+        MutableBlobMetadata newMd=blobStore.copy(sourceS3.getMetadata(),destinationObject);
+        if (options.getAcl() != null)         keyToAcl.put(destinationBucket + "/" + destinationObject,options.getAcl());
+        newMd.setLastModified(new DateTime());
+        Blob newBlob=blobProvider.create(newMd);
+        newBlob.setData(sourceS3.getData());
+        dest.put(destinationObject,newBlob);
+        return blob2ObjectMetadata.apply(blobStore.copy(newMd));
+      }
+      throw new KeyNotFoundException(sourceBucket,sourceObject);
+    }
+  }
+;
+}

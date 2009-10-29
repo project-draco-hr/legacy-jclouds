@@ -1,0 +1,17 @@
+{
+  SortedSet<Blob> objects=Sets.newTreeSet();
+  Map<String,Future<? extends Blob>> futureObjects=Maps.newHashMap();
+  for (  BlobMetadata md : getAllBlobMetadata.execute(container,options)) {
+    futureObjects.put(md.getName(),connection.getBlob(container,md.getName()));
+  }
+  for (  Entry<String,Future<? extends Blob>> futureObjectEntry : futureObjects.entrySet()) {
+    try {
+      ifNotFoundRetryOtherwiseAddToSet(container,futureObjectEntry.getKey(),futureObjectEntry.getValue(),objects);
+    }
+ catch (    Exception e) {
+      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      throw new BlobRuntimeException(String.format("Error getting value from blob %1$s",container),e);
+    }
+  }
+  return objects;
+}

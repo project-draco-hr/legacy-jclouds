@@ -1,0 +1,13 @@
+{
+  Method method=CloudServersClient.class.getMethod("rebootServer",int.class,RebootType.class);
+  GeneratedHttpRequest<CloudServersClient> httpMethod=processor.createRequest(method,new Object[]{2,RebootType.HARD});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/action");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals("{\"reboot\":{\"type\":\"HARD\"}}",httpMethod.getEntity());
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnFalseOn404.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+}

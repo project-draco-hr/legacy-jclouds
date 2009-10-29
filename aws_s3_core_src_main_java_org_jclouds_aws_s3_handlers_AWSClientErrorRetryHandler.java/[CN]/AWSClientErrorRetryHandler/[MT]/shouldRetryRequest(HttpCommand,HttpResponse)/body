@@ -1,7 +1,7 @@
 {
   if (command.getFailureCount() > retryCountLimit)   return false;
   if (response.getStatusCode() == 400 || response.getStatusCode() == 409) {
-    byte[] content=Utils.closeConnectionButKeepContentStream(response);
+    byte[] content=Utils.closeClientButKeepContentStream(response);
     command.incrementFailureCount();
     try {
       AWSError error=utils.parseAWSErrorFromContent(command,response,new String(content));

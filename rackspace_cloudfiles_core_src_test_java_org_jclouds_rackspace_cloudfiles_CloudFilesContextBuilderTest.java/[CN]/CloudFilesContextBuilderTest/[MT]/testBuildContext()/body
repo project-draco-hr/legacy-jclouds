@@ -1,8 +1,7 @@
 {
-  CloudFilesContext context=new CloudFilesContextBuilder("id","secret").withModules(new StubCloudFilesBlobStoreModule(),new StubRackspaceAuthenticationModule()).buildContext();
-  assertEquals(context.getClass(),CloudFilesContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubCloudFilesConnection.class);
-  assertEquals(context.getBlobStore().getClass(),StubBlobStore.class);
+  RestContext<CloudFilesClient> context=newBuilder().withModules(new StubCloudFilesClientModule(),new StubRackspaceAuthenticationModule()).buildContext();
+  assertEquals(context.getClass(),RestContextImpl.class);
+  assertEquals(context.getApi().getClass(),StubCloudFilesClient.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("http://localhost/rackspacestub/cloudfiles"));
 }

@@ -1,8 +1,8 @@
 {
-  S3Context context=new S3ContextBuilder("id","secret").withModules(new StubS3BlobStoreModule()).buildContext();
-  assertEquals(context.getClass(),S3ContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubS3Connection.class);
-  assertEquals(context.getBlobStore().getClass(),StubBlobStore.class);
+  RestContext<S3Client> context=new S3ContextBuilder(new S3PropertiesBuilder("id","secret").build()).withModules(new S3StubClientModule()).buildContext();
+  assertEquals(context.getClass(),RestContextImpl.class);
+  assertEquals(context.getApi().getClass(),StubS3Client.class);
+  assertEquals(context.getApi().newS3Object().getClass(),S3ObjectImpl.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("https://localhost/s3stub"));
 }

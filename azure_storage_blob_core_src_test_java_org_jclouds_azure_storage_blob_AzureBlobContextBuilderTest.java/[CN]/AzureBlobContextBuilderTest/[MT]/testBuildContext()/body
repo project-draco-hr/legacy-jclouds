@@ -1,8 +1,7 @@
 {
-  AzureBlobContext context=new AzureBlobContextBuilder("id",HttpUtils.toBase64String("secret".getBytes())).withModules(new StubAzureBlobStoreModule()).buildContext();
-  assertEquals(context.getClass(),AzureBlobContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubAzureBlobConnection.class);
-  assertEquals(context.getBlobStore().getClass(),StubBlobStore.class);
+  RestContext<AzureBlobClient> context=new AzureBlobContextBuilder(new AzureBlobPropertiesBuilder("id","secret").build()).withModules(new AzureBlobStubClientModule()).buildContext();
+  assertEquals(context.getClass(),RestContextImpl.class);
+  assertEquals(context.getApi().getClass(),StubAzureBlobClient.class);
   assertEquals(context.getAccount(),"id");
-  assertEquals(context.getEndPoint(),URI.create("https://id.blob.core.windows.net"));
+  assertEquals(context.getEndPoint(),URI.create("https://localhost/azurestub"));
 }

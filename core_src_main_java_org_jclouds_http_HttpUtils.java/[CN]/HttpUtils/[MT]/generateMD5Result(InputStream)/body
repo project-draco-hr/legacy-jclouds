@@ -16,8 +16,11 @@
     }
  while (numRead != -1);
   }
-  finally {
-    out.close();
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    IOUtils.closeQuietly(out);
     IOUtils.closeQuietly(toEncode);
   }
   eTag.doFinal(resBuf,0);

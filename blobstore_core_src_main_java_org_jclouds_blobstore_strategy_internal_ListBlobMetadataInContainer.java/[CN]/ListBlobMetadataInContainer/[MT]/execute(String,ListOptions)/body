@@ -1,0 +1,14 @@
+{
+  try {
+    BoundedSortedSet<? extends ResourceMetadata> resources=connection.list(container,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    SortedSet<BlobMetadata> blobM=Sets.newTreeSet();
+    for (    ResourceMetadata from : resources) {
+      if (from.getType() == ResourceType.BLOB)       blobM.add((BlobMetadata)from);
+    }
+    return blobM;
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException("Error getting resource metadata in container: " + container,e);
+  }
+}

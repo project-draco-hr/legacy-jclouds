@@ -1,8 +1,8 @@
 {
-  Collection<InputStream> values=new LinkedList<InputStream>();
-  Set<B> objects=this.getAllBlobs.execute(connection,containerName);
-  for (  B object : objects) {
-    values.add((InputStream)object.getData());
+  return Collections2.transform(getAllBlobs.execute(containerName,options),new Function<Blob,InputStream>(){
+    public InputStream apply(    Blob from){
+      return (InputStream)from.getData();
+    }
   }
-  return values;
+);
 }

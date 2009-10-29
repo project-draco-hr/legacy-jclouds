@@ -1,6 +1,7 @@
 {
-  Injector injector=Guice.createInjector(new RestS3ConnectionModule(),new ParserModule(),new AbstractModule(){
+  Injector injector=Guice.createInjector(new S3RestClientModule(),new ParserModule(),new AbstractModule(){
     @Override protected void configure(){
+      bind(ExecutorService.class).toInstance(Executors.newCachedThreadPool());
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_SESSIONINTERVAL)).to("2");

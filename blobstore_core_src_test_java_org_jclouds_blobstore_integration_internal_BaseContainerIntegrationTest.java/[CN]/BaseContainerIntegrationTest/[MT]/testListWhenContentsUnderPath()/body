@@ -1,0 +1,11 @@
+{
+  String containerName=getContainerName();
+  try {
+    add5BlobsUnderPathAnd5UnderRootToContainer(containerName);
+    context.getBlobStore().clearContainer(containerName).get(60,TimeUnit.SECONDS);
+    assertConsistencyAwareContainerSize(containerName,0);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

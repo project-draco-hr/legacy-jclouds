@@ -1,0 +1,8 @@
+{
+  checkNotNull(path,"path");
+  String container=BlobStoreUtils.parseContainerFromPath(path);
+  String prefix=BlobStoreUtils.parsePrefixFromPath(path);
+  ListOptions options=new ListOptions();
+  if (prefix != null)   options.underPath(prefix);
+  return blobMapFactory.create(container,options);
+}

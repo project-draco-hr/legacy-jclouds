@@ -7,9 +7,11 @@
     String metadataName="metadata-name";
     String sourceMetadataValue="souce-metadata-value";
     String destinationMetadataValue="destination-metadata-value";
-    org.jclouds.aws.s3.domain.S3Object sourceObject=new org.jclouds.aws.s3.domain.S3Object(sourceObjectKey,data);
-    sourceObject.getMetadata().getUserMetadata().put("x-amz-meta-" + metadataName,sourceMetadataValue);
-    addBlobToContainer(bucketName,sourceObject);
+    Blob blob=context.getBlobStore().newBlob();
+    blob.getMetadata().setName(sourceObjectKey);
+    blob.setData(data);
+    blob.getMetadata().getUserMetadata().put(metadataName,sourceMetadataValue);
+    addBlobToContainer(bucketName,blob);
     S3Object destinationObject;
     Map copyResult;
     org.jclouds.aws.s3.domain.S3Object jcDestinationObject;

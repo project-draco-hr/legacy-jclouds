@@ -1,12 +1,11 @@
 {
-  return new FutureBase<B>(){
-    public B get() throws InterruptedException, ExecutionException {
+  return new FutureBase<Blob>(){
+    public Blob get() throws InterruptedException, ExecutionException {
       if (!getContainerToBlobs().containsKey(bucketName))       throw new ContainerNotFoundException(bucketName);
-      Map<String,B> realContents=getContainerToBlobs().get(bucketName);
+      Map<String,Blob> realContents=getContainerToBlobs().get(bucketName);
       if (!realContents.containsKey(key))       throw new KeyNotFoundException(bucketName,key);
-      B object=realContents.get(key);
-      B returnVal=blobProvider.get();
-      returnVal.setMetadata(copy(object.getMetadata()));
+      Blob object=realContents.get(key);
+      Blob returnVal=blobProvider.create(copy(object.getMetadata()));
       returnVal.setData(new ByteArrayInputStream((byte[])object.getData()));
       return returnVal;
     }

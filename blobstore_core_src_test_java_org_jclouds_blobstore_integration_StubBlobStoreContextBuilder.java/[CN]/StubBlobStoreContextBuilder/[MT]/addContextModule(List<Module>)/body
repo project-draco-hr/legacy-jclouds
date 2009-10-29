@@ -1,9 +1,12 @@
 {
+  modules.add(new BlobStoreObjectModule());
+  modules.add(new BlobStoreMapModule());
   modules.add(new AbstractModule(){
     @Override protected void configure(){
+      bind(BlobStore.class).to(StubBlobStore.class).asEagerSingleton();
     }
-    @SuppressWarnings("unused") @Provides @Singleton BlobStoreContext<BlobStore<ContainerMetadata,BlobMetadata,Blob<BlobMetadata>>,ContainerMetadata,BlobMetadata,Blob<BlobMetadata>> provideContext(    BlobMap.Factory<BlobMetadata,Blob<BlobMetadata>> blobMapFactory,    InputStreamMap.Factory<BlobMetadata> inputStreamMapFactory,    Closer closer,    Provider<Blob<BlobMetadata>> blobProvider,    BlobStore<ContainerMetadata,BlobMetadata,Blob<BlobMetadata>> api){
-      return new BlobStoreContextImpl<BlobStore<ContainerMetadata,BlobMetadata,Blob<BlobMetadata>>,ContainerMetadata,BlobMetadata,Blob<BlobMetadata>>(blobMapFactory,inputStreamMapFactory,closer,blobProvider,api,api,URI.create("http://localhost/blobstub"),"foo");
+    @SuppressWarnings("unused") @Provides @Singleton BlobStoreContext<BlobStore> provideContext(    BlobMap.Factory blobMapFactory,    InputStreamMap.Factory inputStreamMapFactory,    Closer closer,    BlobStore api){
+      return new BlobStoreContextImpl<BlobStore>(blobMapFactory,inputStreamMapFactory,closer,api,api,URI.create("http://localhost/blobstub"),"foo");
     }
   }
 );

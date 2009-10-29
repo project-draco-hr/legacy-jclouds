@@ -1,7 +1,7 @@
 {
   try {
     PutObjectOptions options=Util.convertPutObjectOptions(jsObject.getAcl());
-    org.jclouds.aws.s3.domain.S3Object jcObject=Util.convertObject(jsObject);
+    org.jclouds.aws.s3.domain.S3Object jcObject=Util.convertObject(jsObject,connection.newS3Object());
     String eTag=connection.putObject(bucketName,jcObject,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     jsObject.setETag(eTag);
     return jsObject;

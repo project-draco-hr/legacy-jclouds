@@ -1,0 +1,13 @@
+{
+  ParseSystemAndUserMetadataFromHeaders parser=createMock(ParseSystemAndUserMetadataFromHeaders.class);
+  MutableBlobMetadata md=new MutableBlobMetadataImpl();
+  md.setContentType("type");
+  md.setETag(etag);
+  md.setName("key");
+  md.setLastModified(now);
+  md.setSize(1025);
+  md.setUserMetadata(userMetadata);
+  expect(parser.apply(response)).andReturn(md);
+  replay(parser);
+  return parser;
+}

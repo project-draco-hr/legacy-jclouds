@@ -4,8 +4,10 @@
   }
   tmpDirectory=basedir + File.separator + "target"+ File.separator+ "testFiles"+ File.separator+ getClass().getSimpleName();
   new File(tmpDirectory).mkdirs();
-  fiveFiles=ImmutableMap.of("one",new File(tmpDirectory,"apple"),"two",new File(tmpDirectory,"bear"),"three",new File(tmpDirectory,"candy"),"four",new File(tmpDirectory,"dogma"),"five",new File(tmpDirectory,"emma"));
-  for (  File file : fiveFiles.values()) {
-    IOUtils.write(file.getName(),new FileOutputStream(file));
+  fiveFiles=Maps.newHashMap();
+  for (  Entry<String,String> entry : fiveStrings.entrySet()) {
+    File file=new File(tmpDirectory,entry.getKey());
+    IOUtils.write(entry.getValue().getBytes(),new FileOutputStream(file));
+    fiveFiles.put(entry.getKey(),file);
   }
 }

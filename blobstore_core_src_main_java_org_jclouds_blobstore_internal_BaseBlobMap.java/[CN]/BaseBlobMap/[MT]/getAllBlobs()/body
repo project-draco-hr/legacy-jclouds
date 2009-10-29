@@ -1,3 +1,7 @@
 {
-  return getAllBlobs.execute(connection,containerName);
+  SortedSet<? extends Blob> returnVal=getAllBlobs.execute(containerName,options);
+  if (options != null) {
+    for (    Blob from : returnVal)     stripPrefix(from);
+  }
+  return returnVal;
 }

@@ -1,11 +1,11 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,B> map=createMap(context,bucketName);
+    Map<String,Blob> map=createMap(context,bucketName);
     putString(map,"one","apple");
-    B object=context.newBlob("one");
+    Blob object=newBlob("one");
     object.setData("apple");
-    assertEventuallyContainsValue(map,object);
+    assertConsistencyAwareContainsValue(map,object);
   }
   finally {
     returnContainer(bucketName);

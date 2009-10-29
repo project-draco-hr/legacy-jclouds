@@ -1,0 +1,11 @@
+{
+  Method method=S3Client.class.getMethod("bucketExists",String.class);
+  GeneratedHttpRequest<S3Client> httpMethod=processor.createRequest(method,"bucket");
+  assertRequestLineEquals(httpMethod,"HEAD http://bucket.stub:8080/?max-keys=0 HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Host: bucket.stub\n");
+  assertEntityEquals(httpMethod,null);
+  assertResponseParserClassEquals(method,httpMethod,ReturnTrueIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnFalseOn404.class);
+  checkFilters(httpMethod);
+}

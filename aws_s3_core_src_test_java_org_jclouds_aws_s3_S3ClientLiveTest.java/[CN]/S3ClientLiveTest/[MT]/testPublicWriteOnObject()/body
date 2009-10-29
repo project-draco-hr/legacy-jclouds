@@ -1,0 +1,34 @@
+{
+  final String publicReadWriteObjectKey="public-read-write-acl";
+  final String containerName=getContainerName();
+  try {
+    S3Object object=context.getApi().newS3Object();
+    object.getMetadata().setKey(publicReadWriteObjectKey);
+    object.setData("");
+    context.getApi().putObject(containerName,object,new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE)).get(10,TimeUnit.SECONDS);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          AccessControlList acl=context.getApi().getObjectACL(containerName,publicReadWriteObjectKey).get(10,TimeUnit.SECONDS);
+          assertEquals(acl.getGrants().size(),3);
+          assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),2);
+          assertTrue(acl.getOwner() != null);
+          String ownerId=acl.getOwner().getId();
+          assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ_ACP));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.WRITE_ACP));
+          assertFalse(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.FULL_CONTROL));
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

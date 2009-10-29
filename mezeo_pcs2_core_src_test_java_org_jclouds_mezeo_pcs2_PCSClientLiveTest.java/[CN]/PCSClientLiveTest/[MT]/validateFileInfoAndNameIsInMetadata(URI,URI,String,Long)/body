@@ -1,0 +1,9 @@
+{
+  FileInfoWithMetadata response;
+  connection.putMetadataItem(objectURI,"name",name).get(10,TimeUnit.SECONDS);
+  response=connection.getFileInfo(objectURI);
+  validateFileInfo(response,container,name,size,"text/plain");
+  assertEquals(response.getMetadataItems().get("name"),URI.create(objectURI.toASCIIString() + "/metadata/name"));
+  validateMetadataItemNameEquals(objectURI,name);
+  return response;
+}

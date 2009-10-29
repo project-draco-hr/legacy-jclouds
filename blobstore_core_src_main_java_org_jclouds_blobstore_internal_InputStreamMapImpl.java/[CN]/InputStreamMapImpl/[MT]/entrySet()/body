@@ -1,7 +1,7 @@
 {
   Set<Map.Entry<String,InputStream>> entrySet=new HashSet<Map.Entry<String,InputStream>>();
-  for (  B object : this.getAllBlobs.execute(connection,containerName)) {
-    entrySet.add(new Entry(object.getName(),(InputStream)object.getData()));
+  for (  Blob object : this.getAllBlobs.execute(containerName,options)) {
+    entrySet.add(new Entry(pathStripper.apply(object.getMetadata().getName()),(InputStream)object.getData()));
   }
   return entrySet;
 }

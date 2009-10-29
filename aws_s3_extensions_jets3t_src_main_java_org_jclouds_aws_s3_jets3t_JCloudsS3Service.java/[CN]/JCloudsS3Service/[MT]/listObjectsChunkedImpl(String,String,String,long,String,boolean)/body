@@ -4,7 +4,7 @@
     List<String> commonPrefixes=new ArrayList<String>();
     ListBucketResponse jcBucket=null;
     do {
-      ListBucketOptions options=Util.convertListObjectOptions(prefix,priorLastKey,delimiter,maxListingLength);
+      ListBucketOptions options=Util.convertListObjectOptions(prefix,priorLastKey,delimiter,(int)maxListingLength);
       jcBucket=connection.listBucket(bucketName,options).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
       jsObjects.addAll(Arrays.asList(Util.convertObjectHeads(jcBucket)));
       commonPrefixes.addAll(jcBucket.getCommonPrefixes());

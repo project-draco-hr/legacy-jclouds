@@ -1,0 +1,15 @@
+{
+  S3Object jsObject=new S3Object(jcObjectMD.getKey());
+  if (jcObjectMD.getOwner() != null) {
+    jsObject.setOwner(new S3Owner(jcObjectMD.getOwner().getId(),jcObjectMD.getOwner().getDisplayName()));
+  }
+  jsObject.setContentLength(jcObjectMD.getSize());
+  jsObject.setContentDisposition(jcObjectMD.getContentDisposition());
+  jsObject.setContentEncoding(jcObjectMD.getContentEncoding());
+  jsObject.setLastModifiedDate(jcObjectMD.getLastModified().toDate());
+  jsObject.setETag(jcObjectMD.getETag());
+  jsObject.setMd5Hash(jcObjectMD.getContentMD5());
+  jsObject.addAllMetadata(jcObjectMD.getUserMetadata());
+  jsObject.addMetadata(S3Object.METADATA_HEADER_DATE,jcObjectMD.getLastModified().toDate());
+  return jsObject;
+}

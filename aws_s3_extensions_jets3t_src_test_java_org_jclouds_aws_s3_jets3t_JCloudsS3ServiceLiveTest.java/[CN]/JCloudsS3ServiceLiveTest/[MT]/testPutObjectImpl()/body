@@ -7,7 +7,7 @@
     requestObject=new S3Object(objectKey);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
-    assertEquals(jcObject.getMetadata().getSize(),0);
+    assertEquals(jcObject.getMetadata().getSize(),new Long(0));
     assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
@@ -15,7 +15,7 @@
     requestObject=new S3Object("?n???d?-object");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,requestObject.getKey()).get(10,TimeUnit.SECONDS);
-    assertEquals(jcObject.getMetadata().getSize(),0);
+    assertEquals(jcObject.getMetadata().getSize(),new Long(0));
     assertEquals(jcObject.getMetadata().getContentType(),MediaType.APPLICATION_OCTET_STREAM);
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
@@ -24,7 +24,7 @@
     requestObject=new S3Object(objectKey,data);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
-    assertEquals(jcObject.getMetadata().getSize(),data.getBytes("UTF-8").length);
+    assertEquals(jcObject.getMetadata().getSize(),new Long(data.getBytes("UTF-8").length));
     assertTrue(jcObject.getMetadata().getContentType().startsWith("text/plain"));
     assertEquals(jsResultObject.getContentLength(),data.getBytes("UTF-8").length);
     assertTrue(jsResultObject.getContentType().startsWith("text/plain"));

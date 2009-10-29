@@ -15,7 +15,7 @@
     nextMarker=(nextMarker.equals("")) ? null : nextMarker;
   }
  else   if (qName.equals("Container")) {
-    containerMetadata.add(new ContainerMetadata(currentUrl,currentLastModified,currentETag));
+    containerMetadata.add(new ListableContainerPropertiesImpl(currentUrl,currentLastModified,currentETag));
     currentUrl=null;
     currentLastModified=null;
     currentETag=null;
@@ -27,7 +27,7 @@
     currentLastModified=dateParser.rfc822DateParse(currentText.toString().trim());
   }
  else   if (qName.equals("Etag")) {
-    currentETag=HttpUtils.fromHexString(currentText.toString().trim());
+    currentETag=currentText.toString().trim();
   }
   currentText=new StringBuilder();
 }

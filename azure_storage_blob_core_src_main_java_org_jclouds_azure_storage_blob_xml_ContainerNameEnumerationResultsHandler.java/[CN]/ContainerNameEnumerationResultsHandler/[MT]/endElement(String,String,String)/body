@@ -19,7 +19,7 @@
     nextMarker=(nextMarker.equals("")) ? null : nextMarker;
   }
  else   if (qName.equals("Blob")) {
-    BlobMetadata md=new BlobMetadata(currentName,currentUrl,currentLastModified,currentETag,currentSize,currentContentType,null,currentContentEncoding,currentContentLanguage);
+    ListableBlobProperties md=new ListableBlobPropertiesImpl(currentName,currentUrl,currentLastModified,currentETag,currentSize,currentContentType,currentContentEncoding,currentContentLanguage);
     blobMetadata.add(md);
     currentName=null;
     currentUrl=null;
@@ -41,7 +41,7 @@
   }
  else   if (qName.equals("Name")) {
     if (inBlob)     currentName=currentText.toString().trim();
- else     if (inBlobPrefix)     blobPrefix=currentText.toString().trim();
+ else     if (inBlobPrefix)     blobPrefixes.add(currentText.toString().trim());
   }
  else   if (qName.equals("Size")) {
     currentSize=Long.parseLong(currentText.toString().trim());

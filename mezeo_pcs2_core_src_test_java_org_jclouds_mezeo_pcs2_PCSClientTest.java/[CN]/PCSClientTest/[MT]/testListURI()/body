@@ -1,0 +1,12 @@
+{
+  Method method=PCSClient.class.getMethod("list",URI.class);
+  GeneratedHttpRequest<PCSClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/mycontainer")});
+  assertEquals(httpMethod.getRequestLine(),"GET http://localhost/mycontainer HTTP/1.1");
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getHeaders().get("X-Cloud-Depth"),Collections.singletonList("2"));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseSax.class);
+  assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),ContainerHandler.class);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),BasicAuthentication.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+}

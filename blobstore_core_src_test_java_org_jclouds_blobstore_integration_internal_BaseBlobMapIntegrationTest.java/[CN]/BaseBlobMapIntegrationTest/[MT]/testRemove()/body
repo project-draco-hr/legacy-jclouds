@@ -1,12 +1,12 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,B> map=createMap(context,bucketName);
+    Map<String,Blob> map=createMap(context,bucketName);
     putString(map,"one","two");
-    assertEventuallyContentEquals(map,"one","two");
-    assertEventuallyRemoveEquals(map,"one",null);
-    assertEventuallyGetEquals(map,"one",null);
-    assertEventuallyKeySize(map,0);
+    assertConsistencyAwareContentEquals(map,"one","two");
+    assertConsistencyAwareRemoveEquals(map,"one",null);
+    assertConsistencyAwareGetEquals(map,"one",null);
+    assertConsistencyAwareKeySize(map,0);
   }
   finally {
     returnContainer(bucketName);

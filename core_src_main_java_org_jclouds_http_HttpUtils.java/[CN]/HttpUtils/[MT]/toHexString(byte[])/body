@@ -6,5 +6,10 @@
     hex[index++]=HEX_CHAR_TABLE[v >>> 4];
     hex[index++]=HEX_CHAR_TABLE[v & 0xF];
   }
-  return new String(hex,"ASCII");
+  try {
+    return new String(hex,"ASCII");
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
 }

@@ -1,0 +1,11 @@
+{
+  Method method=PCSClient.class.getMethod("deleteContainer",URI.class);
+  GeneratedHttpRequest<PCSClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/container/1234")});
+  assertEquals(httpMethod.getRequestLine(),"DELETE http://localhost/container/1234 HTTP/1.1");
+  assertEquals(httpMethod.getHeaders().size(),0);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
+  assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),null);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),BasicAuthentication.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnVoidOnNotFoundOr404.class);
+}

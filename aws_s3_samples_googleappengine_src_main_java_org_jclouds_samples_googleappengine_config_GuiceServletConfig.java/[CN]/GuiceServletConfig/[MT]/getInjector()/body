@@ -1,5 +1,5 @@
 {
-  return new S3ContextBuilder(accessKeyId,secretAccessKey).withModules(new GaeHttpCommandExecutorServiceModule(),new ServletModule(){
+  return new S3BlobStoreContextBuilder(new S3BlobStorePropertiesBuilder(accessKeyId,secretAccessKey).build()).withModules(new GaeHttpCommandExecutorServiceModule(),new ServletModule(){
     @Override protected void configureServlets(){
       serve("*.s3").with(GetAllBucketsController.class);
       requestInjection(this);

@@ -1,0 +1,15 @@
+{
+  addContextModule(modules);
+  addClientModuleIfNotPresent(modules);
+  addLoggingModuleIfNotPresent(modules);
+  addHttpModuleIfNeededAndNotPresent(modules);
+  ifHttpConfigureRestOtherwiseGuiceClientFactory(modules);
+  addExecutorServiceIfNotPresent(modules);
+  modules.add(new AbstractModule(){
+    @Override protected void configure(){
+      Jsr330.bindProperties(binder(),checkNotNull(properties,"properties"));
+    }
+  }
+);
+  return Guice.createInjector(modules);
+}

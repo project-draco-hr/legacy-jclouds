@@ -5,9 +5,11 @@
     String objectValue="test";
     String metadataName="metadata-name-2";
     String metadataValue="metadata-value-2";
-    org.jclouds.aws.s3.domain.S3Object s3Object=new org.jclouds.aws.s3.domain.S3Object(objectKey,objectValue);
-    s3Object.getMetadata().getUserMetadata().put("x-amz-meta-" + metadataName,metadataValue);
-    addBlobToContainer(bucketName,s3Object);
+    Blob blob=context.getBlobStore().newBlob();
+    blob.getMetadata().setName(objectKey);
+    blob.setData(objectValue);
+    blob.getMetadata().getUserMetadata().put(metadataName,metadataValue);
+    addBlobToContainer(bucketName,blob);
     S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
     assertNotNull(object.getDataInputStream());
     assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);

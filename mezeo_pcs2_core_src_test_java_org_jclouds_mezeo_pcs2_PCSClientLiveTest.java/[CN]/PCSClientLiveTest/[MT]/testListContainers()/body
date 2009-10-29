@@ -1,0 +1,17 @@
+{
+  ContainerList response=connection.list().get(10,TimeUnit.SECONDS);
+  URI rootUrl=response.getUrl();
+  String name="/";
+  validateContainerList(response,rootUrl,name);
+  long initialContainerCount=response.size();
+  assertTrue(initialContainerCount >= 0);
+  for (  String container : new String[]{containerPrefix + ".testListOwnedContainers1",containerPrefix + ".testListOwnedContainers2"}) {
+    URI containerURI=connection.createContainer(container).get(10,TimeUnit.SECONDS);
+    connection.putMetadataItem(containerURI,"name",container).get(10,TimeUnit.SECONDS);
+    response=connection.list(containerURI).get(10,TimeUnit.SECONDS);
+    validateContainerList(response,rootUrl,container);
+    assertEquals(response.getMetadataItems().get("name"),URI.create(containerURI.toASCIIString() + "/metadata/name"));
+    validateMetadataItemNameEquals(containerURI,container);
+    connection.deleteContainer(containerURI).get(10,TimeUnit.SECONDS);
+  }
+}

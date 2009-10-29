@@ -1,0 +1,21 @@
+{
+  ListOptions options=new ListOptions();
+  if (optionsList.length != 0) {
+    if (optionsList[0].getDelimiter() == null) {
+      options.recursive();
+    }
+ else     if (!optionsList[0].getDelimiter().equals("/")) {
+      throw new IllegalArgumentException("only '/' is allowed as a blobstore delimiter");
+    }
+    if (optionsList[0].getMarker() != null) {
+      options.afterMarker(optionsList[0].getMarker());
+    }
+    if (optionsList[0].getMaxResults() != null) {
+      options.maxResults(optionsList[0].getMaxResults());
+    }
+    if (optionsList[0].getPrefix() != null) {
+      options.underPath(optionsList[0].getPrefix());
+    }
+  }
+  return options;
+}

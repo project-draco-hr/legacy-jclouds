@@ -1,11 +1,12 @@
 {
-  B old=getLastValue(key);
+  Blob old=getLastValue(key);
+  String realKey=prefixer.apply(key.toString());
   try {
-    connection.removeBlob(containerName,key.toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    connection.removeBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
     Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException(String.format("Error removing object %1$s:%2$s",containerName,key),e);
+    throw new BlobRuntimeException(String.format("Error removing object %1$s:%2$s",containerName,realKey),e);
   }
   return old;
 }

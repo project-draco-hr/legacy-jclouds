@@ -1,0 +1,81 @@
+{
+  if (qName.equals("contents")) {
+    if (!inContainer)     inContents=false;
+    currentText=new StringBuilder();
+    return;
+  }
+  if (qName.equals("container") && !inContents) {
+    rootContainer=new ContainerListImpl(rootUrl,rootName,rootCreated,rootInproject,rootModified,rootOwner,rootVersion,rootShared,rootAccessed,rootBytes,containerMetadata,rootTags,rootMetadata,metadataItems,rootParent);
+  }
+ else   if (qName.equals("container") || qName.equals("file")) {
+    if (qName.equals("container")) {
+      inContainer=false;
+      containerMetadata.add(new ContainerInfoImpl(currentUrl,currentName,currentCreated,currentInproject,currentModified,currentOwner,currentVersion,currentShared,currentAccessed,currentBytes,currentContents,currentTags,currentMetadata,currentParent));
+    }
+ else {
+      containerMetadata.add(new FileInfoImpl(currentUrl,currentName,currentCreated,currentInproject,currentModified,currentOwner,currentVersion,currentShared,currentAccessed,currentPublic,currentMimeType,currentBytes,currentContent,currentParent,currentPermissions,currentTags,currentMetadata,currentThumbnail));
+    }
+    currentUrl=null;
+    currentName=null;
+    currentCreated=null;
+    currentInproject=false;
+    currentModified=null;
+    currentOwner=null;
+    currentVersion=0;
+    currentShared=false;
+    currentAccessed=null;
+    currentBytes=0;
+    currentPublic=false;
+    currentMimeType=null;
+    currentParent=null;
+    currentContents=null;
+    currentContent=null;
+    currentPermissions=null;
+    currentTags=null;
+    currentMetadata=null;
+    currentThumbnail=null;
+  }
+ else   if (qName.equals("name")) {
+    currentName=currentText.toString().trim();
+    if (!inContents)     rootName=currentName;
+  }
+ else   if (qName.equals("created")) {
+    currentCreated=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+    if (!inContents)     rootCreated=currentCreated;
+  }
+ else   if (qName.equals("inproject")) {
+    currentInproject=Boolean.parseBoolean(currentText.toString().trim());
+    if (!inContents)     rootInproject=currentInproject;
+  }
+ else   if (qName.equals("modified")) {
+    currentModified=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+    if (!inContents)     rootModified=currentModified;
+  }
+ else   if (qName.equals("owner")) {
+    currentOwner=currentText.toString().trim();
+    if (!inContents)     rootOwner=currentOwner;
+  }
+ else   if (qName.equals("version")) {
+    currentVersion=Integer.parseInt(currentText.toString().trim());
+    if (!inContents)     rootVersion=currentVersion;
+  }
+ else   if (qName.equals("shared")) {
+    currentShared=Boolean.parseBoolean(currentText.toString().trim());
+    if (!inContents)     rootShared=currentShared;
+  }
+ else   if (qName.equals("accessed")) {
+    currentAccessed=dateParser.fromSeconds(Long.parseLong(currentText.toString().trim()));
+    if (!inContents)     rootAccessed=currentAccessed;
+  }
+ else   if (qName.equals("bytes")) {
+    currentBytes=Long.parseLong(currentText.toString().trim());
+    if (!inContents)     rootBytes=currentBytes;
+  }
+ else   if (qName.equals("public")) {
+    currentPublic=Boolean.parseBoolean(currentText.toString().trim());
+  }
+ else   if (qName.equals("mime_type")) {
+    currentMimeType=currentText.toString().trim();
+  }
+  currentText=new StringBuilder();
+}

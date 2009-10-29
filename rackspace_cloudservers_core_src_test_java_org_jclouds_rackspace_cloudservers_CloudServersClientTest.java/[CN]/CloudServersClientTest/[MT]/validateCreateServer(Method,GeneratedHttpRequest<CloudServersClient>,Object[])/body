@@ -1,0 +1,12 @@
+{
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseServerFromJsonResponse.class);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertNotNull(processor.getMapEntityBinderOrNull(method,new Object[]{"",1,2,new CreateServerOptions[]{CreateServerOptions.Builder.withSharedIpGroup(1)}}));
+}

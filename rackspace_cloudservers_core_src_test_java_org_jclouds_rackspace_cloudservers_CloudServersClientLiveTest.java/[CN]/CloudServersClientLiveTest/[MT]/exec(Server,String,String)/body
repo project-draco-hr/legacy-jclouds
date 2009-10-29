@@ -1,0 +1,10 @@
+{
+  SshClient connection=sshFactory.create(new InetSocketAddress(details.getAddresses().getPublicAddresses().get(0),22),"root",pass);
+  try {
+    connection.connect();
+    return connection.exec(command);
+  }
+  finally {
+    if (connection != null)     connection.disconnect();
+  }
+}

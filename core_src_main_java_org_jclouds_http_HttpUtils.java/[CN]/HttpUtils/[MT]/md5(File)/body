@@ -3,8 +3,9 @@
   byte[] resBuf=new byte[eTag.getDigestSize()];
   byte[] buffer=new byte[1024];
   int numRead=-1;
-  InputStream i=new FileInputStream(toEncode);
+  InputStream i=null;
   try {
+    i=new FileInputStream(toEncode);
     do {
       numRead=i.read(buffer);
       if (numRead > 0) {
@@ -13,7 +14,10 @@
     }
  while (numRead != -1);
   }
-  finally {
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
     IOUtils.closeQuietly(i);
   }
   eTag.doFinal(resBuf,0);

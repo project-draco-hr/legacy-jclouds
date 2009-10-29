@@ -1,0 +1,14 @@
+{
+  assertConsistencyAware(new Runnable(){
+    public void run(){
+      Blob old=map.remove(key);
+      try {
+        assertEquals(BlobStoreUtils.getContentAsStringAndClose(old),value);
+      }
+ catch (      IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+);
+}

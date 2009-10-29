@@ -1,0 +1,15 @@
+{
+  String containerName=getContainerName();
+  try {
+    String key="hello";
+    S3Object object=context.getApi().newS3Object();
+    object.getMetadata().setKey(key);
+    object.setData(TEST_STRING);
+    context.getApi().putObject(containerName,object,withAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+    URL url=new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s",containerName,key));
+    Utils.toStringAndClose(url.openStream());
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

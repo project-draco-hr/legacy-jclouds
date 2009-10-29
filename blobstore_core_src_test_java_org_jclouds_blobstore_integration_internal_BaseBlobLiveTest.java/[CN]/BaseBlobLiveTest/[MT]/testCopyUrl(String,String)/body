@@ -7,11 +7,11 @@
   URLConnection connection=url.openConnection();
   int length=connection.getContentLength();
   InputStream input=connection.getInputStream();
-  B object=context.newBlob(key);
+  Blob object=newBlob(key);
   object.setData(input);
   object.setContentLength(length);
   object.getMetadata().setContentMD5(md5);
-  object.getMetadata().setSize(length);
+  object.getMetadata().setSize(new Long(length));
   String bucketName=getContainerName();
   try {
     context.getBlobStore().putBlob(bucketName,object).get(180,TimeUnit.SECONDS);

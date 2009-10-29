@@ -1,0 +1,7 @@
+{
+  String account=System.getProperty("jclouds.test.user");
+  String key=System.getProperty("jclouds.test.key");
+  connection=new CloudServersContextBuilder(new RackspacePropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule()).buildContext().getApi();
+  Injector injector=Guice.createInjector(new Log4JLoggingModule(),new JschSshClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+}

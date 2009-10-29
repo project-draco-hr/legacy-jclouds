@@ -1,5 +1,8 @@
 {
-  ObjectMetadata to=super.apply(from);
+  BlobMetadata base=blobMetadataParser.apply(from);
+  MutableObjectMetadata to=blobToObjectMetadata.apply(base);
+  addETagTo(from,to);
+  to.setContentMD5(HttpUtils.fromHexString(to.getETag().replaceAll("\"","")));
   to.setCacheControl(from.getFirstHeaderOrNull(HttpHeaders.CACHE_CONTROL));
   to.setContentDisposition(from.getFirstHeaderOrNull("Content-Disposition"));
   to.setContentEncoding(from.getFirstHeaderOrNull(HttpHeaders.CONTENT_ENCODING));

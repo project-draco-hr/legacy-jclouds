@@ -5,7 +5,7 @@
     for (    HttpRequestFilter filter : request.getFilters()) {
       filter.filter(request);
     }
-    logger.debug("Sending request: %s",request.getRequestLine());
+    logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
     if (request.getEntity() != null && wire.enabled())     request.setEntity(wire.output(request.getEntity()));
     HttpEntityEnclosingRequest nativeRequest=NioHttpUtils.convertToApacheRequest(request);
     if (headerLog.isDebugEnabled()) {

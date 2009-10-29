@@ -1,16 +1,16 @@
 {
   String key="hello";
-  B object=context.newBlob(key);
+  Blob object=newBlob(key);
   object.setData(TEST_STRING);
   object.getMetadata().setContentType("text/plain");
-  object.getMetadata().setSize(TEST_STRING.length());
+  object.getMetadata().setSize(new Long(TEST_STRING.length()));
   object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
   object.getMetadata().setContentMD5(HttpUtils.md5(TEST_STRING.getBytes()));
   String containerName=getContainerName();
   try {
     addBlobToContainer(containerName,object);
-    B newObject=validateContent(containerName,key);
-    M metadata=newObject.getMetadata();
+    Blob newObject=validateContent(containerName,key);
+    BlobMetadata metadata=newObject.getMetadata();
     validateMetadata(metadata);
     validateMetadata(context.getBlobStore().blobMetadata(containerName,key));
     object.getMetadata().getUserMetadata().put("Adrian","wonderpuff");

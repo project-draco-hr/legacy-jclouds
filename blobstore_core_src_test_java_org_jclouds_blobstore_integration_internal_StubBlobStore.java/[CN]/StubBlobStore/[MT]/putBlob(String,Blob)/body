@@ -1,0 +1,35 @@
+{
+  Map<String,Blob> container=getContainerToBlobs().get(bucketName);
+  if (container == null) {
+    new RuntimeException("bucketName not found: " + bucketName);
+  }
+  try {
+    MutableBlobMetadata newMd=copy(object.getMetadata());
+    newMd.setLastModified(new DateTime());
+    byte[] data=toByteArray(object.getData());
+    final byte[] md5=HttpUtils.md5(data);
+    final String eTag=HttpUtils.toHexString(md5);
+    newMd.setETag(eTag);
+    newMd.setContentMD5(md5);
+    newMd.setContentType(object.getMetadata().getContentType());
+    Blob blob=blobProvider.create(newMd);
+    blob.setData(data);
+    container.put(blob.getMetadata().getName(),blob);
+    blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
+    blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
+    blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,newMd.getContentType());
+    blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,newMd.getSize() + "");
+    for (    Entry<String,String> userMD : newMd.getUserMetadata().entrySet()) {
+      blob.getAllHeaders().put(userMD.getKey(),userMD.getValue());
+    }
+    return new FutureBase<String>(){
+      public String get() throws InterruptedException, ExecutionException {
+        return eTag;
+      }
+    }
+;
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}

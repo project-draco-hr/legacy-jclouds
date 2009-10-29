@@ -1,11 +1,5 @@
 {
-  return Guice.createInjector(new StubAzureBlobStoreModule(),BlobStoreMapsModule.Builder.newBuilder(new TypeLiteral<ContainerMetadata>(){
-  }
-,new TypeLiteral<BlobMetadata>(){
-  }
-,new TypeLiteral<Blob>(){
-  }
-).build(),new AzureBlobContextModule(){
+  return Guice.createInjector(new AzureBlobStubClientModule(),new AzureBlobContextModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("user");
       bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_KEY)).to("key");

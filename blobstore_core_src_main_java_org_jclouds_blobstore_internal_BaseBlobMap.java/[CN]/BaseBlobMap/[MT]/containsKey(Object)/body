@@ -1,12 +1,13 @@
 {
+  String realKey=prefixer.apply(key.toString());
   try {
-    return connection.blobMetadata(containerName,key.toString()) != null;
+    return connection.blobMetadata(containerName,realKey) != null;
   }
  catch (  KeyNotFoundException e) {
     return false;
   }
 catch (  Exception e) {
     Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException(String.format("Error searching for %1$s:%2$s",containerName,key),e);
+    throw new BlobRuntimeException(String.format("Error searching for %1$s:%2$s",containerName,realKey),e);
   }
 }

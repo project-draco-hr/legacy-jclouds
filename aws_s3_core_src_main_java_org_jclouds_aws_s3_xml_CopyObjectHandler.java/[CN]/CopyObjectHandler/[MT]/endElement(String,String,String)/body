@@ -1,9 +1,12 @@
 {
   if (qName.equals("ETag")) {
-    metadata.setETag(currentText.toString());
+    this.currentETag=currentText.toString().trim();
   }
  else   if (qName.equals("LastModified")) {
-    metadata.setLastModified(dateParser.iso8601DateParse(currentText.toString()));
+    this.currentLastModified=dateParser.iso8601DateParse(currentText.toString().trim());
+  }
+ else   if (qName.equals("CopyObjectResult")) {
+    metadata=new CopyObjectResult(currentLastModified,currentETag);
   }
   currentText=new StringBuilder();
 }
