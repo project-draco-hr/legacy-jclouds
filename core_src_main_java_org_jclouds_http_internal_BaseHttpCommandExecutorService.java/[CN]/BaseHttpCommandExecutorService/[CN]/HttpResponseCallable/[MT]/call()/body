@@ -10,20 +10,10 @@
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
       if (request.getEntity() != null && wire.enabled())       request.setEntity(wire.output(request.getEntity()));
       nativeRequest=convert(request);
-      if (headerLog.isDebugEnabled()) {
-        headerLog.debug(">> %s",request.getRequestLine().toString());
-        for (        Entry<String,String> header : request.getHeaders().entries()) {
-          if (header.getKey() != null)           headerLog.debug(">> %s: %s",header.getKey(),header.getValue());
-        }
-      }
+      HttpUtils.logRequest(headerLog,request,">>");
       response=invoke(nativeRequest);
       logger.debug("Receiving response %s: %s",request.hashCode(),response.getStatusLine());
-      if (headerLog.isDebugEnabled()) {
-        headerLog.debug("<< " + response.getStatusLine().toString());
-        for (        Entry<String,String> header : response.getHeaders().entries()) {
-          if (header.getKey() != null)           headerLog.debug("<< %s: %s",header.getKey(),header.getValue());
-        }
-      }
+      HttpUtils.logResponse(headerLog,response,"<<");
       if (response.getContent() != null && wire.enabled())       response.setContent(wire.input(response.getContent()));
       int statusCode=response.getStatusCode();
       if (statusCode >= 300) {
