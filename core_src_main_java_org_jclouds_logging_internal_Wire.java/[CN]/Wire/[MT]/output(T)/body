@@ -1,0 +1,22 @@
+{
+  checkNotNull(data,"data");
+  if (data instanceof InputStream) {
+    if (exec.getClass().isAnnotationPresent(SingleThreaded.class))     return (T)copy(">> ",(InputStream)data);
+ else     return (T)tapAsynch(">> ",(InputStream)data);
+  }
+ else   if (data instanceof byte[]) {
+    output((byte[])data);
+    return data;
+  }
+ else   if (data instanceof String) {
+    output((String)data);
+    return data;
+  }
+ else   if (data instanceof File) {
+    output(((File)data));
+    return data;
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + data.getClass());
+  }
+}

@@ -1,11 +1,11 @@
 {
-  Wire wire=setUp();
+  HttpWire wire=setUp();
   InputStream in=wire.input(fromServer);
   ByteArrayOutputStream out=new ByteArrayOutputStream();
   IOUtils.copy(in,out);
   byte[] compare=HttpUtils.md5(new ByteArrayInputStream(out.toByteArray()));
   Thread.sleep(100);
   assertEquals(HttpUtils.toHexString(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
-  assertEquals(((BufferLogger)wire.wireLog).buff.toString().getBytes().length,3331484);
+  assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
   return null;
 }
