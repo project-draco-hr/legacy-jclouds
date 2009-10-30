@@ -1,0 +1,11 @@
+{
+  return Guice.createInjector(new ExecutorServiceModule(new WithinThreadExecutorService()),new JDKLoggingModule(),new CloudFilesStubClientModule(),new StubRackspaceAuthenticationModule(),new CloudFilesBlobStoreContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(RackspaceConstants.PROPERTY_RACKSPACE_USER)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(RackspaceConstants.PROPERTY_RACKSPACE_KEY)).to("key");
+      bindConstant().annotatedWith(Jsr330.named(RackspaceConstants.PROPERTY_RACKSPACE_ENDPOINT)).to("http://localhost");
+      super.configure();
+    }
+  }
+);
+}

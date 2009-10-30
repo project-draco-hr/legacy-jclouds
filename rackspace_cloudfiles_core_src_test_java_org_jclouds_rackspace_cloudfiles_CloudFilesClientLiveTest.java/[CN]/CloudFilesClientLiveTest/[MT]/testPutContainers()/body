@@ -1,23 +1,29 @@
 {
-  String containerName1=bucketPrefix + ".hello";
-  assertTrue(connection.createContainer(containerName1).get(10,TimeUnit.SECONDS));
-  SortedSet<ContainerMetadata> response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerName1.substring(0,containerName1.length() - 1)).maxResults(1));
-  assertNotNull(response);
-  assertEquals(response.size(),1);
-  assertEquals(response.first().getName(),bucketPrefix + ".hello");
-  String containerName2=bucketPrefix + "?should-be-illegal-question-char";
+  String containerName=getContainerName();
   try {
-    connection.createContainer(containerName2).get(10,TimeUnit.MILLISECONDS);
-    fail("Should not be able to create container with illegal '?' character");
+    String containerName1=containerName + ".hello";
+    assertTrue(context.getApi().createContainer(containerName1).get(10,TimeUnit.SECONDS));
+    SortedSet<ContainerMetadata> response=context.getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerName1.substring(0,containerName1.length() - 1)).maxResults(1)).get(10,TimeUnit.SECONDS);
+    assertNotNull(response);
+    assertEquals(response.size(),1);
+    assertEquals(response.first().getName(),containerName + ".hello");
+    String containerName2=containerName + "?should-be-illegal-question-char";
+    try {
+      context.getApi().createContainer(containerName2).get(10,TimeUnit.MILLISECONDS);
+      fail("Should not be able to create container with illegal '?' character");
+    }
+ catch (    Exception e) {
+    }
+    try {
+      context.getApi().createContainer(containerName + "/illegal-slash-char").get(10,TimeUnit.MILLISECONDS);
+      fail("Should not be able to create container with illegal '/' character");
+    }
+ catch (    Exception e) {
+    }
+    assertTrue(context.getApi().deleteContainerIfEmpty(containerName1).get(10,TimeUnit.SECONDS));
+    assertTrue(context.getApi().deleteContainerIfEmpty(containerName2).get(10,TimeUnit.SECONDS));
   }
- catch (  Exception e) {
+  finally {
+    returnContainer(containerName);
   }
-  try {
-    connection.createContainer(bucketPrefix + "/illegal-slash-char").get(10,TimeUnit.MILLISECONDS);
-    fail("Should not be able to create container with illegal '/' character");
-  }
- catch (  Exception e) {
-  }
-  assertTrue(connection.deleteContainerIfEmpty(containerName1).get(10,TimeUnit.SECONDS));
-  assertTrue(connection.deleteContainerIfEmpty(containerName2).get(10,TimeUnit.SECONDS));
 }

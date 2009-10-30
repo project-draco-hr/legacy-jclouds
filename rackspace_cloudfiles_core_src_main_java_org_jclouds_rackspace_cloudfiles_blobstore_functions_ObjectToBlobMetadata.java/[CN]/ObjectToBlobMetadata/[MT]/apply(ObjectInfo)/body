@@ -1,0 +1,14 @@
+{
+  MutableBlobMetadata to=new MutableBlobMetadataImpl();
+  to.setContentMD5(from.getHash());
+  if (from.getContentType() != null)   to.setContentType(from.getContentType());
+  if (from.getHash() != null)   to.setETag(HttpUtils.toHexString(from.getHash()));
+  to.setName(from.getName());
+  if (from.getBytes() != null)   to.setSize(from.getBytes());
+  to.setType(ResourceType.BLOB);
+  if (from instanceof MutableObjectInfoWithMetadata)   to.setUserMetadata(((MutableObjectInfoWithMetadata)from).getMetadata());
+  if (from.getContentType() != null && from.getContentType().equals("application/directory")) {
+    to.setType(ResourceType.RELATIVE_PATH);
+  }
+  return to;
+}

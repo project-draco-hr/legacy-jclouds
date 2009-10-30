@@ -1,0 +1,19 @@
+{
+  String toParse;
+  try {
+    toParse=IOUtils.toString(stream);
+  }
+ catch (  IOException e1) {
+    throw new RuntimeException(e1);
+  }
+  stream=IOUtils.toInputStream(toParse.replaceAll("m,","m\","));
+  Type listType=new TypeToken<SortedSet<ContainerCDNMetadata>>(){
+  }
+.getType();
+  try {
+    return gson.fromJson(new InputStreamReader(stream,"UTF-8"),listType);
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException("jclouds requires UTF-8 encoding",e);
+  }
+}

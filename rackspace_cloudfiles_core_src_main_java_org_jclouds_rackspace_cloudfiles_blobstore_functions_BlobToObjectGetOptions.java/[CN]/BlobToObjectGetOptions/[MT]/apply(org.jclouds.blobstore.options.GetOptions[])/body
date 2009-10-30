@@ -1,0 +1,22 @@
+{
+  GetOptions httpOptions=new GetOptions();
+  if (from.length != 0) {
+    if (from[0].getIfMatch() != null) {
+      httpOptions.ifETagMatches(from[0].getIfMatch());
+    }
+    if (from[0].getIfModifiedSince() != null) {
+      httpOptions.ifModifiedSince(from[0].getIfModifiedSince());
+    }
+    if (from[0].getIfNoneMatch() != null) {
+      httpOptions.ifETagDoesntMatch(from[0].getIfNoneMatch());
+    }
+    if (from[0].getIfUnmodifiedSince() != null) {
+      httpOptions.ifUnmodifiedSince(from[0].getIfUnmodifiedSince());
+    }
+    for (    String range : from[0].getRanges()) {
+      String[] firstLast=range.split("\\-");
+      httpOptions.range(Long.parseLong(firstLast[0]),Long.parseLong(firstLast[1]));
+    }
+  }
+  return httpOptions;
+}

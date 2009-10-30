@@ -1,19 +1,25 @@
 {
-  SortedSet<ContainerMetadata> response=connection.listContainers();
-  assertNotNull(response);
-  long initialContainerCount=response.size();
-  assertTrue(initialContainerCount >= 0);
-  String[] containerJsr330=new String[]{bucketPrefix + ".testListOwnedContainers1",bucketPrefix + ".testListOwnedContainers2"};
-  assertTrue(connection.createContainer(containerJsr330[0]).get(10,TimeUnit.SECONDS));
-  assertTrue(connection.createContainer(containerJsr330[1]).get(10,TimeUnit.SECONDS));
-  response=connection.listContainers();
-  response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0].substring(0,containerJsr330[0].length() - 1)).maxResults(1));
-  assertEquals(response.size(),1);
-  assertEquals(response.first().getName(),containerJsr330[0]);
-  response=connection.listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0]).maxResults(1));
-  assertEquals(response.size(),1);
-  assertEquals(response.first().getName(),containerJsr330[1]);
-  assertTrue(connection.deleteContainerIfEmpty(containerJsr330[0]).get(10,TimeUnit.SECONDS));
-  assertTrue(connection.deleteContainerIfEmpty(containerJsr330[1]).get(10,TimeUnit.SECONDS));
-  response=connection.listContainers();
+  String containerPrefix=getContainerName();
+  try {
+    SortedSet<ContainerMetadata> response=context.getApi().listContainers().get(10,TimeUnit.SECONDS);
+    assertNotNull(response);
+    long initialContainerCount=response.size();
+    assertTrue(initialContainerCount >= 0);
+    String[] containerJsr330=new String[]{containerPrefix + ".testListOwnedContainers1",containerPrefix + ".testListOwnedContainers2"};
+    assertTrue(context.getApi().createContainer(containerJsr330[0]).get(10,TimeUnit.SECONDS));
+    assertTrue(context.getApi().createContainer(containerJsr330[1]).get(10,TimeUnit.SECONDS));
+    response=context.getApi().listContainers().get(10,TimeUnit.SECONDS);
+    response=context.getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0].substring(0,containerJsr330[0].length() - 1)).maxResults(1)).get(10,TimeUnit.SECONDS);
+    assertEquals(response.size(),1);
+    assertEquals(response.first().getName(),containerJsr330[0]);
+    response=context.getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0]).maxResults(1)).get(10,TimeUnit.SECONDS);
+    assertEquals(response.size(),1);
+    assertEquals(response.first().getName(),containerJsr330[1]);
+    assertTrue(context.getApi().deleteContainerIfEmpty(containerJsr330[0]).get(10,TimeUnit.SECONDS));
+    assertTrue(context.getApi().deleteContainerIfEmpty(containerJsr330[1]).get(10,TimeUnit.SECONDS));
+    response=context.getApi().listContainers().get(10,TimeUnit.SECONDS);
+  }
+  finally {
+    returnContainer(containerPrefix);
+  }
 }
