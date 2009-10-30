@@ -1,0 +1,9 @@
+{
+  BlobMetadata base=blobMetadataParser.apply(from);
+  MutableObjectInfoWithMetadata to=blobToObjectInfo.apply(base);
+  String eTagHeader=from.getFirstHeaderOrNull("Etag");
+  if (eTagHeader != null) {
+    to.setHash(HttpUtils.fromHexString(eTagHeader.replaceAll("\"","")));
+  }
+  return to;
+}

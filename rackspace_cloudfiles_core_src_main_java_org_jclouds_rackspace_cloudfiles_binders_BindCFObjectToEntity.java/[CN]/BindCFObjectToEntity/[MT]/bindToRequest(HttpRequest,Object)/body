@@ -1,0 +1,15 @@
+{
+  CFObject object=(CFObject)entity;
+  if (object.getContentLength() != null && object.getContentLength() >= 0) {
+    checkArgument(object.getContentLength() <= 5 * 1024 * 1024* 1024,"maximum size for put object is 5GB");
+    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getContentLength() + "");
+  }
+ else {
+    request.getHeaders().put("Transfer-Encoding","chunked");
+  }
+  blobBinder.bindToRequest(request,object2Blob.apply(object));
+  if (object.getInfo().getHash() != null) {
+    request.getHeaders().put(HttpHeaders.ETAG,HttpUtils.toHexString(object.getInfo().getHash()));
+    request.getHeaders().removeAll("Content-MD5");
+  }
+}

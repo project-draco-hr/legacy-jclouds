@@ -1,0 +1,8 @@
+{
+  BindCFObjectToEntity binder=binderProvider.get();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost:8001"));
+  binder.bindToRequest(request,testBlob());
+  assertEquals(request.getEntity(),"hello");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),5 + "");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),MediaType.TEXT_PLAIN);
+}
