@@ -1,0 +1,12 @@
+{
+  Method method=AtmosStorageClient.class.getMethod("createDirectory",String.class);
+  GeneratedHttpRequest<AtmosStorageClient> httpMethod=processor.createRequest(method,"dir");
+  assertEquals(httpMethod.getRequestLine(),"POST http://accesspoint.emccis.com/rest/namespace/dir/ HTTP/1.1");
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getFirstHeaderOrNull(HttpHeaders.ACCEPT),MediaType.WILDCARD);
+  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseURIFromListOrLocationHeaderIf20x.class);
+  assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),null);
+  assertEquals(httpMethod.getFilters().size(),1);
+  assertEquals(httpMethod.getFilters().get(0).getClass(),SignRequest.class);
+}

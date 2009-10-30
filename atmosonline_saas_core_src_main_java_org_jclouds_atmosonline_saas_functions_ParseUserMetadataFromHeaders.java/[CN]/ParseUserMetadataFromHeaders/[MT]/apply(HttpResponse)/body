@@ -1,0 +1,12 @@
+{
+  UserMetadata md=new UserMetadata();
+  Map<String,String> metaMap=getMetaMap(checkNotNull(from.getFirstHeaderOrNull(AtmosStorageHeaders.META),AtmosStorageHeaders.META));
+  Set<String> keys=Sets.difference(metaMap.keySet(),sysKeys);
+  for (  String key : keys) {
+    md.getMetadata().put(key,metaMap.get(key));
+  }
+  if (from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_META) != null)   md.getListableMetadata().putAll(getMetaMap(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_META)));
+  if (from.getFirstHeaderOrNull(AtmosStorageHeaders.TAGS) != null)   md.getTags().addAll(getTags(from.getFirstHeaderOrNull(AtmosStorageHeaders.TAGS)));
+  if (from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_TAGS) != null)   md.getTags().addAll(getTags(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_TAGS)));
+  return md;
+}

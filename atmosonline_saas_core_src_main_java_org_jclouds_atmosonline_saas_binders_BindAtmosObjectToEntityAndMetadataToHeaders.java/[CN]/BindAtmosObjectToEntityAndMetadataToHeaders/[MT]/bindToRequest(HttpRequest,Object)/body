@@ -1,0 +1,10 @@
+{
+  AtmosObject object=(AtmosObject)entity;
+  request.setEntity(checkNotNull(object.getData(),"object.getContent()"));
+  request.getHeaders().put(HttpHeaders.CONTENT_TYPE,checkNotNull(object.getContentMetadata().getContentType(),"object.metadata.contentType()"));
+  request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getContentMetadata().getContentLength() + "");
+  if (object.getContentMetadata().getContentMD5() != null) {
+    request.getHeaders().put("Content-MD5",HttpUtils.toBase64String(object.getContentMetadata().getContentMD5()));
+  }
+  metaBinder.bindToRequest(request,object.getUserMetadata());
+}

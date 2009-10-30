@@ -1,0 +1,12 @@
+{
+  Set<String> headers=new TreeSet<String>(request.getHeaders().keySet());
+  for (  String header : headers) {
+    if (header.startsWith("x-emc-")) {
+      toSign.append(header.toLowerCase()).append(":");
+      for (      String value : request.getHeaders().get(header))       toSign.append(value.replaceAll("\r?\n","").replaceAll("  "," ")).append(" ");
+      toSign.deleteCharAt(toSign.lastIndexOf(" "));
+      toSign.append("\n");
+    }
+  }
+  if (toSign.charAt(toSign.length() - 1) == '\n')   toSign.deleteCharAt(toSign.length() - 1);
+}

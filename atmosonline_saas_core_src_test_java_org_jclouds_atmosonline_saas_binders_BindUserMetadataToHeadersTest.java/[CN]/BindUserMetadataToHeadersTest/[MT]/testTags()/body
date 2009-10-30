@@ -1,0 +1,10 @@
+{
+  Injector injector=Guice.createInjector();
+  BindUserMetadataToHeaders binder=injector.getInstance(BindUserMetadataToHeaders.class);
+  UserMetadata tagsdata=new UserMetadata();
+  tagsdata.getTags().add("apple");
+  tagsdata.getTags().add("sushi");
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  binder.bindToRequest(request,tagsdata);
+  assertEquals(request.getFirstHeaderOrNull("x-emc-tags"),"apple,sushi");
+}

@@ -1,0 +1,10 @@
+{
+  Injector injector=Guice.createInjector();
+  BindUserMetadataToHeaders binder=injector.getInstance(BindUserMetadataToHeaders.class);
+  UserMetadata metadata=new UserMetadata();
+  metadata.getListableMetadata().put("apple","bear");
+  metadata.getListableMetadata().put("sushi","king");
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  binder.bindToRequest(request,metadata);
+  assertEquals(request.getFirstHeaderOrNull("x-emc-listable-meta"),"apple=bear,sushi=king");
+}
