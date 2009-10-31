@@ -1,0 +1,18 @@
+{
+  ListBlobsOptions httpOptions=new ListBlobsOptions();
+  if (optionsList.length != 0) {
+    if (!optionsList[0].isRecursive()) {
+      httpOptions.delimiter("/");
+    }
+    if (optionsList[0].getPath() != null) {
+      httpOptions.prefix(optionsList[0].getPath());
+    }
+    if (optionsList[0].getMarker() != null) {
+      httpOptions.marker(optionsList[0].getMarker());
+    }
+    if (optionsList[0].getMaxResults() != null) {
+      httpOptions.maxResults(optionsList[0].getMaxResults());
+    }
+  }
+  return httpOptions;
+}

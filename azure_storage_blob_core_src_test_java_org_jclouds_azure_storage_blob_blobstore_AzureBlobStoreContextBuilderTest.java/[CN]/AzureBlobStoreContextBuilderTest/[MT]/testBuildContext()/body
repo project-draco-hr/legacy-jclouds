@@ -1,0 +1,10 @@
+{
+  BlobStoreContext<AzureBlobClient> context=newBuilder().buildContext();
+  assertEquals(context.getClass(),BlobStoreContextImpl.class);
+  assertEquals(context.getApi().getClass(),StubAzureBlobClient.class);
+  assertEquals(context.getBlobStore().getClass(),AzureBlobStore.class);
+  assertEquals(context.getApi().newBlob().getClass(),AzureBlobImpl.class);
+  assertEquals(context.getBlobStore().newBlob().getClass(),BlobImpl.class);
+  assertEquals(context.getAccount(),"id");
+  assertEquals(context.getEndPoint(),URI.create("https://localhost/azurestub"));
+}

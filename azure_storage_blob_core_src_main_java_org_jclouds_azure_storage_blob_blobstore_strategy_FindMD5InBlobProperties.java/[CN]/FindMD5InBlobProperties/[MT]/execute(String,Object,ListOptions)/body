@@ -1,0 +1,14 @@
+{
+  try {
+    byte[] toSearch=objectMD5.apply(value);
+    for (    BlobMetadata metadata : getAllBlobMetadata.execute(containerName,options)) {
+      BlobProperties properties=client.getBlobProperties(containerName,metadata.getName());
+      if (Arrays.equals(toSearch,properties.getContentMD5()))       return true;
+    }
+    return false;
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException(String.format("Error searching for ETAG of value: [%2$s] in container:%1$s",containerName,value),e);
+  }
+}
