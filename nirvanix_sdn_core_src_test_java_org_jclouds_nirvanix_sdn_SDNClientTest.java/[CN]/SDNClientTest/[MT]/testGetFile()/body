@@ -1,13 +1,12 @@
 {
   Method method=SDNClient.class.getMethod("getFile",String.class);
   GeneratedHttpRequest<SDNClient> httpMethod=processor.createRequest(method,new Object[]{"adriansmovies/sushi.avi"});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/adriansmovies/sushi.avi");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"output=json");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(httpMethod.getEntity(),null);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnStringIf200.class);
+  assertRequestLineEquals(httpMethod,"GET http://stub:8080/adriansmovies/sushi.avi?output=json HTTP/1.1");
+  assertHeadersEqual(httpMethod,"");
+  assertEntityEquals(httpMethod,null);
+  assertResponseParserClassEquals(method,httpMethod,ReturnStringIf200.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
   assertEquals(httpMethod.getFilters().size(),1);
   assertEquals(httpMethod.getFilters().get(0).getClass(),InsertUserContextIntoPath.class);
 }

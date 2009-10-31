@@ -1,13 +1,11 @@
 {
   Method method=SDNClient.class.getMethod("getMetadata",String.class);
   GeneratedHttpRequest<SDNClient> httpMethod=processor.createRequest(method,new Object[]{"adriansmovies/sushi.avi"});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/ws/Metadata/GetMetadata.ashx");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"output=json&path=adriansmovies/sushi.avi");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(httpMethod.getEntity(),null);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnStringIf200.class);
-  assertEquals(httpMethod.getFilters().size(),1);
-  assertEquals(httpMethod.getFilters().get(0).getClass(),AddSessionTokenToRequest.class);
+  assertRequestLineEquals(httpMethod,"GET http://stub:8080/ws/Metadata/GetMetadata.ashx?output=json&path=adriansmovies/sushi.avi HTTP/1.1");
+  assertHeadersEqual(httpMethod,"");
+  assertEntityEquals(httpMethod,null);
+  assertResponseParserClassEquals(method,httpMethod,ParseMetadataFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
 }

@@ -2,15 +2,17 @@
   Method method=SDNClient.class.getMethod("upload",URI.class,String.class,String.class,Blob.class);
   Blob blob=BindBlobToMultipartFormTest.TEST_BLOB;
   GeneratedHttpRequest<SDNClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://uploader"),"token","adriansmovies",blob});
-  assertEquals(httpMethod.getEndpoint().getHost(),"uploader");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/Upload.ashx");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"output=json&uploadToken=token&destFolderPath=adriansmovies");
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(BindBlobToMultipartFormTest.EXPECTS.length() + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("multipart/form-data; boundary=" + BindBlobToMultipartFormTest.BOUNDRY));
-  assertEquals(Utils.toStringAndClose((InputStream)httpMethod.getEntity()),BindBlobToMultipartFormTest.EXPECTS);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
-  assertEquals(httpMethod.getFilters().size(),1);
-  assertEquals(httpMethod.getFilters().get(0).getClass(),AddSessionTokenToRequest.class);
+  assertRequestLineEquals(httpMethod,"POST http://uploader/Upload.ashx?output=json&uploadToken=token&destFolderPath=adriansmovies HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 131\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
+  StringBuffer expects=new StringBuffer();
+  expects.append("----JCLOUDS--\r\n");
+  expects.append("Content-Disposition: form-data; name=\"hello\"; filename=\"hello\"\r\n");
+  expects.append("Content-Type: text/plain\r\n\r\n");
+  expects.append("hello\r\n");
+  expects.append("----JCLOUDS----\r\n");
+  assertEntityEquals(httpMethod,expects.toString());
+  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
 }

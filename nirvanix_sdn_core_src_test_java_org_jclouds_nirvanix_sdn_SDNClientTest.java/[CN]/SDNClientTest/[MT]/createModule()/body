@@ -1,0 +1,19 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      install(new BlobStoreObjectModule());
+      bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://stub:8080"));
+      bind(String.class).annotatedWith(SessionToken.class).toInstance("sessiontoken");
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPKEY)).to("appKey");
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPNAME)).to("appname");
+      bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_USERNAME)).to("username");
+    }
+  }
+;
+}
