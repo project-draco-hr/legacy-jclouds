@@ -1,8 +1,8 @@
 {
-  return new MapMaker().expiration(seconds,TimeUnit.SECONDS).makeComputingMap(new Function<String,String>(){
-    public String apply(    String key){
+  return new ExpirableSupplier<String>(new Supplier<String>(){
+    public String get(){
       return dateService.rfc822DateFormat();
     }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }

@@ -2,7 +2,7 @@
   AzureBlob object=(AzureBlob)entity;
   checkArgument(object.getProperties().getSize() >= 0,"size must be set");
   checkArgument(checkNotNull(object.getContentLength(),"object.getContentLength()") <= 64 * 1024 * 1024,"maximum size for put Blob is 64MB");
-  blobBinder.bindToRequest(request,azureBlob2Blob.apply(object));
+  super.bindToRequest(request,azureBlob2Blob.apply(object));
   if (object.getProperties().getContentLanguage() != null) {
     request.getHeaders().put(HttpHeaders.CONTENT_LANGUAGE,object.getProperties().getContentLanguage());
   }

@@ -1,8 +1,8 @@
 {
-  return new MapMaker().expiration(seconds,TimeUnit.SECONDS).makeComputingMap(new Function<String,VCloudXSession>(){
-    public VCloudXSession apply(    String key){
+  return new ExpirableSupplier<VCloudXSession>(new Supplier<VCloudXSession>(){
+    public VCloudXSession get(){
       return login.login();
     }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }
