@@ -1,9 +1,12 @@
 {
-  return new S3BlobStoreContextBuilder(new S3BlobStorePropertiesBuilder(accessKeyId,secretAccessKey).build()).withModules(new GaeHttpCommandExecutorServiceModule(),new ServletModule(){
+  return Guice.createInjector(new ServletModule(){
     @Override protected void configureServlets(){
-      serve("*.s3").with(GetAllBucketsController.class);
+      bind(new TypeLiteral<Map<String,BlobStoreContext<?>>>(){
+      }
+).toInstance(GuiceServletConfig.this.contexts);
+      serve("*.blobstore").with(GetAllContainersController.class);
       requestInjection(this);
     }
   }
-).buildInjector();
+);
 }

@@ -1,6 +1,18 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
-  this.accessKeyId=props.getProperty(S3Constants.PROPERTY_AWS_ACCESSKEYID);
-  this.secretAccessKey=props.getProperty(S3Constants.PROPERTY_AWS_SECRETACCESSKEY);
+  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTBUILDERS),BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
+  contexts=Maps.newHashMap();
+  for (  String className : list) {
+    try {
+      Class<BlobStoreContextBuilder<?>> builderClass;
+      builderClass=(Class<BlobStoreContextBuilder<?>>)Class.forName(className);
+      String name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
+      Constructor<BlobStoreContextBuilder<?>> constructor=builderClass.getConstructor(Properties.class);
+      contexts.put(name,constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext());
+    }
+ catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
   super.contextInitialized(servletContextEvent);
 }

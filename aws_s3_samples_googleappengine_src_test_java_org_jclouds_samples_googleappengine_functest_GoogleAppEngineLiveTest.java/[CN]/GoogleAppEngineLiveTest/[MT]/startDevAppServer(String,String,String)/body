@@ -1,12 +1,10 @@
 {
-  url=new URL(String.format("http://%1$s:%2$s",address,port));
-  String account=System.getProperty("jclouds.test.user");
-  String key=System.getProperty("jclouds.test.key");
-  checkNotNull(account,"account");
-  checkNotNull(key,"key");
+  url=new URL(String.format("http://%s:%s",address,port));
   Properties props=new Properties();
-  props.put(S3Constants.PROPERTY_AWS_ACCESSKEYID,account);
-  props.put(S3Constants.PROPERTY_AWS_SECRETACCESSKEY,key);
+  props.setProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS,String.format("%s,%s,%s",S3BlobStoreContextBuilder.class.getName(),CloudFilesBlobStoreContextBuilder.class.getName(),AzureBlobStoreContextBuilder.class.getName()));
+  props=new S3PropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_AWS_ACCESSKEYID),PROPERTY_AWS_ACCESSKEYID),System.getProperty(PROPERTY_AWS_SECRETACCESSKEY,PROPERTY_AWS_SECRETACCESSKEY)).build();
+  props=new CloudFilesPropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_RACKSPACE_USER),PROPERTY_RACKSPACE_USER),System.getProperty(PROPERTY_RACKSPACE_KEY,PROPERTY_RACKSPACE_KEY)).build();
+  props=new AzureBlobPropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_AZURESTORAGE_ACCOUNT),PROPERTY_AZURESTORAGE_ACCOUNT),System.getProperty(PROPERTY_AZURESTORAGE_KEY,PROPERTY_AZURESTORAGE_KEY)).build();
   server=new GoogleDevServer();
   server.writePropertiesAndStartServer(address,port,warfile,props);
 }
