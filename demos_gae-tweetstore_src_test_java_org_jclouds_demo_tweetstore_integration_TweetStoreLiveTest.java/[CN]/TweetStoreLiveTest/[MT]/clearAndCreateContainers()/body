@@ -1,0 +1,23 @@
+{
+  container=checkNotNull(System.getProperty(PROPERTY_TWEETSTORE_CONTAINER));
+  BlobStoreContext<?> s3Context=S3BlobStoreContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_AWS_ACCESSKEYID),PROPERTY_AWS_ACCESSKEYID),System.getProperty(PROPERTY_AWS_SECRETACCESSKEY,PROPERTY_AWS_SECRETACCESSKEY));
+  BlobStoreContext<?> cfContext=CloudFilesBlobStoreContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_RACKSPACE_USER),PROPERTY_RACKSPACE_USER),System.getProperty(PROPERTY_RACKSPACE_KEY,PROPERTY_RACKSPACE_KEY));
+  BlobStoreContext<?> azContext=AzureBlobStoreContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_AZURESTORAGE_ACCOUNT),PROPERTY_AZURESTORAGE_ACCOUNT),System.getProperty(PROPERTY_AZURESTORAGE_KEY,PROPERTY_AZURESTORAGE_KEY));
+  this.contexts=ImmutableSet.of(s3Context,cfContext,azContext);
+  boolean deleted=false;
+  for (  BlobStoreContext<?> context : contexts) {
+    if (context.getBlobStore().exists(container)) {
+      System.err.printf("deleting container %s at %s%n",container,context.getEndPoint());
+      context.getBlobStore().deleteContainer(container).get(30,TimeUnit.SECONDS);
+      deleted=true;
+    }
+  }
+  if (deleted) {
+    System.err.println("sleeping 30 seconds to allow containers to clear");
+    Thread.sleep(30000);
+  }
+  for (  BlobStoreContext<?> context : contexts) {
+    System.err.printf("creating container %s at %s%n",container,context.getEndPoint());
+    context.getBlobStore().createContainer(container).get(30,TimeUnit.SECONDS);
+  }
+}

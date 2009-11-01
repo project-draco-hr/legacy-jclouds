@@ -1,0 +1,15 @@
+{
+  return Guice.createInjector(new ServletModule(){
+    @Override protected void configureServlets(){
+      bind(new TypeLiteral<Map<String,BlobStoreContext<?>>>(){
+      }
+).toInstance(GuiceServletConfig.this.contexts);
+      bind(TwitterClient.class).toInstance(client);
+      bindConstant().annotatedWith(Jsr330.named(PROPERTY_TWEETSTORE_CONTAINER)).to(container);
+      serve("/cron/*").with(StoreTweetsController.class);
+      serve("/tweets/*").with(AddTweetsController.class);
+      requestInjection(this);
+    }
+  }
+);
+}

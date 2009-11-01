@@ -1,0 +1,24 @@
+{
+  Properties props=loadJCloudsProperties(servletContextEvent);
+  container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
+  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
+  contexts=Maps.newHashMap();
+  client=TwitterContextFactory.createContext(props,new GaeHttpCommandExecutorServiceModule()).getApi();
+  for (  String className : list) {
+    Class<BlobStoreContextBuilder<?>> builderClass;
+    Constructor<BlobStoreContextBuilder<?>> constructor;
+    String name;
+    BlobStoreContext<?> context;
+    try {
+      builderClass=(Class<BlobStoreContextBuilder<?>>)Class.forName(className);
+      name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
+      constructor=builderClass.getConstructor(Properties.class);
+      context=constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException("error instantiating " + className,e);
+    }
+    contexts.put(name,context);
+  }
+  super.contextInitialized(servletContextEvent);
+}

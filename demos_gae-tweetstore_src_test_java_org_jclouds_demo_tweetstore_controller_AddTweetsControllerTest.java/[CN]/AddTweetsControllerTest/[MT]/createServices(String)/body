@@ -1,0 +1,14 @@
+{
+  Map<String,BlobStoreContext<?>> services=Maps.newHashMap();
+  for (  String name : new String[]{"1","2"}) {
+    BlobStoreContext<BlobStore> context=new StubBlobStoreContextBuilder().buildContext();
+    context.getBlobStore().createContainer(container).get();
+    Blob blob=context.getBlobStore().newBlob();
+    blob.getMetadata().setName("1");
+    blob.getMetadata().getUserMetadata().put(TweetStoreConstants.SENDER_NAME,"frank");
+    blob.setData("I love beans!");
+    context.getBlobStore().putBlob(container,blob).get();
+    services.put(name,context);
+  }
+  return services;
+}
