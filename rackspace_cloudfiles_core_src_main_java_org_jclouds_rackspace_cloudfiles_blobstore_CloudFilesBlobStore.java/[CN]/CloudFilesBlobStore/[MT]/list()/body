@@ -1,7 +1,7 @@
 {
-  return wrapFuture(connection.listContainers(),new Function<SortedSet<ContainerMetadata>,SortedSet<? extends ResourceMetadata>>(){
-    public SortedSet<? extends ResourceMetadata> apply(    SortedSet<ContainerMetadata> from){
-      return Sets.newTreeSet(Iterables.transform(from,container2ResourceMd));
+  return wrapFuture(connection.listContainers(),new Function<SortedSet<ContainerMetadata>,org.jclouds.blobstore.domain.ListResponse<? extends ResourceMetadata>>(){
+    public org.jclouds.blobstore.domain.ListResponse<? extends ResourceMetadata> apply(    SortedSet<ContainerMetadata> from){
+      return new ListResponseImpl<ResourceMetadata>(Iterables.transform(from,container2ResourceMd),null,null,false);
     }
   }
 );
