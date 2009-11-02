@@ -1,0 +1,15 @@
+{
+  try {
+    byte[] toSearch=objectMD5.apply(value);
+    String hex=HttpUtils.toHexString(toSearch);
+    for (    BlobMetadata metadata : getAllBlobMetadata.execute(containerName,options)) {
+      UserMetadata properties=client.getUserMetadata(containerName + "/" + metadata.getName());
+      if (hex.equals(properties.getMetadata().get("content-md5")))       return true;
+    }
+    return false;
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException(String.format("Error searching for ETAG of value: [%2$s] in container:%1$s",containerName,value),e);
+  }
+}

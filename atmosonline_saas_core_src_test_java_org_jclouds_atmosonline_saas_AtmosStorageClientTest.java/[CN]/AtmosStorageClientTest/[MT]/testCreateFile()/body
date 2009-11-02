@@ -1,0 +1,11 @@
+{
+  Method method=AtmosStorageClient.class.getMethod("createFile",String.class,AtmosObject.class);
+  GeneratedHttpRequest<AtmosStorageClient> httpMethod=processor.createRequest(method,"dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB));
+  assertRequestLineEquals(httpMethod,"POST http://accesspoint.emccis.com/rest/namespace/dir/hello HTTP/1.1");
+  assertHeadersEqual(httpMethod,HttpHeaders.ACCEPT + ": */*\nContent-Length: 5\nContent-Type: text/plain\n");
+  assertEntityEquals(httpMethod,"hello");
+  assertResponseParserClassEquals(method,httpMethod,ParseURIFromListOrLocationHeaderIf20x.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}

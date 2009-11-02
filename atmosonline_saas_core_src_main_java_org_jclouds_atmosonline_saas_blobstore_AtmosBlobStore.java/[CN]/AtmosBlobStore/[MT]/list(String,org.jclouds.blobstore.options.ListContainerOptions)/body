@@ -1,0 +1,12 @@
+{
+  if (optionsList.length == 1) {
+    if (!optionsList[0].isRecursive()) {
+      throw new UnsupportedOperationException("recursive not currently supported in emcsaas");
+    }
+    if (optionsList[0].getPath() != null) {
+      container=container + "/" + optionsList[0].getPath();
+    }
+  }
+  ListOptions nativeOptions=container2ContainerListOptions.apply(optionsList);
+  return wrapFuture(connection.listDirectory(container,nativeOptions),container2ResourceList);
+}

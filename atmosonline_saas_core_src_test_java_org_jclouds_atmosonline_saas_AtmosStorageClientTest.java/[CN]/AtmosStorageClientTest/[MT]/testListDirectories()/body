@@ -1,12 +1,11 @@
 {
-  Method method=AtmosStorageClient.class.getMethod("listDirectories");
-  GeneratedHttpRequest<AtmosStorageClient> httpMethod=processor.createRequest(method,new Object[]{});
-  assertEquals(httpMethod.getRequestLine(),"GET http://accesspoint.emccis.com/rest/namespace HTTP/1.1");
-  assertEquals(httpMethod.getHeaders().size(),1);
-  assertEquals(httpMethod.getFirstHeaderOrNull(HttpHeaders.ACCEPT),"text/xml");
-  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseSax.class);
-  assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),ListDirectoryResponseHandler.class);
-  assertEquals(httpMethod.getFilters().size(),1);
-  assertEquals(httpMethod.getFilters().get(0).getClass(),SignRequest.class);
+  Method method=AtmosStorageClient.class.getMethod("listDirectories",Array.newInstance(ListOptions.class,0).getClass());
+  GeneratedHttpRequest<AtmosStorageClient> httpMethod=processor.createRequest(method);
+  assertRequestLineEquals(httpMethod,"GET http://accesspoint.emccis.com/rest/namespace HTTP/1.1");
+  assertHeadersEqual(httpMethod,HttpHeaders.ACCEPT + ": text/xml\n");
+  assertEntityEquals(httpMethod,null);
+  assertResponseParserClassEquals(method,httpMethod,ParseDirectoryListFromContentAndHeaders.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
 }

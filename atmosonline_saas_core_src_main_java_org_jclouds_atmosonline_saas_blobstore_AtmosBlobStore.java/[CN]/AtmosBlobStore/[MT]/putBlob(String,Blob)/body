@@ -1,0 +1,21 @@
+{
+  final String path=container + "/" + blob.getMetadata().getName();
+  Callable<String> valueCallable=new FutureFunctionCallable<Void,String>(connection.deletePath(path),new Function<Void,String>(){
+    public String apply(    Void from){
+      boolean exists=connection.pathExists(path);
+      if (!exists)       try {
+        if (blob.getMetadata().getContentMD5() != null)         blob.getMetadata().getUserMetadata().put("content-md5",HttpUtils.toHexString(blob.getMetadata().getContentMD5()));
+        connection.createFile(container,blob2Object.apply(blob)).get();
+      }
+ catch (      InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+catch (      ExecutionException e) {
+        throw new RuntimeException(e);
+      }
+      return null;
+    }
+  }
+);
+  return service.submit(valueCallable);
+}

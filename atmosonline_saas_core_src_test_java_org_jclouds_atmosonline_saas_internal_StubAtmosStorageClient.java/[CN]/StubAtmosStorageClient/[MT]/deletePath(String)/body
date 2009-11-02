@@ -1,0 +1,13 @@
+{
+  if (path.indexOf('/') == -1)   return wrapFuture(blobStore.deleteContainerImpl(path),new Function<Boolean,Void>(){
+    public Void apply(    Boolean from){
+      return null;
+    }
+  }
+);
+ else {
+    String container=path.substring(0,path.indexOf('/'));
+    path=path.substring(path.indexOf('/') + 1);
+    return blobStore.removeBlob(container,path);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  final String container;
+  if (directoryName.indexOf('/') != -1)   container=directoryName.substring(0,directoryName.indexOf('/'));
+ else   container=directoryName;
+  return wrapFuture(blobStore.createContainer(container),new Function<Boolean,URI>(){
+    public URI apply(    Boolean from){
+      return URI.create("http://stub/containers/" + container);
+    }
+  }
+);
+}

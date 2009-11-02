@@ -2,4 +2,11 @@
   String uid=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
   connection=new AtmosStorageContextBuilder(new AtmosStoragePropertiesBuilder(uid,key).build()).withModules(new Log4JLoggingModule()).buildContext().getApi();
+  ClearContainerStrategy clearer=new RecursiveRemove(connection);
+  for (  DirectoryEntry entry : connection.listDirectories().get(10,TimeUnit.SECONDS)) {
+    if (entry.getObjectName().startsWith(containerPrefix)) {
+      clearer.execute(entry.getObjectName());
+      deleteConfirmed(entry.getObjectName());
+    }
+  }
 }

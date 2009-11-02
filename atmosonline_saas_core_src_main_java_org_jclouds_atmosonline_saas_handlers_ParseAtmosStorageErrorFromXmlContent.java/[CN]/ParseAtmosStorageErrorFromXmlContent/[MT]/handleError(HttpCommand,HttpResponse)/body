@@ -6,7 +6,14 @@
       try {
         if (content.indexOf('<') >= 0) {
           AtmosStorageError error=utils.parseAtmosStorageErrorFromContent(command,response,content);
-          command.setException(new AtmosStorageResponseException(command,response,error));
+          AtmosStorageResponseException exception=new AtmosStorageResponseException(command,response,error);
+          if (error.getCode() == 1016) {
+            File file=new File(command.getRequest().getEndpoint().getPath());
+            command.setException(new KeyAlreadyExistsException(file.getParentFile().getAbsolutePath(),file.getName(),exception));
+          }
+ else {
+            command.setException(exception);
+          }
         }
  else {
           command.setException(new HttpResponseException(command,response,content));

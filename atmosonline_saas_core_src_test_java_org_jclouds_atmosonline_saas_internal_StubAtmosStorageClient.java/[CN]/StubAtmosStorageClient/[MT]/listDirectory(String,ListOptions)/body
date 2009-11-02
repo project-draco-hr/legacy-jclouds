@@ -1,0 +1,10 @@
+{
+  org.jclouds.blobstore.options.ListContainerOptions options=container2ContainerListOptions.apply(optionsList);
+  String container=directoryName;
+  if (directoryName.indexOf('/') != -1) {
+    container=directoryName.substring(0,directoryName.indexOf('/'));
+    String path=directoryName.substring(directoryName.indexOf('/') + 1);
+    if (!path.equals(""))     options.underPath(path);
+  }
+  return wrapFuture(blobStore.list(container,options),resource2ObjectList);
+}

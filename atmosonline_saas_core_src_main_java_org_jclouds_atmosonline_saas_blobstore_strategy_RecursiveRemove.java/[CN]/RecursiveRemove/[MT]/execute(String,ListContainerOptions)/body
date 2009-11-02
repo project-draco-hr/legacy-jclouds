@@ -1,0 +1,17 @@
+{
+  String path=containerName;
+  if (options.getPath() != null)   path+="/" + options.getPath();
+  Set<Future<Void>> deletes=Sets.newHashSet();
+  try {
+    for (    DirectoryEntry md : connection.listDirectory(path).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)) {
+      deletes.add(rm(path + "/" + md.getObjectName(),md.getType(),options.isRecursive()));
+    }
+    for (    Future<Void> isdeleted : deletes) {
+      isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    }
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException("Error deleting path: " + path,e);
+  }
+}

@@ -1,20 +1,4 @@
 {
-  Injector injector=Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_ENDPOINT)).to("http://accesspoint.emccis.com");
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_UID)).to("uid");
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_KEY)).to(HttpUtils.toBase64String("key".getBytes()));
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_SESSIONINTERVAL)).to(1l);
-    }
-  }
-,new AtmosStorageRestClientModule(),new RestModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new JavaUrlHttpCommandExecutorServiceModule());
-  processor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<AtmosStorageClient>>(){
-  }
-));
+  super.setupFactory();
+  blobToObject=injector.getInstance(BlobToObject.class);
 }

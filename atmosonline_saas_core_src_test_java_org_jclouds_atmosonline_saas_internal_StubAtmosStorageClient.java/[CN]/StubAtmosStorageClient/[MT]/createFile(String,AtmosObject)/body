@@ -1,0 +1,16 @@
+{
+  final String uri="http://stub/containers/" + parent + "/"+ object.getContentMetadata().getName();
+  String file=object.getContentMetadata().getName();
+  String container=parent;
+  if (parent.indexOf('/') != -1) {
+    container=parent.substring(0,parent.indexOf('/'));
+    String path=parent.substring(parent.indexOf('/') + 1);
+    if (!path.equals(""))     object.getContentMetadata().setName(path + "/" + file);
+  }
+  return wrapFuture(blobStore.putBlob(container,object2Blob.apply(object)),new Function<String,URI>(){
+    public URI apply(    String from){
+      return URI.create(uri);
+    }
+  }
+);
+}
