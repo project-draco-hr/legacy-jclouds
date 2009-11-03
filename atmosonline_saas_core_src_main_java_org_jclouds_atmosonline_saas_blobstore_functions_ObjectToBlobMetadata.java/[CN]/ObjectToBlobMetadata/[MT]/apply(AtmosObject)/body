@@ -2,11 +2,17 @@
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   to.setId(from.getSystemMetadata().getObjectID());
   to.setLastModified(from.getSystemMetadata().getLastUserDataModification());
-  to.setContentMD5(from.getContentMetadata().getContentMD5());
+  String md5hex=from.getUserMetadata().getMetadata().get("content-md5");
+  if (md5hex != null)   to.setContentMD5(HttpUtils.fromHexString(md5hex));
   if (from.getContentMetadata().getContentType() != null)   to.setContentType(from.getContentMetadata().getContentType());
   to.setName(objectName.apply(from));
   to.setSize(from.getSystemMetadata().getSize());
   to.setType(ResourceType.BLOB);
-  to.setUserMetadata(from.getUserMetadata().getMetadata());
+  Map<String,String> lowerKeyMetadata=Maps.newHashMap();
+  for (  Entry<String,String> entry : from.getUserMetadata().getMetadata().entrySet()) {
+    String key=entry.getKey().toLowerCase();
+    if (!systemMetadata.contains(key))     lowerKeyMetadata.put(key,entry.getValue());
+  }
+  to.setUserMetadata(lowerKeyMetadata);
   return to;
 }
