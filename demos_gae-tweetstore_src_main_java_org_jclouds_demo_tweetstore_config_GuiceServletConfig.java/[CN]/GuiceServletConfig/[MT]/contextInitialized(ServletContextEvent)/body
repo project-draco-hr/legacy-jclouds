@@ -1,5 +1,6 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
+  Queue queue=QueueFactory.getQueue("twitter");
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
   contexts=Maps.newHashMap();
@@ -12,6 +13,7 @@
     try {
       builderClass=(Class<BlobStoreContextBuilder<?>>)Class.forName(className);
       name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
+      queue.add(url("/store/do").header("context",name).method(Method.GET));
       constructor=builderClass.getConstructor(Properties.class);
       context=constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext();
     }
