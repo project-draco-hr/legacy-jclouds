@@ -1,3 +1,11 @@
 {
-  return new ParseSax<T>(parser.get(),handler);
+  SAXParser saxParser;
+  try {
+    saxParser=factory.newSAXParser();
+    XMLReader parser=saxParser.getXMLReader();
+    return new ParseSax<T>(parser,handler);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
 }
