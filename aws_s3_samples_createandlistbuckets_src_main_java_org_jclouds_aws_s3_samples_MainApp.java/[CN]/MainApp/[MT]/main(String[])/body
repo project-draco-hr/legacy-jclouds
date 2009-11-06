@@ -2,24 +2,23 @@
   if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
   String accesskeyid=args[0];
   String secretkey=args[1];
-  String ContainerName=args[2];
+  String containerName=args[2];
   BlobStoreContext context=S3BlobStoreContextFactory.createContext(accesskeyid,secretkey);
   try {
     BlobStore blobStore=context.getBlobStore();
-    blobStore.createContainer(ContainerName).get(10,TimeUnit.SECONDS);
+    blobStore.createContainer(containerName).get(10,TimeUnit.SECONDS);
     Blob blob=context.getBlobStore().newBlob();
     blob.getMetadata().setName("test");
     blob.setData("testdata");
-    blobStore.putBlob("test",blob).get(10,TimeUnit.SECONDS);
-    ;
+    blobStore.putBlob(containerName,blob).get(10,TimeUnit.SECONDS);
     for (    ResourceMetadata resourceMd : blobStore.list().get(10,TimeUnit.SECONDS)) {
-      System.out.println(String.format("  %1$s",resourceMd));
       if (resourceMd.getType() == ResourceType.CONTAINER || resourceMd.getType() == ResourceType.FOLDER) {
-        System.out.println(String.format(": %1$s entries%n",context.createInputStreamMap(resourceMd.getName()).size()));
+        System.out.printf("  %s: %s entries%n",resourceMd.getName(),context.createInputStreamMap(resourceMd.getName()).size());
       }
     }
   }
   finally {
     context.close();
+    System.exit(0);
   }
 }
