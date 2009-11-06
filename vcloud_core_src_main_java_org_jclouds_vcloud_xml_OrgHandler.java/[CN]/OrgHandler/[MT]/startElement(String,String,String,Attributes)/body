@@ -1,0 +1,19 @@
+{
+  if (qName.equals("Org")) {
+    org=new LinkImpl(attributes.getValue(attributes.getIndex("name")),ORG_XML,URI.create(attributes.getValue(attributes.getIndex("href"))));
+  }
+ else   if (qName.equals("Link")) {
+    int typeIndex=attributes.getIndex("type");
+    if (typeIndex != -1) {
+      if (attributes.getValue(typeIndex).equals(VDC_XML)) {
+        putLink(vdcs,attributes);
+      }
+ else       if (attributes.getValue(typeIndex).equals(CATALOG_XML)) {
+        catalog=newLink(attributes);
+      }
+ else       if (attributes.getValue(typeIndex).equals(TASKSLIST_XML)) {
+        putLink(tasksLists,attributes);
+      }
+    }
+  }
+}

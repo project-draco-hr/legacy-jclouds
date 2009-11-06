@@ -1,0 +1,17 @@
+{
+  context=new RestContextBuilder<VCloudLogin>(new TypeLiteral<VCloudLogin>(){
+  }
+,new Properties()){
+    public void addContextModule(    List<Module> modules){
+      modules.add(new VCloudLoginContextModule());
+    }
+    @Override protected void addClientModule(    List<Module> modules){
+      properties.setProperty(VCloudConstants.PROPERTY_VCLOUD_ENDPOINT,checkNotNull(endpoint,"endpoint").toString());
+      properties.setProperty(PROPERTY_VCLOUD_USER,checkNotNull(account,"user"));
+      properties.setProperty(PROPERTY_VCLOUD_KEY,checkNotNull(key,"key"));
+      properties.setProperty(PROPERTY_VCLOUD_SESSIONINTERVAL,"4");
+      modules.add(new VCloudDiscoveryRestClientModule());
+    }
+  }
+.withModules(new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService())).buildContext();
+}

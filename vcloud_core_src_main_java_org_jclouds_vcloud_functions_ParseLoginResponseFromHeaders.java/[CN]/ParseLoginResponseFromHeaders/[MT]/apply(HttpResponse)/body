@@ -1,0 +1,20 @@
+{
+  String cookieHeader=checkNotNull(from.getFirstHeaderOrNull(HttpHeaders.SET_COOKIE),HttpHeaders.SET_COOKIE);
+  final Matcher matcher=pattern.matcher(cookieHeader);
+  boolean matchFound=matcher.find();
+  if (matchFound) {
+    final Map<String,Link> org=factory.create(orgHandlerProvider.get()).parse(from.getContent());
+    return new VCloudSession(){
+      @VCloudToken public String getVCloudToken(){
+        return matcher.group(1);
+      }
+      @Org public Map<String,Link> getOrgs(){
+        return org;
+      }
+    }
+;
+  }
+ else {
+    throw new HttpResponseException("vcloud token not found in response ",null,from);
+  }
+}
