@@ -1,10 +1,9 @@
 {
   try {
     byte[] toSearch=objectMD5.apply(value);
-    String hex=HttpUtils.toHexString(toSearch);
     for (    BlobMetadata metadata : getAllBlobMetadata.execute(containerName,options)) {
-      UserMetadata properties=client.headFile(containerName + "/" + metadata.getName()).getUserMetadata();
-      if (hex.equals(properties.getMetadata().get("content-md5")))       return true;
+      MutableContentMetadata contentMd=client.headFile(containerName + "/" + metadata.getName()).getContentMetadata();
+      if (Arrays.equals(toSearch,contentMd.getContentMD5()))       return true;
     }
     return false;
   }

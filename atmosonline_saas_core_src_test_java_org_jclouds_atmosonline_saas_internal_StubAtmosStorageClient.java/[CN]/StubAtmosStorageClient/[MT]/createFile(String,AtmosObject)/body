@@ -7,7 +7,8 @@
     String path=parent.substring(parent.indexOf('/') + 1);
     if (!path.equals(""))     object.getContentMetadata().setName(path + "/" + file);
   }
-  return wrapFuture(blobStore.putBlob(container,object2Blob.apply(object)),new Function<String,URI>(){
+  Blob blob=object2Blob.apply(object);
+  return wrapFuture(blobStore.putBlob(container,blob),new Function<String,URI>(){
     public URI apply(    String from){
       return URI.create(uri);
     }
