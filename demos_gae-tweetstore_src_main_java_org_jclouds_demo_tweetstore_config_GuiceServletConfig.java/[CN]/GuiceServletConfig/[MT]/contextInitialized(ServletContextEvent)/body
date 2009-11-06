@@ -1,11 +1,10 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
-  Queue queue=QueueFactory.getQueue("twitter");
+  twitterClient=TwitterContextFactory.createContext(props,new GaeHttpCommandExecutorServiceModule()).getApi();
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
-  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
-  contexts=Maps.newHashMap();
-  client=TwitterContextFactory.createContext(props,new GaeHttpCommandExecutorServiceModule()).getApi();
-  for (  String className : list) {
+  ImmutableList<String> contextBuilderClassNames=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
+  providerTypeToBlobStoreMap=Maps.newHashMap();
+  for (  String className : contextBuilderClassNames) {
     Class<BlobStoreContextBuilder<?>> builderClass;
     Constructor<BlobStoreContextBuilder<?>> constructor;
     String name;
@@ -13,14 +12,17 @@
     try {
       builderClass=(Class<BlobStoreContextBuilder<?>>)Class.forName(className);
       name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
-      queue.add(url("/store/do").header("context",name).method(Method.GET));
       constructor=builderClass.getConstructor(Properties.class);
       context=constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext();
     }
  catch (    Exception e) {
       throw new RuntimeException("error instantiating " + className,e);
     }
-    contexts.put(name,context);
+    providerTypeToBlobStoreMap.put(name,context);
+  }
+  Queue queue=QueueFactory.getQueue("twitter");
+  for (  String name : providerTypeToBlobStoreMap.keySet()) {
+    queue.add(url("/store/do").header("context",name).method(Method.GET));
   }
   super.contextInitialized(servletContextEvent);
 }
