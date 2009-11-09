@@ -1,0 +1,12 @@
+{
+  try {
+    String returnVal=URLEncoder.encode(in,"UTF-8").replaceAll("\\+","%20").replaceAll("\\*","%2A").replaceAll("%7E","~");
+    for (    char c : skipEncode) {
+      returnVal=returnVal.replaceAll(plainToEncodedChars.get(c + ""),c + "");
+    }
+    return returnVal;
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new IllegalStateException("Bad encoding on input: " + in,e);
+  }
+}

@@ -1,11 +1,8 @@
 {
   PrefixOptions options=new PrefixOptions().withPrefix("1");
   Method method=TestRequest.class.getMethod("get",String.class,HttpRequestOptions.class);
-  HttpRequest httpMethod=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/1");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"prefix=1");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),1);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.HOST),Collections.singletonList("localhost"));
+  GeneratedHttpRequest<?> httpMethod=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
+  assertRequestLineEquals(httpMethod,"GET http://localhost:8080/1?prefix=1 HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Host: localhost\n");
+  assertEntityEquals(httpMethod,null);
 }

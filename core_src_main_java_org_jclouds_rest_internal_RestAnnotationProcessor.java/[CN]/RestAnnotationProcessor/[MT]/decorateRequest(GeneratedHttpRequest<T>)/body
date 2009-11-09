@@ -5,23 +5,40 @@
     mapBinder.bindToRequest(request,mapParams);
     return;
   }
-  for (  Entry<Integer,Set<Annotation>> entry : Maps.filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
+  OUTER:   for (  Entry<Integer,Set<Annotation>> entry : Maps.filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
     public boolean apply(    Set<Annotation> input){
       return input.size() >= 1;
     }
   }
 ).entrySet()) {
+    boolean shouldBreak=false;
     BinderParam entityAnnotation=(BinderParam)entry.getValue().iterator().next();
     Binder binder=injector.getInstance(entityAnnotation.value());
-    Object input=request.getArgs()[entry.getKey()];
-    if (input.getClass().isArray()) {
-      Object[] entityArray=(Object[])input;
-      input=entityArray.length > 0 ? entityArray[0] : null;
-    }
-    Object oldEntity=request.getEntity();
-    binder.bindToRequest(request,input);
-    if (oldEntity != null && !oldEntity.equals(request.getEntity())) {
-      throw new IllegalStateException(String.format("binder %s replaced the previous entity on request: %s",binder,request));
+    if (request.getArgs().length != 0) {
+      Object input;
+      Class<?> parameterType=request.getJavaMethod().getParameterTypes()[entry.getKey()];
+      Class<? extends Object> argType=request.getArgs()[entry.getKey()].getClass();
+      if (!argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+        int arrayLength=request.getArgs().length - request.getJavaMethod().getParameterTypes().length + 1;
+        if (arrayLength == 0)         break OUTER;
+        input=(Object[])Array.newInstance(request.getArgs()[entry.getKey()].getClass(),arrayLength);
+        System.arraycopy(request.getArgs(),entry.getKey(),input,0,arrayLength);
+        shouldBreak=true;
+      }
+ else       if (argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+        input=request.getArgs()[entry.getKey()];
+      }
+ else {
+        input=request.getArgs()[entry.getKey()];
+        if (input.getClass().isArray()) {
+          Object[] entityArray=(Object[])input;
+          input=entityArray.length > 0 ? entityArray[0] : null;
+        }
+      }
+      if (input != null) {
+        binder.bindToRequest(request,input);
+      }
+      if (shouldBreak)       break OUTER;
     }
   }
   if (request.getMethod().equals("PUT") && request.getEntity() == null) {

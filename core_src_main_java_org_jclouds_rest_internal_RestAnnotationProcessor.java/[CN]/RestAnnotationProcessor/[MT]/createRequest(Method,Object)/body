@@ -4,8 +4,9 @@
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
   builder.path(declaring);
   builder.path(method);
-  Multimap<String,String> tokenValues=encodeValues(getPathParamKeyValues(method,args),skipEncode);
-  addQueryParams(builder,tokenValues.entries(),method,args);
+  Multimap<String,String> tokenValues=encodeValues(getPathParamKeyValues(method,args),skips);
+  Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
+  Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
   addMatrixParams(builder,tokenValues.entries(),method,args);
   Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
   String stringEntity=null;
@@ -15,20 +16,23 @@
     for (    Entry<String,String> header : options.buildRequestHeaders().entries()) {
       headers.put(header.getKey(),replaceTokens(header.getValue(),tokenValues.entries()));
     }
-    for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
-      builder.queryParam(query.getKey(),replaceTokens(query.getValue(),tokenValues.entries()));
-    }
     for (    Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
       builder.matrixParam(matrix.getKey(),replaceTokens(matrix.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
+      queryParams.put(query.getKey(),replaceTokens(query.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> form : options.buildFormParameters().entries()) {
+      formParams.put(form.getKey(),replaceTokens(form.getValue(),tokenValues.entries()));
     }
     String pathSuffix=options.buildPathSuffix();
     if (pathSuffix != null) {
       builder.path(pathSuffix);
     }
     stringEntity=options.buildStringEntity();
-    if (stringEntity != null) {
-      headers.put(HttpHeaders.CONTENT_LENGTH,stringEntity.getBytes().length + "");
-    }
+  }
+  if (queryParams.size() > 0) {
+    builder.replaceQuery(makeQueryLine(queryParams,null,skips));
   }
   URI endPoint;
   try {
@@ -40,12 +44,16 @@
 catch (  UriBuilderException e) {
     throw new IllegalStateException(e);
   }
-  endPoint=replaceQuery(endPoint,endPoint.getQuery());
   GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(httpMethod,endPoint,this,declaring,method,args);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
+  if (formParams.size() > 0) {
+    if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_FORM_URLENCODED);
+    request.setEntity(makeQueryLine(formParams,null,skips));
+  }
   if (stringEntity != null) {
     request.setEntity(stringEntity);
+    if (headers.get(HttpHeaders.CONTENT_LENGTH) != null)     headers.put(HttpHeaders.CONTENT_LENGTH,stringEntity.getBytes().length + "");
     if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,"application/unknown");
   }
   request.getHeaders().putAll(headers);

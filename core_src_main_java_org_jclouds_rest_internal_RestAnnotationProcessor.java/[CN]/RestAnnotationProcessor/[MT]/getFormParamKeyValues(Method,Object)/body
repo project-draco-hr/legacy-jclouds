@@ -1,0 +1,12 @@
+{
+  Multimap<String,String> formParamValues=LinkedHashMultimap.create();
+  Map<Integer,Set<Annotation>> indexToFormParam=methodToindexOfParamToFormParamAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToFormParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      String paramKey=((FormParam)key).value();
+      String paramValue=args[entry.getKey()].toString();
+      formParamValues.put(paramKey,paramValue);
+    }
+  }
+  return formParamValues;
+}
