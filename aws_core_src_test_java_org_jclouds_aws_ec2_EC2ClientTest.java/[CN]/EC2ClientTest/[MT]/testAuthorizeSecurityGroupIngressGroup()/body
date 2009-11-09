@@ -1,0 +1,11 @@
+{
+  Method method=EC2Client.class.getMethod("authorizeSecurityGroupIngress",String.class,UserIdGroupPair.class);
+  GeneratedHttpRequest<EC2Client> httpMethod=processor.createRequest(method,"group",new UserIdGroupPair("sourceUser","sourceGroup"));
+  assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 71\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
+  assertEntityEquals(httpMethod,"Version=2009-08-15&Action=AuthorizeSecurityGroupIngress&GroupName=group&SourceSecurityGroupOwnerId=sourceUser&SourceSecurityGroupName=sourceGroup");
+  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}

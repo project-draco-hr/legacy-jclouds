@@ -1,0 +1,12 @@
+{
+  injector=Guice.createInjector(new EC2RestClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new ParserModule(),new AbstractModule(){
+    protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_EC2_ENDPOINT)).to("https://ec2.amazonaws.com");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_EC2_EXPIREINTERVAL)).to(30);
+    }
+  }
+);
+  filter=injector.getInstance(FormSigner.class);
+}

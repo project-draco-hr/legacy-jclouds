@@ -1,0 +1,12 @@
+{
+  return Guice.createInjector(new ExecutorServiceModule(new WithinThreadExecutorService()),new EC2RestClientModule(),new RestModule(),new JavaUrlHttpCommandExecutorServiceModule(),new JDKLoggingModule(),new EC2ContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_EC2_ENDPOINT)).to("http://localhost");
+      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_EC2_EXPIREINTERVAL)).to(30);
+      super.configure();
+    }
+  }
+);
+}

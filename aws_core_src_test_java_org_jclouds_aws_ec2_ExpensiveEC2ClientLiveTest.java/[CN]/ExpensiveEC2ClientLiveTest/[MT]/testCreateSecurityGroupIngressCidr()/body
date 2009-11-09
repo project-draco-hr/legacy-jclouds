@@ -1,0 +1,12 @@
+{
+  securityGroupName=serverPrefix + "ingress";
+  try {
+    client.deleteSecurityGroup(securityGroupName).get(30,TimeUnit.SECONDS);
+  }
+ catch (  Exception e) {
+  }
+  client.createSecurityGroup(securityGroupName,securityGroupName).get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,80,80,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,443,443,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,22,22,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+}

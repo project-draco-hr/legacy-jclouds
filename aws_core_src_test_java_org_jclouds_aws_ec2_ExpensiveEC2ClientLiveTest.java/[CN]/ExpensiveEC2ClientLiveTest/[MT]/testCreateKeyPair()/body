@@ -1,0 +1,14 @@
+{
+  String keyName=serverPrefix + "1";
+  try {
+    client.deleteKeyPair(keyName).get(30,TimeUnit.SECONDS);
+  }
+ catch (  Exception e) {
+  }
+  client.deleteKeyPair(keyName).get(30,TimeUnit.SECONDS);
+  keyPair=client.createKeyPair(keyName).get(30,TimeUnit.SECONDS);
+  assertNotNull(keyPair);
+  assertNotNull(keyPair.getKeyMaterial());
+  assertNotNull(keyPair.getKeyFingerprint());
+  assertEquals(keyPair.getKeyName(),keyName);
+}

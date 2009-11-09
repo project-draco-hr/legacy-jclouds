@@ -1,0 +1,8 @@
+{
+  String user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  client=new EC2ContextBuilder(new EC2PropertiesBuilder(user,password).build()).withModules(new Log4JLoggingModule()).buildContext().getApi();
+  Injector injector=Guice.createInjector(new Log4JLoggingModule(),new JschSshClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
+  client=EC2ContextFactory.createContext(user,password,new Log4JLoggingModule()).getApi();
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+}

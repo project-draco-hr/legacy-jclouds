@@ -1,0 +1,13 @@
+{
+  String groupName=PREFIX + "ingress";
+  try {
+    client.deleteSecurityGroup(groupName).get(30,TimeUnit.SECONDS);
+  }
+ catch (  Exception e) {
+  }
+  client.createSecurityGroup(groupName,groupName).get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(groupName,IpProtocol.TCP,80,80,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+  assertEventually(new GroupHasPermission(client,groupName,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
+  client.revokeSecurityGroupIngress(groupName,IpProtocol.TCP,80,80,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+  assertEventually(new GroupHasNoPermissions(client,groupName));
+}

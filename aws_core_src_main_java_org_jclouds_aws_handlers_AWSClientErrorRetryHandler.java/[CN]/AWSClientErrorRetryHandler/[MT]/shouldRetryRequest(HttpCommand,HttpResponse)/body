@@ -1,0 +1,17 @@
+{
+  if (command.getFailureCount() > retryCountLimit)   return false;
+  if (response.getStatusCode() == 400 || response.getStatusCode() == 403 || response.getStatusCode() == 409) {
+    byte[] content=Utils.closeClientButKeepContentStream(response);
+    command.incrementFailureCount();
+    try {
+      AWSError error=utils.parseAWSErrorFromContent(command,response,new String(content));
+      if ("RequestTimeout".equals(error.getCode()) || "OperationAborted".equals(error.getCode()) || "SignatureDoesNotMatch".equals(error.getCode())) {
+        return true;
+      }
+    }
+ catch (    HttpException e) {
+      logger.warn(e,"error parsing response: %s",new String(content));
+    }
+  }
+  return false;
+}

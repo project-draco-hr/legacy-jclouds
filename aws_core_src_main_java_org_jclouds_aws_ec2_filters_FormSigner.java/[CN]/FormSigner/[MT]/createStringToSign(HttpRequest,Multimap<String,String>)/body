@@ -1,0 +1,10 @@
+{
+  HttpUtils.logRequest(signatureLog,request,">>");
+  StringBuilder stringToSign=new StringBuilder();
+  stringToSign.append(request.getMethod()).append("\n");
+  stringToSign.append(request.getFirstHeaderOrNull(HttpHeaders.HOST).toLowerCase()).append("\n");
+  stringToSign.append(request.getEndpoint().getPath()).append("\n");
+  stringToSign.append(buildCanonicalizedString(decodedParams));
+  if (signatureWire.enabled())   signatureWire.output(stringToSign.toString());
+  return stringToSign.toString();
+}

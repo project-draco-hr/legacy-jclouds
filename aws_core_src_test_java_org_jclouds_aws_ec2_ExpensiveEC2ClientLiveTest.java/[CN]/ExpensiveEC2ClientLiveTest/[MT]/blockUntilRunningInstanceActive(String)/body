@@ -1,0 +1,10 @@
+{
+  RunningInstance currentDetails=null;
+  for (currentDetails=getRunningInstance(serverId); currentDetails.getInstanceState() != InstanceState.RUNNING; currentDetails=getRunningInstance(serverId)) {
+    System.out.printf("%s blocking on status active: currently: %s%n",currentDetails.getInstanceId(),currentDetails.getInstanceState());
+    Thread.sleep(5 * 1000);
+  }
+  System.out.printf("%s awaiting daemons to start%n",currentDetails.getInstanceId());
+  Thread.sleep(10 * 1000);
+  return currentDetails;
+}
