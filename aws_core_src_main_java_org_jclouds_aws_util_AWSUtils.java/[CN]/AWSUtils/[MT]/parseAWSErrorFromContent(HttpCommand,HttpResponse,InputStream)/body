@@ -1,0 +1,8 @@
+{
+  AWSError error=(AWSError)factory.create(errorHandlerProvider.get()).parse(content);
+  if ("SignatureDoesNotMatch".equals(error.getCode())) {
+    error.setStringSigned(signer.createStringToSign(command.getRequest()));
+    error.setSignature(signer.signString(error.getStringSigned()));
+  }
+  return error;
+}
