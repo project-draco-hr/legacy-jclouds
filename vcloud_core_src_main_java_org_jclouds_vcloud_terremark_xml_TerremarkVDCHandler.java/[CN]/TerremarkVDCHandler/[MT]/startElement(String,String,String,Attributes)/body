@@ -1,0 +1,18 @@
+{
+  super.startElement(uri,localName,qName,attributes);
+  if (qName.equals("Link")) {
+    String name=attributes.getValue(attributes.getIndex("name"));
+    if (name.equals("Internet Services")) {
+      internetServices=Utils.newLink(attributes);
+    }
+ else     if (name.equals("Public IPs")) {
+      publicIps=Utils.newLink(attributes);
+    }
+ else {
+      String type=attributes.getValue(attributes.getIndex("type"));
+      if (type.equals(VCloudMediaType.CATALOG_XML)) {
+        catalog=Utils.newLink(attributes);
+      }
+    }
+  }
+}
