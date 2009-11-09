@@ -1,0 +1,21 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(Catalog.class).toInstance(URI.create("http://catalog"));
+      bind(URI.class).annotatedWith(VDC.class).toInstance(URI.create("http://vdc"));
+      bind(SetVCloudTokenCookie.class).toInstance(new SetVCloudTokenCookie(new Provider<String>(){
+        public String get(){
+          return "token";
+        }
+      }
+));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+  }
+;
+}
