@@ -1,0 +1,17 @@
+{
+  return Guice.createInjector(new TwitterRestClientModule(),new TwitterContextModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(TwitterConstants.PROPERTY_TWITTER_USER)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(TwitterConstants.PROPERTY_TWITTER_PASSWORD)).to("password");
+      bindConstant().annotatedWith(Jsr330.named(TwitterConstants.PROPERTY_TWITTER_ENDPOINT)).to("http://localhost");
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+      super.configure();
+    }
+  }
+,new ParserModule(),new JavaUrlHttpCommandExecutorServiceModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
+}
