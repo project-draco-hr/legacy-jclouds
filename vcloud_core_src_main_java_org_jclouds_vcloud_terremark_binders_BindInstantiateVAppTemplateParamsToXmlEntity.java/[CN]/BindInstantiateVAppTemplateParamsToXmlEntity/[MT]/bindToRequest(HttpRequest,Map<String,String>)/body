@@ -1,0 +1,13 @@
+{
+  String name=checkNotNull(postParams.get("name"),"name parameter not present");
+  String template=checkNotNull(postParams.get("template"),"template parameter not present");
+  String count=checkNotNull(postParams.get("count"),"count parameter not present");
+  String megabytes=checkNotNull(postParams.get("megabytes"),"megabytes parameter not present");
+  String network=checkNotNull(postParams.get("network"),"network parameter not present");
+  String entity=xmlTemplate.replaceAll("\\{name\\}",name);
+  entity=entity.replaceAll("\\{template\\}",template);
+  entity=entity.replaceAll("\\{count\\}",count);
+  entity=entity.replaceAll("\\{megabytes\\}",megabytes);
+  entity=entity.replaceAll("\\{network\\}",network);
+  stringBinder.bindToRequest(request,entity);
+}
