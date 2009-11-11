@@ -1,0 +1,25 @@
+{
+  InputStream is=getClass().getResourceAsStream("/cloudfiles/test_list_container.json");
+  List<ObjectInfo> expects=Lists.newArrayList();
+  ObjectInfoImpl one=i.getInstance(ObjectInfoImpl.class);
+  one.name="test_obj_1";
+  one.hash="4281c348eaf83e70ddce0e07221c3d28";
+  one.bytes=14l;
+  one.content_type="application/octet-stream";
+  one.last_modified=new DateTime("2009-02-03T05:26:32.612278");
+  expects.add(one);
+  ObjectInfoImpl two=i.getInstance(ObjectInfoImpl.class);
+  two.name=("test_obj_2");
+  two.hash=("b039efe731ad111bc1b0ef221c3849d0");
+  two.bytes=(64l);
+  two.content_type=("application/octet-stream");
+  two.last_modified=(new DateTime("2009-02-03T05:26:32.612278"));
+  expects.add(two);
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  ListContainerOptions options=new ListContainerOptions();
+  expect(request.getArgs()).andReturn(new Object[]{"containter",new ListContainerOptions[]{options}}).atLeastOnce();
+  replay(request);
+  ParseObjectInfoListFromJsonResponse parser=i.getInstance(ParseObjectInfoListFromJsonResponse.class);
+  parser.setContext(request);
+  assertEquals(parser.apply(is),expects);
+}
