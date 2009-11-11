@@ -1,6 +1,37 @@
 {
-  URI template=tmClient.getCatalog().get(10,TimeUnit.SECONDS).get("Ubuntu Server 9.04 (32-bit)").getLocation();
-  URI network=tmClient.getDefaultVDC().get(10,TimeUnit.SECONDS).getAvailableNetworks().values().iterator().next().getLocation();
-  String response=tmClient.instantiateVAppTemplate("adriantest",template,1,512,network);
-  System.out.println(response);
+  URI template=tmClient.getCatalog().get(45,TimeUnit.SECONDS).get("Ubuntu Server 9.04 (32-bit)").getLocation();
+  URI network=tmClient.getDefaultVDC().get(45,TimeUnit.SECONDS).getAvailableNetworks().values().iterator().next().getLocation();
+  VApp vApp=tmClient.instantiateVAppTemplate("adriantest1",template,1,512,network).get(45,TimeUnit.SECONDS);
+  Task instantiateTask=getLastTaskFor(vApp.getVDC().getLocation());
+  Task deployTask=tmClient.deploy(vApp.getLocation()).get(45,TimeUnit.SECONDS);
+  assertEquals(deployTask.getLocation(),instantiateTask.getLocation());
+  deployTask=tmClient.deploy(vApp.getLocation()).get(45,TimeUnit.SECONDS);
+  assertEquals(deployTask.getLocation(),instantiateTask.getLocation());
+  try {
+    tmClient.cancelTask(deployTask.getLocation()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  deployTask=blockUntilSuccess(deployTask);
+  try {
+    tmClient.undeploy(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  deployTask=blockUntilSuccess(tmClient.powerOn(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS));
+  try {
+    tmClient.suspend(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  deployTask=blockUntilSuccess(tmClient.reset(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS));
+  tmClient.shutdown(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS);
+  deployTask=blockUntilSuccess(tmClient.powerOff(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS));
+  tmClient.delete(deployTask.getResult().getLocation()).get(45,TimeUnit.SECONDS);
 }

@@ -1,0 +1,8 @@
+{
+  for (task=tmClient.getTask(task.getLocation()).get(30,TimeUnit.SECONDS); task.getStatus() != TaskStatus.SUCCESS; task=tmClient.getTask(task.getLocation()).get(30,TimeUnit.SECONDS)) {
+    System.out.printf("%s blocking on status active: currently: %s%n",task.getOwner().getName(),task.getStatus());
+    Thread.sleep(5 * 1000);
+  }
+  System.out.printf("%s complete%n",task.getResult().getName());
+  return task;
+}

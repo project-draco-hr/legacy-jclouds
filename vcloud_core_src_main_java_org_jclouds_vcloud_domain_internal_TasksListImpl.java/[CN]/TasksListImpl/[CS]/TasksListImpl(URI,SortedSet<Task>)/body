@@ -1,4 +1,21 @@
 {
   this.location=location;
   this.tasks=tasks;
+  this.tasksByResult=Multimaps.index(Iterables.filter(tasks,new Predicate<Task>(){
+    public boolean apply(    Task input){
+      return input.getResult() != null;
+    }
+  }
+),new Function<Task,URI>(){
+    public URI apply(    Task input){
+      return input.getResult().getLocation();
+    }
+  }
+);
+  this.tasksByOwner=Multimaps.index(tasks,new Function<Task,URI>(){
+    public URI apply(    Task in){
+      return in.getOwner().getLocation();
+    }
+  }
+);
 }
