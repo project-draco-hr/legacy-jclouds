@@ -1,12 +1,11 @@
 {
-  String serverName="adriantest4";
+  String serverName="adriantest";
   int processorCount=1;
   int memory=512;
   String catalogOs="Ubuntu Server 9.04 (32-bit)";
   String expectedOs="Ubuntu Linux (32-bit)";
-  URI template=tmClient.getCatalog().get(45,TimeUnit.SECONDS).get(catalogOs).getLocation();
-  URI network=tmClient.getDefaultVDC().get(45,TimeUnit.SECONDS).getAvailableNetworks().values().iterator().next().getLocation();
-  VApp vApp=tmClient.instantiateVAppTemplate(serverName,template,processorCount,memory,network).get(45,TimeUnit.SECONDS);
+  int templateId=tmClient.getCatalog().get(45,TimeUnit.SECONDS).get(catalogOs).getId();
+  VApp vApp=tmClient.instantiateVAppTemplate(serverName,templateId).get(45,TimeUnit.SECONDS);
   assertEquals(vApp.getStatus(),VAppStatus.CREATING);
   Task instantiateTask=getLastTaskFor(vApp.getVDC().getLocation());
   assertEquals(instantiateTask.getStatus(),TaskStatus.QUEUED);

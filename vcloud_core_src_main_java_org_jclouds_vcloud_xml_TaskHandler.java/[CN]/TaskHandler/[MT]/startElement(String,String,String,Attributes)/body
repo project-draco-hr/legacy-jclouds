@@ -2,14 +2,9 @@
   if (qName.equals("Task")) {
     taskLink=Utils.newLink(attributes);
     status=TaskStatus.fromValue(attributes.getValue(attributes.getIndex("status")));
-    startTime=dateService.iso8601DateParse(attributes.getValue(attributes.getIndex("startTime")));
+    startTime=parseDate(attributes,"startTime");
     if (attributes.getIndex("endTime") != -1) {
-      try {
-        endTime=dateService.iso8601DateParse(attributes.getValue(attributes.getIndex("endTime")));
-      }
- catch (      RuntimeException e) {
-        if (!(e.getCause() instanceof ParseException))         throw e;
-      }
+      endTime=parseDate(attributes,"endTime");
     }
   }
  else   if (qName.equals("Owner")) {
