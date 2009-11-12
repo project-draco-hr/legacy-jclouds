@@ -1,0 +1,14 @@
+{
+  String[] byteStrings=string.split("\\.");
+  byte[] bytes=new byte[4];
+  for (int i=0; i < 4; i++) {
+    bytes[i]=(byte)Integer.parseInt(byteStrings[i]);
+  }
+  try {
+    return InetAddress.getByAddress(bytes);
+  }
+ catch (  UnknownHostException e) {
+    logger.warn(e,"error parsing ipAddress",currentText);
+    throw new RuntimeException(e);
+  }
+}
