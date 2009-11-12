@@ -1,7 +1,7 @@
 {
   Method method=TestPath.class.getMethod("onePathParamExtractor",String.class);
   GeneratedHttpRequest<?> httpMethod=factory(TestPath.class).createRequest(method,new Object[]{"localhost"});
-  assertEquals(httpMethod.getEndpoint().getPath(),"/l");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),0);
+  assertRequestLineEquals(httpMethod,"GET http://localhost:8080/l HTTP/1.1");
+  assertHeadersEqual(httpMethod,"");
+  assertEntityEquals(httpMethod,null);
 }
