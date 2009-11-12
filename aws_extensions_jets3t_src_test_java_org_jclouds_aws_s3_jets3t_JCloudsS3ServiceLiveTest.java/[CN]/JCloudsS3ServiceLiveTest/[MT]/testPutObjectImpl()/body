@@ -12,7 +12,7 @@
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
     assertEquals(jsResultObject.getContentType(),MediaType.APPLICATION_OCTET_STREAM);
-    requestObject=new S3Object("?n???d?-object");
+    requestObject=new S3Object("???n?????????d???-object");
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,requestObject.getKey()).get(10,TimeUnit.SECONDS);
     assertEquals(jcObject.getMetadata().getSize(),new Long(0));
@@ -20,7 +20,7 @@
     assertEquals(jsResultObject.getKey(),requestObject.getKey());
     assertEquals(jsResultObject.getContentLength(),0);
     assertEquals(jsResultObject.getContentType(),MediaType.APPLICATION_OCTET_STREAM);
-    String data="This is my ?n???d? data";
+    String data="This is my ???n?????????d??? data";
     requestObject=new S3Object(objectKey,data);
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
@@ -42,7 +42,7 @@
     assertTrue(jcACL.hasPermission(jcACL.getOwner().getId(),Permission.FULL_CONTROL));
     assertEquals(jcACL.getGrants().size(),2);
     requestObject=new S3Object(objectKey);
-    data="Here is some d?t? for you";
+    data="Here is some d???t??? for you";
     requestObject.setDataInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));
     jsResultObject=service.putObject(new S3Bucket(bucketName),requestObject);
     jcObject=context.getApi().getObject(bucketName,objectKey).get(10,TimeUnit.SECONDS);
