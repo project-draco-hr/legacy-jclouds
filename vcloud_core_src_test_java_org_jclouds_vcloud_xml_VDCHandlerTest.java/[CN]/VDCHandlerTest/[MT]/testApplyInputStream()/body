@@ -1,9 +1,23 @@
 {
   InputStream is=getClass().getResourceAsStream("/vdc.xml");
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @VCloud URI provide(){
+      return URI.create("https://services.vcloudexpress.terremark.com/api/v0.8");
+    }
+  }
+);
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
   VDC result=factory.create(injector.getInstance(VDCHandler.class)).parse(is);
   assertEquals(result.getName(),"Miami Environment 1");
   assertEquals(result.getLocation(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32"));
-  assertEquals(result.getType(),"application/vnd.vmware.vcloud.vdc+xml");
+  assertEquals(result.getDescription(),null);
+  assertEquals(result.getStorageCapacity(),null);
+  assertEquals(result.getCpuCapacity(),null);
+  assertEquals(result.getMemoryCapacity(),null);
+  assertEquals(result.getInstantiatedVmsQuota(),null);
+  assertEquals(result.getDeployedVmsQuota(),null);
   assertEquals(result.getResourceEntities(),ImmutableMap.<String,NamedLink>of());
   assertEquals(result.getAvailableNetworks(),ImmutableMap.of("10.114.34.128/26",new NamedLinkImpl("10.114.34.128/26","application/vnd.vmware.vcloud.network+xml",URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/network/1708"))));
 }

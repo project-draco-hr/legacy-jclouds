@@ -1,0 +1,23 @@
+{
+  InputStream is=getClass().getResourceAsStream("/vdc-hosting.xml");
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @VCloud URI provide(){
+      return URI.create("https://vcloud.safesecureweb.com/api/v0.8");
+    }
+  }
+);
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  VDC result=factory.create(injector.getInstance(VDCHandler.class)).parse(is);
+  assertEquals(result.getName(),"vDC Name");
+  assertEquals(result.getLocation(),URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/188849"));
+  assertEquals(result.getDescription(),"vDC Name");
+  assertEquals(result.getStorageCapacity(),new Capacity("bytes * 10^9",0,40960));
+  assertEquals(result.getCpuCapacity(),new Capacity("hz * 10^6",0,2400));
+  assertEquals(result.getMemoryCapacity(),new Capacity("bytes * 10^9",0,2));
+  assertEquals(result.getInstantiatedVmsQuota(),new Quota(0,2));
+  assertEquals(result.getDeployedVmsQuota(),new Quota(0,2));
+  assertEquals(result.getResourceEntities(),new ImmutableMap.Builder<String,NamedLink>().put("Plesk (Linux) 64-bit Template",new NamedLinkImpl("Plesk (Linux) 64-bit Template","application/vnd.vmware.vcloud.vAppTemplate+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate/1"))).put("Windows 2008 Datacenter 64 Bit Template",new NamedLinkImpl("Windows 2008 Datacenter 64 Bit Template","application/vnd.vmware.vcloud.vAppTemplate+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate/2"))).put("Cent OS 64 Bit Template",new NamedLinkImpl("Cent OS 64 Bit Template","application/vnd.vmware.vcloud.vAppTemplate+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate/3"))).put("cPanel (Linux) 64 Bit Template",new NamedLinkImpl("cPanel (Linux) 64 Bit Template","application/vnd.vmware.vcloud.vAppTemplate+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate/4"))).put("188849-1",new NamedLinkImpl("188849-1","application/vnd.vmware.vcloud.vApp+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vApp/188849-1"))).put("188849-2",new NamedLinkImpl("188849-2","application/vnd.vmware.vcloud.vApp+xml",URI.create("https://vcloud.safesecureweb.com/api/v0.8/vApp/188849-2"))).build());
+  assertEquals(result.getAvailableNetworks(),ImmutableMap.<String,NamedLink>of());
+}

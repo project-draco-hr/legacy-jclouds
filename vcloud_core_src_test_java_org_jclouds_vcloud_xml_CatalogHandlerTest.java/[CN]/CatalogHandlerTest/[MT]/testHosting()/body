@@ -1,0 +1,20 @@
+{
+  InputStream is=getClass().getResourceAsStream("/catalog-hosting.xml");
+  injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @CatalogItemRoot String provide(){
+      return "https://vcloud.safesecureweb.com/api/v0.8/catalogItem";
+    }
+  }
+);
+  factory=injector.getInstance(ParseSax.Factory.class);
+  Catalog result=(Catalog)factory.create(injector.getInstance(CatalogHandler.class)).parse(is);
+  assertEquals(result.getName(),"HMSCatalog");
+  assertEquals(result.getDescription(),"HMS Shared Catalog");
+  assertEquals(result.getLocation(),URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalog/1"));
+  assertEquals(result.get("Plesk (Linux) 64-bit Template"),new NamedResourceImpl(1,"Plesk (Linux) 64-bit Template",CATALOGITEM_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalogItem/1")));
+  assertEquals(result.get("Windows 2008 Datacenter 64 Bit Template"),new NamedResourceImpl(2,"Windows 2008 Datacenter 64 Bit Template",CATALOGITEM_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalogItem/2")));
+  assertEquals(result.get("Cent OS 64 Bit Template"),new NamedResourceImpl(3,"Cent OS 64 Bit Template",CATALOGITEM_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalogItem/3")));
+  assertEquals(result.get("cPanel (Linux) 64 Bit Template"),new NamedResourceImpl(4,"cPanel (Linux) 64 Bit Template",CATALOGITEM_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalogItem/4")));
+}

@@ -1,9 +1,18 @@
 {
   InputStream is=getClass().getResourceAsStream("/org.xml");
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @Singleton @VCloud URI provide(){
+      return URI.create("https://services.vcloudexpress.terremark.com/api/v0.8");
+    }
+  }
+);
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
   Organization result=(Organization)factory.create(injector.getInstance(OrgHandler.class)).parse(is);
   assertEquals(result.getName(),"adrian@jclouds.org");
+  assertEquals(result.getId(),48);
   assertEquals(result.getLocation(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/org/48"));
-  assertEquals(result.getType(),ORG_XML);
   assertEquals(result.getCatalog(),new NamedLinkImpl("Miami Environment 1 Catalog",CATALOG_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32/catalog")));
   assertEquals(result.getVDCs(),ImmutableMap.of("Miami Environment 1",new NamedLinkImpl("Miami Environment 1",VCloudMediaType.VDC_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32"))));
   assertEquals(result.getTasksLists(),ImmutableMap.of("Miami Environment 1 Tasks List",new NamedLinkImpl("Miami Environment 1 Tasks List",TASKSLIST_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/tasksList/32"))));
