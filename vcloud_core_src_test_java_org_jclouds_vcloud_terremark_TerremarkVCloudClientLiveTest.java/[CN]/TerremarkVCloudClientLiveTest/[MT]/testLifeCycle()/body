@@ -1,0 +1,25 @@
+{
+  try {
+    tmClient.undeployVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  try {
+    tmClient.suspendVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  blockUntilSuccess(tmClient.resetVApp(vApp.getId()).get(45,TimeUnit.SECONDS));
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.ON);
+  tmClient.shutdownVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.ON);
+  blockUntilSuccess(tmClient.powerOffVApp(vApp.getId()).get(45,TimeUnit.SECONDS));
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.OFF);
+}

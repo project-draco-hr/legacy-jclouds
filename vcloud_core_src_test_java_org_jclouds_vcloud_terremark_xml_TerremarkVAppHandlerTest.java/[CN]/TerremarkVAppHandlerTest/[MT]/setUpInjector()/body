@@ -1,3 +1,11 @@
 {
-  super.setUpInjector();
+  injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @VAppRoot String provide(){
+      return "https://services.vcloudexpress.terremark.com/api/v0.8/vapp";
+    }
+  }
+);
+  factory=injector.getInstance(ParseSax.Factory.class);
 }

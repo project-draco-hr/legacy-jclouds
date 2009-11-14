@@ -1,0 +1,33 @@
+{
+  String serverName="adriantest";
+  int processorCount=1;
+  int memory=512;
+  long hardDisk=4194304;
+  String catalogOs="Ubuntu JeOS 9.04 (32-bit)";
+  String expectedOs="Ubuntu Linux (32-bit)";
+  int templateId=tmClient.getCatalog().get(45,TimeUnit.SECONDS).get(catalogOs).getId();
+  vApp=tmClient.instantiateVAppTemplate(serverName,templateId).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.CREATING);
+  Task instantiateTask=getLastTaskFor(vApp.getVDC().getLocation());
+  assertEquals(instantiateTask.getStatus(),TaskStatus.QUEUED);
+  Task deployTask=tmClient.deployVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(deployTask.getLocation(),instantiateTask.getLocation());
+  deployTask=tmClient.deployVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(deployTask.getLocation(),instantiateTask.getLocation());
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.CREATING);
+  try {
+    tmClient.cancelTask(deployTask.getLocation()).get(45,TimeUnit.SECONDS);
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getCause().getClass(),HttpResponseException.class);
+    assertEquals(((HttpResponseException)e.getCause()).getResponse().getStatusCode(),501);
+  }
+  deployTask=blockUntilSuccess(deployTask);
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  verifyConfigurationOfVApp(vApp,serverName,expectedOs,processorCount,memory,hardDisk);
+  assertEquals(vApp.getStatus(),VAppStatus.OFF);
+  deployTask=blockUntilSuccess(tmClient.powerOnVApp(vApp.getId()).get(45,TimeUnit.SECONDS));
+  vApp=tmClient.getVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  assertEquals(vApp.getStatus(),VAppStatus.ON);
+}

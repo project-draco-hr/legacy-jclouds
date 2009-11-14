@@ -1,0 +1,12 @@
+{
+  System.out.printf("%s:%s%n",address,22);
+  SshClient connection=sshFactory.create(new InetSocketAddress(address,22),"vcloud","p4ssw0rd");
+  try {
+    connection.connect();
+    InputStream etcPasswd=connection.get("/etc/passwd");
+    Utils.toStringAndClose(etcPasswd);
+  }
+  finally {
+    if (connection != null)     connection.disconnect();
+  }
+}

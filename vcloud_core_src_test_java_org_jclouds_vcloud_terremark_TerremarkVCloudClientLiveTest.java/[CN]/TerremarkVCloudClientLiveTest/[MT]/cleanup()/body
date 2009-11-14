@@ -1,0 +1,12 @@
+{
+  if (node != null)   tmClient.deleteNode(node.getId()).get(30,TimeUnit.SECONDS);
+  if (is != null)   tmClient.deleteInternetService(is.getId()).get(30,TimeUnit.SECONDS);
+  if (vApp != null) {
+    try {
+      blockUntilSuccess(tmClient.powerOffVApp(vApp.getId()).get(45,TimeUnit.SECONDS));
+    }
+ catch (    Exception e) {
+    }
+    tmClient.deleteVApp(vApp.getId()).get(45,TimeUnit.SECONDS);
+  }
+}

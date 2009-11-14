@@ -3,6 +3,8 @@
     @Override protected void configure(){
       bind(URI.class).annotatedWith(Catalog.class).toInstance(URI.create("http://catalog"));
       bind(String.class).annotatedWith(CatalogItemRoot.class).toInstance("http://catalogItem");
+      bind(URI.class).annotatedWith(VCloud.class).toInstance(URI.create("http://vcloud"));
+      bind(String.class).annotatedWith(VAppRoot.class).toInstance("http://vapp");
       bind(URI.class).annotatedWith(VDC.class).toInstance(URI.create("http://vdc"));
       bind(URI.class).annotatedWith(Network.class).toInstance(URI.create("http://network"));
       bind(SetVCloudTokenCookie.class).toInstance(new SetVCloudTokenCookie(new Provider<String>(){
@@ -19,8 +21,13 @@
 );
     }
     @SuppressWarnings("unused") @Singleton @Provides @Named("InstantiateVAppTemplateParams") String provideInstantiateVAppTemplateParams() throws IOException {
-      InputStream is=getClass().getResourceAsStream("/terremark/InstantiateVAppTemplateParams.xml");
-      return Utils.toStringAndClose(is);
+      return Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/InstantiateVAppTemplateParams.xml"));
+    }
+    @SuppressWarnings("unused") @Singleton @Provides @Named("CreateInternetService") String provideCreateInternetService() throws IOException {
+      return Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/CreateInternetService.xml"));
+    }
+    @SuppressWarnings("unused") @Singleton @Provides @Named("CreateNodeService") String provideCreateNodeService() throws IOException {
+      return Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/CreateNodeService.xml"));
     }
   }
 ;
