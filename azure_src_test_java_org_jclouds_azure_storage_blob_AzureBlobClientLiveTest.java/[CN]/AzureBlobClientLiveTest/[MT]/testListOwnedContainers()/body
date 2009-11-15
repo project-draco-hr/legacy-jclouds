@@ -1,9 +1,9 @@
 {
-  SortedSet<ListableContainerProperties> response=connection.listContainers().get(10,TimeUnit.SECONDS);
-  response=connection.listContainers(ListOptions.Builder.prefix(privateContainer.substring(0,privateContainer.length() - 1)).maxResults(1)).get(10,TimeUnit.SECONDS);
+  SortedSet<ListableContainerProperties> response=connection.listContainers();
+  response=connection.listContainers(ListOptions.Builder.prefix(privateContainer.substring(0,privateContainer.length() - 1)).maxResults(1));
   assertEquals(response.size(),1);
   assertEquals(response.first().getName(),privateContainer);
-  response=connection.listContainers(ListOptions.Builder.prefix(publicContainer).maxResults(1)).get(10,TimeUnit.SECONDS);
+  response=connection.listContainers(ListOptions.Builder.prefix(publicContainer).maxResults(1));
   assertEquals(response.size(),1);
   assertEquals(response.first().getName(),publicContainer);
 }

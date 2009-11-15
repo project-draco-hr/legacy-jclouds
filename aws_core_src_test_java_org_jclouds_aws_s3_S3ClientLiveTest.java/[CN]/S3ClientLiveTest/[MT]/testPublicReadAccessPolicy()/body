@@ -1,8 +1,8 @@
 {
   String containerName=getScratchContainerName();
   try {
-    context.getApi().putBucketIfNotExists(containerName,withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
-    AccessControlList acl=context.getApi().getBucketACL(containerName).get(10,TimeUnit.SECONDS);
+    context.getApi().putBucketIfNotExists(containerName,withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
+    AccessControlList acl=context.getApi().getBucketACL(containerName);
     assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
   }
   finally {

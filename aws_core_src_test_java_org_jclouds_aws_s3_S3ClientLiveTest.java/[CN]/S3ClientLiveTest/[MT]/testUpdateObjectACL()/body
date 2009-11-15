@@ -3,21 +3,21 @@
   try {
     String objectKey="private-acl";
     addBlobToContainer(containerName,objectKey);
-    AccessControlList acl=context.getApi().getObjectACL(containerName,objectKey).get(10,TimeUnit.SECONDS);
+    AccessControlList acl=context.getApi().getObjectACL(containerName,objectKey);
     String ownerId=acl.getOwner().getId();
     assertEquals(acl.getGrants().size(),1);
     assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
     addGrantsToACL(acl);
     assertEquals(acl.getGrants().size(),4);
-    assertTrue(context.getApi().putObjectACL(containerName,objectKey,acl).get(10,TimeUnit.SECONDS));
-    acl=context.getApi().getObjectACL(containerName,objectKey).get(10,TimeUnit.SECONDS);
+    assertTrue(context.getApi().putObjectACL(containerName,objectKey,acl));
+    acl=context.getApi().getObjectACL(containerName,objectKey);
     checkGrants(acl);
     acl.revokeAllPermissions(new CanonicalUserGrantee(ownerId));
     if (!ownerId.equals(TEST_ACL_ID))     acl.revokeAllPermissions(new CanonicalUserGrantee(TEST_ACL_ID));
     assertEquals(acl.getGrants().size(),1);
     assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ));
-    assertTrue(context.getApi().putObjectACL(containerName,objectKey,acl).get(10,TimeUnit.SECONDS));
-    acl=context.getApi().getObjectACL(containerName,objectKey).get(10,TimeUnit.SECONDS);
+    assertTrue(context.getApi().putObjectACL(containerName,objectKey,acl));
+    acl=context.getApi().getObjectACL(containerName,objectKey);
     assertEquals(acl.getGrants().size(),1);
     assertEquals(acl.getPermissions(ownerId).size(),0);
     assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());

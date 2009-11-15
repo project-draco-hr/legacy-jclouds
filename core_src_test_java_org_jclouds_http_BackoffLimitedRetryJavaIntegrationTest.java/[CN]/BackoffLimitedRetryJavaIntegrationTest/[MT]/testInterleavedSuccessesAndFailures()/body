@@ -8,10 +8,8 @@
     submitGetRequest();
     fail("Third request should not succeed by attempt number " + requestCount);
   }
- catch (  ExecutionException e) {
-    assertEquals(e.getCause().getClass(),HttpResponseException.class);
-    HttpResponseException responseException=(HttpResponseException)e.getCause();
-    assertEquals(responseException.getResponse().getStatusCode(),500);
+ catch (  HttpResponseException e) {
+    assertEquals(e.getResponse().getStatusCode(),500);
   }
   assertEquals(submitGetRequest().trim(),XML);
 }

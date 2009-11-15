@@ -3,11 +3,11 @@
   String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
   URI endpoint=URI.create(checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint"));
   connection=PCSContextFactory.createContext(endpoint,user,password,new Log4JLoggingModule()).getApi();
-  ContainerList response=connection.list().get(10,TimeUnit.SECONDS);
+  ContainerList response=connection.list();
   for (  ResourceInfo resource : response) {
     if (resource.getType() == ResourceType.FOLDER && resource.getName().startsWith(containerPrefix)) {
       System.err.printf("*** deleting container %s...%n",resource.getName());
-      connection.deleteContainer(resource.getUrl()).get(10,TimeUnit.SECONDS);
+      connection.deleteContainer(resource.getUrl());
     }
   }
 }

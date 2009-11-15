@@ -2,27 +2,27 @@
   String group1Name=PREFIX + "ingress1";
   String group2Name=PREFIX + "ingress2";
   try {
-    client.deleteSecurityGroup(group1Name).get(30,TimeUnit.SECONDS);
+    client.deleteSecurityGroup(group1Name);
   }
  catch (  Exception e) {
   }
   try {
-    client.deleteSecurityGroup(group2Name).get(30,TimeUnit.SECONDS);
+    client.deleteSecurityGroup(group2Name);
   }
  catch (  Exception e) {
   }
-  client.createSecurityGroup(group1Name,group1Name).get(30,TimeUnit.SECONDS);
-  client.createSecurityGroup(group2Name,group2Name).get(30,TimeUnit.SECONDS);
+  client.createSecurityGroup(group1Name,group1Name);
+  client.createSecurityGroup(group2Name,group2Name);
   ensureGroupsExist(group1Name,group2Name);
-  client.authorizeSecurityGroupIngress(group1Name,IpProtocol.TCP,80,80,"0.0.0.0/0").get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(group1Name,IpProtocol.TCP,80,80,"0.0.0.0/0");
   assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
-  SortedSet<SecurityGroup> oneResult=client.describeSecurityGroups(group1Name).get(30,TimeUnit.SECONDS);
+  SortedSet<SecurityGroup> oneResult=client.describeSecurityGroups(group1Name);
   assertNotNull(oneResult);
   assertEquals(oneResult.size(),1);
   SecurityGroup group=oneResult.iterator().next();
   assertEquals(group.getName(),group1Name);
-  client.authorizeSecurityGroupIngress(group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name)).get(30,TimeUnit.SECONDS);
+  client.authorizeSecurityGroupIngress(group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
   assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
-  client.revokeSecurityGroupIngress(group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name)).get(30,TimeUnit.SECONDS);
+  client.revokeSecurityGroupIngress(group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
   assertEventually(new GroupHasNoPermissions(client,group2Name));
 }

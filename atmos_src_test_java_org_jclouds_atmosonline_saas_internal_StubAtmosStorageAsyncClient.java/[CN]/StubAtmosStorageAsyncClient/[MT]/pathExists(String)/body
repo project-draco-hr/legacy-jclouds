@@ -1,0 +1,19 @@
+{
+  if (path.indexOf('/') == -1 || (path.endsWith("/")))   return blobStore.exists(path);
+ else {
+    return new FutureBase<Boolean>(){
+      public Boolean get() throws InterruptedException, ExecutionException {
+        String container=path.substring(0,path.indexOf('/'));
+        String blobName=path.substring(path.indexOf('/') + 1);
+        try {
+          blobStore.blobMetadata(container,blobName);
+          return true;
+        }
+ catch (        KeyNotFoundException e) {
+          return false;
+        }
+      }
+    }
+;
+  }
+}

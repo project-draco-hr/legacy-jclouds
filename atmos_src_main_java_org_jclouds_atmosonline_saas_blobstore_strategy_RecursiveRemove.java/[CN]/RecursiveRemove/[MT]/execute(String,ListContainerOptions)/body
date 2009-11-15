@@ -3,7 +3,7 @@
   if (options.getPath() != null)   path+="/" + options.getPath();
   Set<Future<Void>> deletes=Sets.newHashSet();
   try {
-    for (    DirectoryEntry md : connection.listDirectory(path).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)) {
+    for (    DirectoryEntry md : async.listDirectory(path).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)) {
       deletes.add(rm(path + "/" + md.getObjectName(),md.getType(),options.isRecursive()));
     }
     for (    Future<Void> isdeleted : deletes) {

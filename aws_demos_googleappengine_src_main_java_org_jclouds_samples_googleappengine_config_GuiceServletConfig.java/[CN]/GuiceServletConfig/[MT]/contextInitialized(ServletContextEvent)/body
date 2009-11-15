@@ -4,10 +4,10 @@
   contexts=Maps.newHashMap();
   for (  String className : list) {
     try {
-      Class<BlobStoreContextBuilder<?>> builderClass;
-      builderClass=(Class<BlobStoreContextBuilder<?>>)Class.forName(className);
+      Class<BlobStoreContextBuilder<?,?>> builderClass;
+      builderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(className);
       String name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
-      Constructor<BlobStoreContextBuilder<?>> constructor=builderClass.getConstructor(Properties.class);
+      Constructor<BlobStoreContextBuilder<?,?>> constructor=builderClass.getConstructor(Properties.class);
       contexts.put(name,constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext());
     }
  catch (    Exception e) {

@@ -1,0 +1,16 @@
+{
+  sync.deletePath(path);
+  try {
+    if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
+      public Boolean get(){
+        return !sync.pathExists(path);
+      }
+    }
+,30000)) {
+      throw new IllegalStateException(path + " still exists after deleting!");
+    }
+  }
+ catch (  InterruptedException e) {
+    new IllegalStateException(path + " interrupted during deletion!",e);
+  }
+}

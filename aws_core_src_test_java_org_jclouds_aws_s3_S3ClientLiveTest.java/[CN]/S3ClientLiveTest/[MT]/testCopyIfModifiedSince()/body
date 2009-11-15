@@ -5,19 +5,13 @@
     DateTime before=new DateTime();
     addToContainerAndValidate(containerName,sourceKey + "mod");
     DateTime after=new DateTime().plusSeconds(1);
-    context.getApi().copyObject(containerName,sourceKey + "mod",destinationContainer,destinationKey,ifSourceModifiedSince(before)).get(10,TimeUnit.SECONDS);
+    context.getApi().copyObject(containerName,sourceKey + "mod",destinationContainer,destinationKey,ifSourceModifiedSince(before));
     validateContent(destinationContainer,destinationKey);
     try {
-      context.getApi().copyObject(containerName,sourceKey + "mod",destinationContainer,destinationKey,ifSourceModifiedSince(after)).get(10,TimeUnit.SECONDS);
+      context.getApi().copyObject(containerName,sourceKey + "mod",destinationContainer,destinationKey,ifSourceModifiedSince(after));
     }
- catch (    ExecutionException e) {
-      if (e.getCause() instanceof HttpResponseException) {
-        HttpResponseException ex=(HttpResponseException)e.getCause();
-        assertEquals(ex.getResponse().getStatusCode(),412);
-      }
- else {
-        throw e;
-      }
+ catch (    HttpResponseException ex) {
+      assertEquals(ex.getResponse().getStatusCode(),412);
     }
   }
   finally {

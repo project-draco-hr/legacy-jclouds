@@ -1,7 +1,7 @@
 {
-  RestContext<AzureBlobClient> context=new AzureBlobContextBuilder(new AzureBlobPropertiesBuilder("id","secret").build()).withModules(new AzureBlobStubClientModule()).buildContext();
+  RestContext<AzureBlobAsyncClient,AzureBlobClient> context=new AzureBlobContextBuilder(new AzureBlobPropertiesBuilder("id","secret").build()).withModules(new AzureBlobStubClientModule()).buildContext();
   assertEquals(context.getClass(),RestContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubAzureBlobClient.class);
+  assertEquals(context.getAsyncApi().getClass(),StubAzureBlobAsyncClient.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("https://localhost/azurestub"));
 }

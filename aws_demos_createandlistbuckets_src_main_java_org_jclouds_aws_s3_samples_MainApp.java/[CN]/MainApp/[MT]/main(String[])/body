@@ -6,12 +6,12 @@
   BlobStoreContext context=S3BlobStoreContextFactory.createContext(accesskeyid,secretkey);
   try {
     BlobStore blobStore=context.getBlobStore();
-    blobStore.createContainer(containerName).get(10,TimeUnit.SECONDS);
-    Blob blob=context.getBlobStore().newBlob();
+    blobStore.createContainer(containerName);
+    Blob blob=blobStore.newBlob();
     blob.getMetadata().setName("test");
     blob.setData("testdata");
-    blobStore.putBlob(containerName,blob).get(10,TimeUnit.SECONDS);
-    for (    ResourceMetadata resourceMd : blobStore.list().get(10,TimeUnit.SECONDS)) {
+    blobStore.putBlob(containerName,blob);
+    for (    ResourceMetadata resourceMd : blobStore.list()) {
       if (resourceMd.getType() == ResourceType.CONTAINER || resourceMd.getType() == ResourceType.FOLDER) {
         System.out.printf("  %s: %s entries%n",resourceMd.getName(),context.createInputStreamMap(resourceMd.getName()).size());
       }

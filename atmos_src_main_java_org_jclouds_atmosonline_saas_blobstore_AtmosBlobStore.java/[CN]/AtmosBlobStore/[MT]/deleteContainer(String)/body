@@ -1,18 +1,4 @@
 {
-  return service.submit(new Callable<Void>(){
-    public Void call() throws Exception {
-      clearContainerStrategy.execute(container,recursive());
-      connection.deletePath(container).get();
-      if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
-        public Boolean get(){
-          return !connection.pathExists(container);
-        }
-      }
-,requestTimeoutMilliseconds)) {
-        throw new IllegalStateException(container + " still exists after deleting!");
-      }
-      return null;
-    }
-  }
-);
+  clearContainerStrategy.execute(container,recursive());
+  deleteAndEnsurePathGone(container);
 }

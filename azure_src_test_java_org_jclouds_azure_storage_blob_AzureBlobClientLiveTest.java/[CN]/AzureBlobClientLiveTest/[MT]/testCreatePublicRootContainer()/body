@@ -1,24 +1,25 @@
 {
   try {
-    connection.deleteRootContainer().get(10,TimeUnit.SECONDS);
+    connection.deleteRootContainer();
   }
- catch (  ExecutionException e) {
+ catch (  AzureStorageResponseException e) {
     sleepIfWaitingForDeleteToFinish(e);
   }
   boolean created=false;
   while (!created) {
     try {
-      created=connection.createRootContainer().get(10,TimeUnit.SECONDS);
+      created=connection.createRootContainer();
     }
- catch (    ExecutionException e) {
-      AzureStorageResponseException htpe=(AzureStorageResponseException)e.getCause().getCause();
+ catch (    AzureStorageResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 409) {
         Thread.sleep(5000);
         continue;
       }
-      throw e;
+ else {
+        throw htpe;
+      }
     }
   }
-  ListBlobsResponse list=connection.listBlobs().get(10,TimeUnit.SECONDS);
+  ListBlobsResponse list=connection.listBlobs();
   assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/%%24root",account)));
 }

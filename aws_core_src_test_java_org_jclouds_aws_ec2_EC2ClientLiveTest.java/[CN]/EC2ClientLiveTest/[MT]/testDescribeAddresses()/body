@@ -1,9 +1,9 @@
 {
-  SortedSet<PublicIpInstanceIdPair> allResults=client.describeAddresses().get(30,TimeUnit.SECONDS);
+  SortedSet<PublicIpInstanceIdPair> allResults=client.describeAddresses();
   assertNotNull(allResults);
   if (allResults.size() >= 1) {
     PublicIpInstanceIdPair pair=allResults.last();
-    SortedSet<PublicIpInstanceIdPair> result=client.describeAddresses(pair.getPublicIp()).get(30,TimeUnit.SECONDS);
+    SortedSet<PublicIpInstanceIdPair> result=client.describeAddresses(pair.getPublicIp());
     assertNotNull(result);
     PublicIpInstanceIdPair compare=result.last();
     assertEquals(compare,pair);

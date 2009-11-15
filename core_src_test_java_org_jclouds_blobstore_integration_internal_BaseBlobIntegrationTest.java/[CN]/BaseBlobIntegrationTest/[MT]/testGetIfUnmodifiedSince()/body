@@ -5,22 +5,14 @@
     DateTime before=new DateTime().minusSeconds(1);
     addObjectAndValidateContent(containerName,key);
     DateTime after=new DateTime().plusSeconds(1);
-    context.getBlobStore().getBlob(containerName,key,ifUnmodifiedSince(after)).get(30,TimeUnit.SECONDS);
+    context.getBlobStore().getBlob(containerName,key,ifUnmodifiedSince(after));
     validateContent(containerName,key);
     try {
-      context.getBlobStore().getBlob(containerName,key,ifUnmodifiedSince(before)).get(30,TimeUnit.SECONDS);
+      context.getBlobStore().getBlob(containerName,key,ifUnmodifiedSince(before));
       validateContent(containerName,key);
     }
- catch (    ExecutionException e) {
-      if (e.getCause() instanceof HttpResponseException) {
-        HttpResponseException ex=(HttpResponseException)e.getCause();
-        assertEquals(ex.getResponse().getStatusCode(),412);
-      }
- else       if (e.getCause() instanceof RuntimeException) {
-      }
- else {
-        throw e;
-      }
+ catch (    HttpResponseException ex) {
+      assertEquals(ex.getResponse().getStatusCode(),412);
     }
   }
   finally {

@@ -1,0 +1,22 @@
+{
+  if (method.getName().equals("equals")) {
+    return this.equals(o);
+  }
+ else   if (method.getName().equals("hashCode")) {
+    return this.hashCode();
+  }
+ else   if (method.getName().equals("toString")) {
+    return this.toString();
+  }
+ else   if (syncMethodMap.containsKey(method)) {
+    return syncMethodMap.get(method).invoke(delegate,args);
+  }
+ else {
+    try {
+      return ((Future<?>)methodMap.get(method).invoke(delegate,args)).get(timeoutMap.get(method),TimeUnit.NANOSECONDS);
+    }
+ catch (    ExecutionException e) {
+      throw e.getCause();
+    }
+  }
+}

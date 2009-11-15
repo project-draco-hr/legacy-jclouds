@@ -5,11 +5,11 @@
     AccountMetadata metadata=context.getApi().getAccountStatistics();
     assertNotNull(metadata);
     long initialContainerCount=metadata.getContainerCount();
-    assertTrue(context.getApi().createContainer(containerName).get(10,TimeUnit.SECONDS));
+    assertTrue(context.getApi().createContainer(containerName));
     metadata=context.getApi().getAccountStatistics();
     assertNotNull(metadata);
     assertTrue(metadata.getContainerCount() >= initialContainerCount);
-    assertTrue(context.getApi().deleteContainerIfEmpty(containerName).get(10,TimeUnit.SECONDS));
+    assertTrue(context.getApi().deleteContainerIfEmpty(containerName));
   }
   finally {
     returnContainer(containerPrefix);

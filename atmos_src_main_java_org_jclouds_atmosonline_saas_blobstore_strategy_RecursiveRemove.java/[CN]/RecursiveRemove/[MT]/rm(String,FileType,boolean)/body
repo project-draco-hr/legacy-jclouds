@@ -1,19 +1,19 @@
 {
   Set<Future<Void>> deletes=Sets.newHashSet();
   if ((type == FileType.DIRECTORY) && recursive) {
-    for (    DirectoryEntry child : connection.listDirectory(fullPath).get(10,TimeUnit.SECONDS)) {
+    for (    DirectoryEntry child : async.listDirectory(fullPath).get(10,TimeUnit.SECONDS)) {
       deletes.add(rm(fullPath + "/" + child.getObjectName(),child.getType(),true));
     }
   }
   for (  Future<Void> isdeleted : deletes) {
     isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
-  return new FutureFunctionWrapper<Void,Void>(connection.deletePath(fullPath),new Function<Void,Void>(){
+  return new FutureFunctionWrapper<Void,Void>(async.deletePath(fullPath),new Function<Void,Void>(){
     public Void apply(    Void from){
       try {
         if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
           public Boolean get(){
-            return !connection.pathExists(fullPath);
+            return !sync.pathExists(fullPath);
           }
         }
 ,requestTimeoutMilliseconds)) {

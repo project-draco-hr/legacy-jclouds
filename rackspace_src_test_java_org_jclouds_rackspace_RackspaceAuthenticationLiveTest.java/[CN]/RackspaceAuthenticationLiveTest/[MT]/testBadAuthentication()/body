@@ -1,12 +1,4 @@
 {
-  RackspaceAuthentication authentication=context.getApi();
-  try {
-    authentication.authenticate("foo","bar");
-  }
- catch (  UndeclaredThrowableException e) {
-    HttpResponseException ew=(HttpResponseException)e.getCause().getCause();
-    assertEquals(ew.getResponse().getStatusCode(),401);
-    throw ew;
-  }
-  fail();
+  RackspaceAuthentication authentication=context.getAsyncApi();
+  authentication.authenticate("foo","bar").get(10,TimeUnit.SECONDS);
 }

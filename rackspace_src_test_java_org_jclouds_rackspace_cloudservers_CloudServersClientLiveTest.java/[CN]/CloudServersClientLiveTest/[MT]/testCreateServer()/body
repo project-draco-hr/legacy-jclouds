@@ -5,7 +5,8 @@
   while (server == null) {
     String serverName=serverPrefix + "createserver" + new SecureRandom().nextInt();
     try {
-      server=connection.createServer(serverName,imageId,flavorId,withFile("/etc/jclouds.txt","rackspace".getBytes()).withMetadata(metadata));
+      System.out.printf("%d: running instance%n",System.currentTimeMillis());
+      server=client.createServer(serverName,imageId,flavorId,withFile("/etc/jclouds.txt","rackspace".getBytes()).withMetadata(metadata));
     }
  catch (    UndeclaredThrowableException e) {
       HttpResponseException htpe=(HttpResponseException)e.getCause().getCause();

@@ -1,0 +1,25 @@
+{
+  final String path=container + "/" + blob.getMetadata().getName();
+  Callable<String> valueCallable=new FutureFunctionCallable<Void,String>(async.deletePath(path),new Function<Void,String>(){
+    public String apply(    Void from){
+      try {
+        if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
+          public Boolean get(){
+            return !sync.pathExists(path);
+          }
+        }
+,requestTimeoutMilliseconds)) {
+          throw new IllegalStateException(path + " still exists after deleting!");
+        }
+        if (blob.getMetadata().getContentMD5() != null)         blob.getMetadata().getUserMetadata().put("content-md5",HttpUtils.toHexString(blob.getMetadata().getContentMD5()));
+        sync.createFile(container,blob2Object.apply(blob));
+        return path;
+      }
+ catch (      InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+);
+  return service.submit(valueCallable);
+}

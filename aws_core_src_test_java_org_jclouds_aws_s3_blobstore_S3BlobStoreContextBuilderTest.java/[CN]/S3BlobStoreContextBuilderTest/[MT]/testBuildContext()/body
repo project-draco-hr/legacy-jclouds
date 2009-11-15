@@ -1,10 +1,10 @@
 {
-  BlobStoreContext<S3Client> context=new S3BlobStoreContextBuilder(new S3PropertiesBuilder("id","secret").build()).withModules(new S3StubClientModule()).buildContext();
+  BlobStoreContext<S3AsyncClient,S3Client> context=new S3BlobStoreContextBuilder(new S3PropertiesBuilder("id","secret").build()).withModules(new S3StubClientModule()).buildContext();
   assertEquals(context.getClass(),BlobStoreContextImpl.class);
-  assertEquals(context.getApi().getClass(),StubS3Client.class);
-  assertEquals(context.getBlobStore().getClass(),S3BlobStore.class);
-  assertEquals(context.getApi().newS3Object().getClass(),S3ObjectImpl.class);
-  assertEquals(context.getBlobStore().newBlob().getClass(),BlobImpl.class);
+  assertEquals(context.getAsyncApi().getClass(),StubS3AsyncClient.class);
+  assertEquals(context.getAsyncBlobStore().getClass(),S3AsyncBlobStore.class);
+  assertEquals(context.getAsyncApi().newS3Object().getClass(),S3ObjectImpl.class);
+  assertEquals(context.getAsyncBlobStore().newBlob().getClass(),BlobImpl.class);
   assertEquals(context.getAccount(),"id");
   assertEquals(context.getEndPoint(),URI.create("https://localhost/s3stub"));
 }

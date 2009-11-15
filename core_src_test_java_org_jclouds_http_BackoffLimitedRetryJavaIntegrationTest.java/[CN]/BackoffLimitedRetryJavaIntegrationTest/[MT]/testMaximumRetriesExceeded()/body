@@ -6,9 +6,7 @@
     submitGetRequest();
     fail("Request should not succeed within " + endFailuresOnRequestNumber + " requests");
   }
- catch (  ExecutionException e) {
-    assertEquals(e.getCause().getClass(),HttpResponseException.class);
-    HttpResponseException responseException=(HttpResponseException)e.getCause();
-    assertEquals(responseException.getResponse().getStatusCode(),500);
+ catch (  HttpResponseException e) {
+    assertEquals(e.getResponse().getStatusCode(),500);
   }
 }

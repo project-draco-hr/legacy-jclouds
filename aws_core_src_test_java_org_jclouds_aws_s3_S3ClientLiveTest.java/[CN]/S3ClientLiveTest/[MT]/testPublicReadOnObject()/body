@@ -5,11 +5,11 @@
     S3Object object=context.getApi().newS3Object();
     object.getMetadata().setKey(publicReadObjectKey);
     object.setData("");
-    context.getApi().putObject(containerName,object,new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ)).get(10,TimeUnit.SECONDS);
+    context.getApi().putObject(containerName,object,new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ));
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
-          AccessControlList acl=context.getApi().getObjectACL(containerName,publicReadObjectKey).get(10,TimeUnit.SECONDS);
+          AccessControlList acl=context.getApi().getObjectACL(containerName,publicReadObjectKey);
           assertEquals(acl.getGrants().size(),2);
           assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),1);
           assertTrue(acl.getOwner() != null);

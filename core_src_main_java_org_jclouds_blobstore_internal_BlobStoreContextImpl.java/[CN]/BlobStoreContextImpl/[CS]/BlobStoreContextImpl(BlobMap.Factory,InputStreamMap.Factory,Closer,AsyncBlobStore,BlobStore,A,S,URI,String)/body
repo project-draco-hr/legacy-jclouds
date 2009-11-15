@@ -1,0 +1,18 @@
+{
+  super(closer,asyncApi,syncApi,endPoint,account);
+  Class<?> type;
+  if (asyncApi.getClass().isAnnotationPresent(ConsistencyModel.class)) {
+    type=asyncApi.getClass();
+  }
+ else   if (asyncApi.getClass().getInterfaces().length > 0 && asyncApi.getClass().getInterfaces()[0].isAnnotationPresent(ConsistencyModel.class)) {
+    type=asyncApi.getClass().getInterfaces()[0];
+  }
+ else {
+    throw new IllegalStateException("@ConsistencyModel needed on " + asyncApi.getClass());
+  }
+  this.consistencyModel=type.getAnnotation(ConsistencyModel.class).value();
+  this.blobMapFactory=checkNotNull(blobMapFactory,"blobMapFactory");
+  this.inputStreamMapFactory=checkNotNull(inputStreamMapFactory,"inputStreamMapFactory");
+  this.ablobStore=checkNotNull(ablobStore,"ablobStore");
+  this.blobStore=checkNotNull(blobStore,"blobStore");
+}

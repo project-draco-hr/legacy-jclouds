@@ -1,11 +1,11 @@
 {
   final String containerName=getScratchContainerName();
   try {
-    context.getApi().putBucketIfNotExists(containerName + "eu",createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ)).get(30,TimeUnit.SECONDS);
+    context.getApi().putBucketIfNotExists(containerName + "eu",createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
-          AccessControlList acl=context.getApi().getBucketACL(containerName + "eu").get(30,TimeUnit.SECONDS);
+          AccessControlList acl=context.getApi().getBucketACL(containerName + "eu");
           assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
         }
  catch (        Exception e) {

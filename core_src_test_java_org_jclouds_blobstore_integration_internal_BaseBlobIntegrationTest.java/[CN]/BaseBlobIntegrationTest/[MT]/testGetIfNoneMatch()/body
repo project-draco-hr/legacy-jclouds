@@ -3,20 +3,14 @@
   try {
     String key="apples";
     String goodETag=addObjectAndValidateContent(containerName,key);
-    context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch("powerfrisbee")).get(30,TimeUnit.SECONDS);
+    context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch("powerfrisbee"));
     validateContent(containerName,key);
     try {
-      context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch(goodETag)).get(30,TimeUnit.SECONDS);
+      context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch(goodETag));
       validateContent(containerName,key);
     }
- catch (    ExecutionException e) {
-      if (e.getCause() instanceof HttpResponseException) {
-        HttpResponseException ex=(HttpResponseException)e.getCause();
-        assertEquals(ex.getResponse().getStatusCode(),304);
-      }
- else {
-        throw e;
-      }
+ catch (    HttpResponseException ex) {
+      assertEquals(ex.getResponse().getStatusCode(),304);
     }
   }
   finally {
