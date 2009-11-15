@@ -5,4 +5,7 @@
   Injector injector=Guice.createInjector(new Log4JLoggingModule(),new JschSshClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
   client=EC2ContextFactory.createContext(user,password,new Log4JLoggingModule()).getApi();
   sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
 }
