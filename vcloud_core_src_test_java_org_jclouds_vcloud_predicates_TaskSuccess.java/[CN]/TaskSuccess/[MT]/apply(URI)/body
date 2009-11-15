@@ -1,0 +1,19 @@
+{
+  logger.trace("looking for status on task %s",taskUri);
+  Task task;
+  try {
+    task=client.getTask(taskUri).get(taskTimeout,TimeUnit.MILLISECONDS);
+    logger.trace("%s: looking for status %s: currently: %s",task,TaskStatus.SUCCESS,task.getStatus());
+    return task.getStatus() == TaskStatus.SUCCESS;
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"%s interrupted, returning false",taskUri);
+  }
+catch (  ExecutionException e) {
+    logger.warn(e,"%s exception, returning false",taskUri);
+  }
+catch (  TimeoutException e) {
+    logger.warn(e,"%s timeout, returning false",taskUri);
+  }
+  return false;
+}

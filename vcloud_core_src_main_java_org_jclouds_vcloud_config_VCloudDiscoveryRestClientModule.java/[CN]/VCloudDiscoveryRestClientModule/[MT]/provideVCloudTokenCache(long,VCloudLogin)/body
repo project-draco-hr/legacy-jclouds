@@ -1,7 +1,13 @@
 {
   return new ExpirableSupplier<VCloudSession>(new Supplier<VCloudSession>(){
     public VCloudSession get(){
-      return login.login();
+      try {
+        return login.login().get(45,TimeUnit.SECONDS);
+      }
+ catch (      Exception e) {
+        Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        throw new RuntimeException("Error logging in",e);
+      }
     }
   }
 ,seconds,TimeUnit.SECONDS);

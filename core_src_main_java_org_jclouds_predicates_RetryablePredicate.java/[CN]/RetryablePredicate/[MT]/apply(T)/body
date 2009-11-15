@@ -1,0 +1,16 @@
+{
+  try {
+    for (DateTime end=new DateTime().plusMillis(maxWait); before(end); Thread.sleep(checkInterval)) {
+      if (predicate.apply(input)) {
+        return true;
+      }
+ else       if (!before(end)) {
+        return false;
+      }
+    }
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"predicate %s on %s interrupted, returning false",input,predicate);
+  }
+  return false;
+}

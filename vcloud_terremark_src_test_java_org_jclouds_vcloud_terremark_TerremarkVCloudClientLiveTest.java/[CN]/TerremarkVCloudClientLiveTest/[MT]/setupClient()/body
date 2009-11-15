@@ -1,7 +1,9 @@
 {
   account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  connection=tmClient=new TerremarkVCloudContextBuilder(new TerremarkVCloudPropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule()).buildContext().getApi();
-  Injector injector=Guice.createInjector(new Log4JLoggingModule(),new JschSshClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()));
+  Injector injector=new TerremarkVCloudContextBuilder(new TerremarkVCloudPropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
+  connection=tmClient=injector.getInstance(TerremarkVCloudClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
+  socketTester=new RetryablePredicate<InetSocketAddress>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
+  successTester=new RetryablePredicate<URI>(injector.getInstance(TaskSuccess.class),300,10,TimeUnit.SECONDS);
 }
