@@ -1,0 +1,14 @@
+{
+  checkArgument(imageCatalogNameMap.containsKey(image),"image not configured: " + image);
+  String templateId=catalogNameTemplateIdMap.get(imageCatalogNameMap.get(image));
+  logger.debug(">> instantiating vApp name(%s) minCores(%d) minMegs(%d) image(%s)",name,minCores,minMegs,image);
+  VApp vApp=tmClient.instantiateVAppTemplate(name,templateId,InstantiateVAppTemplateOptions.Builder.cpuCount(minCores).megabytes(minMegs));
+  logger.debug("<< instantiated VApp(%s)",vApp.getId());
+  logger.debug(">> deploying vApp(%s)",vApp.getId());
+  vApp=blockUntilVAppStatusOrThrowException(vApp,tmClient.deployVApp(vApp.getId()),"deploy",VAppStatus.OFF);
+  logger.debug("<< deployed vApp(%s)",vApp.getId());
+  logger.debug(">> powering vApp(%s)",vApp.getId());
+  vApp=blockUntilVAppStatusOrThrowException(vApp,tmClient.powerOnVApp(vApp.getId()),"powerOn",VAppStatus.ON);
+  logger.debug("<< on vApp(%s)",vApp.getId());
+  return vApp.getId();
+}

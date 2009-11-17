@@ -1,0 +1,10 @@
+{
+  if (!taskTester.apply(deployTask.getLocation())) {
+    throw new TaskException(taskType,vApp,deployTask);
+  }
+  vApp=tmClient.getVApp(vApp.getId());
+  if (vApp.getStatus() != expectedStatus) {
+    throw new VAppException(String.format("vApp %s status %s should be %s after %s",vApp.getId(),vApp.getStatus(),expectedStatus,taskType),vApp);
+  }
+  return vApp;
+}

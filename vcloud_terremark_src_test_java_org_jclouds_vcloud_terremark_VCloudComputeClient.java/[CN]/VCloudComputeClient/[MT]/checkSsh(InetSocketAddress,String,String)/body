@@ -1,0 +1,12 @@
+{
+  if (!socketTester.apply(socket)) {
+    throw new SocketNotOpenException(socket);
+  }
+  SshClient connection=sshFactory.create(socket,username,password);
+  try {
+    connection.connect();
+  }
+  finally {
+    if (connection != null)     connection.disconnect();
+  }
+}

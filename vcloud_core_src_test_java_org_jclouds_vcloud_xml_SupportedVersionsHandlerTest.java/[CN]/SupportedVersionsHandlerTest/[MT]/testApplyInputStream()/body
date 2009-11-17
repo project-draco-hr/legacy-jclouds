@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/versions.xml");
+  Injector injector=Guice.createInjector(new ParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  SortedMap<String,URI> result=factory.create(injector.getInstance(SupportedVersionsHandler.class)).parse(is);
+  assertEquals(result,ImmutableSortedMap.of("0.8",URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/login")));
+}
