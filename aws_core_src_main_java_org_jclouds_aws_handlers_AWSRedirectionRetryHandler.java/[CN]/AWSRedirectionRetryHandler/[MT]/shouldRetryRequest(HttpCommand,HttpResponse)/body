@@ -2,7 +2,7 @@
   if (response.getFirstHeaderOrNull(HttpHeaders.LOCATION) == null && (response.getStatusCode() == 301 || response.getStatusCode() == 307)) {
     byte[] content=Utils.closeClientButKeepContentStream(response);
     if (command.getRequest().getMethod() == HttpMethod.HEAD) {
-      command.setMethod(HttpMethod.GET);
+      command.redirectAsGet();
       return true;
     }
  else {
@@ -15,7 +15,7 @@
             return backoffHandler.shouldRetryRequest(command,response);
           }
  else {
-            command.setHostAndPort(host,command.getRequest().getEndpoint().getPort());
+            command.redirect(host,command.getRequest().getEndpoint().getPort());
           }
           return true;
         }
