@@ -1,0 +1,11 @@
+{
+  NewInstance inst=new NewInstance(new CreateOptions("test.jclouds.org",null,"lenny"),"MIRO1");
+  NewInstanceResponse instanceResponse=connection.createInstance(inst);
+  Instance instance=instanceResponse.getInstance();
+  assertNotNull(instance.getId());
+  InstanceInfo instanceInfo=connection.restartInstance(instance.getId());
+  connection.destroyInstance(instance.getId());
+  assertEquals(instanceInfo.getState(),RunningState.RUNNING);
+  assertEquals(instance.getName(),"test.jclouds.org");
+  assertEquals(instance.getImageId(),"lenny");
+}
