@@ -1,0 +1,9 @@
+{
+  StringBuilder switchClause=new StringBuilder();
+  switchClause.append(replaceTokens(OS_TO_SWITCH_PATTERN.get(family),ImmutableMap.of("variable",CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,variable))));
+  for (  Entry<String,String> entry : valueToActions.entrySet()) {
+    switchClause.append(replaceTokens(OS_TO_CASE_PATTERN.get(family),ImmutableMap.of("value",entry.getKey(),"action",entry.getValue())));
+  }
+  switchClause.append(OS_TO_END_SWITCH_PATTERN.get(family));
+  return switchClause.toString();
+}

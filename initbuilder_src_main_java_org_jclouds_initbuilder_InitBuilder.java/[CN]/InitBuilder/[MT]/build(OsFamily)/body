@@ -1,0 +1,10 @@
+{
+  StringBuilder builder=new StringBuilder();
+  builder.append(ShellToken.SHEBANG.to(osFamily));
+  builder.append(ShellToken.ZERO_PATH.to(osFamily));
+  builder.append(Utils.writeVariableExporters(variables,osFamily));
+  for (  Entry<String,Map<String,String>> entry : switchExec.entrySet()) {
+    builder.append(Utils.writeSwitch(entry.getKey(),entry.getValue(),osFamily));
+  }
+  return builder.toString();
+}
