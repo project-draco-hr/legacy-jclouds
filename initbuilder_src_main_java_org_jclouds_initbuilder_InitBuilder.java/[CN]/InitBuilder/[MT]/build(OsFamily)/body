@@ -1,7 +1,14 @@
 {
   StringBuilder builder=new StringBuilder();
   builder.append(ShellToken.SHEBANG.to(osFamily));
-  builder.append(ShellToken.ZERO_PATH.to(osFamily));
+  builder.append(Utils.writeUnsetVariables(Lists.newArrayList(Iterables.transform(variablesToUnset,new Function<String,String>(){
+    @Override public String apply(    String from){
+      if (ShellToken.tokenValueMap(osFamily).containsKey(from + "Variable"))       return Utils.FUNCTION_UPPER_UNDERSCORE_TO_LOWER_CAMEL.apply(ShellToken.tokenValueMap(osFamily).get(from + "Variable"));
+      return from;
+    }
+  }
+)),osFamily));
+  builder.append(Utils.writeZeroPath(osFamily));
   builder.append(Utils.writeVariableExporters(variables,osFamily));
   for (  Entry<String,Map<String,String>> entry : switchExec.entrySet()) {
     builder.append(Utils.writeSwitch(entry.getKey(),entry.getValue(),osFamily));
