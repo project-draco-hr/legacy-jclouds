@@ -1,8 +1,3 @@
 {
-  StringBuilder initializers=new StringBuilder();
-  for (  Entry<String,String> entry : variablesInLowerCamelCase.entrySet()) {
-    String key=CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,entry.getKey());
-    initializers.append(replaceTokens(OS_TO_EXPORTER_PATTERN.get(family),ImmutableMap.of("key",key,"value",entry.getValue())));
-  }
-  return initializers.toString();
+  return replaceTokens(writeVariableExporters(variablesInLowerCamelCase),ShellToken.tokenValueMap(family));
 }
