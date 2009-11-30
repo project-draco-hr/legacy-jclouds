@@ -9,6 +9,7 @@
     }
   }
 )),osFamily));
+  resolveFunctionDependencies(osFamily);
   if (functions.size() > 0) {
     builder.append(ShellToken.BEGIN_FUNCTIONS.to(osFamily));
     builder.append(Utils.writeFunctionFromResource("abort",osFamily));
@@ -18,9 +19,11 @@
     builder.append(ShellToken.END_FUNCTIONS.to(osFamily));
   }
   builder.append(Utils.writeZeroPath(osFamily));
-  for (  Entry<String,Map<String,String>> entry : switchExec.entrySet()) {
-    builder.append(Utils.writeSwitch(entry.getKey(),entry.getValue(),osFamily));
+  StringBuilder statementBuilder=new StringBuilder();
+  for (  Statement statement : statements) {
+    statementBuilder.append(statement.render(osFamily));
   }
+  builder.append(statementBuilder.toString().replaceAll(ShellToken.RETURN.to(osFamily),ShellToken.EXIT.to(osFamily)));
   builder.append(ShellToken.END_SCRIPT.to(osFamily));
   return builder.toString();
 }

@@ -1,0 +1,13 @@
+{
+  Iterable<String> dependentFunctions=Iterables.concat(Iterables.transform(statements,new Function<Statement,Iterable<String>>(){
+    @Override public Iterable<String> apply(    Statement from){
+      return from.functionDependecies();
+    }
+  }
+));
+  List<String> unresolvedFunctions=Lists.newArrayList(dependentFunctions);
+  Iterables.removeAll(unresolvedFunctions,this.functions.keySet());
+  for (  String functionName : dependentFunctions) {
+    functions.put(functionName,Utils.writeFunctionFromResource(functionName,osFamily));
+  }
+}

@@ -1,5 +1,5 @@
 {
   ScriptBuilder builder=new ScriptBuilder();
-  builder.switchOn("1",ImmutableMap.of("start","echo started","stop","echo stopped"));
-  assertEquals(builder.switchExec,ImmutableMap.of("1",ImmutableMap.of("start","echo started","stop","echo stopped")));
+  builder.addStatement(switchOn("1",ImmutableMap.of("start",interpret("echo started{lf}"),"stop",interpret("echo stopped{lf}"))));
+  assertEquals(builder.statements,ImmutableList.of(new Switch("1",ImmutableMap.of("start",interpret("echo started{lf}"),"stop",interpret("echo stopped{lf}")))));
 }
