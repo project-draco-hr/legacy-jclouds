@@ -1,4 +1,9 @@
 {
+  Map<String,String> functions=Maps.newLinkedHashMap();
+  functions.put("abort",Utils.writeFunctionFromResource("abort",osFamily));
+  for (  Entry<String,Map<String,String>> entry : variableScopes.entrySet()) {
+    functions.put(entry.getKey(),Utils.writeFunction(entry.getKey(),Utils.writeVariableExporters(entry.getValue())));
+  }
   final Map<String,String> tokenValueMap=ShellToken.tokenValueMap(osFamily);
   StringBuilder builder=new StringBuilder();
   builder.append(ShellToken.BEGIN_SCRIPT.to(osFamily));
@@ -9,10 +14,9 @@
     }
   }
 )),osFamily));
-  resolveFunctionDependencies(osFamily);
+  resolveFunctionDependencies(functions,osFamily);
   if (functions.size() > 0) {
     builder.append(ShellToken.BEGIN_FUNCTIONS.to(osFamily));
-    builder.append(Utils.writeFunctionFromResource("abort",osFamily));
     for (    String function : functions.values()) {
       builder.append(Utils.replaceTokens(function,tokenValueMap));
     }
