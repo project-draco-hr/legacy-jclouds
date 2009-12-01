@@ -1,0 +1,3 @@
+{
+  assertEquals(new SwitchArg(1,ImmutableMap.of("0",interpret("echo hello zero{lf}"),"1",interpret("echo hello one{lf}"))).render(OsFamily.WINDOWS),"if not \"%1\" == \"0\" if not \"%1\" == \"1\" (\r\n   set EXCEPTION=bad argument: %1 not in 0 1\r\n   goto abort\r\n)\r\ngoto CASE_%1\r\n:CASE_0\r\n   echo hello zero\r\n   GOTO END_SWITCH\r\n:CASE_1\r\n   echo hello one\r\n   GOTO END_SWITCH\r\n:END_SWITCH\r\n");
+}

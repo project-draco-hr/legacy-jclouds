@@ -1,6 +1,7 @@
 {
   StringBuilder switchClause=new StringBuilder();
-  switchClause.append(Utils.replaceTokens(OS_TO_SWITCH_PATTERN.get(family),ImmutableMap.of("variable",CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,variable))));
+  addArgValidation(switchClause,family);
+  switchClause.append(Utils.replaceTokens(OS_TO_SWITCH_PATTERN.get(family),ImmutableMap.of("arg",arg + "")));
   for (  Entry<String,Statement> entry : valueToActions.entrySet()) {
     switchClause.append(Utils.replaceTokens(OS_TO_CASE_PATTERN.get(family),ImmutableMap.of("value",entry.getKey(),"action",entry.getValue().render(family).replaceAll("^","   "))));
   }

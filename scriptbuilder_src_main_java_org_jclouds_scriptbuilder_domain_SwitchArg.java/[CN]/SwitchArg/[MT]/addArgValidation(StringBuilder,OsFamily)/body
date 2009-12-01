@@ -1,0 +1,10 @@
+{
+  if (family.equals(OsFamily.WINDOWS)) {
+    for (    String value : valueToActions.keySet()) {
+      switchClause.append("if not \"%").append(arg).append(String.format("\" == \"%s\" ",value));
+    }
+    switchClause.append("(\r\n   set EXCEPTION=bad argument: %").append(arg).append(" not in ");
+    switchClause.append(Joiner.on(" ").join(valueToActions.keySet()));
+    switchClause.append("\r\n   goto abort\r\n)\r\n");
+  }
+}
