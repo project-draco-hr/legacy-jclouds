@@ -1,0 +1,17 @@
+{
+  if (qName.equals("VApp")) {
+    name=id=attributes.getValue(attributes.getIndex("name"));
+    location=URI.create(attributes.getValue(attributes.getIndex("href")));
+    status=VAppStatus.fromValue(attributes.getValue(attributes.getIndex("status")));
+  }
+ else   if (qName.equals("ovf:OperatingSystemSection")) {
+    inOs=true;
+  }
+ else   if (qName.equals("NetworkConfig")) {
+    networkName=attributes.getValue(attributes.getIndex("name"));
+  }
+ else {
+    systemHandler.startElement(uri,localName,qName,attributes);
+    allocationHandler.startElement(uri,localName,qName,attributes);
+  }
+}

@@ -1,5 +1,9 @@
 {
-  String response=connection.getVAppString("188849-2");
-  assertNotNull(response);
-  System.out.println(response);
+  VDC response=connection.getDefaultVDC();
+  for (  NamedResource item : response.getResourceEntities().values()) {
+    if (item.getType().equals(VCloudMediaType.VAPP_XML)) {
+      VApp app=connection.getVApp(item.getId());
+      assertNotNull(app);
+    }
+  }
 }

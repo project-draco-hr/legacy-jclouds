@@ -1,0 +1,22 @@
+{
+  if (qName.equals("rasd:ElementName")) {
+    this.elementName=currentText.toString().trim();
+  }
+ else   if (qName.equals("rasd:InstanceID")) {
+    this.instanceID=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("rasd:VirtualSystemIdentifier")) {
+    this.virtualSystemIdentifier=currentText.toString().trim();
+  }
+ else   if (qName.equals("rasd:VirtualSystemType")) {
+    this.virtualSystemType=currentText.toString().trim();
+  }
+ else   if (qName.equals("System")) {
+    this.system=new org.jclouds.vcloud.domain.VirtualSystem(instanceID,elementName,virtualSystemIdentifier,virtualSystemType);
+    this.elementName=null;
+    this.instanceID=-1;
+    this.virtualSystemIdentifier=null;
+    this.virtualSystemType=null;
+  }
+  currentText=new StringBuilder();
+}

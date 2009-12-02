@@ -1,0 +1,53 @@
+{
+  if (qName.equals("rasd:Address")) {
+    address=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("rasd:AddressOnParent")) {
+    addressOnParent=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("rasd:AllocationUnits")) {
+    allocationUnits=currentOrNull();
+  }
+ else   if (qName.equals("rasd:Description")) {
+    description=currentOrNull();
+  }
+ else   if (qName.equals("rasd:ElementName")) {
+    elementName=currentOrNull();
+  }
+ else   if (qName.equals("rasd:InstanceID")) {
+    instanceID=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("rasd:Parent")) {
+    parent=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("rasd:ResourceSubType")) {
+    resourceSubType=currentOrNull();
+  }
+ else   if (qName.equals("rasd:ResourceType")) {
+    resourceType=ResourceType.fromValue(currentOrNull());
+  }
+ else   if (qName.equals("rasd:VirtualQuantity")) {
+    virtualQuantity=Long.parseLong(currentOrNull());
+  }
+ else   if (qName.equals("rasd:VirtualQuantityUnits")) {
+    virtualQuantityUnits=currentOrNull();
+  }
+ else   if (qName.equals("Item")) {
+    if (allocationUnits != null)     virtualQuantityUnits=allocationUnits;
+    this.allocation=new ResourceAllocation(instanceID,elementName,description,resourceType,resourceSubType,address,addressOnParent,parent,connected,virtualQuantity,virtualQuantityUnits);
+    address=null;
+    addressOnParent=null;
+    allocationUnits=null;
+    automaticAllocation=null;
+    connected=null;
+    description=null;
+    elementName=null;
+    instanceID=-1;
+    parent=null;
+    resourceSubType=null;
+    resourceType=null;
+    virtualQuantity=1;
+    virtualQuantityUnits=null;
+  }
+  currentText=new StringBuilder();
+}

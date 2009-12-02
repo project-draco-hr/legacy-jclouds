@@ -1,0 +1,24 @@
+{
+  if (qName.equals("ovf:OperatingSystemSection")) {
+    inOs=false;
+  }
+ else   if (inOs && qName.equals("Description")) {
+    operatingSystemDescription=currentText.toString().trim();
+  }
+ else   if (qName.equals("IPAddress")) {
+    networkToAddresses.put(networkName,parseInetAddress(currentText.toString().trim()));
+  }
+ else   if (qName.equals("System")) {
+    systemHandler.endElement(uri,localName,qName);
+    system=systemHandler.getResult();
+  }
+ else   if (qName.equals("Item")) {
+    allocationHandler.endElement(uri,localName,qName);
+    allocations.add(allocationHandler.getResult());
+  }
+ else {
+    systemHandler.endElement(uri,localName,qName);
+    allocationHandler.endElement(uri,localName,qName);
+  }
+  currentText=new StringBuilder();
+}

@@ -1,0 +1,22 @@
+{
+  checkArgument(imageCatalogIdMap.containsKey(image),"image not configured: " + image);
+  String templateId=imageCatalogIdMap.get(image);
+  logger.debug(">> instantiating vApp name(%s) minCores(%d) minMegs(%d) template(%s)",name,minCores,minMegs,templateId);
+  HostingDotComVApp vAppResponse=(HostingDotComVApp)tmClient.instantiateVAppTemplate(name,templateId,InstantiateVAppTemplateOptions.Builder.cpuCount(minCores).megabytes(minMegs));
+  this.username=vAppResponse.getUsername();
+  this.password=vAppResponse.getPassword();
+  try {
+    Thread.sleep(1000);
+  }
+ catch (  InterruptedException e) {
+  }
+  tmClient.getVApp(vAppResponse.getId());
+  logger.debug("<< instantiated VApp(%s)",vAppResponse.getId());
+  logger.debug(">> deploying vApp(%s)",vAppResponse.getId());
+  VApp vApp=blockUntilVAppStatusOrThrowException(vAppResponse,tmClient.deployVApp(vAppResponse.getId()),"deploy",VAppStatus.OFF);
+  logger.debug("<< deployed vApp(%s)",vApp.getId());
+  logger.debug(">> powering vApp(%s)",vApp.getId());
+  vApp=blockUntilVAppStatusOrThrowException(vApp,tmClient.powerOnVApp(vApp.getId()),"powerOn",VAppStatus.ON);
+  logger.debug("<< on vApp(%s)",vApp.getId());
+  return vApp.getId();
+}
