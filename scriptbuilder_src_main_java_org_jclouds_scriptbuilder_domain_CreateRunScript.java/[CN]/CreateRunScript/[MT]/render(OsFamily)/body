@@ -1,0 +1,22 @@
+{
+  List<Statement> statements=Lists.newArrayList();
+  Map<String,String> tokenMap=ShellToken.tokenValueMap(family);
+  String runScript=Utils.replaceTokens(pwd + "{fs}" + instanceName+ ".{sh}",tokenMap);
+  statements.add(interpret(String.format("{md} %s{lf}",pwd)));
+  statements.add(interpret(String.format("{rm} %s 2{closeFd}{lf}",runScript)));
+  for (  String line : Splitter.on(ShellToken.LF.to(family)).split(ShellToken.BEGIN_SCRIPT.to(family))) {
+    if (!line.equals(""))     statements.add(appendToFile(line,runScript,family));
+  }
+  statements.add(new AddTitleToFile(instanceName,runScript));
+  statements.add(new AddExportToFile("instanceName",instanceName,runScript));
+  for (  String export : exports) {
+    statements.add(new AddExportToFile(export,Utils.replaceTokens("{varl}" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,export) + "{varr}",tokenMap),runScript));
+  }
+  statements.add(appendToFile("{cd} " + pwd,runScript,family));
+  statements.add(appendToFile(execLine,runScript,family));
+  for (  String line : Splitter.on(ShellToken.LF.to(family)).split(ShellToken.END_SCRIPT.to(family))) {
+    if (!line.equals(""))     statements.add(appendToFile(line,runScript,family));
+  }
+  statements.add(interpret(Utils.replaceTokens(OS_TO_CHMOD_PATTERN.get(family),ImmutableMap.of("file",runScript))));
+  return new StatementList(statements).render(family);
+}
