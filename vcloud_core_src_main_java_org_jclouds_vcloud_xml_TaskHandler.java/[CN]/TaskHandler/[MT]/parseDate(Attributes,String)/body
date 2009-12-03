@@ -4,10 +4,16 @@
   }
  catch (  RuntimeException e) {
     if (e.getCause() instanceof ParseException) {
-      return dateService.iso8601SecondsDateParse(attributes.getValue(attributes.getIndex(attribute)));
+      try {
+        return dateService.iso8601SecondsDateParse(attributes.getValue(attributes.getIndex(attribute)));
+      }
+ catch (      RuntimeException ex) {
+        logger.error(e,"error parsing date");
+      }
     }
  else {
-      throw e;
+      logger.error(e,"error parsing date");
     }
   }
+  return null;
 }

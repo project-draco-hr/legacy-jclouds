@@ -1,14 +1,17 @@
 {
-  if (qName.equals("Task")) {
-    taskLink=Utils.newLink(attributes);
+  if (qName.equalsIgnoreCase("Task")) {
+    if (attributes.getIndex("type") != -1)     taskLink=Utils.newLink(attributes);
     status=TaskStatus.fromValue(attributes.getValue(attributes.getIndex("status")));
-    startTime=parseDate(attributes,"startTime");
+    if (attributes.getIndex("startTime") != -1)     startTime=parseDate(attributes,"startTime");
     if (attributes.getIndex("endTime") != -1) {
       endTime=parseDate(attributes,"endTime");
     }
   }
  else   if (qName.equals("Owner")) {
     owner=Utils.newNamedLink(attributes);
+  }
+ else   if (qName.equals("Link")) {
+    taskLink=Utils.newNamedLink(attributes);
   }
  else   if (qName.equals("Result")) {
     result=Utils.newNamedLink(attributes);
