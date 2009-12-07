@@ -3,12 +3,12 @@
   final Matcher matcher=pattern.matcher(cookieHeader);
   boolean matchFound=matcher.find();
   if (matchFound) {
-    final Map<String,NamedLink> org=factory.create(orgHandlerProvider.get()).parse(from.getContent());
+    final Map<String,NamedResource> org=factory.create(orgHandlerProvider.get()).parse(from.getContent());
     return new VCloudSession(){
       @VCloudToken public String getVCloudToken(){
         return matcher.group(1);
       }
-      @Org public Map<String,NamedLink> getOrgs(){
+      @Org public Map<String,NamedResource> getOrgs(){
         return org;
       }
     }
