@@ -1,0 +1,29 @@
+{
+  FileObject base=manager.resolveFile(uri);
+  FileObject writeTests=base.resolveFile("write-tests");
+  FileObject readTests=base.resolveFile("read-tests");
+  if (base instanceof BlobStoreFileObject) {
+    BlobStore blobStore=((BlobStoreFileObject)base).getBlobStore();
+    String container=((BlobStoreFileObject)base).getContainer();
+    blobStore.clearContainer(container);
+  }
+ else {
+    writeTests.delete(new AllFileSelector());
+    readTests.delete(new AllFileSelector());
+  }
+  writeTests.createFolder();
+  readTests.createFolder();
+  for (  String name : new String[]{"file1.txt","file%25.txt","file space.txt"}) {
+    writeFile(readTests,name,FILE1_CONTENT);
+  }
+  writeFile(readTests,"empty.txt","");
+  FileObject dir=readTests.resolveFile("dir1");
+  dir.createFolder();
+  write3Files(dir);
+  for (  String subdirName : new String[]{"subdir1","subdir2","subdir3"}) {
+    FileObject subdir=dir.resolveFile(subdirName);
+    subdir.createFolder();
+    write3Files(subdir);
+  }
+  return base;
+}

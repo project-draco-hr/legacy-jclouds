@@ -6,7 +6,13 @@
       try {
         if (content.indexOf('<') >= 0) {
           AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,content);
-          command.setException(new AzureStorageResponseException(command,response,error));
+          AzureStorageResponseException ex=new AzureStorageResponseException(command,response,error);
+          if (error.getCode().equals("ContainerNotFound")) {
+            command.setException(new ContainerNotFoundException(ex));
+          }
+ else {
+            command.setException(ex);
+          }
         }
  else {
           command.setException(new HttpResponseException(command,response,content));

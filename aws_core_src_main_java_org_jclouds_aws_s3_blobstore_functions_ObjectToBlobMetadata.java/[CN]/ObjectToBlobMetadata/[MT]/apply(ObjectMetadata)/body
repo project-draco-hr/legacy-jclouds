@@ -6,8 +6,9 @@
   to.setName(from.getKey());
   to.setSize(from.getSize());
   to.setType(ResourceType.BLOB);
+  to.setLastModified(from.getLastModified());
   to.setUserMetadata(from.getUserMetadata());
-  if (from.getContentType() != null && from.getContentType().equals("application/directory")) {
+  if (isDirectoryStrategy.execute(to)) {
     to.setType(ResourceType.RELATIVE_PATH);
   }
   return to;

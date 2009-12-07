@@ -1,0 +1,30 @@
+{
+  if (dis != null) {
+    return dis;
+  }
+  dis=new DataInputStream(new FilterInputStream((InputStream)fileSystem.blobStore.getBlob(fileSystem.container,fileObject.getNameTrimLeadingSlashes(),new GetOptions().startAt(filePointer)).getData()){
+    public int read() throws IOException {
+      int ret=super.read();
+      if (ret > -1) {
+        filePointer++;
+      }
+      return ret;
+    }
+    public int read(    byte b[]) throws IOException {
+      int ret=super.read(b);
+      if (ret > -1) {
+        filePointer+=ret;
+      }
+      return ret;
+    }
+    public int read(    byte b[],    int off,    int len) throws IOException {
+      int ret=super.read(b,off,len);
+      if (ret > -1) {
+        filePointer+=ret;
+      }
+      return ret;
+    }
+  }
+);
+  return dis;
+}

@@ -1,0 +1,10 @@
+{
+  remoteMgr=new DefaultFileSystemManager();
+  remoteMgr.setFilesCache(new SoftRefFilesCache());
+  remoteMgr.addProvider("blobstore",new BlobStoreFileProvider());
+  remoteMgr.init();
+  remoteCwd=remoteMgr.resolveFile(checkNotNull(uri,"uri"));
+  mgr=VFS.getManager();
+  cwd=mgr.resolveFile(System.getProperty("user.dir"));
+  reader=new BufferedReader(new InputStreamReader(System.in));
+}

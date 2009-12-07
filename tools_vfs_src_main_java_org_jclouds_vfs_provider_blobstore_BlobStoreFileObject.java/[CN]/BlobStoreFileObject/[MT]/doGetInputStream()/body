@@ -1,0 +1,11 @@
+{
+  if (!getType().hasContent()) {
+    throw new FileSystemException("vfs.provider/read-not-file.error",getName());
+  }
+  if (metadata != null && metadata.getType() != ResourceType.BLOB) {
+    throw new FileTypeHasNoContentException(getName());
+  }
+  logger.info(String.format(">> get: %s/%s",getContainer(),getNameTrimLeadingSlashes()));
+  Blob blob=getBlobStore().getBlob(getContainer(),getNameTrimLeadingSlashes());
+  return (InputStream)blob.getData();
+}

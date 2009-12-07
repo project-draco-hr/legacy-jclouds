@@ -1,0 +1,10 @@
+{
+  if (cmd.length < 2) {
+    throw new Exception("USAGE: touch <path>");
+  }
+  final FileObject file=remoteMgr.resolveFile(remoteCwd,cmd[1]);
+  if (!file.exists()) {
+    file.createFile();
+  }
+  file.getContent().setLastModifiedTime(System.currentTimeMillis());
+}

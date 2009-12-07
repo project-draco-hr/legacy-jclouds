@@ -1,0 +1,30 @@
+{
+  int pos=1;
+  final boolean recursive;
+  if (cmd.length > pos && cmd[pos].equals("-R")) {
+    recursive=true;
+    pos++;
+  }
+ else {
+    recursive=false;
+  }
+  final FileObject file;
+  if (cmd.length > pos) {
+    file=mg.resolveFile(wd,cmd[pos]);
+  }
+ else {
+    file=wd;
+  }
+  if (file.getType() == FileType.FOLDER) {
+    System.out.println("Contents of " + file.getName().getFriendlyURI());
+    listChildren(file,recursive,"");
+  }
+ else {
+    System.out.println(file.getName());
+    final FileContent content=file.getContent();
+    System.out.println("Size: " + content.getSize() + " bytes.");
+    final DateFormat dateFormat=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
+    final String lastMod=dateFormat.format(new Date(content.getLastModifiedTime()));
+    System.out.println("Last modified: " + lastMod);
+  }
+}

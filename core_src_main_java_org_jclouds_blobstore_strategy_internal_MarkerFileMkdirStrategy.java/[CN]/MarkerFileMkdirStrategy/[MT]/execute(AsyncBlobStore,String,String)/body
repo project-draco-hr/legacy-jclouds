@@ -1,0 +1,15 @@
+{
+  try {
+    if (!connection.directoryExists(containerName,directory).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)) {
+      Blob blob=connection.newBlob();
+      blob.getMetadata().setName(directory + directorySuffix);
+      blob.setData("");
+      blob.getMetadata().setContentType("application/directory");
+      connection.putBlob(containerName,blob).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    }
+  }
+ catch (  Exception e) {
+    e=Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    if (!(e instanceof KeyNotFoundException))     throw new BlobRuntimeException("Error creating marker directory: " + containerName + "/"+ directory,e);
+  }
+}

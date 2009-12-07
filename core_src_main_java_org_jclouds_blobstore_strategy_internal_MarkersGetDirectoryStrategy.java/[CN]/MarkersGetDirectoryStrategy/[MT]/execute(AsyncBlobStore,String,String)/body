@@ -1,0 +1,14 @@
+{
+  for (  String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
+    try {
+      return resource2Directory.apply(connection.blobMetadata(containerName,directory + suffix).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS));
+    }
+ catch (    KeyNotFoundException e) {
+    }
+catch (    Exception e) {
+      e=Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      if (!(e instanceof KeyNotFoundException))       throw new BlobRuntimeException("Error determining if a directory exists at: " + containerName + "/"+ directory,e);
+    }
+  }
+  throw new KeyNotFoundException(containerName,directory);
+}

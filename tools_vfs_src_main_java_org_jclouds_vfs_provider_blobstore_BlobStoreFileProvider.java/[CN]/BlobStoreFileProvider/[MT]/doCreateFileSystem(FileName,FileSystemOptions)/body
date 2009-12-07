@@ -1,0 +1,20 @@
+{
+  BlobStoreFileName rootName=(BlobStoreFileName)name;
+  UserAuthenticationData authData=null;
+  BlobStore blobStore;
+  try {
+    String uriToParse=rootName.getFriendlyURI();
+    authData=UserAuthenticatorUtils.authenticate(fileSystemOptions,AUTHENTICATOR_TYPES);
+    Properties properties=new Properties();
+    properties.load(Resources.newInputStreamSupplier(Resources.getResource("jclouds.properties")).getInput());
+    LocationAndCredentials locationAndCredentials=LocationAndCredentials.parse(uriToParse);
+    blobStore=new BlobStoreContextFactory(properties).createContext(locationAndCredentials.uri,UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.USERNAME,UserAuthenticatorUtils.toChar(rootName.getUserName()))),UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.PASSWORD,UserAuthenticatorUtils.toChar(rootName.getPassword()))),modules).getBlobStore();
+  }
+ catch (  IOException e) {
+    throw new FileSystemException("vfs.provider.blobstore/properties.error",name,e);
+  }
+ finally {
+    UserAuthenticatorUtils.cleanup(authData);
+  }
+  return new BlobStoreFileSystem(rootName,blobStore,fileSystemOptions);
+}

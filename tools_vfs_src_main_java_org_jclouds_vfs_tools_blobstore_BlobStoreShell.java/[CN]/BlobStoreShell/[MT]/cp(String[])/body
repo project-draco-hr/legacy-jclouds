@@ -1,0 +1,11 @@
+{
+  if (cmd.length < 3) {
+    throw new Exception("USAGE: cp <src> <dest>");
+  }
+  FileObject src=remoteMgr.resolveFile(remoteCwd,cmd[1]);
+  FileObject dest=remoteMgr.resolveFile(remoteCwd,cmd[2]);
+  if (dest.exists() && dest.getType() == FileType.FOLDER) {
+    dest=dest.resolveFile(src.getName().getBaseName());
+  }
+  dest.copyFrom(src,Selectors.SELECT_ALL);
+}

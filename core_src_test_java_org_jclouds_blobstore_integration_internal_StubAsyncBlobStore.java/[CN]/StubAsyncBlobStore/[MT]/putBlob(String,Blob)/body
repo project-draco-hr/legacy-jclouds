@@ -4,9 +4,10 @@
     new RuntimeException("bucketName not found: " + bucketName);
   }
   try {
+    byte[] data=toByteArray(object.getData());
+    object.getMetadata().setSize(data.length);
     MutableBlobMetadata newMd=copy(object.getMetadata());
     newMd.setLastModified(new DateTime());
-    byte[] data=toByteArray(object.getData());
     final byte[] md5=HttpUtils.md5(data);
     final String eTag=HttpUtils.toHexString(md5);
     newMd.setETag(eTag);

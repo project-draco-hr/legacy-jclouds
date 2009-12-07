@@ -5,9 +5,10 @@
   if (from.getHash() != null)   to.setETag(HttpUtils.toHexString(from.getHash()));
   to.setName(from.getName());
   if (from.getBytes() != null)   to.setSize(from.getBytes());
+  if (from.getLastModified() != null)   to.setLastModified(from.getLastModified());
   to.setType(ResourceType.BLOB);
   if (from instanceof MutableObjectInfoWithMetadata)   to.setUserMetadata(((MutableObjectInfoWithMetadata)from).getMetadata());
-  if (from.getContentType() != null && from.getContentType().equals("application/directory")) {
+  if (isDirectoryStrategy.execute(to)) {
     to.setType(ResourceType.RELATIVE_PATH);
   }
   return to;

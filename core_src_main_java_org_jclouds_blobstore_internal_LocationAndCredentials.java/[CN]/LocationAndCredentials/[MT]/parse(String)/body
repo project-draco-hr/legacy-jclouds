@@ -1,0 +1,40 @@
+{
+  if (uriPath.indexOf('@') != 1) {
+    List<String> parts=Lists.newArrayList(Splitter.on('@').split(uriPath));
+    String path=parts.remove(parts.size() - 1);
+    parts.add(Utils.urlEncode(path,'/',':'));
+    uriPath=Joiner.on('@').join(parts);
+  }
+ else {
+    List<String> parts=Lists.newArrayList(Splitter.on('/').split(uriPath));
+    String path=parts.remove(parts.size() - 1);
+    parts.add(Utils.urlEncode(path,':'));
+    uriPath=Joiner.on('/').join(parts);
+  }
+  LocationAndCredentials locationAndCredentials;
+  if (PATTERN_THAT_BREAKS_URI.matcher(uriPath).matches()) {
+    Matcher matcher=URI_PATTERN.matcher(uriPath);
+    if (matcher.find()) {
+      String scheme=matcher.group(1);
+      String rest=matcher.group(4);
+      String account=matcher.group(2);
+      String key=matcher.group(3);
+      locationAndCredentials=new LocationAndCredentials(URI.create(String.format("%s://%s",scheme,rest)),account,key);
+    }
+ else {
+      throw new IllegalArgumentException("bad syntax");
+    }
+  }
+ else {
+    URI uri=URI.create(uriPath);
+    String account=null;
+    String key=null;
+    if (uri.getUserInfo() != null) {
+      List<String> userInfo=Lists.newArrayList(Splitter.on(':').split(uri.getUserInfo()));
+      account=userInfo.get(0);
+      key=userInfo.size() > 1 ? userInfo.get(1) : null;
+    }
+    locationAndCredentials=new LocationAndCredentials(uri,account,key);
+  }
+  return locationAndCredentials;
+}

@@ -1,0 +1,8 @@
+{
+  URI blobStore=URI.create("service://account@container/path");
+  assertEquals(blobStore.getScheme(),"service");
+  Iterator<String> accountKey=Splitter.on(":").split(checkNotNull(blobStore.getUserInfo(),"userInfo")).iterator();
+  assertEquals(accountKey.next(),"account");
+  assertEquals(blobStore.getHost(),"container");
+  assertEquals(blobStore.getPath(),"/path");
+}

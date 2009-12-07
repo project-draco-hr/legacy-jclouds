@@ -1,0 +1,17 @@
+{
+switch (metadata.getType()) {
+case CONTAINER:
+case FOLDER:
+case RELATIVE_PATH:
+    return true;
+case BLOB:
+  BlobMetadata blobMd=(BlobMetadata)metadata;
+if (blobMd.getContentType() != null && blobMd.getContentType().equals("application/directory")) return true;
+for (String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
+if (metadata.getName().endsWith(suffix)) {
+  return true;
+}
+}
+}
+return false;
+}

@@ -1,0 +1,11 @@
+{
+  for (  String uriKey : urisToTest) {
+    System.out.println("storing at context: " + uriKey);
+    new File(tmpDirectory).delete();
+    new File(tmpDirectory).mkdirs();
+    GetPath.main(uriKey,tmpDirectory);
+    for (    Entry<String,String> entry : fiveStrings.entrySet()) {
+      assertEquals(Utils.toStringAndClose(new FileInputStream(new File(tmpDirectory,entry.getKey()))),entry.getValue());
+    }
+  }
+}

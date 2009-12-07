@@ -6,7 +6,9 @@
       if (realContents == null)       throw new ContainerNotFoundException(name);
       SortedSet<ResourceMetadata> contents=Sets.newTreeSet(Iterables.transform(realContents.keySet(),new Function<String,ResourceMetadata>(){
         public ResourceMetadata apply(        String key){
-          return copy(realContents.get(key).getMetadata());
+          MutableBlobMetadata md=copy(realContents.get(key).getMetadata());
+          if (isDirectoryStrategy.execute(md))           md.setType(ResourceType.RELATIVE_PATH);
+          return md;
         }
       }
 ));
@@ -21,7 +23,7 @@
         contents=contents.tailSet(lastMarkerMetadata);
         contents.remove(lastMarkerMetadata);
       }
-      final String prefix=options.getPath();
+      final String prefix=options.getDir();
       if (prefix != null) {
         contents=Sets.newTreeSet(Iterables.filter(contents,new Predicate<ResourceMetadata>(){
           public boolean apply(          ResourceMetadata o){

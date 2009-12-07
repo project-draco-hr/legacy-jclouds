@@ -2,10 +2,11 @@
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   if (from.getContentType() != null)   to.setContentType(from.getContentType());
   to.setETag(from.getETag());
+  to.setLastModified(from.getLastModified());
   to.setName(from.getName());
   to.setSize(from.getSize());
   to.setType(ResourceType.BLOB);
-  if (from.getContentType() != null && from.getContentType().equals("application/directory")) {
+  if (isDirectoryStrategy.execute(to)) {
     to.setType(ResourceType.RELATIVE_PATH);
   }
   return to;

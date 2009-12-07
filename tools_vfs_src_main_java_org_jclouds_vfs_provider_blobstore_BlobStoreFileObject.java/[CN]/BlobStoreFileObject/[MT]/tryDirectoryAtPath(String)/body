@@ -1,0 +1,20 @@
+{
+  ListContainerOptions options=new ListContainerOptions();
+  if (getName().getParent() != null) {
+    String dir=trimLeadingAndTrailingSlashes(getName().getParent().getPath());
+    if (!dir.equals(""))     options.inDirectory(dir);
+  }
+  try {
+    metadata=Iterables.find(Iterables.transform(getBlobStore().list(getContainer(),options),resource2Directory),new Predicate<ResourceMetadata>(){
+      @Override public boolean apply(      ResourceMetadata input){
+        return input.getName().equals(name);
+      }
+    }
+);
+    logger.info(String.format("<< dir: %s/%s",getContainer(),name));
+  }
+ catch (  NoSuchElementException nse) {
+    metadata=null;
+    logger.info(String.format("<< not found: %s/%s",getContainer(),name));
+  }
+}
