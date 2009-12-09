@@ -1,6 +1,7 @@
 {
-  LocationAndCredentials creds=LocationAndCredentials.parse(filename);
-  filename=creds.uri.toASCIIString();
+  URI uri=HttpUtils.createUri(filename);
+  filename=uri.toASCIIString();
+  Credentials creds=Credentials.parse(uri);
   StringBuffer name=new StringBuffer();
   Authority auth=extractToPath(filename,name);
   UriParser.canonicalizePath(name,0,name.length(),this);
@@ -11,5 +12,5 @@
   }
   FileType fileType=UriParser.normalisePath(name);
   String path=name.toString();
-  return new BlobStoreFileName(auth.getHostName(),creds.acccount,creds.key,path,fileType,container);
+  return new BlobStoreFileName(auth.getHostName(),creds.account,creds.key,path,fileType,container);
 }

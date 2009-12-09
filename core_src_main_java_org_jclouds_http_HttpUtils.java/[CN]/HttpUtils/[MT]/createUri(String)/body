@@ -1,0 +1,30 @@
+{
+  if (uriPath.indexOf('@') != 1) {
+    List<String> parts=Lists.newArrayList(Splitter.on('@').split(uriPath));
+    String path=parts.remove(parts.size() - 1);
+    parts.add(urlEncode(path,'/',':'));
+    uriPath=Joiner.on('@').join(parts);
+  }
+ else {
+    List<String> parts=Lists.newArrayList(Splitter.on('/').split(uriPath));
+    String path=parts.remove(parts.size() - 1);
+    parts.add(urlEncode(path,':'));
+    uriPath=Joiner.on('/').join(parts);
+  }
+  if (PATTERN_THAT_BREAKS_URI.matcher(uriPath).matches()) {
+    Matcher matcher=URI_PATTERN.matcher(uriPath);
+    if (matcher.find()) {
+      String scheme=matcher.group(1);
+      String rest=matcher.group(4);
+      String account=matcher.group(2);
+      String key=matcher.group(3);
+      return URI.create(String.format("%s://%s:%s@%s",scheme,account,urlEncode(key),rest));
+    }
+ else {
+      throw new IllegalArgumentException("bad syntax");
+    }
+  }
+ else {
+    return URI.create(uriPath);
+  }
+}
