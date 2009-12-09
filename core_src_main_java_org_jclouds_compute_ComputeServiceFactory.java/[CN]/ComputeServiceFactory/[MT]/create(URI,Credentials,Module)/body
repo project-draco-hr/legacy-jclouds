@@ -1,0 +1,18 @@
+{
+  String hint=checkNotNull(provider.getHost(),"host");
+  String account=checkNotNull(creds.account,"account");
+  String key=creds.key;
+  String propertiesBuilderKey=String.format("%s.propertiesbuilder",hint);
+  String propertiesBuilderClassName=checkNotNull(properties.getProperty(propertiesBuilderKey),propertiesBuilderKey);
+  String contextBuilderKey=String.format("%s.contextbuilder",hint);
+  String contextBuilderClassName=checkNotNull(properties.getProperty(contextBuilderKey),contextBuilderKey);
+  try {
+    Class<HttpPropertiesBuilder> propertiesBuilderClass=(Class<HttpPropertiesBuilder>)Class.forName(propertiesBuilderClassName);
+    Class<RestContextBuilder<?,?>> contextBuilderClass=(Class<RestContextBuilder<?,?>>)Class.forName(contextBuilderClassName);
+    HttpPropertiesBuilder builder=propertiesBuilderClass.getConstructor(String.class,String.class).newInstance(account,key);
+    return contextBuilderClass.getConstructor(Properties.class).newInstance(builder.build()).withModules(modules).buildInjector().getInstance(ComputeService.class);
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("error instantiating " + contextBuilderClassName,e);
+  }
+}
