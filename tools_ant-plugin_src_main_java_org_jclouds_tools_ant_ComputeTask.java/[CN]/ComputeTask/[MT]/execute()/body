@@ -1,7 +1,31 @@
 {
-  if (ACTION_CREATE.equalsIgnoreCase(action)) {
-    ComputeService computeService=computeMap.get(HttpUtils.createUri(provider));
-    log("hello");
-    computeService.createServer("test.com","MIRO1B","lenny");
-  }
+  ComputeTask.project=getProject();
+  Action action=Action.valueOf(this.action.toUpperCase());
+  ComputeService computeService=computeMap.get(HttpUtils.createUri(provider));
+switch (action) {
+case CREATE:
+case DESTROY:
+    if (serverElement != null) {
+switch (action) {
+case CREATE:
+        create(computeService);
+      break;
+case DESTROY:
+    destroy(computeService);
+  break;
+}
+}
+ else {
+this.log("missing server element for action: " + action,Project.MSG_ERR);
+}
+break;
+case LIST:
+log("list");
+for (Server server : computeService.listServers()) {
+log(String.format("   id=%s, name=%s",server.getId(),server.getName()));
+}
+break;
+default :
+this.log("bad action: " + action,Project.MSG_ERR);
+}
 }

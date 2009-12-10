@@ -1,0 +1,27 @@
+{
+  TerremarkVApp vApp=tmClient.getVApp(id);
+  SERVICE:   for (  InternetService service : tmClient.getAllInternetServices()) {
+    for (    Node node : tmClient.getNodes(service.getId())) {
+      if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
+        logger.debug(">> deleting Node(%s)",node.getId());
+        tmClient.deleteNode(node.getId());
+        logger.debug("<< deleted Node(%s)",node.getId());
+        SortedSet<Node> nodes=tmClient.getNodes(service.getId());
+        if (nodes.size() == 0) {
+          logger.debug(">> deleting InternetService(%s)",service.getId());
+          tmClient.deleteInternetService(service.getId());
+          logger.debug("<< deleted InternetService(%s)",service.getId());
+          continue SERVICE;
+        }
+      }
+    }
+  }
+  if (vApp.getStatus() != VAppStatus.OFF) {
+    logger.debug(">> powering off vApp(%s)",vApp.getId());
+    blockUntilVAppStatusOrThrowException(vApp,tmClient.powerOffVApp(vApp.getId()),"powerOff",VAppStatus.OFF);
+    logger.debug("<< off vApp(%s)",vApp.getId());
+  }
+  logger.debug(">> deleting vApp(%s)",vApp.getId());
+  tmClient.deleteVApp(id);
+  logger.debug("<< deleted vApp(%s)",vApp.getId());
+}

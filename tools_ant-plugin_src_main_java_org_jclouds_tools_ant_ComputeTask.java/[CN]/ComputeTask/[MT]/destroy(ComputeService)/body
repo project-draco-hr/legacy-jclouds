@@ -1,0 +1,12 @@
+{
+  log(String.format("destroy name: %s",serverElement.getName()));
+  SortedSet<Server> serversThatMatch=computeService.getServerByName(serverElement.getName());
+  if (serversThatMatch.size() > 0) {
+    for (    Server server : serversThatMatch) {
+      log(String.format("   destroying id=%s, name=%s",server.getId(),server.getName()));
+      if (!server.destroy()) {
+        log(String.format("   could not destroy id=%s, name=%s",server.getId(),server.getName()),Project.MSG_ERR);
+      }
+    }
+  }
+}
