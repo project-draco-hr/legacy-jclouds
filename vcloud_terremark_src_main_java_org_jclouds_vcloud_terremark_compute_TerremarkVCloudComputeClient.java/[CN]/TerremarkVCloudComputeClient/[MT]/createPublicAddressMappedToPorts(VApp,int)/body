@@ -1,21 +1,33 @@
 {
-  PublicIpAddress sshIp=null;
+  PublicIpAddress ip=null;
   InetAddress privateAddress=Iterables.getLast(vApp.getNetworkToAddresses().values());
   for (  int port : ports) {
     InternetService is=null;
-    if (sshIp == null) {
-      logger.debug(">> creating InternetService %d",port);
-      is=tmClient.addInternetService(vApp.getName() + "-" + port,"TCP",port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getId(),vApp.getName())));
-      sshIp=is.getPublicIpAddress();
-    }
+    Protocol protocol;
+switch (port) {
+case 22:
+      protocol=Protocol.TCP;
+case 80:
+case 8080:
+    protocol=Protocol.HTTP;
+case 443:
+  protocol=Protocol.HTTPS;
+default :
+protocol=Protocol.HTTP;
+}
+if (ip == null) {
+logger.debug(">> creating InternetService %d",port);
+is=tmClient.addInternetService(vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getId(),vApp.getName())));
+ip=is.getPublicIpAddress();
+}
  else {
-      logger.debug(">> adding InternetService %s:%d",sshIp.getAddress().getHostAddress(),port);
-      is=tmClient.addInternetServiceToExistingIp(sshIp.getId() + "",vApp.getName() + "-" + port,"TCP",port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getId(),vApp.getName())));
-    }
-    logger.debug("<< created InternetService(%s) %s:%d",is.getId(),is.getPublicIpAddress().getAddress().getHostAddress(),is.getPort());
-    logger.debug(">> adding Node %s:%d -> %s:%d",is.getPublicIpAddress().getAddress().getHostAddress(),is.getPort(),privateAddress.getHostAddress(),port);
-    Node node=tmClient.addNode(is.getId(),privateAddress,vApp.getName() + "-" + port,port);
-    logger.debug("<< added Node(%s)",node.getId());
-  }
-  return sshIp.getAddress();
+logger.debug(">> adding InternetService %s:%d",ip.getAddress().getHostAddress(),port);
+is=tmClient.addInternetServiceToExistingIp(ip.getId(),vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getId(),vApp.getName())));
+}
+logger.debug("<< created InternetService(%s) %s:%d",is.getId(),is.getPublicIpAddress().getAddress().getHostAddress(),is.getPort());
+logger.debug(">> adding Node %s:%d -> %s:%d",is.getPublicIpAddress().getAddress().getHostAddress(),is.getPort(),privateAddress.getHostAddress(),port);
+Node node=tmClient.addNode(is.getId(),privateAddress,vApp.getName() + "-" + port,port);
+logger.debug("<< added Node(%s)",node.getId());
+}
+return ip.getAddress();
 }

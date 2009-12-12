@@ -1,0 +1,21 @@
+{
+  Set<PublicIpAddress> ipAddresses=Sets.newHashSet();
+  SERVICE:   for (  InternetService service : tmClient.getAllInternetServices()) {
+    for (    Node node : tmClient.getNodes(service.getId())) {
+      if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
+        ipAddresses.add(service.getPublicIpAddress());
+        logger.debug(">> deleting Node(%s) %s:%d -> %s:%d",node.getId(),service.getPublicIpAddress().getAddress().getHostAddress(),service.getPort(),node.getIpAddress().getHostAddress(),node.getPort());
+        tmClient.deleteNode(node.getId());
+        logger.debug("<< deleted Node(%s)",node.getId());
+        SortedSet<Node> nodes=tmClient.getNodes(service.getId());
+        if (nodes.size() == 0) {
+          logger.debug(">> deleting InternetService(%s) %s:%d",service.getId(),service.getPublicIpAddress().getAddress().getHostAddress(),service.getPort());
+          tmClient.deleteInternetService(service.getId());
+          logger.debug("<< deleted InternetService(%s)",service.getId());
+          continue SERVICE;
+        }
+      }
+    }
+  }
+  return ipAddresses;
+}
