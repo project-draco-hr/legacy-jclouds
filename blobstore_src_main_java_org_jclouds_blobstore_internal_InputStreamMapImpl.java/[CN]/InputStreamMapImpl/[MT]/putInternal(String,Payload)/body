@@ -1,0 +1,15 @@
+{
+  Blob object=connection.newBlob();
+  object.getMetadata().setName(prefixer.apply(s));
+  try {
+    InputStream returnVal=containsKey(s) ? get(s) : null;
+    object.setPayload(payload);
+    object.generateMD5();
+    connection.putBlob(containerName,object).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    return returnVal;
+  }
+ catch (  Exception e) {
+    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    throw new BlobRuntimeException(String.format("Error adding object %1$s:%2$s",containerName,object),e);
+  }
+}

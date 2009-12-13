@@ -4,7 +4,7 @@
     new RuntimeException("bucketName not found: " + bucketName);
   }
   try {
-    byte[] data=toByteArray(object.getData());
+    byte[] data=toByteArray(object.getPayload().getRawContent());
     object.getMetadata().setSize(data.length);
     MutableBlobMetadata newMd=copy(object.getMetadata());
     newMd.setLastModified(new Date());
@@ -14,7 +14,7 @@
     newMd.setContentMD5(md5);
     newMd.setContentType(object.getMetadata().getContentType());
     Blob blob=blobProvider.create(newMd);
-    blob.setData(data);
+    blob.setPayload(data);
     container.put(blob.getMetadata().getName(),blob);
     blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
     blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);

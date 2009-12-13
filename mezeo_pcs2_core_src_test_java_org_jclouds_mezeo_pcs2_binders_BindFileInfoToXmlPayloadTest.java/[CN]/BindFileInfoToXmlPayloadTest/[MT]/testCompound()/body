@@ -1,0 +1,10 @@
+{
+  BindFileInfoToXmlPayload binder=new BindFileInfoToXmlPayload();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  PCSFile file=factory.create(null);
+  file.getMetadata().setName("subdir/foo");
+  binder.bindToRequest(request,file);
+  assertEquals(request.getPayload().getRawContent(),"<file><name>foo</name><mime_type>application/octet-stream</mime_type><public>false</public></file>");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),"<file><name>foo</name><mime_type>application/octet-stream</mime_type><public>false</public></file>".getBytes().length + "");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),"application/vnd.csp.file-info+xml");
+}

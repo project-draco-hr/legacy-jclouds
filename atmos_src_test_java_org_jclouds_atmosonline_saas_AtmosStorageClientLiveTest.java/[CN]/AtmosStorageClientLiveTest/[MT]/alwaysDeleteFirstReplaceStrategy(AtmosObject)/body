@@ -3,11 +3,11 @@
   long time=System.currentTimeMillis();
   try {
     connection.createFile(privateDirectory,object);
-    System.err.printf("%s %s; %dms%n","created",object.getData() instanceof InputStream ? "stream" : "string",System.currentTimeMillis() - time);
+    System.err.printf("%s %s; %dms%n","created",object.getPayload() instanceof InputStreamPayload ? "stream" : "string",System.currentTimeMillis() - time);
   }
  catch (  Exception e) {
     String message=(e.getCause().getCause() != null) ? e.getCause().getCause().getMessage() : e.getCause().getMessage();
-    System.err.printf("failure %s %s; %dms: [%s]%n","creating",object.getData() instanceof InputStream ? "stream" : "string",System.currentTimeMillis() - time,message);
+    System.err.printf("failure %s %s; %dms: [%s]%n","creating",object.getPayload() instanceof InputStreamPayload ? "stream" : "string",System.currentTimeMillis() - time,message);
     throw e;
   }
 }

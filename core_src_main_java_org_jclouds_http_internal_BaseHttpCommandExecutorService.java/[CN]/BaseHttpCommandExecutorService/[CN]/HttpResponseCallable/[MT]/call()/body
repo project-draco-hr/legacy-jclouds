@@ -8,7 +8,7 @@
         filter.filter(request);
       }
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
-      if (request.getEntity() != null && wire.enabled())       request.setEntity(wire.output(request.getEntity()));
+      if (request.getPayload() != null && wire.enabled())       request.setPayload(Payloads.newPayload(wire.output(request.getPayload().getRawContent())));
       nativeRequest=convert(request);
       HttpUtils.logRequest(headerLog,request,">>");
       response=invoke(nativeRequest);

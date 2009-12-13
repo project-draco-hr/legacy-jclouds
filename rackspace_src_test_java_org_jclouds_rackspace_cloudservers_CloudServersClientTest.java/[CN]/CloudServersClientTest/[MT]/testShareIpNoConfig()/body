@@ -5,9 +5,9 @@
   assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/ips/public/127.0.0.1");
   assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
   assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals("{\"shareIp\":{\"sharedIpGroupId\":3}}",httpMethod.getEntity());
+  assertEquals("{\"shareIp\":{\"sharedIpGroupId\":3}}",httpMethod.getPayload().getRawContent());
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnFalseOn404.class);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
 }

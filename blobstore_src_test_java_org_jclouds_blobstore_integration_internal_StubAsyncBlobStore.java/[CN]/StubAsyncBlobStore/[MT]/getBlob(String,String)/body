@@ -6,7 +6,7 @@
       if (!realContents.containsKey(key))       throw new KeyNotFoundException(bucketName,key);
       Blob object=realContents.get(key);
       Blob returnVal=blobProvider.create(copy(object.getMetadata()));
-      returnVal.setData(new ByteArrayInputStream((byte[])object.getData()));
+      returnVal.setPayload(object.getContent());
       return returnVal;
     }
   }

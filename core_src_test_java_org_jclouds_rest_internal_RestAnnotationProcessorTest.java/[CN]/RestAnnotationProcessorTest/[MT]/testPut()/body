@@ -1,9 +1,9 @@
 {
-  RestAnnotationProcessor<TestEntity> processor=factory(TestEntity.class);
-  Method method=TestEntity.class.getMethod("put",String.class);
-  GeneratedHttpRequest<TestEntity> request=new GeneratedHttpRequest<TestEntity>("GET",URI.create("http://localhost"),processor,TestEntity.class,method,"test");
+  RestAnnotationProcessor<TestPayload> processor=factory(TestPayload.class);
+  Method method=TestPayload.class.getMethod("put",String.class);
+  GeneratedHttpRequest<TestPayload> request=new GeneratedHttpRequest<TestPayload>("GET",URI.create("http://localhost"),processor,TestPayload.class,method,"test");
   processor.decorateRequest(request);
-  assertEquals(request.getEntity(),"test");
+  assertEquals(request.getPayload().toString(),"test");
   assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
   assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("test".getBytes().length + ""));
   assertEquals(processor.createResponseParser(method,request).getClass(),ReturnVoidIf2xx.class);

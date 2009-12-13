@@ -3,11 +3,11 @@
   try {
     Map<String,Blob> map=createMap(context,bucketName);
     Blob object=newBlob("one");
-    object.setData(IOUtils.toInputStream("apple"));
+    object.setPayload(IOUtils.toInputStream("apple"));
     object.generateMD5();
     Blob old=map.put(object.getMetadata().getName(),object);
     getOneReturnsAppleAndOldValueIsNull(map,old);
-    object.setData(IOUtils.toInputStream("bear"));
+    object.setPayload(IOUtils.toInputStream("bear"));
     object.generateMD5();
     Blob apple=map.put(object.getMetadata().getName(),object);
     getOneReturnsBearAndOldValueIsApple(map,apple);

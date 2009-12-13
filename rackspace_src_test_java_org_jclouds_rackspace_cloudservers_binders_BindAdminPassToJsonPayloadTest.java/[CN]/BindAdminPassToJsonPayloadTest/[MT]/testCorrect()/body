@@ -1,0 +1,7 @@
+{
+  BindAdminPassToJsonPayload binder=new BindAdminPassToJsonPayload();
+  injector.injectMembers(binder);
+  HttpRequest request=new HttpRequest(HttpMethod.PUT,URI.create("http://localhost"));
+  binder.bindToRequest(request,"foo");
+  assertEquals("{\"server\":{\"adminPass\":\"foo\"}}",request.getPayload().getRawContent());
+}

@@ -1,0 +1,6 @@
+{
+  String stringPayload=payload.toString();
+  if (request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE) == null)   request.getHeaders().put(HttpHeaders.CONTENT_TYPE,"application/unknown");
+  request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singletonList(stringPayload.getBytes().length + ""));
+  request.setPayload(stringPayload);
+}

@@ -1,0 +1,21 @@
+{
+  checkNotNull(data,"data");
+  if (data instanceof Payload) {
+    return (Payload)data;
+  }
+ else   if (data instanceof InputStream) {
+    return newInputStreamPayload((InputStream)data);
+  }
+ else   if (data instanceof byte[]) {
+    return newByteArrayPayload((byte[])data);
+  }
+ else   if (data instanceof String) {
+    return newStringPayload((String)data);
+  }
+ else   if (data instanceof File) {
+    return newFilePayload((File)data);
+  }
+ else {
+    throw new UnsupportedOperationException("unsupported payload type: " + data.getClass());
+  }
+}

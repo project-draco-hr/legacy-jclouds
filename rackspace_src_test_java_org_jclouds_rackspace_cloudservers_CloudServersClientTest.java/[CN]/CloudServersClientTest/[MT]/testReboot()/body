@@ -5,9 +5,9 @@
   assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/action");
   assertEquals(httpMethod.getMethod(),HttpMethod.POST);
   assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals("{\"reboot\":{\"type\":\"HARD\"}}",httpMethod.getEntity());
+  assertEquals("{\"reboot\":{\"type\":\"HARD\"}}",httpMethod.getPayload().getRawContent());
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method).getClass(),ReturnFalseOn404.class);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
 }

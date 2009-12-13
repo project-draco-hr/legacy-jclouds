@@ -1,0 +1,13 @@
+{
+  PayloadOptions options=new PayloadOptions();
+  Method method=TestRequest.class.getMethod("putOptions",String.class,HttpRequestOptions.class);
+  GeneratedHttpRequest<?> httpMethod=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/1");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),3);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.HOST),Collections.singletonList("localhost"));
+  assertEquals(httpMethod.getPayload().toString(),"foo");
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("foo".getBytes().length + ""));
+}

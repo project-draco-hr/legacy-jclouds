@@ -1,8 +1,3 @@
 {
-  Object content=request.getEntity();
-  if (content != null && content instanceof InputStream) {
-    logger.warn("%1$s: InputStreams are not replayable",toString());
-    return false;
-  }
-  return true;
+  return (request.getPayload() == null) ? true : request.getPayload().isRepeatable();
 }

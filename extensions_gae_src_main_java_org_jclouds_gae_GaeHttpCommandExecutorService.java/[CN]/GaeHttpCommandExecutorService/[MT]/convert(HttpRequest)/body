@@ -8,9 +8,9 @@
       gaeRequest.addHeader(new HTTPHeader(header,value));
     }
   }
-  if (request.getEntity() != null) {
+  if (request.getPayload() != null) {
     changeRequestContentToBytes(request);
-    gaeRequest.setPayload((byte[])request.getEntity());
+    gaeRequest.setPayload(((ByteArrayPayload)request.getPayload()).getRawContent());
   }
  else {
     gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));

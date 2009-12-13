@@ -4,9 +4,9 @@
   assertEquals(httpMethod.getRequestLine(),"PUT http://localhost/contents/file/metadata/pow HTTP/1.1");
   assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
   assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getEntity().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals("bar",httpMethod.getEntity());
+  assertEquals("bar",httpMethod.getPayload().getRawContent());
   assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
 }

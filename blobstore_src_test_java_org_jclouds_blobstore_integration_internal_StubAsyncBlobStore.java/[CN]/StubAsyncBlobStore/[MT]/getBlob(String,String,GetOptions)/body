@@ -30,7 +30,13 @@
       }
       Blob returnVal=copyBlob(object);
       if (options.getRanges() != null && options.getRanges().size() > 0) {
-        byte[] data=(byte[])returnVal.getData();
+        byte[] data;
+        try {
+          data=IOUtils.toByteArray(returnVal.getPayload().getContent());
+        }
+ catch (        IOException e) {
+          throw new RuntimeException(e);
+        }
         ByteArrayOutputStream out=new ByteArrayOutputStream();
         for (        String s : options.getRanges()) {
           if (s.startsWith("-")) {
@@ -52,11 +58,11 @@
             throw new IllegalArgumentException("first and last were null!");
           }
         }
-        returnVal.setData(out.toByteArray());
+        returnVal.setPayload(out.toByteArray());
         returnVal.setContentLength(out.size());
         returnVal.getMetadata().setSize(new Long(data.length));
       }
-      returnVal.setData(new ByteArrayInputStream((byte[])returnVal.getData()));
+      returnVal.setPayload(returnVal.getPayload());
       return returnVal;
     }
   }
