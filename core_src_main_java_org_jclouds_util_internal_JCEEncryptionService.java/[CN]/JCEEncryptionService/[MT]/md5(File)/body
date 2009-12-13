@@ -1,0 +1,23 @@
+{
+  MessageDigest eTag=getDigest();
+  byte[] buffer=new byte[1024];
+  int numRead=-1;
+  InputStream i=null;
+  try {
+    i=new FileInputStream(toEncode);
+    do {
+      numRead=i.read(buffer);
+      if (numRead > 0) {
+        eTag.update(buffer,0,numRead);
+      }
+    }
+ while (numRead != -1);
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    IOUtils.closeQuietly(i);
+  }
+  return eTag.digest();
+}

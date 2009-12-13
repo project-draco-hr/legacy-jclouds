@@ -11,11 +11,11 @@
   byte[] md5=blob.getMetadata().getContentMD5();
   connection.upload(uploadInfo.getHost(),uploadInfo.getToken(),containerName,blob);
   Map<String,String> metadata=connection.getMetadata(containerName + "/test.txt");
-  assertEquals(metadata.get("MD5"),HttpUtils.toBase64String(md5));
+  assertEquals(metadata.get("MD5"),Base64.encodeBytes(md5));
   String content=connection.getFile(containerName + "/test.txt");
   assertEquals(content,"value");
   metadata=ImmutableMap.of("chef","sushi","foo","bar");
   connection.setMetadata(containerName + "/test.txt",metadata);
   metadata=connection.getMetadata(containerName + "/test.txt");
-  assertEquals(metadata.get("MD5"),HttpUtils.toBase64String(md5));
+  assertEquals(metadata.get("MD5"),Base64.encodeBytes(md5));
 }

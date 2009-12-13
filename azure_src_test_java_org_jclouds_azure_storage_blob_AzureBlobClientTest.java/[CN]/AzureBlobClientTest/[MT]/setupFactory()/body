@@ -3,7 +3,7 @@
     @Override protected void configure(){
       bind(URI.class).annotatedWith(AzureBlob.class).toInstance(URI.create("http://myaccount.blob.core.windows.net"));
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("myaccount");
-      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(HttpUtils.toBase64String("key".getBytes()));
+      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_KEY)).to(Base64.encodeBytes("key".getBytes()));
       bindConstant().annotatedWith(Jsr330.named(BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX)).to("x-ms-meta-");
       bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZUREBLOB_METADATA_PREFIX)).to("x-ms-meta-");
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){

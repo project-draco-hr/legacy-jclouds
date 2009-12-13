@@ -8,8 +8,8 @@
     object.getMetadata().setSize(data.length);
     MutableBlobMetadata newMd=copy(object.getMetadata());
     newMd.setLastModified(new Date());
-    final byte[] md5=HttpUtils.md5(data);
-    final String eTag=HttpUtils.toHexString(md5);
+    final byte[] md5=encryptionService.md5(data);
+    final String eTag=encryptionService.toHexString(md5);
     newMd.setETag(eTag);
     newMd.setContentMD5(md5);
     newMd.setContentType(object.getMetadata().getContentType());

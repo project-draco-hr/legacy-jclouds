@@ -5,7 +5,7 @@
   object.getMetadata().setContentType("text/plain");
   object.getMetadata().setSize(new Long(TEST_STRING.length()));
   object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
-  object.getMetadata().setContentMD5(HttpUtils.md5(TEST_STRING.getBytes()));
+  object.getMetadata().setContentMD5(new JCEEncryptionService().md5(TEST_STRING.getBytes()));
   String containerName=getContainerName();
   try {
     addBlobToContainer(containerName,object);

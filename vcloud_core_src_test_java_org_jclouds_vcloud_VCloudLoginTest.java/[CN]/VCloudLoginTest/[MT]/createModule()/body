@@ -3,7 +3,7 @@
     @Override protected void configure(){
       bind(URI.class).annotatedWith(org.jclouds.vcloud.endpoints.VCloudLogin.class).toInstance(URI.create("http://localhost:8080/login"));
       try {
-        bind(BasicAuthentication.class).toInstance(new BasicAuthentication("user","pass"));
+        bind(BasicAuthentication.class).toInstance(new BasicAuthentication("user","pass",new JCEEncryptionService()));
       }
  catch (      UnsupportedEncodingException e) {
         throw new RuntimeException(e);

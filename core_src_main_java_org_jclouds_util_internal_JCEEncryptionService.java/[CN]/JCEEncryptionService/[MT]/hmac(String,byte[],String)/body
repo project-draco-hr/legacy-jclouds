@@ -1,0 +1,17 @@
+{
+  SecretKeySpec signingKey=new SecretKeySpec(key,algorithm);
+  Mac mac=null;
+  try {
+    mac=Mac.getInstance(algorithm);
+  }
+ catch (  NoSuchAlgorithmException e) {
+    throw new RuntimeException("Could not find the " + algorithm + " algorithm",e);
+  }
+  try {
+    mac.init(signingKey);
+  }
+ catch (  InvalidKeyException e) {
+    throw new RuntimeException("Could not initialize the " + algorithm + " algorithm",e);
+  }
+  return mac.doFinal(toEncode.getBytes());
+}

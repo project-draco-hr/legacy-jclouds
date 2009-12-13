@@ -4,7 +4,7 @@
   http.getHeaders().put("Content-Disposition","contentDisposition");
   http.getHeaders().put(HttpHeaders.CONTENT_ENCODING,"encoding");
   http.getHeaders().put(S3Headers.AMZ_MD5,"\"abc\"");
-  ParseObjectMetadataFromHeaders parser=new ParseObjectMetadataFromHeaders(blobParser(http,null),blobToObjectMetadata);
+  ParseObjectMetadataFromHeaders parser=new ParseObjectMetadataFromHeaders(blobParser(http,null),blobToObjectMetadata,encryptionService);
   MutableObjectMetadata response=parser.apply(http);
   assertEquals(response,expects);
 }

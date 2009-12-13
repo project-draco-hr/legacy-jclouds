@@ -2,7 +2,7 @@
   return Guice.createInjector(new AzureBlobRestClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new ParserModule(),new AbstractModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_ACCOUNT)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_KEY)).to(HttpUtils.toBase64String("secret".getBytes()));
+      bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZURESTORAGE_KEY)).to(Base64.encodeBytes("secret".getBytes()));
       bindConstant().annotatedWith(Jsr330.named(AzureBlobConstants.PROPERTY_AZUREBLOB_ENDPOINT)).to("http://localhost");
       bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_SESSIONINTERVAL)).to(1l);
     }

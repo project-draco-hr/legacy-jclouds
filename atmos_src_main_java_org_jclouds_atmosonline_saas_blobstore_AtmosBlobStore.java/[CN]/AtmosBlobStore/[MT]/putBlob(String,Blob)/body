@@ -1,7 +1,7 @@
 {
   final String path=container + "/" + blob.getMetadata().getName();
   deleteAndEnsurePathGone(path);
-  if (blob.getMetadata().getContentMD5() != null)   blob.getMetadata().getUserMetadata().put("content-md5",HttpUtils.toHexString(blob.getMetadata().getContentMD5()));
+  if (blob.getMetadata().getContentMD5() != null)   blob.getMetadata().getUserMetadata().put("content-md5",encryptionService.toHexString(blob.getMetadata().getContentMD5()));
   sync.createFile(container,blob2Object.apply(blob));
   return path;
 }

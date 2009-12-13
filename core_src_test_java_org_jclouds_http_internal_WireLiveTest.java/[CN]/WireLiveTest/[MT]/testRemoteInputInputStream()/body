@@ -3,8 +3,8 @@
   URLConnection connection=url.openConnection();
   HttpWire wire=setUp();
   InputStream in=wire.input(connection.getInputStream());
-  byte[] compare=HttpUtils.md5(in);
+  byte[] compare=encryptionService.md5(in);
   Thread.sleep(100);
-  assertEquals(HttpUtils.toHexString(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
+  assertEquals(encryptionService.toHexString(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
   assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
 }
