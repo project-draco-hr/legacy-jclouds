@@ -13,17 +13,17 @@
           if (object.getMetadata().getETag().equals(options.getIfNoneMatch()))           blobStore.throwResponseException(412);
         }
         if (options.getIfModifiedSince() != null) {
-          DateTime modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());
-          if (modifiedSince.isAfter(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
+          Date modifiedSince=dateService.rfc822DateParse(options.getIfModifiedSince());
+          if (modifiedSince.after(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
         }
         if (options.getIfUnmodifiedSince() != null) {
-          DateTime unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
-          if (unmodifiedSince.isBefore(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
+          Date unmodifiedSince=dateService.rfc822DateParse(options.getIfUnmodifiedSince());
+          if (unmodifiedSince.before(object.getMetadata().getLastModified()))           blobStore.throwResponseException(412);
         }
         Blob sourceS3=source.get(sourceObject);
         MutableBlobMetadata newMd=blobStore.copy(sourceS3.getMetadata(),destinationObject);
         if (options.getAcl() != null)         keyToAcl.put(destinationBucket + "/" + destinationObject,options.getAcl());
-        newMd.setLastModified(new DateTime());
+        newMd.setLastModified(new Date());
         Blob newBlob=blobProvider.create(newMd);
         newBlob.setData(sourceS3.getData());
         dest.put(destinationObject,newBlob);

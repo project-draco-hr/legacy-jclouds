@@ -2,9 +2,9 @@
   String containerName=getContainerName();
   String destinationContainer=getContainerName();
   try {
-    DateTime before=new DateTime();
+    Date before=new Date();
     addToContainerAndValidate(containerName,sourceKey + "mod");
-    DateTime after=new DateTime().plusSeconds(1);
+    Date after=new Date(System.currentTimeMillis() + 1000);
     context.getApi().copyObject(containerName,sourceKey + "mod",destinationContainer,destinationKey,ifSourceModifiedSince(before));
     validateContent(destinationContainer,destinationKey);
     try {

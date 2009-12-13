@@ -13,16 +13,16 @@
         if (object.getMetadata().getETag().equals(options.getIfNoneMatch()))         throwResponseException(304);
       }
       if (options.getIfModifiedSince() != null) {
-        DateTime modifiedSince=options.getIfModifiedSince();
-        if (object.getMetadata().getLastModified().isBefore(modifiedSince)) {
+        Date modifiedSince=options.getIfModifiedSince();
+        if (object.getMetadata().getLastModified().before(modifiedSince)) {
           HttpResponse response=new HttpResponse();
           response.setStatusCode(304);
           throw new ExecutionException(new HttpResponseException(String.format("%1$s is before %2$s",object.getMetadata().getLastModified(),modifiedSince),null,response));
         }
       }
       if (options.getIfUnmodifiedSince() != null) {
-        DateTime unmodifiedSince=options.getIfUnmodifiedSince();
-        if (object.getMetadata().getLastModified().isAfter(unmodifiedSince)) {
+        Date unmodifiedSince=options.getIfUnmodifiedSince();
+        if (object.getMetadata().getLastModified().after(unmodifiedSince)) {
           HttpResponse response=new HttpResponse();
           response.setStatusCode(412);
           throw new ExecutionException(new HttpResponseException(String.format("%1$s is after %2$s",object.getMetadata().getLastModified(),unmodifiedSince),null,response));

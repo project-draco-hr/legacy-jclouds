@@ -3,7 +3,7 @@
   jcObject.getMetadata().setCacheControl((String)jsObject.getMetadata("Cache-Control"));
   jcObject.getMetadata().setContentDisposition(jsObject.getContentDisposition());
   jcObject.getMetadata().setContentEncoding(jsObject.getContentEncoding());
-  jcObject.getMetadata().setLastModified(new DateTime(jsObject.getLastModifiedDate()));
+  jcObject.getMetadata().setLastModified(jsObject.getLastModifiedDate());
   jcObject.setContentLength(jsObject.getContentLength());
   if (jsObject.getStorageClass() != null)   jcObject.getMetadata().setStorageClass(StorageClass.valueOf(jsObject.getStorageClass()));
   if (jsObject.getMd5HashAsHex() != null) {
@@ -25,7 +25,7 @@
     jcObject.getMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
     jsObject.setContentType(MediaType.APPLICATION_OCTET_STREAM);
   }
-  DateService dateService=new DateService();
+  DateService dateService=new SimpleDateFormatDateService();
   for (  Object maybeUserMetadataObj : jsObject.getMetadataMap().entrySet()) {
     String name=((Entry<String,Object>)maybeUserMetadataObj).getKey();
     Object value=((Entry<String,Object>)maybeUserMetadataObj).getValue();
