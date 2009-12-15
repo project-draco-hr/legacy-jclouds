@@ -7,7 +7,12 @@
   if (from.getContentMetadata().getContentType() != null)   to.setContentType(from.getContentMetadata().getContentType());
   to.setName(objectName.apply(from));
   to.setSize(from.getSystemMetadata().getSize());
-  to.setType(ResourceType.BLOB);
+  if (from.getSystemMetadata().getType() == FileType.DIRECTORY) {
+    to.setType(ResourceType.FOLDER);
+  }
+ else {
+    to.setType(ResourceType.BLOB);
+  }
   Map<String,String> lowerKeyMetadata=Maps.newHashMap();
   for (  Entry<String,String> entry : from.getUserMetadata().getMetadata().entrySet()) {
     String key=entry.getKey().toLowerCase();
