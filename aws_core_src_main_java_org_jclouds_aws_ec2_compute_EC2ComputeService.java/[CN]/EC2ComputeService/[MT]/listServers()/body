@@ -1,0 +1,14 @@
+{
+  logger.debug(">> listing servers");
+  SortedSet<ServerIdentity> servers=Sets.newTreeSet();
+  for (  Reservation reservation : ec2Client.describeInstances()) {
+    Iterables.addAll(servers,Iterables.transform(reservation.getRunningInstances(),new Function<RunningInstance,ServerIdentity>(){
+      @Override public ServerIdentity apply(      RunningInstance from){
+        return new ServerIdentityImpl(from.getInstanceId(),from.getKeyName());
+      }
+    }
+));
+  }
+  logger.debug("<< list(%d)",servers.size());
+  return servers;
+}

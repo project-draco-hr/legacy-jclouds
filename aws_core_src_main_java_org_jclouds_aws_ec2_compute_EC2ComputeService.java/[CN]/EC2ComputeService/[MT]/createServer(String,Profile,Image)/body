@@ -1,0 +1,16 @@
+{
+  String ami=checkNotNull(imageAmiIdMap.get(image),"image not supported: " + image);
+  InstanceType type=checkNotNull(profileInstanceTypeMap.get(profile),"profile not supported: " + profile);
+  KeyPair keyPair=createKeyPair(name);
+  String securityGroupName=name;
+  createSecurityGroup(securityGroupName,22,80,443);
+  logger.debug(">> running instance ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ami,type,keyPair.getKeyName(),securityGroupName);
+  RunningInstance runningInstance=Iterables.getLast(ec2Client.runInstances(ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name)).getRunningInstances());
+  logger.debug("<< started instance(%s)",runningInstance.getInstanceId());
+  instanceStateRunning.apply(runningInstance);
+  logger.debug("<< running instance(%s)",runningInstance.getInstanceId());
+  runningInstance=getRunningInstance(runningInstance.getInstanceId());
+  Set<InetAddress> publicAddresses=runningInstance.getIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getIpAddress());
+  Set<InetAddress> privateAddresses=runningInstance.getPrivateIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getPrivateIpAddress());
+  return new CreateServerResponseImpl(runningInstance.getInstanceId(),name,publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials("root",keyPair.getKeyMaterial()));
+}

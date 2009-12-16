@@ -1,0 +1,18 @@
+{
+  logger.debug(">> creating keyPair name(%s)",name);
+  KeyPair keyPair;
+  try {
+    keyPair=ec2Client.createKeyPair(name);
+    logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
+  }
+ catch (  AWSResponseException e) {
+    if (e.getError().getCode().equals("InvalidKeyPair.Duplicate")) {
+      keyPair=ec2Client.describeKeyPairs(name).last();
+      logger.debug("<< reused keyPair(%s)",keyPair.getKeyName());
+    }
+ else {
+      throw e;
+    }
+  }
+  return keyPair;
+}

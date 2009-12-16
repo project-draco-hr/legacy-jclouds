@@ -1,0 +1,13 @@
+{
+  RunningInstance runningInstance=getRunningInstance(id);
+  String name=runningInstance.getKeyName();
+  logger.debug(">> terminating instance(%s)",runningInstance.getInstanceId());
+  ec2Client.terminateInstances(id);
+  logger.debug("<< terminated instance(%s)",runningInstance.getInstanceId());
+  logger.debug(">> deleting keyPair(%s)",name);
+  ec2Client.deleteKeyPair(name);
+  logger.debug("<< deleted keyPair(%s)",name);
+  logger.debug(">> deleting securityGroup(%s)",name);
+  ec2Client.deleteSecurityGroup(name);
+  logger.debug("<< deleted securityGroup(%s)",name);
+}
