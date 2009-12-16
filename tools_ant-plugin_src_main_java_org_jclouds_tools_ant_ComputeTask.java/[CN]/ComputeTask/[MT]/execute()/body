@@ -4,15 +4,19 @@
   ComputeService computeService=computeMap.get(HttpUtils.createUri(provider));
 switch (action) {
 case CREATE:
+case GET:
 case DESTROY:
     if (serverElement != null) {
 switch (action) {
 case CREATE:
         create(computeService);
       break;
-case DESTROY:
-    destroy(computeService);
+case GET:
+    get(computeService);
   break;
+case DESTROY:
+destroy(computeService);
+break;
 }
 }
  else {
@@ -21,7 +25,7 @@ this.log("missing server element for action: " + action,Project.MSG_ERR);
 break;
 case LIST:
 log("list");
-for (Server server : computeService.listServers()) {
+for (ServerIdentity server : computeService.listServers()) {
 log(String.format("   id=%s, name=%s",server.getId(),server.getName()));
 }
 break;
