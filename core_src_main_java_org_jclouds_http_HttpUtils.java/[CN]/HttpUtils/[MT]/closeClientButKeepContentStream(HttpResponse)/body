@@ -1,7 +1,7 @@
 {
   if (response.getContent() != null) {
     try {
-      byte[] data=IOUtils.toByteArray(response.getContent());
+      byte[] data=ByteStreams.toByteArray(response.getContent());
       response.setContent(new ByteArrayInputStream(data));
       return data;
     }
@@ -9,7 +9,7 @@
       logger.error(e,"Error consuming input");
     }
  finally {
-      IOUtils.closeQuietly(response.getContent());
+      Closeables.closeQuietly(response.getContent());
     }
   }
   return null;

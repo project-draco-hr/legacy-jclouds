@@ -11,12 +11,12 @@
       input=entry.getValue();
       File file=new File(destinationDir,entry.getKey());
       OutputStream out=new FileOutputStream(file);
-      IOUtils.copyLarge(input,out);
+      ByteStreams.copy(input,out);
       out.flush();
       out.close();
     }
   }
   finally {
-    IOUtils.closeQuietly(input);
+    Closeables.closeQuietly(input);
   }
 }

@@ -2,7 +2,7 @@
   HttpWire wire=setUp();
   InputStream in=wire.input(fromServer);
   ByteArrayOutputStream out=new ByteArrayOutputStream();
-  IOUtils.copy(in,out);
+  ByteStreams.copy(in,out);
   byte[] compare=encryptionService.md5(new ByteArrayInputStream(out.toByteArray()));
   Thread.sleep(100);
   assertEquals(encryptionService.toHexString(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));

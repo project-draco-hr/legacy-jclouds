@@ -9,8 +9,8 @@
   }
  else   if (data instanceof File || data instanceof InputStream) {
     InputStream io=(data instanceof InputStream) ? (InputStream)data : new FileInputStream((File)data);
-    bytes=IOUtils.toByteArray(io);
-    IOUtils.closeQuietly(io);
+    bytes=ByteStreams.toByteArray(io);
+    Closeables.closeQuietly(io);
   }
  else {
     throw new UnsupportedOperationException("Content not supported " + data.getClass());

@@ -10,10 +10,10 @@
  else   if (content instanceof InputStreamPayload || content instanceof FilePayload) {
     InputStream i=content.getContent();
     try {
-      request.setPayload(IOUtils.toByteArray(i));
+      request.setPayload(ByteStreams.toByteArray(i));
     }
   finally {
-      IOUtils.closeQuietly(i);
+      Closeables.closeQuietly(i);
     }
   }
  else {

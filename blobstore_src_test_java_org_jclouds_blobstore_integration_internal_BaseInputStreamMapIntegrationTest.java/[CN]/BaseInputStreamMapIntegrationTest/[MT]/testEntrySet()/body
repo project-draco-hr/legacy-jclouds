@@ -7,12 +7,12 @@
     Set<Entry<String,InputStream>> entries=map.entrySet();
     assertEquals(entries.size(),5);
     for (    Entry<String,InputStream> entry : entries) {
-      assertEquals(fiveStrings.get(entry.getKey()),IOUtils.toString(entry.getValue()));
-      entry.setValue(IOUtils.toInputStream(""));
+      assertEquals(fiveStrings.get(entry.getKey()),Utils.toStringAndClose(entry.getValue()));
+      entry.setValue(Utils.toInputStream(""));
     }
     assertConsistencyAwareMapSize(map,5);
     for (    InputStream value : map.values()) {
-      assertEquals(IOUtils.toString(value),"");
+      assertEquals(Utils.toStringAndClose(value),"");
     }
   }
   finally {

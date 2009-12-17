@@ -1,6 +1,6 @@
 {
   try {
-    byte[] data=IOUtils.toByteArray(instream);
+    byte[] data=ByteStreams.toByteArray(instream);
     wire(header,new ByteArrayInputStream(data));
     return new ByteArrayInputStream(data);
   }
@@ -8,6 +8,6 @@
     throw new RuntimeException("Error tapping line",e);
   }
  finally {
-    IOUtils.closeQuietly(instream);
+    Closeables.closeQuietly(instream);
   }
 }

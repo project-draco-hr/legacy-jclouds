@@ -12,7 +12,7 @@
     addBlobToContainer(bucketName,blob);
     S3Object object=service.getObject(new S3Bucket(bucketName),objectKey);
     assertNotNull(object.getDataInputStream());
-    assertEquals(IOUtils.toString(object.getDataInputStream()),objectValue);
+    assertEquals(Utils.toStringAndClose(object.getDataInputStream()),objectValue);
     assertEquals(object.getContentLength(),objectValue.length());
     assertEquals(object.getMetadata(metadataName),metadataValue);
   }
