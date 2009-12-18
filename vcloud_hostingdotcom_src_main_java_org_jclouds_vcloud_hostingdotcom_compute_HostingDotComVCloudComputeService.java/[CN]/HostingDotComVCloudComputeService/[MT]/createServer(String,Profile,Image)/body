@@ -1,5 +1,5 @@
 {
   Map<String,String> metaMap=computeClient.start(name,1,512,image);
-  VApp vApp=tmClient.getVApp(metaMap.get("id"));
-  return new CreateServerResponseImpl(vApp.getId(),vApp.getName(),vApp.getNetworkToAddresses().values(),ImmutableSet.<InetAddress>of(),22,LoginType.SSH,new Credentials(metaMap.get("username"),metaMap.get("password")));
+  VApp vApp=hostingClient.getVApp(metaMap.get("id"));
+  return new CreateServerResponseImpl(vApp.getId(),vApp.getName(),vAppStatusToServerState.get(vApp.getStatus()),vApp.getNetworkToAddresses().values(),ImmutableSet.<InetAddress>of(),22,LoginType.SSH,new Credentials(metaMap.get("username"),metaMap.get("password")));
 }

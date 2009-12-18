@@ -12,5 +12,5 @@
   runningInstance=getRunningInstance(runningInstance.getInstanceId());
   Set<InetAddress> publicAddresses=runningInstance.getIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getIpAddress());
   Set<InetAddress> privateAddresses=runningInstance.getPrivateIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getPrivateIpAddress());
-  return new CreateServerResponseImpl(runningInstance.getInstanceId(),name,publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials("root",keyPair.getKeyMaterial()));
+  return new CreateServerResponseImpl(runningInstance.getInstanceId(),name,instanceToServerState.get(runningInstance.getInstanceState()),publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials("root",keyPair.getKeyMaterial()));
 }
