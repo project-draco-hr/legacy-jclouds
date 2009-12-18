@@ -1,6 +1,6 @@
 {
   ComputeTask.project=getProject();
-  Action action=Action.valueOf(this.action.toUpperCase());
+  Action action=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,this.action));
   ComputeService computeService=computeMap.get(HttpUtils.createUri(provider));
 switch (action) {
 case CREATE:
@@ -27,6 +27,12 @@ case LIST:
 log("list");
 for (ServerIdentity server : computeService.listServers()) {
 log(String.format("   id=%s, name=%s",server.getId(),server.getName()));
+}
+break;
+case LIST_DETAILS:
+log("list details");
+for (ServerIdentity server : computeService.listServers()) {
+logDetails(computeService,server);
 }
 break;
 default :
