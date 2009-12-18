@@ -1,7 +1,10 @@
 {
-  context=new RestContextBuilder<VCloudLogin,VCloudLogin>(new TypeLiteral<VCloudLogin>(){
+  final String endpoint=checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint");
+  final String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  final String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  context=new RestContextBuilder<VCloudLoginAsyncClient,VCloudLoginAsyncClient>(new TypeLiteral<VCloudLoginAsyncClient>(){
   }
-,new TypeLiteral<VCloudLogin>(){
+,new TypeLiteral<VCloudLoginAsyncClient>(){
   }
 ,new Properties()){
     public void addContextModule(    List<Module> modules){
@@ -13,7 +16,7 @@
       properties.setProperty(PROPERTY_VCLOUD_USER,checkNotNull(account,"user"));
       properties.setProperty(PROPERTY_VCLOUD_KEY,checkNotNull(key,"key"));
       properties.setProperty(PROPERTY_VCLOUD_SESSIONINTERVAL,"4");
-      modules.add(new VCloudDiscoveryRestClientModule());
+      modules.add(new VCloudLoginRestClientModule(endpoint));
     }
   }
 .withModules(new Log4JLoggingModule(),new ExecutorServiceModule(new WithinThreadExecutorService())).buildContext();
