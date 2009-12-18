@@ -1,4 +1,9 @@
 {
-  Image newDetails=client.getImage(12312987);
-  assertEquals(Image.NOT_FOUND,newDetails);
+  try {
+    Image newDetails=client.getImage(12312987);
+    assertEquals(Image.NOT_FOUND,newDetails);
+  }
+ catch (  HttpResponseException e) {
+    if (e.getResponse().getStatusCode() != 400)     throw e;
+  }
 }

@@ -1,0 +1,14 @@
+{
+  final Date date=new Date();
+  Provider<Date> dateProvider=new Provider<Date>(){
+    @Override public Date get(){
+      return date;
+    }
+  }
+;
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  request.addQueryParam("now",date.getTime() + "");
+  replay(request);
+  AddTimestampQuery filter=new AddTimestampQuery(dateProvider);
+  filter.filter(request);
+}

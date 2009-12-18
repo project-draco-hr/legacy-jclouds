@@ -1,12 +1,14 @@
 {
-  SshClient connection=sshFactory.create(new InetSocketAddress(newDetails.getAddresses().getPublicAddresses().first(),22),"root",pass);
+  InetSocketAddress socket=new InetSocketAddress(newDetails.getAddresses().getPublicAddresses().first(),22);
+  socketTester.apply(socket);
+  SshClient client=sshFactory.create(socket,"root",pass);
   try {
-    connection.connect();
-    InputStream etcPasswd=connection.get("/etc/jclouds.txt");
+    client.connect();
+    InputStream etcPasswd=client.get("/etc/jclouds.txt");
     String etcPasswdContents=Utils.toStringAndClose(etcPasswd);
     assertEquals("rackspace",etcPasswdContents.trim());
   }
   finally {
-    if (connection != null)     connection.disconnect();
+    if (client != null)     client.disconnect();
   }
 }
