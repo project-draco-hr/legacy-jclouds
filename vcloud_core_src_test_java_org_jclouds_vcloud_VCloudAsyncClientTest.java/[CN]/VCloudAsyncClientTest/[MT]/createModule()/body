@@ -1,9 +1,13 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
+      Properties props=new Properties();
+      props.put(PROPERTY_VCLOUD_DEFAULT_NETWORK,"https://vcloud.safesecureweb.com/network/1990");
+      Jsr330.bindProperties(binder(),new VCloudPropertiesBuilder(props).build());
       bind(URI.class).annotatedWith(Org.class).toInstance(URI.create("http://org"));
       bind(URI.class).annotatedWith(Catalog.class).toInstance(URI.create("http://catalog"));
       bind(String.class).annotatedWith(CatalogItemRoot.class).toInstance("http://catalogItem");
+      bind(String.class).annotatedWith(VAppTemplateRoot.class).toInstance("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate");
       bind(String.class).annotatedWith(VAppRoot.class).toInstance("http://vApps");
       bind(URI.class).annotatedWith(VDC.class).toInstance(URI.create("http://vdc"));
       bind(URI.class).annotatedWith(TasksList.class).toInstance(URI.create("http://tasksList"));

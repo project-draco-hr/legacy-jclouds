@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/vAppTemplate-trmk.xml");
+  injector=Guice.createInjector(new ParserModule());
+  factory=injector.getInstance(ParseSax.Factory.class);
+  VAppTemplate result=factory.create(injector.getInstance(VAppTemplateHandler.class)).parse(is);
+  assertEquals(result,new VAppTemplateImpl("5","CentOS 5.3 (32-bit)",URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vAppTemplate/5"),"description of CentOS 5.3 (32-bit)",null));
+}

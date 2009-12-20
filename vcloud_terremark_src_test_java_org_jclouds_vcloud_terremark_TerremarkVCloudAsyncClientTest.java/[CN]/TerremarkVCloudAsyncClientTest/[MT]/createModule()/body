@@ -1,12 +1,9 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_TERREMARK_DEFAULTGROUP)).toProvider(Providers.<String>of("group"));
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_TERREMARK_DEFAULTROW)).toProvider(Providers.<String>of("row"));
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_TERREMARK_DEFAULTPASSWORD)).toProvider(Providers.<String>of("password"));
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_VCLOUD_DEFAULTCPUCOUNT)).toProvider(Providers.<String>of("1"));
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_VCLOUD_DEFAULTMEMORY)).toProvider(Providers.<String>of("512"));
-      bind(String.class).annotatedWith(Jsr330.named(PROPERTY_VCLOUD_DEFAULTNETWORK)).toProvider(Providers.<String>of("https://vcloud.safesecureweb.com/network/1990"));
+      Properties props=new Properties();
+      props.put(PROPERTY_VCLOUD_DEFAULT_NETWORK,"https://vcloud.safesecureweb.com/network/1990");
+      Jsr330.bindProperties(binder(),new TerremarkVCloudPropertiesBuilder(props).build());
       bind(URI.class).annotatedWith(Catalog.class).toInstance(URI.create("http://catalog"));
       bind(String.class).annotatedWith(CatalogItemRoot.class).toInstance("http://catalogItem");
       bind(URI.class).annotatedWith(VCloudApi.class).toInstance(URI.create("http://vcloud"));
@@ -25,9 +22,6 @@
         }
       }
 );
-    }
-    @SuppressWarnings("unused") @Singleton @Provides @Named("InstantiateVAppTemplateParams") String provideInstantiateVAppTemplateParams() throws IOException {
-      return Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/InstantiateVAppTemplateParams.xml"));
     }
     @SuppressWarnings("unused") @Singleton @Provides @Named("CreateInternetService") String provideCreateInternetService() throws IOException {
       return Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/CreateInternetService.xml"));

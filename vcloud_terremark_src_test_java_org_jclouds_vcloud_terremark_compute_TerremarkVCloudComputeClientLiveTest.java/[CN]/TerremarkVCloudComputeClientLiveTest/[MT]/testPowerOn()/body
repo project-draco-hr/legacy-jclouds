@@ -3,7 +3,8 @@
   String serverName=getCompatibleServerName(toTest);
   int processorCount=1;
   int memory=512;
-  id=client.start(serverName,processorCount,memory,toTest);
+  Map<String,String> properties=ImmutableMap.of();
+  id=client.start(serverName,toTest,processorCount,memory,properties);
   Expectation expectation=expectationMap.get(toTest);
   TerremarkVApp vApp=tmClient.getVApp(id);
   verifyConfigurationOfVApp(vApp,serverName,expectation.os,processorCount,memory,expectation.hardDisk);

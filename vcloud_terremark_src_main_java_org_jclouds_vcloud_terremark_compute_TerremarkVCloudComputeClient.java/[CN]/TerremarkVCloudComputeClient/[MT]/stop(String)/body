@@ -3,7 +3,7 @@
   Set<PublicIpAddress> ipAddresses=deleteInternetServicesAndNodesAssociatedWithVApp(vApp);
   deletePublicIpAddressesWithNoServicesAttached(ipAddresses);
   if (vApp.getStatus() != VAppStatus.OFF) {
-    logger.debug(">> powering off vApp(%s)",vApp.getId());
+    logger.debug(">> powering off vApp(%s), current status: %s",vApp.getId(),vApp.getStatus());
     blockUntilVAppStatusOrThrowException(vApp,tmClient.powerOffVApp(vApp.getId()),"powerOff",VAppStatus.OFF);
     logger.debug("<< off vApp(%s)",vApp.getId());
   }

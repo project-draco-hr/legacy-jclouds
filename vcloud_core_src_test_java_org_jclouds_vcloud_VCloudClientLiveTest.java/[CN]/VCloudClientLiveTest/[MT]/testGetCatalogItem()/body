@@ -1,0 +1,14 @@
+{
+  Catalog response=connection.getCatalog();
+  for (  NamedResource resource : response.values()) {
+    if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
+      CatalogItem item=connection.getCatalogItem(resource.getId());
+      assertNotNull(item);
+      assertNotNull(item.getEntity());
+      assertNotNull(item.getId());
+      assertNotNull(item.getLocation());
+      assertNotNull(item.getProperties());
+      assertNotNull(item.getType());
+    }
+  }
+}
