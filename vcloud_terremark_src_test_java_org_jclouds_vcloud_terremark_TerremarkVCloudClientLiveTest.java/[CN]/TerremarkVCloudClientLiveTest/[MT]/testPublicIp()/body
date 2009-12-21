@@ -1,5 +1,7 @@
 {
   node=tmClient.addNode(is.getId(),Iterables.getLast(vApp.getNetworkToAddresses().values()),vApp.getName() + "-SSH",22);
+  node=tmClient.configureNode(node.getId(),new NodeConfiguration().changeNameTo(vApp.getName() + "-ssh"));
+  assertEquals(node.getName(),vApp.getName() + "-ssh");
   publicIp=is.getPublicIpAddress().getAddress();
   doCheckPass(publicIp);
 }

@@ -1,0 +1,19 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest gRequest=(GeneratedHttpRequest)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  InternetServiceConfiguration internetServiceConfiguration=(InternetServiceConfiguration)checkNotNull(input,"configuration");
+  checkArgument(internetServiceConfiguration.getDescription() != null || internetServiceConfiguration.getEnabled() != null || internetServiceConfiguration.getName() != null || internetServiceConfiguration.getTimeout() != null,"no configuration set");
+  try {
+    super.bindToRequest(request,generateXml(internetServiceConfiguration));
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  FactoryConfigurationError e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException e) {
+    throw new RuntimeException(e);
+  }
+}

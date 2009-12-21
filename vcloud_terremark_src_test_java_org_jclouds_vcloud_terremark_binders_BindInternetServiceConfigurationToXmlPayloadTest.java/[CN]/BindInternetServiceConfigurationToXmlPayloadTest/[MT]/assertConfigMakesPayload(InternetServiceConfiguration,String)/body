@@ -1,0 +1,13 @@
+{
+  BindInternetServiceConfigurationToXmlPayload binder=injector.getInstance(BindInternetServiceConfigurationToXmlPayload.class);
+  Multimap<String,String> headers=Multimaps.synchronizedMultimap(HashMultimap.<String,String>create());
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  expect(request.getArgs()).andReturn(new Object[]{config}).atLeastOnce();
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
+  expect(request.getFirstHeaderOrNull("Content-Type")).andReturn(null).atLeastOnce();
+  expect(request.getHeaders()).andReturn(headers).atLeastOnce();
+  request.setPayload(expectedPayload);
+  replay(request);
+  binder.bindToRequest(request,config);
+  verify(request);
+}
