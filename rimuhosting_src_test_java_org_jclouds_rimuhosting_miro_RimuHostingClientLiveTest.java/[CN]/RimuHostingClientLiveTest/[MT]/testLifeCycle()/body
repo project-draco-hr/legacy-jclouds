@@ -1,9 +1,9 @@
 {
-  NewServerResponse serverResponse=connection.createInstance("test.jclouds.org","lenny","MIRO1B");
+  NewServerResponse serverResponse=connection.createServer("test.jclouds.org","lenny","MIRO1B");
   Server server=serverResponse.getServer();
   assertNotNull(server.getId());
-  ServerInfo serverInfo=connection.restartInstance(server.getId());
-  connection.destroyInstance(server.getId());
+  ServerInfo serverInfo=connection.restartServer(server.getId());
+  connection.destroyServer(server.getId());
   assertEquals(serverInfo.getState(),RunningState.RUNNING);
   assertEquals(server.getName(),"test.jclouds.org");
   assertEquals(server.getImageId(),"lenny");
