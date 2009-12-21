@@ -1,0 +1,9 @@
+{
+  VDC response=tmClient.getDefaultVDC();
+  for (  NamedResource resource : response.getAvailableNetworks().values()) {
+    if (resource.getType().equals(VCloudMediaType.NETWORK_XML)) {
+      SortedSet<IpAddress> addresses=tmClient.getIpAddressesForNetwork(resource.getId());
+      assertNotNull(addresses);
+    }
+  }
+}

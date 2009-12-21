@@ -1,0 +1,18 @@
+{
+  if (qName.equals("Name")) {
+    address=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("Status")) {
+    status=IpAddress.Status.fromValue(currentOrNull());
+  }
+ else   if (!skip && qName.equals("Server")) {
+    server=currentOrNull();
+  }
+ else   if (qName.equals("IpAddress")) {
+    addresses.add(new IpAddress(address,status,server));
+    address=null;
+    status=null;
+    server=null;
+  }
+  currentText=new StringBuilder();
+}
