@@ -1,0 +1,59 @@
+{
+  if (qName.equals("Description")) {
+    description=currentOrNull();
+  }
+ else   if (qName.equals("Dns")) {
+    dnsServers.add(parseInetAddress(currentOrNull()));
+  }
+ else   if (qName.equals("Gateway")) {
+    gateway=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("Netmask")) {
+    netmask=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("FenceMode")) {
+    fenceModes.add(FenceMode.fromValue(currentOrNull()));
+  }
+ else   if (qName.equals("Dhcp")) {
+    dhcp=new Boolean(currentOrNull());
+  }
+ else   if (qName.equals("NatRule")) {
+    natRules.add(new NatRule(externalIP,externalPort,internalIP,internalPort));
+    externalIP=null;
+    externalPort=null;
+    internalIP=null;
+    internalPort=null;
+  }
+ else   if (qName.equals("ExternalIP")) {
+    externalIP=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("ExternalPort")) {
+    externalPort=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("InternalIP")) {
+    internalIP=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("InternalPort")) {
+    internalPort=Integer.parseInt(currentOrNull());
+  }
+ else   if (qName.equals("FirewallRule")) {
+    firewallRules.add(new FirewallRule(policy,protocol,sourceIP,sourcePort));
+    policy=null;
+    protocol=null;
+    sourceIP=null;
+    sourcePort=null;
+  }
+ else   if (qName.equals("Policy")) {
+    policy=Policy.fromValue(currentOrNull());
+  }
+ else   if (qName.equals("Policy")) {
+    protocol=Protocol.fromValue(currentOrNull());
+  }
+ else   if (qName.equals("SourceIp")) {
+    sourceIP=parseInetAddress(currentOrNull());
+  }
+ else   if (qName.equals("SourcePort")) {
+    sourcePort=currentOrNull();
+  }
+  currentText=new StringBuilder();
+}

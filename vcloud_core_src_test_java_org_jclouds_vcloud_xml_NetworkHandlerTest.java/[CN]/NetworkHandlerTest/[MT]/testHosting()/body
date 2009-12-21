@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/network-hosting.xml");
+  injector=Guice.createInjector(new ParserModule());
+  factory=injector.getInstance(ParseSax.Factory.class);
+  Network result=(Network)factory.create(injector.getInstance(NetworkHandler.class)).parse(is);
+  assertEquals(result,new NetworkImpl("1183","188849 trust",URI.create("https://vcloud.safesecureweb.com/api/v0.8/network/1183"),"188849 trust",ImmutableSet.<InetAddress>of(InetAddress.getByName("76.12.32.110"),InetAddress.getByName("208.112.89.187")),InetAddress.getByName("204.12.53.89"),InetAddress.getByName("255.255.255.248"),ImmutableSet.<FenceMode>of(),null,ImmutableSet.<NatRule>of(),ImmutableSet.<FirewallRule>of()));
+}
