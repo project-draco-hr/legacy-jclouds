@@ -3,6 +3,6 @@
   GeneratedHttpRequest<PCSAsyncClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/pow"),"newkey",ImmutableMap.of("key","value")});
   assertEquals(httpMethod.getRequestLine(),"GET http://localhost/pow/metadata/newkey HTTP/1.1");
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ThrowResourceNotFoundOn404.class);
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),AddMetadataItemIntoMap.class);
 }

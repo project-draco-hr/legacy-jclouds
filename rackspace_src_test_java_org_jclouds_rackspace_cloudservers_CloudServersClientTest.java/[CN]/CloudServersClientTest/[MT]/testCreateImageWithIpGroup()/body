@@ -10,6 +10,6 @@
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseImageFromJsonResponse.class);
-  assertNotNull(processor.createExceptionParserOrNullIfNotFound(method));
+  assertNotNull(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method));
   assertNotNull(processor.getMapPayloadBinderOrNull(method,new Object[]{"",2}));
 }

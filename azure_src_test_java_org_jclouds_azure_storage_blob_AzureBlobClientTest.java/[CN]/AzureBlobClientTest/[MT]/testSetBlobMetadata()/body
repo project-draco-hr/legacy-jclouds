@@ -10,5 +10,5 @@
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("0"));
   assertEquals(httpMethod.getHeaders().get("x-ms-meta-key"),Collections.singletonList("value"));
   assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnVoidIf2xx.class);
-  assertEquals(processor.createExceptionParserOrNullIfNotFound(method),null);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ThrowResourceNotFoundOn404.class);
 }

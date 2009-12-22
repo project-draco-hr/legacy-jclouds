@@ -3,7 +3,9 @@
   String serverName=getCompatibleServerName(toTest);
   int processorCount=1;
   int memory=512;
-  id=client.start(serverName,processorCount,memory,toTest);
+  long disk=10 * 1025 * 1024;
+  Map<String,String> properties=ImmutableMap.of("foo","bar");
+  id=client.start(serverName,toTest,processorCount,memory,disk,properties).get("id");
   Expectation expectation=expectationMap.get(toTest);
   VApp vApp=tmClient.getVApp(id);
   verifyConfigurationOfVApp(vApp,serverName,expectation.os,processorCount,memory,expectation.hardDisk);
