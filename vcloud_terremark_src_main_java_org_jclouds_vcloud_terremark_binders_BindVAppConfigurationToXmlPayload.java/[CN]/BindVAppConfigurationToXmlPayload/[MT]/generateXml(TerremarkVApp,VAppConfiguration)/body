@@ -1,0 +1,12 @@
+{
+  String name=configuration.getName() != null ? configuration.getName() : vApp.getName();
+  XMLBuilder rootBuilder=buildRoot(vApp,name);
+  XMLBuilder sectionBuilder=rootBuilder.e("Section").a("xsi:type","q2:VirtualHardwareSection_Type").a("xmlns","http://schemas.dmtf.org/ovf/envelope/1").a("xmlns:q2","http://www.vmware.com/vcloud/v1");
+  sectionBuilder.e("Info").t("Virtual Hardware");
+  addProcessorItem(sectionBuilder,vApp,configuration);
+  addMemoryItem(sectionBuilder,vApp,configuration);
+  addDiskItems(sectionBuilder,vApp,configuration);
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  return rootBuilder.asString(outputProperties);
+}
