@@ -1,6 +1,6 @@
 {
   for (  ResourceAllocation disk : vApp.getResourceAllocationByType().get(ResourceType.DISK_DRIVE)) {
-    addDiskWithQuantity(sectionBuilder,disk);
+    if (!configuration.getDisksToDelete().contains(disk.getAddressOnParent()))     addDiskWithQuantity(sectionBuilder,disk);
   }
   for (  Long quantity : configuration.getDisks()) {
     ResourceAllocation disk=new ResourceAllocation(9,"n/a",null,ResourceType.DISK_DRIVE,null,"1048576",null,-1,null,null,quantity,null);
