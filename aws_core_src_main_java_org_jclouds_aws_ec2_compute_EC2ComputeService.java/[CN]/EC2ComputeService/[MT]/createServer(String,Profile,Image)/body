@@ -5,7 +5,7 @@
   String securityGroupName=name;
   createSecurityGroup(securityGroupName,22,80,443);
   logger.debug(">> running instance ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ami,type,keyPair.getKeyName(),securityGroupName);
-  RunningInstance runningInstance=Iterables.getLast(ec2Client.runInstances(ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name)).getRunningInstances());
+  RunningInstance runningInstance=Iterables.getLast(ec2Client.getInstanceServices().runInstances(ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name)).getRunningInstances());
   logger.debug("<< started instance(%s)",runningInstance.getInstanceId());
   instanceStateRunning.apply(runningInstance);
   logger.debug("<< running instance(%s)",runningInstance.getInstanceId());

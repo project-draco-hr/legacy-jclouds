@@ -4,7 +4,7 @@
   while (server == null) {
     try {
       System.out.printf("%d: running instance%n",System.currentTimeMillis());
-      server=client.runInstances(imageId,1,1,withKeyName(keyPair.getKeyName()).asType(InstanceType.M1_SMALL).withSecurityGroup(securityGroupName)).getRunningInstances().iterator().next();
+      server=client.getInstanceServices().runInstances(imageId,1,1,withKeyName(keyPair.getKeyName()).asType(InstanceType.M1_SMALL).withSecurityGroup(securityGroupName)).getRunningInstances().iterator().next();
     }
  catch (    HttpResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 400)       continue;

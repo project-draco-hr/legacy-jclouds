@@ -2,12 +2,12 @@
   RunningInstance runningInstance=getRunningInstance(id);
   String name=runningInstance.getKeyName();
   logger.debug(">> terminating instance(%s)",runningInstance.getInstanceId());
-  ec2Client.terminateInstances(id);
+  ec2Client.getInstanceServices().terminateInstances(id);
   logger.debug("<< terminated instance(%s)",runningInstance.getInstanceId());
   logger.debug(">> deleting keyPair(%s)",name);
-  ec2Client.deleteKeyPair(name);
+  ec2Client.getKeyPairServices().deleteKeyPair(name);
   logger.debug("<< deleted keyPair(%s)",name);
   logger.debug(">> deleting securityGroup(%s)",name);
-  ec2Client.deleteSecurityGroup(name);
+  ec2Client.getSecurityGroupServices().deleteSecurityGroup(name);
   logger.debug("<< deleted securityGroup(%s)",name);
 }

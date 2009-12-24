@@ -1,0 +1,13 @@
+{
+  Method method=AMIAsyncClient.class.getMethod("describeImages",Array.newInstance(DescribeImagesOptions.class,0).getClass());
+  GeneratedHttpRequest<AMIAsyncClient> httpMethod=processor.createRequest(method);
+  assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 40\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
+  assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=DescribeImages");
+  filter.filter(httpMethod);
+  assertPayloadEquals(httpMethod,"Action=DescribeImages&Signature=z1UAagWh%2BypA%2BR66ZAOvJJm5uQcBzGDVcbVeMilfioU%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&Version=2009-11-30&AWSAccessKeyId=user");
+  assertResponseParserClassEquals(method,httpMethod,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,DescribeImagesResponseHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}

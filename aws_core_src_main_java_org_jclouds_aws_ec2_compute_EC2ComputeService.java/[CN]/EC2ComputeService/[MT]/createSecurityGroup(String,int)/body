@@ -1,11 +1,11 @@
 {
   logger.debug(">> creating securityGroup name(%s)",name);
   try {
-    ec2Client.createSecurityGroup(name,name);
+    ec2Client.getSecurityGroupServices().createSecurityGroup(name,name);
     logger.debug("<< created securityGroup(%s)",name);
     logger.debug(">> authorizing securityGroup name(%s) ports(%s)",name,ImmutableSet.of(ports));
     for (    int port : ports) {
-      ec2Client.authorizeSecurityGroupIngress(name,IpProtocol.TCP,port,port,"0.0.0.0/0");
+      ec2Client.getSecurityGroupServices().authorizeSecurityGroupIngress(name,IpProtocol.TCP,port,port,"0.0.0.0/0");
     }
     logger.debug("<< authorized securityGroup(%s)",name);
   }

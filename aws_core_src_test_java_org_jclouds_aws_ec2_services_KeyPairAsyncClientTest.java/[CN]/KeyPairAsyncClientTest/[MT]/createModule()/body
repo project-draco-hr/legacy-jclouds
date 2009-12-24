@@ -1,0 +1,19 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(EC2.class).toInstance(URI.create("https://ec2.amazonaws.com"));
+      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("user");
+      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+    @SuppressWarnings("unused") @Provides @TimeStamp String provide(){
+      return "2009-11-08T15:54:08.897Z";
+    }
+  }
+;
+}
