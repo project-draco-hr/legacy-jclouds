@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/ec2/describe_images_ebs.xml");
+  SortedSet<Image> contents=Sets.newTreeSet();
+  contents.add(new Image(Architecture.I386,"websrv_2009-12-10","Web Server AMI","ami-246f8d4d","706093390852/websrv_2009-12-10","706093390852",ImageState.AVAILABLE,ImageType.MACHINE,true,Sets.<String>newHashSet(),null,"windows",null,Image.RootDeviceType.EBS,"/dev/sda1",ImmutableMap.<String,EbsBlockDevice>of("/dev/sda1",new EbsBlockDevice("snap-d01272b9",30,true),"xvdf",new EbsBlockDevice("snap-d31272ba",250,false))));
+  Set<Image> result=factory.create(injector.getInstance(DescribeImagesResponseHandler.class)).parse(is);
+  assertEquals(result,contents);
+}

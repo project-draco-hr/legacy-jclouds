@@ -1,0 +1,6 @@
+{
+  InputStream is=getClass().getResourceAsStream("/ec2/describe_image_attribute_blockDeviceMapping.xml");
+  Map<String,EbsBlockDevice> expected=ImmutableMap.<String,EbsBlockDevice>of("/dev/sda1",new EbsBlockDevice("snap-d01272b9",30,true),"xvdf",new EbsBlockDevice("snap-d31272ba",250,false));
+  Map<String,EbsBlockDevice> result=factory.create(injector.getInstance(BlockDeviceMappingHandler.class)).parse(is);
+  assertEquals(result,expected);
+}

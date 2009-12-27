@@ -1,0 +1,10 @@
+{
+  String imageRegisteredId=client.registerImageFromManifest("jcloudstest1",DEFAULT_MANIFEST);
+  imagesToDeregister.add(imageRegisteredId);
+  Image imageRegisteredFromManifest=Iterables.getOnlyElement(client.describeImages(imageIds(imageRegisteredId)));
+  assertEquals(imageRegisteredFromManifest.getName(),"jcloudstest1");
+  assertEquals(imageRegisteredFromManifest.getImageLocation(),DEFAULT_MANIFEST);
+  assertEquals(imageRegisteredFromManifest.getImageType(),ImageType.MACHINE);
+  assertEquals(imageRegisteredFromManifest.getRootDeviceType(),RootDeviceType.INSTANCE_STORE);
+  assertEquals(imageRegisteredFromManifest.getRootDeviceName(),"/dev/sda1");
+}
