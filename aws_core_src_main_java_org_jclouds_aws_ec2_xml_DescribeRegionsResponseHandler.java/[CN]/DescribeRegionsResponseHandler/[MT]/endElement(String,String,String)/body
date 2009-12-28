@@ -1,0 +1,20 @@
+{
+  if (qName.equals("regionName")) {
+    try {
+      region=Region.fromValue(currentText.toString().trim());
+    }
+ catch (    IllegalArgumentException e) {
+      logger.warn(e,"unsupported region: %s",currentText.toString().trim());
+      region=Region.UNKNOWN;
+    }
+  }
+ else   if (qName.equals("regionEndpoint")) {
+    regionEndpoint=URI.create(String.format("https://%s",currentText.toString().trim()));
+  }
+ else   if (qName.equals("item")) {
+    regionEndpoints.put(region,regionEndpoint);
+    this.region=null;
+    this.regionEndpoint=null;
+  }
+  currentText=new StringBuilder();
+}

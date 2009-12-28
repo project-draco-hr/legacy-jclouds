@@ -1,0 +1,45 @@
+{
+  if (qName.equals("zoneName")) {
+    zoneName=currentText.toString().trim();
+    try {
+      zone=AvailabilityZone.fromValue(zoneName);
+    }
+ catch (    IllegalArgumentException e) {
+      logger.warn(e,"unsupported region: %s",zoneName);
+      zone=AvailabilityZone.UNKNOWN;
+    }
+  }
+ else   if (qName.equals("regionName")) {
+    try {
+      region=Region.fromValue(currentText.toString().trim());
+    }
+ catch (    IllegalArgumentException e) {
+      logger.warn(e,"unsupported region: %s",currentText.toString().trim());
+      region=Region.UNKNOWN;
+    }
+  }
+ else   if (qName.equals("zoneState")) {
+    try {
+      zoneState=AvailabilityZoneInfo.State.fromValue(currentText.toString().trim());
+    }
+ catch (    IllegalArgumentException e) {
+      logger.warn(e,"unsupported zoneState: %s",currentText.toString().trim());
+      zoneState=AvailabilityZoneInfo.State.UNKNOWN;
+    }
+  }
+ else   if (qName.equals("message")) {
+    messages.add(currentText.toString().trim());
+  }
+ else   if (qName.equals("messageSet")) {
+    inMessageSet=false;
+  }
+ else   if (qName.equals("item") && !inMessageSet) {
+    availablilityZones.add(new AvailabilityZoneInfo(zoneName,zone,zoneState,region,messages));
+    this.zone=null;
+    this.zoneName=null;
+    this.region=null;
+    this.zoneState=null;
+    this.messages=Sets.newHashSet();
+  }
+  currentText=new StringBuilder();
+}
