@@ -1,7 +1,7 @@
 {
-  String imageRegisteredId=client.registerImageBackedByEbs("jcloudstest1",DEFAULT_MANIFEST);
+  String imageRegisteredId=client.registerImageBackedByEbsInRegion(Region.DEFAULT,"jcloudstest1",DEFAULT_MANIFEST);
   imagesToDeregister.add(imageRegisteredId);
-  Image imageRegistered=Iterables.getOnlyElement(client.describeImages(imageIds(imageRegisteredId)));
+  Image imageRegistered=Iterables.getOnlyElement(client.describeImagesInRegion(Region.DEFAULT,imageIds(imageRegisteredId)));
   assertEquals(imageRegistered.getName(),"jcloudstest1");
   assertEquals(imageRegistered.getImageType(),ImageType.MACHINE);
   assertEquals(imageRegistered.getRootDeviceType(),RootDeviceType.EBS);

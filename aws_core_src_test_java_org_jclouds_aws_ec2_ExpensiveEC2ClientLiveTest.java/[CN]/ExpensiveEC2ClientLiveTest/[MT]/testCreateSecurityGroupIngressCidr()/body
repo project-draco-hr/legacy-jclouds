@@ -1,12 +1,12 @@
 {
   securityGroupName=serverPrefix + "ingress";
   try {
-    client.getSecurityGroupServices().deleteSecurityGroup(securityGroupName);
+    client.getSecurityGroupServices().deleteSecurityGroupInRegion(Region.DEFAULT,securityGroupName);
   }
  catch (  Exception e) {
   }
-  client.getSecurityGroupServices().createSecurityGroup(securityGroupName,securityGroupName);
-  client.getSecurityGroupServices().authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
-  client.getSecurityGroupServices().authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,443,443,"0.0.0.0/0");
-  client.getSecurityGroupServices().authorizeSecurityGroupIngress(securityGroupName,IpProtocol.TCP,22,22,"0.0.0.0/0");
+  client.getSecurityGroupServices().createSecurityGroupInRegion(Region.DEFAULT,securityGroupName,securityGroupName);
+  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
+  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,443,443,"0.0.0.0/0");
+  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,22,22,"0.0.0.0/0");
 }

@@ -1,7 +1,7 @@
 {
-  String imageRegisteredWithOptionsId=client.registerImageFromManifest("jcloudstest2",DEFAULT_MANIFEST,withDescription("adrian"));
+  String imageRegisteredWithOptionsId=client.registerImageFromManifestInRegion(Region.DEFAULT,"jcloudstest2",DEFAULT_MANIFEST,withDescription("adrian"));
   imagesToDeregister.add(imageRegisteredWithOptionsId);
-  Image imageRegisteredFromManifestWithOptions=Iterables.getOnlyElement(client.describeImages(imageIds(imageRegisteredWithOptionsId)));
+  Image imageRegisteredFromManifestWithOptions=Iterables.getOnlyElement(client.describeImagesInRegion(Region.DEFAULT,imageIds(imageRegisteredWithOptionsId)));
   assertEquals(imageRegisteredFromManifestWithOptions.getName(),"jcloudstest2");
   assertEquals(imageRegisteredFromManifestWithOptions.getImageLocation(),DEFAULT_MANIFEST);
   assertEquals(imageRegisteredFromManifestWithOptions.getImageType(),ImageType.MACHINE);

@@ -1,0 +1,28 @@
+{
+  String group1Name=PREFIX + "ingress1";
+  String group2Name=PREFIX + "ingress2";
+  try {
+    client.deleteSecurityGroupInRegion(Region.DEFAULT,group1Name);
+  }
+ catch (  Exception e) {
+  }
+  try {
+    client.deleteSecurityGroupInRegion(Region.DEFAULT,group2Name);
+  }
+ catch (  Exception e) {
+  }
+  client.createSecurityGroupInRegion(Region.DEFAULT,group1Name,group1Name);
+  client.createSecurityGroupInRegion(Region.DEFAULT,group2Name,group2Name);
+  ensureGroupsExist(group1Name,group2Name);
+  client.authorizeSecurityGroupIngressInRegion(Region.DEFAULT,group1Name,IpProtocol.TCP,80,80,"0.0.0.0/0");
+  assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
+  SortedSet<SecurityGroup> oneResult=client.describeSecurityGroupsInRegion(Region.DEFAULT,group1Name);
+  assertNotNull(oneResult);
+  assertEquals(oneResult.size(),1);
+  SecurityGroup group=oneResult.iterator().next();
+  assertEquals(group.getName(),group1Name);
+  client.authorizeSecurityGroupIngressInRegion(Region.DEFAULT,group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
+  assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
+  client.revokeSecurityGroupIngressInRegion(Region.DEFAULT,group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
+  assertEventually(new GroupHasNoPermissions(client,group2Name));
+}

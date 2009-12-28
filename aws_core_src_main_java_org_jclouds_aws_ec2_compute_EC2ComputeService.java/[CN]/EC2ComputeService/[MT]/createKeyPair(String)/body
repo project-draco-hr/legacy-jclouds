@@ -2,12 +2,12 @@
   logger.debug(">> creating keyPair name(%s)",name);
   KeyPair keyPair;
   try {
-    keyPair=ec2Client.getKeyPairServices().createKeyPair(name);
+    keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(Region.DEFAULT,name);
     logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
   }
  catch (  AWSResponseException e) {
     if (e.getError().getCode().equals("InvalidKeyPair.Duplicate")) {
-      keyPair=ec2Client.getKeyPairServices().describeKeyPairs(name).last();
+      keyPair=Iterables.getLast(ec2Client.getKeyPairServices().describeKeyPairsInRegion(Region.DEFAULT,name));
       logger.debug("<< reused keyPair(%s)",keyPair.getKeyName());
     }
  else {

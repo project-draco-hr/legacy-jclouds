@@ -1,9 +1,9 @@
 {
-  Method method=AMIAsyncClient.class.getMethod("addLaunchPermissionsToImage",Iterable.class,Iterable.class,String.class);
-  GeneratedHttpRequest<AMIAsyncClient> httpMethod=processor.createRequest(method,ImmutableList.of("bob","sue"),ImmutableList.of("all"),"imageId");
+  Method method=AMIAsyncClient.class.getMethod("addLaunchPermissionsToImageInRegion",Region.class,Iterable.class,Iterable.class,String.class);
+  GeneratedHttpRequest<AMIAsyncClient> httpMethod=processor.createRequest(method,Region.DEFAULT,ImmutableList.of("bob","sue"),ImmutableList.of("all"),"imageId");
   assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
   assertHeadersEqual(httpMethod,"Content-Length: 107\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
-  assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=ModifyImageAttribute&OperationType=add&Attribute=launchPermission&ImageId=imageId&UserId.1=bob&UserId.2=sue&UserGroup.1=all");
+  assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=ModifyImageAttribute&OperationType=add&Attribute=launchPermission&ImageId=imageId&UserGroup.1=all&UserId.1=bob&UserId.2=sue");
   filter.filter(httpMethod);
   assertPayloadEquals(httpMethod,"Action=ModifyImageAttribute&Attribute=launchPermission&ImageId=imageId&OperationType=add&Signature=pWWwIIdcLSw0vrWFpRsCnHk93X3qYWVfcl%2FaXRhoFd8%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&UserGroup.1=all&UserId.1=bob&UserId.2=sue&Version=2009-11-30&AWSAccessKeyId=user");
   assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
