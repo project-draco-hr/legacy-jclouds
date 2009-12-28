@@ -1,5 +1,13 @@
 {
   for (  Region region : ImmutableSet.of(Region.DEFAULT,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1)) {
-    System.out.println(client.describeVolumesInRegion(region));
+    SortedSet<Volume> allResults=Sets.newTreeSet(client.describeVolumesInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      Volume volume=allResults.last();
+      SortedSet<Volume> result=Sets.newTreeSet(client.describeVolumesInRegion(region,volume.getId()));
+      assertNotNull(result);
+      Volume compare=result.last();
+      assertEquals(compare,volume);
+    }
   }
 }

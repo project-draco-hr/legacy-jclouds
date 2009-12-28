@@ -1,0 +1,65 @@
+{
+  if (qName.equals("volumeId")) {
+    if (inAttachmentSet) {
+      volumeId=currentText.toString().trim();
+    }
+ else {
+      id=currentText.toString().trim();
+    }
+  }
+ else   if (qName.equals("size")) {
+    size=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("availabilityZone")) {
+    String availabilityZoneName=currentText.toString().trim();
+    try {
+      availabilityZone=AvailabilityZone.fromValue(availabilityZoneName);
+    }
+ catch (    IllegalArgumentException e) {
+      logger.warn(e,"unsupported availability zone: %s",availabilityZoneName);
+      availabilityZone=AvailabilityZone.UNKNOWN;
+    }
+  }
+ else   if (qName.equals("volumeId")) {
+    if (inAttachmentSet) {
+      volumeId=currentText.toString().trim();
+    }
+ else {
+      id=currentText.toString().trim();
+    }
+  }
+ else   if (qName.equals("status")) {
+    if (inAttachmentSet) {
+      attachmentStatus=Volume.Attachment.Status.fromValue(currentText.toString().trim());
+    }
+ else {
+      volumeStatus=Volume.Status.fromValue(currentText.toString().trim());
+    }
+  }
+ else   if (qName.equals("createTime")) {
+    createTime=dateService.iso8601DateParse(currentText.toString().trim());
+  }
+ else   if (qName.equals("attachmentSet")) {
+    inAttachmentSet=false;
+  }
+ else   if (qName.equals("instanceId")) {
+    instanceId=currentText.toString().trim();
+  }
+ else   if (qName.equals("device")) {
+    device=currentText.toString().trim();
+  }
+ else   if (qName.equals("attachTime")) {
+    attachTime=dateService.iso8601DateParse(currentText.toString().trim());
+  }
+ else   if (qName.equals("item")) {
+    if (inAttachmentSet) {
+      attachments.add(new Attachment(volumeId,instanceId,device,attachmentStatus,attachTime));
+      volumeId=null;
+      instanceId=null;
+      device=null;
+      attachmentStatus=null;
+      attachTime=null;
+    }
+  }
+  currentText=new StringBuilder();
+}

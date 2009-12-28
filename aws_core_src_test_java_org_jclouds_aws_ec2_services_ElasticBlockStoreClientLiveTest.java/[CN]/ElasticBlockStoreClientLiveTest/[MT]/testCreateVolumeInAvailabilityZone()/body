@@ -1,5 +1,12 @@
 {
-  String result=client.createVolumeInAvailabilityZone(AvailabilityZone.US_EAST_1A,1);
+  Volume expected=client.createVolumeInAvailabilityZone(AvailabilityZone.US_EAST_1B,1);
+  assertNotNull(expected);
+  System.out.println(expected);
+  assertEquals(expected.getAvailabilityZone(),AvailabilityZone.US_EAST_1B);
+  this.volumeId=expected.getId();
+  SortedSet<Volume> result=Sets.newTreeSet(client.describeVolumesInRegion(Region.DEFAULT,expected.getId()));
   assertNotNull(result);
-  System.out.println(result);
+  assertEquals(result.size(),1);
+  Volume volume=result.iterator().next();
+  assertEquals(volume.getId(),expected.getId());
 }
