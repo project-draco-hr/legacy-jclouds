@@ -1,7 +1,9 @@
 {
   DateService dateService=injector.getInstance(DateService.class);
   InputStream is=getClass().getResourceAsStream("/ec2/attach.xml");
-  Attachment expected=new Attachment("vol-4d826724","i-6058a509","/dev/sdh",Attachment.Status.ATTACHING,dateService.iso8601DateParse("2008-05-07T11:51:50.000Z"));
-  Attachment result=factory.create(injector.getInstance(AttachmentHandler.class)).parse(is);
+  Attachment expected=new Attachment(Region.DEFAULT,"vol-4d826724","i-6058a509","/dev/sdh",Attachment.Status.ATTACHING,dateService.iso8601DateParse("2008-05-07T11:51:50.000Z"));
+  AttachmentHandler handler=injector.getInstance(AttachmentHandler.class);
+  addDefaultRegionToHandler(handler);
+  Attachment result=factory.create(handler).parse(is);
   assertEquals(result,expected);
 }

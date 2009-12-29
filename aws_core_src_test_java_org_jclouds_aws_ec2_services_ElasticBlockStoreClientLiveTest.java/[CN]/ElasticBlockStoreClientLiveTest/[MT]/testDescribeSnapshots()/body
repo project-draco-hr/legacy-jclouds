@@ -1,0 +1,12 @@
+{
+  for (  Region region : ImmutableSet.of(Region.DEFAULT,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1)) {
+    SortedSet<Snapshot> allResults=Sets.newTreeSet(client.describeSnapshotsInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      Snapshot snapshot=allResults.last();
+      Snapshot result=Iterables.getOnlyElement(client.describeSnapshotsInRegion(region,snapshotIds(snapshot.getId())));
+      assertNotNull(result);
+      assertEquals(result,snapshot);
+    }
+  }
+}

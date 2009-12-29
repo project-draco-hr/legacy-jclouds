@@ -45,6 +45,10 @@
  else   if (qName.equals("instanceId")) {
     instanceId=currentText.toString().trim();
   }
+ else   if (qName.equals("snapshotId")) {
+    snapshotId=currentText.toString().trim();
+    if (snapshotId.equals(""))     snapshotId=null;
+  }
  else   if (qName.equals("device")) {
     device=currentText.toString().trim();
   }
@@ -53,7 +57,7 @@
   }
  else   if (qName.equals("item")) {
     if (inAttachmentSet) {
-      attachments.add(new Attachment(volumeId,instanceId,device,attachmentStatus,attachTime));
+      attachments.add(new Attachment(EC2Utils.findRegionInArgsOrNull(request),volumeId,instanceId,device,attachmentStatus,attachTime));
       volumeId=null;
       instanceId=null;
       device=null;

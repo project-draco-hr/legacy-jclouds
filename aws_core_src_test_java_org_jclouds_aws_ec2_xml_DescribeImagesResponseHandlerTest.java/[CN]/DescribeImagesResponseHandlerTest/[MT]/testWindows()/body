@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/ec2/describe_images_windows.xml");
   SortedSet<Image> contents=Sets.newTreeSet();
-  contents.add(new Image(Architecture.X86_64,null,null,"ami-02eb086b","aws-solutions-amis/SqlSvrStd2003r2-x86_64-Win_SFWBasic5.1-v1.0.manifest.xml","771350841976",ImageState.AVAILABLE,ImageType.MACHINE,true,Sets.<String>newHashSet("5771E9A6"),null,"windows",null,Image.RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of()));
-  Set<Image> result=factory.create(injector.getInstance(DescribeImagesResponseHandler.class)).parse(is);
+  contents.add(new Image(Region.DEFAULT,Architecture.X86_64,null,null,"ami-02eb086b","aws-solutions-amis/SqlSvrStd2003r2-x86_64-Win_SFWBasic5.1-v1.0.manifest.xml","771350841976",ImageState.AVAILABLE,ImageType.MACHINE,true,Sets.<String>newHashSet("5771E9A6"),null,"windows",null,Image.RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of()));
+  Set<Image> result=parseImages(is);
   assertEquals(result,contents);
 }

@@ -1,6 +1,8 @@
 {
   InputStream is=getClass().getResourceAsStream("/ec2/terminate_instances.xml");
-  SortedSet<TerminatedInstance> expected=ImmutableSortedSet.of(new TerminatedInstance("i-3ea74257",InstanceState.SHUTTING_DOWN,InstanceState.RUNNING));
-  SortedSet<TerminatedInstance> result=factory.create(injector.getInstance(TerminateInstancesResponseHandler.class)).parse(is);
+  Set<TerminatedInstance> expected=ImmutableSet.of(new TerminatedInstance(Region.DEFAULT,"i-3ea74257",InstanceState.SHUTTING_DOWN,InstanceState.RUNNING));
+  TerminateInstancesResponseHandler handler=injector.getInstance(TerminateInstancesResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  Set<TerminatedInstance> result=factory.create(handler).parse(is);
   assertEquals(result,expected);
 }

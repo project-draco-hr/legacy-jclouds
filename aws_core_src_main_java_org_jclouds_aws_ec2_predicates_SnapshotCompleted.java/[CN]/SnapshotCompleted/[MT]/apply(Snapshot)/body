@@ -1,0 +1,6 @@
+{
+  logger.trace("looking for status on snapshot %s",snapshot.getId());
+  snapshot=Iterables.getOnlyElement(client.describeSnapshotsInRegion(snapshot.getRegion(),snapshotIds(snapshot.getId())));
+  logger.trace("%s: looking for status %s: currently: %s; progress %d/100",snapshot,Snapshot.Status.COMPLETED,snapshot.getStatus(),snapshot.getProgress());
+  return snapshot.getStatus() == Snapshot.Status.COMPLETED;
+}

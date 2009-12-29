@@ -1,0 +1,9 @@
+{
+  DateService dateService=injector.getInstance(DateService.class);
+  InputStream is=getClass().getResourceAsStream("/ec2/created_snapshot.xml");
+  Snapshot expected=new Snapshot(Region.DEFAULT,"snap-78a54011","vol-4d826724",10,Snapshot.Status.PENDING,dateService.iso8601DateParse("2008-05-07T12:51:50.000Z"),60,"213457642086","Daily Backup",null);
+  SnapshotHandler handler=injector.getInstance(SnapshotHandler.class);
+  addDefaultRegionToHandler(handler);
+  Snapshot result=factory.create(handler).parse(is);
+  assertEquals(result,expected);
+}
