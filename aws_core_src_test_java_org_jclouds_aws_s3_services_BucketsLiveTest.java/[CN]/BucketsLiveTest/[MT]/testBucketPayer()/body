@@ -1,0 +1,33 @@
+{
+  final String bucketName=getContainerName();
+  try {
+    assertEquals(Payer.BUCKET_OWNER,context.getApi().getBucketPayer(bucketName));
+    context.getApi().setBucketPayer(bucketName,Payer.REQUESTER);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          assertEquals(Payer.REQUESTER,context.getApi().getBucketPayer(bucketName));
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+    context.getApi().setBucketPayer(bucketName,Payer.BUCKET_OWNER);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          assertEquals(Payer.BUCKET_OWNER,context.getApi().getBucketPayer(bucketName));
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+  }
+  finally {
+    destroyContainer(bucketName);
+  }
+}

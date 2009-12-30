@@ -1,0 +1,7 @@
+{
+  checkArgument(checkNotNull(toBind,"toBind") instanceof Payer,"this binder is only valid for Payer!");
+  String text=String.format("<RequestPaymentConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Payer>%s</Payer></RequestPaymentConfiguration>",((Payer)toBind).value());
+  request.setPayload(text);
+  request.getHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singletonList(text.getBytes().length + ""));
+  request.getHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,Collections.singletonList(MediaType.TEXT_XML));
+}
