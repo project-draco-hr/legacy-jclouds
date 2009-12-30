@@ -1,0 +1,44 @@
+{
+  final String bucketName=getContainerName();
+  final String targetBucket=getContainerName();
+  try {
+    assertNull(context.getApi().getBucketLogging(bucketName));
+    setupAclForBucketLoggingTarget(targetBucket);
+    final BucketLogging logging=new BucketLogging(targetBucket,"access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee(StubS3AsyncClient.TEST_ACL_EMAIL),Permission.FULL_CONTROL)));
+    context.getApi().enableBucketLogging(bucketName,logging);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          BucketLogging newLogging=context.getApi().getBucketLogging(bucketName);
+          AccessControlList acl=new AccessControlList();
+          for (          Grant grant : newLogging.getTargetGrants()) {
+            acl.addPermission(grant.getGrantee(),grant.getPermission());
+          }
+          assertTrue(acl.hasPermission(StubS3AsyncClient.TEST_ACL_ID,Permission.FULL_CONTROL),acl.toString());
+          assertEquals(logging.getTargetBucket(),newLogging.getTargetBucket());
+          assertEquals(logging.getTargetPrefix(),newLogging.getTargetPrefix());
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+    context.getApi().disableBucketLogging(bucketName);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          assertNull(context.getApi().getBucketLogging(bucketName));
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+  }
+  finally {
+    destroyContainer(bucketName);
+    destroyContainer(targetBucket);
+  }
+}

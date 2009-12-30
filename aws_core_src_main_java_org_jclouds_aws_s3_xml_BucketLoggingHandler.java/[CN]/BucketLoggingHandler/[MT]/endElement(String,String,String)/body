@@ -1,0 +1,32 @@
+{
+  if (qName.equals("TargetBucket")) {
+    this.targetBucket=currentText.toString().trim();
+  }
+ else   if (qName.equals("TargetPrefix")) {
+    this.targetPrefix=currentText.toString().trim();
+  }
+ else   if (qName.equals("Grantee")) {
+    if ("AmazonCustomerByEmail".equals(currentGranteeType)) {
+      currentGrantee=new EmailAddressGrantee(currentId);
+    }
+ else     if ("CanonicalUser".equals(currentGranteeType)) {
+      currentGrantee=new CanonicalUserGrantee(currentId,currentDisplayName);
+    }
+ else     if ("Group".equals(currentGranteeType)) {
+      currentGrantee=new GroupGrantee(GroupGranteeURI.fromURI(currentId));
+    }
+  }
+ else   if (qName.equals("Grant")) {
+    targetGrants.add(new Grant(currentGrantee,Permission.valueOf(currentPermission)));
+  }
+ else   if (qName.equals("ID") || qName.equals("EmailAddress") || qName.equals("URI")) {
+    currentId=currentText.toString().trim();
+  }
+ else   if (qName.equals("DisplayName")) {
+    currentDisplayName=currentText.toString().trim();
+  }
+ else   if (qName.equals("Permission")) {
+    currentPermission=currentText.toString().trim();
+  }
+  currentText=new StringBuilder();
+}
