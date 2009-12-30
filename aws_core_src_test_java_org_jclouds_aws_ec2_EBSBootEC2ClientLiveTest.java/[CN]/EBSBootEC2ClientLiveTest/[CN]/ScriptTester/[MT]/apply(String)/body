@@ -1,0 +1,17 @@
+{
+  System.out.printf("%d: %s testing status%n",System.currentTimeMillis(),script);
+  ExecResponse output=ssh.exec(script + " status");
+  if (output.getOutput().trim().equals("")) {
+    output=ssh.exec(script + " tail");
+    String stdout=output.getOutput().trim();
+    if (stdout.contains(endMatches)) {
+      return true;
+    }
+ else {
+      output=ssh.exec(script + " tailerr");
+      String stderr=output.getOutput().trim();
+      throw new RuntimeException(String.format("script %s ended without token: stdout.log: [%s]; stderr.log: [%s]; ",script,stdout,stderr));
+    }
+  }
+  return false;
+}

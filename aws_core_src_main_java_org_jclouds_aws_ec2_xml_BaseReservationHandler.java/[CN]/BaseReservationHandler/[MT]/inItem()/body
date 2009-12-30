@@ -1,6 +1,14 @@
 {
-  if (inInstances && !inProductCodes) {
-    instances.add(new RunningInstance(amiLaunchIndex,dnsName,imageId,instanceId,instanceState,instanceType,ipAddress,kernelId,keyName,launchTime,monitoring,availabilityZone,platform,privateDnsName,privateIpAddress,productCodes,ramdiskId,reason,subnetId,vpcId));
+  if (inBlockDeviceMapping) {
+    ebsBlockDevices.put(deviceName,new RunningInstance.EbsBlockDevice(volumeId,attachmentStatus,attachTime,deleteOnTermination));
+    this.deviceName=null;
+    this.volumeId=null;
+    this.attachmentStatus=null;
+    this.attachTime=null;
+    this.deleteOnTermination=true;
+  }
+ else   if (inInstances && !inProductCodes && !inBlockDeviceMapping) {
+    instances.add(new RunningInstance(EC2Utils.findRegionInArgsOrNull(request),amiLaunchIndex,dnsName,imageId,instanceId,instanceState,instanceType,ipAddress,kernelId,keyName,launchTime,monitoring,availabilityZone,platform,privateDnsName,privateIpAddress,productCodes,ramdiskId,reason,subnetId,vpcId,rootDeviceType,rootDeviceName,ebsBlockDevices));
     this.amiLaunchIndex=null;
     this.dnsName=null;
     this.imageId=null;
@@ -21,5 +29,8 @@
     this.reason=null;
     this.subnetId=null;
     this.vpcId=null;
+    this.rootDeviceType=RootDeviceType.INSTANCE_STORE;
+    this.rootDeviceName=null;
+    this.ebsBlockDevices=Maps.newHashMap();
   }
 }

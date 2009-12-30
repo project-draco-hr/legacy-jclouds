@@ -6,11 +6,11 @@
   createSecurityGroup(securityGroupName,22,80,443);
   logger.debug(">> running instance ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ami,type,keyPair.getKeyName(),securityGroupName);
   RunningInstance runningInstance=Iterables.getLast(ec2Client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name)).getRunningInstances());
-  logger.debug("<< started instance(%s)",runningInstance.getInstanceId());
+  logger.debug("<< started instance(%s)",runningInstance.getId());
   instanceStateRunning.apply(runningInstance);
-  logger.debug("<< running instance(%s)",runningInstance.getInstanceId());
-  runningInstance=getRunningInstance(runningInstance.getInstanceId());
+  logger.debug("<< running instance(%s)",runningInstance.getId());
+  runningInstance=getRunningInstance(runningInstance.getId());
   Set<InetAddress> publicAddresses=runningInstance.getIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getIpAddress());
   Set<InetAddress> privateAddresses=runningInstance.getPrivateIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getPrivateIpAddress());
-  return new CreateServerResponseImpl(runningInstance.getInstanceId(),name,instanceToServerState.get(runningInstance.getInstanceState()),publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials("root",keyPair.getKeyMaterial()));
+  return new CreateServerResponseImpl(runningInstance.getId(),name,instanceToServerState.get(runningInstance.getInstanceState()),publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials("root",keyPair.getKeyMaterial()));
 }

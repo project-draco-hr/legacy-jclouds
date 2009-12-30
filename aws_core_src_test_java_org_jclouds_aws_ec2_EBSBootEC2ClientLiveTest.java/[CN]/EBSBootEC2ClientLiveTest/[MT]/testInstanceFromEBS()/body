@@ -1,0 +1,10 @@
+{
+  System.out.printf("%d: %s creating instance from ebs-backed ami%n",System.currentTimeMillis(),ebsImage.getId());
+  ebsInstance=createInstance(ebsImage.getId());
+  client.getInstanceServices().stopInstancesInRegion(ebsInstance.getRegion(),true,ebsInstance.getId());
+  System.out.printf("%d: %s awaiting instance to stop %n",System.currentTimeMillis(),ebsInstance.getId());
+  stoppedTester.apply(ebsInstance);
+  System.out.printf("%d: %s awaiting instance to start %n",System.currentTimeMillis(),ebsInstance.getId());
+  client.getInstanceServices().startInstancesInRegion(ebsInstance.getRegion(),ebsInstance.getId());
+  ebsInstance=blockUntilWeCanSshIntoInstance(ebsInstance);
+}

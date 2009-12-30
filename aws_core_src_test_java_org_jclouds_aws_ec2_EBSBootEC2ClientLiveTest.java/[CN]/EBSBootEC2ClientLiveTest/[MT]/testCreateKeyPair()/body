@@ -1,0 +1,13 @@
+{
+  String keyName=INSTANCE_PREFIX + "1";
+  try {
+    client.getKeyPairServices().deleteKeyPairInRegion(Region.DEFAULT,keyName);
+  }
+ catch (  Exception e) {
+  }
+  keyPair=client.getKeyPairServices().createKeyPairInRegion(Region.DEFAULT,keyName);
+  assertNotNull(keyPair);
+  assertNotNull(keyPair.getKeyMaterial());
+  assertNotNull(keyPair.getKeyFingerprint());
+  assertEquals(keyPair.getKeyName(),keyName);
+}

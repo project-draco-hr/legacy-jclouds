@@ -4,7 +4,7 @@
   for (  Reservation reservation : ec2Client.getInstanceServices().describeInstancesInRegion(Region.DEFAULT)) {
     Iterables.addAll(servers,Iterables.transform(reservation.getRunningInstances(),new Function<RunningInstance,ServerIdentity>(){
       @Override public ServerIdentity apply(      RunningInstance from){
-        return new ServerIdentityImpl(from.getInstanceId(),from.getKeyName());
+        return new ServerIdentityImpl(from.getId(),from.getKeyName());
       }
     }
 ));
