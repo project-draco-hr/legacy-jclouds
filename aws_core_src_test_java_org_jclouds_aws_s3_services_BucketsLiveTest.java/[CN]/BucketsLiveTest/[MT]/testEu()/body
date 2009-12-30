@@ -1,0 +1,22 @@
+{
+  final String bucketName=getScratchContainerName();
+  try {
+    context.getApi().putBucketIfNotExists(bucketName + "eu",createIn(LocationConstraint.EU).withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          AccessControlList acl=context.getApi().getBucketACL(bucketName + "eu");
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
+        }
+ catch (        Exception e) {
+          Utils.<RuntimeException>rethrowIfRuntimeOrSameType(e);
+        }
+      }
+    }
+);
+    assertEquals(LocationConstraint.EU,context.getApi().getBucketLocation(bucketName + "eu"));
+  }
+  finally {
+    destroyContainer(bucketName + "eu");
+  }
+}

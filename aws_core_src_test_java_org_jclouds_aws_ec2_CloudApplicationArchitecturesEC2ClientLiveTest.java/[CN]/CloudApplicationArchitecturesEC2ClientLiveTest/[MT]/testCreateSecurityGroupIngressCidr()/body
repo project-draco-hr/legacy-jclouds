@@ -6,7 +6,7 @@
  catch (  Exception e) {
   }
   client.getSecurityGroupServices().createSecurityGroupInRegion(Region.DEFAULT,securityGroupName,securityGroupName);
-  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
-  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,443,443,"0.0.0.0/0");
-  client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,22,22,"0.0.0.0/0");
+  for (  int port : new int[]{80,443,22}) {
+    client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,port,port,"0.0.0.0/0");
+  }
 }

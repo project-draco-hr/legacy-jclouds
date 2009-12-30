@@ -1,10 +1,10 @@
 {
-  String imageId="ami-1fd73376";
   RunningInstance server=null;
   while (server == null) {
     try {
       System.out.printf("%d: running instance%n",System.currentTimeMillis());
-      server=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,imageId,1,1,withKeyName(keyPair.getKeyName()).asType(InstanceType.M1_SMALL).withSecurityGroup(securityGroupName)).getRunningInstances().iterator().next();
+      Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,"ami-7e28ca17",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPair.getKeyName()).withSecurityGroup(securityGroupName));
+      server=Iterables.getOnlyElement(reservation.getRunningInstances());
     }
  catch (    HttpResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 400)       continue;

@@ -5,8 +5,8 @@
     String[] params=request.getEndpoint().getQuery().split("&");
     for (    String param : params) {
       String[] paramNameAndValue=param.split("=");
-      if ("acl".equals(paramNameAndValue[0])) {
-        paramsToSign.append("acl");
+      if (SPECIAL_QUERIES.contains(paramNameAndValue[0])) {
+        paramsToSign.append(paramNameAndValue[0]);
       }
     }
     if (paramsToSign.length() > 1) {
