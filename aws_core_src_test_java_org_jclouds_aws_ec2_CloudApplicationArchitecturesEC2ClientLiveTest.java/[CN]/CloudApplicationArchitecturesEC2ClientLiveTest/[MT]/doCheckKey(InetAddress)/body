@@ -1,11 +1,11 @@
 {
-  SshClient connection=sshFactory.create(new InetSocketAddress(address,22),"root",keyPair.getKeyMaterial().getBytes());
+  SshClient ssh=sshFactory.create(new InetSocketAddress(address,22),"root",keyPair.getKeyMaterial().getBytes());
   try {
-    connection.connect();
-    InputStream etcPasswd=connection.get("/etc/passwd");
-    Utils.toStringAndClose(etcPasswd);
+    ssh.connect();
+    ExecResponse hello=ssh.exec("echo hello");
+    assertEquals(hello.getOutput().trim(),"hello");
   }
   finally {
-    if (connection != null)     connection.disconnect();
+    if (ssh != null)     ssh.disconnect();
   }
 }

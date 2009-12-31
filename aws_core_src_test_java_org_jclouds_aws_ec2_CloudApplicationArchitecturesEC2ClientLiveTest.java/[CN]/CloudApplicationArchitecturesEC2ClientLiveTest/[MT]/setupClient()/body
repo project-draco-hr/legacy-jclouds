@@ -4,7 +4,6 @@
   Injector injector=new EC2ContextBuilder(new EC2PropertiesBuilder(user,password).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
   client=injector.getInstance(EC2Client.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
-  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
-  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
-  injector.injectMembers(socketOpen);
+  runningTester=new RetryablePredicate<RunningInstance>(new InstanceStateRunning(client.getInstanceServices()),180,5,TimeUnit.SECONDS);
+  socketTester=new RetryablePredicate<InetSocketAddress>(new SocketOpen(),180,1,TimeUnit.SECONDS);
 }

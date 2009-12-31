@@ -1,20 +1,22 @@
 {
-  RunningInstance server=null;
-  while (server == null) {
+  RunningInstance instance=null;
+  while (instance == null) {
     try {
+      String script=new ScriptBuilder().addStatement(exec("runurl run.alestic.com/apt/upgrade")).addStatement(exec("runurl run.alestic.com/install/lamp")).build(OsFamily.UNIX);
+      String encodedScript=Base64.encodeBytes(script.getBytes());
       System.out.printf("%d: running instance%n",System.currentTimeMillis());
-      Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,"ami-7e28ca17",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPair.getKeyName()).withSecurityGroup(securityGroupName));
-      server=Iterables.getOnlyElement(reservation.getRunningInstances());
+      Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,"ami-ccf615a5",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPair.getKeyName()).withSecurityGroup(securityGroupName).withUserData(encodedScript));
+      instance=Iterables.getOnlyElement(reservation.getRunningInstances());
     }
  catch (    HttpResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 400)       continue;
       throw htpe;
     }
   }
-  assertNotNull(server.getId());
-  serverId=server.getId();
-  assertEquals(server.getInstanceState(),InstanceState.PENDING);
-  server=blockUntilRunningInstanceActive(serverId);
-  sshPing(server);
-  System.out.printf("%d: %s ssh connection made%n",System.currentTimeMillis(),serverId);
+  assertNotNull(instance.getId());
+  instanceId=instance.getId();
+  assertEquals(instance.getInstanceState(),InstanceState.PENDING);
+  instance=blockUntilWeCanSshIntoInstance(instance);
+  sshPing(instance);
+  System.out.printf("%d: %s ssh connection made%n",System.currentTimeMillis(),instanceId);
 }
