@@ -1,0 +1,29 @@
+{
+  if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
+  String accesskeyid=args[0];
+  String secretkey=args[1];
+  String command=args[2];
+  String name=args[3];
+  RestContext<EC2AsyncClient,EC2Client> context=EC2ContextFactory.createContext(accesskeyid,secretkey);
+  EC2Client client=context.getApi();
+  try {
+    if (command.equals("create")) {
+      KeyPair pair=createKeyPair(client,name);
+      RunningInstance instance=createSecurityGroupKeyPairAndInstance(client,name);
+      System.out.printf("instance %s ready%n",instance.getId());
+      System.out.printf("ip address: %s%n",instance.getIpAddress().getHostAddress());
+      System.out.printf("dns name: %s%n",instance.getDnsName());
+      System.out.printf("login identity:%n%s%n",pair.getKeyMaterial());
+    }
+ else     if (command.equals("destroy")) {
+      destroySecurityGroupKeyPairAndInstance(client,name);
+    }
+ else {
+      throw new IllegalArgumentException(INVALID_SYNTAX);
+    }
+  }
+  finally {
+    context.close();
+    System.exit(0);
+  }
+}
