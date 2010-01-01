@@ -1,0 +1,11 @@
+{
+  logger.trace("looking for ipAddress on instance %s",instance);
+  try {
+    instance=refresh(instance.getId());
+    return instance.getIpAddress() != null;
+  }
+ catch (  AWSResponseException e) {
+    if (e.getError().getCode().equals("InvalidInstanceID.NotFound"))     return false;
+    throw e;
+  }
+}

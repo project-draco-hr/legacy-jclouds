@@ -4,6 +4,7 @@
   client.getInstanceServices().stopInstancesInRegion(ebsInstance.getRegion(),true,ebsInstance.getId());
   System.out.printf("%d: %s awaiting instance to stop %n",System.currentTimeMillis(),ebsInstance.getId());
   stoppedTester.apply(ebsInstance);
+  tryToChangeStuff();
   System.out.printf("%d: %s awaiting instance to start %n",System.currentTimeMillis(),ebsInstance.getId());
   client.getInstanceServices().startInstancesInRegion(ebsInstance.getRegion(),ebsInstance.getId());
   ebsInstance=blockUntilWeCanSshIntoInstance(ebsInstance);

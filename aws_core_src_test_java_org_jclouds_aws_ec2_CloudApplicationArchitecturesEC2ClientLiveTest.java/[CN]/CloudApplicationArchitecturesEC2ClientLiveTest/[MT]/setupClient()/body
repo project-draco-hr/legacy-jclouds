@@ -5,5 +5,6 @@
   client=injector.getInstance(EC2Client.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   runningTester=new RetryablePredicate<RunningInstance>(new InstanceStateRunning(client.getInstanceServices()),180,5,TimeUnit.SECONDS);
+  hasIpTester=new RetryablePredicate<RunningInstance>(new InstanceHasIpAddress(client.getInstanceServices()),180,5,TimeUnit.SECONDS);
   socketTester=new RetryablePredicate<InetSocketAddress>(new SocketOpen(),180,1,TimeUnit.SECONDS);
 }

@@ -1,0 +1,13 @@
+{
+  Method method=InstanceAsyncClient.class.getMethod("setUserDataForInstanceInRegion",Region.class,String.class,Array.newInstance(byte.class,0).getClass());
+  GeneratedHttpRequest<InstanceAsyncClient> httpMethod=processor.createRequest(method,Region.DEFAULT,"1","test".getBytes());
+  assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 100\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
+  assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=ModifyInstanceAttribute&Attribute=userData&Value=dGVzdA%3D%3D&InstanceId=1");
+  filter.filter(httpMethod);
+  assertPayloadEquals(httpMethod,"Action=ModifyInstanceAttribute&Attribute=userData&InstanceId=1&Signature=LyanxPcmESLrkIIFu9RX2yGN1rSQmyF489LYcoszbFE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&Value=dGVzdA%3D%3D&Version=2009-11-30&AWSAccessKeyId=user");
+  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}

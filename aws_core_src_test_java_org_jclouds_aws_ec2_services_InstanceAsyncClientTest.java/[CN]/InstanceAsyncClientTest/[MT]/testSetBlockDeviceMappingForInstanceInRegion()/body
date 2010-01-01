@@ -1,0 +1,13 @@
+{
+  Method method=InstanceAsyncClient.class.getMethod("setBlockDeviceMappingForInstanceInRegion",Region.class,String.class,String.class);
+  GeneratedHttpRequest<InstanceAsyncClient> httpMethod=processor.createRequest(method,Region.DEFAULT,"1","test");
+  assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 102\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
+  assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=ModifyInstanceAttribute&Attribute=blockDeviceMapping&Value=test&InstanceId=1");
+  filter.filter(httpMethod);
+  assertPayloadEquals(httpMethod,"Action=ModifyInstanceAttribute&Attribute=blockDeviceMapping&InstanceId=1&Signature=KNCKfLATSmpXGuIBpXOx3lBmHv9tyu17Cxrfi%2FTzQHE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&Value=test&Version=2009-11-30&AWSAccessKeyId=user");
+  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}
