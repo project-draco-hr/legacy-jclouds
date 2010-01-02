@@ -1,0 +1,23 @@
+{
+  if (paths != null && paths.length > 0) {
+    JavaArchive classpathArchive=Archives.create("classpath.jar",JavaArchive.class);
+    for (    String path : paths) {
+      File file=new File(path);
+      if (file.exists()) {
+        if (file.isFile()) {
+          try {
+            classpathArchive.as(ZipImporter.class).importZip(new ZipFile(file.getAbsolutePath()));
+          }
+ catch (          IOException e) {
+            throw new BuildException(e);
+          }
+        }
+ else {
+          classpathArchive.as(ExplodedImporter.class).importDirectory(file);
+        }
+      }
+    }
+    return classpathArchive.as(ZipExporter.class).exportZip();
+  }
+  return null;
+}

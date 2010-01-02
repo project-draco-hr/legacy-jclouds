@@ -1,0 +1,27 @@
+{
+  String sshHost=System.getProperty("jclouds.test.ssh.host");
+  String sshPort=System.getProperty("jclouds.test.ssh.port");
+  String sshUser=System.getProperty("jclouds.test.ssh.username");
+  String sshPass=System.getProperty("jclouds.test.ssh.password");
+  String sshKeyFile=System.getProperty("jclouds.test.ssh.keyfile");
+  int port=(sshPort != null) ? Integer.parseInt(sshPort) : 22;
+  InetAddress host=(sshHost != null) ? InetAddress.getByName(sshHost) : InetAddress.getLocalHost();
+  JavaOverSsh task=createTask();
+  task.setHost(host.getHostAddress());
+  task.setPort(port);
+  task.setTrust(true);
+  task.setUsername(sshUser);
+  if (sshKeyFile != null && !sshKeyFile.trim().equals("")) {
+    task.setKeyfile(sshKeyFile);
+  }
+ else {
+    task.setPassword(sshPass);
+  }
+  task.setOutputproperty("out");
+  task.setErrorProperty("err");
+  task.setResultProperty("result");
+  task.execute();
+  assertEquals(task.getProject().getProperty("out"),"[hello, world]\n");
+  assertEquals(task.getProject().getProperty("err"),"err\n");
+  assertEquals(task.getProject().getProperty("result"),"3");
+}

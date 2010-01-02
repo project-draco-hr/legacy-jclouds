@@ -1,0 +1,23 @@
+{
+  Project p=new Project();
+  JavaOverSsh task=new JavaOverSsh();
+  task.setProject(p);
+  task.setClassname(TestClass.class.getName());
+  task.createClasspath().add(new Path(p,"target/test-classes"));
+  Variable prop1=new Environment.Variable();
+  prop1.setKey("fooble");
+  prop1.setValue("baz");
+  task.addSysproperty(prop1);
+  Variable prop2=new Environment.Variable();
+  prop2.setKey("foo");
+  prop2.setValue("bar");
+  task.addSysproperty(prop2);
+  task.createJvmarg().setValue("-Xms256");
+  task.createArg().setValue("hello");
+  task.createArg().setValue("world");
+  task.setDir(new File(System.getProperty("user.dir")));
+  task.setRemotedir(new File("/tmp/foo"));
+  task.setFork(true);
+  task.setJvm(System.getProperty("java.home") + "/bin/java");
+  return task;
+}
