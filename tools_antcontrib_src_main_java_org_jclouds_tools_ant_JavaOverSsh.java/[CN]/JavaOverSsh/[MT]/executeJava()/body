@@ -1,87 +1,27 @@
 {
-  String command=convertJavaToScript(getCommandLine());
-  InputStream classpathJar=(getCommandLine().getClasspath() != null) ? makeClasspathJarOrNull(getCommandLine().getClasspath().list()) : null;
-  InputStream bootClasspathJar=(getCommandLine().getBootclasspath() != null) ? makeClasspathJarOrNull(getCommandLine().getBootclasspath().list()) : null;
-  InputStream currentDirectoryZip=Archives.create("cwd.zip",ZipExporter.class).as(ExplodedImporter.class).importDirectory(localDirectory).as(ZipExporter.class).exportZip();
-  if (getHost() == null) {
-    throw new BuildException("Host is required.");
+  checkNotNull(jvm,"jvm must be set");
+  checkNotNull(remoteDirectory,"remotedir must be set");
+  if (localDirectory != null) {
+    FileSet cwd=new FileSet();
+    cwd.setDir(localDirectory);
+    mkdirAndCopyTo(remoteDirectory.getAbsolutePath(),ImmutableList.of(cwd));
   }
-  if (getUserInfo().getName() == null) {
-    throw new BuildException("Username is required.");
+  if (getCommandLine().getClasspath() != null) {
+    copyPathTo(getCommandLine().getClasspath(),remoteDirectory.getAbsolutePath() + "/classpath");
   }
-  if (getUserInfo().getKeyfile() == null && getUserInfo().getPassword() == null) {
-    throw new BuildException("Password or Keyfile is required.");
+  if (getCommandLine().getBootclasspath() != null) {
+    copyPathTo(getCommandLine().getBootclasspath(),remoteDirectory.getAbsolutePath() + "/bootclasspath");
   }
-  Session session=null;
-  try {
-    session=openSession();
-    session.setTimeout((int)maxwait);
-    ChannelSftp sftp=null;
-    sftp=(ChannelSftp)session.openChannel("sftp");
-    sftp.connect();
-    sftp.put(currentDirectoryZip,remoteDirectory + "/cwd.zip");
-    Closeables.closeQuietly(currentDirectoryZip);
-    if (classpathJar != null || bootClasspathJar != null) {
-      if (classpathJar != null) {
-        sftp.put(classpathJar,remoteDirectory + "/classpath.jar");
-        Closeables.closeQuietly(classpathJar);
-      }
-      if (bootClasspathJar != null) {
-        sftp.put(classpathJar,remoteDirectory + "/boot-classpath.jar");
-        Closeables.closeQuietly(classpathJar);
-      }
-    }
-    final ChannelExec channel=(ChannelExec)session.openChannel("exec");
-    channel.setCommand(command);
-    ByteArrayOutputStream out=new ByteArrayOutputStream();
-    TeeOutputStream teeOut=new TeeOutputStream(out,new KeepAliveOutputStream(System.out));
-    ByteArrayOutputStream err=new ByteArrayOutputStream();
-    TeeOutputStream teeErr=new TeeOutputStream(err,new KeepAliveOutputStream(System.err));
-    channel.setOutputStream(teeOut);
-    channel.setExtOutputStream(teeOut);
-    channel.setErrStream(teeErr);
-    channel.connect();
-    watchDog=new Thread(){
-      public void run(){
-        while (!channel.isEOF()) {
-          if (watchDog == null) {
-            return;
-          }
-          try {
-            sleep(500);
-          }
- catch (          Exception e) {
-          }
-        }
-      }
-    }
-;
-    watchDog.start();
-    watchDog.join(maxwait);
-    if (watchDog.isAlive()) {
-      throw new BuildException(TIMEOUT_MESSAGE);
-    }
- else {
-      return writeOutputAndReturnExitStatus(channel,out,err);
-    }
-  }
- catch (  BuildException e) {
-    throw e;
-  }
-catch (  JSchException e) {
-    if (e.getMessage().indexOf("session is down") >= 0) {
-      throw new BuildException(TIMEOUT_MESSAGE,e);
-    }
- else {
-      throw new BuildException(e);
-    }
-  }
-catch (  Exception e) {
-    throw new BuildException(e);
-  }
- finally {
-    if (session != null && session.isConnected()) {
-      session.disconnect();
-    }
-  }
+  String command=convertJavaToScriptNormalizingPaths(getCommandLine());
+  String random=new SecureRandom().nextInt() + "";
+  exec.setResultProperty(random);
+  exec.setFailonerror(false);
+  exec.setCommand(command);
+  exec.setError(errorFile);
+  exec.setErrorproperty(errorProperty);
+  exec.setOutput(outputFile);
+  exec.setOutputproperty(outputProperty);
+  exec.setAppend(append);
+  exec.execute();
+  return Integer.parseInt(getProject().getProperty(random));
 }

@@ -1,0 +1,10 @@
+{
+  scp.init();
+  exec.setCommand(exec("{md} " + destination).render(osFamily));
+  exec.execute();
+  String scpDestination=getScpDir(destination);
+  System.out.println("Sending to: " + scpDestination);
+  for (  FileSet set : sets)   scp.addFileset(set);
+  scp.setTodir(scpDestination);
+  scp.execute();
+}

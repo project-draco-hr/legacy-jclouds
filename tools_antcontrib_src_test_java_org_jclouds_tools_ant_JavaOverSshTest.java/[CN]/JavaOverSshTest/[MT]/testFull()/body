@@ -1,4 +1,5 @@
 {
-  JavaOverSsh task=createTask();
-  assertEquals(String.format("cd /tmp/foo\njar -xf cwd.zip\n%s -Xms256 -cp classpath.jar -Dfooble=baz -Dfoo=bar org.jclouds.tools.ant.TestClass hello world\n",System.getProperty("java.home") + "/bin/java",System.getProperty("user.dir")),task.convertJavaToScript(task.getCommandLine()));
+  JavaOverSsh task=makeJavaOverSsh();
+  String expected=String.format("export %s=\"%s\"%ncd /tmp/foo\n%s -Xms16m -Xmx32m -cp classpath -Dfooble=baz -Dfoo=bar org.jclouds.tools.ant.TestClass %s hello world\n",LAST_ENV.getKey(),LAST_ENV.getValue(),System.getProperty("java.home") + "/bin/java",LAST_ENV.getKey());
+  assertEquals(task.convertJavaToScriptNormalizingPaths(task.getCommandLine()),expected);
 }

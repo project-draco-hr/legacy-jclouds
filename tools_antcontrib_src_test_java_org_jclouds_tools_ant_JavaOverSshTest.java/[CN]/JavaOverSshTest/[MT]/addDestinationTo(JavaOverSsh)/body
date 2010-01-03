@@ -1,0 +1,18 @@
+{
+  String sshHost=System.getProperty("jclouds.test.ssh.host");
+  String sshPort=System.getProperty("jclouds.test.ssh.port");
+  String sshUser=System.getProperty("jclouds.test.ssh.username");
+  String sshPass=System.getProperty("jclouds.test.ssh.password");
+  String sshKeyFile=System.getProperty("jclouds.test.ssh.keyfile");
+  int port=(sshPort != null) ? Integer.parseInt(sshPort) : 22;
+  InetAddress host=(sshHost != null) ? InetAddress.getByName(sshHost) : InetAddress.getLocalHost();
+  javaOverSsh.setHost(host.getHostAddress());
+  javaOverSsh.setPort(port);
+  javaOverSsh.setUsername(sshUser);
+  if (sshKeyFile != null && !sshKeyFile.trim().equals("")) {
+    javaOverSsh.setKeyfile(sshKeyFile);
+  }
+ else {
+    javaOverSsh.setPassword(sshPass);
+  }
+}

@@ -1,0 +1,68 @@
+{
+  if (getHost() == null) {
+    throw new BuildException("Host is required.");
+  }
+  if (getUserInfo().getName() == null) {
+    throw new BuildException("Username is required.");
+  }
+  if (getUserInfo().getKeyfile() == null && getUserInfo().getPassword() == null) {
+    throw new BuildException("Password or Keyfile is required.");
+  }
+  if (command == null && commandResource == null) {
+    throw new BuildException("Command or commandResource is required.");
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (command != null) {
+      log("cmd : " + command,Project.MSG_INFO);
+      ExecResponse response=executeCommand(session,command);
+      if (outputProperty != null) {
+        getProject().setNewProperty(outputProperty,response.getOutput());
+      }
+      if (errorProperty != null) {
+        getProject().setNewProperty(outputProperty,response.getError());
+      }
+      if (resultProperty != null) {
+        getProject().setNewProperty(resultProperty,response.getCode() + "");
+      }
+    }
+ else {
+      try {
+        BufferedReader br=new BufferedReader(new InputStreamReader(commandResource.getInputStream()));
+        String cmd;
+        StringBuilder output=new StringBuilder();
+        StringBuilder error=new StringBuilder();
+        int lastCode=-1;
+        while ((cmd=br.readLine()) != null) {
+          log("cmd : " + cmd,Project.MSG_INFO);
+          ExecResponse response=executeCommand(session,cmd);
+          output.append(response.getOutput());
+          error.append(response.getError());
+          lastCode=response.getCode();
+        }
+        if (outputProperty != null) {
+          getProject().setNewProperty(outputProperty,output.toString());
+        }
+        if (errorProperty != null) {
+          getProject().setNewProperty(outputProperty,error.toString());
+        }
+        if (resultProperty != null) {
+          getProject().setNewProperty(resultProperty,lastCode + "");
+        }
+        FileUtils.close(br);
+      }
+ catch (      IOException e) {
+        throw new BuildException(e);
+      }
+    }
+  }
+ catch (  JSchException e) {
+    throw new BuildException(e);
+  }
+ finally {
+    if (session != null && session.isConnected()) {
+      session.disconnect();
+    }
+  }
+}
