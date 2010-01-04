@@ -1,5 +1,6 @@
 {
-  logger.trace("About to initialize properties.");
+  Properties props=loadJCloudsProperties();
+  logger.trace("About to initialize members.");
   twitterClient=TwitterContextFactory.createContext(props,new GaeHttpCommandExecutorServiceModule()).getApi();
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   ImmutableList<String> contextBuilderClassNames=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
@@ -24,5 +25,5 @@
   for (  String name : providerTypeToBlobStoreMap.keySet()) {
     queue.add(url("/store/do").header("context",name).method(Method.GET));
   }
-  logger.trace("Properties initialized. TwitterClient: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
+  logger.trace("Members initialized. TwitterClient: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
 }
