@@ -2,7 +2,7 @@
   String bucketName=getContainerName();
   try {
     Map<String,Blob> map=createMap(context,bucketName);
-    Blob object=newBlob("one");
+    Blob object=context.getBlobStore().newBlob("one");
     object.setPayload(Utils.toInputStream("apple"));
     object.generateMD5();
     Blob old=map.put(object.getMetadata().getName(),object);

@@ -2,8 +2,7 @@
   try {
     Set<Future<String>> puts=Sets.newHashSet();
     for (    Map.Entry<? extends String,? extends Object> entry : map.entrySet()) {
-      Blob object=connection.newBlob();
-      object.getMetadata().setName(prefixer.apply(entry.getKey()));
+      Blob object=connection.newBlob(prefixer.apply(entry.getKey()));
       object.setPayload(Payloads.newPayload(entry.getValue()));
       object.generateMD5();
       puts.add(connection.putBlob(containerName,object));

@@ -1,8 +1,7 @@
 {
-  Blob object=connection.newBlob();
-  object.getMetadata().setName(prefixer.apply(s));
+  Blob object=connection.newBlob(prefixer.apply(name));
   try {
-    InputStream returnVal=containsKey(s) ? get(s) : null;
+    InputStream returnVal=containsKey(name) ? get(name) : null;
     object.setPayload(payload);
     object.generateMD5();
     connection.putBlob(containerName,object).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
