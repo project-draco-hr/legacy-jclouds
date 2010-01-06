@@ -1,5 +1,5 @@
 {
-  return Guice.createInjector(new ExecutorServiceModule(new WithinThreadExecutorService()),new JDKLoggingModule(),new AtmosStorageStubClientModule(),new AtmosBlobStoreContextModule(){
+  return Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor()),new JDKLoggingModule(),new AtmosStorageStubClientModule(),new AtmosBlobStoreContextModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_UID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_KEY)).to("key");

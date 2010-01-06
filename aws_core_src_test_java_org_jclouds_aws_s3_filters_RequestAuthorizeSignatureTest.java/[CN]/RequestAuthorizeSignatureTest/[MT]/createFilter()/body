@@ -1,5 +1,5 @@
 {
-  injector=Guice.createInjector(new S3RestClientModule(),new ExecutorServiceModule(new WithinThreadExecutorService()),new ParserModule(),new AbstractModule(){
+  injector=Guice.createInjector(new S3RestClientModule(),new ExecutorServiceModule(sameThreadExecutor()),new ParserModule(),new AbstractModule(){
     protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
