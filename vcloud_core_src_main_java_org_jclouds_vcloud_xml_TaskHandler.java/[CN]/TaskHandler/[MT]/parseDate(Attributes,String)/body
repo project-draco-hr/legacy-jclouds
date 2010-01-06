@@ -1,11 +1,13 @@
 {
+  String toParse=attributes.getValue(attributes.getIndex(attribute));
   try {
-    return dateService.iso8601DateParse(attributes.getValue(attributes.getIndex(attribute)));
+    return dateService.iso8601DateParse(toParse);
   }
  catch (  RuntimeException e) {
     if (e.getCause() instanceof ParseException) {
       try {
-        return dateService.iso8601SecondsDateParse(attributes.getValue(attributes.getIndex(attribute)));
+        if (!toParse.endsWith("Z"))         toParse+="Z";
+        return dateService.iso8601SecondsDateParse(toParse);
       }
  catch (      RuntimeException ex) {
         logger.error(e,"error parsing date");

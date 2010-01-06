@@ -1,7 +1,9 @@
 {
   if (qName.equals("VApp")) {
-    name=id=attributes.getValue(attributes.getIndex("name"));
-    location=URI.create(attributes.getValue(attributes.getIndex("href")));
+    NamedResource resource=Utils.newNamedResource(attributes);
+    name=resource.getName();
+    id=resource.getId();
+    location=resource.getLocation();
     status=VAppStatus.fromValue(attributes.getValue(attributes.getIndex("status")));
     if (attributes.getIndex("size") != -1)     size=new Long(attributes.getValue(attributes.getIndex("size")));
   }
