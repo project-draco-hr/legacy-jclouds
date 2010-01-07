@@ -1,10 +1,4 @@
 {
   Method method=IntegrationTestAsyncClient.class.getMethod("download",String.class);
-  HttpCommand command=new TransformingHttpCommandImpl<String>(executorService,processor.createRequest(method,"1"),new ReturnStringIf200(),new Function<Exception,String>(){
-    public String apply(    Exception from){
-      return null;
-    }
-  }
-);
-  return command;
+  return new TransformingHttpCommandImpl<String>(executorService,processor.createRequest(method,"1"),new ReturnStringIf200());
 }

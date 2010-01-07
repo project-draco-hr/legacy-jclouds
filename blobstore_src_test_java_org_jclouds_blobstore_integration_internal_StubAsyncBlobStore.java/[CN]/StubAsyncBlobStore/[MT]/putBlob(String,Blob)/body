@@ -23,14 +23,9 @@
     for (    Entry<String,String> userMD : newMd.getUserMetadata().entrySet()) {
       blob.getAllHeaders().put(userMD.getKey(),userMD.getValue());
     }
-    return new FutureBase<String>(){
-      public String get() throws InterruptedException, ExecutionException {
-        return eTag;
-      }
-    }
-;
+    return immediateFuture(eTag);
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    return immediateFailedFuture(new RuntimeException(e));
   }
 }

@@ -56,7 +56,7 @@
     Function<HttpResponse,?> transformer=util.createResponseParser(method,request);
     logger.trace("Response from %s.%s is parsed by %s",declaring.getSimpleName(),method.getName(),transformer.getClass().getSimpleName());
     logger.debug("Invoking %s.%s",declaring.getSimpleName(),method.getName());
-    Future<?> result=commandFactory.create(request,transformer,exceptionParser).execute();
+    ListenableFuture<?> result=commandFactory.create(request,transformer).execute();
     if (exceptionParser != null) {
       logger.trace("Exceptions from %s.%s are parsed by %s",declaring.getSimpleName(),method.getName(),exceptionParser.getClass().getSimpleName());
       result=new FutureExceptionParser(result,exceptionParser);

@@ -1,15 +1,10 @@
 {
-  return new FutureBase<BlobMetadata>(){
-    public BlobMetadata get() throws InterruptedException, ExecutionException {
-      try {
-        return copy(getBlob(container,key).get().getMetadata());
-      }
- catch (      Exception e) {
-        Utils.<ContainerNotFoundException>rethrowIfRuntimeOrSameType(e);
-        Utils.<KeyNotFoundException>rethrowIfRuntimeOrSameType(e);
-        throw new RuntimeException(e);
-      }
-    }
+  try {
+    return immediateFuture((BlobMetadata)copy(getBlob(container,key).get().getMetadata()));
   }
-;
+ catch (  Exception e) {
+    Utils.<ContainerNotFoundException>rethrowIfRuntimeOrSameType(e);
+    Utils.<KeyNotFoundException>rethrowIfRuntimeOrSameType(e);
+    return immediateFailedFuture(e);
+  }
 }

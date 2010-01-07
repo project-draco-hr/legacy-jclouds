@@ -1,5 +1,5 @@
 {
   GetOptions httpOptions=blob2ObjectGetOptions.apply(optionsList);
   Future<AzureBlob> returnVal=async.getBlob(container,key,httpOptions);
-  return wrapFuture(returnVal,object2Blob);
+  return compose(makeListenable(returnVal),object2Blob,service);
 }

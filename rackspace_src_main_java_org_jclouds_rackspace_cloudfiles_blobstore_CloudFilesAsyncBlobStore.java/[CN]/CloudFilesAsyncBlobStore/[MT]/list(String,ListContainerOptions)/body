@@ -1,5 +1,5 @@
 {
   org.jclouds.rackspace.cloudfiles.options.ListContainerOptions httpOptions=container2ContainerListOptions.apply(optionsList);
   Future<ListContainerResponse<ObjectInfo>> returnVal=async.listObjects(container,httpOptions);
-  return wrapFuture(returnVal,container2ResourceList);
+  return compose(makeListenable(returnVal),container2ResourceList,service);
 }

@@ -2,10 +2,9 @@
   String container=path.substring(0,path.indexOf('/'));
   path=path.substring(path.indexOf('/') + 1);
   try {
-    return wrapFuture(blobStore.getBlob(container,path),blob2Object);
+    return Futures.compose(Futures.makeListenable(blobStore.getBlob(container,path)),blob2Object);
   }
  catch (  Exception e) {
-    Utils.<KeyNotFoundException>rethrowIfRuntimeOrSameType(e);
-    throw new RuntimeException(e);
+    return immediateFailedFuture(Throwables.getRootCause(e));
   }
 }

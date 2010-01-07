@@ -1,5 +1,5 @@
 {
-  return wrapFuture(blobStore.blobMetadata(container,key),new Function<BlobMetadata,BlobProperties>(){
+  return Futures.compose(Futures.makeListenable(blobStore.blobMetadata(container,key)),new Function<BlobMetadata,BlobProperties>(){
     @Override public BlobProperties apply(    BlobMetadata from){
       return blob2ObjectInfo.apply(from);
     }

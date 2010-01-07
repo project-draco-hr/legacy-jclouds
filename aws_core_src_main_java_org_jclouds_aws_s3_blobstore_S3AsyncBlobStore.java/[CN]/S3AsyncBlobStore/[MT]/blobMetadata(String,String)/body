@@ -1,8 +1,8 @@
 {
-  return wrapFuture(async.headObject(container,key),new Function<ObjectMetadata,BlobMetadata>(){
+  return compose(makeListenable(async.headObject(container,key)),new Function<ObjectMetadata,BlobMetadata>(){
     @Override public BlobMetadata apply(    ObjectMetadata from){
       return object2BlobMd.apply(from);
     }
   }
-);
+,service);
 }

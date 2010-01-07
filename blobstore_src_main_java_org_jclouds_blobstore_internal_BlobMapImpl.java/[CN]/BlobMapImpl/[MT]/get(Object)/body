@@ -4,9 +4,12 @@
     return stripPrefix(connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS));
   }
  catch (  Exception e) {
-    if (e instanceof KeyNotFoundException)     return null;
-    e=Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    if (e instanceof KeyNotFoundException)     return null;
-    throw new BlobRuntimeException(String.format("Error geting object %1$s:%2$s",containerName,realKey),e);
+    Throwable cause=Throwables.getRootCause(e);
+    if (cause instanceof KeyNotFoundException) {
+      return null;
+    }
+ else {
+      throw new BlobRuntimeException(String.format("Error geting object %1$s:%2$s",containerName,realKey),cause);
+    }
   }
 }

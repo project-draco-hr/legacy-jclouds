@@ -1,16 +1,11 @@
 {
-  return new FutureBase<ListResponse<? extends ResourceMetadata>>(){
-    public ListResponse<ResourceMetadata> get() throws InterruptedException, ExecutionException {
-      return new ListResponseImpl<ResourceMetadata>(Iterables.transform(getContainerToBlobs().keySet(),new Function<String,ResourceMetadata>(){
-        public ResourceMetadata apply(        String name){
-          MutableResourceMetadata cmd=create();
-          cmd.setName(name);
-          cmd.setType(ResourceType.CONTAINER);
-          return cmd;
-        }
-      }
-),null,null,false);
+  return immediateFuture(new ListResponseImpl<ResourceMetadata>(Iterables.transform(getContainerToBlobs().keySet(),new Function<String,ResourceMetadata>(){
+    public ResourceMetadata apply(    String name){
+      MutableResourceMetadata cmd=create();
+      cmd.setName(name);
+      cmd.setType(ResourceType.CONTAINER);
+      return cmd;
     }
   }
-;
+),null,null,false));
 }

@@ -1,10 +1,5 @@
 {
   ExecutorService execService=Executors.newCachedThreadPool();
   JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(execService,new DelegatingRetryHandler(),new DelegatingErrorHandler(),new HttpWire(Executors.newCachedThreadPool()));
-  executorService=new TransformingHttpCommandExecutorServiceImpl(httpService,execService,new LoggerFactory(){
-    public Logger getLogger(    String category){
-      return Logger.NULL;
-    }
-  }
-);
+  executorService=new TransformingHttpCommandExecutorServiceImpl(httpService,execService);
 }

@@ -1,4 +1,4 @@
 {
   org.jclouds.blobstore.options.GetOptions getOptions=httpGetOptionsConverter.apply(options);
-  return wrapFuture(blobStore.getBlob(bucketName,key,getOptions),blob2Object);
+  return Futures.compose(Futures.makeListenable(blobStore.getBlob(bucketName,key,getOptions)),blob2Object);
 }

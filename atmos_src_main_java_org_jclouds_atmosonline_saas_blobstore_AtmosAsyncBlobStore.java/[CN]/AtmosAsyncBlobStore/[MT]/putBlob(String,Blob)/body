@@ -1,6 +1,6 @@
 {
   final String path=container + "/" + blob.getMetadata().getName();
-  Callable<String> valueCallable=new FutureFunctionCallable<Void,String>(async.deletePath(path),new Function<Void,String>(){
+  return compose(makeListenable(async.deletePath(path)),new Function<Void,String>(){
     public String apply(    Void from){
       try {
         if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
@@ -20,6 +20,5 @@
       }
     }
   }
-);
-  return service.submit(valueCallable);
+,service);
 }

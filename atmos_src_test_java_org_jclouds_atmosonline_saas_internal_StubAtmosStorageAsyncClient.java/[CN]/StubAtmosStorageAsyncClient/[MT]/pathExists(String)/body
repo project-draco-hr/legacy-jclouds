@@ -1,19 +1,21 @@
 {
   if (path.indexOf('/') == -1 || (path.endsWith("/")))   return blobStore.containerExists(path);
  else {
-    return new FutureBase<Boolean>(){
-      public Boolean get() throws InterruptedException, ExecutionException {
-        String container=path.substring(0,path.indexOf('/'));
-        String blobName=path.substring(path.indexOf('/') + 1);
-        try {
-          blobStore.blobMetadata(container,blobName).get();
-          return true;
-        }
- catch (        KeyNotFoundException e) {
-          return false;
-        }
-      }
+    String container=path.substring(0,path.indexOf('/'));
+    String blobName=path.substring(path.indexOf('/') + 1);
+    try {
+      blobStore.blobMetadata(container,blobName).get();
+      return immediateFuture(true);
     }
-;
+ catch (    KeyNotFoundException e) {
+      return immediateFuture(false);
+    }
+catch (    InterruptedException e) {
+      return immediateFuture(false);
+    }
+catch (    ExecutionException e) {
+      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),ResourceNotFoundException.class)) >= 1)       return immediateFuture(false);
+      return immediateFailedFuture(e);
+    }
   }
 }

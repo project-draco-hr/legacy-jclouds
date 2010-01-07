@@ -1,5 +1,4 @@
 {
   GetOptions httpOptions=blob2ObjectGetOptions.apply(optionsList);
-  Future<S3Object> returnVal=async.getObject(container,key,httpOptions);
-  return wrapFuture(returnVal,object2Blob);
+  return compose(makeListenable(async.getObject(container,key,httpOptions)),object2Blob,service);
 }
