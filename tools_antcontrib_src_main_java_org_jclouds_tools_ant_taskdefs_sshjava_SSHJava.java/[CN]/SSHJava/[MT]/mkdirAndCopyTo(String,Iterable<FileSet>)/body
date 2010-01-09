@@ -3,19 +3,11 @@
     log("no content: " + destination,Project.MSG_DEBUG);
     return;
   }
-  exec.setCommand(exec("test -d " + destination).render(osFamily));
-  getProjectProperties().remove(id);
-  exec.setResultProperty(id);
-  exec.setFailonerror(false);
-  exec.execute();
-  if (getProject().getProperty(id).equals("0")) {
+  if (sshexec(exec("test -d " + destination).render(osFamily)) == 0) {
     log("already created: " + destination,Project.MSG_VERBOSE);
     return;
   }
-  getProjectProperties().remove(id);
-  exec.setCommand(exec("{md} " + destination).render(osFamily));
-  exec.setFailonerror(true);
-  exec.execute();
+  sshexec(exec("{md} " + destination).render(osFamily));
   scp.init();
   String scpDestination=getScpDir(destination);
   log("staging: " + scpDestination,Project.MSG_VERBOSE);

@@ -1,5 +1,4 @@
 {
-  checkNotNull(jvm,"jvm must be set");
   checkNotNull(remotebase,"remotebase must be set");
   if (localDirectory == null) {
     try {
@@ -14,12 +13,11 @@
   if (remotedir == null)   remotedir=new File(remotebase,id);
   if (osFamily == OsFamily.UNIX) {
     log("removing old contents: " + remotedir.getAbsolutePath(),Project.MSG_VERBOSE);
-    exec.setCommand(exec("rm -rf " + remotedir.getAbsolutePath()).render(osFamily));
-    exec.execute();
+    sshexec(exec("rm -rf " + remotedir.getAbsolutePath()).render(osFamily));
   }
  else {
   }
-  String command=convertJavaToScriptNormalizingPaths(getCommandLine());
+  String command=createInitScript(osFamily,id,remotedir.getAbsolutePath(),env,getCommandLine());
   try {
     BufferedWriter out=new BufferedWriter(new FileWriter(new File(localDirectory,"init." + ShellToken.SH.to(osFamily))));
     out.write(command);
@@ -43,20 +41,13 @@
     copyPathTo(getCommandLine().getBootclasspath(),remotedir.getAbsolutePath() + "/bootclasspath");
   }
   if (osFamily == OsFamily.UNIX) {
-    exec.setCommand(exec("chmod 755 " + remotedir.getAbsolutePath() + "{fs}init.{sh}").render(osFamily));
-    exec.execute();
+    sshexec(exec("chmod 755 " + remotedir.getAbsolutePath() + "{fs}init.{sh}").render(osFamily));
   }
   Statement statement=new StatementList(exec("{cd} " + remotedir.getAbsolutePath()),exec(remotedir.getAbsolutePath() + "{fs}init.{sh} init"),exec(remotedir.getAbsolutePath() + "{fs}init.{sh} run"));
-  getProjectProperties().remove(id);
-  exec.setResultProperty(id);
-  exec.setFailonerror(false);
-  exec.setCommand(statement.render(osFamily));
-  exec.setError(errorFile);
-  exec.setErrorproperty(errorProperty);
-  exec.setOutput(outputFile);
-  exec.setOutputproperty(outputProperty);
-  exec.setAppend(append);
-  log("starting java as:\n" + statement.render(osFamily),Project.MSG_VERBOSE);
-  exec.execute();
-  return Integer.parseInt(getProject().getProperty(id));
+  try {
+    return sshexecRedirectStreams(statement);
+  }
+ catch (  IOException e) {
+    throw new BuildException(e,getLocation());
+  }
 }
