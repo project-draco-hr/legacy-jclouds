@@ -1,27 +1,62 @@
 {
   checkNotNull(jvm,"jvm must be set");
-  checkNotNull(remoteDirectory,"remotedir must be set");
-  if (localDirectory != null) {
-    FileSet cwd=new FileSet();
-    cwd.setDir(localDirectory);
-    mkdirAndCopyTo(remoteDirectory.getAbsolutePath(),ImmutableList.of(cwd));
+  checkNotNull(remotebase,"remotebase must be set");
+  if (localDirectory == null) {
+    try {
+      localDirectory=File.createTempFile("sshjava","dir");
+      localDirectory.delete();
+      localDirectory.mkdirs();
+    }
+ catch (    IOException e) {
+      throw new BuildException(e);
+    }
   }
-  if (getCommandLine().getClasspath() != null) {
-    copyPathTo(getCommandLine().getClasspath(),remoteDirectory.getAbsolutePath() + "/classpath");
+  if (remotedir == null)   remotedir=new File(remotebase,id);
+  if (osFamily == OsFamily.UNIX) {
+    log("removing old contents: " + remotedir.getAbsolutePath(),Project.MSG_VERBOSE);
+    exec.setCommand(exec("rm -rf " + remotedir.getAbsolutePath()).render(osFamily));
+    exec.execute();
   }
-  if (getCommandLine().getBootclasspath() != null) {
-    copyPathTo(getCommandLine().getBootclasspath(),remoteDirectory.getAbsolutePath() + "/bootclasspath");
+ else {
   }
   String command=convertJavaToScriptNormalizingPaths(getCommandLine());
-  String random=new SecureRandom().nextInt() + "";
-  exec.setResultProperty(random);
+  try {
+    BufferedWriter out=new BufferedWriter(new FileWriter(new File(localDirectory,"init." + ShellToken.SH.to(osFamily))));
+    out.write(command);
+    out.close();
+  }
+ catch (  IOException e) {
+    throw new BuildException(e);
+  }
+  FileSet cwd=new FileSet();
+  cwd.setDir(localDirectory);
+  mkdirAndCopyTo(remotedir.getAbsolutePath(),ImmutableList.of(cwd));
+  for (  Entry<String,String> entry : shiftMap.entrySet()) {
+    FileSet set=new FileSet();
+    set.setDir(new File(entry.getKey()));
+    mkdirAndCopyTo(remotebase.getAbsolutePath() + ShellToken.FS.to(osFamily) + entry.getValue(),ImmutableList.of(set));
+  }
+  if (getCommandLine().getClasspath() != null) {
+    copyPathTo(getCommandLine().getClasspath(),remotedir.getAbsolutePath() + "/classpath");
+  }
+  if (getCommandLine().getBootclasspath() != null) {
+    copyPathTo(getCommandLine().getBootclasspath(),remotedir.getAbsolutePath() + "/bootclasspath");
+  }
+  if (osFamily == OsFamily.UNIX) {
+    exec.setCommand(exec("chmod 755 " + remotedir.getAbsolutePath() + "{fs}init.{sh}").render(osFamily));
+    exec.execute();
+  }
+  Statement statement=new StatementList(exec("{cd} " + remotedir.getAbsolutePath()),exec(remotedir.getAbsolutePath() + "{fs}init.{sh} init"),exec(remotedir.getAbsolutePath() + "{fs}init.{sh} run"));
+  getProjectProperties().remove(id);
+  exec.setResultProperty(id);
   exec.setFailonerror(false);
-  exec.setCommand(command);
+  exec.setCommand(statement.render(osFamily));
   exec.setError(errorFile);
   exec.setErrorproperty(errorProperty);
   exec.setOutput(outputFile);
   exec.setOutputproperty(outputProperty);
   exec.setAppend(append);
+  log("starting java as:\n" + statement.render(osFamily),Project.MSG_VERBOSE);
   exec.execute();
-  return Integer.parseInt(getProject().getProperty(random));
+  return Integer.parseInt(getProject().getProperty(id));
 }

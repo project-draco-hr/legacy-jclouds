@@ -1,0 +1,12 @@
+{
+  PropertyHelper helper=(PropertyHelper)getProject().getReference(MagicNames.REFID_PROPERTY_HELPER);
+  Field field;
+  try {
+    field=PropertyHelper.class.getDeclaredField("properties");
+    field.setAccessible(true);
+    return (Hashtable<String,String>)field.get(helper);
+  }
+ catch (  Exception e) {
+    throw new BuildException(e);
+  }
+}

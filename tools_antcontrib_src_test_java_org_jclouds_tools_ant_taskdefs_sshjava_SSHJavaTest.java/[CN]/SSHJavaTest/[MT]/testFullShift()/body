@@ -1,0 +1,7 @@
+{
+  SSHJava task=makeSSHJava();
+  task=directoryShift(task);
+  String expected=String.format("export %s=\"%s\"%ncd /tmp/foo\n%s -Xms16m -Xmx32m -cp classpath -Dfooble=baz -Dfoo=bar -Dsettingsfile=/tmp/foo/maven/conf/settings.xml -DappHome=/tmp/foo/maven org.jclouds.tools.ant.TestClass %s hello world\n",LAST_ENV.getKey(),LAST_ENV.getValue(),System.getProperty("java.home") + "/bin/java",LAST_ENV.getKey());
+  assertEquals(task.convertJavaToScriptNormalizingPaths(task.getCommandLine()),expected);
+  assertEquals(task.shiftMap,ImmutableMap.<String,String>of(System.getProperty("user.home") + "/apache-maven-2.2.1","maven"));
+}
