@@ -9,7 +9,7 @@
       ifNotFoundRetryOtherwiseAddToSet(container,futureObjectEntry.getKey(),futureObjectEntry.getValue(),objects);
     }
  catch (    Exception e) {
-      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      Throwables.propagateIfPossible(e,BlobRuntimeException.class);
       throw new BlobRuntimeException(String.format("Error getting value from blob %1$s",container),e);
     }
   }

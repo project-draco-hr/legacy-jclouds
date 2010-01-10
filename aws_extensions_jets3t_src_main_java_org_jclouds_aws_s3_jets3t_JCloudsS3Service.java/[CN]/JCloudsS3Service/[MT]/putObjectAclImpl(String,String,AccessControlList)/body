@@ -4,7 +4,7 @@
     connection.putObjectACL(bucketName,objectKey,jcACL);
   }
  catch (  Exception e) {
-    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,S3ServiceException.class);
     throw new S3ServiceException("error putting object's ACL",e);
   }
 }

@@ -7,7 +7,7 @@
     return false;
   }
  catch (  Exception e) {
-    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
     throw new BlobRuntimeException(String.format("Error searching for ETAG of value: [%2$s] in container:%1$s",containerName,value),e);
   }
 }

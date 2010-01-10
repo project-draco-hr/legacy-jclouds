@@ -19,7 +19,7 @@
     return new S3ObjectsChunk(prefix,jcBucket.getDelimiter(),(S3Object[])jsObjects.toArray(new S3Object[jsObjects.size()]),(String[])commonPrefixes.toArray(new String[commonPrefixes.size()]),priorLastKey);
   }
  catch (  Exception e) {
-    Utils.<S3ServiceException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,S3ServiceException.class);
     throw new S3ServiceException("error listing objects in bucket " + bucketName,e);
   }
 }

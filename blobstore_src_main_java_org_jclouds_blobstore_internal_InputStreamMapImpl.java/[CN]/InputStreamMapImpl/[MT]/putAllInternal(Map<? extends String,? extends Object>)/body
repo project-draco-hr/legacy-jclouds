@@ -10,7 +10,7 @@
     for (    Future<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
-    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
     throw new BlobRuntimeException("Error putting into containerName" + containerName,e);
   }
 }

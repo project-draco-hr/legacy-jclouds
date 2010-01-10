@@ -7,8 +7,7 @@
       return;
     }
  catch (    Exception e) {
-      Throwable cause=Throwables.getRootCause(e);
-      if (cause instanceof KeyNotFoundException) {
+      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),KeyNotFoundException.class)) >= 1) {
         Thread.sleep(requestRetryMilliseconds);
         value=connection.getBlob(container,key);
       }

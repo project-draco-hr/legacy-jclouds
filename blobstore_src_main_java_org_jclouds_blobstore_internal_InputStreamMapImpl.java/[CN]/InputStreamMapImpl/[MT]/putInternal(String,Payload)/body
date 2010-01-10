@@ -8,7 +8,7 @@
     return returnVal;
   }
  catch (  Exception e) {
-    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException(String.format("Error adding object %1$s:%2$s",containerName,object),e);
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
+    throw new BlobRuntimeException(String.format("Error adding blob %s:%s",containerName,object),e);
   }
 }

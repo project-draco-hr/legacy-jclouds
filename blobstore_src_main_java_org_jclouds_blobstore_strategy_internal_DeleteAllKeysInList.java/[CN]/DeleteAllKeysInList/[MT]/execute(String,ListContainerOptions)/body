@@ -8,7 +8,7 @@
       isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     }
  catch (    Exception e) {
-      Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+      Throwables.propagateIfPossible(e,BlobRuntimeException.class);
       throw new BlobRuntimeException("Error deleting blob in container: " + containerName,e);
     }
   }

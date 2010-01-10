@@ -5,8 +5,8 @@
     connection.removeBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
-    Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
-    throw new BlobRuntimeException(String.format("Error removing object %1$s:%2$s",containerName,realKey),e);
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
+    throw new BlobRuntimeException(String.format("Error removing blob %s:%s",containerName,realKey),e);
   }
   return old;
 }

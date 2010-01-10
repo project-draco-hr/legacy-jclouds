@@ -3,8 +3,8 @@
     return immediateFuture((BlobMetadata)copy(getBlob(container,key).get().getMetadata()));
   }
  catch (  Exception e) {
-    Utils.<ContainerNotFoundException>rethrowIfRuntimeOrSameType(e);
-    Utils.<KeyNotFoundException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,ContainerNotFoundException.class);
+    Throwables.propagateIfPossible(e,KeyNotFoundException.class);
     return immediateFailedFuture(e);
   }
 }

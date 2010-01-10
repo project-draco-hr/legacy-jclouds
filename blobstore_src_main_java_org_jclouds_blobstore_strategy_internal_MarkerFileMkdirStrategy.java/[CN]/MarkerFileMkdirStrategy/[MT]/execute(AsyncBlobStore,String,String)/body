@@ -8,7 +8,7 @@
     }
   }
  catch (  Exception e) {
-    e=Utils.<BlobRuntimeException>rethrowIfRuntimeOrSameType(e);
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
     if (!(e instanceof KeyNotFoundException))     throw new BlobRuntimeException("Error creating marker directory: " + containerName + "/"+ directory,e);
   }
 }

@@ -1,15 +1,11 @@
 {
   String realKey=prefixer.apply(o.toString());
   try {
-    return (InputStream)(connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS)).getContent();
+    return connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS).getContent();
   }
- catch (  KeyNotFoundException e) {
-    return null;
-  }
-catch (  Exception e) {
-    Throwable cause=Throwables.getRootCause(e);
-    if (cause instanceof KeyNotFoundException)     return null;
-    Throwables.propagateIfInstanceOf(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error geting object %1$s:%2$s",containerName,realKey),e);
+ catch (  Exception e) {
+    if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),KeyNotFoundException.class)) >= 1)     return null;
+    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
+    throw new BlobRuntimeException(String.format("Error geting blob %s:%s",containerName,realKey),e);
   }
 }
