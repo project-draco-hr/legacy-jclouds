@@ -1,13 +1,13 @@
 {
   try {
-    Set<Future<String>> puts=Sets.newHashSet();
+    Set<ListenableFuture<String>> puts=Sets.newHashSet();
     for (    Map.Entry<? extends String,? extends Object> entry : map.entrySet()) {
       Blob object=connection.newBlob(prefixer.apply(entry.getKey()));
       object.setPayload(Payloads.newPayload(entry.getValue()));
       object.generateMD5();
       puts.add(connection.putBlob(containerName,object));
     }
-    for (    Future<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    for (    ListenableFuture<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
   }
  catch (  Exception e) {
     Throwables.propagateIfPossible(e,BlobRuntimeException.class);

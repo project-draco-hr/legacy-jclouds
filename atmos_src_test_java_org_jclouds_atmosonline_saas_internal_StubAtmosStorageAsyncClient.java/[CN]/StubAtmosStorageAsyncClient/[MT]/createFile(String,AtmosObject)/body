@@ -8,7 +8,7 @@
     if (!path.equals(""))     object.getContentMetadata().setName(path + "/" + file);
   }
   Blob blob=object2Blob.apply(object);
-  return Futures.compose(Futures.makeListenable(blobStore.putBlob(container,blob)),new Function<String,URI>(){
+  return compose(blobStore.putBlob(container,blob),new Function<String,URI>(){
     public URI apply(    String from){
       return URI.create(uri);
     }

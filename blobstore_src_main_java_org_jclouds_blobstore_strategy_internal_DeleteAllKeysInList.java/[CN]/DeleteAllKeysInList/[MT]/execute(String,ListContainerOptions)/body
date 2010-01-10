@@ -1,9 +1,9 @@
 {
-  Set<Future<Void>> deletes=Sets.newHashSet();
+  Set<ListenableFuture<Void>> deletes=Sets.newHashSet();
   for (  ResourceMetadata md : getAllBlobMetadata.execute(containerName,options)) {
     if (md.getType() == ResourceType.BLOB)     deletes.add(connection.removeBlob(containerName,md.getName()));
   }
-  for (  Future<Void> isdeleted : deletes) {
+  for (  ListenableFuture<Void> isdeleted : deletes) {
     try {
       isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
     }

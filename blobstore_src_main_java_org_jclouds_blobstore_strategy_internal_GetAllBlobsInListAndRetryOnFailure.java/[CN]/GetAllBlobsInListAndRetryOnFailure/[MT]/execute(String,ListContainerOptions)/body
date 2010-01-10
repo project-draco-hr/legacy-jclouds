@@ -1,10 +1,10 @@
 {
   SortedSet<Blob> objects=Sets.newTreeSet();
-  Map<String,Future<? extends Blob>> futureObjects=Maps.newHashMap();
+  Map<String,ListenableFuture<? extends Blob>> futureObjects=Maps.newHashMap();
   for (  BlobMetadata md : getAllBlobMetadata.execute(container,options)) {
     futureObjects.put(md.getName(),connection.getBlob(container,md.getName()));
   }
-  for (  Entry<String,Future<? extends Blob>> futureObjectEntry : futureObjects.entrySet()) {
+  for (  Entry<String,ListenableFuture<? extends Blob>> futureObjectEntry : futureObjects.entrySet()) {
     try {
       ifNotFoundRetryOtherwiseAddToSet(container,futureObjectEntry.getKey(),futureObjectEntry.getValue(),objects);
     }
