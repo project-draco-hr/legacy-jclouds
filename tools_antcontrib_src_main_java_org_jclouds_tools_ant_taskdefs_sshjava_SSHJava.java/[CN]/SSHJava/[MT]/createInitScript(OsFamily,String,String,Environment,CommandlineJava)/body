@@ -5,7 +5,7 @@
     for (int i=0; i < environment.length; i++) {
       log("Setting environment variable: " + environment[i],Project.MSG_DEBUG);
       String[] keyValue=environment[i].split("=");
-      envVariables.put(keyValue[0],reprefix(keyValue[1]));
+      envVariables.put(keyValue[0],keyValue[1]);
     }
   }
   StringBuilder commandBuilder=new StringBuilder(commandLine.getVmCommand().getExecutable());
@@ -14,16 +14,16 @@
     resetPathToUnderPrefixIfExistsAndIsFileIfNotExistsAddAsIs(commandLine.getBootclasspath(),"bootclasspath",commandBuilder);
   }
   if (commandLine.getVmCommand().getArguments() != null && commandLine.getVmCommand().getArguments().length > 0) {
-    reprefixArgs(commandLine.getVmCommand().getArguments(),commandBuilder);
+    commandBuilder.append(" ").append(Joiner.on(' ').join(commandLine.getVmCommand().getArguments()));
   }
   commandBuilder.append(" -cp classpath");
   resetPathToUnderPrefixIfExistsAndIsFileIfNotExistsAddAsIs(commandLine.getClasspath(),"classpath",commandBuilder);
   if (commandLine.getSystemProperties() != null && commandLine.getSystemProperties().getVariables() != null && commandLine.getSystemProperties().getVariables().length > 0) {
-    reprefixValues(commandLine.getSystemProperties().getVariables(),commandBuilder);
+    commandBuilder.append(" ").append(Joiner.on(' ').join(commandLine.getSystemProperties().getVariables()));
   }
   commandBuilder.append(" ").append(commandLine.getClassname());
   if (commandLine.getJavaCommand().getArguments() != null && commandLine.getJavaCommand().getArguments().length > 0) {
-    reprefixArgs(commandLine.getJavaCommand().getArguments(),commandBuilder);
+    commandBuilder.append(" ").append(Joiner.on(' ').join(commandLine.getJavaCommand().getArguments()));
   }
   InitBuilder testInitBuilder=new InitBuilder(id,basedir,basedir,envVariables,commandBuilder.toString());
   return testInitBuilder.build(osFamily);

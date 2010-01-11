@@ -11,13 +11,6 @@
     }
   }
   if (remotedir == null)   remotedir=new File(remotebase,id);
-  replace.put(localDirectory.getAbsolutePath(),remotedir.getAbsolutePath());
-  if (osFamily == OsFamily.UNIX) {
-    log("removing old contents: " + remotedir.getAbsolutePath(),Project.MSG_VERBOSE);
-    sshexec(exec("rm -rf " + remotedir.getAbsolutePath()).render(osFamily));
-  }
- else {
-  }
   String command=createInitScript(osFamily,id,remotedir.getAbsolutePath(),env,getCommandLine());
   try {
     BufferedWriter out=new BufferedWriter(new FileWriter(new File(localDirectory,"init." + ShellToken.SH.to(osFamily))));
@@ -27,13 +20,33 @@
  catch (  IOException e) {
     throw new BuildException(e);
   }
+  replaceAllTokensIn(localDirectory);
   FileSet cwd=new FileSet();
   cwd.setDir(localDirectory);
+  if (osFamily == OsFamily.UNIX) {
+    log("removing old contents: " + remotedir.getAbsolutePath(),Project.MSG_VERBOSE);
+    sshexec(exec("rm -rf " + remotedir.getAbsolutePath()).render(osFamily));
+  }
+ else {
+  }
   mkdirAndCopyTo(remotedir.getAbsolutePath(),ImmutableList.of(cwd));
   for (  Entry<String,String> entry : shiftMap.entrySet()) {
     FileSet set=new FileSet();
-    set.setDir(new File(entry.getKey()));
-    mkdirAndCopyTo(remotebase.getAbsolutePath() + ShellToken.FS.to(osFamily) + entry.getValue(),ImmutableList.of(set));
+    File source=new File(entry.getKey());
+    if (source.isDirectory()) {
+      set.setDir(new File(entry.getKey()));
+      mkdirAndCopyTo(remotebase.getAbsolutePath() + ShellToken.FS.to(osFamily) + entry.getValue(),ImmutableList.of(set));
+    }
+ else {
+      String destination=remotebase.getAbsolutePath() + ShellToken.FS.to(osFamily) + new File(entry.getValue()).getParent();
+      sshexec(exec("{md} " + destination).render(osFamily));
+      scp.init();
+      String scpDestination=getScpDir(destination);
+      log("staging: " + scpDestination,Project.MSG_VERBOSE);
+      scp.setFile(source.getAbsolutePath());
+      scp.setTodir(scpDestination);
+      scp.execute();
+    }
   }
   if (getCommandLine().getClasspath() != null) {
     copyPathTo(getCommandLine().getClasspath(),remotedir.getAbsolutePath() + "/classpath");

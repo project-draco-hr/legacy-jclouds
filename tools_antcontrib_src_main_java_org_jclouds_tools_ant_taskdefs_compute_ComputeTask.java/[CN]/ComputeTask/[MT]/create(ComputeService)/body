@@ -1,0 +1,15 @@
+{
+  log(String.format("create name: %s, profile: %s, image: %s",serverElement.getName(),serverElement.getProfile(),serverElement.getImage()));
+  CreateServerResponse createdServer=computeService.createServer(serverElement.getName(),Profile.valueOf(serverElement.getProfile().toUpperCase()),Image.valueOf(serverElement.getImage().toUpperCase()));
+  log(String.format("   id=%s, name=%s, connection=%s://%s:%s@%s:%d",createdServer.getId(),createdServer.getName(),createdServer.getLoginType().toString().toLowerCase(),createdServer.getCredentials().account,createdServer.getCredentials().key,createdServer.getPublicAddresses().first().getHostAddress(),createdServer.getLoginPort()));
+  if (serverElement.getIdproperty() != null)   getProject().setProperty(serverElement.getIdproperty(),createdServer.getId());
+  if (serverElement.getHostproperty() != null)   getProject().setProperty(serverElement.getHostproperty(),createdServer.getPublicAddresses().first().getHostAddress());
+  if (serverElement.getKeyfile() != null && createdServer.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----"))   try {
+    Files.write(createdServer.getCredentials().key,new File(serverElement.getKeyfile()),Charset.defaultCharset());
+  }
+ catch (  IOException e) {
+    throw new BuildException(e);
+  }
+  if (serverElement.getPasswordproperty() != null && !createdServer.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----"))   getProject().setProperty(serverElement.getPasswordproperty(),createdServer.getCredentials().key);
+  if (serverElement.getUsernameproperty() != null)   getProject().setProperty(serverElement.getUsernameproperty(),createdServer.getCredentials().account);
+}
