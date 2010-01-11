@@ -2,4 +2,6 @@
   SSHJava task=makeSSHJava();
   task=directoryShift(task);
   assertEquals(task.shiftMap,ImmutableMap.<String,String>of(System.getProperty("user.home") + "/apache-maven-2.2.1","maven"));
+  assertEquals(task.replace,ImmutableMap.<String,String>of(System.getProperty("user.name"),"root"));
+  assertEquals(task.createInitScript(OsFamily.UNIX,"1","remotedir",task.env,task.getCommandLine()),CharStreams.toString(Resources.newReaderSupplier(Resources.getResource("init.sh"),Charsets.UTF_8)));
 }

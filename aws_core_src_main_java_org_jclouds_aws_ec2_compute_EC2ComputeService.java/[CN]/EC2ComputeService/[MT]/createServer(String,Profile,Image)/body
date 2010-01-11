@@ -4,7 +4,7 @@
   KeyPair keyPair=createKeyPair(name);
   String securityGroupName=name;
   createSecurityGroup(securityGroupName,22,80,8080,443);
-  String script=new ScriptBuilder().addStatement(exec("runurl run.alestic.com/apt/upgrade")).addStatement(exec("apt-get install -y openjdk-6-jdk")).build(OsFamily.UNIX);
+  String script=new ScriptBuilder().addStatement(exec("apt-get update")).addStatement(exec("apt-get upgrade -y")).addStatement(exec("apt-get install -y openjdk-6-jdk")).addStatement(exec("wget -qO/usr/bin/runurl run.alestic.com/runurl")).addStatement(exec("chmod 755 /usr/bin/runurl")).build(OsFamily.UNIX);
   logger.debug(">> running instance ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ami,type,keyPair.getKeyName(),securityGroupName);
   RunningInstance runningInstance=Iterables.getLast(ec2Client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name).withUserData(script.getBytes())).getRunningInstances());
   logger.debug("<< started instance(%s)",runningInstance.getId());

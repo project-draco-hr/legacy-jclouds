@@ -1,24 +1,23 @@
 {
   if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
+  boolean isEnterprise=System.getProperties().containsKey("jclouds.enterprise");
   String accesskeyid=args[0];
   String secretkey=args[1];
   String queueName=args[2];
   int messageCount=Integer.parseInt(args[3]);
-  RestContext<SQSAsyncClient,SQSClient> nullLoggingDefaultContext=SQSContextFactory.createContext(System.getProperties(),accesskeyid,secretkey,new NullLoggingModule());
-  RestContext<SQSAsyncClient,SQSClient> nullLoggingEnterpriseContext=SQSContextFactory.createContext(System.getProperties(),accesskeyid,secretkey,new NullLoggingModule(),new EnterpriseConfigurationModule());
+  RestContext<SQSAsyncClient,SQSClient> context=isEnterprise ? SQSContextFactory.createContext(System.getProperties(),accesskeyid,secretkey,new NullLoggingModule(),new EnterpriseConfigurationModule()) : SQSContextFactory.createContext(System.getProperties(),accesskeyid,secretkey,new NullLoggingModule());
   try {
     Set<Queue> queues=Sets.newHashSet();
-    if (purgeQueues(queueName,nullLoggingDefaultContext)) {
+    if (purgeQueues(queueName,context)) {
       System.out.printf("pausing 60 seconds before recreating queues%n");
       Thread.sleep(60 * 1000);
     }
-    createQueues(queueName,nullLoggingDefaultContext,queues);
-    runTests(messageCount,nullLoggingDefaultContext,nullLoggingEnterpriseContext,queues);
+    createQueues(queueName,context,queues);
+    runTests(messageCount,isEnterprise ? "enterprise" : "default",context,queues);
   }
   finally {
-    purgeQueues(queueName,nullLoggingDefaultContext);
-    nullLoggingDefaultContext.close();
-    nullLoggingEnterpriseContext.close();
+    purgeQueues(queueName,context);
+    context.close();
     System.exit(0);
   }
 }
