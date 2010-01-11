@@ -1,0 +1,14 @@
+{
+  injector=Guice.createInjector(new ParserModule(),new ExecutorServiceModule(Executors.sameThreadExecutor()),new AbstractModule(){
+    protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
+      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
+      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_EXPIREINTERVAL)).to(30);
+    }
+    @SuppressWarnings("unused") @Provides @TimeStamp protected String provideTimeStamp(    final DateService dateService,    @Named(AWSConstants.PROPERTY_AWS_EXPIREINTERVAL) final int expiration){
+      return dateService.iso8601DateFormat(new Date(System.currentTimeMillis() + (expiration * 1000)));
+    }
+  }
+);
+  filter=injector.getInstance(FormSigner.class);
+}

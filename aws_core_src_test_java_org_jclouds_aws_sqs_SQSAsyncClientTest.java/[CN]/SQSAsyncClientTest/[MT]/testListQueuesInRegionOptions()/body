@@ -1,0 +1,11 @@
+{
+  Method method=SQSAsyncClient.class.getMethod("listQueuesInRegion",Region.class,Array.newInstance(ListQueuesOptions.class,0).getClass());
+  GeneratedHttpRequest<SQSAsyncClient> httpMethod=processor.createRequest(method,Region.DEFAULT,ListQueuesOptions.Builder.queuePrefix("prefix"));
+  assertRequestLineEquals(httpMethod,"POST https://default/ HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Content-Length: 59\nContent-Type: application/x-www-form-urlencoded\nHost: default\n");
+  assertPayloadEquals(httpMethod,"Version=2009-02-01&Action=ListQueues&QueueNamePrefix=prefix");
+  assertResponseParserClassEquals(method,httpMethod,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,ListQueuesResponseHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpMethod);
+}

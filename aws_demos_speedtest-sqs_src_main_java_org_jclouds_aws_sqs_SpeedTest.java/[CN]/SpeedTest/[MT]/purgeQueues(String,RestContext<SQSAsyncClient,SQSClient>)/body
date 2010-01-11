@@ -1,0 +1,16 @@
+{
+  boolean deleted=false;
+  for (  Region region : ImmutableSet.of(Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1)) {
+    try {
+      SortedSet<Queue> result=Sets.newTreeSet(nullLoggingDefaultContext.getApi().listQueuesInRegion(region,queuePrefix(queueName)));
+      if (result.size() >= 1) {
+        nullLoggingDefaultContext.getApi().deleteQueue(result.last());
+        System.out.printf("deleted queue: %s in region %s%n",queueName,region);
+        deleted=true;
+      }
+    }
+ catch (    Exception e) {
+    }
+  }
+  return deleted;
+}
