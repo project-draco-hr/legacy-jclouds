@@ -1,0 +1,21 @@
+{
+  byte[] value=null;
+  try {
+    Matcher matcher=pattern.matcher(Utils.toStringAndClose(response.getContent()));
+    if (matcher.find()) {
+      value=encryptionService.fromHexString(matcher.group(1));
+    }
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
+ finally {
+    try {
+      response.getContent().close();
+    }
+ catch (    IOException e) {
+      Throwables.propagate(e);
+    }
+  }
+  return value;
+}
