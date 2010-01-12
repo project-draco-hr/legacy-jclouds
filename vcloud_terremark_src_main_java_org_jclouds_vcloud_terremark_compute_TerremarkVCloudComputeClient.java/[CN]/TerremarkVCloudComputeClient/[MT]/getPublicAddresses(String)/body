@@ -1,0 +1,12 @@
+{
+  TerremarkVApp vApp=tmClient.getVApp(id);
+  Set<InetAddress> ipAddresses=Sets.newHashSet();
+  SERVICE:   for (  InternetService service : tmClient.getAllInternetServicesInVDC(vApp.getVDC().getId())) {
+    for (    Node node : tmClient.getNodes(service.getId())) {
+      if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
+        ipAddresses.add(service.getPublicIpAddress().getAddress());
+      }
+    }
+  }
+  return ipAddresses;
+}
