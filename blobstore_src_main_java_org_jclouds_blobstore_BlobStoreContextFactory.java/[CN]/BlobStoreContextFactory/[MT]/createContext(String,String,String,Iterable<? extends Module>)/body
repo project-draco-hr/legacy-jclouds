@@ -1,0 +1,17 @@
+{
+  checkNotNull(hint,"hint");
+  checkNotNull(account,"account");
+  String propertiesBuilderKey=String.format("%s.propertiesbuilder",hint);
+  String propertiesBuilderClassName=checkNotNull(properties.getProperty(propertiesBuilderKey),hint + " service not supported");
+  String contextBuilderKey=String.format("%s.contextbuilder",hint);
+  String contextBuilderClassName=checkNotNull(properties.getProperty(contextBuilderKey),contextBuilderKey);
+  try {
+    Class<HttpPropertiesBuilder> propertiesBuilderClass=(Class<HttpPropertiesBuilder>)Class.forName(propertiesBuilderClassName);
+    Class<BlobStoreContextBuilder<?,?>> contextBuilderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(contextBuilderClassName);
+    HttpPropertiesBuilder builder=propertiesBuilderClass.getConstructor(String.class,String.class).newInstance(account,key);
+    return contextBuilderClass.getConstructor(Properties.class).newInstance(builder.build()).withModules(Iterables.toArray(modules,Module.class)).buildContext();
+  }
+ catch (  Exception e) {
+    throw new RuntimeException("error instantiating " + contextBuilderClassName,e);
+  }
+}
