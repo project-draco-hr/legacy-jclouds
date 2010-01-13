@@ -1,0 +1,29 @@
+{
+  NewServerResponse nsResponse=createMock(NewServerResponse.class);
+  Server rhServer=createMock(Server.class);
+  expect(nsResponse.getServer()).andReturn(rhServer).atLeastOnce();
+  expect(rhServer.getId()).andReturn(new Long(1));
+  expect(rhServer.getName()).andReturn("name");
+  IpAddresses addresses=createMock(IpAddresses.class);
+  expect(rhServer.getIpAddresses()).andReturn(addresses).atLeastOnce();
+  expect(addresses.getPrimaryIp()).andReturn("127.0.0.1");
+  expect(addresses.getSecondaryIps()).andReturn(ImmutableSortedSet.<String>of());
+  NewServerData data=createMock(NewServerData.class);
+  expect(nsResponse.getNewInstanceRequest()).andReturn(data).atLeastOnce();
+  CreateOptions options=createMock(CreateOptions.class);
+  expect(data.getCreateOptions()).andReturn(options);
+  expect(options.getPassword()).andReturn("password");
+  replay(nsResponse);
+  replay(rhServer);
+  replay(addresses);
+  replay(data);
+  replay(options);
+  RimuHostingCreateNodeResponse response=new RimuHostingCreateNodeResponse(nsResponse);
+  assertEquals(response.getId(),"1");
+  assertEquals(response.getName(),"name");
+  assertEquals(response.getPublicAddresses(),ImmutableSet.<InetAddress>of(InetAddress.getByName("127.0.0.1")));
+  assertEquals(response.getPrivateAddresses(),ImmutableSet.<InetAddress>of());
+  assertEquals(response.getLoginPort(),22);
+  assertEquals(response.getLoginType(),LoginType.SSH);
+  assertEquals(response.getCredentials(),new Credentials("root","password"));
+}

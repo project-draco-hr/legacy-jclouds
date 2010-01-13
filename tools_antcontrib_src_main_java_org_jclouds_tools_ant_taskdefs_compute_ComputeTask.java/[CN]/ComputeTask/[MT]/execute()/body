@@ -1,41 +1,47 @@
 {
   ComputeTask.project=getProject();
   Action action=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,this.action));
-  ComputeService computeService=computeMap.get(HttpUtils.createUri(provider));
+  ComputeServiceContext<?,?> context=computeMap.get(HttpUtils.createUri(provider));
+  try {
+    ComputeService computeService=context.getComputeService();
 switch (action) {
 case CREATE:
 case GET:
 case DESTROY:
-    if (serverElement != null) {
+      if (nodeElement != null) {
 switch (action) {
 case CREATE:
-        create(computeService);
-      break;
+          create(computeService);
+        break;
 case GET:
-    get(computeService);
-  break;
+      get(computeService);
+    break;
 case DESTROY:
-destroy(computeService);
+  destroy(computeService);
 break;
 }
 }
  else {
-this.log("missing server element for action: " + action,Project.MSG_ERR);
+this.log("missing node element for action: " + action,Project.MSG_ERR);
 }
 break;
 case LIST:
 log("list");
-for (ServerIdentity server : computeService.listServers()) {
-log(String.format("   id=%s, name=%s",server.getId(),server.getName()));
+for (NodeIdentity node : computeService.listNodes()) {
+log(String.format("   id=%s, name=%s",node.getId(),node.getName()));
 }
 break;
 case LIST_DETAILS:
 log("list details");
-for (ServerIdentity server : computeService.listServers()) {
-logDetails(computeService,server);
+for (NodeIdentity node : computeService.listNodes()) {
+logDetails(computeService,node);
 }
 break;
 default :
 this.log("bad action: " + action,Project.MSG_ERR);
+}
+}
+  finally {
+context.close();
 }
 }

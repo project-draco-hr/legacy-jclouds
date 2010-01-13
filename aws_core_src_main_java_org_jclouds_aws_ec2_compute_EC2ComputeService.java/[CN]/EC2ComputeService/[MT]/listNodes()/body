@@ -1,0 +1,14 @@
+{
+  logger.debug(">> listing servers");
+  Set<NodeIdentity> servers=Sets.newHashSet();
+  for (  Reservation reservation : ec2Client.getInstanceServices().describeInstancesInRegion(Region.DEFAULT)) {
+    Iterables.addAll(servers,Iterables.transform(reservation.getRunningInstances(),new Function<RunningInstance,NodeIdentity>(){
+      @Override public NodeIdentity apply(      RunningInstance from){
+        return new NodeIdentityImpl(from.getId(),from.getKeyName());
+      }
+    }
+));
+  }
+  logger.debug("<< list(%d)",servers.size());
+  return servers;
+}

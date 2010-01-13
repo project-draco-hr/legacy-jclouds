@@ -1,0 +1,13 @@
+{
+  InetSocketAddress socket=new InetSocketAddress(node.getPublicAddresses().last(),node.getLoginPort());
+  socketTester.apply(socket);
+  SshClient connection=sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key);
+  try {
+    connection.connect();
+    InputStream etcPasswd=connection.get("/etc/passwd");
+    Utils.toStringAndClose(etcPasswd);
+  }
+  finally {
+    if (connection != null)     connection.disconnect();
+  }
+}

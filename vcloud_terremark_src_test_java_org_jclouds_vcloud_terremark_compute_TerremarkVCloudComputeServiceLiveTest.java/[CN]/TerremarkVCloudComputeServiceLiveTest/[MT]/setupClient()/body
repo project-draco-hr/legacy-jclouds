@@ -1,0 +1,10 @@
+{
+  String user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  context=TerremarkVCloudComputeServiceContextFactory.createContext(user,password,new Log4JLoggingModule());
+  Injector injector=Guice.createInjector(new JschSshClientModule());
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+}
