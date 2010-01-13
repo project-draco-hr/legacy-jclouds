@@ -1,6 +1,20 @@
 {
   URL url=request.getEndpoint().toURL();
-  HttpURLConnection connection=(HttpURLConnection)url.openConnection();
+  HttpURLConnection connection;
+  if (systemProxies) {
+    System.setProperty("java.net.useSystemProxies","true");
+    Iterable<Proxy> proxies=ProxySelector.getDefault().select(request.getEndpoint());
+    Proxy proxy=Iterables.getLast(proxies);
+    connection=(HttpURLConnection)url.openConnection(proxy);
+  }
+ else   if (proxyAddress != null) {
+    SocketAddress proxySocketAddress=new InetSocketAddress(InetAddress.getByName(proxyAddress),proxyPort);
+    Proxy proxy=new Proxy(Proxy.Type.HTTP,proxySocketAddress);
+    connection=(HttpURLConnection)url.openConnection(proxy);
+  }
+ else {
+    connection=(HttpURLConnection)url.openConnection();
+  }
   if (relaxHostname && connection instanceof HttpsURLConnection) {
     HttpsURLConnection sslCon=(HttpsURLConnection)connection;
     sslCon.setHostnameVerifier(new LogToMapHostnameVerifier());
