@@ -3,7 +3,8 @@
   while (instance == null) {
     try {
       System.out.printf("%d: running instance%n",System.currentTimeMillis());
-      instance=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,imageId,1,1,withKeyName(keyPair.getKeyName()).asType(InstanceType.M1_SMALL).withSecurityGroup(securityGroupName)).getRunningInstances().iterator().next();
+      Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,imageId,1,1,withKeyName(keyPair.getKeyName()).asType(InstanceType.M1_SMALL).withSecurityGroup(securityGroupName));
+      instance=Iterables.getOnlyElement(reservation.getRunningInstances());
     }
  catch (    HttpResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 400)       continue;
