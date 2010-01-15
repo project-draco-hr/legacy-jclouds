@@ -1,0 +1,17 @@
+{
+  checkArgument(node.getType() == ComputeType.NODE,"this is only valid for nodes, not " + node.getType());
+  checkNotNull(node.getId(),"node.id");
+  Region region=getRegionFromNodeOrDefault(node);
+  for (  RunningInstance runningInstance : getAllRunningInstancesInRegion(region,node.getId())) {
+    String name=runningInstance.getKeyName();
+    logger.debug(">> terminating instance(%s)",node.getId());
+    ec2Client.getInstanceServices().terminateInstancesInRegion(region,node.getId());
+    logger.debug("<< terminated instance(%s)",node.getId());
+    logger.debug(">> deleting keyPair(%s)",name);
+    ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,name);
+    logger.debug("<< deleted keyPair(%s)",name);
+    logger.debug(">> deleting securityGroup(%s)",name);
+    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,name);
+    logger.debug("<< deleted securityGroup(%s)",name);
+  }
+}

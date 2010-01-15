@@ -1,15 +1,15 @@
 {
   try {
     for (int i=0; i < 2; i++) {
-      Iterable<? extends ResourceMetadata> testContainers=Iterables.filter(context.getBlobStore().list(),new Predicate<ResourceMetadata>(){
-        public boolean apply(        ResourceMetadata input){
-          return (input.getType() == ResourceType.CONTAINER || input.getType() == ResourceType.FOLDER) && input.getName().startsWith(CONTAINER_PREFIX.toLowerCase());
+      Iterable<? extends StorageMetadata> testContainers=Iterables.filter(context.getBlobStore().list(),new Predicate<StorageMetadata>(){
+        public boolean apply(        StorageMetadata input){
+          return (input.getType() == StorageType.CONTAINER || input.getType() == StorageType.FOLDER) && input.getName().startsWith(CONTAINER_PREFIX.toLowerCase());
         }
       }
 );
       if (testContainers.iterator().hasNext()) {
         ExecutorService executor=Executors.newCachedThreadPool();
-        for (        final ResourceMetadata metaDatum : testContainers) {
+        for (        final StorageMetadata metaDatum : testContainers) {
           executor.execute(new Runnable(){
             public void run(){
               deleteContainerOrWarnIfUnable(context,metaDatum.getName());

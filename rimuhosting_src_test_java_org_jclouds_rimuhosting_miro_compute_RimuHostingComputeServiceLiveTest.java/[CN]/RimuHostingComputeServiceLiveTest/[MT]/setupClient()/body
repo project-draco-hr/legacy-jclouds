@@ -1,6 +1,9 @@
 {
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  Injector injector=new RimuHostingContextBuilder(new RimuHostingPropertiesBuilder(key).relaxSSLHostname().build()).withModules(new Log4JLoggingModule()).buildInjector();
-  rhClient=injector.getInstance(RimuHostingClient.class);
-  rhNodeService=injector.getInstance(RimuHostingComputeService.class);
+  context=new ComputeServiceContextFactory().createContext("rimuhosting",key,key,ImmutableSet.of(new Log4JLoggingModule()));
+  Injector injector=Guice.createInjector(new JschSshClientModule());
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
 }

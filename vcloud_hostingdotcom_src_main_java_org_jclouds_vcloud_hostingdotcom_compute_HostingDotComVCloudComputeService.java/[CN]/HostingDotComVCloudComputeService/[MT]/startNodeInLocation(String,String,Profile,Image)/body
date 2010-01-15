@@ -1,0 +1,6 @@
+{
+  if (checkNotNull(location,"location").equalsIgnoreCase("default"))   location=client.getDefaultVDC().getId();
+  Map<String,String> metaMap=computeClient.start(name,image,1,512,(10l * 1025 * 1024),ImmutableMap.<String,String>of());
+  VApp vApp=client.getVApp(metaMap.get("id"));
+  return new CreateNodeResponseImpl(vApp.getId(),vApp.getName(),location,vApp.getLocation(),ImmutableMap.<String,String>of(),vAppStatusToNodeState.get(vApp.getStatus()),vApp.getNetworkToAddresses().values(),ImmutableSet.<InetAddress>of(),22,LoginType.SSH,new Credentials(metaMap.get("username"),metaMap.get("password")),ImmutableMap.<String,String>of());
+}

@@ -1,0 +1,16 @@
+{
+  MutableObjectInfoWithMetadata to=new MutableObjectInfoWithMetadataImpl();
+  if (base.getType() == StorageType.BLOB) {
+    to.setContentType(((BlobMetadata)base).getContentType());
+    to.setHash(((BlobMetadata)base).getContentMD5());
+  }
+ else   if (base.getType() == StorageType.RELATIVE_PATH) {
+    to.setContentType("application/directory");
+  }
+  if (base.getETag() != null && to.getHash() == null)   to.setHash(encryptionService.fromHexString(base.getETag()));
+  to.setName(base.getName());
+  to.setLastModified(base.getLastModified());
+  if (base.getSize() != null)   to.setBytes(base.getSize());
+  if (base.getUserMetadata() != null)   to.getMetadata().putAll(base.getUserMetadata());
+  return to;
+}

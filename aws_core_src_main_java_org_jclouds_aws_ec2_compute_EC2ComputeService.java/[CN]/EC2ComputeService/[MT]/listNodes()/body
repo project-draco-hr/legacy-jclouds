@@ -1,10 +1,10 @@
 {
   logger.debug(">> listing servers");
-  Set<NodeIdentity> servers=Sets.newHashSet();
-  for (  Reservation reservation : ec2Client.getInstanceServices().describeInstancesInRegion(Region.DEFAULT)) {
-    Iterables.addAll(servers,Iterables.transform(reservation.getRunningInstances(),new Function<RunningInstance,NodeIdentity>(){
-      @Override public NodeIdentity apply(      RunningInstance from){
-        return new NodeIdentityImpl(from.getId(),from.getKeyName());
+  Set<ComputeMetadata> servers=Sets.newHashSet();
+  for (  Region region : ImmutableSet.of(Region.US_EAST_1,Region.US_WEST_1,Region.EU_WEST_1)) {
+    Iterables.addAll(servers,Iterables.transform(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region)),new Function<RunningInstance,ComputeMetadata>(){
+      @Override public ComputeMetadata apply(      RunningInstance from){
+        return new ComputeMetadataImpl(ComputeType.NODE,from.getId(),from.getKeyName(),from.getRegion().toString(),null,ImmutableMap.<String,String>of());
       }
     }
 ));

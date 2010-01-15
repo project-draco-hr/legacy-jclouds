@@ -1,0 +1,12 @@
+{
+  Iterable<RunningInstance> instances=Iterables.filter(getAllRunningInstancesInRegion(region,id),new Predicate<RunningInstance>(){
+    @Override public boolean apply(    RunningInstance instance){
+      return instance.getInstanceState() == InstanceState.PENDING || instance.getInstanceState() == InstanceState.RUNNING;
+    }
+  }
+);
+  int size=Iterables.size(instances);
+  if (size == 0)   throw new NoSuchElementException(String.format("%d instances in region %s have an instance with id %s running.",size,region,id));
+  if (size > 1)   throw new IllegalStateException(String.format("%d instances in region %s have an instance with id %s running.  Expected 1",size,region,id));
+  return Iterables.getOnlyElement(instances);
+}

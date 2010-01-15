@@ -1,13 +1,13 @@
 {
   InetSocketAddress socket=new InetSocketAddress(node.getPublicAddresses().last(),node.getLoginPort());
   socketTester.apply(socket);
-  SshClient connection=sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key);
+  SshClient ssh=node.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----") ? sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key.getBytes()) : sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key);
   try {
-    connection.connect();
-    InputStream etcPasswd=connection.get("/etc/passwd");
-    Utils.toStringAndClose(etcPasswd);
+    ssh.connect();
+    ExecResponse hello=ssh.exec("echo hello");
+    assertEquals(hello.getOutput().trim(),"hello");
   }
   finally {
-    if (connection != null)     connection.disconnect();
+    if (ssh != null)     ssh.disconnect();
   }
 }

@@ -1,0 +1,7 @@
+{
+  if (checkNotNull(location,"location").equalsIgnoreCase("default"))   location=client.getDefaultVDC().getId();
+  String id=computeClient.start(name,image,1,512,ImmutableMap.<String,String>of());
+  VApp vApp=client.getVApp(id);
+  InetAddress publicIp=computeClient.createPublicAddressMappedToPorts(vApp,22,80,8080,443);
+  return new CreateNodeResponseImpl(vApp.getId(),vApp.getName(),location,vApp.getLocation(),ImmutableMap.<String,String>of(),vAppStatusToNodeState.get(vApp.getStatus()),ImmutableSet.<InetAddress>of(publicIp),vApp.getNetworkToAddresses().values(),22,LoginType.SSH,new Credentials("vcloud","p4ssw0rd"),ImmutableMap.<String,String>of());
+}

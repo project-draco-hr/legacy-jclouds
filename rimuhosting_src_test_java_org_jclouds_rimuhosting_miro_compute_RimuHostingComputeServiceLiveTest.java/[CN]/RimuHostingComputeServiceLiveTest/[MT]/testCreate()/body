@@ -1,0 +1,13 @@
+{
+  node=context.getComputeService().startNodeInLocation("default",nodePrefix,Profile.SMALLEST,Image.CENTOS_53);
+  assertNotNull(node.getId());
+  assertEquals(node.getLoginPort(),22);
+  assertEquals(node.getLoginType(),LoginType.SSH);
+  assertNotNull(node.getName());
+  assertEquals(node.getPrivateAddresses().size(),1);
+  assertEquals(node.getPublicAddresses().size(),1);
+  assertNotNull(node.getCredentials());
+  assertNotNull(node.getCredentials().account);
+  assertNotNull(node.getCredentials().key);
+  sshPing();
+}

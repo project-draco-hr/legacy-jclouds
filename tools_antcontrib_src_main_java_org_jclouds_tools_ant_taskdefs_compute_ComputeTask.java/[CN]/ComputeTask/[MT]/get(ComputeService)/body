@@ -1,9 +1,7 @@
 {
   log(String.format("get name: %s",nodeElement.getName()));
-  Set<NodeIdentity> nodesThatMatch=computeService.getNodeByName(nodeElement.getName());
-  if (nodesThatMatch.size() > 0) {
-    for (    NodeIdentity node : nodesThatMatch) {
-      logDetails(computeService,node);
-    }
+  Iterable<ComputeMetadata> nodesThatMatch=ComputeUtils.filterByName(computeService.listNodes(),nodeElement.getName());
+  for (  ComputeMetadata node : nodesThatMatch) {
+    logDetails(computeService,node);
   }
 }

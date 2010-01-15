@@ -2,5 +2,5 @@
   String script=new ScriptBuilder().addStatement(exec("runurl run.alestic.com/apt/upgrade")).addStatement(exec("runurl run.alestic.com/install/lamp")).addStatement(exec("apt-get -y install openjdk-6-jdk")).build(OsFamily.UNIX);
   System.out.printf("%d: running instance%n",System.currentTimeMillis());
   Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,"ami-ccf615a5",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPairName).withSecurityGroup(securityGroupName).withUserData(script.getBytes()));
-  return Iterables.getOnlyElement(reservation.getRunningInstances());
+  return Iterables.getOnlyElement(reservation);
 }

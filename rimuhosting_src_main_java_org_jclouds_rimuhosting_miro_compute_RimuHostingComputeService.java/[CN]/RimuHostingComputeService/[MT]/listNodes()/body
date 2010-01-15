@@ -1,8 +1,8 @@
 {
-  SortedSet<NodeIdentity> servers=new TreeSet<NodeIdentity>();
-  SortedSet<Server> rhNodes=rhClient.getServerList();
+  Set<ComputeMetadata> serverSet=Sets.newLinkedHashSet();
+  Set<Server> rhNodes=rhClient.getServerList();
   for (  Server rhNode : rhNodes) {
-    servers.add(new RimuHostingNodeIdentity(rhNode,rhClient));
+    serverSet.add(new ComputeMetadataImpl(ComputeType.NODE,rhNode.getId() + "",rhNode.getName(),null,null,ImmutableMap.<String,String>of()));
   }
-  return servers;
+  return serverSet;
 }

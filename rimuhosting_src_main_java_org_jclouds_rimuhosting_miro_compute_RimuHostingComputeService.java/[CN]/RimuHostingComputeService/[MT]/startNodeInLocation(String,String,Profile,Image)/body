@@ -1,0 +1,4 @@
+{
+  NewServerResponse serverResponse=rhClient.createServer(name,checkNotNull(imageNameMap.get(image),"image not supported: " + image),checkNotNull(profileNameMap.get(profile),"profile not supported: " + profile));
+  return new CreateNodeResponseImpl(serverResponse.getServer().getId().toString(),serverResponse.getServer().getName(),"default",null,ImmutableMap.<String,String>of(),NodeState.RUNNING,getPublicAddresses(serverResponse.getServer()),ImmutableList.<InetAddress>of(),22,LoginType.SSH,new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()),ImmutableMap.<String,String>of());
+}

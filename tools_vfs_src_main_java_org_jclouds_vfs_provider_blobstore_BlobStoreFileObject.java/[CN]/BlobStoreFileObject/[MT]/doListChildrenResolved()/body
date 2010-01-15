@@ -10,11 +10,11 @@
  else {
     logger.info(String.format(">> list: %s",getContainer()));
   }
-  ListContainerResponse<? extends ResourceMetadata> list=getBlobStore().list(getContainer(),options);
+  ListContainerResponse<? extends StorageMetadata> list=getBlobStore().list(getContainer(),options);
   Set<BlobStoreFileObject> children=Sets.newHashSet();
-  loop:   for (  ResourceMetadata md : list) {
+  loop:   for (  StorageMetadata md : list) {
     if (!md.getName().equals("")) {
-      if (name.equals(md.getName()) && md.getType() != ResourceType.BLOB) {
+      if (name.equals(md.getName()) && md.getType() != StorageType.BLOB) {
         continue loop;
       }
       if (isDirectoryStrategy.execute(md)) {
