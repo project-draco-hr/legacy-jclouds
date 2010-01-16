@@ -1,3 +1,3 @@
 {
-  return new CloudFilesBlobStoreContextBuilder(new CloudFilesPropertiesBuilder(account,key).relaxSSLHostname().build()).withModules(configurationModule,new Log4JLoggingModule()).buildContext();
+  return (BlobStoreContext<CloudFilesAsyncClient,CloudFilesClient>)new BlobStoreContextFactory().createContext("cloudfiles",account,key,ImmutableSet.of(configurationModule,new Log4JLoggingModule()),new Properties());
 }
