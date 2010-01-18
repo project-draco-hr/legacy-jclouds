@@ -3,7 +3,9 @@
   for (  String header : headers) {
     if (header.startsWith("x-ms-")) {
       toSign.append(header.toLowerCase()).append(":");
-      for (      String value : request.getHeaders().get(header))       toSign.append(value.replaceAll("\r?\n","")).append(",");
+      for (      String value : request.getHeaders().get(header)) {
+        toSign.append(Utils.replaceAll(value,NEWLINE_PATTERN,"")).append(",");
+      }
       toSign.deleteCharAt(toSign.lastIndexOf(","));
       toSign.append("\n");
     }

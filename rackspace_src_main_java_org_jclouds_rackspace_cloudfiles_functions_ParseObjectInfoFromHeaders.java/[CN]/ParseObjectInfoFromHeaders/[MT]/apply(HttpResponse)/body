@@ -3,7 +3,8 @@
   MutableObjectInfoWithMetadata to=blobToObjectInfo.apply(base);
   String eTagHeader=from.getFirstHeaderOrNull("Etag");
   if (eTagHeader != null) {
-    to.setHash(encryptionService.fromHexString(eTagHeader.replaceAll("\"","")));
+    String hashString=Utils.replaceAll(eTagHeader,'"',"");
+    to.setHash(encryptionService.fromHexString(hashString));
   }
   return to;
 }

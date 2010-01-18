@@ -1,9 +1,12 @@
 {
   if (isUrlEncoded(in))   return in;
   try {
-    String returnVal=URLEncoder.encode(in,"UTF-8").replaceAll("\\+","%20").replaceAll("\\*","%2A").replaceAll("%7E","~");
+    String returnVal=URLEncoder.encode(in,"UTF-8");
+    returnVal=Utils.replaceAll(returnVal,'+',PLUS_PATTERN,"%20");
+    returnVal=Utils.replaceAll(returnVal,'*',STAR_PATTERN,"%2A");
+    returnVal=Utils.replaceAll(returnVal,_7E_PATTERN,"~");
     for (    char c : skipEncode) {
-      returnVal=returnVal.replaceAll(plainToEncodedChars.get(c + ""),c + "");
+      returnVal=Utils.replaceAll(returnVal,CHAR_TO_ENCODED_PATTERN.get(c),c + "");
     }
     return returnVal;
   }

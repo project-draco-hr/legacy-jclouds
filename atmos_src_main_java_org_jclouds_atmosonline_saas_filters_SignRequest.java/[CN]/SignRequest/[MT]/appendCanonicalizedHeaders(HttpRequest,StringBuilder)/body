@@ -3,7 +3,11 @@
   for (  String header : headers) {
     if (header.startsWith("x-emc-")) {
       toSign.append(header.toLowerCase()).append(":");
-      for (      String value : request.getHeaders().get(header))       toSign.append(value.replaceAll("\r?\n","").replaceAll("  "," ")).append(" ");
+      for (      String value : request.getHeaders().get(header)) {
+        value=Utils.replaceAll(value,TWO_SPACE_PATTERN," ");
+        value=Utils.replaceAll(value,NEWLINE_PATTERN,"");
+        toSign.append(value).append(' ');
+      }
       toSign.deleteCharAt(toSign.lastIndexOf(" "));
       toSign.append("\n");
     }

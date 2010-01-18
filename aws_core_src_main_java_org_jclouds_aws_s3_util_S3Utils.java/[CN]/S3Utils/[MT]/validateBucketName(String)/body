@@ -1,8 +1,7 @@
 {
   checkNotNull(bucketName,"bucketName");
-  checkArgument(bucketName.matches("^[a-z0-9].*"),"bucketName name must start with a number or letter");
-  checkArgument(bucketName.matches("^[-_.a-z0-9]+"),"bucketName name can only contain lowercase letters, numbers, periods (.), underscores (_), and dashes (-)");
+  checkArgument(BUCKET_NAME_PATTERN.matcher(bucketName).matches(),"bucketName name must start with a number or letter and  can only contain lowercase letters, numbers, periods (.), underscores (_), and dashes (-)");
   checkArgument(bucketName.length() > 2 && bucketName.length() < 256,"bucketName name must be between 3 and 255 characters long");
-  checkArgument(!HttpUtils.IP_PATTERN.matcher(bucketName).matches(),"bucketName name cannot be ip address style");
+  checkArgument(!Patterns.IP_PATTERN.matcher(bucketName).matches(),"bucketName name cannot be ip address style");
   return bucketName;
 }
