@@ -1,15 +1,4 @@
 {
   checkArgument(imageCatalogIdMap.containsKey(image),"image not configured: " + image);
-  String templateId=imageCatalogIdMap.get(image);
-  String vDCId=tmClient.getDefaultVDC().getId();
-  logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) minCores(%d) minMegs(%d) properties(%s)",vDCId,templateId,name,minCores,minMegs,properties);
-  VApp vApp=tmClient.instantiateVAppTemplateInVDC(vDCId,name,templateId,TerremarkInstantiateVAppTemplateOptions.Builder.processorCount(minCores).memory(minMegs).productProperties(properties));
-  logger.debug("<< instantiated VApp(%s)",vApp.getId());
-  logger.debug(">> deploying vApp(%s)",vApp.getId());
-  vApp=blockUntilVAppStatusOrThrowException(vApp,tmClient.deployVApp(vApp.getId()),"deploy",VAppStatus.OFF);
-  logger.debug("<< deployed vApp(%s)",vApp.getId());
-  logger.debug(">> powering vApp(%s)",vApp.getId());
-  vApp=blockUntilVAppStatusOrThrowException(vApp,tmClient.powerOnVApp(vApp.getId()),"powerOn",VAppStatus.ON);
-  logger.debug("<< on vApp(%s)",vApp.getId());
-  return vApp.getId();
+  return start(name,imageCatalogIdMap.get(image),minCores,minMegs,properties);
 }
