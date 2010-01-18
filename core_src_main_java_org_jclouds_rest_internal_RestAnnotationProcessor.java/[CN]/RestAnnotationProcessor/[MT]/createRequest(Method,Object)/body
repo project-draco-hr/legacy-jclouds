@@ -2,7 +2,7 @@
   URI endpoint=getEndpointFor(method,args);
   String httpMethod=getHttpMethodOrConstantOrThrowException(method);
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
-  builder.path(declaring);
+  if (declaring.isAnnotationPresent(Path.class))   builder.path(declaring);
   builder.path(method);
   Multimap<String,String> tokenValues=encodeValues(getPathParamKeyValues(method,args),skips);
   Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);

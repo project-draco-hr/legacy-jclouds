@@ -1,0 +1,20 @@
+{
+  StringBuffer buf=new StringBuffer();
+  List<String> params=new ArrayList<String>();
+  boolean foundParam=false;
+  if (savePathParams(string,buf,params)) {
+    foundParam=true;
+    string=buf.toString();
+  }
+  try {
+    string=URLEncoder.encode(string,"UTF-8").replace("%25","%");
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
+  string=encodeNonCodes(string);
+  if (foundParam) {
+    return pathParamReplacement(string,params);
+  }
+  return string;
+}
