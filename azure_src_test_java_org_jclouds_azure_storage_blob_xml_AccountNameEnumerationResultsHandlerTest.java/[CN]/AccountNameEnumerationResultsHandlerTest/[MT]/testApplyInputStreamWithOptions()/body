@@ -4,7 +4,7 @@
   contents.add(new ListableContainerPropertiesImpl(URI.create("http://myaccount.blob.core.windows.net/images"),dateService.rfc822DateParse("Wed, 14 Aug 2008 20:39:39 GMT"),"0x8CACB9BD7C1EEEC"));
   contents.add(new ListableContainerPropertiesImpl(URI.create("http://myaccount.blob.core.windows.net/textfiles"),dateService.rfc822DateParse("Wed, 15 Aug 2008 20:39:39 GMT"),"0x8CACB9BD7BACAC3"));
   InputStream is=getClass().getResourceAsStream("/blob/test_list_containers_options.xml");
-  BoundedSortedSet<ListableContainerProperties> list=new BoundedTreeSet<ListableContainerProperties>(contents,URI.create("http://myaccount.blob.core.windows.net"),"prefix","marker",1,"video");
-  BoundedSortedSet<ListableContainerProperties> result=(BoundedSortedSet<ListableContainerProperties>)factory.create(injector.getInstance(AccountNameEnumerationResultsHandler.class)).parse(is);
+  BoundedSet<ListableContainerProperties> list=new BoundedHashSet<ListableContainerProperties>(contents,URI.create("http://myaccount.blob.core.windows.net"),"prefix","marker",1,"video");
+  BoundedSet<ListableContainerProperties> result=(BoundedSet<ListableContainerProperties>)factory.create(injector.getInstance(AccountNameEnumerationResultsHandler.class)).parse(is);
   assertEquals(result,list);
 }

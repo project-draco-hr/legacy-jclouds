@@ -1,0 +1,22 @@
+{
+  if (args.length < PARAMETERS)   throw new IllegalArgumentException(INVALID_SYNTAX);
+  boolean isEnterprise=System.getProperties().containsKey("jclouds.enterprise");
+  String account=args[0];
+  String encodedKey=args[1];
+  String queueName=args[2];
+  int messageCount=Integer.parseInt(args[3]);
+  RestContext<AzureQueueAsyncClient,AzureQueueClient> context=isEnterprise ? AzureQueueContextFactory.createContext(System.getProperties(),account,encodedKey,new NullLoggingModule(),new EnterpriseConfigurationModule()) : AzureQueueContextFactory.createContext(System.getProperties(),account,encodedKey,new NullLoggingModule());
+  try {
+    if (purgeQueues(queueName,context)) {
+      System.out.printf("pausing 60 seconds before recreating queues%n");
+      Thread.sleep(60 * 1000);
+    }
+    createQueue(queueName,context);
+    runTests(queueName,messageCount,isEnterprise ? "enterprise" : "default",context);
+  }
+  finally {
+    purgeQueues(queueName,context);
+    context.close();
+    System.exit(0);
+  }
+}

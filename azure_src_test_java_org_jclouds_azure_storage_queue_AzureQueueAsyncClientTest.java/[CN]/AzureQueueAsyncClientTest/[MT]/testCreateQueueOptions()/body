@@ -1,0 +1,14 @@
+{
+  Method method=AzureQueueAsyncClient.class.getMethod("createQueue",String.class,createOptionsVarargsClass);
+  GeneratedHttpRequest<AzureQueueAsyncClient> httpMethod=processor.createRequest(method,new Object[]{"queue",withMetadata(ImmutableMultimap.of("foo","bar"))});
+  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/queue");
+  assertEquals(httpMethod.getEndpoint().getQuery(),null);
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),3);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(httpMethod.getHeaders().get("x-ms-meta-foo"),Collections.singletonList("bar"));
+  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ThrowResourceNotFoundOn404.class);
+}

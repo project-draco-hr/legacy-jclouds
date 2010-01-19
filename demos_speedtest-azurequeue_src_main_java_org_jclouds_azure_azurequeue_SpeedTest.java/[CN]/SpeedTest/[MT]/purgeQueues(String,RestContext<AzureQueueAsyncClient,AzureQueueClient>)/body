@@ -1,0 +1,14 @@
+{
+  boolean deleted=false;
+  try {
+    SortedSet<QueueMetadata> result=Sets.newTreeSet(nullLoggingDefaultContext.getApi().listQueues(ListOptions.Builder.prefix(queueName)));
+    if (result.size() >= 1) {
+      nullLoggingDefaultContext.getApi().deleteQueue(result.last().getName());
+      System.out.printf("deleted queue: %s%n",queueName);
+      deleted=true;
+    }
+  }
+ catch (  Exception e) {
+  }
+  return deleted;
+}

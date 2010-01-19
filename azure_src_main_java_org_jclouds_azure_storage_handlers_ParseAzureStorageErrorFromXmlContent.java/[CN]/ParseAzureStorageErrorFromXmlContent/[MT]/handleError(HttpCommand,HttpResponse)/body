@@ -1,11 +1,12 @@
 {
-  String content;
+  byte[] content;
   try {
-    content=response.getContent() != null ? Utils.toStringAndClose(response.getContent()) : null;
+    content=response.getContent() != null ? ByteStreams.toByteArray(response.getContent()) : null;
     if (content != null) {
+      String message=new String(content);
       try {
-        if (content.indexOf('<') >= 0) {
-          AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,content);
+        if (message.indexOf('<') >= 0) {
+          AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,new ByteArrayInputStream(content));
           AzureStorageResponseException ex=new AzureStorageResponseException(command,response,error);
           if (error.getCode().equals("ContainerNotFound")) {
             command.setException(new ContainerNotFoundException(ex));
@@ -15,11 +16,11 @@
           }
         }
  else {
-          command.setException(new HttpResponseException(command,response,content));
+          command.setException(new HttpResponseException(command,response,message));
         }
       }
  catch (      Exception he) {
-        command.setException(new HttpResponseException(command,response,content));
+        command.setException(new HttpResponseException(command,response,message));
         Throwables.propagateIfPossible(he);
       }
     }
@@ -30,5 +31,8 @@
  catch (  Exception e) {
     command.setException(new HttpResponseException(command,response));
     Throwables.propagateIfPossible(e);
+  }
+ finally {
+    Closeables.closeQuietly(response.getContent());
   }
 }

@@ -1,10 +1,10 @@
 {
-  Iterable<ListableBlobProperties> contents=Iterables.transform(Iterables.filter(list,new Predicate<StorageMetadata>(){
+  Iterable<BlobProperties> contents=Iterables.transform(Iterables.filter(list,new Predicate<StorageMetadata>(){
     public boolean apply(    StorageMetadata input){
       return input.getType() == StorageType.BLOB;
     }
   }
-),new Function<StorageMetadata,ListableBlobProperties>(){
+),new Function<StorageMetadata,BlobProperties>(){
     public MutableBlobProperties apply(    StorageMetadata from){
       return blob2ObjectMd.apply((BlobMetadata)from);
     }
@@ -21,5 +21,5 @@
     }
   }
 ));
-  return new TreeSetListBlobsResponse(contents,null,list.getPath(),null,list.getMaxResults(),list.getMarker(),"/",commonPrefixes);
+  return new HashSetListBlobsResponse(contents,null,list.getPath(),null,list.getMaxResults(),list.getMarker(),"/",commonPrefixes);
 }

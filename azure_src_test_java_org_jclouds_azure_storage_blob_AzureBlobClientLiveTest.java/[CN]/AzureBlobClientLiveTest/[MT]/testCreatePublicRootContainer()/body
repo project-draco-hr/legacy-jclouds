@@ -2,8 +2,16 @@
   try {
     connection.deleteRootContainer();
   }
- catch (  AzureStorageResponseException e) {
-    sleepIfWaitingForDeleteToFinish(e);
+ catch (  ContainerNotFoundException e) {
+    Thread.sleep(5000);
+  }
+catch (  AzureStorageResponseException htpe) {
+    if (htpe.getResponse().getStatusCode() == 409) {
+      Thread.sleep(5000);
+    }
+ else {
+      throw htpe;
+    }
   }
   boolean created=false;
   while (!created) {

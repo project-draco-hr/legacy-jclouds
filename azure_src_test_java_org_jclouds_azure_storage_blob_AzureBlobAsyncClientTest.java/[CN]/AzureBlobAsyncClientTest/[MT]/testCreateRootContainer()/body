@@ -1,0 +1,13 @@
+{
+  Method method=AzureBlobAsyncClient.class.getMethod("createRootContainer",Array.newInstance(CreateContainerOptions.class,0).getClass());
+  GeneratedHttpRequest<AzureBlobAsyncClient> httpMethod=processor.createRequest(method,new Object[]{});
+  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
+  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnTrueIfContainerAlreadyExists.class);
+}

@@ -1,0 +1,12 @@
+{
+  Method method=AzureBlobAsyncClient.class.getMethod("listBlobs",Array.newInstance(ListBlobsOptions.class,0).getClass());
+  GeneratedHttpRequest<AzureBlobAsyncClient> httpMethod=processor.createRequest(method,new Object[]{});
+  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.blob.core.windows.net");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container&comp=list");
+  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
+  assertEquals(httpMethod.getHeaders().size(),1);
+  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseSax.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ThrowResourceNotFoundOn404.class);
+}
