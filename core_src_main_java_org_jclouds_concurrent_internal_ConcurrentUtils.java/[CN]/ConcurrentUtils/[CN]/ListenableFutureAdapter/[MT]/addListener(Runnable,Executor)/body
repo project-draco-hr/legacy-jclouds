@@ -1,0 +1,21 @@
+{
+  if (!hasListeners.get() && hasListeners.compareAndSet(false,true)) {
+    adapterExecutor.execute(new Runnable(){
+      public void run(){
+        try {
+          delegate.get();
+        }
+ catch (        CancellationException e) {
+        }
+catch (        InterruptedException e) {
+          throw new IllegalStateException("Adapter thread interrupted!",e);
+        }
+catch (        ExecutionException e) {
+        }
+        executionList.run();
+      }
+    }
+);
+  }
+  executionList.add(listener,exec);
+}

@@ -14,8 +14,8 @@
       return result;
     }
   }
-));
-  HttpCommandRendezvous<T> rendezvous=new HttpCommandRendezvous<T>(command,channel,makeListenable(future));
+),executorService);
+  HttpCommandRendezvous<T> rendezvous=new HttpCommandRendezvous<T>(command,channel,makeListenable(future,executorService));
   commandQueue.add(rendezvous);
   return rendezvous.getListenableFuture();
 }
