@@ -1,6 +1,6 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
-  twitterClient=TwitterContextFactory.createContext(props,new GaeHttpCommandExecutorServiceModule()).getApi();
+  twitterClient=TwitterContextFactory.createContext(props,new GoogleAppEngineConfigurationModule()).getApi();
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   ImmutableList<String> contextBuilderClassNames=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
   providerTypeToBlobStoreMap=Maps.newHashMap();
@@ -13,7 +13,7 @@
       builderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(className);
       name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
       constructor=builderClass.getConstructor(Properties.class);
-      context=constructor.newInstance(props).withModules(new GaeHttpCommandExecutorServiceModule()).buildContext();
+      context=constructor.newInstance(props).withModules(new GoogleAppEngineConfigurationModule()).buildContext();
     }
  catch (    Exception e) {
       throw new RuntimeException("error instantiating " + className,e);
