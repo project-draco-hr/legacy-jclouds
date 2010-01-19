@@ -1,6 +1,6 @@
 {
-  return compose(async.listContainers(),new Function<Set<ListableContainerProperties>,org.jclouds.blobstore.domain.ListResponse<? extends StorageMetadata>>(){
-    public org.jclouds.blobstore.domain.ListResponse<? extends StorageMetadata> apply(    Set<ListableContainerProperties> from){
+  return compose(async.listContainers(includeMetadata()),new Function<Set<ContainerProperties>,org.jclouds.blobstore.domain.ListResponse<? extends StorageMetadata>>(){
+    public org.jclouds.blobstore.domain.ListResponse<? extends StorageMetadata> apply(    Set<ContainerProperties> from){
       return new ListResponseImpl<StorageMetadata>(Iterables.transform(from,container2ResourceMd),null,null,false);
     }
   }
