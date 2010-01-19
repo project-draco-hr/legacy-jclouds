@@ -1,12 +1,12 @@
 {
   Region region=Region.fromValue(location);
   InstanceType type=checkNotNull(profileInstanceTypeMap.get(profile),"profile not supported: " + profile);
-  String ami=checkNotNull(imageAmiIdMap.get(type).get(image),"image not supported: " + image);
+  String ami=checkNotNull(checkNotNull(checkNotNull(imageAmiIdMap.get(type),"type not supported: " + type).get(image),"image not supported: " + image).get(region),"region not supported: " + region);
   KeyPair keyPair=createKeyPairInRegion(region,name);
   String securityGroupName=name;
   createSecurityGroupInRegion(region,securityGroupName,22,80,8080,443);
   String script=new ScriptBuilder().addStatement(exec("apt-get update")).addStatement(exec("apt-get upgrade -y")).addStatement(exec("apt-get install -y openjdk-6-jdk")).addStatement(exec("wget -qO/usr/bin/runurl run.alestic.com/runurl")).addStatement(exec("chmod 755 /usr/bin/runurl")).build(OsFamily.UNIX);
-  logger.debug(">> running instance ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ami,type,keyPair.getKeyName(),securityGroupName);
+  logger.debug(">> running instance region(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",region,ami,type,keyPair.getKeyName(),securityGroupName);
   RunningInstance runningInstance=Iterables.getOnlyElement(ec2Client.getInstanceServices().runInstancesInRegion(region,null,ami,1,1,withKeyName(keyPair.getKeyName()).asType(type).withSecurityGroup(securityGroupName).withAdditionalInfo(name).withUserData(script.getBytes())));
   logger.debug("<< started instance(%s)",runningInstance.getId());
   instanceStateRunning.apply(runningInstance);

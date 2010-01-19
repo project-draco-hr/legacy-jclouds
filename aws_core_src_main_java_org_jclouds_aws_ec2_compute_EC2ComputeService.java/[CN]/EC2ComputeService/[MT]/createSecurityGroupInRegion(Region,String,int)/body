@@ -1,9 +1,9 @@
 {
-  logger.debug(">> creating securityGroup name(%s)",name);
+  logger.debug(">> creating securityGroup region(%s) name(%s)",region,name);
   try {
     ec2Client.getSecurityGroupServices().createSecurityGroupInRegion(region,name,name);
     logger.debug("<< created securityGroup(%s)",name);
-    logger.debug(">> authorizing securityGroup name(%s) ports(%s)",name,Arrays.asList(ports));
+    logger.debug(">> authorizing securityGroup region(%s) name(%s) ports(%s)",region,name,Joiner.on(',').join(Arrays.asList(ports)));
     for (    int port : ports) {
       ec2Client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(region,name,IpProtocol.TCP,port,port,"0.0.0.0/0");
     }
