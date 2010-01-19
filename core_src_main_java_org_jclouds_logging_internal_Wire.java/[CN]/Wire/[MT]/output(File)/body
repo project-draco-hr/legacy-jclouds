@@ -1,19 +1,14 @@
 {
   checkNotNull(out,"output");
-  exec.submit(new Runnable(){
-    public void run(){
-      InputStream in=null;
-      try {
-        in=new FileInputStream(out);
-        wire(">> ",in);
-      }
- catch (      FileNotFoundException e) {
-        logger.error(e,"Error tapping file: %s",out);
-      }
- finally {
-        Closeables.closeQuietly(in);
-      }
-    }
+  InputStream in=null;
+  try {
+    in=new FileInputStream(out);
+    wire(">> ",in);
   }
-);
+ catch (  FileNotFoundException e) {
+    logger.error(e,"Error tapping file: %s",out);
+  }
+ finally {
+    Closeables.closeQuietly(in);
+  }
 }

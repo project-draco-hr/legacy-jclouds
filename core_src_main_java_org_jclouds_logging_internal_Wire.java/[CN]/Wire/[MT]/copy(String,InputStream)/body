@@ -1,13 +1,18 @@
 {
+  int limit=256 * 1024;
+  FileBackedOutputStream out=null;
   try {
-    byte[] data=ByteStreams.toByteArray(instream);
-    wire(header,new ByteArrayInputStream(data));
-    return new ByteArrayInputStream(data);
+    out=new FileBackedOutputStream(limit);
+    long bytesRead=ByteStreams.copy(instream,out);
+    if (bytesRead >= limit)     logger.warn("over limit %d/%d: wrote temp file",bytesRead,limit);
+    wire(header,out.getSupplier().getInput());
+    return out.getSupplier().getInput();
   }
  catch (  IOException e) {
     throw new RuntimeException("Error tapping line",e);
   }
  finally {
+    Closeables.closeQuietly(out);
     Closeables.closeQuietly(instream);
   }
 }
