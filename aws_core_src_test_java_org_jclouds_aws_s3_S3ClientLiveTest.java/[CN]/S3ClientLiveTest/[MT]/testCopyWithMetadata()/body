@@ -5,9 +5,9 @@
     addToContainerAndValidate(containerName,sourceKey);
     Map<String,String> metadata=Maps.newHashMap();
     metadata.put("adrian","cole");
-    context.getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,overrideMetadataWith(metadata));
+    getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,overrideMetadataWith(metadata));
     validateContent(destinationContainer,destinationKey);
-    ObjectMetadata objectMeta=context.getApi().headObject(destinationContainer,destinationKey);
+    ObjectMetadata objectMeta=getApi().headObject(destinationContainer,destinationKey);
     assertEquals(objectMeta.getUserMetadata(),metadata);
   }
   finally {

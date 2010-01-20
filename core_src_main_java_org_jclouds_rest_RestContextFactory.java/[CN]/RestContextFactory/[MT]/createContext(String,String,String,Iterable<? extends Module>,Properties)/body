@@ -1,7 +1,5 @@
 {
   checkNotNull(hint,"hint");
-  checkNotNull(account,"account");
-  checkNotNull(key,"key");
   checkNotNull(modules,"modules");
   checkNotNull(overrides,"overrides");
   String propertiesBuilderKey=String.format("%s.propertiesbuilder",hint);
@@ -11,8 +9,10 @@
   try {
     Class<HttpPropertiesBuilder> propertiesBuilderClass=(Class<HttpPropertiesBuilder>)Class.forName(propertiesBuilderClassName);
     Class<B> contextBuilderClass=(Class<B>)Class.forName(contextBuilderClassName);
-    HttpPropertiesBuilder builder=propertiesBuilderClass.getConstructor(Properties.class).newInstance(overrides).withCredentials(account,key);
-    return (T)contextBuilderClass.getConstructor(Properties.class).newInstance(builder.build()).withModules(Iterables.toArray(modules,Module.class)).buildContext();
+    HttpPropertiesBuilder builder=propertiesBuilderClass.getConstructor(Properties.class).newInstance(overrides);
+    if (key != null)     builder.withCredentials(account,key);
+    B contextBuilder=(B)contextBuilderClass.getConstructor(Properties.class).newInstance(builder.build()).withModules(Iterables.toArray(modules,Module.class));
+    return build(contextBuilder);
   }
  catch (  Exception e) {
     throw new RuntimeException("error instantiating " + contextBuilderClassName,e);

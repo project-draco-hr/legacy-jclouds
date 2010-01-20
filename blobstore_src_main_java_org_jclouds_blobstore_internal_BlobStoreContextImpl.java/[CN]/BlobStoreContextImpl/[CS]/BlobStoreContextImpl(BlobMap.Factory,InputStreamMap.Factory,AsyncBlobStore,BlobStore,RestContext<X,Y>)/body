@@ -1,0 +1,18 @@
+{
+  this.providerSpecificContext=providerSpecificContext;
+  Class<?> type;
+  if (providerSpecificContext.getAsyncApi().getClass().isAnnotationPresent(ConsistencyModel.class)) {
+    type=providerSpecificContext.getAsyncApi().getClass();
+  }
+ else   if (providerSpecificContext.getAsyncApi().getClass().getInterfaces().length > 0 && providerSpecificContext.getAsyncApi().getClass().getInterfaces()[0].isAnnotationPresent(ConsistencyModel.class)) {
+    type=providerSpecificContext.getAsyncApi().getClass().getInterfaces()[0];
+  }
+ else {
+    throw new IllegalStateException("@ConsistencyModel needed on " + providerSpecificContext.getAsyncApi().getClass());
+  }
+  this.consistencyModel=type.getAnnotation(ConsistencyModel.class).value();
+  this.blobMapFactory=checkNotNull(blobMapFactory,"blobMapFactory");
+  this.inputStreamMapFactory=checkNotNull(inputStreamMapFactory,"inputStreamMapFactory");
+  this.ablobStore=checkNotNull(ablobStore,"ablobStore");
+  this.blobStore=checkNotNull(blobStore,"blobStore");
+}

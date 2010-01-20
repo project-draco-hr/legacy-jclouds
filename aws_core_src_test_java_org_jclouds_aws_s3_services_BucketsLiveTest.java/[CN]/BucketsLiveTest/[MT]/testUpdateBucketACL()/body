@@ -1,14 +1,14 @@
 {
   String bucketName=getContainerName();
   try {
-    AccessControlList acl=context.getApi().getBucketACL(bucketName);
+    AccessControlList acl=getApi().getBucketACL(bucketName);
     String ownerId=acl.getOwner().getId();
     assertEquals(acl.getGrants().size(),1);
     assertTrue(acl.hasPermission(ownerId,Permission.FULL_CONTROL));
     addGrantsToACL(acl);
     assertEquals(acl.getGrants().size(),4);
-    assertTrue(context.getApi().putBucketACL(bucketName,acl));
-    acl=context.getApi().getBucketACL(bucketName);
+    assertTrue(getApi().putBucketACL(bucketName,acl));
+    acl=getApi().getBucketACL(bucketName);
     checkGrants(acl);
   }
   finally {

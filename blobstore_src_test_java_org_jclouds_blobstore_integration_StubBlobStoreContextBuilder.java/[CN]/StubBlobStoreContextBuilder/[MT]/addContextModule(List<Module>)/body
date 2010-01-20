@@ -8,8 +8,8 @@
     @SuppressWarnings("unused") @Provides @Singleton public BlobStore provideClient(    AsyncBlobStore client) throws IllegalArgumentException, SecurityException, NoSuchMethodException {
       return SyncProxy.create(StubBlobStore.class,client);
     }
-    @SuppressWarnings("unused") @Provides @Singleton BlobStoreContext<AsyncBlobStore,BlobStore> provideContext(    BlobMap.Factory blobMapFactory,    InputStreamMap.Factory inputStreamMapFactory,    Closer closer,    AsyncBlobStore asynch,    BlobStore synch){
-      return new BlobStoreContextImpl<AsyncBlobStore,BlobStore>(blobMapFactory,inputStreamMapFactory,closer,asynch,synch,asynch,synch,URI.create("http://localhost/blobstub"),"foo");
+    @SuppressWarnings("unused") @Provides @Singleton RestContext<AsyncBlobStore,BlobStore> provideContext(    Closer closer,    final AsyncBlobStore async,    final BlobStore sync){
+      return new RestContextImpl<AsyncBlobStore,BlobStore>(closer,async,sync,URI.create("http://localhost/blobstub"),"foo");
     }
   }
 );

@@ -1,12 +1,12 @@
 {
   final String bucketName=getContainerName();
   try {
-    assertEquals(Payer.BUCKET_OWNER,context.getApi().getBucketPayer(bucketName));
-    context.getApi().setBucketPayer(bucketName,Payer.REQUESTER);
+    assertEquals(Payer.BUCKET_OWNER,getApi().getBucketPayer(bucketName));
+    getApi().setBucketPayer(bucketName,Payer.REQUESTER);
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
-          assertEquals(Payer.REQUESTER,context.getApi().getBucketPayer(bucketName));
+          assertEquals(Payer.REQUESTER,getApi().getBucketPayer(bucketName));
         }
  catch (        Exception e) {
           Throwables.propagateIfPossible(e);
@@ -14,11 +14,11 @@
       }
     }
 );
-    context.getApi().setBucketPayer(bucketName,Payer.BUCKET_OWNER);
+    getApi().setBucketPayer(bucketName,Payer.BUCKET_OWNER);
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
-          assertEquals(Payer.BUCKET_OWNER,context.getApi().getBucketPayer(bucketName));
+          assertEquals(Payer.BUCKET_OWNER,getApi().getBucketPayer(bucketName));
         }
  catch (        Exception e) {
           Throwables.propagateIfPossible(e);

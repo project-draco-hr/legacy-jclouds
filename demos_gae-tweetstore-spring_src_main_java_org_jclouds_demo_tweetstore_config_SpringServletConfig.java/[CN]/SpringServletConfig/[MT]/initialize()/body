@@ -1,25 +1,14 @@
 {
   Properties props=loadJCloudsProperties();
   logger.trace("About to initialize members.");
-  twitterClient=TwitterContextFactory.createContext(props,new GoogleAppEngineConfigurationModule()).getApi();
+  Module googleModule=new GoogleAppEngineConfigurationModule();
+  Set<Module> modules=ImmutableSet.<Module>of(googleModule);
+  twitterClient=TwitterContextFactory.createContext(props,googleModule).getApi();
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
-  ImmutableList<String> contextBuilderClassNames=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS),PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
+  BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
   providerTypeToBlobStoreMap=Maps.newHashMap();
-  for (  String className : contextBuilderClassNames) {
-    Class<BlobStoreContextBuilder<?,?>> builderClass;
-    Constructor<BlobStoreContextBuilder<?,?>> constructor;
-    String name;
-    BlobStoreContext<?,?> context;
-    try {
-      builderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(className);
-      name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
-      constructor=builderClass.getConstructor(Properties.class);
-      context=constructor.newInstance(props).withModules(new GoogleAppEngineConfigurationModule()).buildContext();
-    }
- catch (    Exception e) {
-      throw new RuntimeException("error instantiating " + className,e);
-    }
-    providerTypeToBlobStoreMap.put(name,context);
+  for (  String hint : Splitter.on(',').split(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS))) {
+    providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
   }
   Queue queue=QueueFactory.getQueue("twitter");
   for (  String name : providerTypeToBlobStoreMap.keySet()) {

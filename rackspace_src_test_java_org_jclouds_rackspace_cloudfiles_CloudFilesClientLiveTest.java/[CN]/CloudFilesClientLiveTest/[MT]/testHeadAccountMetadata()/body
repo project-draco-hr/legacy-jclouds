@@ -2,14 +2,14 @@
   String containerPrefix=getContainerName();
   String containerName=containerPrefix + ".testHeadAccountMetadata";
   try {
-    AccountMetadata metadata=context.getApi().getAccountStatistics();
+    AccountMetadata metadata=getApi().getAccountStatistics();
     assertNotNull(metadata);
     long initialContainerCount=metadata.getContainerCount();
-    assertTrue(context.getApi().createContainer(containerName));
-    metadata=context.getApi().getAccountStatistics();
+    assertTrue(getApi().createContainer(containerName));
+    metadata=getApi().getAccountStatistics();
     assertNotNull(metadata);
     assertTrue(metadata.getContainerCount() >= initialContainerCount);
-    assertTrue(context.getApi().deleteContainerIfEmpty(containerName));
+    assertTrue(getApi().deleteContainerIfEmpty(containerName));
   }
   finally {
     returnContainer(containerPrefix);

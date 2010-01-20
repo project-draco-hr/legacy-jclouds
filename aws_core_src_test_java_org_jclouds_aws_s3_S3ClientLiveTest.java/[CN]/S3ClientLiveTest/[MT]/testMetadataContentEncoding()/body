@@ -1,12 +1,12 @@
 {
   String key="hello";
-  S3Object object=context.getApi().newS3Object();
+  S3Object object=getApi().newS3Object();
   object.getMetadata().setKey(key);
   object.setPayload(TEST_STRING);
   object.getMetadata().setContentEncoding("x-compress");
   String containerName=getContainerName();
   try {
-    context.getApi().putObject(containerName,object);
+    getApi().putObject(containerName,object);
     S3Object newObject=validateObject(containerName,key);
     assertEquals(newObject.getMetadata().getContentEncoding(),"x-compress");
   }

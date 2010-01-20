@@ -1,6 +1,6 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
-  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTBUILDERS),BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTBUILDERS).split(","));
+  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTS),BlobStoreConstants.PROPERTY_BLOBSTORE_CONTEXTS).split(","));
   contexts=Maps.newHashMap();
   for (  String className : list) {
     try {
@@ -8,7 +8,7 @@
       builderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(className);
       String name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
       Constructor<BlobStoreContextBuilder<?,?>> constructor=builderClass.getConstructor(Properties.class);
-      contexts.put(name,constructor.newInstance(props).withModules(new GoogleAppEngineConfigurationModule()).buildContext());
+      contexts.put(name,constructor.newInstance(props).withModules(new GoogleAppEngineConfigurationModule()).buildBlobStoreContext());
     }
  catch (    Exception e) {
       throw new RuntimeException(e);

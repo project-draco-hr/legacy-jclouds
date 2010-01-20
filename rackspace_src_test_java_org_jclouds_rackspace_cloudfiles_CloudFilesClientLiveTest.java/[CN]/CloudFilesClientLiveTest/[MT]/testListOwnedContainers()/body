@@ -1,23 +1,23 @@
 {
   String containerPrefix=getContainerName();
   try {
-    SortedSet<ContainerMetadata> response=context.getApi().listContainers();
+    SortedSet<ContainerMetadata> response=getApi().listContainers();
     assertNotNull(response);
     long initialContainerCount=response.size();
     assertTrue(initialContainerCount >= 0);
     String[] containerJsr330=new String[]{containerPrefix + ".testListOwnedContainers1",containerPrefix + ".testListOwnedContainers2"};
-    assertTrue(context.getApi().createContainer(containerJsr330[0]));
-    assertTrue(context.getApi().createContainer(containerJsr330[1]));
-    response=context.getApi().listContainers();
-    response=context.getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0].substring(0,containerJsr330[0].length() - 1)).maxResults(1));
+    assertTrue(getApi().createContainer(containerJsr330[0]));
+    assertTrue(getApi().createContainer(containerJsr330[1]));
+    response=getApi().listContainers();
+    response=getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0].substring(0,containerJsr330[0].length() - 1)).maxResults(1));
     assertEquals(response.size(),1);
     assertEquals(response.first().getName(),containerJsr330[0]);
-    response=context.getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0]).maxResults(1));
+    response=getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0]).maxResults(1));
     assertEquals(response.size(),1);
     assertEquals(response.first().getName(),containerJsr330[1]);
-    assertTrue(context.getApi().deleteContainerIfEmpty(containerJsr330[0]));
-    assertTrue(context.getApi().deleteContainerIfEmpty(containerJsr330[1]));
-    response=context.getApi().listContainers();
+    assertTrue(getApi().deleteContainerIfEmpty(containerJsr330[0]));
+    assertTrue(getApi().deleteContainerIfEmpty(containerJsr330[1]));
+    response=getApi().listContainers();
   }
   finally {
     returnContainer(containerPrefix);

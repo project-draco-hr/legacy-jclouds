@@ -1,7 +1,7 @@
 {
   url=new URL(String.format("http://%s:%s",address,port));
   Properties props=new Properties();
-  props.setProperty(PROPERTY_BLOBSTORE_CONTEXTBUILDERS,String.format("%s,%s,%s",S3BlobStoreContextBuilder.class.getName(),CloudFilesBlobStoreContextBuilder.class.getName(),AzureBlobStoreContextBuilder.class.getName()));
+  props.setProperty(PROPERTY_BLOBSTORE_CONTEXTS,String.format("%s,%s,%s",S3BlobStoreContextBuilder.class.getName(),CloudFilesBlobStoreContextBuilder.class.getName(),AzureBlobStoreContextBuilder.class.getName()));
   props=new S3PropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_AWS_ACCESSKEYID),PROPERTY_AWS_ACCESSKEYID),System.getProperty(PROPERTY_AWS_SECRETACCESSKEY,PROPERTY_AWS_SECRETACCESSKEY)).build();
   props=new CloudFilesPropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_RACKSPACE_USER),PROPERTY_RACKSPACE_USER),System.getProperty(PROPERTY_RACKSPACE_KEY,PROPERTY_RACKSPACE_KEY)).build();
   props=new AzureBlobPropertiesBuilder(props).withCredentials(checkNotNull(System.getProperty(PROPERTY_AZURESTORAGE_ACCOUNT),PROPERTY_AZURESTORAGE_ACCOUNT),System.getProperty(PROPERTY_AZURESTORAGE_KEY,PROPERTY_AZURESTORAGE_KEY)).build();

@@ -2,14 +2,14 @@
   final String publicReadWriteObjectKey="public-read-write-acl";
   final String containerName=getContainerName();
   try {
-    S3Object object=context.getApi().newS3Object();
+    S3Object object=getApi().newS3Object();
     object.getMetadata().setKey(publicReadWriteObjectKey);
     object.setPayload("");
-    context.getApi().putObject(containerName,object,new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE));
+    getApi().putObject(containerName,object,new PutObjectOptions().withAcl(CannedAccessPolicy.PUBLIC_READ_WRITE));
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
-          AccessControlList acl=context.getApi().getObjectACL(containerName,publicReadWriteObjectKey);
+          AccessControlList acl=getApi().getObjectACL(containerName,publicReadWriteObjectKey);
           assertEquals(acl.getGrants().size(),3);
           assertEquals(acl.getPermissions(GroupGranteeURI.ALL_USERS).size(),2);
           assertTrue(acl.getOwner() != null);

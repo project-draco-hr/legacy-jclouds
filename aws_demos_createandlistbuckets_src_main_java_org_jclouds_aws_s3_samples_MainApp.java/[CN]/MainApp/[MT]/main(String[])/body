@@ -3,7 +3,7 @@
   String accesskeyid=args[0];
   String secretkey=args[1];
   String containerName=args[2];
-  BlobStoreContext context=S3BlobStoreContextFactory.createContext(accesskeyid,secretkey);
+  BlobStoreContext context=new BlobStoreContextFactory().createContext("s3",accesskeyid,secretkey);
   try {
     BlobStore blobStore=context.getBlobStore();
     blobStore.createContainerInLocation(Region.DEFAULT.toString(),containerName);
@@ -12,9 +12,12 @@
     blobStore.putBlob(containerName,blob);
     for (    StorageMetadata resourceMd : blobStore.list()) {
       if (resourceMd.getType() == StorageType.CONTAINER || resourceMd.getType() == StorageType.FOLDER) {
-        System.out.printf("  %s: %s entries%n",resourceMd.getName(),context.createInputStreamMap(resourceMd.getName()).size());
+        Map<String,InputStream> containerMap=context.createInputStreamMap(resourceMd.getName());
+        System.out.printf("  %s: %s entries%n",resourceMd.getName(),containerMap.size());
       }
     }
+    RestContext<S3AsyncClient,S3Client> providerContext=context.getProviderSpecificContext();
+    providerContext.getApi().getBucketLogging(containerName);
   }
   finally {
     context.close();
