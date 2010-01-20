@@ -1,11 +1,11 @@
 {
-  Image toTest=Image.CENTOS_53;
+  OperatingSystem toTest=OperatingSystem.CENTOS;
   String serverName=getCompatibleServerName(toTest);
   int processorCount=1;
   int memory=512;
   long disk=10 * 1025 * 1024;
   Map<String,String> properties=ImmutableMap.of("foo","bar");
-  id=client.start(serverName,toTest,processorCount,memory,disk,properties).get("id");
+  id=client.start(hostingClient.getDefaultVDC().getId(),serverName,"3",processorCount,memory,disk,properties).get("id");
   Expectation expectation=expectationMap.get(toTest);
   VApp vApp=hostingClient.getVApp(id);
   verifyConfigurationOfVApp(vApp,serverName,expectation.os,processorCount,memory,expectation.hardDisk);

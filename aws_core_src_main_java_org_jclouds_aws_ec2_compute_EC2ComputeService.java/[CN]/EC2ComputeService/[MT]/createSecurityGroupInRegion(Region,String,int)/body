@@ -3,11 +3,11 @@
   try {
     ec2Client.getSecurityGroupServices().createSecurityGroupInRegion(region,name,name);
     logger.debug("<< created securityGroup(%s)",name);
-    logger.debug(">> authorizing securityGroup region(%s) name(%s) ports(%s)",region,name,Joiner.on(',').join(Arrays.asList(ports)));
     for (    int port : ports) {
+      logger.debug(">> authorizing securityGroup region(%s) name(%s) port(%s)",region,name,port);
       ec2Client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(region,name,IpProtocol.TCP,port,port,"0.0.0.0/0");
+      logger.debug("<< authorized securityGroup(%s)",name);
     }
-    logger.debug("<< authorized securityGroup(%s)",name);
   }
  catch (  AWSResponseException e) {
     if (e.getError().getCode().equals("InvalidGroup.Duplicate")) {

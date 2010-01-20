@@ -1,0 +1,7 @@
+{
+  checkNotNull(template.getImage().getLocation(),"location");
+  String id=computeClient.start(template.getImage().getLocation(),name,template.getImage().getId(),(int)template.getSize().getCores(),(int)template.getSize().getRam(),ImmutableMap.<String,String>of());
+  VApp vApp=client.getVApp(id);
+  InetAddress publicIp=computeClient.createPublicAddressMappedToPorts(vApp,22,80,8080,443);
+  return new CreateNodeResponseImpl(vApp.getId(),vApp.getName(),template.getImage().getLocation(),vApp.getLocation(),ImmutableMap.<String,String>of(),vAppStatusToNodeState.get(vApp.getStatus()),ImmutableSet.<InetAddress>of(publicIp),vApp.getNetworkToAddresses().values(),22,LoginType.SSH,new Credentials("vcloud","p4ssw0rd"),ImmutableMap.<String,String>of());
+}

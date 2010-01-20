@@ -1,0 +1,24 @@
+{
+  Set<Image> images=Sets.newLinkedHashSet();
+  holder.logger.debug(">> providing images");
+  Catalog response=client.getDefaultCatalog();
+  String vDC=client.getDefaultVDC().getId();
+  for (  NamedResource resource : response.values()) {
+    if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
+      CatalogItem item=client.getCatalogItem(resource.getId());
+      OperatingSystem myOs=OperatingSystem.UNKNOWN;
+      for (      OperatingSystem os : OperatingSystem.values()) {
+        if (resource.getName().toUpperCase().replaceAll("\\s","").indexOf(os.toString()) != -1) {
+          myOs=os;
+        }
+      }
+      Architecture arch=resource.getName().matches("64[- ]bit") ? Architecture.X86_32 : Architecture.X86_64;
+      if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
+        VAppTemplate template=client.getVAppTemplate(item.getEntity().getId());
+        images.add(new ImageImpl(resource.getId(),template.getDescription(),myOs,null,vDC,arch));
+      }
+    }
+  }
+  holder.logger.debug("<< images(%d)",images.size());
+  return images;
+}

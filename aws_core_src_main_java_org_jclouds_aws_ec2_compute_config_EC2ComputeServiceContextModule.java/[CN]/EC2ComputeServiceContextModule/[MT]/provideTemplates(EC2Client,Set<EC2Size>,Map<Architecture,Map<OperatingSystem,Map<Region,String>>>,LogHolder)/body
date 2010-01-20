@@ -1,0 +1,18 @@
+{
+  Set<EC2Template> templates=Sets.newHashSet();
+  holder.logger.debug(">> generating templates");
+  for (  EC2Size size : sizes) {
+    for (    Architecture architecture : imageAmiIdMap.keySet()) {
+      if (size.supportsArchitecture(architecture)) {
+        for (        OperatingSystem operatingSystem : imageAmiIdMap.get(architecture).keySet()) {
+          for (          Region region : imageAmiIdMap.get(architecture).get(operatingSystem).keySet()) {
+            String ami=imageAmiIdMap.get(architecture).get(operatingSystem).get(region);
+            templates.add(new EC2Template(client,imageAmiIdMap,size,operatingSystem,region,EC2Utils.newImage(client,region,operatingSystem,architecture,ami)));
+          }
+        }
+      }
+    }
+  }
+  holder.logger.debug("<< templates(%d)",templates.size());
+  return templates;
+}

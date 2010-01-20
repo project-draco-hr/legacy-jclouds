@@ -1,0 +1,17 @@
+{
+  checkArgument(template instanceof EC2Template,"unexpected template type. should be EC2Template, was: " + template.getClass());
+  EC2Template ec2Template=(EC2Template)template;
+  KeyPair keyPair=createKeyPairInRegion(ec2Template.getRegion(),name);
+  String securityGroupName=name;
+  createSecurityGroupInRegion(ec2Template.getRegion(),securityGroupName,22,80,8080,443);
+  String script=new ScriptBuilder().addStatement(exec("apt-get update")).addStatement(exec("apt-get upgrade -y")).addStatement(exec("apt-get install -y openjdk-6-jdk")).addStatement(exec("wget -qO/usr/bin/runurl run.alestic.com/runurl")).addStatement(exec("chmod 755 /usr/bin/runurl")).build(OsFamily.UNIX);
+  logger.debug(">> running instance region(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",ec2Template.getRegion(),ec2Template.getImage().getId(),ec2Template.getSize().getInstanceType(),keyPair.getKeyName(),securityGroupName);
+  RunningInstance runningInstance=Iterables.getOnlyElement(ec2Client.getInstanceServices().runInstancesInRegion(ec2Template.getRegion(),null,ec2Template.getImage().getId(),1,1,withKeyName(keyPair.getKeyName()).asType(ec2Template.getSize().getInstanceType()).withSecurityGroup(securityGroupName).withAdditionalInfo(name).withUserData(script.getBytes())));
+  logger.debug("<< started instance(%s)",runningInstance.getId());
+  instanceStateRunning.apply(runningInstance);
+  logger.debug("<< running instance(%s)",runningInstance.getId());
+  runningInstance=getOnlyRunningInstanceInRegion(ec2Template.getRegion(),runningInstance.getId());
+  Set<InetAddress> publicAddresses=runningInstance.getIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getIpAddress());
+  Set<InetAddress> privateAddresses=runningInstance.getPrivateIpAddress() == null ? ImmutableSet.<InetAddress>of() : ImmutableSet.<InetAddress>of(runningInstance.getPrivateIpAddress());
+  return new CreateNodeResponseImpl(runningInstance.getId(),name,runningInstance.getRegion().toString(),null,ImmutableMap.<String,String>of(),instanceToNodeState.get(runningInstance.getInstanceState()),publicAddresses,privateAddresses,22,LoginType.SSH,new Credentials(ec2Template.getImage().getOperatingSystem() == OperatingSystem.UBUNTU ? "ubuntu" : "root",keyPair.getKeyMaterial()),ImmutableMap.<String,String>of());
+}

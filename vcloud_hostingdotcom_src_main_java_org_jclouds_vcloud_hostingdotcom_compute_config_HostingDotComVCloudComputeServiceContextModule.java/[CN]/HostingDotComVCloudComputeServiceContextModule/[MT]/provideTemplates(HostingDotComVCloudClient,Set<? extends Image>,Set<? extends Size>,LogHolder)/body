@@ -1,0 +1,12 @@
+{
+  Set<HostingDotComVCloudTemplate> templates=Sets.newHashSet();
+  holder.logger.debug(">> generating templates");
+  String vDC=client.getDefaultVDC().getId();
+  for (  Size size : sizes) {
+    for (    Image image : images) {
+      templates.add(new HostingDotComVCloudTemplate(client,images,sizes,vDC,size,image.getOperatingSystem(),image));
+    }
+  }
+  holder.logger.debug("<< templates(%d)",templates.size());
+  return templates;
+}

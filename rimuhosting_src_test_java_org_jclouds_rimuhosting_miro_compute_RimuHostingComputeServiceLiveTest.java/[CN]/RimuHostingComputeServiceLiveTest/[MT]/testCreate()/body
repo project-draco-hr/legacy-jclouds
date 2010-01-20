@@ -1,5 +1,6 @@
 {
-  node=context.getComputeService().startNodeInLocation("default",nodePrefix,Profile.SMALLEST,Image.CENTOS_53);
+  Template template=client.createTemplateInLocation("default").os(UBUNTU).smallest();
+  node=client.runNode(nodeName,template);
   assertNotNull(node.getId());
   assertEquals(node.getLoginPort(),22);
   assertEquals(node.getLoginType(),LoginType.SSH);
