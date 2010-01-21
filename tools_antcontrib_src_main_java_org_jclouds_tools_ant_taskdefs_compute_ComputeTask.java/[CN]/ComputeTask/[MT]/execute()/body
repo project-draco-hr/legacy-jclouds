@@ -1,47 +1,10 @@
 {
-  ComputeTask.project=getProject();
-  Action action=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,this.action));
   ComputeServiceContext context=computeMap.get(HttpUtils.createUri(provider));
+  Action action=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,this.action));
   try {
-    ComputeService computeService=context.getComputeService();
-switch (action) {
-case CREATE:
-case GET:
-case DESTROY:
-      if (nodeElement != null) {
-switch (action) {
-case CREATE:
-          create(computeService);
-        break;
-case GET:
-      get(computeService);
-    break;
-case DESTROY:
-  destroy(computeService);
-break;
-}
-}
- else {
-this.log("missing node element for action: " + action,Project.MSG_ERR);
-}
-break;
-case LIST:
-log("list");
-for (ComputeMetadata node : computeService.listNodes()) {
-log(String.format("   location=%s, id=%s, name=%s",node.getLocation(),node.getId(),node.getName()));
-}
-break;
-case LIST_DETAILS:
-log("list details");
-for (ComputeMetadata node : computeService.listNodes()) {
-logDetails(computeService,node);
-}
-break;
-default :
-this.log("bad action: " + action,Project.MSG_ERR);
-}
-}
+    invokeActionOnService(action,context.getComputeService());
+  }
   finally {
-context.close();
-}
+    context.close();
+  }
 }

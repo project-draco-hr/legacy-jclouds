@@ -1,29 +1,9 @@
 {
-  log(String.format("create name: %s, size: %s, os: %s",nodeElement.getName(),nodeElement.getSize(),nodeElement.getOs()));
-  Template template=computeService.createTemplateInLocation(nodeElement.getLocation());
-  template.os(OperatingSystem.valueOf(nodeElement.getOs()));
-  if (nodeElement.getSize().equalsIgnoreCase("smallest")) {
-    template.smallest();
-  }
- else   if (nodeElement.getSize().equalsIgnoreCase("fastest")) {
-    template.fastest();
-  }
- else   if (nodeElement.getSize().equalsIgnoreCase("biggest")) {
-    template.biggest();
-  }
- else {
-    throw new BuildException("size: " + nodeElement.getSize() + " not supported.  valid sizes are smallest, fastest, biggest");
-  }
-  CreateNodeResponse createdNode=computeService.runNode(nodeElement.getName(),template);
-  log(String.format("   id=%s, name=%s, connection=%s://%s:%s@%s:%d",createdNode.getId(),createdNode.getName(),createdNode.getLoginType().toString().toLowerCase(),createdNode.getCredentials().account,createdNode.getCredentials().key,createdNode.getPublicAddresses().first().getHostAddress(),createdNode.getLoginPort()));
-  if (nodeElement.getIdproperty() != null)   getProject().setProperty(nodeElement.getIdproperty(),createdNode.getId());
-  if (nodeElement.getHostproperty() != null)   getProject().setProperty(nodeElement.getHostproperty(),createdNode.getPublicAddresses().first().getHostAddress());
-  if (nodeElement.getKeyfile() != null && createdNode.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----"))   try {
-    Files.write(createdNode.getCredentials().key,new File(nodeElement.getKeyfile()),Charset.defaultCharset());
-  }
- catch (  IOException e) {
-    throw new BuildException(e);
-  }
-  if (nodeElement.getPasswordproperty() != null && !createdNode.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----"))   getProject().setProperty(nodeElement.getPasswordproperty(),createdNode.getCredentials().key);
-  if (nodeElement.getUsernameproperty() != null)   getProject().setProperty(nodeElement.getUsernameproperty(),createdNode.getCredentials().account);
+  String name=nodeElement.getName();
+  log(String.format("create name: %s, size: %s, os: %s",name,nodeElement.getSize(),nodeElement.getOs()));
+  Template template=createTemplateFromElement(nodeElement,computeService);
+  RunNodeOptions options=getNodeOptionsFromElement(nodeElement);
+  CreateNodeResponse createdNode=computeService.runNode(name,template,options);
+  logNodeDetails(createdNode);
+  addNodeDetailsAsProjectProperties(createdNode);
 }

@@ -1,0 +1,14 @@
+{
+  InetSocketAddress socket=new InetSocketAddress(node.getPublicAddresses().last(),node.getLoginPort());
+  socketTester.apply(socket);
+  SshClient ssh=node.getCredentials().key.startsWith("-----BEGIN RSA PRIVATE KEY-----") ? sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key.getBytes()) : sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key);
+  try {
+    ssh.connect();
+    ExecResponse hello=ssh.exec("echo hello");
+    assertEquals(hello.getOutput().trim(),"hello");
+    if (canRunScript())     System.out.println(ssh.exec("java -version"));
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+}

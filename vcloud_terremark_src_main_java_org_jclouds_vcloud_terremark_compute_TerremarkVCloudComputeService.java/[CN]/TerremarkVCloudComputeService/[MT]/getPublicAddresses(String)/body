@@ -1,0 +1,12 @@
+{
+  VApp vApp=client.getVApp(id);
+  Set<InetAddress> ipAddresses=Sets.newHashSet();
+  for (  InternetService service : client.getAllInternetServicesInVDC(vApp.getVDC().getId())) {
+    for (    Node node : client.getNodes(service.getId())) {
+      if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
+        ipAddresses.add(service.getPublicIpAddress().getAddress());
+      }
+    }
+  }
+  return ipAddresses;
+}

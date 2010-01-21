@@ -1,0 +1,11 @@
+{
+  IPADDRESS:   for (  PublicIpAddress address : ipAddresses) {
+    SortedSet<InternetService> services=client.getInternetServicesOnPublicIp(address.getId());
+    if (services.size() == 0) {
+      logger.debug(">> deleting PublicIpAddress(%s) %s",address.getId(),address.getAddress().getHostAddress());
+      client.deletePublicIp(address.getId());
+      logger.debug("<< deleted PublicIpAddress(%s)",address.getId());
+      continue IPADDRESS;
+    }
+  }
+}

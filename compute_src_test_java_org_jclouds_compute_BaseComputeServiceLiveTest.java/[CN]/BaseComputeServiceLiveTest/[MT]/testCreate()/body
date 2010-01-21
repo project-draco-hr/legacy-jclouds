@@ -1,0 +1,25 @@
+{
+  try {
+    client.destroyNode(Iterables.find(client.listNodes(),new Predicate<ComputeMetadata>(){
+      @Override public boolean apply(      ComputeMetadata input){
+        return input.getName().equals(nodeName);
+      }
+    }
+));
+  }
+ catch (  HttpResponseException e) {
+  }
+catch (  NoSuchElementException e) {
+  }
+  Template template=client.createTemplateInLocation("default").os(testOS).smallest();
+  node=client.runNode(nodeName,template,options);
+  assertNotNull(node.getId());
+  assertEquals(node.getLoginPort(),22);
+  assertEquals(node.getLoginType(),LoginType.SSH);
+  assertNotNull(node.getName());
+  assertEquals(node.getPublicAddresses().size(),1);
+  assertNotNull(node.getCredentials());
+  assertNotNull(node.getCredentials().account);
+  assertNotNull(node.getCredentials().key);
+  sshPing();
+}
