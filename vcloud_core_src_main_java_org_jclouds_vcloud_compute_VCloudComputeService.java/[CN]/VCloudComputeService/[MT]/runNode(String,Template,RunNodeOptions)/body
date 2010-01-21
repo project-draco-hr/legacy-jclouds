@@ -1,0 +1,11 @@
+{
+  checkNotNull(template.getImage().getLocation(),"location");
+  Map<String,String> metaMap=start(template.getImage().getLocation(),name,template.getImage().getId(),template.getSize().getCores(),template.getSize().getRam(),template.getSize().getDisk() * 1024 * 1024l,ImmutableMap.<String,String>of(),options.getOpenPorts());
+  VApp vApp=client.getVApp(metaMap.get("id"));
+  CreateNodeResponse node=newCreateNodeResponse(template,metaMap,vApp);
+  if (options.getRunScript() != null) {
+    checkState(this.sshFactory != null,"runScript requested, but no SshModule configured");
+    runScriptOnNode(node,options.getRunScript());
+  }
+  return node;
+}

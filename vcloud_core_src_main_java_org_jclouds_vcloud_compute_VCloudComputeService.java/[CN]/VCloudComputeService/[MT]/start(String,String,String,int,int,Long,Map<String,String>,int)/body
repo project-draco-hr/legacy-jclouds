@@ -1,0 +1,18 @@
+{
+  logger.debug(">> instantiating vApp vDC(%s) name(%s) template(%s)  minCores(%d) minMegs(%d) diskSize(%d) properties(%s) ",vDCId,name,templateId,minCores,minMegs,diskSize,properties);
+  InstantiateVAppTemplateOptions options=processorCount(minCores).memory(minMegs).productProperties(properties);
+  if (diskSize != null)   options.disk(diskSize);
+  VApp vAppResponse=client.instantiateVAppTemplateInVDC(vDCId,name,templateId,options);
+  logger.debug("<< instantiated VApp(%s)",vAppResponse.getId());
+  logger.debug(">> deploying vApp(%s)",vAppResponse.getId());
+  VApp vApp=blockUntilVAppStatusOrThrowException(vAppResponse,client.deployVApp(vAppResponse.getId()),"deploy",ImmutableSet.of(VAppStatus.OFF,VAppStatus.ON));
+  logger.debug("<< deployed vApp(%s)",vApp.getId());
+  logger.debug(">> powering vApp(%s)",vApp.getId());
+  vApp=blockUntilVAppStatusOrThrowException(vApp,client.powerOnVApp(vApp.getId()),"powerOn",ImmutableSet.of(VAppStatus.ON));
+  logger.debug("<< on vApp(%s)",vApp.getId());
+  Map<String,String> response=parseResponse(vAppResponse);
+  checkState(response.containsKey("id"),"bad configuration: [id] should be in response");
+  checkState(response.containsKey("username"),"bad configuration: [username] should be in response");
+  checkState(response.containsKey("password"),"bad configuration: [password] should be in response");
+  return response;
+}

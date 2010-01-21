@@ -1,0 +1,14 @@
+{
+  String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  String endpoint=checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint");
+  Injector injector=new VCloudComputeServiceContextBuilder(new VCloudPropertiesBuilder(URI.create(endpoint),account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
+  computeClient=injector.getInstance(VCloudComputeClient.class);
+  client=injector.getInstance(VCloudClient.class);
+  addressTester=injector.getInstance(Key.get(new TypeLiteral<Predicate<InetAddress>>(){
+  }
+));
+  expectationMap=ImmutableMap.<OperatingSystem,Expectation>builder().put(OperatingSystem.CENTOS,new Expectation(4194304 / 2 * 10,"Red Hat Enterprise Linux 5 (64-bit)")).build();
+  service="vcloudtest";
+  templateId="3";
+}
