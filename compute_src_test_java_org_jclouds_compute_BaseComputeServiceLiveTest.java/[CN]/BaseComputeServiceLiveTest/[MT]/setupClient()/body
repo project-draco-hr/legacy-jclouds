@@ -4,7 +4,7 @@
   if (canRunScript())   options.runScript(new ScriptBuilder().addStatement(Statements.exec("echo nameserver 208.67.222.222 >> /etc/resolv.conf")).addStatement(Statements.exec("apt-get update")).addStatement(Statements.exec("apt-get upgrade -y")).addStatement(Statements.exec("apt-get install -y openjdk-6-jdk")).addStatement(Statements.exec("wget -qO/usr/bin/runurl run.alestic.com/runurl")).addStatement(Statements.exec("chmod 755 /usr/bin/runurl")).build(OsFamily.UNIX).getBytes());
   user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  context=new ComputeServiceContextFactory().createContext(service,user,password,ImmutableSet.of(new Log4JLoggingModule(),getSshModule()),new Properties());
+  context=new ComputeServiceContextFactory().createContext(service,user,password,ImmutableSet.of(new Log4JLoggingModule(),getSshModule()));
   Injector injector=Guice.createInjector(getSshModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
   SocketOpen socketOpen=injector.getInstance(SocketOpen.class);

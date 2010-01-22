@@ -2,13 +2,13 @@
   if (from instanceof HttpResponseException) {
     HttpResponseException responseException=(HttpResponseException)from;
     if (responseException.getResponse().getStatusCode() == 404) {
-      return v;
+      return null;
     }
  else     if (responseException.getResponse().getStatusCode() == 409) {
       clear.execute(request.getArgs()[0].toString());
       try {
         connection.deleteContainer(request.getArgs()[0].toString()).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-        return v;
+        return null;
       }
  catch (      Exception e) {
         Throwables.propagateIfPossible(e,BlobRuntimeException.class);
@@ -16,5 +16,5 @@
       }
     }
   }
-  return null;
+  return Void.class.cast(propagateOrNull(from));
 }

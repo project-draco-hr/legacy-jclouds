@@ -1,3 +1,8 @@
 {
-  return object2BlobMd.apply(sync.getObjectInfo(container,key));
+  try {
+    return object2BlobMd.apply(sync.getObjectInfo(container,key));
+  }
+ catch (  Exception e) {
+    return returnNullOnKeyNotFoundOrPropagate(e);
+  }
 }

@@ -4,7 +4,7 @@
   assertRequestLineEquals(httpMethod,"PUT http://bucket.stub:8080/?requestPayment HTTP/1.1");
   assertHeadersEqual(httpMethod,"Content-Length: 131\nContent-Type: text/xml\nHost: bucket.stub\n");
   assertPayloadEquals(httpMethod,"<RequestPaymentConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Payer>Requester</Payer></RequestPaymentConfiguration>");
-  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(httpMethod);

@@ -4,7 +4,7 @@
   assertRequestLineEquals(httpMethod,"PUT http://bucket.stub:8080/?logging HTTP/1.1");
   assertHeadersEqual(httpMethod,"Content-Length: 70\nContent-Type: text/xml\nHost: bucket.stub\n");
   assertPayloadEquals(httpMethod,"<BucketLoggingStatus xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>");
-  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(httpMethod);

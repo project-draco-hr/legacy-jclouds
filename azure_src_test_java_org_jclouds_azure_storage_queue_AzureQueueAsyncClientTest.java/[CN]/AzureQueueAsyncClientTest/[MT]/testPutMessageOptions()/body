@@ -4,7 +4,7 @@
   assertRequestLineEquals(httpMethod,"POST http://localhost:8080/queue/messages?messagettl=3 HTTP/1.1");
   assertHeadersEqual(httpMethod,"Content-Length: 63\nContent-Type: application/unknown\nx-ms-version: 2009-09-19\n");
   assertPayloadEquals(httpMethod,"<QueueMessage><MessageText>message</MessageText></QueueMessage>");
-  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(httpMethod);

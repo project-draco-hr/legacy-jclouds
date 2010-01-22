@@ -1,4 +1,9 @@
 {
   GetOptions httpOptions=blob2ObjectGetOptions.apply(optionsList);
-  return object2Blob.apply(sync.getObject(container,key,httpOptions));
+  try {
+    return object2Blob.apply(sync.getObject(container,key,httpOptions));
+  }
+ catch (  Exception e) {
+    return returnNullOnKeyNotFoundOrPropagate(e);
+  }
 }

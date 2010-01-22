@@ -4,7 +4,7 @@
   assertRequestLineEquals(httpMethod,"POST https://ec2.amazonaws.com/ HTTP/1.1");
   assertHeadersEqual(httpMethod,"Content-Length: 62\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.amazonaws.com\n");
   assertPayloadEquals(httpMethod,"Version=2009-11-30&Action=DetachVolume&Force=false&VolumeId=id");
-  assertResponseParserClassEquals(method,httpMethod,ReturnVoidIf2xx.class);
+  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnVoidOnVolumeAvailable.class);
   checkFilters(httpMethod);

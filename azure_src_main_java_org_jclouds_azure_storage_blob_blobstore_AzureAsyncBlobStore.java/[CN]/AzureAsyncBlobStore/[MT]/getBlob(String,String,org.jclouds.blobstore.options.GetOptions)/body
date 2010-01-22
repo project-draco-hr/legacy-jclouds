@@ -1,5 +1,5 @@
 {
   GetOptions azureOptions=blob2ObjectGetOptions.apply(optionsList);
   ListenableFuture<AzureBlob> returnVal=async.getBlob(container,key,azureOptions);
-  return compose(returnVal,object2Blob,service);
+  return compose(convertExceptionToValue(returnVal,KeyNotFoundException.class,null),object2Blob,service);
 }

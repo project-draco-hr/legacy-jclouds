@@ -2,7 +2,7 @@
   final GetOptions options=(optionsList.length == 0) ? new GetOptions() : optionsList[0];
   if (!getContainerToBlobs().containsKey(bucketName))   return immediateFailedFuture(new ContainerNotFoundException(bucketName));
   Map<String,Blob> realContents=getContainerToBlobs().get(bucketName);
-  if (!realContents.containsKey(key))   return immediateFailedFuture(new KeyNotFoundException(bucketName,key));
+  if (!realContents.containsKey(key))   return immediateFuture(null);
   Blob object=realContents.get(key);
   if (options.getIfMatch() != null) {
     if (!object.getMetadata().getETag().equals(options.getIfMatch()))     return immediateFailedFuture(returnResponseException(412));

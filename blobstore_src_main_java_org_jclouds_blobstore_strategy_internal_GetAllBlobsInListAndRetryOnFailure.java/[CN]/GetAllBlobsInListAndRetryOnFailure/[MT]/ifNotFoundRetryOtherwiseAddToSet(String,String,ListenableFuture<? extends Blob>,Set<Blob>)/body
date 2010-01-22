@@ -1,19 +1,13 @@
 {
   for (int i=0; i < 3; i++) {
-    try {
-      Blob object=value.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-      object.getMetadata().setName(key);
-      objects.add(object);
-      return;
+    Blob object=value.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    if (object == null) {
+      Thread.sleep(requestRetryMilliseconds);
+      value=connection.getBlob(container,key);
+      continue;
     }
- catch (    Exception e) {
-      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),KeyNotFoundException.class)) >= 1) {
-        Thread.sleep(requestRetryMilliseconds);
-        value=connection.getBlob(container,key);
-      }
- else {
-        Throwables.propagate(e);
-      }
-    }
+    object.getMetadata().setName(key);
+    objects.add(object);
+    return;
   }
 }

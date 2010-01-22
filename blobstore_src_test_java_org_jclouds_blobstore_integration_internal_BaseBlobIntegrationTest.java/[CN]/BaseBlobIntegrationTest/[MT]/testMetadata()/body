@@ -8,6 +8,7 @@
   object.getMetadata().setContentMD5(new JCEEncryptionService().md5(TEST_STRING.getBytes()));
   String containerName=getContainerName();
   try {
+    assertNull(context.getBlobStore().blobMetadata(containerName,"powderpuff"));
     addBlobToContainer(containerName,object);
     Blob newObject=validateContent(containerName,key);
     BlobMetadata metadata=newObject.getMetadata();

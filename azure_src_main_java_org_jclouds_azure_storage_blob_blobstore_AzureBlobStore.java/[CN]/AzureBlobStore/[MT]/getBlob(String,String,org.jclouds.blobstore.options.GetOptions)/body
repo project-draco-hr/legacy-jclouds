@@ -1,4 +1,9 @@
 {
   GetOptions azureOptions=blob2ObjectGetOptions.apply(optionsList);
-  return object2Blob.apply(sync.getBlob(container,key,azureOptions));
+  try {
+    return object2Blob.apply(sync.getBlob(container,key,azureOptions));
+  }
+ catch (  Exception e) {
+    return returnNullOnKeyNotFoundOrPropagate(e);
+  }
 }

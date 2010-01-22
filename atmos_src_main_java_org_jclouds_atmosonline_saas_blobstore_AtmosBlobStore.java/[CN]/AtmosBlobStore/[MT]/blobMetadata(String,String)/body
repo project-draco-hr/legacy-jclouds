@@ -1,3 +1,8 @@
 {
-  return object2BlobMd.apply(sync.headFile(container + "/" + key));
+  try {
+    return object2BlobMd.apply(sync.headFile(container + "/" + key));
+  }
+ catch (  Exception e) {
+    return returnNullOnKeyNotFoundOrPropagate(e);
+  }
 }

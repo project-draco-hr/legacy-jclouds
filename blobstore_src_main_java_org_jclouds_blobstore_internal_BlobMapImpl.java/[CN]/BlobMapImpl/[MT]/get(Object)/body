@@ -1,10 +1,10 @@
 {
   String realKey=prefixer.apply(key.toString());
   try {
-    return stripPrefix(connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS));
+    Blob blob=connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
+    return blob != null ? stripPrefix(blob) : null;
   }
  catch (  Exception e) {
-    if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),KeyNotFoundException.class)) >= 1)     return null;
     Throwables.propagateIfPossible(e,BlobRuntimeException.class);
     throw new BlobRuntimeException(String.format("Error geting blob %s:%s",containerName,realKey),e);
   }

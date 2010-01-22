@@ -4,17 +4,12 @@
     String container=path.substring(0,path.indexOf('/'));
     String blobName=path.substring(path.indexOf('/') + 1);
     try {
-      blobStore.blobMetadata(container,blobName).get();
-      return immediateFuture(true);
+      return immediateFuture(blobStore.blobMetadata(container,blobName).get() != null);
     }
- catch (    KeyNotFoundException e) {
-      return immediateFuture(false);
-    }
-catch (    InterruptedException e) {
-      return immediateFuture(false);
+ catch (    InterruptedException e) {
+      return immediateFailedFuture(e);
     }
 catch (    ExecutionException e) {
-      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(e),ResourceNotFoundException.class)) >= 1)       return immediateFuture(false);
       return immediateFailedFuture(e);
     }
   }

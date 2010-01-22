@@ -1,8 +1,10 @@
 {
   if (from instanceof KeyNotFoundException || from instanceof ContainerNotFoundException) {
-    return v;
+    return null;
   }
  else {
-    return rto404.apply(from) ? v : null;
+    Boolean value=rto404.apply(from);
+    if (value != null && value)     return null;
   }
+  return Void.class.cast(propagateOrNull(from));
 }

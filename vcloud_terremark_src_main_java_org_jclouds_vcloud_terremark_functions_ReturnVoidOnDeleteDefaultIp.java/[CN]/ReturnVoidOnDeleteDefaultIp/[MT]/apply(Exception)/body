@@ -1,7 +1,7 @@
 {
   if (from instanceof HttpResponseException) {
     HttpResponseException hre=(HttpResponseException)from;
-    if (hre.getResponse().getStatusCode() == 503 || hre.getResponse().getStatusCode() == 401 || MESSAGE_PATTERN.matcher(hre.getMessage()).matches())     return v;
+    if (hre.getResponse().getStatusCode() == 503 || hre.getResponse().getStatusCode() == 401 || MESSAGE_PATTERN.matcher(hre.getMessage()).matches())     return null;
   }
-  return null;
+  return Void.class.cast(propagateOrNull(from));
 }
