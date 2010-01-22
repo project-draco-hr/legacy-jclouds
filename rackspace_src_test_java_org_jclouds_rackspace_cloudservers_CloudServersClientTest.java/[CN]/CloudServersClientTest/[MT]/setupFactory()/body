@@ -9,11 +9,24 @@
       }
 );
     }
-    @SuppressWarnings("unused") @Provides @Authentication public String getAuthToken(){
-      return "testtoken";
+    @SuppressWarnings("unused") @Provides @Authentication public Supplier<String> getAuthToken(){
+      return new Supplier<String>(){
+        public String get(){
+          return "testtoken";
+        }
+      }
+;
+    }
+    @SuppressWarnings("unused") @Provides @TimeStamp public Supplier<Date> getDate(){
+      return new Supplier<Date>(){
+        public Date get(){
+          return new Date();
+        }
+      }
+;
     }
   }
-,new RestModule(),new ExecutorServiceModule(sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+,new RestModule(),new ExecutorServiceModule(Executors.sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
   processor=injector.getInstance(Key.get(new TypeLiteral<RestAnnotationProcessor<CloudServersAsyncClient>>(){
   }
 ));

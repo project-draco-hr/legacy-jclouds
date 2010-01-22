@@ -1,0 +1,23 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  holder.logger.debug(">> providing images");
+  for (  final org.jclouds.rackspace.cloudservers.domain.Image from : sync.listImages(ListOptions.Builder.withDetails())) {
+    OsFamily os=null;
+    Architecture arch=Architecture.X86_64;
+    String osDescription="";
+    String version="";
+    Matcher matcher=RACKSPACE_PATTERN.matcher(from.getName());
+    if (matcher.find()) {
+      try {
+        os=OsFamily.fromValue(matcher.group(2).toLowerCase());
+        osDescription=matcher.group(1);
+      }
+ catch (      IllegalArgumentException e) {
+        holder.logger.debug("<< didn't match os(%s)",matcher.group(2));
+      }
+    }
+    images.add(new CloudServersImage(from,location,arch,os,osDescription,version));
+  }
+  holder.logger.debug("<< images(%d)",images.size());
+  return images;
+}

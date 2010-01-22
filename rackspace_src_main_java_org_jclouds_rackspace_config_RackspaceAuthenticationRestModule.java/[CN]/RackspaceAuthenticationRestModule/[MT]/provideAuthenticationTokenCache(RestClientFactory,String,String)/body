@@ -1,0 +1,14 @@
+{
+  return new ExpirableSupplier<String>(new Supplier<String>(){
+    public String get(){
+      try {
+        return factory.create(RackspaceAuthentication.class).authenticate(user,key).get(30,TimeUnit.SECONDS).getAuthToken();
+      }
+ catch (      Exception e) {
+        Throwables.propagateIfPossible(e);
+        throw new RuntimeException("Error logging in",e);
+      }
+    }
+  }
+,23,TimeUnit.HOURS);
+}
