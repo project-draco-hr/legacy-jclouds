@@ -7,10 +7,13 @@
     String osDescription="";
     String version="";
     Matcher matcher=RACKSPACE_PATTERN.matcher(from.getName());
-    if (matcher.find()) {
+    osDescription=from.getName();
+    if (from.getName().indexOf("Red Hat EL") != -1) {
+      os=OsFamily.RHEL;
+    }
+ else     if (matcher.find()) {
       try {
         os=OsFamily.fromValue(matcher.group(2).toLowerCase());
-        osDescription=matcher.group(1);
       }
  catch (      IllegalArgumentException e) {
         holder.logger.debug("<< didn't match os(%s)",matcher.group(2));
