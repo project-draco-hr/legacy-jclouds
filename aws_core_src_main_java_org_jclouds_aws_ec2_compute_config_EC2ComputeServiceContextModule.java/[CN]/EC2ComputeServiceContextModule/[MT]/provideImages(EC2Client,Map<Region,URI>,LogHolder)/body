@@ -1,0 +1,25 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  holder.logger.debug(">> providing images");
+  for (  final Region region : regionMap.keySet()) {
+    for (    final org.jclouds.aws.ec2.domain.Image from : sync.getAMIServices().describeImagesInRegion(region,ownedBy("063491364108"))) {
+      OperatingSystem os=null;
+      String osVersion="";
+      String version="";
+      Matcher matcher=ALESTIC_PATTERN.matcher(from.getImageLocation());
+      if (matcher.find()) {
+        try {
+          os=OperatingSystem.fromValue(matcher.group(1));
+          osVersion=matcher.group(2);
+          version=matcher.group(3);
+        }
+ catch (        IllegalArgumentException e) {
+          holder.logger.debug("<< didn't match os(%s)",matcher.group(1));
+        }
+      }
+      images.add(new EC2Image(from,os,osVersion,version));
+    }
+  }
+  holder.logger.debug("<< images(%d)",images.size());
+  return images;
+}

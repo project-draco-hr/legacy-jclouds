@@ -1,0 +1,30 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  holder.logger.debug(">> providing images");
+  Catalog response=client.getDefaultCatalog();
+  Set<Future<Void>> responses=Sets.newHashSet();
+  for (  final NamedResource resource : response.values()) {
+    if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
+      final CatalogItem item=client.getCatalogItem(resource.getId());
+      if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
+        responses.add(executor.submit(new Callable<Void>(){
+          @Override public Void call() throws Exception {
+            OperatingSystem myOs=null;
+            for (            OperatingSystem os : OperatingSystem.values()) {
+              if (resource.getName().toLowerCase().replaceAll("\\s","").indexOf(os.toString()) != -1) {
+                myOs=os;
+              }
+            }
+            Architecture arch=resource.getName().matches("64[- ]bit") ? Architecture.X86_32 : Architecture.X86_64;
+            VAppTemplate template=client.getVAppTemplate(item.getEntity().getId());
+            images.add(new ImageImpl(resource.getId(),template.getName(),"",myOs,template.getName(),vDC,arch));
+            return null;
+          }
+        }
+));
+      }
+    }
+  }
+  ConcurrentUtils.pollResponsesAndLogWhenComplete(images.size(),"images",holder.logger,responses);
+  return images;
+}

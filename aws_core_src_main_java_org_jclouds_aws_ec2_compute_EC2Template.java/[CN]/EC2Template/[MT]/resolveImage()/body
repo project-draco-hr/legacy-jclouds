@@ -1,5 +1,0 @@
-{
-  Architecture architecture=size.supportsArchitecture(Architecture.X86_64) ? Architecture.X86_64 : Architecture.X86_32;
-  String ami=checkNotNull(checkNotNull(checkNotNull(imageAmiIdMap.get(architecture),String.format("architecture %s not supported.  Valid choices %s: ",architecture,imageAmiIdMap.keySet())).get(operatingSystem),String.format("operatingSystem %s not supported for architecture %s.  Valid choices %s: ",operatingSystem,architecture,imageAmiIdMap.get(architecture).keySet())).get(region),String.format("region %s not supported for operatingSystem %s, architecture %s.  Valid choices %s: ",region,operatingSystem,architecture,imageAmiIdMap.get(architecture).get(operatingSystem).keySet()));
-  return EC2Utils.newImage(client,region,operatingSystem,architecture,ami);
-}
