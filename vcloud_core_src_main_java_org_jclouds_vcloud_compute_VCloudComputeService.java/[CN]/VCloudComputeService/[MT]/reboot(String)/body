@@ -1,6 +1,9 @@
 {
   VApp vApp=client.getVApp(id);
-  logger.debug(">> rebooting vApp(%s)",vApp.getId());
-  blockUntilVAppStatusOrThrowException(vApp,client.resetVApp(vApp.getId()),"reset",ImmutableSet.of(VAppStatus.ON));
+  logger.debug(">> resetting vApp(%s)",vApp.getId());
+  Task task=client.resetVApp(vApp.getId());
+  if (!taskTester.apply(task.getId())) {
+    throw new TaskException("resetVApp",vApp,task);
+  }
   logger.debug("<< on vApp(%s)",vApp.getId());
 }

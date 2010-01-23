@@ -1,4 +1,4 @@
 {
-  NewServerResponse serverResponse=rhClient.createServer(name,checkNotNull(imageNameMap.get(template.getImage().getOsFamily()),"os not supported: " + template.getImage().getOsFamily()),"MIRO1B");
-  return new CreateNodeResponseImpl(serverResponse.getServer().getId().toString(),serverResponse.getServer().getName(),"default",null,ImmutableMap.<String,String>of(),NodeState.RUNNING,getPublicAddresses(serverResponse.getServer()),ImmutableList.<InetAddress>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()),ImmutableMap.<String,String>of());
+  NewServerResponse serverResponse=client.createServer(name,checkNotNull(template.getImage().getId(),"imageId"),checkNotNull(template.getSize().getId(),"sizeId"));
+  return new CreateNodeResponseImpl(null,name,location,null,ImmutableMap.<String,String>of(),NodeState.UNKNOWN,ImmutableList.<InetAddress>of(),ImmutableList.<InetAddress>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()),ImmutableMap.<String,String>of());
 }

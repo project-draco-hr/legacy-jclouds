@@ -6,7 +6,8 @@
     String name=runningInstance.getKeyName();
     logger.debug(">> terminating instance(%s)",node.getId());
     ec2Client.getInstanceServices().terminateInstancesInRegion(region,node.getId());
-    logger.debug("<< terminated instance(%s)",node.getId());
+    boolean success=instanceStateTerminated.apply(runningInstance);
+    logger.debug("<< terminated instance(%s) success(%s)",node.getId(),success);
     logger.debug(">> deleting keyPair(%s)",name);
     ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,name);
     logger.debug("<< deleted keyPair(%s)",name);

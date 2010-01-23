@@ -5,11 +5,17 @@
   VApp vAppResponse=client.instantiateVAppTemplateInVDC(vDCId,name,templateId,options);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getId());
   logger.debug(">> deploying vApp(%s)",vAppResponse.getId());
-  VApp vApp=blockUntilVAppStatusOrThrowException(vAppResponse,client.deployVApp(vAppResponse.getId()),"deploy",ImmutableSet.of(VAppStatus.OFF,VAppStatus.ON));
-  logger.debug("<< deployed vApp(%s)",vApp.getId());
-  logger.debug(">> powering vApp(%s)",vApp.getId());
-  vApp=blockUntilVAppStatusOrThrowException(vApp,client.powerOnVApp(vApp.getId()),"powerOn",ImmutableSet.of(VAppStatus.ON));
-  logger.debug("<< on vApp(%s)",vApp.getId());
+  Task task=client.deployVApp(vAppResponse.getId());
+  if (!taskTester.apply(task.getId())) {
+    throw new TaskException("deploy",vAppResponse,task);
+  }
+  logger.debug("<< deployed vApp(%s)",vAppResponse.getId());
+  logger.debug(">> powering vApp(%s)",vAppResponse.getId());
+  task=client.powerOnVApp(vAppResponse.getId());
+  if (!taskTester.apply(task.getId())) {
+    throw new TaskException("powerOn",vAppResponse,task);
+  }
+  logger.debug("<< on vApp(%s)",vAppResponse.getId());
   Map<String,String> response=parseResponse(vAppResponse);
   checkState(response.containsKey("id"),"bad configuration: [id] should be in response");
   checkState(response.containsKey("username"),"bad configuration: [username] should be in response");

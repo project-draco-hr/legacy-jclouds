@@ -3,12 +3,12 @@
   CloudServersImage cloudServersImage=CloudServersImage.class.cast(template.getImage());
   checkArgument(template.getSize() instanceof CloudServersSize,"unexpected size type. should be CloudServersSize, was: " + template.getSize().getClass());
   CloudServersSize cloudServersSize=CloudServersSize.class.cast(template.getSize());
-  logger.debug(">> running instance location(%s) image(%s) flavor(%s)",location,cloudServersImage.getId(),template.getSize().getId());
+  logger.debug(">> running server location(%s) image(%s) flavor(%s)",location,cloudServersImage.getId(),template.getSize().getId());
   Server server=client.createServer(name,cloudServersImage.getImage().getId(),cloudServersSize.getFlavor().getId());
   CreateNodeResponse node=new CreateNodeResponseImpl(server.getId() + "",name,location,null,server.getMetadata(),NodeState.RUNNING,server.getAddresses().getPublicAddresses(),server.getAddresses().getPrivateAddresses(),new Credentials("root",server.getAdminPass()),ImmutableMap.<String,String>of());
-  logger.debug("<< started instance(%s)",server.getId());
+  logger.debug("<< started server(%s)",server.getId());
   serverActive.apply(server);
-  logger.debug("<< running instance(%s)",server.getId());
+  logger.debug("<< running server(%s)",server.getId());
   if (options.getRunScript() != null) {
     utils.runScriptOnNode(node,options.getRunScript());
   }

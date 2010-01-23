@@ -2,10 +2,14 @@
   VApp vApp=client.getVApp(id);
   if (vApp.getStatus() != VAppStatus.OFF) {
     logger.debug(">> powering off vApp(%s), current status: %s",vApp.getId(),vApp.getStatus());
-    blockUntilVAppStatusOrThrowException(vApp,client.powerOffVApp(vApp.getId()),"powerOff",ImmutableSet.of(VAppStatus.OFF));
+    Task task=client.powerOffVApp(vApp.getId());
+    if (!taskTester.apply(task.getId())) {
+      throw new TaskException("powerOff",vApp,task);
+    }
     logger.debug("<< off vApp(%s)",vApp.getId());
   }
   logger.debug(">> deleting vApp(%s)",vApp.getId());
   client.deleteVApp(id);
-  logger.debug("<< deleted vApp(%s)",vApp.getId());
+  boolean successful=notFoundTester.apply(vApp);
+  logger.debug("<< deleted vApp(%s) completed(%s)",vApp.getId(),successful);
 }

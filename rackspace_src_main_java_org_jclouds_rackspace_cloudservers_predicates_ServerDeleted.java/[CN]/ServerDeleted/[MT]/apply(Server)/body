@@ -1,0 +1,11 @@
+{
+  logger.trace("looking for state on server %s",server);
+  try {
+    server=refresh(server);
+    logger.trace("%s: looking for server state %s: currently: %s",server.getId(),ServerStatus.DELETED,server.getStatus());
+    return server.getStatus() == ServerStatus.DELETED;
+  }
+ catch (  ResourceNotFoundException e) {
+    return true;
+  }
+}

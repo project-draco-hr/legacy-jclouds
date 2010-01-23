@@ -1,11 +1,13 @@
 {
   if (e instanceof HttpResponseException) {
     HttpResponseException responseException=(HttpResponseException)e;
-    Type setType=new TypeToken<Map<String,RimuHostingResponse>>(){
-    }
+    if (responseException.getContent() != null) {
+      Type setType=new TypeToken<Map<String,RimuHostingResponse>>(){
+      }
 .getType();
-    Map<String,RimuHostingResponse> responseMap=gson.fromJson(responseException.getContent(),setType);
-    throw new RuntimeException(responseMap.values().iterator().next().getErrorInfo().getErrorClass());
+      Map<String,RimuHostingResponse> responseMap=gson.fromJson(responseException.getContent(),setType);
+      throw new RuntimeException(responseMap.values().iterator().next().getErrorInfo().getErrorClass());
+    }
   }
   return propagateOrNull(e);
 }

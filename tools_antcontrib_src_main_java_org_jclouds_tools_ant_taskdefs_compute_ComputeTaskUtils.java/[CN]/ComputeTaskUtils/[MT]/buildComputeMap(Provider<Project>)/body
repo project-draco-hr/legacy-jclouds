@@ -2,9 +2,9 @@
   return new MapMaker().makeComputingMap(new Function<URI,ComputeServiceContext>(){
     @SuppressWarnings("unchecked") @Override public ComputeServiceContext apply(    URI from){
       try {
-        Properties props=new Properties();
+        Properties props=getPropertiesFromResource("compute.properties");
         props.putAll(projectProvider.get().getProperties());
-        return new ComputeServiceContextFactory().createContext(from,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
+        return new ComputeServiceContextFactory(props).createContext(from,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
       }
  catch (      IOException e) {
         throw new RuntimeException(e);
