@@ -1,4 +1,4 @@
 {
   NewServerResponse serverResponse=client.createServer(name,checkNotNull(template.getImage().getId(),"imageId"),checkNotNull(template.getSize().getId(),"sizeId"));
-  return new CreateNodeResponseImpl(null,name,location,null,ImmutableMap.<String,String>of(),NodeState.UNKNOWN,ImmutableList.<InetAddress>of(),ImmutableList.<InetAddress>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()),ImmutableMap.<String,String>of());
+  return new CreateNodeResponseImpl(serverResponse.getServer().getId().toString(),name,location,null,ImmutableMap.<String,String>of(),NodeState.UNKNOWN,getPublicAddresses(serverResponse.getServer()),ImmutableList.<InetAddress>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()),ImmutableMap.<String,String>of());
 }
