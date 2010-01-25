@@ -5,7 +5,7 @@
   String encodedKey=args[1];
   String queueName=args[2];
   int messageCount=Integer.parseInt(args[3]);
-  RestContext<AzureQueueAsyncClient,AzureQueueClient> context=isEnterprise ? AzureQueueContextFactory.createContext(System.getProperties(),account,encodedKey,new NullLoggingModule(),new EnterpriseConfigurationModule()) : AzureQueueContextFactory.createContext(System.getProperties(),account,encodedKey,new NullLoggingModule());
+  RestContext<AzureQueueAsyncClient,AzureQueueClient> context=isEnterprise ? AzureQueueContextFactory.createContext(account,encodedKey,new NullLoggingModule(),new EnterpriseConfigurationModule()) : AzureQueueContextFactory.createContext(account,encodedKey,new NullLoggingModule());
   try {
     if (purgeQueues(queueName,context)) {
       System.out.printf("pausing 60 seconds before recreating queues%n");

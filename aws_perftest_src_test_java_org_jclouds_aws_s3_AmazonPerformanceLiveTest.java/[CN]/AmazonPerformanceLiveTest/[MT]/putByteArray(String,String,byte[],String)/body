@@ -1,6 +1,11 @@
 {
-  com.amazon.s3.S3Object object=new com.amazon.s3.S3Object(data,null);
-  Map<String,List<String>> headers=new TreeMap<String,List<String>>();
+  final com.amazon.s3.S3Object object=new com.amazon.s3.S3Object(data,null);
+  final Map<String,List<String>> headers=new TreeMap<String,List<String>>();
   headers.put("Content-Type",Arrays.asList(new String[]{contentType}));
-  return amzClient.put(bucket,key,object,headers).connection.getResponseMessage() != null;
+  return exec.submit(new Callable(){
+    @Override public Object call() throws Exception {
+      return amzClient.put(bucket,key,object,headers).connection.getResponseMessage();
+    }
+  }
+);
 }

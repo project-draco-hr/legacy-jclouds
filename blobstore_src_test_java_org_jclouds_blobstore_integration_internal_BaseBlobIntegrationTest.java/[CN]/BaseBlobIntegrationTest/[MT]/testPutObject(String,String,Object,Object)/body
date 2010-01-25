@@ -9,7 +9,7 @@
   try {
     assertNotNull(context.getBlobStore().putBlob(containerName,object));
     object=context.getBlobStore().getBlob(containerName,object.getMetadata().getName());
-    String returnedString=BlobStoreUtils.getContentAsStringAndClose(object);
+    String returnedString=BlobStoreUtils.getContentAsStringOrNullAndClose(object);
     assertEquals(returnedString,realObject);
     assertEquals(context.getBlobStore().list(containerName).size(),1);
   }

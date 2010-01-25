@@ -2,13 +2,13 @@
   return makeListenable(service.submit(new Callable<Void>(){
     public Void call() throws Exception {
       clearContainerStrategy.execute(container,recursive());
-      async.deletePath(container).get();
+      sync.deletePath(container);
       if (!Utils.enventuallyTrue(new Supplier<Boolean>(){
         public Boolean get(){
           return !sync.pathExists(container);
         }
       }
-,requestTimeoutMilliseconds)) {
+,300)) {
         throw new IllegalStateException(container + " still exists after deleting!");
       }
       return null;

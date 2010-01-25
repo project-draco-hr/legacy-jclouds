@@ -1,0 +1,18 @@
+{
+  ListBlobsOptions httpOptions=new ListBlobsOptions();
+  if (from != null && from != ListContainerOptions.NONE) {
+    if (!from.isRecursive()) {
+      httpOptions.delimiter("/");
+    }
+    if (from.getDir() != null) {
+      httpOptions.prefix(from.getDir());
+    }
+    if (from.getMarker() != null) {
+      httpOptions.marker(from.getMarker());
+    }
+    if (from.getMaxResults() != null) {
+      httpOptions.maxResults(from.getMaxResults());
+    }
+  }
+  return httpOptions;
+}

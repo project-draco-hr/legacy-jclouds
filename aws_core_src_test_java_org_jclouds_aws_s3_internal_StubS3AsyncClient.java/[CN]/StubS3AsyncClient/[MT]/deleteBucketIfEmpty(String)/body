@@ -1,3 +1,8 @@
 {
-  return blobStore.deleteContainerImpl(bucketName);
+  Boolean returnVal=true;
+  if (containerToBlobs.containsKey(bucketName)) {
+    if (containerToBlobs.get(bucketName).size() == 0)     containerToBlobs.remove(bucketName);
+ else     returnVal=false;
+  }
+  return immediateFuture(returnVal);
 }

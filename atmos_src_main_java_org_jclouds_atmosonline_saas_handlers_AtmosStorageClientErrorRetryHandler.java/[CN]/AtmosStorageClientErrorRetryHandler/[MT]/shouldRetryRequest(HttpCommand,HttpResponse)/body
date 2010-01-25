@@ -1,15 +1,21 @@
 {
-  HttpUtils.closeClientButKeepContentStream(response);
-  command.incrementFailureCount();
-  if (!command.isReplayable()) {
-    logger.warn("Cannot retry after server error, command is not replayable: %1$s",command);
-    return false;
+  if (command.getFailureCount() > retryCountLimit)   return false;
+  if (response.getStatusCode() == 404 && command.getRequest().getMethod().equals("DELETE")) {
+    command.incrementFailureCount();
+    return true;
   }
- else   if (command.getFailureCount() > retryCountLimit) {
-    logger.warn("Cannot retry after server error, command has exceeded retry limit %1$d: %2$s",retryCountLimit,command);
-    return false;
-  }
- else   if (response.getStatusCode() == 409) {
+ else   if (response.getStatusCode() == 409 || response.getStatusCode() == 400) {
+    byte[] content=HttpUtils.closeClientButKeepContentStream(response);
+    try {
+      AtmosStorageError error=utils.parseAtmosStorageErrorFromContent(command,response,new String(content));
+      if (error.getCode() == 1016) {
+        return backoffHandler.shouldRetryRequest(command,response);
+      }
+      command.incrementFailureCount();
+    }
+ catch (    HttpException e) {
+      logger.warn(e,"error parsing response: %s",new String(content));
+    }
     return true;
   }
   return false;

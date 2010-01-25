@@ -1,12 +1,6 @@
 {
   Blob old=getLastValue(key);
   String realKey=prefixer.apply(key.toString());
-  try {
-    connection.removeBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error removing blob %s:%s",containerName,realKey),e);
-  }
+  blobstore.removeBlob(containerName,realKey);
   return old;
 }

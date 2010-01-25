@@ -7,7 +7,10 @@
   addExecutorServiceIfNotPresent(modules);
   modules.add(new AbstractModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(binder(),checkNotNull(properties,"properties"));
+      Properties toBind=new Properties();
+      toBind.putAll(checkNotNull(properties,"properties"));
+      toBind.putAll(System.getProperties());
+      Jsr330.bindProperties(binder(),toBind);
     }
   }
 );

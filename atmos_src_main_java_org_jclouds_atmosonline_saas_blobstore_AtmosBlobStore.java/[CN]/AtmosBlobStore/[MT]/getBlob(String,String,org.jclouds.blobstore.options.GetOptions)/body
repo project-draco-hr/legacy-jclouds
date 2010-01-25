@@ -1,9 +1,9 @@
 {
-  GetOptions httpOptions=blob2ObjectGetOptions.apply(optionsList);
+  GetOptions httpOptions=blob2ObjectGetOptions.apply(options);
   try {
     return object2Blob.apply(sync.readFile(container + "/" + key,httpOptions));
   }
  catch (  Exception e) {
-    return returnNullOnKeyNotFoundOrPropagate(e);
+    return keyNotFoundToNullOrPropagate(e);
   }
 }

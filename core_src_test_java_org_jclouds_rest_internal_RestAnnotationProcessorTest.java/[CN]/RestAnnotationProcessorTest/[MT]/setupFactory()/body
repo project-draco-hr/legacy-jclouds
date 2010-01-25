@@ -10,7 +10,16 @@
         }
       }
 );
+      Jsr330.bindProperties(binder(),new PropertiesBuilder(){
+        @Override public PropertiesBuilder withCredentials(        String account,        String key){
+          return null;
+        }
+        @Override public PropertiesBuilder withEndpoint(        URI endpoint){
+          return null;
+        }
+      }
+.build());
     }
   }
-,new RestModule(),new ExecutorServiceModule(sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+,new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
 }

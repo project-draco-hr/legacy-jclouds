@@ -1,0 +1,20 @@
+{
+  this.blobstore=checkNotNull(blobstore,"blobstore");
+  this.containerName=checkNotNull(containerName,"container");
+  this.options=options;
+  if (options.getDir() == null) {
+    prefixer=new PassThrough<String>();
+    pathStripper=prefixer;
+  }
+ else {
+    prefixer=new PrefixKey(options.getDir(),"/");
+    pathStripper=new StripPath(options.getDir(),"/");
+  }
+  this.getAllBlobs=checkNotNull(getAllBlobs,"getAllBlobs");
+  this.getAllBlobMetadata=checkNotNull(getAllBlobMetadata,"getAllBlobMetadata");
+  this.containsValueStrategy=checkNotNull(containsValueStrategy,"containsValueStrategy");
+  this.deleteBlobsStrategy=checkNotNull(deleteBlobsStrategy,"deleteBlobsStrategy");
+  this.countStrategy=checkNotNull(countStrategy,"countStrategy");
+  this.putBlobsStrategy=checkNotNull(putBlobsStrategy,"putBlobsStrategy");
+  checkArgument(!containerName.equals(""),"container name must not be a blank string!");
+}

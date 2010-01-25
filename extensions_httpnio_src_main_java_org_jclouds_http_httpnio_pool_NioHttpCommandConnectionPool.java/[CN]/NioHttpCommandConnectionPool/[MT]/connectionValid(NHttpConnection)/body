@@ -1,3 +1,6 @@
 {
-  return conn.isOpen() && !conn.isStale() && conn.getMetrics().getRequestCount() < maxConnectionReuse;
+  boolean isOpen=conn.isOpen();
+  boolean isStale=conn.isStale();
+  long requestCount=conn.getMetrics().getRequestCount();
+  return isOpen && !isStale && requestCount < maxConnectionReuse;
 }

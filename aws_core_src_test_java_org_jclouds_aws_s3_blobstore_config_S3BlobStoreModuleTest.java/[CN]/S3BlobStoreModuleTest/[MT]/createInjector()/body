@@ -1,9 +1,12 @@
 {
-  return Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor()),new JDKLoggingModule(),new S3StubClientModule(),new S3BlobStoreContextModule(){
+  return Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JDKLoggingModule(),new S3StubClientModule(),new S3BlobStoreContextModule(){
     @Override protected void configure(){
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_ENDPOINT)).to("http://localhost");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST)).to("1");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
       super.configure();
     }
   }

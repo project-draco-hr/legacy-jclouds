@@ -13,7 +13,7 @@
     System.err.printf("%s %s; %dms%n",update ? "updated" : "created",object.getPayload() instanceof InputStreamPayload ? "stream" : "string",System.currentTimeMillis() - time);
   }
  catch (  Exception e) {
-    String message=(e.getCause().getCause() != null) ? e.getCause().getCause().getMessage() : e.getCause().getMessage();
+    String message=Throwables.getRootCause(e).getMessage();
     System.err.printf("failure %s %s; %dms: [%s]%n",update ? "updating" : "creating",object.getPayload() instanceof InputStreamPayload ? "stream" : "string",System.currentTimeMillis() - time,message);
     throw e;
   }

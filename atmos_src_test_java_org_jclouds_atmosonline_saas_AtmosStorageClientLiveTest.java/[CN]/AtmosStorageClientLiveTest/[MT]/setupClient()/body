@@ -2,12 +2,18 @@
   String uid=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
   RestContext<AtmosStorageAsyncClient,AtmosStorageClient> context=new AtmosStorageContextBuilder(new AtmosStoragePropertiesBuilder(uid,key).build()).withModules(new Log4JLoggingModule()).buildContext();
+  ExecutorService service=Executors.newCachedThreadPool();
   connection=context.getApi();
-  ClearContainerStrategy clearer=new RecursiveRemove(context.getAsyncApi(),connection);
+  ClearContainerStrategy clearer=new RecursiveRemove(service,context.getAsyncApi(),connection);
   for (  DirectoryEntry entry : connection.listDirectories()) {
-    if (entry.getObjectName().startsWith(containerPrefix)) {
-      clearer.execute(entry.getObjectName());
-      deleteConfirmed(entry.getObjectName());
+    try {
+      if (entry.getObjectName().startsWith(containerPrefix)) {
+        clearer.execute(entry.getObjectName());
+        deleteConfirmed(entry.getObjectName());
+      }
+    }
+ catch (    ContainerNotFoundException e) {
+      if (entry.getType() != FileType.DIRECTORY)       throw e;
     }
   }
 }

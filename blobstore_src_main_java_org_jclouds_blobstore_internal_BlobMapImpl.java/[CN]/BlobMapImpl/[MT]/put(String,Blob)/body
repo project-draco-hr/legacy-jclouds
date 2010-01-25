@@ -1,11 +1,5 @@
 {
   Blob returnVal=getLastValue(key);
-  try {
-    connection.putBlob(containerName,value).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error putting blob %s:%s%n%3$s",containerName,key,value),e);
-  }
+  blobstore.putBlob(containerName,value);
   return returnVal;
 }

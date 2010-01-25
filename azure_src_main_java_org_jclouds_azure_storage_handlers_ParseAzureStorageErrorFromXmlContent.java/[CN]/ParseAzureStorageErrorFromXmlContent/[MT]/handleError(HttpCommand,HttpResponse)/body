@@ -1,38 +1,45 @@
 {
-  byte[] content;
+  Exception exception=new HttpResponseException(command,response);
   try {
-    content=response.getContent() != null ? ByteStreams.toByteArray(response.getContent()) : null;
-    if (content != null) {
-      String message=new String(content);
-      try {
-        if (message.indexOf('<') >= 0) {
-          AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,new ByteArrayInputStream(content));
-          AzureStorageResponseException ex=new AzureStorageResponseException(command,response,error);
-          if (error.getCode().equals("ContainerNotFound")) {
-            command.setException(new ContainerNotFoundException(ex));
-          }
- else {
-            command.setException(ex);
-          }
-        }
- else {
-          command.setException(new HttpResponseException(command,response,message));
-        }
-      }
- catch (      Exception he) {
-        command.setException(new HttpResponseException(command,response,message));
-        Throwables.propagateIfPossible(he);
-      }
+switch (response.getStatusCode()) {
+case 401:
+      exception=new AuthorizationException(command.getRequest().getRequestLine());
+    break;
+case 404:
+  if (!command.getRequest().getMethod().equals("DELETE")) {
+    String path=command.getRequest().getEndpoint().getPath();
+    Matcher matcher=CONTAINER_PATH.matcher(path);
+    if (matcher.find()) {
+      exception=new ContainerNotFoundException(matcher.group(1));
     }
  else {
-      command.setException(new HttpResponseException(command,response));
+      matcher=CONTAINER_KEY_PATH.matcher(path);
+      if (matcher.find()) {
+        exception=new KeyNotFoundException(matcher.group(1),matcher.group(2));
+      }
     }
   }
- catch (  Exception e) {
-    command.setException(new HttpResponseException(command,response));
-    Throwables.propagateIfPossible(e);
+break;
+default :
+if (response.getContent() != null) {
+try {
+  String content=Utils.toStringAndClose(response.getContent());
+  if (content.indexOf('<') >= 0) {
+    AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,Utils.toInputStream(content));
+    exception=new AzureStorageResponseException(command,response,error);
   }
- finally {
-    Closeables.closeQuietly(response.getContent());
+ else {
+    exception=new HttpResponseException(command,response,content);
   }
+}
+ catch (IOException e) {
+  logger.warn(e,"exception reading error from response",response);
+}
+}
+}
+}
+  finally {
+Closeables.closeQuietly(response.getContent());
+command.setException(exception);
+}
 }

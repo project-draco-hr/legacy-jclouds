@@ -6,7 +6,7 @@
     Set<Entry<String,Blob>> entries=map.entrySet();
     assertEquals(entries.size(),5);
     for (    Entry<String,Blob> entry : entries) {
-      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtils.getContentAsStringAndClose(entry.getValue()));
+      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtils.getContentAsStringOrNullAndClose(entry.getValue()));
       Blob value=entry.getValue();
       value.setPayload("");
       value.generateMD5();
@@ -14,7 +14,7 @@
     }
     assertConsistencyAwareMapSize(map,5);
     for (    Blob value : map.values()) {
-      assertEquals(BlobStoreUtils.getContentAsStringAndClose(value),"");
+      assertEquals(BlobStoreUtils.getContentAsStringOrNullAndClose(value),null);
     }
   }
   finally {

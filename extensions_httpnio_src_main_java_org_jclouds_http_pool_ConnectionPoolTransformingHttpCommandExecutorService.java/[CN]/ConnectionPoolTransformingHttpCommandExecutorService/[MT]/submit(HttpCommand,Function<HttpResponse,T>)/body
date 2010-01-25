@@ -2,20 +2,16 @@
   exceptionIfNotActive();
   final SynchronousQueue<?> channel=new SynchronousQueue<Object>();
   ListenableFuture<T> future=makeListenable(executorService.submit(new Callable<T>(){
-    Logger transformerLogger=logFactory.getLogger(responseTransformer.getClass().getName());
     public T call() throws Exception {
       Object o=channel.take();
       if (o instanceof Exception) {
         throw (Exception)o;
       }
-      transformerLogger.debug("Processing intermediate result for: %s",o);
-      T result=responseTransformer.apply((HttpResponse)o);
-      transformerLogger.debug("Processed intermediate result for: %s",o);
-      return result;
+      return responseTransformer.apply((HttpResponse)o);
     }
   }
 ),executorService);
-  HttpCommandRendezvous<T> rendezvous=new HttpCommandRendezvous<T>(command,channel,makeListenable(future,executorService));
+  HttpCommandRendezvous<T> rendezvous=new HttpCommandRendezvous<T>(command,channel,future);
   commandQueue.add(rendezvous);
   return rendezvous.getListenableFuture();
 }

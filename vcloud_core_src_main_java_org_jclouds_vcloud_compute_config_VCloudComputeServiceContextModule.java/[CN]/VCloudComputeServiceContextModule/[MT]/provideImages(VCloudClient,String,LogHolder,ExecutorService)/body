@@ -2,12 +2,12 @@
   final Set<Image> images=Sets.newHashSet();
   holder.logger.debug(">> providing images");
   Catalog response=client.getDefaultCatalog();
-  Set<Future<Void>> responses=Sets.newHashSet();
+  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
   for (  final NamedResource resource : response.values()) {
     if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
       final CatalogItem item=client.getCatalogItem(resource.getId());
       if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
-        responses.add(executor.submit(new Callable<Void>(){
+        responses.add(ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
           @Override public Void call() throws Exception {
             OsFamily myOs=null;
             for (            OsFamily os : OsFamily.values()) {
@@ -21,10 +21,10 @@
             return null;
           }
         }
-));
+),executor));
       }
     }
   }
-  ConcurrentUtils.pollResponsesAndLogWhenComplete(images.size(),"images",holder.logger,responses);
+  ConcurrentUtils.awaitCompletion(responses,executor,null,holder.logger,"images");
   return images;
 }

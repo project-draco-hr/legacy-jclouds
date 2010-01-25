@@ -2,8 +2,12 @@
   return new AbstractModule(){
     @Override protected void configure(){
       Properties props=new Properties();
+      props.setProperty(PROPERTY_VCLOUD_DEFAULT_CPUCOUNT,"1");
+      props.setProperty(PROPERTY_VCLOUD_DEFAULT_MEMORY,"512");
       props.put(PROPERTY_VCLOUD_DEFAULT_NETWORK,"https://vcloud.safesecureweb.com/network/1990");
-      Jsr330.bindProperties(binder(),new TerremarkVCloudPropertiesBuilder(props).build());
+      props.setProperty(PROPERTY_VCLOUD_XML_NAMESPACE,"http://www.vmware.com/vcloud/v0.8");
+      props.setProperty(PROPERTY_VCLOUD_XML_SCHEMA,"http://vcloud.safesecureweb.com/ns/vcloud.xsd");
+      Jsr330.bindProperties(binder(),props);
       bind(URI.class).annotatedWith(Catalog.class).toInstance(URI.create("http://catalog"));
       bind(String.class).annotatedWith(CatalogItemRoot.class).toInstance("http://catalogItem");
       bind(URI.class).annotatedWith(VCloudApi.class).toInstance(URI.create("http://vcloud"));

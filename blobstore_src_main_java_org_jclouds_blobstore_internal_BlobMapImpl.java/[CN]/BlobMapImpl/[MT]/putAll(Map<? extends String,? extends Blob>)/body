@@ -1,13 +1,3 @@
 {
-  try {
-    Set<ListenableFuture<String>> puts=Sets.newHashSet();
-    for (    Blob object : map.values()) {
-      puts.add(connection.putBlob(containerName,object));
-    }
-    for (    ListenableFuture<String> put : puts)     put.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException("Error putting into containerName" + containerName,e);
-  }
+  putBlobsStrategy.execute(containerName,map.values());
 }

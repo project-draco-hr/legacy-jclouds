@@ -1,0 +1,23 @@
+{
+  String host=checkNotNull(connection.getURL().getHost(),"host");
+  try {
+    if (globalMaxConnections != null) {
+      globalMaxConnections.acquire();
+    }
+    if (connectionLimiterMap != null) {
+      Semaphore semaphore=connectionLimiterMap.get(host);
+      semaphore.acquire();
+    }
+    T returnVal=provider.get();
+    currentConnections.incrementAndGet();
+    return returnVal;
+  }
+ catch (  InterruptedException e) {
+    releaseConnection(globalMaxConnections,connectionLimiterMap,host);
+    throw e;
+  }
+catch (  NullPointerException e) {
+    releaseConnection(globalMaxConnections,connectionLimiterMap,host);
+    throw e;
+  }
+}

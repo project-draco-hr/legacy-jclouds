@@ -1,5 +1,5 @@
 {
-  injector=Guice.createInjector(new RestModule(),new ExecutorServiceModule(sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule(),new AbstractModule(){
+  injector=Guice.createInjector(new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule(),new AbstractModule(){
     protected void configure(){
       RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
@@ -15,6 +15,10 @@
       bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPKEY)).to("appKey");
       bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_USERNAME)).to("username");
       bindConstant().annotatedWith(Jsr330.named(SDNConstants.PROPERTY_SDN_APPNAME)).to("appname");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT)).to("0");
+      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST)).to("1");
     }
   }
 );

@@ -1,10 +1,4 @@
 {
   String realKey=prefixer.apply(key.toString());
-  try {
-    return connection.blobMetadata(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS) != null;
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error searching for %1$s:%2$s",containerName,realKey),e);
-  }
+  return blobstore.blobExists(containerName,realKey);
 }

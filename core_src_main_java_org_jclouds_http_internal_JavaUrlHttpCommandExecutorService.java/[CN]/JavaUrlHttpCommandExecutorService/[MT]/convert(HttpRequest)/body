@@ -29,12 +29,17 @@
   connection.setRequestProperty(HttpHeaders.HOST,request.getEndpoint().getHost());
   connection.setRequestProperty(HttpHeaders.USER_AGENT,USER_AGENT);
   if (request.getPayload() != null) {
-    OutputStream out=connection.getOutputStream();
     try {
-      request.getPayload().writeTo(out);
-    }
+      OutputStream out=new ReleaseSemaphoreOnCloseOutputStream(globalMaxConnections,connectionLimiterMap,connection);
+      try {
+        request.getPayload().writeTo(out);
+      }
   finally {
-      Closeables.closeQuietly(out);
+        Closeables.closeQuietly(out);
+      }
+    }
+ catch (    RuntimeException e) {
+      Throwables.propagate(e);
     }
   }
  else {

@@ -1,11 +1,5 @@
 {
   String realKey=prefixer.apply(o.toString());
-  try {
-    Blob blob=connection.getBlob(containerName,realKey).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-    return blob != null ? blob.getContent() : null;
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error geting blob %s:%s",containerName,realKey),e);
-  }
+  Blob blob=blobstore.getBlob(containerName,realKey);
+  return blob != null ? blob.getContent() : null;
 }

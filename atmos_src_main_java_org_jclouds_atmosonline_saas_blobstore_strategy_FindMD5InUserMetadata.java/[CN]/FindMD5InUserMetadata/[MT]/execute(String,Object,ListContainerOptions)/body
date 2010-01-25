@@ -1,14 +1,44 @@
 {
-  try {
-    byte[] toSearch=objectMD5.apply(value);
-    for (    BlobMetadata metadata : getAllBlobMetadata.execute(containerName,options)) {
-      MutableContentMetadata contentMd=client.headFile(containerName + "/" + metadata.getName()).getContentMetadata();
-      if (Arrays.equals(toSearch,contentMd.getContentMD5()))       return true;
+  final byte[] toSearch=objectMD5.apply(value);
+  final BlockingQueue<Boolean> queue=new SynchronousQueue<Boolean>();
+  SortedSet<? extends BlobMetadata> allMd=getAllBlobMetadata.execute(containerName,options);
+  final CountDownLatch doneSignal=new CountDownLatch(allMd.size());
+  for (  final ListenableFuture<AtmosObject> future : Iterables.transform(getAllBlobMetadata.execute(containerName,options),new Function<BlobMetadata,ListenableFuture<AtmosObject>>(){
+    @Override public ListenableFuture<AtmosObject> apply(    BlobMetadata from){
+      return client.headFile(containerName + "/" + from.getName());
     }
+  }
+)) {
+    future.addListener(new Runnable(){
+      public void run(){
+        try {
+          future.get();
+          doneSignal.countDown();
+          if (Arrays.equals(toSearch,future.get().getContentMetadata().getContentMD5())) {
+            queue.put(true);
+          }
+        }
+ catch (        Exception e) {
+          doneSignal.countDown();
+        }
+      }
+    }
+,userExecutor);
+  }
+  try {
+    if (maxTime != null) {
+      return queue.poll(maxTime,TimeUnit.MILLISECONDS);
+    }
+ else {
+      doneSignal.await();
+      return queue.poll(1,TimeUnit.MICROSECONDS);
+    }
+  }
+ catch (  InterruptedException e) {
     return false;
   }
- catch (  Exception e) {
+catch (  Exception e) {
     Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error searching for ETAG of value: [%2$s] in container:%1$s",containerName,value),e);
+    throw new BlobRuntimeException(String.format("Error searching for ETAG of value: [%s] in container:%s",value,containerName),e);
   }
 }

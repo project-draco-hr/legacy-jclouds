@@ -1,0 +1,17 @@
+{
+  super(aquireAndGetStream(globalMaxConnections,connectionLimiterMap,connection,new Supplier<OutputStream>(){
+    public OutputStream get(){
+      try {
+        return checkNotNull(connection.getOutputStream(),"output stream");
+      }
+ catch (      IOException e) {
+        releaseConnection(globalMaxConnections,connectionLimiterMap,connection.getURL().getHost());
+        throw new RuntimeException(e);
+      }
+    }
+  }
+));
+  this.globalMaxConnections=globalMaxConnections;
+  this.connectionLimiterMap=connectionLimiterMap;
+  this.host=connection.getURL().getHost();
+}

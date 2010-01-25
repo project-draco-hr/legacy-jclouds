@@ -1,14 +1,8 @@
 {
-  Blob object=connection.newBlob(prefixer.apply(name));
-  try {
-    InputStream returnVal=containsKey(name) ? get(name) : null;
-    object.setPayload(payload);
-    object.generateMD5();
-    connection.putBlob(containerName,object).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-    return returnVal;
-  }
- catch (  Exception e) {
-    Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-    throw new BlobRuntimeException(String.format("Error adding blob %s:%s",containerName,object),e);
-  }
+  InputStream returnVal=containsKey(name) ? get(name) : null;
+  Blob blob=blobstore.newBlob(prefixer.apply(name));
+  blob.setPayload(payload);
+  blob.generateMD5();
+  blobstore.putBlob(containerName,blob);
+  return returnVal;
 }

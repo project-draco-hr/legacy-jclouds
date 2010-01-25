@@ -1,9 +1,3 @@
 {
-  if (!getContainerToBlobs().containsKey(bucketName))   return immediateFailedFuture(new ContainerNotFoundException(bucketName));
-  Map<String,Blob> realContents=getContainerToBlobs().get(bucketName);
-  if (!realContents.containsKey(key))   return immediateFuture(null);
-  Blob object=realContents.get(key);
-  Blob returnVal=blobProvider.create(copy(object.getMetadata()));
-  returnVal.setPayload(object.getContent());
-  return immediateFuture(returnVal);
+  return this.getBlob(bucketName,key,GetOptions.NONE);
 }

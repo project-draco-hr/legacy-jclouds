@@ -4,18 +4,18 @@
   int poolMaxClientReuse=3932;
   int poolMaxClients=3382;
   int poolMaxSessionFailures=857;
-  HttpPropertiesBuilder builder=new HttpPropertiesBuilder(new Properties()){
-    @Override public HttpPropertiesBuilder withCredentials(    String account,    String key){
+  PropertiesBuilder builder=new PropertiesBuilder(new Properties()){
+    @Override public PropertiesBuilder withCredentials(    String account,    String key){
       return this;
     }
-    @Override public HttpPropertiesBuilder withEndpoint(    URI endpoint){
+    @Override public PropertiesBuilder withEndpoint(    URI endpoint){
       return this;
     }
   }
 ;
   builder.withHttpMaxRetries(httpMaxRetries);
-  builder.withPoolIoWorkerThreads(poolIoWorkerThreads);
-  builder.withPoolMaxClientReuse(poolMaxClientReuse);
-  builder.withPoolMaxClients(poolMaxClients);
-  builder.withPoolMaxSessionFailures(poolMaxSessionFailures);
+  builder.limitIoWorkerThreadsTo(poolIoWorkerThreads);
+  builder.withMaxClientReuse(poolMaxClientReuse);
+  builder.limitConnectionsPerHostTo(poolMaxClients);
+  builder.withMaxSessionFailures(poolMaxSessionFailures);
 }

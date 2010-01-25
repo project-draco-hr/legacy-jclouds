@@ -1,0 +1,7 @@
+{
+  Set<ListenableFuture<String>> responses=Sets.newHashSet();
+  for (  Blob blob : blobs) {
+    responses.add(ablobstore.putBlob(containerName,blob));
+  }
+  awaitCompletion(responses,userExecutor,maxTime,logger,String.format("putting into containerName: %s",containerName));
+}

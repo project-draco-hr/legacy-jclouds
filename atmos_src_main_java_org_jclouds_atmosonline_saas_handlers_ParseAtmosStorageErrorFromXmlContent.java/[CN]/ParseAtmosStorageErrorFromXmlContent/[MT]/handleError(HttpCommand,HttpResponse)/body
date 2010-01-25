@@ -1,35 +1,49 @@
 {
-  String content;
+  Exception exception=new HttpResponseException(command,response);
   try {
-    content=response.getContent() != null ? Utils.toStringAndClose(response.getContent()) : null;
-    if (content != null) {
-      try {
-        if (content.indexOf('<') >= 0) {
-          AtmosStorageError error=utils.parseAtmosStorageErrorFromContent(command,response,content);
-          AtmosStorageResponseException exception=new AtmosStorageResponseException(command,response,error);
-          if (error.getCode() == 1016) {
-            File file=new File(command.getRequest().getEndpoint().getPath());
-            command.setException(new KeyAlreadyExistsException(file.getParentFile().getAbsolutePath(),file.getName(),exception));
-          }
- else {
-            command.setException(exception);
-          }
-        }
- else {
-          command.setException(new HttpResponseException(command,response,content));
-        }
-      }
- catch (      Exception he) {
-        command.setException(new HttpResponseException(command,response,content));
-        Throwables.propagateIfPossible(he);
-      }
+switch (response.getStatusCode()) {
+case 401:
+      exception=new AuthorizationException(command.getRequest().getRequestLine());
+    break;
+case 404:
+  if (!command.getRequest().getMethod().equals("DELETE")) {
+    String path=command.getRequest().getEndpoint().getPath();
+    Matcher matcher=CONTAINER_PATH.matcher(path);
+    if (matcher.find()) {
+      exception=new ContainerNotFoundException(matcher.group(1));
     }
  else {
-      command.setException(new HttpResponseException(command,response));
+      matcher=CONTAINER_KEY_PATH.matcher(path);
+      if (matcher.find()) {
+        exception=new KeyNotFoundException(matcher.group(1),matcher.group(2));
+      }
     }
   }
- catch (  Exception e) {
-    command.setException(new HttpResponseException(command,response));
-    Throwables.propagateIfPossible(e);
+break;
+default :
+if (response.getContent() != null) {
+try {
+  String content=Utils.toStringAndClose(response.getContent());
+  if (content.indexOf('<') >= 0) {
+    AtmosStorageError error=utils.parseAtmosStorageErrorFromContent(command,response,content);
+    if (error.getCode() == 1016) {
+      File file=new File(command.getRequest().getEndpoint().getPath());
+      exception=new KeyAlreadyExistsException(file.getParentFile().getAbsolutePath(),file.getName());
+    }
+ else {
+      exception=new AtmosStorageResponseException(command,response,error);
+    }
   }
+}
+ catch (IOException e) {
+  logger.warn(e,"exception reading error from response",response);
+  exception=new HttpResponseException(command,response);
+}
+}
+}
+}
+  finally {
+Closeables.closeQuietly(response.getContent());
+command.setException(exception);
+}
 }

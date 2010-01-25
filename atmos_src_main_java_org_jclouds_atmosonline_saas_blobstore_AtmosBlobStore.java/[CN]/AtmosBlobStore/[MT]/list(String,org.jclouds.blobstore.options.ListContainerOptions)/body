@@ -1,12 +1,5 @@
 {
-  if (optionsList.length == 1) {
-    if (optionsList[0].isRecursive()) {
-      throw new UnsupportedOperationException("recursive not currently supported in emcsaas");
-    }
-    if (optionsList[0].getDir() != null) {
-      container=container + "/" + optionsList[0].getDir();
-    }
-  }
-  ListOptions nativeOptions=container2ContainerListOptions.apply(optionsList);
+  container=adjustContainerIfDirOptionPresent(container,options);
+  ListOptions nativeOptions=container2ContainerListOptions.apply(options);
   return container2ResourceList.apply(sync.listDirectory(container,nativeOptions));
 }

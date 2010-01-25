@@ -1,0 +1,15 @@
+{
+  return new ExpirableSupplier<AuthenticationResponse>(new Supplier<AuthenticationResponse>(){
+    public AuthenticationResponse get(){
+      try {
+        ListenableFuture<AuthenticationResponse> response=factory.create(RackspaceAuthentication.class).authenticate(user,key);
+        return response.get(30,TimeUnit.SECONDS);
+      }
+ catch (      Exception e) {
+        Throwables.propagateIfPossible(e);
+        throw new RuntimeException("Error logging in",e);
+      }
+    }
+  }
+,23,TimeUnit.HOURS);
+}

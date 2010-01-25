@@ -1,4 +1,15 @@
 {
-  Injector i=Guice.createInjector(new LifeCycleModule(),new ExecutorServiceModule(Executors.newCachedThreadPool()));
+  Injector i=Guice.createInjector(new LifeCycleModule(){
+    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_USER_THREADS) int p(){
+      return 1;
+    }
+    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT) int p2(){
+      return 1;
+    }
+    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_IO_WORKER_THREADS) int p3(){
+      return 1;
+    }
+  }
+,new ExecutorServiceModule());
   return i;
 }

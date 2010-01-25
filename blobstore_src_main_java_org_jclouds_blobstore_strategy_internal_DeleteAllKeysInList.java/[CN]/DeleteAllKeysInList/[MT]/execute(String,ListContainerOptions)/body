@@ -1,15 +1,7 @@
 {
-  Set<ListenableFuture<Void>> deletes=Sets.newHashSet();
+  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
   for (  StorageMetadata md : getAllBlobMetadata.execute(containerName,options)) {
-    if (md.getType() == StorageType.BLOB)     deletes.add(connection.removeBlob(containerName,md.getName()));
+    if (md.getType() == StorageType.BLOB)     responses.add(connection.removeBlob(containerName,md.getName()));
   }
-  for (  ListenableFuture<Void> isdeleted : deletes) {
-    try {
-      isdeleted.get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS);
-    }
- catch (    Exception e) {
-      Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-      throw new BlobRuntimeException("Error deleting blob in container: " + containerName,e);
-    }
-  }
+  awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting from containerName: %s",containerName));
 }

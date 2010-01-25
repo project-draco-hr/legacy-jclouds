@@ -2,6 +2,11 @@
   S3Object object=newObject(key);
   object.getMetadata().setContentType(contentType);
   object.setPayload(data);
-  object.setContentLength(new Long(data.available()));
-  return getApi().putObject(bucket,object) != null;
+  try {
+    object.setContentLength(new Long(data.available()));
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
+  return getApi().putObject(bucket,object);
 }

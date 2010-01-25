@@ -1,0 +1,13 @@
+{
+  exec=Executors.newCachedThreadPool();
+  String accesskeyid=System.getProperty("jclouds.test.user");
+  String secretkey=System.getProperty("jclouds.test.key");
+  Properties overrides=new Properties();
+  overrides.setProperty(PROPERTY_MAX_CONNECTIONS_PER_CONTEXT,50 + "");
+  overrides.setProperty(PROPERTY_MAX_CONNECTIONS_PER_HOST,30 + "");
+  overrides.setProperty(PROPERTY_IO_WORKER_THREADS,50 + "");
+  overrides.setProperty(PROPERTY_USER_THREADS,0 + "");
+  String contextName="standard";
+  overrideWithSysPropertiesAndPrint(overrides,contextName);
+  context=S3ContextFactory.createContext(overrides,accesskeyid,secretkey,new NullLoggingModule(),new EnterpriseConfigurationModule());
+}
