@@ -1,0 +1,18 @@
+{
+  checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
+  checkNotNull(template.getLocation(),"location");
+  final Set<NodeMetadata> nodes=Sets.newHashSet();
+  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
+  for (int i=0; i < max; i++) {
+    final String name=String.format("%s-%d",tag,i + 1);
+    responses.add(makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        runVAppAndAddToSet(name,tag,template,nodes);
+        return null;
+      }
+    }
+),executor));
+  }
+  awaitCompletion(responses,executor,null,logger,"nodes");
+  return new NodeSetImpl(nodes);
+}

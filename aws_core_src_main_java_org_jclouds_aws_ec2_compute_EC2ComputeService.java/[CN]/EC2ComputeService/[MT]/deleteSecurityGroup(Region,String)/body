@@ -1,0 +1,8 @@
+{
+  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,tag).size() > 0) {
+    logger.debug(">> deleting securityGroup(%s)",tag);
+    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,tag);
+    securityGroupMap.remove(new PortsRegionTag(region,tag,null));
+    logger.debug("<< deleted securityGroup(%s)",tag);
+  }
+}

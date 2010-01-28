@@ -1,0 +1,15 @@
+{
+  logger.debug(">> terminating servers by tag(%s)",tag);
+  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
+  for (  final NodeMetadata node : doGetNodes(tag)) {
+    responses.add(ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        destroyNode(node);
+        return null;
+      }
+    }
+),executor));
+  }
+  ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"nodes");
+  logger.debug("<< destroyed");
+}

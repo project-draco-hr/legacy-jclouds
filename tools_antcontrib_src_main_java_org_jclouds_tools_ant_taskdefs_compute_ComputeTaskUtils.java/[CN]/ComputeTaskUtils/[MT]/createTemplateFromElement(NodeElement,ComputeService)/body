@@ -1,16 +1,10 @@
 {
   TemplateBuilder templateBuilder=computeService.templateBuilder();
-  if (nodeElement.getLocation() != null && !"".equals(nodeElement.getLocation()))   templateBuilder.location(nodeElement.getLocation());
+  if (nodeElement.getLocation() != null && !"".equals(nodeElement.getLocation()))   templateBuilder.locationId(nodeElement.getLocation());
   if (nodeElement.getImage() != null && !"".equals(nodeElement.getImage())) {
     final String imageId=nodeElement.getImage();
     try {
-      Image image=Iterables.getOnlyElement(Iterables.filter(computeService.listImages(),new Predicate<Image>(){
-        @Override public boolean apply(        Image input){
-          return input.getId().equals(imageId);
-        }
-      }
-));
-      templateBuilder.fromImage(image);
+      templateBuilder.imageId(imageId);
     }
  catch (    NoSuchElementException e) {
       throw new BuildException("image not found " + nodeElement.getImage());
@@ -20,5 +14,6 @@
     templateBuilder.osFamily(OsFamily.valueOf(nodeElement.getOs()));
   }
   addSizeFromElementToTemplate(nodeElement,templateBuilder);
+  templateBuilder.options(getNodeOptionsFromElement(nodeElement));
   return templateBuilder.build();
 }

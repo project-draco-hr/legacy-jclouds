@@ -1,0 +1,26 @@
+{
+  checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
+  checkArgument(template.getSize() instanceof EC2Size,"unexpected image type. should be EC2Size, was: " + template.getSize().getClass());
+  EC2Size ec2Size=EC2Size.class.cast(template.getSize());
+  AvailabilityZone zone=template.getLocation().getScope() == LocationScope.ZONE ? AvailabilityZone.fromValue(template.getLocation().getId()) : null;
+  Region region=zone == null ? Region.fromValue(template.getLocation().getId()) : Region.fromValue(template.getLocation().getParent());
+  RegionTag regionTag=new RegionTag(region,tag);
+  if (!credentialsMap.containsKey(regionTag)) {
+    credentialsMap.put(regionTag,createKeyPairIfNeeded.apply(regionTag));
+  }
+  TemplateOptions options=template.getOptions();
+  PortsRegionTag portsRegionTag=new PortsRegionTag(region,tag,options.getInboundPorts());
+  if (!securityGroupMap.containsKey(portsRegionTag)) {
+    securityGroupMap.put(portsRegionTag,createSecurityGroupIfNeeded.apply(portsRegionTag));
+  }
+  logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",count,region,zone,template.getImage().getId(),ec2Size.getInstanceType(),tag,tag);
+  RunInstancesOptions instanceOptions=withKeyName(tag).asType(ec2Size.getInstanceType()).withSecurityGroup(tag).withAdditionalInfo(tag);
+  if (options.getRunScript() != null)   instanceOptions.withUserData(options.getRunScript());
+  Reservation reservation=ec2Client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getId(),1,count,instanceOptions);
+  Iterable<String> ids=Iterables.transform(reservation,instanceToId);
+  String idsString=Joiner.on(',').join(ids);
+  logger.debug("<< started instances(%s)",idsString);
+  Iterables.all(reservation,instanceStateRunning);
+  logger.debug("<< running instances(%s)",idsString);
+  return new NodeSetImpl(Iterables.transform(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,Iterables.toArray(ids,String.class))),runningInstanceToNodeMetadata));
+}

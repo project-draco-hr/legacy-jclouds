@@ -1,0 +1,8 @@
+{
+  if (ec2Client.getKeyPairServices().describeKeyPairsInRegion(region,tag).size() > 0) {
+    logger.debug(">> deleting keyPair(%s)",tag);
+    ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,tag);
+    credentialsMap.remove(new RegionTag(region,tag));
+    logger.debug("<< deleted keyPair(%s)",tag);
+  }
+}

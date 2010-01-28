@@ -18,6 +18,7 @@ String content=Utils.toStringAndClose(response.getContent());
 if (content.indexOf('<') >= 0) {
 AWSError error=utils.parseAWSErrorFromContent(command,response,content);
 exception=new AWSResponseException(command,response,error);
+if (error.getCode().indexOf("NotFound") >= 0) exception=new ResourceNotFoundException(exception);
 }
  else {
 exception=new HttpResponseException(command,response,content);

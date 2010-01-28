@@ -1,8 +1,10 @@
 {
   ComputeServiceContext context=computeMap.get(HttpUtils.createUri(provider));
-  Action action=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,this.action));
   try {
-    invokeActionOnService(action,context.getComputeService());
+    for (    String action : Splitter.on(',').split(actions)) {
+      Action act=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,action));
+      invokeActionOnService(act,context.getComputeService());
+    }
   }
   finally {
     context.close();

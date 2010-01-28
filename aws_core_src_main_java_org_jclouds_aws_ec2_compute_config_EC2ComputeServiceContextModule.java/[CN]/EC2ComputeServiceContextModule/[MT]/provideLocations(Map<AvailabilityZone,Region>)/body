@@ -1,0 +1,15 @@
+{
+  Set<Location> locations=Sets.newHashSet();
+  for (  AvailabilityZone zone : map.keySet()) {
+    locations.add(new LocationImpl(LocationScope.ZONE,zone.toString(),zone.toString(),map.get(zone).toString(),true));
+  }
+  for (  Region region : map.values()) {
+    locations.add(new LocationImpl(LocationScope.REGION,region.toString(),region.toString(),null,true));
+  }
+  return Maps.uniqueIndex(locations,new Function<Location,String>(){
+    @Override public String apply(    Location from){
+      return from.getId();
+    }
+  }
+);
+}

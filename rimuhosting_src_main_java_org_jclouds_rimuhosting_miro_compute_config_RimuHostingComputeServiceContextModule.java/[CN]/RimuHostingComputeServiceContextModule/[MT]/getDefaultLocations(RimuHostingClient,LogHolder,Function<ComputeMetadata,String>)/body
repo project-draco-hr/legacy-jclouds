@@ -1,0 +1,19 @@
+{
+  final Set<Location> locations=Sets.newHashSet();
+  holder.logger.debug(">> providing locations");
+  for (  final PricingPlan from : sync.getPricingPlanList()) {
+    try {
+      locations.add(new LocationImpl(LocationScope.ZONE,from.getDataCenter().getId(),from.getDataCenter().getName(),null,true));
+    }
+ catch (    NullPointerException e) {
+      holder.logger.warn("datacenter not present in " + from.getId());
+    }
+  }
+  holder.logger.debug("<< locations(%d)",locations.size());
+  return Maps.uniqueIndex(locations,new Function<Location,String>(){
+    @Override public String apply(    Location from){
+      return from.getId();
+    }
+  }
+);
+}

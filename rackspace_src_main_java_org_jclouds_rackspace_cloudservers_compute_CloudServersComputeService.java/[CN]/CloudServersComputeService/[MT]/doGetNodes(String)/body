@@ -1,0 +1,14 @@
+{
+  Iterable<NodeMetadata> nodes=Iterables.filter(Iterables.transform(doGetNodes().values(),new Function<ComputeMetadata,NodeMetadata>(){
+    @Override public NodeMetadata apply(    ComputeMetadata from){
+      return getNodeMetadata(from);
+    }
+  }
+),new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    NodeMetadata input){
+      return tag.equals(input.getTag());
+    }
+  }
+);
+  return new NodeSetImpl(Iterables.filter(nodes,new NodeMatchesTag(tag)));
+}

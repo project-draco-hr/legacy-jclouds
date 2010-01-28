@@ -1,0 +1,25 @@
+{
+  checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
+  logger.debug(">> running server image(%s) flavor(%s)",template.getImage().getId(),template.getSize().getId());
+  final Set<NodeMetadata> nodes=Sets.newHashSet();
+  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
+  for (int i=0; i < max; i++) {
+    final String name=String.format("%s-%d",tag,i + 1);
+    responses.add(ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        NewServerResponse serverResponse=client.createServer(name,checkNotNull(template.getImage().getId(),"imageId"),checkNotNull(template.getSize().getId(),"sizeId"));
+        NodeMetadata node=new NodeMetadataImpl(serverResponse.getServer().getId().toString(),name,template.getLocation().getId(),null,ImmutableMap.<String,String>of(),tag,NodeState.UNKNOWN,getPublicAddresses(serverResponse.getServer()),ImmutableList.<InetAddress>of(),ImmutableMap.<String,String>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()));
+        nodes.add(node);
+        logger.debug("<< started server(%s)",node.getId());
+        logger.debug("<< running server(%s)",node.getId());
+        if (template.getOptions().getRunScript() != null) {
+          utils.runScriptOnNode(node,template.getOptions().getRunScript());
+        }
+        return null;
+      }
+    }
+),executor));
+  }
+  ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"nodes");
+  return new NodeSetImpl(nodes);
+}

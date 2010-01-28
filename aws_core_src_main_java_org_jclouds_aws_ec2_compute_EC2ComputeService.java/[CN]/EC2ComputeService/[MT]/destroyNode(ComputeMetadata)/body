@@ -1,18 +1,26 @@
 {
-  checkArgument(node.getType() == ComputeType.NODE,"this is only valid for nodes, not " + node.getType());
-  checkNotNull(node.getId(),"node.id");
+  checkArgument(metadata.getType() == ComputeType.NODE,"this is only valid for nodes, not " + metadata.getType());
+  checkNotNull(metadata.getId(),"node.id");
+  NodeMetadata node=metadata instanceof NodeMetadata ? NodeMetadata.class.cast(metadata) : getNodeMetadata(metadata);
+  String tag=checkNotNull(node.getTag(),"node.tag");
   Region region=getRegionFromNodeOrDefault(node);
-  for (  RunningInstance runningInstance : getAllRunningInstancesInRegion(region,node.getId())) {
-    String name=runningInstance.getKeyName();
+  RunningInstance instance=getInstance(node,region);
+  if (instance.getInstanceState() != InstanceState.TERMINATED) {
     logger.debug(">> terminating instance(%s)",node.getId());
-    ec2Client.getInstanceServices().terminateInstancesInRegion(region,node.getId());
-    boolean success=instanceStateTerminated.apply(runningInstance);
+    boolean success=false;
+    while (!success) {
+      ec2Client.getInstanceServices().terminateInstancesInRegion(region,node.getId());
+      success=instanceStateTerminated.apply(getInstance(node,region));
+    }
     logger.debug("<< terminated instance(%s) success(%s)",node.getId(),success);
-    logger.debug(">> deleting keyPair(%s)",name);
-    ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,name);
-    logger.debug("<< deleted keyPair(%s)",name);
-    logger.debug(">> deleting securityGroup(%s)",name);
-    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,name);
-    logger.debug("<< deleted securityGroup(%s)",name);
+  }
+  if (Iterables.all(doGetNodes(tag),new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    NodeMetadata input){
+      return input.getState() == NodeState.TERMINATED;
+    }
+  }
+)) {
+    deleteKeyPair(region,tag);
+    deleteSecurityGroup(region,tag);
   }
 }

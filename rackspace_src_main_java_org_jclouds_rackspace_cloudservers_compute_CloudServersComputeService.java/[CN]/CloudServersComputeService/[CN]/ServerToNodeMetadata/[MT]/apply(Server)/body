@@ -1,3 +1,5 @@
 {
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),location,null,from.getMetadata(),serverToNodeState.get(from.getStatus()),from.getAddresses().getPublicAddresses(),from.getAddresses().getPrivateAddresses(),ImmutableMap.<String,String>of());
+  Matcher matcher=TAG_PATTERN.matcher(from.getName());
+  final String tag=matcher.find() ? matcher.group(1) : null;
+  return new NodeMetadataImpl(from.getId() + "",from.getName(),location.getId(),null,from.getMetadata(),tag,serverToNodeState.get(from.getStatus()),from.getAddresses().getPublicAddresses(),from.getAddresses().getPrivateAddresses(),ImmutableMap.<String,String>of(),null);
 }

@@ -1,0 +1,14 @@
+{
+  String id=from.getId();
+  String name=null;
+  URI uri=null;
+  Map<String,String> userMetadata=ImmutableMap.<String,String>of();
+  String tag=from.getKeyName();
+  NodeState state=instanceToNodeState.get(from.getInstanceState());
+  Set<InetAddress> publicAddresses=nullSafeSet(from.getIpAddress());
+  Set<InetAddress> privateAddresses=nullSafeSet(from.getPrivateIpAddress());
+  Credentials credentials=credentialsMap.containsKey(new RegionTag(from.getRegion(),tag)) ? credentialsMap.get(new RegionTag(from.getRegion(),tag)) : null;
+  String locationId=from.getAvailabilityZone().toString();
+  Map<String,String> extra=ImmutableMap.<String,String>of();
+  return new NodeMetadataImpl(id,name,locationId,uri,userMetadata,tag,state,publicAddresses,privateAddresses,extra,credentials);
+}

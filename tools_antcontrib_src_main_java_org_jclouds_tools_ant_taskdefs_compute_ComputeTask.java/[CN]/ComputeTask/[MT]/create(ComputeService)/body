@@ -1,9 +1,8 @@
 {
-  String name=nodeElement.getName();
-  log(String.format("create name: %s, size: %s, os: %s",name,nodeElement.getSize(),nodeElement.getOs()));
+  String tag=nodeElement.getTag();
+  log(String.format("create tag: %s, count: %d, size: %s, os: %s",tag,nodeElement.getCount(),nodeElement.getSize(),nodeElement.getOs()));
   Template template=createTemplateFromElement(nodeElement,computeService);
-  RunNodeOptions options=getNodeOptionsFromElement(nodeElement);
-  CreateNodeResponse createdNode=computeService.runNode(name,template,options);
+  NodeMetadata createdNode=Iterables.getOnlyElement(computeService.runNodes(tag,nodeElement.getCount(),template));
   logNodeDetails(createdNode);
   addNodeDetailsAsProjectProperties(createdNode);
 }
