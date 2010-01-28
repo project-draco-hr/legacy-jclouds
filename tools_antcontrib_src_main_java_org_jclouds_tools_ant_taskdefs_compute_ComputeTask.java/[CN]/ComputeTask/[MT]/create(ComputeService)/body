@@ -2,7 +2,8 @@
   String tag=nodeElement.getTag();
   log(String.format("create tag: %s, count: %d, size: %s, os: %s",tag,nodeElement.getCount(),nodeElement.getSize(),nodeElement.getOs()));
   Template template=createTemplateFromElement(nodeElement,computeService);
-  NodeMetadata createdNode=Iterables.getOnlyElement(computeService.runNodesWithTag(tag,nodeElement.getCount(),template));
-  logNodeDetails(createdNode);
-  addNodeDetailsAsProjectProperties(createdNode);
+  for (  NodeMetadata createdNode : computeService.runNodesWithTag(tag,nodeElement.getCount(),template)) {
+    logNodeDetails(createdNode);
+    addNodeDetailsAsProjectProperties(createdNode);
+  }
 }
