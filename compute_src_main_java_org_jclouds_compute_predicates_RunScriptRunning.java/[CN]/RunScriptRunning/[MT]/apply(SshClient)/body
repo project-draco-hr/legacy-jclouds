@@ -1,0 +1,7 @@
+{
+  logger.trace("looking for runscript state on %s@%s",ssh.getUsername(),ssh.getHostAddress());
+  ExecResponse response=refresh(ssh);
+  while (response.getExitCode() == -1)   response=refresh(ssh);
+  logger.trace("%s@%s: looking for exit code 0: currently: %s",ssh.getUsername(),ssh.getHostAddress(),response.getExitCode());
+  return 0 == response.getExitCode();
+}

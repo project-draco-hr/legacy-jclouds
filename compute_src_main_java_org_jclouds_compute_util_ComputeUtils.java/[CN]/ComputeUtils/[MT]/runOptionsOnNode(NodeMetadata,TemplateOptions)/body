@@ -1,0 +1,12 @@
+{
+  List<SshCallable<?>> callables=Lists.newArrayList();
+  if (options.getRunScript() != null) {
+    callables.add(runScriptOnNode(node,"runscript.sh",options.getRunScript()));
+  }
+  if (options.getPublicKey() != null) {
+    callables.add(authorizeKeyOnNode(node,options.getPublicKey()));
+  }
+  if (callables.size() > 0 || options.getPrivateKey() != null) {
+    runCallablesOnNode(node,callables,options.getPrivateKey() != null ? installKeyOnNode(node,options.getPrivateKey()) : null);
+  }
+}

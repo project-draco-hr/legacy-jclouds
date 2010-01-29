@@ -1,0 +1,42 @@
+{
+  checkState(this.sshFactory != null,"runScript requested, but no SshModule configured");
+  InetSocketAddress socket=new InetSocketAddress(Iterables.get(node.getPublicAddresses(),0),22);
+  socketTester.apply(socket);
+  SshClient ssh=isKeyAuth(node) ? sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key.getBytes()) : sshFactory.create(socket,node.getCredentials().account,node.getCredentials().key);
+  for (int i=0; i < 3; i++) {
+    try {
+      ssh.connect();
+      Set<ListenableFuture<?>> responses=Sets.newHashSet();
+      for (      SshCallable<?> callable : parallel) {
+        callable.setConnection(ssh,logger);
+        responses.add(ConcurrentUtils.makeListenable(executor.submit(callable),executor));
+      }
+      ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"ssh");
+      if (last != null) {
+        last.setConnection(ssh,logger);
+        try {
+          last.call();
+        }
+ catch (        Exception e) {
+          Throwables.propagate(e);
+        }
+      }
+      break;
+    }
+ catch (    RuntimeException from) {
+      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(from),ConnectException.class)) >= 1 || Throwables.getRootCause(from).getMessage().indexOf("Auth fail") != -1 || Throwables.getRootCause(from).getMessage().indexOf("invalid privatekey") != -1) {
+        try {
+          Thread.sleep(100);
+        }
+ catch (        InterruptedException e) {
+          Throwables.propagate(e);
+        }
+        continue;
+      }
+      Throwables.propagate(from);
+    }
+ finally {
+      if (ssh != null)       ssh.disconnect();
+    }
+  }
+}

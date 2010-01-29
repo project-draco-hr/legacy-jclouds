@@ -10,12 +10,11 @@
         Server server=client.createServer(name,Integer.parseInt(template.getImage().getId()),Integer.parseInt(template.getSize().getId()));
         NodeMetadata node=new NodeMetadataImpl(server.getId() + "",name,null,null,server.getMetadata(),tag,NodeState.RUNNING,server.getAddresses().getPublicAddresses(),server.getAddresses().getPrivateAddresses(),ImmutableMap.<String,String>of(),new Credentials("root",server.getAdminPass()));
         nodes.add(node);
-        logger.debug("<< started server(%s)",server.getId());
+        logger.debug("<< started server(%s)",node.getId());
         serverActive.apply(server);
-        logger.debug("<< running server(%s)",server.getId());
-        if (template.getOptions().getRunScript() != null) {
-          utils.runScriptOnNode(node,template.getOptions().getRunScript());
-        }
+        logger.debug("<< running server(%s)",node.getId());
+        utils.runOptionsOnNode(node,template.getOptions());
+        logger.debug("<< options applied server(%s)",node.getId());
         return null;
       }
     }
