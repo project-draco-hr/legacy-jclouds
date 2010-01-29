@@ -34,9 +34,8 @@
   if (queryParams.size() > 0) {
     builder.replaceQuery(makeQueryLine(queryParams,null,skips));
   }
-  URI endPoint;
   try {
-    endPoint=builder.buildFromEncodedMap(convertUnsafe(tokenValues));
+    endpoint=builder.buildFromEncodedMap(convertUnsafe(tokenValues));
   }
  catch (  IllegalArgumentException e) {
     throw new IllegalStateException(e);
@@ -44,7 +43,7 @@
 catch (  UriBuilderException e) {
     throw new IllegalStateException(e);
   }
-  GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(httpMethod,endPoint,this,declaring,method,args);
+  GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(httpMethod,endpoint,this,declaring,method,args);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
   if (formParams.size() > 0) {
