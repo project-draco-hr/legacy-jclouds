@@ -1,14 +1,9 @@
 {
+  BlobMetadata md=connection.blobMetadata(containerName,directory);
+  if (md != null && md.getContentType().equals("application/directory"))   return resource2Directory.apply(md);
   for (  String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
-    try {
-      return resource2Directory.apply(connection.blobMetadata(containerName,directory + suffix).get(requestTimeoutMilliseconds,TimeUnit.MILLISECONDS));
-    }
- catch (    KeyNotFoundException e) {
-    }
-catch (    Exception e) {
-      Throwables.propagateIfPossible(e,BlobRuntimeException.class);
-      if (!(e instanceof KeyNotFoundException))       throw new BlobRuntimeException("Error determining if a directory exists at: " + containerName + "/"+ directory,e);
-    }
+    md=connection.blobMetadata(containerName,directory + suffix);
+    if (md != null)     return resource2Directory.apply(md);
   }
-  throw new KeyNotFoundException(containerName,directory);
+  return null;
 }

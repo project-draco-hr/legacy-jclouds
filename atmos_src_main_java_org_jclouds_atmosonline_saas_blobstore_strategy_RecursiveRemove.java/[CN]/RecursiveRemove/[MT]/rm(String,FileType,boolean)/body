@@ -1,11 +1,12 @@
 {
-  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
+  Map<String,ListenableFuture<?>> responses=Maps.newHashMap();
   if ((type == FileType.DIRECTORY) && recursive) {
     for (    DirectoryEntry child : sync.listDirectory(fullPath)) {
-      responses.add(rm(fullPath + "/" + child.getObjectName(),child.getType(),true));
+      responses.put(fullPath + "/" + child.getObjectName(),rm(fullPath + "/" + child.getObjectName(),child.getType(),true));
     }
   }
-  awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting from path: %s",fullPath));
+  Map<String,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting from path: %s",fullPath));
+  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("deleting from path %s: %s",fullPath,exceptions));
   return Futures.compose(async.deletePath(fullPath),new Function<Void,Void>(){
     public Void apply(    Void from){
       try {

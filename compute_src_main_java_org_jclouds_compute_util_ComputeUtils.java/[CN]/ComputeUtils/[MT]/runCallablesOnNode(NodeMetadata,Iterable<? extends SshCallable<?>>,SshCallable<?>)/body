@@ -6,12 +6,13 @@
   for (int i=0; i < 3; i++) {
     try {
       ssh.connect();
-      Set<ListenableFuture<?>> responses=Sets.newHashSet();
+      Map<SshCallable<?>,ListenableFuture<?>> responses=Maps.newHashMap();
       for (      SshCallable<?> callable : parallel) {
         callable.setConnection(ssh,logger);
-        responses.add(ConcurrentUtils.makeListenable(executor.submit(callable),executor));
+        responses.put(callable,ConcurrentUtils.makeListenable(executor.submit(callable),executor));
       }
-      ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"ssh");
+      Map<SshCallable<?>,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"ssh");
+      if (exceptions.size() > 0)       throw new RuntimeException(String.format("error invoking callables on host %s: %s",socket,exceptions));
       if (last != null) {
         last.setConnection(ssh,logger);
         try {

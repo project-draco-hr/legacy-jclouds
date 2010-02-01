@@ -1,6 +1,6 @@
 {
-  if (!getContainerToBlobs().containsKey(bucketName))   return immediateFailedFuture(new ContainerNotFoundException(bucketName));
-  Map<String,Blob> realContents=getContainerToBlobs().get(bucketName);
+  if (!getContainerToBlobs().containsKey(containerName))   return immediateFailedFuture(cnfe(containerName));
+  Map<String,Blob> realContents=getContainerToBlobs().get(containerName);
   if (!realContents.containsKey(key))   return immediateFuture(null);
   Blob object=realContents.get(key);
   if (options.getIfMatch() != null) {
@@ -59,9 +59,6 @@
     returnVal.setContentLength(out.size());
     returnVal.getMetadata().setSize(new Long(data.length));
   }
-  if (returnVal.getContentLength() == 0) {
-    returnVal.setPayload(Payloads.NULL_PAYLOAD);
-    returnVal.getMetadata().setSize(0);
-  }
+  checkNotNull(returnVal.getPayload(),"payload " + returnVal);
   return immediateFuture(returnVal);
 }

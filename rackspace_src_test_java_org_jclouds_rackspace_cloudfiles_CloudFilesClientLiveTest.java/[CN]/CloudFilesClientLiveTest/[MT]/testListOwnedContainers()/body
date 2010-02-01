@@ -1,7 +1,7 @@
 {
   String containerPrefix=getContainerName();
   try {
-    SortedSet<ContainerMetadata> response=getApi().listContainers();
+    Set<ContainerMetadata> response=getApi().listContainers();
     assertNotNull(response);
     long initialContainerCount=response.size();
     assertTrue(initialContainerCount >= 0);
@@ -11,10 +11,10 @@
     response=getApi().listContainers();
     response=getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0].substring(0,containerJsr330[0].length() - 1)).maxResults(1));
     assertEquals(response.size(),1);
-    assertEquals(response.first().getName(),containerJsr330[0]);
+    assertEquals(Iterables.get(response,0).getName(),containerJsr330[0]);
     response=getApi().listContainers(ListContainerOptions.Builder.afterMarker(containerJsr330[0]).maxResults(1));
     assertEquals(response.size(),1);
-    assertEquals(response.first().getName(),containerJsr330[1]);
+    assertEquals(Iterables.get(response,0).getName(),containerJsr330[1]);
     assertTrue(getApi().deleteContainerIfEmpty(containerJsr330[0]));
     assertTrue(getApi().deleteContainerIfEmpty(containerJsr330[1]));
     response=getApi().listContainers();

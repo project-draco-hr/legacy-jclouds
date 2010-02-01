@@ -1,7 +1,8 @@
 {
-  Set<ListenableFuture<String>> responses=Sets.newHashSet();
+  Map<Blob,ListenableFuture<?>> responses=Maps.newHashMap();
   for (  Blob blob : blobs) {
-    responses.add(ablobstore.putBlob(containerName,blob));
+    responses.put(blob,ablobstore.putBlob(containerName,blob));
   }
-  awaitCompletion(responses,userExecutor,maxTime,logger,String.format("putting into containerName: %s",containerName));
+  Map<Blob,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("putting into containerName: %s",containerName));
+  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("error putting into container %s: %s",containerName,exceptions));
 }

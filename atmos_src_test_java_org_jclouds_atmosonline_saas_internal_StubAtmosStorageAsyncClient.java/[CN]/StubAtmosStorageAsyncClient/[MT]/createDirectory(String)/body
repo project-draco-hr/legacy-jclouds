@@ -1,9 +1,22 @@
 {
   final String container;
-  if (directoryName.indexOf('/') != -1)   container=directoryName.substring(0,directoryName.indexOf('/'));
- else   container=directoryName;
+  final String path;
+  if (directoryName.indexOf('/') != -1) {
+    container=directoryName.substring(0,directoryName.indexOf('/'));
+    path=directoryName.substring(directoryName.indexOf('/') + 1);
+  }
+ else {
+    container=directoryName;
+    path=null;
+  }
   return Futures.compose(blobStore.createContainerInLocation("default",container),new Function<Boolean,URI>(){
     public URI apply(    Boolean from){
+      if (path != null) {
+        Blob blob=blobStore.newBlob(path + "/");
+        blob.getMetadata().setContentType("application/directory");
+        blob.setPayload("");
+        blobStore.putBlob(container,blob);
+      }
       return URI.create("http://stub/containers/" + container);
     }
   }

@@ -1,19 +1,2 @@
 {
-  String bucketName=getContainerName();
-  try {
-    Map<String,InputStream> map=createMap(context,bucketName);
-    map.putAll(this.fiveInputs);
-    assertConsistencyAwareKeySize(map,5);
-    Collection<InputStream> values=map.values();
-    assertEquals(values.size(),5);
-    Set<String> valuesAsString=new HashSet<String>();
-    for (    InputStream stream : values) {
-      valuesAsString.add(Utils.toStringAndClose(stream));
-    }
-    valuesAsString.removeAll(fiveStrings.values());
-    assertEquals(valuesAsString.size(),0);
-  }
-  finally {
-    returnContainer(bucketName);
-  }
 }

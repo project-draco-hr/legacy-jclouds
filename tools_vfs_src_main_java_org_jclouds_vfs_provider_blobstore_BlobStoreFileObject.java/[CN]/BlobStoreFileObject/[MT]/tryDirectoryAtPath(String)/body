@@ -5,9 +5,9 @@
     if (!dir.equals(""))     options.inDirectory(dir);
   }
   try {
-    metadata=Iterables.find(Iterables.transform(getBlobStore().list(getContainer(),options),resource2Directory),new Predicate<StorageMetadata>(){
+    metadata=Iterables.find(lister.execute(getContainer(),options),new Predicate<StorageMetadata>(){
       @Override public boolean apply(      StorageMetadata input){
-        return input.getName().equals(name);
+        return input.getType() != StorageType.BLOB && input.getName().equals(name);
       }
     }
 );

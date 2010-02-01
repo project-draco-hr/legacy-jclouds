@@ -1,8 +1,14 @@
 {
   logger.debug(">> terminating servers by tag(%s)",tag);
-  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
-  for (  final NodeMetadata node : doGetNodes(tag)) {
-    if (node.getState() != NodeState.TERMINATED)     responses.add(ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
+  Iterable<NodeMetadata> nodesToDestroy=Iterables.filter(doGetNodes(tag),new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    NodeMetadata input){
+      return input.getState() != NodeState.TERMINATED;
+    }
+  }
+);
+  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+  for (  final NodeMetadata node : nodesToDestroy) {
+    responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
         destroyNode(node);
         return null;
@@ -10,6 +16,6 @@
     }
 ),executor));
   }
-  ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"nodes");
+  awaitCompletion(responses,executor,null,logger,"nodes");
   logger.debug("<< destroyed");
 }

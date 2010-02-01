@@ -15,31 +15,34 @@
   }
   logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",count,region,zone,template.getImage().getId(),ec2Size.getInstanceType(),tag,tag);
   RunInstancesOptions instanceOptions=withKeyName(tag).asType(ec2Size.getInstanceType()).withSecurityGroup(tag).withAdditionalInfo(tag);
-  Reservation reservation=ec2Client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getId(),1,count,instanceOptions);
-  Iterable<String> ids=Iterables.transform(reservation,instanceToId);
-  String idsString=Joiner.on(',').join(ids);
-  logger.debug("<< started instances(%s)",idsString);
-  Iterables.all(reservation,instanceStateRunning);
-  logger.debug("<< running instances(%s)",idsString);
   final Set<NodeMetadata> nodes=Sets.newHashSet();
-  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
-  for (  final NodeMetadata node : Iterables.transform(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,Iterables.toArray(ids,String.class))),runningInstanceToNodeMetadata)) {
-    responses.add(ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        try {
-          utils.runOptionsOnNode(node,template.getOptions());
-          logger.debug("<< options applied instance(%s)",node.getId());
-          nodes.add(node);
+  int nodesToStart=count;
+  while (nodesToStart > 0) {
+    Reservation reservation=ec2Client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getId(),1,nodesToStart,instanceOptions);
+    Iterable<String> ids=Iterables.transform(reservation,instanceToId);
+    String idsString=Joiner.on(',').join(ids);
+    logger.debug("<< started instances(%s)",idsString);
+    Iterables.all(reservation,instanceStateRunning);
+    logger.debug("<< running instances(%s)",idsString);
+    Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+    for (    final NodeMetadata node : Iterables.transform(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,Iterables.toArray(ids,String.class))),runningInstanceToNodeMetadata)) {
+      responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
+        @Override public Void call() throws Exception {
+          try {
+            utils.runOptionsOnNode(node,template.getOptions());
+            logger.debug("<< options applied instance(%s)",node.getId());
+            nodes.add(node);
+          }
+ catch (          Exception e) {
+            logger.error(e,"<< error applying instance(%s) [%s] destroying ",node.getId(),e.getMessage());
+            destroyNode(node);
+          }
+          return null;
         }
- catch (        Exception e) {
-          logger.error(e,"<< error applying instance(%s) [%s] destroying ",node.getId(),e.getMessage());
-          destroyNode(node);
-        }
-        return null;
       }
-    }
 ),executor));
+    }
+    nodesToStart=awaitCompletion(responses,executor,null,logger,"nodes").size();
   }
-  ConcurrentUtils.awaitCompletion(responses,executor,null,logger,"nodes");
   return new NodeSetImpl(nodes);
 }

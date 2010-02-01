@@ -1,0 +1,11 @@
+{
+  return chain(directoryExists(containerName,directory),new Function<Boolean,ListenableFuture<Void>>(){
+    @Override public ListenableFuture<Void> apply(    Boolean from){
+      if (!from) {
+        blobUtils.createDirectory(containerName,directory);
+      }
+      return immediateFuture(null);
+    }
+  }
+,service);
+}

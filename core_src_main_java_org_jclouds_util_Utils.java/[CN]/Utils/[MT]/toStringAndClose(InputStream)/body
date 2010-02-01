@@ -1,8 +1,16 @@
 {
+  checkNotNull(input,"input");
   try {
     return new String(ByteStreams.toByteArray(input),Charsets.UTF_8);
   }
-  finally {
+ catch (  IOException e) {
+    logger.warn(e,"Failed to read from stream");
+    return null;
+  }
+catch (  NullPointerException e) {
+    return null;
+  }
+ finally {
     Closeables.closeQuietly(input);
   }
 }

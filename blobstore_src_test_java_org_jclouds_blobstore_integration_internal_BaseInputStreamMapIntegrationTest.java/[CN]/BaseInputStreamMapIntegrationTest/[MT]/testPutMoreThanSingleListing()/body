@@ -1,0 +1,23 @@
+{
+  String bucketName=getContainerName();
+  try {
+    InputStreamMap map=createMap(context,bucketName);
+    Set<String> keySet=Sets.newHashSet();
+    for (int i=0; i < maxList() + 1; i++) {
+      keySet.add(i + "");
+    }
+    Map<String,String> newMap=new HashMap<String,String>();
+    for (    String key : keySet) {
+      newMap.put(key,key);
+    }
+    map.putAllStrings(newMap);
+    newMap.clear();
+    assertConsistencyAwareMapSize(map,maxList() + 1);
+    assertConsistencyAwareKeySetEquals(map,keySet);
+    map.clear();
+    assertConsistencyAwareMapSize(map,0);
+  }
+  finally {
+    returnContainer(bucketName);
+  }
+}

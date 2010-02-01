@@ -1,7 +1,7 @@
 {
-  metadata=Iterables.find(Iterables.transform(getBlobStore().list(),resource2Directory),new Predicate<StorageMetadata>(){
+  metadata=Iterables.find(getBlobStore().list(),new Predicate<StorageMetadata>(){
     @Override public boolean apply(    StorageMetadata input){
-      return input.getName().equals(container);
+      return input.getType() == StorageType.CONTAINER && input.getName().equals(container);
     }
   }
 );

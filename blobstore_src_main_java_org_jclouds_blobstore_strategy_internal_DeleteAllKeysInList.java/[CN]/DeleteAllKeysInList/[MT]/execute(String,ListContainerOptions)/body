@@ -1,7 +1,34 @@
 {
-  Set<ListenableFuture<Void>> responses=Sets.newHashSet();
-  for (  StorageMetadata md : getAllBlobMetadata.execute(containerName,options)) {
-    if (md.getType() == StorageType.BLOB)     responses.add(connection.removeBlob(containerName,md.getName()));
-  }
-  awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting from containerName: %s",containerName));
+  String message=options.getDir() != null ? String.format("deleting from path: %s/%s",containerName,options.getDir()) : String.format("deleting from containerName: %s",containerName);
+  Map<StorageMetadata,Exception> exceptions=Maps.newHashMap();
+  Iterable<? extends StorageMetadata> toDelete=getResourcesToDelete(containerName,options);
+  for (int i=0; i < 3; i++) {
+    Map<StorageMetadata,ListenableFuture<?>> responses=Maps.newHashMap();
+    try {
+      for (      StorageMetadata md : toDelete) {
+switch (md.getType()) {
+case BLOB:
+          responses.put(md,connection.removeBlob(containerName,md.getName()));
+        break;
+case FOLDER:
+case RELATIVE_PATH:
+      if (options.isRecursive())       responses.put(md,connection.deleteDirectory(containerName,md.getName()));
+    break;
+case CONTAINER:
+  throw new IllegalArgumentException("Container type not supported");
+}
+}
+}
+  finally {
+exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,message);
+toDelete=getResourcesToDelete(containerName,options);
+if (Iterables.size(toDelete) == 0) {
+break;
+}
+if (exceptions.size() > 0) {
+retryHandler.imposeBackoffExponentialDelay(i + 1,message);
+}
+}
+}
+if (exceptions.size() > 0) throw new BlobRuntimeException(String.format("error %s: %s",message,exceptions));
 }

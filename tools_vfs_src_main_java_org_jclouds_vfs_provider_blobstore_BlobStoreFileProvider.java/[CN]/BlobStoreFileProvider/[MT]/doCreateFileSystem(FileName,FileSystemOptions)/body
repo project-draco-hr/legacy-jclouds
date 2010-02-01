@@ -1,12 +1,12 @@
 {
   BlobStoreFileName rootName=(BlobStoreFileName)name;
   UserAuthenticationData authData=null;
-  BlobStore blobStore;
+  BlobStoreContext context;
   try {
     String uriToParse=rootName.getFriendlyURI();
     authData=UserAuthenticatorUtils.authenticate(fileSystemOptions,AUTHENTICATOR_TYPES);
     URI location=HttpUtils.createUri(uriToParse);
-    blobStore=new BlobStoreContextFactory().createContext(location,new Credentials(UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.USERNAME,UserAuthenticatorUtils.toChar(rootName.getUserName()))),UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.PASSWORD,UserAuthenticatorUtils.toChar(rootName.getPassword())))),modules,new Properties()).getBlobStore();
+    context=new BlobStoreContextFactory().createContext(location,new Credentials(UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.USERNAME,UserAuthenticatorUtils.toChar(rootName.getUserName()))),UserAuthenticatorUtils.toString(UserAuthenticatorUtils.getData(authData,UserAuthenticationData.PASSWORD,UserAuthenticatorUtils.toChar(rootName.getPassword())))),modules,new Properties());
   }
  catch (  IOException e) {
     throw new FileSystemException("vfs.provider.blobstore/properties.error",name,e);
@@ -14,5 +14,5 @@
  finally {
     UserAuthenticatorUtils.cleanup(authData);
   }
-  return new BlobStoreFileSystem(rootName,blobStore,fileSystemOptions);
+  return new BlobStoreFileSystem(rootName,context,fileSystemOptions);
 }

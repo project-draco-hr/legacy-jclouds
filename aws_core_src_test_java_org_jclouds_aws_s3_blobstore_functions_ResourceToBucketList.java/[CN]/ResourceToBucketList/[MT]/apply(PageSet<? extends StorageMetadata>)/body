@@ -1,0 +1,25 @@
+{
+  Iterable<ObjectMetadata> contents=Iterables.transform(Iterables.filter(list,new Predicate<StorageMetadata>(){
+    public boolean apply(    StorageMetadata input){
+      return input.getType() == StorageType.BLOB;
+    }
+  }
+),new Function<StorageMetadata,ObjectMetadata>(){
+    public MutableObjectMetadata apply(    StorageMetadata from){
+      return blob2ObjectMd.apply((BlobMetadata)from);
+    }
+  }
+);
+  SortedSet<String> commonPrefixes=Sets.newTreeSet(Iterables.transform(Iterables.filter(list,new Predicate<StorageMetadata>(){
+    public boolean apply(    StorageMetadata input){
+      return input.getType() == StorageType.RELATIVE_PATH;
+    }
+  }
+),new Function<StorageMetadata,String>(){
+    public String apply(    StorageMetadata from){
+      return from.getName();
+    }
+  }
+));
+  return new ListBucketResponseImpl(null,contents,null,null,list.getNextMarker(),0,"/",list.getNextMarker() != null,commonPrefixes);
+}

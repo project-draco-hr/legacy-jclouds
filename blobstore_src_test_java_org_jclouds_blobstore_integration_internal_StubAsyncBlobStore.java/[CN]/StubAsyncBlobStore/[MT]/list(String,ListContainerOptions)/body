@@ -1,10 +1,14 @@
 {
   final Map<String,Blob> realContents=getContainerToBlobs().get(name);
-  if (realContents == null)   return immediateFailedFuture(new ContainerNotFoundException(name));
+  if (realContents == null)   return immediateFailedFuture(cnfe(name));
   SortedSet<StorageMetadata> contents=Sets.newTreeSet(Iterables.transform(realContents.keySet(),new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String key){
       MutableBlobMetadata md=copy(realContents.get(key).getMetadata());
-      if (isDirectoryStrategy.execute(md))       md.setType(StorageType.RELATIVE_PATH);
+      String directoryName=ifDirectoryReturnName.execute(md);
+      if (directoryName != null) {
+        md.setName(directoryName);
+        md.setType(StorageType.RELATIVE_PATH);
+      }
       return md;
     }
   }
@@ -24,19 +28,16 @@
   if (prefix != null) {
     contents=Sets.newTreeSet(Iterables.filter(contents,new Predicate<StorageMetadata>(){
       public boolean apply(      StorageMetadata o){
-        return (o != null && o.getName().startsWith(prefix));
+        return (o != null && o.getName().startsWith(prefix) && !o.getName().equals(prefix));
       }
     }
 ));
   }
-  int maxResults=contents.size();
-  boolean truncated=false;
   String marker=null;
-  if (options.getMaxResults() != null && contents.size() > 0) {
-    SortedSet<StorageMetadata> contentsSlice=firstSliceOfSize(contents,options.getMaxResults().intValue());
-    maxResults=options.getMaxResults();
+  Integer maxResults=options.getMaxResults() != null ? options.getMaxResults() : 1000;
+  if (contents.size() > 0) {
+    SortedSet<StorageMetadata> contentsSlice=firstSliceOfSize(contents,maxResults);
     if (!contentsSlice.contains(contents.last())) {
-      truncated=true;
       marker=contentsSlice.last().getName();
     }
  else {
@@ -61,5 +62,5 @@
     }
 ));
   }
-  return immediateFuture(new ListContainerResponseImpl<StorageMetadata>(contents,prefix,marker,maxResults,truncated));
+  return immediateFuture(new PageSetImpl<StorageMetadata>(contents,marker));
 }

@@ -1,5 +1,8 @@
 {
-  Set<String> keys=Sets.newHashSet();
-  for (  StorageMetadata object : getAllBlobMetadata.execute(containerName,options))   if (object.getType() == StorageType.BLOB)   keys.add(pathStripper.apply(object.getName()));
-  return keys;
+  return Sets.newHashSet(Iterables.transform(list(),new Function<BlobMetadata,String>(){
+    @Override public String apply(    BlobMetadata from){
+      return from.getName();
+    }
+  }
+));
 }

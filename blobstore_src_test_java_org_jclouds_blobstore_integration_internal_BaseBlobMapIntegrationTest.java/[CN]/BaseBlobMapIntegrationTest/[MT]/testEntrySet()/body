@@ -1,21 +1,31 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,Blob> map=createMap(context,bucketName);
+    final Map<String,Blob> map=createMap(context,bucketName);
     putFiveStrings(map);
+    assertConsistencyAwareMapSize(map,5);
     Set<Entry<String,Blob>> entries=map.entrySet();
     assertEquals(entries.size(),5);
     for (    Entry<String,Blob> entry : entries) {
-      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtils.getContentAsStringOrNullAndClose(entry.getValue()));
+      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtilsImpl.getContentAsStringOrNullAndClose(entry.getValue()));
       Blob value=entry.getValue();
       value.setPayload("");
       value.generateMD5();
       entry.setValue(value);
     }
-    assertConsistencyAwareMapSize(map,5);
-    for (    Blob value : map.values()) {
-      assertEquals(BlobStoreUtils.getContentAsStringOrNullAndClose(value),null);
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        for (        Blob value : map.values()) {
+          try {
+            assertEquals(BlobStoreUtilsImpl.getContentAsStringOrNullAndClose(value),"");
+          }
+ catch (          IOException e) {
+            Throwables.propagate(e);
+          }
+        }
+      }
     }
+);
   }
   finally {
     returnContainer(bucketName);

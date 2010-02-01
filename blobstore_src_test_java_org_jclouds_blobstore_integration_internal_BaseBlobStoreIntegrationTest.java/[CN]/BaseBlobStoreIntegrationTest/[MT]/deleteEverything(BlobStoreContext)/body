@@ -7,18 +7,8 @@
         }
       }
 );
-      if (testContainers.iterator().hasNext()) {
-        ExecutorService executor=Executors.newCachedThreadPool();
-        for (        final StorageMetadata metaDatum : testContainers) {
-          executor.execute(new Runnable(){
-            public void run(){
-              deleteContainerOrWarnIfUnable(context,metaDatum.getName());
-            }
-          }
-);
-        }
-        executor.shutdown();
-        executor.awaitTermination(60,TimeUnit.SECONDS);
+      for (      StorageMetadata container : testContainers) {
+        deleteContainerOrWarnIfUnable(context,container.getName());
       }
     }
   }

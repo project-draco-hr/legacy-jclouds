@@ -1,14 +1,10 @@
 {
-  SortedSet<? extends BlobMetadata> returnVal=getAllBlobMetadata.execute(containerName,options);
-  if (options.getDir() != null) {
-    returnVal=Sets.newTreeSet(Iterables.transform(returnVal,new Function<BlobMetadata,BlobMetadata>(){
-      public BlobMetadata apply(      BlobMetadata from){
-        MutableBlobMetadata md=new MutableBlobMetadataImpl(from);
-        md.setName(pathStripper.apply(from.getName()));
-        return md;
-      }
+  return Iterables.transform(listStrategy.execute(containerName,options),new Function<BlobMetadata,BlobMetadata>(){
+    public BlobMetadata apply(    BlobMetadata from){
+      MutableBlobMetadata md=new MutableBlobMetadataImpl(from);
+      if (options.getDir() != null)       md.setName(pathStripper.apply(from.getName()));
+      return md;
     }
-));
   }
-  return returnVal;
+);
 }

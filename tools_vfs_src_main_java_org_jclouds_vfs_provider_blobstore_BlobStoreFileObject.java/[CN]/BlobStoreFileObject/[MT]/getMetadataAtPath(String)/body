@@ -1,11 +1,9 @@
 {
-  BlobMetadata md=getBlobStore().blobMetadata(getContainer(),name);
-  if (isDirectoryStrategy.execute(md)) {
-    metadata=resource2Directory.apply(md);
+  metadata=getBlobStore().blobMetadata(getContainer(),name);
+  if (metadata.getType() != StorageType.BLOB) {
     logger.info(String.format("<< dir: %s/%s",getContainer(),name));
   }
  else {
-    metadata=md;
     logger.info(String.format("<< blob: %s/%s",getContainer(),name));
   }
 }

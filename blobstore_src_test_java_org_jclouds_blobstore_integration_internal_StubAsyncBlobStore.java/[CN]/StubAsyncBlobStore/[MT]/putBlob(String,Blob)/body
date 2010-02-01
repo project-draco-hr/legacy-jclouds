@@ -1,7 +1,7 @@
 {
-  Map<String,Blob> container=getContainerToBlobs().get(bucketName);
+  Map<String,Blob> container=getContainerToBlobs().get(containerName);
   if (container == null) {
-    new RuntimeException("bucketName not found: " + bucketName);
+    new RuntimeException("containerName not found: " + containerName);
   }
   try {
     byte[] data=toByteArray(object.getPayload().getRawContent());
@@ -13,7 +13,7 @@
     newMd.setETag(eTag);
     newMd.setContentMD5(md5);
     newMd.setContentType(object.getMetadata().getContentType());
-    Blob blob=blobProvider.create(newMd);
+    Blob blob=blobFactory.create(newMd);
     blob.setPayload(data);
     container.put(blob.getMetadata().getName(),blob);
     blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
