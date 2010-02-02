@@ -1,12 +1,6 @@
 {
   if (nodeElement.getIdproperty() != null)   getProject().setProperty(nodeElement.getIdproperty(),createdNode.getId());
   if (nodeElement.getHostproperty() != null)   getProject().setProperty(nodeElement.getHostproperty(),ipOrEmptyString(createdNode.getPublicAddresses()));
-  if (nodeElement.getKeyfile() != null && isKeyAuth(createdNode))   try {
-    Files.write(createdNode.getCredentials().key,new File(nodeElement.getKeyfile()),Charset.defaultCharset());
-  }
- catch (  IOException e) {
-    throw new BuildException(e);
-  }
   if (nodeElement.getPasswordproperty() != null && !isKeyAuth(createdNode))   getProject().setProperty(nodeElement.getPasswordproperty(),createdNode.getCredentials().key);
   if (nodeElement.getUsernameproperty() != null)   getProject().setProperty(nodeElement.getUsernameproperty(),createdNode.getCredentials().account);
 }
