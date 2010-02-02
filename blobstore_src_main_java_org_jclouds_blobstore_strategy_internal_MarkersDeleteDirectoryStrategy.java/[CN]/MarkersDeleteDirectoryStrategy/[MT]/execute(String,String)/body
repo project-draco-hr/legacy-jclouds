@@ -1,13 +1,2 @@
 {
-  Set<String> names=Sets.newHashSet();
-  names.add(directory);
-  for (  String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
-    names.add(directory + suffix);
-  }
-  Map<String,ListenableFuture<?>> responses=Maps.newHashMap();
-  for (  String name : names) {
-    responses.put(name,ablobstore.removeBlob(containerName,name));
-  }
-  Map<String,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting directory in containerName: %s",containerName));
-  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("error deleting from container %s: %s",containerName,exceptions));
 }

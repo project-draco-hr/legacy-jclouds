@@ -1,6 +1,6 @@
 {
   try {
-    connection.deleteRootContainer();
+    client.deleteRootContainer();
   }
  catch (  ContainerNotFoundException e) {
     Thread.sleep(5000);
@@ -16,7 +16,7 @@ catch (  AzureStorageResponseException htpe) {
   boolean created=false;
   while (!created) {
     try {
-      created=connection.createRootContainer();
+      created=client.createRootContainer();
     }
  catch (    AzureStorageResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 409) {
@@ -28,6 +28,6 @@ catch (  AzureStorageResponseException htpe) {
       }
     }
   }
-  ListBlobsResponse list=connection.listBlobs();
+  ListBlobsResponse list=client.listBlobs();
   assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/%%24root",account)));
 }

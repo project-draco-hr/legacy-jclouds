@@ -1,0 +1,20 @@
+{
+  this.blobstore=checkNotNull(blobstore,"blobstore");
+  this.containerName=checkNotNull(containerName,"container");
+  checkArgument(containerName.indexOf('/') == -1,"please specify directory path using the option: inDirectory, not encoded in the container name");
+  this.options=checkNotNull(options,"options") instanceof ImmutableListContainerOptions ? options : new ImmutableListContainerOptions(options);
+  String dir=options.getDir();
+  if (dir == null) {
+    prefixer=new PassThrough<String>();
+    pathStripper=prefixer;
+  }
+ else {
+    prefixer=new PrefixKey(dir,"/");
+    pathStripper=new StripPath(dir,"/");
+  }
+  this.getAllBlobs=checkNotNull(getAllBlobs,"getAllBlobs");
+  this.listStrategy=checkNotNull(listStrategy,"listStrategy");
+  this.containsValueStrategy=checkNotNull(containsValueStrategy,"containsValueStrategy");
+  this.putBlobsStrategy=checkNotNull(putBlobsStrategy,"putBlobsStrategy");
+  checkArgument(!containerName.equals(""),"container name must not be a blank string!");
+}

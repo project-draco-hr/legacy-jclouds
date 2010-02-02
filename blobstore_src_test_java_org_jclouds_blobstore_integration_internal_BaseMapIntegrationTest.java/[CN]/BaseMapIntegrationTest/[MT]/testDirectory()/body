@@ -1,0 +1,39 @@
+{
+  String containerName=getContainerName();
+  try {
+    String directory="apps";
+    Map<String,V> rootMap=createMap(context,containerName);
+    Map<String,V> rootRecursiveMap=createMap(context,containerName,recursive());
+    Map<String,V> inDirectoryMap=createMap(context,containerName,inDirectory(directory));
+    Map<String,V> inDirectoryRecursiveMap=createMap(context,containerName,inDirectory(directory).recursive());
+    context.getBlobStore().createDirectory(containerName,directory);
+    addTenObjectsUnderRoot(containerName);
+    assertEquals(rootMap.size(),10);
+    assertEquals(rootRecursiveMap.size(),10);
+    assertEquals(inDirectoryMap.size(),0);
+    assertEquals(inDirectoryRecursiveMap.size(),0);
+    addTenObjectsUnderPrefix(containerName,directory);
+    assertEquals(rootMap.size(),10);
+    assertEquals(rootRecursiveMap.size(),20);
+    assertEquals(inDirectoryMap.size(),10);
+    assertEquals(inDirectoryRecursiveMap.size(),10);
+    context.getBlobStore().createDirectory(containerName,directory + "/" + directory);
+    assertEquals(rootMap.size(),10);
+    assertEquals(rootRecursiveMap.size(),20);
+    assertEquals(inDirectoryMap.size(),10);
+    assertEquals(inDirectoryRecursiveMap.size(),10);
+    rootMap.clear();
+    assertEquals(rootMap.size(),0);
+    assertEquals(rootRecursiveMap.size(),10);
+    assertEquals(inDirectoryMap.size(),10);
+    assertEquals(inDirectoryRecursiveMap.size(),10);
+    inDirectoryMap.clear();
+    assertEquals(rootMap.size(),0);
+    assertEquals(rootRecursiveMap.size(),0);
+    assertEquals(inDirectoryMap.size(),0);
+    assertEquals(inDirectoryRecursiveMap.size(),0);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

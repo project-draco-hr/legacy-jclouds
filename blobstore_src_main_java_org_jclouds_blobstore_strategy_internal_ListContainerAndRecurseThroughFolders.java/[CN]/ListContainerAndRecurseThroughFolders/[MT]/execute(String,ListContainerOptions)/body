@@ -1,0 +1,25 @@
+{
+  final List<Iterable<? extends BlobMetadata>> lists=Lists.newArrayList();
+  Iterable<? extends StorageMetadata> pwdList=lister.execute(containerName,options);
+  for (  StorageMetadata md : Iterables.filter(pwdList,new Predicate<StorageMetadata>(){
+    @Override public boolean apply(    StorageMetadata input){
+      return (input.getType() == StorageType.FOLDER || input.getType() == StorageType.RELATIVE_PATH) && options.isRecursive();
+    }
+  }
+)) {
+    String directory=(options.getDir() != null) ? options.getDir() + "/" + md.getName() : md.getName();
+    lists.add(execute(containerName,options.clone().inDirectory(directory)));
+  }
+  lists.add(Iterables.transform(Iterables.filter(pwdList,new Predicate<StorageMetadata>(){
+    @Override public boolean apply(    StorageMetadata input){
+      return input.getType() == StorageType.BLOB;
+    }
+  }
+),new Function<StorageMetadata,BlobMetadata>(){
+    @Override public BlobMetadata apply(    StorageMetadata from){
+      return (BlobMetadata)from;
+    }
+  }
+));
+  return Sets.newHashSet(Iterables.concat(lists));
+}

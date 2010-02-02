@@ -15,12 +15,12 @@ case 404:
     if (!command.getRequest().getMethod().equals("DELETE")) {
       String message=error != null ? error.getMessage() : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
       String path=command.getRequest().getEndpoint().getPath();
-      Matcher matcher=CONTAINER_PATH.matcher(path);
+      Matcher matcher=DIRECTORY_PATH.matcher(path);
       if (matcher.find()) {
         exception=new ContainerNotFoundException(matcher.group(1),message);
       }
  else {
-        matcher=CONTAINER_KEY_PATH.matcher(path);
+        matcher=DIRECTORY_KEY_PATH.matcher(path);
         if (matcher.find()) {
           exception=new KeyNotFoundException(matcher.group(1),matcher.group(2),message);
         }

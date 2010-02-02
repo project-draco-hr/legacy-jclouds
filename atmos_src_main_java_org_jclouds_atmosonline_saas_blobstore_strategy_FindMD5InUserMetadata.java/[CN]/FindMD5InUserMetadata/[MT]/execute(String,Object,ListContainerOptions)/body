@@ -7,8 +7,15 @@
     future.addListener(new Runnable(){
       public void run(){
         try {
-          if (Arrays.equals(toSearch,future.get().getContentMetadata().getContentMD5())) {
-            queue.put(true);
+          AtmosObject object=future.get();
+          checkNotNull(object.getSystemMetadata(),object + " has no content metadata");
+          if (object.getSystemMetadata().getContentMD5() != null) {
+            if (Arrays.equals(toSearch,object.getSystemMetadata().getContentMD5())) {
+              queue.put(true);
+            }
+          }
+ else {
+            logger.debug("object %s has no content md5",object.getSystemMetadata().getObjectID());
           }
         }
  catch (        InterruptedException e) {
@@ -25,7 +32,7 @@ catch (        ExecutionException e) {
   Map<String,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("searching for md5 in container %s",containerName));
   if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("searching for md5 in container %s: %s",containerName,exceptions));
   try {
-    return queue.poll(1,TimeUnit.MICROSECONDS);
+    return queue.poll(1,TimeUnit.MICROSECONDS) != null;
   }
  catch (  InterruptedException e) {
     Throwables.propagate(e);

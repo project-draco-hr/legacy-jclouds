@@ -3,8 +3,7 @@
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   to.setId(from.getSystemMetadata().getObjectID());
   to.setLastModified(from.getSystemMetadata().getLastUserDataModification());
-  String md5hex=from.getUserMetadata().getMetadata().get("content-md5");
-  if (md5hex != null)   to.setContentMD5(encryptionService.fromHexString(md5hex));
+  to.setContentMD5(from.getSystemMetadata().getContentMD5());
   if (from.getContentMetadata().getContentType() != null)   to.setContentType(from.getContentMetadata().getContentType());
   to.setName(objectName.apply(from));
   to.setSize(from.getSystemMetadata().getSize());

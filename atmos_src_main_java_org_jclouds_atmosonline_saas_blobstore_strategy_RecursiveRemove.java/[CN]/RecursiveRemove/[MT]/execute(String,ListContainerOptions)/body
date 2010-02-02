@@ -1,9 +1,0 @@
-{
-  if (options.getDir() != null)   path+="/" + options.getDir();
-  Map<String,ListenableFuture<?>> responses=Maps.newHashMap();
-  for (  DirectoryEntry md : sync.listDirectory(path)) {
-    responses.put(path + "/" + md.getObjectName(),rm(path + "/" + md.getObjectName(),md.getType(),options.isRecursive()));
-  }
-  Map<String,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting from path: %s",path));
-  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("deleting from path %s: %s",path,exceptions));
-}

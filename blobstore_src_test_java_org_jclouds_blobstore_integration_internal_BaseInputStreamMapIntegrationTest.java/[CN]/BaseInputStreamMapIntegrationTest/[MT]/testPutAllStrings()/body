@@ -1,13 +1,13 @@
 {
-  String bucketName=getContainerName();
+  String containerName=getContainerName();
   try {
-    Map<String,InputStream> map=createMap(context,bucketName);
+    Map<String,InputStream> map=createMap(context,containerName);
     ((InputStreamMap)map).putAllStrings(this.fiveStrings);
     assertConsistencyAwareMapSize(map,5);
     assertConsistencyAwareKeySetEquals(map,new TreeSet<String>(fiveStrings.keySet()));
     fourLeftRemovingOne(map);
   }
   finally {
-    returnContainer(bucketName);
+    returnContainer(containerName);
   }
 }

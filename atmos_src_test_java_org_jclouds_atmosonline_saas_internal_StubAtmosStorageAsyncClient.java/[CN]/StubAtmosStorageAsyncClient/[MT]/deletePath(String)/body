@@ -1,10 +1,12 @@
 {
-  if (path.indexOf('/') == -1)   return compose(blobStore.deleteContainerImpl(path),new Function<Boolean,Void>(){
-    public Void apply(    Boolean from){
-      return null;
+  if (path.indexOf('/') == path.length() - 1) {
+    return compose(blobStore.deleteContainerImpl(path.substring(0,path.length() - 1)),new Function<Boolean,Void>(){
+      public Void apply(      Boolean from){
+        return null;
+      }
     }
-  }
 );
+  }
  else {
     String container=path.substring(0,path.indexOf('/'));
     path=path.substring(path.indexOf('/') + 1);

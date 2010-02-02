@@ -1,10 +1,10 @@
 {
-  if (maxList() == 0)   return;
+  if (maxResultsForTestListings() == 0)   return;
   String bucketName=getContainerName();
   try {
     Map<String,Blob> map=createMap(context,bucketName);
     Set<String> keySet=Sets.newHashSet();
-    for (int i=0; i < maxList() + 1; i++) {
+    for (int i=0; i < maxResultsForTestListings() + 1; i++) {
       keySet.add(i + "");
     }
     Map<String,Blob> newMap=new HashMap<String,Blob>();
@@ -15,7 +15,7 @@
     }
     map.putAll(newMap);
     newMap.clear();
-    assertConsistencyAwareMapSize(map,maxList() + 1);
+    assertConsistencyAwareMapSize(map,maxResultsForTestListings() + 1);
     assertConsistencyAwareKeySetEquals(map,keySet);
     map.clear();
     assertConsistencyAwareMapSize(map,0);
