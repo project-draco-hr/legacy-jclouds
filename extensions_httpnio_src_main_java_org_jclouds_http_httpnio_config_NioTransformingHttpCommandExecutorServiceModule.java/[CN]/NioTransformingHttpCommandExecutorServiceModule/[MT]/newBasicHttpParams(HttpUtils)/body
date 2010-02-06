@@ -1,0 +1,12 @@
+{
+  BasicHttpParams params=new BasicHttpParams();
+  params.setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE,8 * 1024).setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK,true).setBooleanParameter(CoreConnectionPNames.TCP_NODELAY,true).setParameter(CoreProtocolPNames.ORIGIN_SERVER,"jclouds/1.0");
+  if (utils.getConnectionTimeout() > 0) {
+    params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,utils.getConnectionTimeout());
+  }
+  if (utils.getSocketOpenTimeout() > 0) {
+    params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT,utils.getSocketOpenTimeout());
+  }
+  HttpProtocolParams.setVersion(params,HttpVersion.HTTP_1_1);
+  return params;
+}
