@@ -6,7 +6,7 @@
   assertEquals(httpMethod.getHeaders().size(),2);
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOn404.class);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
   assertNotNull(processor.getMapPayloadBinderOrNull(method,new Object[]{"",new RebuildServerOptions[]{withImage(2)}}));
 }

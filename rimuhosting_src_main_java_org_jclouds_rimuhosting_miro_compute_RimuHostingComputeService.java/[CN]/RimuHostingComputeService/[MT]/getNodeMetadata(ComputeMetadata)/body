@@ -1,5 +1,7 @@
 {
   checkArgument(node.getType() == ComputeType.NODE,"this is only valid for nodes, not " + node.getType());
   checkNotNull(node.getId(),"node.id");
-  return serverToNodeMetadata.apply(client.getServer(Long.parseLong(node.getId())));
+  long serverId=Long.parseLong(node.getId());
+  Server server=client.getServer(serverId);
+  return server == null ? null : serverToNodeMetadata.apply(server);
 }

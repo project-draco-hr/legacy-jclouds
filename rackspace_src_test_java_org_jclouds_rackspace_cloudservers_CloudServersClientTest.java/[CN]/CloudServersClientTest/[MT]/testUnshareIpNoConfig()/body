@@ -5,6 +5,6 @@
   assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/ips/public/127.0.0.1");
   assertEquals(httpMethod.getMethod(),HttpMethod.DELETE);
   assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOn404.class);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnVoidOnNotFoundOr404.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
 }

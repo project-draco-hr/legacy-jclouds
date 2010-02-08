@@ -9,5 +9,5 @@
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
   assertEquals(httpMethod.getPayload().getRawContent(),"{\"backupSchedule\":{\"daily\":\"H_0800_1000\",\"enabled\":true,\"weekly\":\"MONDAY\"}}");
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOn404.class);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
 }

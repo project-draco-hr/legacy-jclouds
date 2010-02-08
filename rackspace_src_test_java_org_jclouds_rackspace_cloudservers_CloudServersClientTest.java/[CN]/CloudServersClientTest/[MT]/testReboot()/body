@@ -8,6 +8,6 @@
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
   assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
   assertEquals("{\"reboot\":{\"type\":\"HARD\"}}",httpMethod.getPayload().getRawContent());
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOn404.class);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
 }

@@ -1,0 +1,9 @@
+{
+  Iterable<HttpResponseException> throwables=Iterables.filter(Throwables.getCausalChain(from),HttpResponseException.class);
+  if (Iterables.size(Iterables.filter(throwables,ResourceNotFoundException.class)) >= 1) {
+    return false;
+  }
+ else {
+    return !rto404.apply(from);
+  }
+}

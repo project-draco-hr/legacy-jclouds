@@ -1,0 +1,14 @@
+{
+  Iterable<String> addresses=server.getIpAddresses() == null ? ImmutableSet.<String>of() : Iterables.concat(ImmutableList.of(server.getIpAddresses().getPrimaryIp()),server.getIpAddresses().getSecondaryIps());
+  return Iterables.transform(addresses,new Function<String,InetAddress>(){
+    @Override public InetAddress apply(    String from){
+      try {
+        return InetAddress.getByName(from);
+      }
+ catch (      UnknownHostException e) {
+        return null;
+      }
+    }
+  }
+);
+}

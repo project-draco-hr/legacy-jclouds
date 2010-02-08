@@ -1,10 +1,10 @@
 {
-  assertEquals(new BackupSchedule(),client.listBackupSchedule(serverId));
+  assertEquals(new BackupSchedule(),client.getBackupSchedule(serverId));
   BackupSchedule dailyWeekly=new BackupSchedule();
   dailyWeekly.setEnabled(true);
   dailyWeekly.setWeekly(WeeklyBackup.FRIDAY);
   dailyWeekly.setDaily(DailyBackup.H_0400_0600);
-  assertEquals(true,client.replaceBackupSchedule(serverId,dailyWeekly));
+  client.replaceBackupSchedule(serverId,dailyWeekly);
   client.deleteBackupSchedule(serverId);
-  assertEquals(client.listBackupSchedule(serverId).isEnabled(),false);
+  assertEquals(client.getBackupSchedule(serverId).isEnabled(),false);
 }
