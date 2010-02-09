@@ -1,0 +1,18 @@
+{
+  injector=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Jsr330.named("testaccount")).to("ralphie");
+      bind(URI.class).annotatedWith(RestAnnotationProcessorTest.Localhost.class).toInstance(URI.create("http://localhost:8080"));
+      Jsr330.bindProperties(binder(),new PropertiesBuilder(){
+        @Override public PropertiesBuilder withCredentials(        String account,        String key){
+          return null;
+        }
+        @Override public PropertiesBuilder withEndpoint(        URI endpoint){
+          return null;
+        }
+      }
+.build());
+    }
+  }
+,new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+}
