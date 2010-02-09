@@ -1,33 +1,13 @@
 {
   checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
   checkNotNull(template.getLocation(),"location");
-  final Set<NodeMetadata> nodes=Sets.newHashSet();
   logger.debug(">> running %d node%s tag(%s) location(%s) image(%s) size(%s) options(%s)",count,count > 1 ? "s" : "",tag,template.getLocation().getId(),template.getImage().getId(),template.getSize().getId(),template.getOptions());
-  Map<String,ListenableFuture<Void>> responses=Maps.newHashMap();
-  for (  final String name : getNextNames(tag,count)) {
-    responses.put(name,makeListenable(executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        NodeMetadata node=null;
-        logger.debug(">> starting node(%s) tag(%s)",name,tag);
-        node=startNode(tag,name,template);
-        logger.debug("<< running node(%s)",node.getId());
-        try {
-          utils.runOptionsOnNode(node,template.getOptions());
-          logger.debug("<< options applied node(%s)",node.getId());
-          nodes.add(node);
-        }
- catch (        Exception e) {
-          if (!template.getOptions().shouldDestroyOnError())           nodes.add(node);
-        }
-        return null;
-      }
-    }
-),executor));
-  }
-  Map<String,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
+  final Set<NodeMetadata> nodes=Sets.newHashSet();
+  Map<?,ListenableFuture<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,nodes);
+  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
   if (exceptions.size() > 0 && template.getOptions().shouldDestroyOnError()) {
-    ImmutableMap<String,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(doGetNodes(),METADATA_TO_ID);
-    for (    Entry<String,Exception> entry : exceptions.entrySet()) {
+    ImmutableMap<?,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(listNodesStrategy.execute(),METADATA_TO_ID);
+    for (    Entry<?,Exception> entry : exceptions.entrySet()) {
       logger.error(entry.getValue(),"<< error applying nodes(%s) [%s] destroying ",entry.getKey(),entry.getValue().getMessage());
       destroyNode(currentNodes.get(entry.getKey()));
     }

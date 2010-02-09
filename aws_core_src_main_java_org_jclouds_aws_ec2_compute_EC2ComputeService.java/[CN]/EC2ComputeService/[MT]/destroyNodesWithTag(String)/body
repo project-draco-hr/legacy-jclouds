@@ -1,0 +1,14 @@
+{
+  super.destroyNodesWithTag(tag);
+  Iterable<? extends NodeMetadata> nodes=Iterables.filter(getNodesWithTag(tag).values(),new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    NodeMetadata input){
+      return input.getState() == NodeState.TERMINATED;
+    }
+  }
+);
+  if (Iterables.size(nodes) > 0) {
+    Region region=getRegionFromNodeOrDefault.apply(Iterables.get(nodes,0));
+    deleteKeyPair(region,tag);
+    deleteSecurityGroup(region,tag);
+  }
+}

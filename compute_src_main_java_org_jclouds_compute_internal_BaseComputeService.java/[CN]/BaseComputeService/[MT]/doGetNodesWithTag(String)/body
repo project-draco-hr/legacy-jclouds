@@ -1,0 +1,14 @@
+{
+  Iterable<? extends NodeMetadata> nodes=Iterables.filter(Iterables.transform(listNodesStrategy.execute(),new Function<ComputeMetadata,NodeMetadata>(){
+    @Override public NodeMetadata apply(    ComputeMetadata from){
+      return from instanceof NodeMetadata ? NodeMetadata.class.cast(from) : getNodeMetadata(from);
+    }
+  }
+),new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    NodeMetadata input){
+      return tag.equals(input.getTag());
+    }
+  }
+);
+  return Maps.uniqueIndex(Iterables.filter(nodes,new NodeMatchesTag(tag)),METADATA_TO_ID);
+}

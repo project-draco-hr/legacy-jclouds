@@ -1,0 +1,24 @@
+{
+  Map<String,ListenableFuture<Void>> responses=Maps.newHashMap();
+  for (  final String name : getNextNames(tag,count)) {
+    responses.put(name,makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        NodeMetadata node=null;
+        logger.debug(">> starting node(%s) tag(%s)",name,tag);
+        node=addNodeWithTagStrategy.execute(tag,name,template);
+        logger.debug("<< running node(%s)",node.getId());
+        try {
+          utils.runOptionsOnNode(node,template.getOptions());
+          logger.debug("<< options applied node(%s)",node.getId());
+          nodes.add(node);
+        }
+ catch (        Exception e) {
+          if (!template.getOptions().shouldDestroyOnError())           nodes.add(node);
+        }
+        return null;
+      }
+    }
+),executor));
+  }
+  return responses;
+}

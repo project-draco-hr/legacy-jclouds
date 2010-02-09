@@ -1,7 +1,11 @@
 {
   super.configure();
-  bind(ComputeService.class).to(CloudServersComputeService.class).asEagerSingleton();
   bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
   }
 ).to(ServerToNodeMetadata.class);
+  bind(AddNodeWithTagStrategy.class).to(CloudServersAddNodeWithTagStrategy.class);
+  bind(ListNodesStrategy.class).to(CloudServersListNodesStrategy.class);
+  bind(GetNodeMetadataStrategy.class).to(CloudServersGetNodeMetadataStrategy.class);
+  bind(RebootNodeStrategy.class).to(CloudServersRebootNodeStrategy.class);
+  bind(DestroyNodeStrategy.class).to(CloudServersDestroyNodeStrategy.class);
 }
