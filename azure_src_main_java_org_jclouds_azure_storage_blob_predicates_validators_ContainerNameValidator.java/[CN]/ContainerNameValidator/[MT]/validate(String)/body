@@ -1,0 +1,9 @@
+{
+  if (containerName == null || containerName.length() < 3 || containerName.length() > 63)   throw exception(containerName,"Can't be null or empty. Length must be 3 to 63 symbols.");
+  if (CharMatcher.JAVA_LETTER_OR_DIGIT.indexIn(containerName) != 0)   throw exception(containerName,"Should start with letter/number");
+  if (!containerName.toLowerCase().equals(containerName))   throw exception(containerName,"Should be only lowercase");
+  CharMatcher lettersNumbersOrDashes=inRange('a','z').or(inRange('0','9').or(is('-')));
+  if (!lettersNumbersOrDashes.matchesAllOf(containerName))   throw exception(containerName,"Should have lowercase ASCII letters, " + "numbers, or dashes");
+  if (containerName.contains("--"))   throw exception(containerName,"Every dash must be followed by letter or number");
+  if (containerName.endsWith("-"))   throw exception(containerName,"Shouldn't end with a dash");
+}
