@@ -1,0 +1,7 @@
+{
+  Snapshot createdSnapshot=elasticBlockStoreServices.createSnapshotInRegion(volume.getRegion(),volume.getId(),CreateSnapshotOptions.Builder.withDescription("snapshot to test extending volumes"));
+  assertTrue(snapshotCompleted.apply(createdSnapshot));
+  Volume newVolume=elasticBlockStoreServices.createVolumeFromSnapshotInAvailabilityZone(volume.getAvailabilityZone(),newSize,createdSnapshot.getId());
+  assertTrue(volumeAvailable.apply(newVolume));
+  return newVolume;
+}

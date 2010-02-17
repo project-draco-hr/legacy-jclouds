@@ -1,0 +1,6 @@
+{
+  this.elasticBlockStoreServices=elasticBlockStoreServices;
+  this.volumeAvailable=new RetryablePredicate<Volume>(new VolumeAvailable(elasticBlockStoreServices),600,10,TimeUnit.SECONDS);
+  this.volumeAttached=new RetryablePredicate<Attachment>(new VolumeAttached(elasticBlockStoreServices),600,10,TimeUnit.SECONDS);
+  this.snapshotCompleted=new RetryablePredicate<Snapshot>(new SnapshotCompleted(elasticBlockStoreServices),600,10,TimeUnit.SECONDS);
+}

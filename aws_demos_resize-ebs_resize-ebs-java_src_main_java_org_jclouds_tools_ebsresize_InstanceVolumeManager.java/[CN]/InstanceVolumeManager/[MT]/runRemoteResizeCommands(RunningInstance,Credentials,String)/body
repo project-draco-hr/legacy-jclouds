@@ -1,0 +1,7 @@
+{
+  Map<String,? extends ComputeMetadata> nodes=context.getComputeService().getNodes();
+  NodeMetadata nodeMetadata=addCredentials((NodeMetadata)nodes.get(instance.getId()),instanceCredentials);
+  SshExecutor sshExecutor=new SshExecutor(nodeMetadata,instanceCredentials,keyPair,instance);
+  sshExecutor.connect();
+  sshExecutor.execute("sudo resize2fs " + instance.getRootDeviceName());
+}

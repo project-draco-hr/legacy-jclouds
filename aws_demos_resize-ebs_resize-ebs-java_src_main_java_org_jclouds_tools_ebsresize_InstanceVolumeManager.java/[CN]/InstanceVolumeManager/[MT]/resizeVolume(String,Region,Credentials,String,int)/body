@@ -1,0 +1,17 @@
+{
+  RunningInstance instance=instanceApi.getInstanceByIdAndRegion(instanceId,region);
+  instanceApi.stopInstance(instance);
+  Volume volume=ebsApi.getRootVolumeForInstance(instance);
+  ebsApi.detachVolumeFromStoppedInstance(volume,instance);
+  Volume newVolume=ebsApi.cloneVolumeWithNewSize(volume,newSize);
+  ebsApi.attachVolumeToStoppedInstance(newVolume,instance);
+  instanceApi.startInstance(instance);
+  api.getElasticBlockStoreServices().deleteVolumeInRegion(instance.getRegion(),volume.getId());
+  try {
+    Thread.sleep(20000);
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  runRemoteResizeCommands(instance,instanceCredentials,pathToKeyPair);
+}
