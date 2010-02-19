@@ -1,4 +1,8 @@
 {
   manager.getApi().getInstanceServices().terminateInstancesInRegion(instanceCreated.getRegion(),instanceCreated.getId());
+  checkState(instanceTerminated.apply(instanceCreated),"" + "Couldn't terminate the instance");
+  if (volumeAttached != null) {
+    manager.getApi().getElasticBlockStoreServices().deleteVolumeInRegion(volumeAttached.getRegion(),volumeAttached.getId());
+  }
   manager.closeContext();
 }
