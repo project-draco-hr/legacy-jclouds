@@ -1,7 +1,14 @@
 {
+  BlockDeviceMapping blockDeviceMapping=new BlockDeviceMapping();
+  blockDeviceMapping.addEbsBlockDevice(new RunningInstance.EbsBlockDevice(volume.getId(),"/dev/sda1",false));
   try {
-    client.getInstanceServices().setBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId(),"whoopie");
-    assertEquals(ImmutableMap.<String,EbsBlockDevice>of("whoopie",null),client.getInstanceServices().getBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId()));
+    client.getInstanceServices().setBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId(),blockDeviceMapping);
+    Map<String,RunningInstance.EbsBlockDevice> devices=client.getInstanceServices().getBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId());
+    assertEquals(devices.size(),1);
+    RunningInstance.EbsBlockDevice device=Iterables.getOnlyElement(devices.values());
+    assertEquals(device.getVolumeId(),volume.getId());
+    assertEquals(device.getDeviceName(),"/dev/sda1");
+    assertEquals(device.isDeleteOnTermination(),false);
     System.out.println("OK: setBlockDeviceMappingForInstanceInRegion");
   }
  catch (  Exception e) {

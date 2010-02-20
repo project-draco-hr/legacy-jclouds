@@ -2,20 +2,25 @@
   if (qName.equals("deviceName")) {
     deviceName=currentText.toString().trim();
   }
- else   if (qName.equals("snapshotId")) {
-    snapshotId=currentText.toString().trim();
-  }
- else   if (qName.equals("volumeSize")) {
-    volumeSize=Integer.parseInt(currentText.toString().trim());
+ else   if (qName.equals("volumeId")) {
+    volumeId=currentText.toString().trim();
   }
  else   if (qName.equals("deleteOnTermination")) {
     deleteOnTermination=Boolean.parseBoolean(currentText.toString().trim());
   }
+ else   if (qName.equals("status")) {
+    attachmentStatus=Attachment.Status.fromValue(currentText.toString().trim());
+  }
+ else   if (qName.equals("attachTime")) {
+    attachTime=dateService.iso8601DateParse(currentText.toString().trim());
+  }
  else   if (qName.equals("item")) {
-    ebsBlockDevices.put(deviceName,new Image.EbsBlockDevice(snapshotId,volumeSize,deleteOnTermination));
-    this.snapshotId=null;
-    this.volumeSize=0;
+    ebsBlockDevices.put(deviceName,new EbsBlockDevice(volumeId,deviceName,attachmentStatus,attachTime,deleteOnTermination));
+    this.volumeId=null;
+    this.deviceName=null;
     this.deleteOnTermination=true;
+    this.attachmentStatus=null;
+    this.attachTime=null;
   }
   currentText=new StringBuilder();
 }
