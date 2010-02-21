@@ -1,0 +1,12 @@
+{
+  RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  TransformingHttpCommandImpl<?> command=new TransformingHttpCommandImpl(null,request,null);
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/mypath"));
+  request.setEndpoint(URI.create("https://remotehost:443/mypath"));
+  Multimap<String,String> headers=HashMultimap.create();
+  expect(request.getHeaders()).andReturn(headers);
+  replay(request);
+  command.changeSchemeHostAndPortTo("https","remotehost",443);
+  assertEquals(headers.get(HttpHeaders.HOST),Collections.singletonList("remotehost"));
+}
