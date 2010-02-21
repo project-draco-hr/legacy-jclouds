@@ -1,30 +1,17 @@
 {
-  final String endpoint=checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint") + "/v0.8/login";
-  final String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
-  final String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  String endpoint=checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint") + "/v0.8/login";
+  String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
   context=new RestContextBuilder<VCloudLoginAsyncClient,VCloudLoginAsyncClient>(new TypeLiteral<VCloudLoginAsyncClient>(){
   }
 ,new TypeLiteral<VCloudLoginAsyncClient>(){
   }
-,new PropertiesBuilder(){
-    @Override public PropertiesBuilder withCredentials(    String account,    String key){
-      return null;
-    }
-    @Override public PropertiesBuilder withEndpoint(    URI endpoint){
-      return null;
-    }
-  }
-.build()){
+,new VCloudPropertiesBuilder(URI.create(endpoint),account,key).build()){
     public void addContextModule(    List<Module> modules){
       modules.add(new VCloudLoginContextModule());
     }
     @Override protected void addClientModule(    List<Module> modules){
-      properties.setProperty(VCloudConstants.PROPERTY_VCLOUD_ENDPOINT,checkNotNull(endpoint,"endpoint").toString());
-      properties.setProperty(PROPERTY_VCLOUD_VERSION,"0.8");
-      properties.setProperty(PROPERTY_VCLOUD_USER,checkNotNull(account,"user"));
-      properties.setProperty(PROPERTY_VCLOUD_KEY,checkNotNull(key,"key"));
-      properties.setProperty(PROPERTY_VCLOUD_SESSIONINTERVAL,"4");
-      modules.add(new VCloudLoginRestClientModule(endpoint));
+      modules.add(new VCloudLoginRestClientModule());
     }
   }
 .withModules(new Log4JLoggingModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor())).buildContext();
