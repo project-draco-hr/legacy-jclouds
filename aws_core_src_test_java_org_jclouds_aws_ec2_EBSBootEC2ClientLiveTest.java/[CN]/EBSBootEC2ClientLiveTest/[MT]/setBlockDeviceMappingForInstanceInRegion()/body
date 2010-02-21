@@ -1,13 +1,15 @@
 {
+  String volumeId=ebsInstance.getEbsBlockDevices().get("/dev/sda1").getVolumeId();
   BlockDeviceMapping blockDeviceMapping=new BlockDeviceMapping();
-  blockDeviceMapping.addEbsBlockDevice(new RunningInstance.EbsBlockDevice(volume.getId(),"/dev/sda1",false));
+  blockDeviceMapping.addEbsBlockDevice("/dev/sda1",new RunningInstance.EbsBlockDevice(volumeId,false));
   try {
     client.getInstanceServices().setBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId(),blockDeviceMapping);
     Map<String,RunningInstance.EbsBlockDevice> devices=client.getInstanceServices().getBlockDeviceMappingForInstanceInRegion(Region.DEFAULT,ebsInstance.getId());
     assertEquals(devices.size(),1);
+    String deviceName=Iterables.getOnlyElement(devices.keySet());
     RunningInstance.EbsBlockDevice device=Iterables.getOnlyElement(devices.values());
-    assertEquals(device.getVolumeId(),volume.getId());
-    assertEquals(device.getDeviceName(),"/dev/sda1");
+    assertEquals(device.getVolumeId(),volumeId);
+    assertEquals(deviceName,"/dev/sda1");
     assertEquals(device.isDeleteOnTermination(),false);
     System.out.println("OK: setBlockDeviceMappingForInstanceInRegion");
   }

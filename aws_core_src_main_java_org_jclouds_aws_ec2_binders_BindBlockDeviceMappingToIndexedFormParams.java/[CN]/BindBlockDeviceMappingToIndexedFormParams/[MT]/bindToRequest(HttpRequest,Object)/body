@@ -4,12 +4,14 @@
   BlockDeviceMapping blockDeviceMapping=(BlockDeviceMapping)input;
   GeneratedHttpRequest generatedRequest=(GeneratedHttpRequest)request;
   int amazonOneBasedIndex=1;
-  for (  RunningInstance.EbsBlockDevice ebsBlockDevice : blockDeviceMapping.getEbsBlockDevices()) {
-    generatedRequest.addFormParam(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDevice.getVolumeId());
-    if (ebsBlockDevice.getDeviceName() != null) {
-      generatedRequest.addFormParam(format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDevice.getDeviceName());
+  for (  String ebsBlockDeviceName : blockDeviceMapping.getEbsBlockDevices().keySet()) {
+    for (    RunningInstance.EbsBlockDevice ebsBlockDevice : blockDeviceMapping.getEbsBlockDevices().get(ebsBlockDeviceName)) {
+      generatedRequest.addFormParam(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDevice.getVolumeId());
+      if (ebsBlockDeviceName != null) {
+        generatedRequest.addFormParam(format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDeviceName);
+      }
+      generatedRequest.addFormParam(format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDevice.isDeleteOnTermination()));
+      amazonOneBasedIndex++;
     }
-    generatedRequest.addFormParam(format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDevice.isDeleteOnTermination()));
-    amazonOneBasedIndex++;
   }
 }
