@@ -1,0 +1,9 @@
+{
+  Map<String,String> extra=Maps.newHashMap();
+  extra.put("memory/mb",Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.MEMORY)).getVirtualQuantity() + "");
+  extra.put("processor/count",Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)).getVirtualQuantity() + "");
+  for (  ResourceAllocation disk : vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)) {
+    extra.put(String.format("disk_drive/%s/kb",disk.getId()),disk.getVirtualQuantity() + "");
+  }
+  return extra;
+}
