@@ -1,0 +1,17 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(GoGrid.class).toInstance(URI.create("https://api.gogrid.com/api"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication(    EncryptionService encryptionService) throws UnsupportedEncodingException {
+      return new BasicAuthentication("foo","bar",encryptionService);
+    }
+  }
+;
+}
