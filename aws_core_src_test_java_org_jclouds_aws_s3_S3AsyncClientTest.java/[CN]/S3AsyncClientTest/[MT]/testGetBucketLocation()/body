@@ -4,6 +4,10 @@
   assertRequestLineEquals(httpMethod,"GET http://bucket.stub:8080/?location HTTP/1.1");
   assertHeadersEqual(httpMethod,"Host: bucket.stub\n");
   assertPayloadEquals(httpMethod,null);
+  filter.filter(httpMethod);
+  assertRequestLineEquals(httpMethod,"GET http://bucket.stub:8080/?location HTTP/1.1");
+  assertHeadersEqual(httpMethod,"Authorization: AWS user:mlDjMMEYSR8md0v9S0JOZSoqWSA=\nDate: timestamp\nHost: bucket.stub\n");
+  assertPayloadEquals(httpMethod,null);
   assertResponseParserClassEquals(method,httpMethod,ParseSax.class);
   assertSaxResponseParserClassEquals(method,LocationConstraintHandler.class);
   assertExceptionParserClassEquals(method,null);
