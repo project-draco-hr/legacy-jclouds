@@ -1,0 +1,13 @@
+{
+  Exception exception;
+  ErrorResponse error=parseErrorFromContentOrNull(response.getContent());
+switch (response.getStatusCode()) {
+case 403:
+    exception=new AuthorizationException(command.getRequest(),error.getMessage());
+  break;
+default :
+exception=error != null ? new GoGridResponseException(command,response,error) : new HttpResponseException(command,response);
+}
+command.setException(exception);
+Closeables.closeQuietly(response.getContent());
+}
