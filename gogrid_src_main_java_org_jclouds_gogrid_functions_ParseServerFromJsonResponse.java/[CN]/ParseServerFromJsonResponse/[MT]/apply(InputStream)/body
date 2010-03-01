@@ -1,13 +1,4 @@
 {
-  Type setType=new TypeToken<GenericResponseContainer<Server>>(){
-  }
-.getType();
-  GenericResponseContainer<Server> response;
-  try {
-    response=gson.fromJson(new InputStreamReader(stream,"UTF-8"),setType);
-  }
- catch (  UnsupportedEncodingException e) {
-    throw new RuntimeException("jclouds requires UTF-8 encoding",e);
-  }
-  return Iterables.getOnlyElement(response.getList());
+  SortedSet<Server> allServers=new ParseServerListFromJsonResponse(gson).apply(stream);
+  return Iterables.getOnlyElement(allServers);
 }
