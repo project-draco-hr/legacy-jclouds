@@ -1,0 +1,13 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_get_job_list.json");
+  ParseJobListFromJsonResponse parser=new ParseJobListFromJsonResponse(i.getInstance(Gson.class));
+  SortedSet<Job> response=parser.apply(is);
+  Map<String,String> details=Maps.newTreeMap();
+  details.put("description",null);
+  details.put("image","GSI-f8979644-e646-4711-ad58-d98a5fa3612c");
+  details.put("ip","204.51.240.189");
+  details.put("name","ServerCreated40562");
+  details.put("type","virtual_server");
+  Job job=new Job(250628L,new Option(7L,"DeleteVirtualServer","Delete Virtual Server"),ObjectType.VIRTUAL_SERVER,new Date(1267404528895L),new Date(1267404538592L),new Option(3L,"Succeeded","Change request has succeeded."),1,"3116784158f0af2d-24076@api.gogrid.com",Arrays.asList(new JobState(940263L,new Date(1267404528897L),new Option(7L,"Created","Change request is created but not queued yet"),null),new JobState(940264L,new Date(1267404528967L),new Option(1L,"Queued","Change request is new to the system."),null)),details);
+  assertEquals(job,Iterables.getOnlyElement(response));
+}

@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_get_load_balancer_list.json");
+  ParseLoadBalancerListFromJsonResponse parser=new ParseLoadBalancerListFromJsonResponse(i.getInstance(Gson.class));
+  SortedSet<LoadBalancer> response=parser.apply(is);
+  LoadBalancer loadBalancer=new LoadBalancer(6372L,"Balancer",null,new IpPortPair(new Ip(1313082L,"204.51.240.181","204.51.240.176/255.255.255.240",true,IpState.ASSIGNED),80),Arrays.asList(new IpPortPair(new Ip(1313086L,"204.51.240.185","204.51.240.176/255.255.255.240",true,IpState.ASSIGNED),80),new IpPortPair(new Ip(1313089L,"204.51.240.188","204.51.240.176/255.255.255.240",true,IpState.ASSIGNED),80)),LoadBalancerType.ROUND_ROBIN,LoadBalancerPersistenceType.NONE,LoadBalancerOs.F5,LoadBalancerState.ON);
+  assertEquals(Iterables.getOnlyElement(response),loadBalancer);
+}
