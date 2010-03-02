@@ -1,9 +1,9 @@
 {
   Exception exception;
-  ErrorResponse error=parseErrorFromContentOrNull(response.getContent());
+  Set<ErrorResponse> errors=parseErrorsFromContentOrNull(response.getContent());
 switch (response.getStatusCode()) {
 default :
-    exception=error != null ? new GoGridResponseException(command,response,error) : new HttpResponseException(command,response);
+    exception=errors != null ? new GoGridResponseException(command,response,errors) : new HttpResponseException(command,response);
 }
 command.setException(exception);
 Closeables.closeQuietly(response.getContent());
