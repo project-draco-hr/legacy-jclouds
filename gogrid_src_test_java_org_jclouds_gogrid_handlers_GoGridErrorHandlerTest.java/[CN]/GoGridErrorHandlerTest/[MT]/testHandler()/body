@@ -1,0 +1,17 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_error_handler.json");
+  GoGridErrorHandler handler=new GoGridErrorHandler(new ParseErrorFromJsonResponse(new GsonBuilder().create()));
+  HttpCommand command=createHttpCommand();
+  handler.handleError(command,new HttpResponse(is));
+  Exception createdException=command.getException();
+  assertNotNull(createdException,"There should've been an exception generated");
+  String message=createdException.getMessage();
+  assertTrue(message.contains("No object found that matches your input criteria."),"Didn't find the expected error cause in the exception message");
+  assertTrue(message.contains("IllegalArgumentException"),"Didn't find the expected error code in the exception message");
+  try {
+    is.available();
+    throw new TestException("Stream wasn't closed by the GoGridErrorHandler when it should've");
+  }
+ catch (  IOException e) {
+  }
+}

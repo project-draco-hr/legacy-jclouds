@@ -1,0 +1,11 @@
+{
+  checkArgument(checkNotNull(request,"request is null") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
+  checkArgument(checkNotNull(input,"input is null") instanceof IpPortPair,"this binder is only valid for a IpPortPair argument");
+  IpPortPair ipPortPair=(IpPortPair)input;
+  GeneratedHttpRequest generatedRequest=(GeneratedHttpRequest)request;
+  checkNotNull(ipPortPair.getIp(),"There must be an IP address defined");
+  checkNotNull(ipPortPair.getIp().getIp(),"There must be an IP address defined in Ip object");
+  checkState(ipPortPair.getPort() > 0,"The port number must be a positive integer");
+  generatedRequest.addQueryParam(VIRTUAL_IP_KEY + "ip",ipPortPair.getIp().getIp());
+  generatedRequest.addQueryParam(VIRTUAL_IP_KEY + "port",String.valueOf(ipPortPair.getPort()));
+}

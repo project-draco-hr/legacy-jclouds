@@ -1,0 +1,7 @@
+{
+  checkNotNull(server,"Server must be a valid instance");
+  checkNotNull(server.getName(),"Server must be a valid name");
+  GetJobListOptions jobOptions=new GetJobListOptions.Builder().latestJobForObjectByName(server.getName());
+  Job latestJob=Iterables.getOnlyElement(jobClient.getJobList(jobOptions));
+  return JobState.SUCCEEDED.equals(latestJob.getCurrentState());
+}
