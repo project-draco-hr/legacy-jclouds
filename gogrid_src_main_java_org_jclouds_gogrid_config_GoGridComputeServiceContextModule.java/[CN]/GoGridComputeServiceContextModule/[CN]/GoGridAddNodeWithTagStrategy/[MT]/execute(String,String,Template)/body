@@ -3,7 +3,8 @@
   Ip availableIp=Iterables.getLast(availableIps);
   Server addedServer=client.getServerServices().addServer(name,checkNotNull(template.getImage().getId()),sizeToRam.apply(template.getSize()),availableIp.getIp());
   serverLatestJobCompleted.apply(addedServer);
+  client.getServerServices().power(addedServer.getName(),PowerCommand.START);
+  serverLatestJobCompleted.apply(addedServer);
   addedServer=Iterables.getOnlyElement(client.getServerServices().getServersByName(addedServer.getName()));
-  NodeMetadata node=new NodeMetadataImpl(String.valueOf(addedServer.getId()),addedServer.getName(),template.getLocation().getId(),null,ImmutableMap.<String,String>of(),tag,serverStateToNodeState.get(addedServer.getState().getName()),ImmutableSet.<InetAddress>of(stringIpToInetAddress.apply(addedServer.getIp().getIp())),ImmutableList.<InetAddress>of(),ImmutableMap.<String,String>of(),new Credentials("root",""));
-  return node;
+  return serverToNodeMetadata.apply(addedServer);
 }

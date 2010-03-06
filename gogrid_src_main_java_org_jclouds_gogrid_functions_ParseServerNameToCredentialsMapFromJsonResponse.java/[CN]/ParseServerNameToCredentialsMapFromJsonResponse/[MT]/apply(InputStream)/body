@@ -1,0 +1,17 @@
+{
+  Type setType=new TypeToken<GenericResponseContainer<Password>>(){
+  }
+.getType();
+  GenericResponseContainer<Password> response;
+  try {
+    response=gson.fromJson(new InputStreamReader(stream,"UTF-8"),setType);
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException("jclouds requires UTF-8 encoding",e);
+  }
+  Map<String,Credentials> serverNameToCredentials=Maps.newHashMap();
+  for (  Password password : response.getList()) {
+    serverNameToCredentials.put(password.getServer().getName(),new Credentials(password.getUserName(),password.getPassword()));
+  }
+  return serverNameToCredentials;
+}

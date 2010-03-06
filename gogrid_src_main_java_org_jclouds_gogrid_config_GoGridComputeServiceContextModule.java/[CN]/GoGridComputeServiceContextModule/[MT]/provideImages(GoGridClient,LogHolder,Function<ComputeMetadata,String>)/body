@@ -1,0 +1,24 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  holder.logger.debug(">> providing images");
+  Set<ServerImage> allImages=sync.getImageServices().getImageList();
+  for (  ServerImage from : allImages) {
+    OsFamily os=null;
+    Architecture arch=from.getDescription().indexOf("64") == -1 ? Architecture.X86_32 : Architecture.X86_64;
+    String osDescription;
+    String version="";
+    osDescription=from.getOs().getName();
+    Matcher matcher=GOGRID_PATTERN.matcher(from.getOs().getName());
+    if (matcher.find()) {
+      try {
+        os=OsFamily.fromValue(matcher.group(1).toLowerCase());
+      }
+ catch (      IllegalArgumentException e) {
+        holder.logger.debug("<< didn't match os(%s)",matcher.group(2));
+      }
+    }
+    images.add(new ImageImpl(from.getName(),from.getDescription(),null,null,ImmutableMap.<String,String>of(),from.getDescription(),version,os,osDescription,arch));
+  }
+  holder.logger.debug("<< images(%d)",images.size());
+  return Maps.uniqueIndex(images,indexer);
+}
