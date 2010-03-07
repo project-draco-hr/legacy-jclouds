@@ -2,8 +2,11 @@
   Exception exception;
   Set<ErrorResponse> errors=parseErrorsFromContentOrNull(response.getContent());
 switch (response.getStatusCode()) {
+case 403:
+    exception=new HttpResponseException(command,response);
+  break;
 default :
-    exception=errors != null ? new GoGridResponseException(command,response,errors) : new HttpResponseException(command,response);
+exception=errors != null ? new GoGridResponseException(command,response,errors) : new HttpResponseException(command,response);
 }
 command.setException(exception);
 Closeables.closeQuietly(response.getContent());
