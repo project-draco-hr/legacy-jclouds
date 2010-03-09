@@ -1,0 +1,13 @@
+{
+  install(new BlobStoreObjectModule<AsyncBlobStore,BlobStore>(new TypeLiteral<AsyncBlobStore>(){
+  }
+,new TypeLiteral<BlobStore>(){
+  }
+));
+  install(new BlobStoreMapModule());
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+  bind(AsyncBlobStore.class).to(TransientAsyncBlobStore.class).asEagerSingleton();
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<AsyncBlobStore,BlobStore>>(){
+  }
+).in(Scopes.SINGLETON);
+}
