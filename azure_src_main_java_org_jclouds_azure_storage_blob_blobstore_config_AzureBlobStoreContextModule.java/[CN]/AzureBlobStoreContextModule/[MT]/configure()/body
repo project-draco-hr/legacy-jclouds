@@ -1,7 +1,11 @@
 {
   super.configure();
   install(new BlobStoreMapModule());
-  bind(AsyncBlobStore.class).to(AzureAsyncBlobStore.class).asEagerSingleton();
-  bind(BlobStore.class).to(AzureBlobStore.class).asEagerSingleton();
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+  bind(AsyncBlobStore.class).to(AzureAsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(AzureBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<AzureBlobAsyncClient,AzureBlobClient>>(){
+  }
+).in(Scopes.SINGLETON);
   bind(ContainsValueInListStrategy.class).to(FindMD5InBlobProperties.class);
 }

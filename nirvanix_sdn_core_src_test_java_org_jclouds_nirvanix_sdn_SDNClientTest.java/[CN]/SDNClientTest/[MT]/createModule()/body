@@ -1,7 +1,11 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
-      install(new BlobStoreObjectModule());
+      install(new BlobStoreObjectModule<SDNAsyncClient,SDNClient>(new TypeLiteral<SDNAsyncClient>(){
+      }
+,new TypeLiteral<SDNClient>(){
+      }
+));
       bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://stub:8080"));
       bind(String.class).annotatedWith(SessionToken.class).toInstance("sessiontoken");
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){

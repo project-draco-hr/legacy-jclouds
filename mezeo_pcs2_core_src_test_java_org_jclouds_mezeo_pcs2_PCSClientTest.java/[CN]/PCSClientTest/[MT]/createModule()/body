@@ -2,7 +2,11 @@
   return new AbstractModule(){
     @Override protected void configure(){
       install(new PCSObjectModule());
-      install(new BlobStoreObjectModule());
+      install(new BlobStoreObjectModule<PCSAsyncClient,PCSClient>(new TypeLiteral<PCSAsyncClient>(){
+      }
+,new TypeLiteral<PCSClient>(){
+      }
+));
       bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
       bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){

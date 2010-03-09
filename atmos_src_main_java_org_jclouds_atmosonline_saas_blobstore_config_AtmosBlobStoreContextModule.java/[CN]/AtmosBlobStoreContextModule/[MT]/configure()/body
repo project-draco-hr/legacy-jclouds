@@ -1,7 +1,11 @@
 {
   super.configure();
   install(new BlobStoreMapModule());
-  bind(AsyncBlobStore.class).to(AtmosAsyncBlobStore.class).asEagerSingleton();
-  bind(BlobStore.class).to(AtmosBlobStore.class).asEagerSingleton();
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
+  bind(AsyncBlobStore.class).to(AtmosAsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(AtmosBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<AtmosStorageAsyncClient,AtmosStorageClient>>(){
+  }
+).in(Scopes.SINGLETON);
   bind(ContainsValueInListStrategy.class).to(FindMD5InUserMetadata.class);
 }

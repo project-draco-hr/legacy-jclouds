@@ -1,6 +1,10 @@
 {
   super.configure();
   install(new BlobStoreMapModule());
-  bind(AsyncBlobStore.class).to(S3AsyncBlobStore.class).asEagerSingleton();
-  bind(BlobStore.class).to(S3BlobStore.class).asEagerSingleton();
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
+  bind(AsyncBlobStore.class).to(S3AsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(S3BlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<S3AsyncClient,S3Client>>(){
+  }
+).in(Scopes.SINGLETON);
 }

@@ -1,6 +1,10 @@
 {
   super.configure();
   install(new BlobStoreMapModule());
-  bind(AsyncBlobStore.class).to(CloudFilesAsyncBlobStore.class).asEagerSingleton();
-  bind(BlobStore.class).to(CloudFilesBlobStore.class).asEagerSingleton();
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+  bind(AsyncBlobStore.class).to(CloudFilesAsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(CloudFilesBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<CloudFilesAsyncClient,CloudFilesClient>>(){
+  }
+).in(Scopes.SINGLETON);
 }

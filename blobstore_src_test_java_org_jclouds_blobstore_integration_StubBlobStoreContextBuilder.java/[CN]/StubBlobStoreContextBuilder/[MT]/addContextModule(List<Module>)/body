@@ -1,9 +1,17 @@
 {
-  modules.add(new BlobStoreObjectModule());
+  modules.add(new BlobStoreObjectModule<AsyncBlobStore,BlobStore>(new TypeLiteral<AsyncBlobStore>(){
+  }
+,new TypeLiteral<BlobStore>(){
+  }
+));
   modules.add(new BlobStoreMapModule());
   modules.add(new AbstractModule(){
     @Override protected void configure(){
       bind(AsyncBlobStore.class).to(StubAsyncBlobStore.class).asEagerSingleton();
+      bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+      bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<AsyncBlobStore,BlobStore>>(){
+      }
+).in(Scopes.SINGLETON);
     }
     @SuppressWarnings("unused") @Provides @Singleton public BlobStore provideClient(    AsyncBlobStore client) throws IllegalArgumentException, SecurityException, NoSuchMethodException {
       return SyncProxy.create(StubBlobStore.class,client);
