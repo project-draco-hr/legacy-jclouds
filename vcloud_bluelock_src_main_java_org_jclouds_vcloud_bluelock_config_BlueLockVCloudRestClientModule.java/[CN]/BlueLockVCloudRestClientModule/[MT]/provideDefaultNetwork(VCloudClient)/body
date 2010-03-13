@@ -1,0 +1,11 @@
+{
+  org.jclouds.vcloud.domain.VDC vDC=client.getDefaultVDC();
+  Map<String,NamedResource> networks=vDC.getAvailableNetworks();
+  checkState(networks.size() > 0,"No networks present in vDC: " + vDC.getName());
+  return Iterables.getOnlyElement(Iterables.filter(networks.values(),new Predicate<NamedResource>(){
+    @Override public boolean apply(    NamedResource input){
+      return input.getName().endsWith("Public");
+    }
+  }
+)).getLocation();
+}

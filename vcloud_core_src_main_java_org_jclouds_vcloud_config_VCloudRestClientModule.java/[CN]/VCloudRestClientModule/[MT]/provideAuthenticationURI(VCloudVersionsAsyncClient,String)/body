@@ -1,3 +1,6 @@
 {
-  return versionService.getSupportedVersions().get(180,TimeUnit.SECONDS).get(version);
+  SortedMap<String,URI> versions=versionService.getSupportedVersions().get(180,TimeUnit.SECONDS);
+  checkState(versions.size() > 0,"No versions present");
+  checkState(versions.containsKey(version),"version " + version + " not present in: "+ versions);
+  return versions.get(version);
 }
