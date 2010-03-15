@@ -1,5 +1,6 @@
 {
   org.jclouds.rackspace.cloudfiles.options.ListContainerOptions httpOptions=container2ContainerListOptions.apply(options);
   ListenableFuture<PageSet<ObjectInfo>> returnVal=async.listObjects(container,httpOptions);
-  return compose(returnVal,container2ResourceList,service);
+  ListenableFuture<PageSet<? extends StorageMetadata>> list=compose(returnVal,container2ResourceList,service);
+  return options.isDetailed() ? compose(list,fetchBlobMetadataProvider.get().setContainerName(container),service) : list;
 }

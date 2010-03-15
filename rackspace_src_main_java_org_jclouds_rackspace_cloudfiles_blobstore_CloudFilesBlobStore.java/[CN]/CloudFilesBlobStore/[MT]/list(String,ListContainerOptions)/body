@@ -1,4 +1,5 @@
 {
-  org.jclouds.rackspace.cloudfiles.options.ListContainerOptions httpOptions=container2ContainerListOptions.apply(optionsList);
-  return container2ResourceList.apply(sync.listObjects(container,httpOptions));
+  org.jclouds.rackspace.cloudfiles.options.ListContainerOptions httpOptions=container2ContainerListOptions.apply(options);
+  PageSet<? extends StorageMetadata> list=container2ResourceList.apply(sync.listObjects(container,httpOptions));
+  return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
 }

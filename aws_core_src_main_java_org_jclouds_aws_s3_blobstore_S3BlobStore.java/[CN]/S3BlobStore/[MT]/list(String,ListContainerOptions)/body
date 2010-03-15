@@ -1,4 +1,5 @@
 {
-  ListBucketOptions httpOptions=container2BucketListOptions.apply(optionsList);
-  return bucket2ResourceList.apply(sync.listBucket(container,httpOptions));
+  ListBucketOptions httpOptions=container2BucketListOptions.apply(options);
+  PageSet<? extends StorageMetadata> list=bucket2ResourceList.apply(sync.listBucket(container,httpOptions));
+  return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
 }

@@ -1,0 +1,19 @@
+{
+  String key="hello";
+  Blob object=context.getBlobStore().newBlob(key);
+  object.setPayload(TEST_STRING);
+  object.getMetadata().setContentType(MediaType.TEXT_PLAIN);
+  object.getMetadata().setSize(new Long(TEST_STRING.length()));
+  object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
+  String containerName=getContainerName();
+  try {
+    addBlobToContainer(containerName,object);
+    validateContent(containerName,key);
+    PageSet<? extends StorageMetadata> container=context.getBlobStore().list(containerName,maxResults(1));
+    BlobMetadata metadata=(BlobMetadata)Iterables.getOnlyElement(container);
+    assertEquals(metadata.getUserMetadata().size(),0);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

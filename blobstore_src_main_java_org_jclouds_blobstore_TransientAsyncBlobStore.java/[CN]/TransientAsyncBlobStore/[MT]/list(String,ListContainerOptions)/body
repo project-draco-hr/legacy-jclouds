@@ -1,11 +1,11 @@
 {
-  final Map<String,Blob> realContents=getContainerToBlobs().get(name);
-  if (realContents == null)   return immediateFailedFuture(cnfe(name));
+  final Map<String,Blob> realContents=getContainerToBlobs().get(container);
+  if (realContents == null)   return immediateFailedFuture(cnfe(container));
   SortedSet<StorageMetadata> contents=Sets.newTreeSet(Iterables.transform(realContents.keySet(),new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String key){
       Blob oldBlob=realContents.get(key);
-      checkState(oldBlob != null,"blob " + key + " is not present although it was in the list of "+ name);
-      checkState(oldBlob.getMetadata() != null,"blob " + name + "/"+ key+ " has no metadata");
+      checkState(oldBlob != null,"blob " + key + " is not present although it was in the list of "+ container);
+      checkState(oldBlob.getMetadata() != null,"blob " + container + "/"+ key+ " has no metadata");
       MutableBlobMetadata md=copy(oldBlob.getMetadata());
       String directoryName=ifDirectoryReturnName.execute(md);
       if (directoryName != null) {
@@ -64,6 +64,11 @@
       }
     }
 ));
+  }
+  if (!options.isDetailed()) {
+    for (    StorageMetadata md : contents) {
+      md.getUserMetadata().clear();
+    }
   }
   return immediateFuture(new PageSetImpl<StorageMetadata>(contents,marker));
 }
