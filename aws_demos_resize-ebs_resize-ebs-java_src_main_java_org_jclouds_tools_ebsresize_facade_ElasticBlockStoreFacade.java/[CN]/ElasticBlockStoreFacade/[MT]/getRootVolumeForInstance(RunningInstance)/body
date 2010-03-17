@@ -1,0 +1,11 @@
+{
+  checkArgument(runningInstance.getRootDeviceType() == RootDeviceType.EBS,"Only storage for instances with EBS type of root device can be resized.");
+  String rootDevice=checkNotNull(runningInstance.getRootDeviceName());
+  String volumeId=null;
+  for (  String ebsVolumeId : runningInstance.getEbsBlockDevices().keySet()) {
+    if (!rootDevice.equals(ebsVolumeId))     continue;
+    RunningInstance.EbsBlockDevice device=runningInstance.getEbsBlockDevices().get(ebsVolumeId);
+    volumeId=checkNotNull(device.getVolumeId(),"Device's volume id must not be null.");
+  }
+  return Iterables.getOnlyElement(elasticBlockStoreServices.describeVolumesInRegion(runningInstance.getRegion(),volumeId));
+}

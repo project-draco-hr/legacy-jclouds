@@ -1,0 +1,8 @@
+{
+  Snapshot createdSnapshot=elasticBlockStoreServices.createSnapshotInRegion(volume.getRegion(),volume.getId(),CreateSnapshotOptions.Builder.withDescription("snapshot to test extending volumes"));
+  checkState(snapshotCompleted.apply(createdSnapshot),"Couldn't create a snapshot");
+  Volume newVolume=elasticBlockStoreServices.createVolumeFromSnapshotInAvailabilityZone(volume.getAvailabilityZone(),newSize,createdSnapshot.getId());
+  checkState(volumeAvailable.apply(newVolume),"Couldn't create a volume from the snapshot");
+  elasticBlockStoreServices.deleteSnapshotInRegion(volume.getRegion(),createdSnapshot.getId());
+  return newVolume;
+}
