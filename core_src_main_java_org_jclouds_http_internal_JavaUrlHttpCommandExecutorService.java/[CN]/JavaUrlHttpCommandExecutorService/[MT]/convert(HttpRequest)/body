@@ -7,6 +7,18 @@
     Proxy proxy=Iterables.getLast(proxies);
     connection=(HttpURLConnection)url.openConnection(proxy);
   }
+ else   if (utils.getProxyHost() != null) {
+    SocketAddress addr=new InetSocketAddress(utils.getProxyHost(),utils.getProxyPort());
+    Proxy proxy=new Proxy(Proxy.Type.HTTP,addr);
+    Authenticator authenticator=new Authenticator(){
+      public PasswordAuthentication getPasswordAuthentication(){
+        return (new PasswordAuthentication(utils.getProxyUser(),utils.getProxyPassword().toCharArray()));
+      }
+    }
+;
+    Authenticator.setDefault(authenticator);
+    connection=(HttpURLConnection)url.openConnection(proxy);
+  }
  else {
     connection=(HttpURLConnection)url.openConnection();
   }
