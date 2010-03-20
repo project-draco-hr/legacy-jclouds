@@ -3,8 +3,11 @@
     @Override protected void configureServlets(){
       bind(new TypeLiteral<Map<String,BlobStoreContext>>(){
       }
-).toInstance(GuiceServletConfig.this.contexts);
-      serve("*.blobstore").with(GetAllContainersController.class);
+).toInstance(GuiceServletConfig.this.blobsStoreContexts);
+      bind(new TypeLiteral<Map<String,ComputeServiceContext>>(){
+      }
+).toInstance(GuiceServletConfig.this.computeServiceContexts);
+      serve("*.check").with(GetAllStatusController.class);
       requestInjection(this);
     }
   }

@@ -1,18 +1,12 @@
 {
   Properties props=loadJCloudsProperties(servletContextEvent);
-  ImmutableList<String> list=ImmutableList.<String>of(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS).split(","));
-  contexts=Maps.newHashMap();
-  for (  String className : list) {
-    try {
-      Class<BlobStoreContextBuilder<?,?>> builderClass;
-      builderClass=(Class<BlobStoreContextBuilder<?,?>>)Class.forName(className);
-      String name=builderClass.getSimpleName().replaceAll("BlobStoreContextBuilder","");
-      Constructor<BlobStoreContextBuilder<?,?>> constructor=builderClass.getConstructor(Properties.class);
-      contexts.put(name,constructor.newInstance(props).withModules(new GoogleAppEngineConfigurationModule()).buildBlobStoreContext());
-    }
- catch (    Exception e) {
-      throw new RuntimeException(e);
-    }
+  ImmutableSet<Module> modules=ImmutableSet.<Module>of(new GoogleAppEngineConfigurationModule());
+  try {
+    blobsStoreContexts=ImmutableMap.<String,BlobStoreContext>of("s3",new BlobStoreContextFactory().createContext("s3",modules,props));
+    computeServiceContexts=ImmutableMap.<String,ComputeServiceContext>of("ec2",new ComputeServiceContextFactory().createContext("ec2",modules,props));
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
   }
   super.contextInitialized(servletContextEvent);
 }

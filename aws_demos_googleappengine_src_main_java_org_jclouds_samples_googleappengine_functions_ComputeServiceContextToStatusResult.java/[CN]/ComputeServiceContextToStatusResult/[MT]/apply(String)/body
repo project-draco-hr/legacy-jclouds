@@ -1,0 +1,17 @@
+{
+  final ComputeServiceContext context=contexts.get(contextName);
+  final String host=context.getProviderSpecificContext().getEndPoint().getHost();
+  String status;
+  String name="not found";
+  try {
+    long start=System.currentTimeMillis();
+    Map<String,? extends ComputeMetadata> nodes=context.getComputeService().getNodes();
+    if (nodes.size() > 0)     name=Iterables.get(nodes.keySet(),0);
+    status=((System.currentTimeMillis() - start) + "ms");
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error listing service %s",contextName);
+    status=(e.getMessage());
+  }
+  return new StatusResult(contextName,host,name,status);
+}

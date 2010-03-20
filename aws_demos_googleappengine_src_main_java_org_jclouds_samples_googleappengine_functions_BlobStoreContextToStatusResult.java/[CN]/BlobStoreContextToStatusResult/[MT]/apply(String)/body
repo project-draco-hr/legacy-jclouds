@@ -1,0 +1,18 @@
+{
+  final BlobStoreContext context=contexts.get(contextName);
+  final String host=context.getProviderSpecificContext().getEndPoint().getHost();
+  try {
+    StorageMetadata md=Iterables.getLast(Sets.newTreeSet(Iterables.filter(context.getBlobStore().list(),new Predicate<StorageMetadata>(){
+      public boolean apply(      StorageMetadata input){
+        return input.getType() == StorageType.CONTAINER;
+      }
+    }
+)));
+    return new BuildContainerResult(host,context,contextName).apply(md);
+  }
+ catch (  Exception e) {
+    StatusResult result=new StatusResult(contextName,host,null,e.getMessage());
+    logger.error(e,"Error listing service %s",contextName);
+    return result;
+  }
+}

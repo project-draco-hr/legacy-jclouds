@@ -1,0 +1,18 @@
+{
+  String status;
+  try {
+    try {
+      long start=System.currentTimeMillis();
+      context.getBlobStore().containerExists(from.getName());
+      status=((System.currentTimeMillis() - start) + "ms");
+    }
+ catch (    ContainerNotFoundException ex) {
+      status=("not found");
+    }
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error listing container %s//%s",contextName,from);
+    status=(e.getMessage());
+  }
+  return new StatusResult(contextName,host,from.getName(),status);
+}
