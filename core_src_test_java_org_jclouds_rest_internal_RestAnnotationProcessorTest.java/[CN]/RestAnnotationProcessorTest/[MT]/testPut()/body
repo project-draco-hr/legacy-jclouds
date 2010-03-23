@@ -1,7 +1,7 @@
 {
   RestAnnotationProcessor<TestPayload> processor=factory(TestPayload.class);
   Method method=TestPayload.class.getMethod("put",String.class);
-  GeneratedHttpRequest<TestPayload> request=new GeneratedHttpRequest<TestPayload>("GET",URI.create("http://localhost"),processor,TestPayload.class,method,"test");
+  GeneratedHttpRequest<TestPayload> request=new GeneratedHttpRequest<TestPayload>(uriBuilderProvider,"GET",URI.create("http://localhost"),processor,TestPayload.class,method,"test");
   processor.decorateRequest(request);
   assertEquals(request.getPayload().toString(),"test");
   assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
