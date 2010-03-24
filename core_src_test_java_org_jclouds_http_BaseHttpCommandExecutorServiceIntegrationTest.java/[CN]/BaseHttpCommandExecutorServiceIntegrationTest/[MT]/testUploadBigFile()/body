@@ -1,0 +1,19 @@
+{
+  String filename="jclouds";
+  OutputStream os=null;
+  File f=null;
+  try {
+    f=File.createTempFile(filename,"tmp");
+    f.deleteOnExit();
+    long length=Runtime.getRuntime().freeMemory() * 2;
+    os=new FileOutputStream(f.getAbsolutePath());
+    for (long i=0; i < length; i++)     os.write('a');
+    os.flush();
+    os.close();
+    assertEquals(client.postWithMd5("fileso",f).trim(),"created");
+  }
+  finally {
+    if (os != null)     os.close();
+    if (f != null && f.exists())     f.delete();
+  }
+}
