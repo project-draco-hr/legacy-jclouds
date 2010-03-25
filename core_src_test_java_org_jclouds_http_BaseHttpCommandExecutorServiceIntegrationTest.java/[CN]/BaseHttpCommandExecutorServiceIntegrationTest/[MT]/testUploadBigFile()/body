@@ -5,12 +5,24 @@
   try {
     f=File.createTempFile(filename,"tmp");
     f.deleteOnExit();
-    long length=Runtime.getRuntime().freeMemory() * 2;
-    os=new FileOutputStream(f.getAbsolutePath());
-    for (long i=0; i < length; i++)     os.write('a');
-    os.flush();
-    os.close();
-    assertEquals(client.postWithMd5("fileso",f).trim(),"created");
+    long length=(long)(Runtime.getRuntime().freeMemory() * 1.1);
+    os=new BufferedOutputStream(new FileOutputStream(f.getAbsolutePath()));
+    MessageDigest eTag=JCEEncryptionService.getDigest();
+    ByteArrayOutputStream out=new ByteArrayOutputStream();
+    try {
+      for (long i=0; i < length; i++) {
+        eTag.update((byte)'a');
+        os.write((byte)'a');
+      }
+      os.flush();
+    }
+ catch (    IOException e) {
+      throw new RuntimeException(e);
+    }
+ finally {
+      Closeables.closeQuietly(out);
+    }
+    assertEquals(client.postWithMd5("fileso",this.encryptionService.toBase64String(eTag.digest()),f).trim(),"created");
   }
   finally {
     if (os != null)     os.close();
