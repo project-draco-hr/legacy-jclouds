@@ -1,0 +1,26 @@
+{
+  URL url=null;
+  try {
+    url=request.getEndpoint().toURL();
+  }
+ catch (  MalformedURLException e) {
+    Throwables.propagate(e);
+  }
+  FetchOptions options=disallowTruncate();
+  options.followRedirects();
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header)) {
+      gaeRequest.addHeader(new HTTPHeader(header,value));
+    }
+  }
+  gaeRequest.addHeader(new HTTPHeader(HttpHeaders.USER_AGENT,USER_AGENT));
+  if (request.getPayload() != null) {
+    changeRequestContentToBytes(request);
+    gaeRequest.setPayload(((ByteArrayPayload)request.getPayload()).getRawContent());
+  }
+ else {
+    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
+  }
+  return gaeRequest;
+}
