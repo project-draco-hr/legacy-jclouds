@@ -1,0 +1,26 @@
+{
+  Payload content=request.getPayload();
+  if (content == null || content instanceof ByteArrayPayload) {
+  }
+ else   if (content instanceof StringPayload) {
+    String string=((StringPayload)content).getRawContent();
+    request.setPayload(string.getBytes());
+  }
+ else   if (content instanceof InputStreamPayload || content instanceof FilePayload) {
+    InputStream i=content.getContent();
+    try {
+      try {
+        request.setPayload(ByteStreams.toByteArray(i));
+      }
+ catch (      IOException e) {
+        throw Throwables.propagate(e);
+      }
+    }
+  finally {
+      Closeables.closeQuietly(i);
+    }
+  }
+ else {
+    throw new UnsupportedOperationException("Content not supported " + content.getClass());
+  }
+}

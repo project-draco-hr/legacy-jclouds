@@ -1,0 +1,30 @@
+{
+  try {
+    for (; ; ) {
+      Future<Response> responseF=client.executeRequest(convertToNingRequest.apply(command.getRequest()));
+      final HttpResponse httpResponse=convertToJCloudsResponse.apply(responseF.get());
+      int statusCode=httpResponse.getStatusCode();
+      if (statusCode >= 300) {
+        if (retryHandler.shouldRetryRequest(command,httpResponse)) {
+          continue;
+        }
+ else {
+          errorHandler.handleError(command,httpResponse);
+          return wrapAsFuture(httpResponse);
+        }
+      }
+ else {
+        return wrapAsFuture(httpResponse);
+      }
+    }
+  }
+ catch (  IOException e) {
+    throw Throwables.propagate(e);
+  }
+catch (  InterruptedException e) {
+    throw Throwables.propagate(e);
+  }
+catch (  ExecutionException e) {
+    throw Throwables.propagate(e);
+  }
+}

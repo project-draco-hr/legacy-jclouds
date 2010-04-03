@@ -1,0 +1,40 @@
+{
+  for (  HttpRequestFilter filter : request.getFilters()) {
+    filter.filter(request);
+  }
+  AsyncHttpClient client=new AsyncHttpClient();
+  AsyncHttpClient.BoundRequestBuilder nativeRequestBuilder;
+  String endpoint=request.getEndpoint().toASCIIString();
+  if (request.getMethod().equals(HttpMethod.HEAD)) {
+    nativeRequestBuilder=client.prepareHead(endpoint);
+  }
+ else   if (request.getMethod().equals(HttpMethod.GET)) {
+    nativeRequestBuilder=client.prepareGet(endpoint);
+  }
+ else   if (request.getMethod().equals(HttpMethod.DELETE)) {
+    nativeRequestBuilder=client.prepareDelete(endpoint);
+  }
+ else   if (request.getMethod().equals(HttpMethod.PUT)) {
+    nativeRequestBuilder=client.preparePut(endpoint);
+  }
+ else   if (request.getMethod().equals(HttpMethod.POST)) {
+    nativeRequestBuilder=client.preparePost(endpoint);
+  }
+ else {
+    throw new UnsupportedOperationException(request.getMethod());
+  }
+  Payload payload=request.getPayload();
+  if (payload != null) {
+    setPayload(nativeRequestBuilder,payload);
+  }
+ else {
+    nativeRequestBuilder.addHeader(HttpHeaders.CONTENT_LENGTH,"0");
+  }
+  nativeRequestBuilder.addHeader(HttpHeaders.USER_AGENT,USER_AGENT);
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header)) {
+      nativeRequestBuilder.addHeader(header,value);
+    }
+  }
+  return nativeRequestBuilder.build();
+}
