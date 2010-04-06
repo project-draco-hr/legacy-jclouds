@@ -9,7 +9,7 @@
   Set<InetAddress> privateAddresses=nullSafeSet(from.getPrivateIpAddress());
   Credentials credentials=credentialsMap.containsKey(new RegionTag(from.getRegion(),tag)) ? credentialsMap.get(new RegionTag(from.getRegion(),tag)) : null;
   Image image=Iterables.getOnlyElement(amiClient.describeImagesInRegion(from.getRegion(),DescribeImagesOptions.Builder.imageIds(from.getImageId())));
-  if (credentials != null && image.getImageOwnerId().equals("063491364108"))   credentials=new Credentials("ubuntu",credentials.key);
+  if (credentials != null && image.getImageOwnerId().matches("063491364108|099720109477"))   credentials=new Credentials("ubuntu",credentials.key);
   String locationId=from.getAvailabilityZone().toString();
   Map<String,String> extra=ImmutableMap.<String,String>of();
   return new NodeMetadataImpl(id,name,locationId,uri,userMetadata,tag,state,publicAddresses,privateAddresses,extra,credentials);
