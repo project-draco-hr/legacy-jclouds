@@ -2,6 +2,7 @@
   InputStream is=getClass().getResourceAsStream("/ec2/vostok.xml");
   Set<Image> result=parseImages(is);
   ImageParser parser=new ImageParser();
+  parser.setAuthenticator(new EC2PopulateDefaultLoginCredentialsForImageStrategy());
   org.jclouds.compute.domain.Image image=parser.apply(Iterables.get(result,0));
   assertEquals(image.getArchitecture(),org.jclouds.compute.domain.Architecture.X86_32);
   assertEquals(image.getDescription(),"vostok-builds/vostok-0.95-5622/vostok-0.95-5622.manifest.xml");
