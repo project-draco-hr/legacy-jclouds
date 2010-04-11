@@ -22,7 +22,7 @@
           Throwables.propagate(e);
         }
       }
-      break;
+      return transform(responses);
     }
  catch (    RuntimeException from) {
       if (Iterables.size(Iterables.filter(Throwables.getCausalChain(from),ConnectException.class)) >= 1 || Throwables.getRootCause(from).getMessage().indexOf("Auth fail") != -1 || Throwables.getRootCause(from).getMessage().indexOf("invalid privatekey") != -1) {
@@ -30,14 +30,15 @@
           Thread.sleep(100);
         }
  catch (        InterruptedException e) {
-          Throwables.propagate(e);
+          throw Throwables.propagate(e);
         }
         continue;
       }
-      Throwables.propagate(from);
+      throw Throwables.propagate(from);
     }
  finally {
       if (ssh != null)       ssh.disconnect();
     }
   }
+  throw new RuntimeException(String.format("Couldn't connect to node %s and run the script",node.getId()));
 }
