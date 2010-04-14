@@ -14,7 +14,7 @@
       checkNotNull(node.getCredentials(),"If the default credentials need to be used, they can't be null");
     }
     ComputeUtils.SshCallable<?> callable=utils.runScriptOnNode(node,"computeserv.sh",runScript);
-    Map<ComputeUtils.SshCallable<?>,?> scriptRunResults=utils.runCallablesOnNode(node,Sets.newHashSet(callable),null);
+    Map<ComputeUtils.SshCallable<?>,?> scriptRunResults=utils.runCallablesOnNode(node,Sets.<SshCallable<?>>newHashSet(callable),null);
     responses.put(node.getId(),(ExecResponse)scriptRunResults.get(callable));
   }
   return responses;
