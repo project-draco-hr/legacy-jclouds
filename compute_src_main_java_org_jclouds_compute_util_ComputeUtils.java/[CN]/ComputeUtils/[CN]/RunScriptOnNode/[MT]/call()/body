@@ -2,18 +2,8 @@
   ssh.put(scriptName,new ByteArrayInputStream(script));
   ExecResponse returnVal=ssh.exec("chmod 755 " + scriptName);
   returnVal=ssh.exec("./" + scriptName + " init");
-  if (node.getCredentials().account.equals("root")) {
-    logger.debug(">> running %s as %s@%s",scriptName,node.getCredentials().account,Iterables.get(node.getPublicAddresses(),0).getHostAddress());
-    returnVal=ssh.exec("./" + scriptName + " start");
-  }
- else   if (isKeyAuth(node)) {
-    logger.debug(">> running sudo %s as %s@%s",scriptName,node.getCredentials().account,Iterables.get(node.getPublicAddresses(),0).getHostAddress());
-    returnVal=ssh.exec("sudo ./" + scriptName + " start");
-  }
- else {
-    logger.debug(">> running sudo -S %s as %s@%s",scriptName,node.getCredentials().account,Iterables.get(node.getPublicAddresses(),0).getHostAddress());
-    returnVal=ssh.exec(String.format("echo %s|sudo -S ./%s",node.getCredentials().key,scriptName + " start"));
-  }
+  if (runAsRoot)   returnVal=runScriptAsRoot();
+ else   returnVal=runScriptAsDefaultUser();
   runScriptNotRunning.apply(ssh);
   logger.debug("<< complete(%d)",returnVal.getExitCode());
   return returnVal;

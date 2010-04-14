@@ -6,14 +6,15 @@
   Map<String,ExecResponse> responses=Maps.newHashMap();
   for (  NodeMetadata node : nodes.values()) {
     if (NodeState.RUNNING != node.getState())     continue;
-    if (options.isOverrideCredentials()) {
-      checkNotNull(credentials,"If the credentials need to be overridden, they can't be null");
-      node=ComputeUtils.installNewCredentials(node,credentials);
+    if (options.getOverrideCredentials() != null) {
+      node=ComputeUtils.installNewCredentials(node,options.getOverrideCredentials());
     }
  else {
       checkNotNull(node.getCredentials(),"If the default credentials need to be used, they can't be null");
     }
-    ComputeUtils.SshCallable<?> callable=utils.runScriptOnNode(node,"computeserv.sh",runScript);
+    ComputeUtils.SshCallable<?> callable;
+    if (options.isRunAsRoot())     callable=utils.runScriptOnNode(node,"computeserv.sh",runScript);
+ else     callable=utils.runScriptOnNodeAsDefaultUser(node,"computeserv.sh",runScript);
     Map<ComputeUtils.SshCallable<?>,?> scriptRunResults=utils.runCallablesOnNode(node,Sets.newHashSet(callable),null);
     responses.put(node.getId(),(ExecResponse)scriptRunResults.get(callable));
   }
