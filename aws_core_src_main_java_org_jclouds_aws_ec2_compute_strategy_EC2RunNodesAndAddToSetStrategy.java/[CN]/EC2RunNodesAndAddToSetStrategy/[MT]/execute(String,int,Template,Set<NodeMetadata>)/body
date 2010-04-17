@@ -4,16 +4,15 @@
   AvailabilityZone zone=template.getLocation().getScope() == LocationScope.ZONE ? AvailabilityZone.fromValue(template.getLocation().getId()) : null;
   Region region=zone == null ? Region.fromValue(template.getLocation().getId()) : Region.fromValue(template.getLocation().getParent());
   RegionTag regionTag=new RegionTag(region,tag);
-  if (!credentialsMap.containsKey(regionTag)) {
-    credentialsMap.put(regionTag,createKeyPairIfNeeded.apply(regionTag));
-  }
+  KeyPair keyPair=createNewKeyPair.apply(regionTag);
+  credentialsMap.put(new RegionTag(region,keyPair.getKeyName()),keyPair);
   TemplateOptions options=template.getOptions();
   PortsRegionTag portsRegionTag=new PortsRegionTag(region,tag,options.getInboundPorts());
   if (!securityGroupMap.containsKey(portsRegionTag)) {
     securityGroupMap.put(portsRegionTag,createSecurityGroupIfNeeded.apply(portsRegionTag));
   }
   logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",count,region,zone,template.getImage().getId(),ec2Size.getInstanceType(),tag,tag);
-  RunInstancesOptions instanceOptions=withKeyName(tag).asType(ec2Size.getInstanceType()).withSecurityGroup(tag).withAdditionalInfo(tag);
+  RunInstancesOptions instanceOptions=withKeyName(keyPair.getKeyName()).asType(ec2Size.getInstanceType()).withSecurityGroup(tag).withAdditionalInfo(tag);
   Reservation reservation=ec2Client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getId(),1,count,instanceOptions);
   Iterable<String> ids=Iterables.transform(reservation,instanceToId);
   String idsString=Joiner.on(',').join(ids);

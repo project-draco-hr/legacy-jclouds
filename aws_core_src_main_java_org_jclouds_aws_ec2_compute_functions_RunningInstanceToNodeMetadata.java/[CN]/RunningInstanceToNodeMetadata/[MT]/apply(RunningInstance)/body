@@ -1,17 +1,14 @@
 {
-  String id=from.getId();
+  String id=checkNotNull(instance,"instance").getId();
   String name=null;
   URI uri=null;
   Map<String,String> userMetadata=ImmutableMap.<String,String>of();
-  String tag=from.getKeyName();
-  NodeState state=instanceToNodeState.get(from.getInstanceState());
-  Set<InetAddress> publicAddresses=nullSafeSet(from.getIpAddress());
-  Set<InetAddress> privateAddresses=nullSafeSet(from.getPrivateIpAddress());
-  Credentials credentials=credentialsMap.containsKey(new RegionTag(from.getRegion(),tag)) ? credentialsMap.get(new RegionTag(from.getRegion(),tag)) : null;
-  Image image=Iterables.getOnlyElement(amiClient.describeImagesInRegion(from.getRegion(),DescribeImagesOptions.Builder.imageIds(from.getImageId())));
-  if (credentials != null && image.getImageOwnerId().matches("063491364108|099720109477"))   credentials=new Credentials("ubuntu",credentials.key);
-  if (credentials == null)   credentials=imageParser.apply(image).getDefaultCredentials();
-  String locationId=from.getAvailabilityZone().toString();
+  String tag=instance.getKeyName().replaceAll("-[0-9]+","");
+  NodeState state=instanceToNodeState.get(instance.getInstanceState());
+  Set<InetAddress> publicAddresses=nullSafeSet(instance.getIpAddress());
+  Set<InetAddress> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
+  Credentials credentials=new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance,tag));
+  String locationId=instance.getAvailabilityZone().toString();
   Map<String,String> extra=ImmutableMap.<String,String>of();
   return new NodeMetadataImpl(id,name,locationId,uri,userMetadata,tag,state,publicAddresses,privateAddresses,extra,credentials);
 }

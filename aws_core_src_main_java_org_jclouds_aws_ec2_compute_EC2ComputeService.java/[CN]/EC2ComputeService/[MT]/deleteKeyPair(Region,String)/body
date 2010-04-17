@@ -1,8 +1,10 @@
 {
-  if (ec2Client.getKeyPairServices().describeKeyPairsInRegion(region,tag).size() > 0) {
-    logger.debug(">> deleting keyPair(%s)",tag);
-    ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,tag);
-    credentialsMap.remove(new RegionTag(region,tag));
-    logger.debug("<< deleted keyPair(%s)",tag);
+  for (  KeyPair keyPair : ec2Client.getKeyPairServices().describeKeyPairsInRegion(region)) {
+    if (keyPair.getKeyName().matches(tag + "-[0-9]+")) {
+      logger.debug(">> deleting keyPair(%s)",tag);
+      ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,keyPair.getKeyName());
+      credentialsMap.remove(new RegionTag(region,keyPair.getKeyName()));
+      logger.debug("<< deleted keyPair(%s)",keyPair.getKeyName());
+    }
   }
 }
