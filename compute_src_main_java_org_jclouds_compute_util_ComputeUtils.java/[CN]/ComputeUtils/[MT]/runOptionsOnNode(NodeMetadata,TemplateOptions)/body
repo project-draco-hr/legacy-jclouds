@@ -9,4 +9,7 @@
   if (callables.size() > 0 || options.getPrivateKey() != null) {
     runCallablesOnNode(node,callables,options.getPrivateKey() != null ? installKeyOnNode(node,options.getPrivateKey()) : null);
   }
+  if (options.getPort() > 0) {
+    blockUntilPortIsListeningOnPublicIp(options.getPort(),options.getSeconds(),Iterables.get(node.getPublicAddresses(),0));
+  }
 }
