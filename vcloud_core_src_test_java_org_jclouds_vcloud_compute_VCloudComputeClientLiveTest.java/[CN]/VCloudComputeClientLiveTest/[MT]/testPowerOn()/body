@@ -3,9 +3,8 @@
   String serverName=getCompatibleServerName(toTest);
   int processorCount=1;
   int memory=512;
-  long disk=10 * 1025 * 1024;
-  Map<String,String> properties=ImmutableMap.of("foo","bar");
-  id=computeClient.start(client.getDefaultVDC().getId(),serverName,templateId,processorCount,memory,disk,properties).get("id");
+  InstantiateVAppTemplateOptions options=processorCount(1).memory(512).disk(10 * 1025 * 1024).productProperties(ImmutableMap.of("foo","bar"));
+  id=computeClient.start(client.getDefaultVDC().getId(),serverName,templateId,options).get("id");
   Expectation expectation=expectationMap.get(toTest);
   VApp vApp=client.getVApp(id);
   verifyConfigurationOfVApp(vApp,serverName,expectation.os,processorCount,memory,expectation.hardDisk);

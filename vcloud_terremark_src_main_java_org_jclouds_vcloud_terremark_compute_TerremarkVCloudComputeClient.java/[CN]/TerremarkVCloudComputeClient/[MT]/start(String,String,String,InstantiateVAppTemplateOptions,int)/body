@@ -1,0 +1,8 @@
+{
+  if (options.getDiskSizeKilobytes() != null) {
+    logger.warn("trmk does not support resizing the primary disk; unsetting disk size");
+  }
+  Map<String,String> response=super.start(vDCId,name,templateId,options,portsToOpen);
+  if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(response.get("id"),portsToOpen);
+  return response;
+}

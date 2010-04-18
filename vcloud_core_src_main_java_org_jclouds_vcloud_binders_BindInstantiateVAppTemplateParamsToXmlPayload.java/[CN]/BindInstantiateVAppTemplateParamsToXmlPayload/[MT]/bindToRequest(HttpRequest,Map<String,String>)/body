@@ -5,6 +5,9 @@
   String name=checkNotNull(postParams.remove("name"),"name");
   String template=checkNotNull(postParams.remove("template"),"template");
   String network=postParams.remove("network");
+  String fenceMode=postParams.remove("fenceMode");
+  String dhcpEnabled=postParams.remove("dhcpEnabled");
+  String networkName=postParams.remove("networkName");
   SortedMap<ResourceType,String> virtualHardwareQuantity=extractVirtualQuantityFromPostParams(postParams);
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
   Map<String,String> properties=Maps.newTreeMap();
@@ -13,9 +16,8 @@
     network=networkFromOptions != null ? networkFromOptions : network;
     properties.putAll(options.getProperties());
   }
-  network=network == null ? defaultNetwork : network;
   try {
-    stringBinder.bindToRequest(request,generateXml(name,template,properties,virtualHardwareQuantity,network));
+    stringBinder.bindToRequest(request,generateXml(name,template,properties,virtualHardwareQuantity,networkName == null ? name : networkName,fenceMode == null ? defaultFenceMode : FenceMode.fromValue(fenceMode),dhcpEnabled == null ? defaultDhcpEnabled : Boolean.parseBoolean(dhcpEnabled),network == null ? defaultNetwork : URI.create(network)));
   }
  catch (  ParserConfigurationException e) {
     throw new RuntimeException(e);
