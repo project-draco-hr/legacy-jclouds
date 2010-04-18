@@ -6,7 +6,7 @@
   Map<?,ListenableFuture<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,nodes);
   Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
   if (exceptions.size() > 0 && template.getOptions().shouldDestroyOnError()) {
-    ImmutableMap<?,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(listNodesStrategy.execute(),METADATA_TO_ID);
+    ImmutableMap<?,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(listNodesStrategy.execute(GetNodesOptions.NONE),METADATA_TO_ID);
     for (    Entry<?,Exception> entry : exceptions.entrySet()) {
       logger.error(entry.getValue(),"<< error applying nodes(%s) [%s] destroying ",entry.getKey(),entry.getValue().getMessage());
       destroyNode(currentNodes.get(entry.getKey()));
