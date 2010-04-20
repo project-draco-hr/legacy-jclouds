@@ -2,7 +2,16 @@
   if (options.getDiskSizeKilobytes() != null) {
     logger.warn("trmk does not support resizing the primary disk; unsetting disk size");
   }
+  String password=null;
+  if (client.getVAppTemplate(templateId).getDescription().indexOf("Windows") != -1) {
+    password=passwordGenerator.get();
+    options.getProperties().put("password",password);
+  }
   Map<String,String> response=super.start(vDCId,name,templateId,options,portsToOpen);
+  if (password != null) {
+    response=new LinkedHashMap<String,String>(response);
+    response.put("password",password);
+  }
   if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(response.get("id"),portsToOpen);
   return response;
 }

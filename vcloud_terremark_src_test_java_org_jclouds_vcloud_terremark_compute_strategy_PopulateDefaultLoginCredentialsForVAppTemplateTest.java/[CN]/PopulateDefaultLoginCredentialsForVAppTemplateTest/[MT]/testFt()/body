@@ -1,0 +1,12 @@
+{
+  InputStream is=getClass().getResourceAsStream("/terremark/ft_description.txt");
+  String description=new String(ByteStreams.toByteArray(is));
+  VAppTemplate template=createMock(VAppTemplate.class);
+  expect(template.getDescription()).andReturn(description).atLeastOnce();
+  replay(template);
+  ParseVAppTemplateDescriptionToGetDefaultLoginCredentials converter=new ParseVAppTemplateDescriptionToGetDefaultLoginCredentials();
+  Credentials creds=converter.execute(template);
+  assertEquals(creds.account,"vpncubed");
+  assertEquals(creds.key,"vpncubed");
+  verify(template);
+}
