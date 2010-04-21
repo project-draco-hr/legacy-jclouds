@@ -1,0 +1,9 @@
+{
+  Map<String,String> mapping=Maps.newHashMap();
+  mapping.put(String.format(LOCAL_PARTITION_GB_PATTERN,ROOT_PARTITION_NAME_UNIX),getRootPartitionSizeForInstanceType(instanceType) + "");
+  mapping.put(String.format(LOCAL_PARTITION_GB_PATTERN,getPrimaryPartitionDeviceName(instanceType)),getPrimaryPartitionSizeForInstanceType(instanceType) + "");
+  for (  Map.Entry<String,Integer> entry : getAdditionalPartitionsMapping(instanceType).entrySet()) {
+    mapping.put(String.format(LOCAL_PARTITION_GB_PATTERN,entry.getKey()),entry.getValue() + "");
+  }
+  return mapping;
+}
