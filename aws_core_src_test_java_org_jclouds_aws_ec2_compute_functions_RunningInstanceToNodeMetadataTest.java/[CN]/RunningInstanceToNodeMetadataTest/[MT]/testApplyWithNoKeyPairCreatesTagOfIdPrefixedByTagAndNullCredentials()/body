@@ -1,0 +1,25 @@
+{
+  AMIClient amiClient=createMock(AMIClient.class);
+  Map<RegionTag,KeyPair> credentialsMap=createMock(Map.class);
+  PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
+  RunningInstance instance=createMock(RunningInstance.class);
+  expect(instance.getId()).andReturn("id").atLeastOnce();
+  expect(instance.getKeyName()).andReturn(null).atLeastOnce();
+  expect(instance.getInstanceState()).andReturn(InstanceState.RUNNING);
+  expect(instance.getIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{12,10,10,1}));
+  expect(instance.getPrivateIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{10,10,10,1}));
+  expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
+  expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
+  replay(amiClient);
+  replay(credentialsMap);
+  replay(credentialProvider);
+  replay(instance);
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider);
+  NodeMetadata metadata=parser.apply(instance);
+  assertEquals(metadata.getTag(),"NOTAG-id");
+  assertEquals(metadata.getCredentials(),null);
+  verify(amiClient);
+  verify(credentialsMap);
+  verify(credentialProvider);
+  verify(instance);
+}

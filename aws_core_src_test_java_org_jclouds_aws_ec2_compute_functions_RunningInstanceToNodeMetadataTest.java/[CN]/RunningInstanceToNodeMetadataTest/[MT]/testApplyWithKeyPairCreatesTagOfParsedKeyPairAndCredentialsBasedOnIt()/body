@@ -1,0 +1,31 @@
+{
+  AMIClient amiClient=createMock(AMIClient.class);
+  Map<RegionTag,KeyPair> credentialsMap=createMock(Map.class);
+  PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
+  RunningInstance instance=createMock(RunningInstance.class);
+  Image image=createMock(Image.class);
+  expect(instance.getId()).andReturn("id").atLeastOnce();
+  expect(instance.getKeyName()).andReturn("keyName-100").atLeastOnce();
+  expect(instance.getInstanceState()).andReturn(InstanceState.RUNNING);
+  expect(instance.getIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{12,10,10,1}));
+  expect(instance.getPrivateIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{10,10,10,1}));
+  expect(instance.getRegion()).andReturn(Region.US_EAST_1).atLeastOnce();
+  expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
+  expect(amiClient.describeImagesInRegion(Region.US_EAST_1,imageIds("imageId"))).andReturn(ImmutableSet.<Image>of(image));
+  expect(credentialProvider.execute(image)).andReturn(new Credentials("user","pass"));
+  expect(credentialsMap.get(new RegionTag(Region.US_EAST_1,"keyName-100"))).andReturn(new KeyPair(Region.US_EAST_1,"keyName-100","keyFingerprint","pass"));
+  expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
+  expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
+  replay(amiClient);
+  replay(credentialsMap);
+  replay(credentialProvider);
+  replay(instance);
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider);
+  NodeMetadata metadata=parser.apply(instance);
+  assertEquals(metadata.getTag(),"keyName");
+  assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
+  verify(amiClient);
+  verify(credentialsMap);
+  verify(credentialProvider);
+  verify(instance);
+}

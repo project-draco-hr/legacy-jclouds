@@ -2,12 +2,16 @@
   String id=checkNotNull(instance,"instance").getId();
   String name=null;
   URI uri=null;
+  Credentials credentials=null;
+  String tag=String.format("NOTAG-%s",instance.getId());
+  if (instance.getKeyName() != null) {
+    tag=instance.getKeyName().replaceAll("-[0-9]+","");
+    credentials=new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance,tag));
+  }
   Map<String,String> userMetadata=ImmutableMap.<String,String>of();
-  String tag=instance.getKeyName().replaceAll("-[0-9]+","");
   NodeState state=instanceToNodeState.get(instance.getInstanceState());
   Set<InetAddress> publicAddresses=nullSafeSet(instance.getIpAddress());
   Set<InetAddress> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
-  Credentials credentials=new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance,tag));
   String locationId=instance.getAvailabilityZone().toString();
   Map<String,String> extra=getExtra(instance);
   return new NodeMetadataImpl(id,name,locationId,uri,userMetadata,tag,state,publicAddresses,privateAddresses,extra,credentials);
