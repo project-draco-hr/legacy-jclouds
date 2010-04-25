@@ -1,6 +1,7 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
+      Jsr330.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(new Properties()).build(),"properties"));
       bind(URI.class).annotatedWith(org.jclouds.vcloud.endpoints.VCloudLogin.class).toInstance(URI.create("http://localhost:8080/login"));
       try {
         bind(BasicAuthentication.class).toInstance(new BasicAuthentication("user","pass",new JCEEncryptionService()));

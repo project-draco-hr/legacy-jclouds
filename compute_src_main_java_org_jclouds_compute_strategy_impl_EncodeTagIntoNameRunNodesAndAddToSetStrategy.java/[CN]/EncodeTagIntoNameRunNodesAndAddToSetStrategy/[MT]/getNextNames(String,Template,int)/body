@@ -1,0 +1,11 @@
+{
+  Set<String> names=Sets.newHashSet();
+  Map<String,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(listNodesStrategy.execute(GetNodesOptions.NONE),BaseComputeService.METADATA_TO_NAME);
+  while (names.size() < count) {
+    String name=getNextName(tag,template);
+    if (!currentNodes.containsKey(name)) {
+      names.add(name);
+    }
+  }
+  return names;
+}

@@ -1,4 +1,9 @@
 {
   initializeContextAndClient();
-  checkNodes(client.runNodesWithTag(tag,1,template).values(),tag);
+  TreeSet<NodeMetadata> nodes=Sets.newTreeSet(client.runNodesWithTag(tag,1,template).values());
+  checkNodes(nodes,tag);
+  NodeMetadata node=nodes.first();
+  assertEquals(nodes.size(),1);
+  assertLocationSameOrChild(node.getLocation(),template.getLocation());
+  assertEquals(node.getImage(),template.getImage());
 }

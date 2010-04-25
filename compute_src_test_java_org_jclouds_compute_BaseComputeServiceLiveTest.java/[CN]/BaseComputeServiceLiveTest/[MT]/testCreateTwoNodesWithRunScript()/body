@@ -1,2 +1,20 @@
 {
+  try {
+    client.destroyNodesWithTag(tag);
+  }
+ catch (  HttpResponseException e) {
+  }
+catch (  NoSuchElementException e) {
+  }
+  template=buildTemplate(client.templateBuilder());
+  template.getOptions().installPrivateKey(keyPair.get("private")).authorizePublicKey(keyPair.get("public")).runScript(buildScript(template.getImage().getOsFamily()).getBytes());
+  nodes=Sets.newTreeSet(client.runNodesWithTag(tag,2,template).values());
+  assertEquals(nodes.size(),2);
+  checkNodes(nodes,tag);
+  NodeMetadata node1=nodes.first();
+  NodeMetadata node2=nodes.last();
+  assertLocationSameOrChild(node1.getLocation(),template.getLocation());
+  assertLocationSameOrChild(node2.getLocation(),template.getLocation());
+  assertEquals(node1.getImage(),template.getImage());
+  assertEquals(node2.getImage(),template.getImage());
 }

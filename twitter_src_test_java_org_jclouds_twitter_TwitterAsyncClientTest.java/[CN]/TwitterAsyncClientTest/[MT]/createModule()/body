@@ -1,0 +1,18 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      Jsr330.bindProperties(this.binder(),new TwitterPropertiesBuilder("foo","bar").build());
+      bind(URI.class).annotatedWith(Twitter.class).toInstance(URI.create("http://twitter.com"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication(    EncryptionService encryptionService) throws UnsupportedEncodingException {
+      return new BasicAuthentication("foo","bar",encryptionService);
+    }
+  }
+;
+}

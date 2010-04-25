@@ -1,6 +1,7 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
+      Jsr330.bindProperties(binder(),checkNotNull(new EC2PropertiesBuilder(new Properties()).build(),"properties"));
       bind(URI.class).annotatedWith(EC2.class).toInstance(URI.create("https://ec2.amazonaws.com"));
       bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");

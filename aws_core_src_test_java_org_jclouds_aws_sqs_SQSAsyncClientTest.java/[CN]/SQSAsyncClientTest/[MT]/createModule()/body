@@ -1,6 +1,7 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
+      Jsr330.bindProperties(binder(),checkNotNull(new SQSPropertiesBuilder(new Properties()).build(),"properties"));
       bind(URI.class).annotatedWith(SQS.class).toInstance(URI.create("https://default"));
       bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");

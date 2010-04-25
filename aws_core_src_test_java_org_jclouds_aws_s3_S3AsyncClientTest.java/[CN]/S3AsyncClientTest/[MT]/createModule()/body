@@ -7,10 +7,10 @@
       }
 ));
       install(new S3ObjectModule());
+      Jsr330.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder(new Properties()).build(),"properties"));
       bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("http://stub:8080"));
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
       bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
-      bindConstant().annotatedWith(Jsr330.named(BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX)).to("prefix");
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
         public Logger getLogger(        String category){
           return Logger.NULL;
