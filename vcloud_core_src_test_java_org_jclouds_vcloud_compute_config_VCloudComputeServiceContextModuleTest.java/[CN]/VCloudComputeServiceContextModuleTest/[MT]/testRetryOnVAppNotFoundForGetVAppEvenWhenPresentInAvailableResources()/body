@@ -9,7 +9,6 @@
   expect(client.getVApp("10")).andReturn(vApp);
   expect(computeClient.getPublicAddresses("10")).andReturn(Sets.<InetAddress>newHashSet());
   expect(computeClient.getPrivateAddresses("10")).andReturn(Sets.newHashSet(InetAddress.getLocalHost()));
-  replay(getExtra);
   replay(client);
   replay(computeClient);
   Map<String,? extends Location> locations=ImmutableMap.of();
@@ -19,7 +18,6 @@
   NamedResource vdc=new NamedResourceImpl("1",null,null,null);
   NamedResource resource=new NamedResourceImpl("10",null,null,null);
   strategy.addVAppToSetRetryingIfNotYetPresent(nodes,vdc,resource);
-  verify(getExtra);
   verify(client);
   verify(computeClient);
 }
