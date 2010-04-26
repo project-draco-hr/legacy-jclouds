@@ -1,7 +1,7 @@
 {
-  String imageRegisteredWithOptionsId=client.registerUnixImageBackedByEbsInRegion(Region.DEFAULT,"jcloudstest2",DEFAULT_SNAPSHOT,addNewBlockDevice("/dev/sda2","myvirtual",1).withDescription("adrian"));
+  String imageRegisteredWithOptionsId=client.registerUnixImageBackedByEbsInRegion(null,"jcloudstest2",DEFAULT_SNAPSHOT,addNewBlockDevice("/dev/sda2","myvirtual",1).withDescription("adrian"));
   imagesToDeregister.add(imageRegisteredWithOptionsId);
-  Image imageRegisteredWithOptions=Iterables.getOnlyElement(client.describeImagesInRegion(Region.DEFAULT,imageIds(imageRegisteredWithOptionsId)));
+  Image imageRegisteredWithOptions=Iterables.getOnlyElement(client.describeImagesInRegion(null,imageIds(imageRegisteredWithOptionsId)));
   assertEquals(imageRegisteredWithOptions.getName(),"jcloudstest2");
   assertEquals(imageRegisteredWithOptions.getImageType(),ImageType.MACHINE);
   assertEquals(imageRegisteredWithOptions.getRootDeviceType(),RootDeviceType.EBS);

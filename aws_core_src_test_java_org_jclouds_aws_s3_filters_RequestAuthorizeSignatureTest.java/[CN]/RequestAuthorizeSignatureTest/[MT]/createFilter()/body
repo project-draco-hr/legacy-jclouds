@@ -1,12 +1,7 @@
 {
   injector=Guice.createInjector(new S3RestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new ParserModule(),new AbstractModule(){
     protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_SESSIONINTERVAL)).to("2");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(S3Constants.PROPERTY_S3_ENDPOINT)).to("https://s3.amazonaws.com");
+      Jsr330.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder("foo","bar")).build());
       bind(UriBuilder.class).to(UriBuilderImpl.class);
     }
   }

@@ -8,7 +8,9 @@
     this.deleteOnTermination=true;
   }
  else   if (inInstances && !inProductCodes && !inBlockDeviceMapping) {
-    instances.add(new RunningInstance(EC2Utils.findRegionInArgsOrNull(request),amiLaunchIndex,dnsName,imageId,instanceId,instanceState,instanceType,ipAddress,kernelId,keyName,launchTime,monitoring,availabilityZone,platform,privateDnsName,privateIpAddress,productCodes,ramdiskId,reason,subnetId,vpcId,rootDeviceType,rootDeviceName,ebsBlockDevices));
+    Region region=EC2Utils.findRegionInArgsOrNull(request);
+    if (region == null)     region=defaultRegion;
+    instances.add(new RunningInstance(region,amiLaunchIndex,dnsName,imageId,instanceId,instanceState,instanceType,ipAddress,kernelId,keyName,launchTime,monitoring,availabilityZone,platform,privateDnsName,privateIpAddress,productCodes,ramdiskId,reason,subnetId,vpcId,rootDeviceType,rootDeviceName,ebsBlockDevices));
     this.amiLaunchIndex=null;
     this.dnsName=null;
     this.imageId=null;

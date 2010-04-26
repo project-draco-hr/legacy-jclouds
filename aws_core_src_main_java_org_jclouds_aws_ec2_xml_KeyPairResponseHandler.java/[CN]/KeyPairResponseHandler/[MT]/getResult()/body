@@ -1,3 +1,5 @@
 {
-  return new KeyPair(EC2Utils.findRegionInArgsOrNull(request),keyName,keyFingerprint,keyMaterial);
+  Region region=EC2Utils.findRegionInArgsOrNull(request);
+  if (region == null)   region=defaultRegion;
+  return new KeyPair(region,keyName,keyFingerprint,keyMaterial);
 }

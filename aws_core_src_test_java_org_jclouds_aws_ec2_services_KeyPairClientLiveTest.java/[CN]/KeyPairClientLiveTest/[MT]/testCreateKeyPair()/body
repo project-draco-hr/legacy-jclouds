@@ -1,17 +1,17 @@
 {
   String keyName=PREFIX + "1";
   try {
-    client.deleteKeyPairInRegion(Region.DEFAULT,keyName);
+    client.deleteKeyPairInRegion(null,keyName);
   }
  catch (  Exception e) {
   }
-  client.deleteKeyPairInRegion(Region.DEFAULT,keyName);
-  KeyPair result=client.createKeyPairInRegion(Region.DEFAULT,keyName);
+  client.deleteKeyPairInRegion(null,keyName);
+  KeyPair result=client.createKeyPairInRegion(null,keyName);
   assertNotNull(result);
   assertNotNull(result.getKeyMaterial());
   assertNotNull(result.getKeyFingerprint());
   assertEquals(result.getKeyName(),keyName);
-  SortedSet<KeyPair> twoResults=Sets.newTreeSet(client.describeKeyPairsInRegion(Region.DEFAULT,keyName));
+  SortedSet<KeyPair> twoResults=Sets.newTreeSet(client.describeKeyPairsInRegion(null,keyName));
   assertNotNull(twoResults);
   assertEquals(twoResults.size(),1);
   KeyPair listPair=twoResults.iterator().next();

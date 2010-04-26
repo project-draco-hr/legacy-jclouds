@@ -1,5 +1,7 @@
 {
-  Reservation info=new Reservation(EC2Utils.findRegionInArgsOrNull(request),groupIds,instances,ownerId,requesterId,reservationId);
+  Region region=EC2Utils.findRegionInArgsOrNull(request);
+  if (region == null)   region=defaultRegion;
+  Reservation info=new Reservation(region,groupIds,instances,ownerId,requesterId,reservationId);
   this.groupIds=Sets.newTreeSet();
   this.instances=Sets.newTreeSet();
   this.ownerId=null;
