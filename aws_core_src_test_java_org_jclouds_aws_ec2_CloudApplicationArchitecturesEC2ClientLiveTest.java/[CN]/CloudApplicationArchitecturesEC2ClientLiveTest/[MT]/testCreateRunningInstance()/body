@@ -4,7 +4,7 @@
   while (instance == null) {
     try {
       System.out.printf("%d: running instance%n",System.currentTimeMillis());
-      Reservation reservation=client.getInstanceServices().runInstancesInRegion(Region.DEFAULT,null,"ami-ccf615a5",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPair.getKeyName()).withSecurityGroup(securityGroupName).withUserData(script.getBytes()));
+      Reservation reservation=client.getInstanceServices().runInstancesInRegion(null,null,"ami-ccf615a5",1,1,asType(InstanceType.M1_SMALL).withKeyName(keyPair.getKeyName()).withSecurityGroup(securityGroupName).withUserData(script.getBytes()));
       instance=Iterables.getOnlyElement(reservation);
     }
  catch (    HttpResponseException htpe) {

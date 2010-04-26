@@ -1,12 +1,12 @@
 {
   securityGroupName=instancePrefix + "ingress";
   try {
-    client.getSecurityGroupServices().deleteSecurityGroupInRegion(Region.DEFAULT,securityGroupName);
+    client.getSecurityGroupServices().deleteSecurityGroupInRegion(null,securityGroupName);
   }
  catch (  Exception e) {
   }
-  client.getSecurityGroupServices().createSecurityGroupInRegion(Region.DEFAULT,securityGroupName,securityGroupName);
+  client.getSecurityGroupServices().createSecurityGroupInRegion(null,securityGroupName,securityGroupName);
   for (  int port : new int[]{80,443,22}) {
-    client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(Region.DEFAULT,securityGroupName,IpProtocol.TCP,port,port,"0.0.0.0/0");
+    client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(null,securityGroupName,IpProtocol.TCP,port,port,"0.0.0.0/0");
   }
 }

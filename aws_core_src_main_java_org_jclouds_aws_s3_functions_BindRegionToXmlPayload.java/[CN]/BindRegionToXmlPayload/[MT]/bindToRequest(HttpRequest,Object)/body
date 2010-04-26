@@ -1,11 +1,11 @@
 {
-  checkArgument(checkNotNull(input,"input") instanceof Region,"this binder is only valid for Region!");
+  input=input == null ? defaultRegion : input;
+  checkArgument(input instanceof Region,"this binder is only valid for Region!");
   Region constraint=(Region)input;
   String value=null;
 switch (constraint) {
 case US_STANDARD:
 case US_EAST_1:
-case DEFAULT:
     return;
 case EU_WEST_1:
   value="EU";
@@ -16,5 +16,6 @@ break;
 default :
 throw new IllegalStateException("unimplemented location: " + this);
 }
-super.bindToRequest(request,String.format("<CreateBucketConfiguration><LocationConstraint>%s</LocationConstraint></CreateBucketConfiguration>",value));
+String payload=String.format("<CreateBucketConfiguration><LocationConstraint>%s</LocationConstraint></CreateBucketConfiguration>",value);
+super.bindToRequest(request,payload);
 }

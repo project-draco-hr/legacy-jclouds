@@ -1,5 +1,7 @@
 {
-  Snapshot snapshot=new Snapshot(EC2Utils.findRegionInArgsOrNull(request),id,volumeId,volumeSize,status,startTime,progress,ownerId,description,ownerAlias);
+  Region region=EC2Utils.findRegionInArgsOrNull(request);
+  if (region == null)   region=defaultRegion;
+  Snapshot snapshot=new Snapshot(region,id,volumeId,volumeSize,status,startTime,progress,ownerId,description,ownerAlias);
   this.id=null;
   this.volumeId=null;
   this.volumeSize=0;

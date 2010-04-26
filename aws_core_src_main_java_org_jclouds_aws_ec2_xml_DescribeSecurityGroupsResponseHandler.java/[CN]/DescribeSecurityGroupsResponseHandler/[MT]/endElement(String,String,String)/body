@@ -48,7 +48,9 @@
       this.userIdGroupName=null;
     }
  else     if (!inIpPermissions && !inIpRanges && !inGroups) {
-      securtyGroups.add(new SecurityGroup(EC2Utils.findRegionInArgsOrNull(request),groupName,ownerId,groupDescription,ipPermissions));
+      Region region=EC2Utils.findRegionInArgsOrNull(request);
+      if (region == null)       region=defaultRegion;
+      securtyGroups.add(new SecurityGroup(region,groupName,ownerId,groupDescription,ipPermissions));
       this.groupName=null;
       this.ownerId=null;
       this.groupDescription=null;
