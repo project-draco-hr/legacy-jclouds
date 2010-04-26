@@ -1,0 +1,18 @@
+{
+  Properties properties=new Properties();
+  try {
+    properties.load(Resources.newInputStreamSupplier(Resources.getResource("compute.properties")).getInput());
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+  Set<Object> keys=properties.keySet();
+  Set<String> providers=new HashSet<String>();
+  for (  Object key : keys) {
+    String keyString=key.toString();
+    if (keyString.endsWith(".contextbuilder")) {
+      providers.add(keyString.substring(0,keyString.length() - ".contextbuilder".length()));
+    }
+  }
+  return providers;
+}
