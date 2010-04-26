@@ -1,13 +1,13 @@
 {
   String groupName=PREFIX + "ingress";
   try {
-    client.deleteSecurityGroupInRegion(Region.DEFAULT,groupName);
+    client.deleteSecurityGroupInRegion(null,groupName);
   }
  catch (  Exception e) {
   }
-  client.createSecurityGroupInRegion(Region.DEFAULT,groupName,groupName);
-  client.authorizeSecurityGroupIngressInRegion(Region.DEFAULT,groupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
+  client.createSecurityGroupInRegion(null,groupName,groupName);
+  client.authorizeSecurityGroupIngressInRegion(null,groupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
   assertEventually(new GroupHasPermission(client,groupName,new IpPermission(80,80,Sets.<UserIdGroupPair>newTreeSet(),IpProtocol.TCP,ImmutableSortedSet.of("0.0.0.0/0"))));
-  client.revokeSecurityGroupIngressInRegion(Region.DEFAULT,groupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
+  client.revokeSecurityGroupIngressInRegion(null,groupName,IpProtocol.TCP,80,80,"0.0.0.0/0");
   assertEventually(new GroupHasNoPermissions(client,groupName));
 }

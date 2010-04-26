@@ -1,12 +1,7 @@
 {
   return Guice.createInjector(new EC2RestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new ParserModule(),new AbstractModule(){
     @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_ACCESSKEYID)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
-      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_EC2_ENDPOINT)).to("http://localhost");
-      bindConstant().annotatedWith(Jsr330.named(EC2Constants.PROPERTY_AWS_EXPIREINTERVAL)).to(30);
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
+      Jsr330.bindProperties(this.binder(),new EC2PropertiesBuilder("user","key").build());
       bind(UriBuilder.class).to(UriBuilderImpl.class);
     }
   }

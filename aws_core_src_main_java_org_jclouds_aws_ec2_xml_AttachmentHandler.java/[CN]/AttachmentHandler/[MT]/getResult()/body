@@ -1,3 +1,5 @@
 {
-  return new Attachment(EC2Utils.findRegionInArgsOrNull(request),volumeId,instanceId,device,attachmentStatus,attachTime);
+  Region region=EC2Utils.findRegionInArgsOrNull(request);
+  if (region == null)   region=defaultRegion;
+  return new Attachment(region,volumeId,instanceId,device,attachmentStatus,attachTime);
 }

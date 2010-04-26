@@ -17,7 +17,9 @@
     }
   }
  else   if (qName.equals("item")) {
-    instances.add(new InstanceStateChange(EC2Utils.findRegionInArgsOrNull(request),instanceId,shutdownState,previousState));
+    Region region=EC2Utils.findRegionInArgsOrNull(request);
+    if (region == null)     region=defaultRegion;
+    instances.add(new InstanceStateChange(region,instanceId,shutdownState,previousState));
     this.instanceId=null;
     this.shutdownState=null;
     this.previousState=null;

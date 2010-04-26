@@ -72,7 +72,9 @@
     }
  else     if (!inProductCodes) {
       try {
-        contents.add(new Image(EC2Utils.findRegionInArgsOrNull(request),architecture,this.name,description,imageId,imageLocation,imageOwnerId,imageState,imageType,isPublic,productCodes,kernelId,platform,ramdiskId,rootDeviceType,rootDeviceName,ebsBlockDevices));
+        Region region=EC2Utils.findRegionInArgsOrNull(request);
+        if (region == null)         region=defaultRegion;
+        contents.add(new Image(region,architecture,this.name,description,imageId,imageLocation,imageOwnerId,imageState,imageType,isPublic,productCodes,kernelId,platform,ramdiskId,rootDeviceType,rootDeviceName,ebsBlockDevices));
       }
  catch (      NullPointerException e) {
         logger.warn(e,"malformed image: %s",imageId);
