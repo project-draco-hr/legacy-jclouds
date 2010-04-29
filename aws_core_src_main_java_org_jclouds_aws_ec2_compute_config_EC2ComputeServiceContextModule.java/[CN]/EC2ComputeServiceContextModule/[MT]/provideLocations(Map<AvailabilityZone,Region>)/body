@@ -1,15 +1,10 @@
 {
-  Set<Location> locations=Sets.newHashSet();
+  Map<String,Location> locations=Maps.newLinkedHashMap();
   for (  AvailabilityZone zone : map.keySet()) {
-    locations.add(new LocationImpl(LocationScope.ZONE,zone.toString(),zone.toString(),map.get(zone).toString()));
+    locations.put(zone.toString(),new LocationImpl(LocationScope.ZONE,zone.toString(),zone.toString(),map.get(zone).toString()));
   }
   for (  Region region : map.values()) {
-    locations.add(new LocationImpl(LocationScope.REGION,region.toString(),region.toString(),null));
+    locations.put(region.toString(),new LocationImpl(LocationScope.REGION,region.toString(),region.toString(),null));
   }
-  return Maps.uniqueIndex(locations,new Function<Location,String>(){
-    @Override public String apply(    Location from){
-      return from.getId();
-    }
-  }
-);
+  return locations;
 }
