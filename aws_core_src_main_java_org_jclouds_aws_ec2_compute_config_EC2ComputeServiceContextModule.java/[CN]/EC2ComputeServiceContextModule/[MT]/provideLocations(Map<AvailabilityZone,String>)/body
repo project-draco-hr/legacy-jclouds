@@ -1,0 +1,10 @@
+{
+  Map<String,Location> locations=Maps.newLinkedHashMap();
+  for (  AvailabilityZone zone : availabilityZoneToRegionMap.keySet()) {
+    locations.put(zone.toString(),new LocationImpl(LocationScope.ZONE,zone.toString(),zone.toString(),availabilityZoneToRegionMap.get(zone)));
+  }
+  for (  String region : availabilityZoneToRegionMap.values()) {
+    locations.put(region,new LocationImpl(LocationScope.REGION,region,region,null));
+  }
+  return locations;
+}
