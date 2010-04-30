@@ -4,7 +4,7 @@
   returnVal=ssh.exec("./" + scriptName + " init");
   if (runAsRoot)   returnVal=runScriptAsRoot();
  else   returnVal=runScriptAsDefaultUser();
-  runScriptNotRunning.apply(ssh);
+  runScriptNotRunning.apply(new CommandUsingClient("./" + scriptName + " status",ssh));
   logger.debug("<< complete(%d)",returnVal.getExitCode());
   return returnVal;
 }
