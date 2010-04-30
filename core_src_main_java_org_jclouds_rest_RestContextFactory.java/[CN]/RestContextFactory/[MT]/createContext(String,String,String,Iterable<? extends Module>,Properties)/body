@@ -1,23 +1,2 @@
 {
-  checkNotNull(hint,"hint");
-  checkNotNull(modules,"modules");
-  checkNotNull(overrides,"overrides");
-  String propertiesBuilderKey=String.format("%s.propertiesbuilder",hint);
-  String propertiesBuilderClassName=checkNotNull(properties.getProperty(propertiesBuilderKey),hint + " service not supported");
-  String contextBuilderKey=String.format("%s.contextbuilder",hint);
-  String contextBuilderClassName=checkNotNull(properties.getProperty(contextBuilderKey),contextBuilderKey);
-  String endpointKey=String.format("%s.endpoint",hint);
-  String endpoint=properties.getProperty(endpointKey);
-  try {
-    Class<PropertiesBuilder> propertiesBuilderClass=(Class<PropertiesBuilder>)Class.forName(propertiesBuilderClassName);
-    Class<B> contextBuilderClass=(Class<B>)Class.forName(contextBuilderClassName);
-    PropertiesBuilder builder=propertiesBuilderClass.getConstructor(Properties.class).newInstance(overrides);
-    if (key != null)     builder.withCredentials(account,key);
-    if (endpoint != null)     builder.withEndpoint(URI.create(endpoint));
-    B contextBuilder=(B)contextBuilderClass.getConstructor(Properties.class).newInstance(builder.build()).withModules(Iterables.toArray(modules,Module.class));
-    return build(contextBuilder);
-  }
- catch (  Exception e) {
-    throw new RuntimeException("error instantiating " + contextBuilderClassName,e);
-  }
 }

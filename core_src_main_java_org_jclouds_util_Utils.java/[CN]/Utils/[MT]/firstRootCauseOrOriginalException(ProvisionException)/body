@@ -1,0 +1,8 @@
+{
+  for (  Message message : e.getErrorMessages()) {
+    Throwable cause=Throwables.getRootCause(message.getCause());
+    if (cause instanceof ProvisionException)     return firstRootCauseOrOriginalException(ProvisionException.class.cast(cause));
+    return cause;
+  }
+  return e;
+}
