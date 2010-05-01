@@ -1,13 +1,6 @@
 {
   if (qName.equals("zoneName")) {
-    zoneName=currentText.toString().trim();
-    try {
-      zone=AvailabilityZone.fromValue(zoneName);
-    }
- catch (    IllegalArgumentException e) {
-      logger.warn(e,"unsupported region: %s",zoneName);
-      zone=AvailabilityZone.UNKNOWN;
-    }
+    zone=currentText.toString().trim();
   }
  else   if (qName.equals("regionName")) {
     try {
@@ -34,9 +27,8 @@
     inMessageSet=false;
   }
  else   if (qName.equals("item") && !inMessageSet) {
-    availablilityZones.add(new AvailabilityZoneInfo(zoneName,zone,zoneState,region,messages));
+    availablilityZones.add(new AvailabilityZoneInfo(zone,zoneState,region,messages));
     this.zone=null;
-    this.zoneName=null;
     this.region=null;
     this.zoneState=null;
     this.messages=Sets.newHashSet();
