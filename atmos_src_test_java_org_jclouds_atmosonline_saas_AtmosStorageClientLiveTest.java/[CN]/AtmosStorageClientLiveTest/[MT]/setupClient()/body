@@ -1,7 +1,7 @@
 {
   String uid=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  BlobStoreContext blobStoreContext=new AtmosStorageContextBuilder(new AtmosStoragePropertiesBuilder(uid,key).build()).withModules(new Log4JLoggingModule()).buildBlobStoreContext();
+  BlobStoreContext blobStoreContext=new BlobStoreContextFactory().createContext("atmosstorage",uid,key,ImmutableSet.<Module>of(new Log4JLoggingModule()));
   RestContext<AtmosStorageAsyncClient,AtmosStorageClient> context=blobStoreContext.getProviderSpecificContext();
   connection=context.getApi();
   for (  DirectoryEntry entry : connection.listDirectories()) {

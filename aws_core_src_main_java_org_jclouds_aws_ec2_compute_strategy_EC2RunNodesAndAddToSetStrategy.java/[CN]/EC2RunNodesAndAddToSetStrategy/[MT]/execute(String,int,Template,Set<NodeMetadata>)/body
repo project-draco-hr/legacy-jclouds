@@ -2,7 +2,7 @@
   checkArgument(template.getSize() instanceof EC2Size,"unexpected image type. should be EC2Size, was: " + template.getSize().getClass());
   EC2Size ec2Size=EC2Size.class.cast(template.getSize());
   String zone=template.getLocation().getScope() == LocationScope.ZONE ? template.getLocation().getId() : null;
-  String region=zone == null ? template.getLocation().getId() : template.getLocation().getParent();
+  String region=zone == null ? template.getLocation().getId() : template.getLocation().getParent().getId();
   RegionTag regionTag=new RegionTag(region,tag);
   KeyPair keyPair=createNewKeyPair.apply(regionTag);
   credentialsMap.put(new RegionTag(region,keyPair.getKeyName()),keyPair);
