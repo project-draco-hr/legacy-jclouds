@@ -1,9 +1,11 @@
 {
   this.host=checkNotNull(socket,"socket").getAddress();
   checkArgument(socket.getPort() > 0,"ssh port must be greater then zero" + socket.getPort());
+  checkArgument(password != null || privateKey != null,"you must specify a password or a key");
   this.port=socket.getPort();
   this.username=checkNotNull(username,"username");
-  this.password=checkNotNull(password,"password");
+  this.backoffLimitedRetryHandler=checkNotNull(backoffLimitedRetryHandler,"backoffLimitedRetryHandler");
   this.timeout=timeout;
-  this.privateKey=null;
+  this.password=password;
+  this.privateKey=privateKey;
 }
