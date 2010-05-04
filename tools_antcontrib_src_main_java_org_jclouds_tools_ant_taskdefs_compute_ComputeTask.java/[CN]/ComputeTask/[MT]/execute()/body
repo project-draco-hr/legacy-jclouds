@@ -3,7 +3,12 @@
   try {
     for (    String action : Splitter.on(',').split(actions)) {
       Action act=Action.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE,action));
-      invokeActionOnService(act,context.getComputeService());
+      try {
+        invokeActionOnService(act,context.getComputeService());
+      }
+ catch (      RunNodesException e) {
+        throw new BuildException(e);
+      }
     }
   }
   finally {

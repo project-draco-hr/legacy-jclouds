@@ -1,0 +1,8 @@
+{
+  Formatter fmt=new Formatter().format("Execution failures:%n%n");
+  int index=1;
+  for (  Entry<?,Exception> errorMessage : executionExceptions.entrySet()) {
+    fmt.format("%s) %s on %s:%n%s%n%n",index++,errorMessage.getValue().getClass().getSimpleName(),errorMessage.getKey(),Throwables.getStackTraceAsString(errorMessage.getValue()));
+  }
+  return fmt.format("%s error[s]",executionExceptions.size()).toString();
+}

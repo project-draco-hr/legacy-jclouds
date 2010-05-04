@@ -1,7 +1,8 @@
 {
   GridServerClient client=createMock(GridServerClient.class);
   Map<String,NodeState> serverStateToNodeState=createMock(Map.class);
-  Map<String,org.jclouds.compute.domain.Image> images=createMock(Map.class);
+  org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
+  Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
   Server server=createMock(Server.class);
   expect(server.getId()).andReturn(1000l).atLeastOnce();
   expect(server.getName()).andReturn("tag-ff").atLeastOnce();
@@ -15,14 +16,14 @@
   ServerImage image=createMock(ServerImage.class);
   expect(server.getImage()).andReturn(image).atLeastOnce();
   expect(image.getId()).andReturn(2000l).atLeastOnce();
-  org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
-  expect(images.get("2000")).andReturn(jcImage);
+  expect(jcImage.getId()).andReturn("2000").atLeastOnce();
+  expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
   replay(client);
   replay(serverStateToNodeState);
   replay(server);
   replay(image);
+  replay(jcImage);
   replay(credentialsMap);
-  replay(images);
   ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,client,images,location);
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
@@ -34,5 +35,5 @@
   verify(image);
   verify(credentialsMap);
   verify(server);
-  verify(images);
+  verify(jcImage);
 }

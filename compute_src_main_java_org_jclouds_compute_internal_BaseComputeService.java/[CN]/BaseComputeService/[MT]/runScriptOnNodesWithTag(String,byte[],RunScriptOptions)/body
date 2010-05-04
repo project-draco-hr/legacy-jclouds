@@ -1,24 +1,36 @@
 {
-  checkNotEmpty(tag,"Tag must be provided");
-  checkNotNull(runScript,"The script (represented by bytes array - use \"script\".getBytes() must be provided");
-  if (options == null)   options=RunScriptOptions.NONE;
-  Map<String,? extends NodeMetadata> nodes=getNodesWithTag(tag);
-  Map<String,ExecResponse> responses=Maps.newHashMap();
-  for (  NodeMetadata node : nodes.values()) {
-    if (NodeState.RUNNING != node.getState())     continue;
-    if (options.getOverrideCredentials() != null) {
-      node=ComputeUtils.installNewCredentials(node,options.getOverrideCredentials());
+  Iterable<? extends NodeMetadata> nodes=verifyParametersAndGetNodes(tag,runScript,(options != null) ? options : RunScriptOptions.NONE);
+  final Map<NodeMetadata,ExecResponse> execs=Maps.newHashMap();
+  final Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
+  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+  for (  final NodeMetadata node : nodes) {
+    responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        try {
+          RunScriptOnNode callable;
+          if (options.isRunAsRoot())           callable=utils.runScriptOnNode(node,"computeserv",runScript);
+ else           callable=utils.runScriptOnNodeAsDefaultUser(node,"computeserv",runScript);
+          SshClient ssh=utils.createSshClientOncePortIsListeningOnNode(node);
+          try {
+            ssh.connect();
+            callable.setConnection(ssh,logger);
+            execs.put(node,callable.call());
+          }
+  finally {
+            if (ssh != null)             ssh.disconnect();
+          }
+        }
+ catch (        Exception e) {
+          badNodes.put(node,e);
+        }
+        return null;
+      }
     }
- else {
-      checkNotNull(node.getCredentials(),"If the default credentials need to be used, they can't be null");
-      checkNotNull(node.getCredentials().account,"Account name for ssh authentication must be " + "specified. Try passing RunScriptOptions with new credentials");
-      checkNotNull(node.getCredentials().key,"Key or password for ssh authentication must be " + "specified. Try passing RunScriptOptions with new credentials");
-    }
-    ComputeUtils.SshCallable<?> callable;
-    if (options.isRunAsRoot())     callable=utils.runScriptOnNode(node,"computeserv.sh",runScript);
- else     callable=utils.runScriptOnNodeAsDefaultUser(node,"computeserv.sh",runScript);
-    Map<ComputeUtils.SshCallable<?>,?> scriptRunResults=utils.runCallablesOnNode(node,Sets.newHashSet(callable),null);
-    responses.put(node.getId(),(ExecResponse)scriptRunResults.get(callable));
+),executor));
   }
-  return responses;
+  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
+  if (exceptions.size() > 0 || badNodes.size() > 0) {
+    throw new RunScriptOnNodesException(tag,runScript,options,execs,exceptions,badNodes);
+  }
+  return execs;
 }

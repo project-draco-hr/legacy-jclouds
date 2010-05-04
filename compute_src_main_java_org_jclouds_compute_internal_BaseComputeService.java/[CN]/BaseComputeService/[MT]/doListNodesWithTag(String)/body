@@ -1,0 +1,8 @@
+{
+  return Sets.newHashSet(Iterables.filter(Iterables.transform(listNodesStrategy.execute(GetNodesOptions.NONE),new Function<ComputeMetadata,NodeMetadata>(){
+    @Override public NodeMetadata apply(    ComputeMetadata from){
+      return from instanceof NodeMetadata ? NodeMetadata.class.cast(from) : getNodeMetadata(from);
+    }
+  }
+),new NodeMatchesTag(tag)));
+}

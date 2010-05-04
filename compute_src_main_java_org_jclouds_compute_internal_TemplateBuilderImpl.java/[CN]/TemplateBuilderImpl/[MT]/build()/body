@@ -2,7 +2,7 @@
   logger.debug(">> searching params(%s)",this);
   Image image;
   try {
-    image=DEFAULT_IMAGE_ORDERING.max(Iterables.filter(images.values(),imagePredicate));
+    image=DEFAULT_IMAGE_ORDERING.max(Iterables.filter(images,imagePredicate));
   }
  catch (  NoSuchElementException exception) {
     throw new NoSuchElementException("image didn't match: " + toString() + "\n"+ images);
@@ -14,13 +14,18 @@
   if (fastest)   sizeOrdering=Ordering.compound(ImmutableList.of(BY_CORES_ORDERING,sizeOrdering));
   Size size;
   try {
-    size=sizeOrdering.max(Iterables.filter(sizes.values(),sizePredicate));
+    size=sizeOrdering.max(Iterables.filter(sizes,sizePredicate));
   }
  catch (  NoSuchElementException exception) {
     throw new NoSuchElementException("size didn't match: " + toString() + "\n"+ sizes);
   }
   logger.debug("<<   matched size(%s)",size);
-  Location location=locations.get(locationId);
+  Location location=Iterables.find(locations,new Predicate<Location>(){
+    @Override public boolean apply(    Location input){
+      return input.getId().equals(locationId);
+    }
+  }
+);
   logger.debug("<<   matched location(%s)",location);
   return new TemplateImpl(image,size,location,options);
 }

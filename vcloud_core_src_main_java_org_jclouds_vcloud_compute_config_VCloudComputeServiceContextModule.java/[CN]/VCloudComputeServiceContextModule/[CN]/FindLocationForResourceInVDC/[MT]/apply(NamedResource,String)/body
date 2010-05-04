@@ -1,0 +1,16 @@
+{
+  Location location=null;
+  try {
+    location=Iterables.find(locations,new Predicate<Location>(){
+      @Override public boolean apply(      Location input){
+        return input.getId().equals(vdcId);
+      }
+    }
+);
+  }
+ catch (  NoSuchElementException e) {
+    logger.error("unknown vdc %s for %s %s; not in %s",vdcId,resource.getType(),resource.getId(),locations);
+    location=new LocationImpl(LocationScope.ZONE,vdcId,vdcId,defaultLocation.getParent());
+  }
+  return location;
+}

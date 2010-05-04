@@ -1,0 +1,9 @@
+{
+  final Set<Size> sizes=Sets.newHashSet();
+  holder.logger.debug(">> providing sizes");
+  for (  final Flavor from : sync.listFlavors(ListOptions.Builder.withDetails())) {
+    sizes.add(new SizeImpl(from.getId() + "",from.getName(),location,null,ImmutableMap.<String,String>of(),from.getDisk() / 10,from.getRam(),from.getDisk(),ImmutableSet.<Architecture>of(Architecture.X86_32,Architecture.X86_64)));
+  }
+  holder.logger.debug("<< sizes(%d)",sizes.size());
+  return sizes;
+}

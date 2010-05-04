@@ -1,9 +1,16 @@
 {
   Set<String> names=Sets.newHashSet();
-  Map<String,? extends ComputeMetadata> currentNodes=Maps.uniqueIndex(listNodesStrategy.execute(GetNodesOptions.NONE),BaseComputeService.METADATA_TO_NAME);
-  while (names.size() < count) {
-    String name=getNextName(tag,template);
-    if (!currentNodes.containsKey(name)) {
+  Iterable<? extends ComputeMetadata> currentNodes=listNodesStrategy.execute(GetNodesOptions.NONE);
+  int maxTries=100;
+  int currentTries=0;
+  while (names.size() < count && currentTries++ < maxTries) {
+    final String name=getNextName(tag,template);
+    if (!Iterables.any(currentNodes,new Predicate<ComputeMetadata>(){
+      @Override public boolean apply(      ComputeMetadata input){
+        return name.equals(input.getName());
+      }
+    }
+)) {
       names.add(name);
     }
   }

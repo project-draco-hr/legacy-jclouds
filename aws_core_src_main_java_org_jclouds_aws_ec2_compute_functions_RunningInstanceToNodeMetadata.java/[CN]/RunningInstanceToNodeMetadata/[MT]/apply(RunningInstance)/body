@@ -12,7 +12,20 @@
   NodeState state=instanceToNodeState.get(instance.getInstanceState());
   Set<InetAddress> publicAddresses=nullSafeSet(instance.getIpAddress());
   Set<InetAddress> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
-  String locationId=instance.getAvailabilityZone();
+  final String locationId=instance.getAvailabilityZone();
   Map<String,String> extra=getExtra(instance);
-  return new NodeMetadataImpl(id,name,locations.get(locationId),uri,userMetadata,tag,images.get(instance.getImageId()),state,publicAddresses,privateAddresses,extra,credentials);
+  final Location location=Iterables.find(locations,new Predicate<Location>(){
+    @Override public boolean apply(    Location input){
+      return input.getId().equals(locationId);
+    }
+  }
+);
+  Image image=null;
+  try {
+    image=Iterables.find(images,new FindImageForInstance(location,instance));
+  }
+ catch (  NoSuchElementException e) {
+    logger.warn("could not find a matching image for instance %s in location %s",instance,location);
+  }
+  return new NodeMetadataImpl(id,name,location,uri,userMetadata,tag,image,state,publicAddresses,privateAddresses,extra,credentials);
 }

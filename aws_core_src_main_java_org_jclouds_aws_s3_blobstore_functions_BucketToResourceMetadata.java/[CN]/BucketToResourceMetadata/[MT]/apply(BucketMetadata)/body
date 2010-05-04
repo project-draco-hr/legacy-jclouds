@@ -3,11 +3,19 @@
   to.setName(from.getName());
   to.setType(StorageType.CONTAINER);
   try {
-    String region=client.getBucketLocation(from.getName());
+    final String region=client.getBucketLocation(from.getName());
     if (region != null) {
-      Location location=locations.get(region.toString());
-      if (location == null)       logger.error("could not get location for region %s in %s",region,locations);
-      to.setLocation(location);
+      try {
+        to.setLocation(Iterables.find(locations,new Predicate<Location>(){
+          @Override public boolean apply(          Location input){
+            return input.getId().equals(region.toString());
+          }
+        }
+));
+      }
+ catch (      NoSuchElementException e) {
+        logger.error("could not get location for region %s in %s",region,locations);
+      }
     }
  else {
       logger.error("could not get region for %s",from.getName());

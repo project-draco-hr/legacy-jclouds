@@ -11,9 +11,11 @@
   expect(computeClient.getPrivateAddresses("10")).andReturn(Sets.newHashSet(InetAddress.getLocalHost()));
   replay(client);
   replay(computeClient);
-  Map<String,? extends Location> locations=ImmutableMap.of();
-  Map<String,? extends Image> images=ImmutableMap.of();
-  VCloudListNodesStrategy strategy=new VCloudListNodesStrategy(client,computeClient,vAppStatusToNodeState,getExtra,locations,images);
+  Location vdcL=new LocationImpl(LocationScope.ZONE,"1","1",null);
+  Set<? extends Location> locations=ImmutableSet.of(vdcL);
+  Set<? extends Image> images=ImmutableSet.of();
+  FindLocationForResourceInVDC findLocationForResourceInVDC=new FindLocationForResourceInVDC(locations,null);
+  VCloudListNodesStrategy strategy=new VCloudListNodesStrategy(client,computeClient,vAppStatusToNodeState,getExtra,findLocationForResourceInVDC,images);
   Set<ComputeMetadata> nodes=Sets.newHashSet();
   NamedResource vdc=new NamedResourceImpl("1",null,null,null);
   NamedResource resource=new NamedResourceImpl("10",null,null,null);

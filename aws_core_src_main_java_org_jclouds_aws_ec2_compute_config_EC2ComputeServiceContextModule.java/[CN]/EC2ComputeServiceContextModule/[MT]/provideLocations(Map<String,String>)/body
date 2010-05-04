@@ -1,11 +1,10 @@
 {
   Location ec2=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
-  Map<String,Location> locations=Maps.newLinkedHashMap();
-  for (  String region : availabilityZoneToRegionMap.values()) {
-    locations.put(region,new LocationImpl(LocationScope.REGION,region,region,ec2));
-  }
+  Set<Location> locations=Sets.newLinkedHashSet();
   for (  String zone : availabilityZoneToRegionMap.keySet()) {
-    locations.put(zone,new LocationImpl(LocationScope.ZONE,zone,zone,locations.get(availabilityZoneToRegionMap.get(zone))));
+    Location region=new LocationImpl(LocationScope.REGION,availabilityZoneToRegionMap.get(zone),availabilityZoneToRegionMap.get(zone),ec2);
+    locations.add(region);
+    locations.add(new LocationImpl(LocationScope.ZONE,zone,zone,region));
   }
   return locations;
 }

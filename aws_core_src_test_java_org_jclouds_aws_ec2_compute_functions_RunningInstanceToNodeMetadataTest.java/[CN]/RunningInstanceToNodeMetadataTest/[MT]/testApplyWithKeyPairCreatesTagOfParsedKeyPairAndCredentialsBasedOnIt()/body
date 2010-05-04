@@ -1,8 +1,6 @@
 {
   AMIClient amiClient=createMock(AMIClient.class);
   Map<RegionTag,KeyPair> credentialsMap=createMock(Map.class);
-  Map<String,org.jclouds.compute.domain.Image> images=createMock(Map.class);
-  Map<String,Location> locations=createMock(Map.class);
   PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
   RunningInstance instance=createMock(RunningInstance.class);
   Image image=createMock(Image.class);
@@ -10,13 +8,15 @@
   expect(instance.getKeyName()).andReturn("keyName-100").atLeastOnce();
   expect(instance.getInstanceState()).andReturn(InstanceState.RUNNING);
   Location location=new LocationImpl(LocationScope.ZONE,"us-east-1a","description",null);
-  expect(locations.get("us-east-1a")).andReturn(location);
-  org.jclouds.compute.domain.Image jcImage=createNiceMock(org.jclouds.compute.domain.Image.class);
-  expect(images.get("imageId")).andReturn(jcImage);
+  Set<Location> locations=ImmutableSet.<Location>of(location);
+  org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
+  Set<org.jclouds.compute.domain.Image> images=ImmutableSet.<org.jclouds.compute.domain.Image>of(jcImage);
   expect(instance.getIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{12,10,10,1}));
   expect(instance.getPrivateIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{10,10,10,1}));
   expect(instance.getRegion()).andReturn(Region.US_EAST_1).atLeastOnce();
   expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
+  expect(jcImage.getId()).andReturn("imageId").atLeastOnce();
+  expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
   expect(amiClient.describeImagesInRegion(Region.US_EAST_1,imageIds("imageId"))).andReturn(ImmutableSet.<Image>of(image));
   expect(credentialProvider.execute(image)).andReturn(new Credentials("user","pass"));
   expect(credentialsMap.get(new RegionTag(Region.US_EAST_1,"keyName-100"))).andReturn(new KeyPair(Region.US_EAST_1,"keyName-100","keyFingerprint","pass"));
@@ -26,18 +26,16 @@
   replay(credentialsMap);
   replay(credentialProvider);
   replay(instance);
-  replay(images);
-  replay(locations);
+  replay(jcImage);
   RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider,images,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getTag(),"keyName");
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImage(),jcImage);
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
+  verify(jcImage);
   verify(amiClient);
   verify(credentialsMap);
   verify(credentialProvider);
   verify(instance);
-  verify(images);
-  verify(locations);
 }

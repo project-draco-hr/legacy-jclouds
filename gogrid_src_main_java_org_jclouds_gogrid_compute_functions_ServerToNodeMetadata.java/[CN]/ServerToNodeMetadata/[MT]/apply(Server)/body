@@ -4,5 +4,12 @@
   Set<InetAddress> ipSet=ImmutableSet.of(from.getIp().getIp());
   NodeState state=serverStateToNodeState.get(from.getState().getName());
   Credentials creds=client.getServerCredentialsList().get(from.getName());
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),location,null,ImmutableMap.<String,String>of(),tag,images.get(from.getImage().getId() + ""),state,ipSet,ImmutableList.<InetAddress>of(),ImmutableMap.<String,String>of(),creds);
+  Image image=null;
+  try {
+    image=Iterables.find(images,new FindImageForServer(location,from));
+  }
+ catch (  NoSuchElementException e) {
+    logger.warn("could not find a matching image for server %s in location %s",from,location);
+  }
+  return new NodeMetadataImpl(from.getId() + "",from.getName(),location,null,ImmutableMap.<String,String>of(),tag,image,state,ipSet,ImmutableList.<InetAddress>of(),ImmutableMap.<String,String>of(),creds);
 }
