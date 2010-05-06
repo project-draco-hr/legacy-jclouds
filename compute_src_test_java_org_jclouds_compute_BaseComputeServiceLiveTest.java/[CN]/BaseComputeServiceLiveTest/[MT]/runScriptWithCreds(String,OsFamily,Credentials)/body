@@ -1,6 +1,12 @@
 {
+  Predicate<NodeMetadata> filter=new Predicate<NodeMetadata>(){
+    @Override public boolean apply(    @Nullable NodeMetadata nodeMetadata){
+      return true;
+    }
+  }
+;
   try {
-    return client.runScriptOnNodesWithTag(tag,buildScript(osFamily).getBytes(),RunScriptOptions.Builder.overrideCredentialsWith(creds));
+    return client.runScriptOnNodesMatching(filter,buildScript(osFamily).getBytes(),RunScriptOptions.Builder.overrideCredentialsWith(creds));
   }
  catch (  SshException e) {
     if (Throwables.getRootCause(e).getMessage().contains("Auth fail")) {

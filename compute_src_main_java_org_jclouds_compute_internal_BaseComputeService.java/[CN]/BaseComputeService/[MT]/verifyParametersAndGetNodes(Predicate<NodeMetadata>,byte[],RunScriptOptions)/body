@@ -1,13 +1,8 @@
 {
-  checkNotEmpty(tag,"Tag must be provided");
+  checkNotNull(filter,"Filter must be provided");
   checkNotNull(runScript,"The script (represented by bytes array - use \"script\".getBytes() must be provided");
   checkNotNull(options,"options");
-  Iterable<? extends NodeMetadata> nodes=Iterables.filter(listNodesWithTag(tag),new Predicate<NodeMetadata>(){
-    @Override public boolean apply(    NodeMetadata input){
-      return input.getState() == NodeState.RUNNING;
-    }
-  }
-);
+  Iterable<? extends NodeMetadata> nodes=Iterables.filter(Iterables.transform(listNodes(),computeMetadataToNodeMetadata),filter);
   return Iterables.transform(nodes,new Function<NodeMetadata,NodeMetadata>(){
     @Override public NodeMetadata apply(    NodeMetadata node){
       checkArgument(node.getPublicAddresses().size() > 0,"no public ip addresses on node: " + node);
