@@ -1,16 +1,13 @@
 {
   logger.debug(">> destroying nodes by tag(%s)",tag);
-  Iterable<? extends NodeMetadata> nodesToDestroy=Iterables.filter(doListNodesWithTag(tag),new Predicate<NodeMetadata>(){
-    @Override public boolean apply(    NodeMetadata input){
-      return input.getState() != NodeState.TERMINATED;
-    }
-  }
-);
+  Iterable<? extends NodeMetadata> nodesToDestroy=Iterables.filter(doListNodesWithTag(tag),Predicates.not(NodePredicates.TERMINATED));
   Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+  final List<NodeMetadata> destroyedNodes=Lists.newArrayList();
   for (  final NodeMetadata node : nodesToDestroy) {
     responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
         destroyNode(node);
+        destroyedNodes.add(node);
         return null;
       }
     }
