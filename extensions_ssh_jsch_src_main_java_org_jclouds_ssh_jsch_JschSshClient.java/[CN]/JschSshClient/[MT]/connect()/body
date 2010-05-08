@@ -1,11 +1,14 @@
 {
   disconnect();
+  Exception e=null;
   RETRY_LOOP:   for (int i=0; i < sshRetries; i++) {
     try {
       newSession();
+      e=null;
       break RETRY_LOOP;
     }
  catch (    Exception from) {
+      e=from;
       disconnect();
       String rootMessage=Throwables.getRootCause(from).getMessage();
       if (i == sshRetries)       throw propagate(from);
@@ -16,4 +19,5 @@
       throw propagate(from);
     }
   }
+  if (e != null)   throw propagate(e);
 }
