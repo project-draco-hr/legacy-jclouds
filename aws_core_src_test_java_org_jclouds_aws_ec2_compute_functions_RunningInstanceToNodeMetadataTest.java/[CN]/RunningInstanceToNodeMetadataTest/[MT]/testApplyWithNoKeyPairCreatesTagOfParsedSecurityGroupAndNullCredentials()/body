@@ -1,0 +1,37 @@
+{
+  AMIClient amiClient=createMock(AMIClient.class);
+  Map<RegionTag,KeyPair> credentialsMap=createMock(Map.class);
+  org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
+  Set<org.jclouds.compute.domain.Image> images=ImmutableSet.<org.jclouds.compute.domain.Image>of(jcImage);
+  Location location=new LocationImpl(LocationScope.ZONE,"us-east-1a","description",null);
+  Set<Location> locations=ImmutableSet.<Location>of(location);
+  PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
+  RunningInstance instance=createMock(RunningInstance.class);
+  expect(instance.getId()).andReturn("id").atLeastOnce();
+  expect(instance.getGroupIds()).andReturn(ImmutableSet.of("jclouds#tag")).atLeastOnce();
+  expect(instance.getKeyName()).andReturn(null).atLeastOnce();
+  expect(instance.getInstanceState()).andReturn(InstanceState.RUNNING);
+  expect(instance.getIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{12,10,10,1}));
+  expect(instance.getPrivateIpAddress()).andReturn(InetAddress.getByAddress(new byte[]{10,10,10,1}));
+  expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
+  expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
+  expect(jcImage.getId()).andReturn("imageId").atLeastOnce();
+  expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
+  expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
+  replay(jcImage);
+  replay(amiClient);
+  replay(credentialsMap);
+  replay(credentialProvider);
+  replay(instance);
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider,images,locations,new RunningInstanceToStorageMappingUnix());
+  NodeMetadata metadata=parser.apply(instance);
+  assertEquals(metadata.getLocation(),locations.iterator().next());
+  assertEquals(metadata.getImage(),jcImage);
+  assertEquals(metadata.getTag(),"tag");
+  assertEquals(metadata.getCredentials(),null);
+  verify(jcImage);
+  verify(amiClient);
+  verify(credentialsMap);
+  verify(credentialProvider);
+  verify(instance);
+}

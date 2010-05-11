@@ -7,12 +7,13 @@
   KeyPair keyPair=createNewKeyPair.apply(regionTag);
   credentialsMap.put(new RegionTag(region,keyPair.getKeyName()),keyPair);
   TemplateOptions options=template.getOptions();
-  PortsRegionTag portsRegionTag=new PortsRegionTag(region,tag,options.getInboundPorts());
+  String group="jclouds#" + tag;
+  PortsRegionTag portsRegionTag=new PortsRegionTag(region,group,options.getInboundPorts());
   if (!securityGroupMap.containsKey(portsRegionTag)) {
     securityGroupMap.put(portsRegionTag,createSecurityGroupIfNeeded.apply(portsRegionTag));
   }
-  logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",count,region,zone,template.getImage().getId(),ec2Size.getInstanceType(),tag,tag);
-  RunInstancesOptions instanceOptions=withKeyName(keyPair.getKeyName()).asType(ec2Size.getInstanceType()).withSecurityGroup(tag).withAdditionalInfo(tag);
+  logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) type(%s) keyPair(%s) securityGroup(%s)",count,region,zone,template.getImage().getId(),ec2Size.getInstanceType(),keyPair.getKeyName(),group);
+  RunInstancesOptions instanceOptions=withKeyName(keyPair.getKeyName()).asType(ec2Size.getInstanceType()).withSecurityGroup(group).withAdditionalInfo(tag);
   Reservation reservation=ec2Client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getId(),1,count,instanceOptions);
   Iterable<String> ids=Iterables.transform(reservation,instanceToId);
   String idsString=Joiner.on(',').join(ids);

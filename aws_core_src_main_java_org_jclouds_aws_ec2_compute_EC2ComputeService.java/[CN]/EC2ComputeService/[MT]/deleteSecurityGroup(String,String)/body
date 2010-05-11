@@ -1,8 +1,10 @@
 {
-  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,tag).size() > 0) {
-    logger.debug(">> deleting securityGroup(%s)",tag);
-    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,tag);
+  checkNotEmpty(tag,"tag");
+  String group="jclouds#" + tag;
+  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,group).size() > 0) {
+    logger.debug(">> deleting securityGroup(%s)",group);
+    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,group);
     securityGroupMap.remove(new PortsRegionTag(region,tag,null));
-    logger.debug("<< deleted securityGroup(%s)",tag);
+    logger.debug("<< deleted securityGroup(%s)",group);
   }
 }

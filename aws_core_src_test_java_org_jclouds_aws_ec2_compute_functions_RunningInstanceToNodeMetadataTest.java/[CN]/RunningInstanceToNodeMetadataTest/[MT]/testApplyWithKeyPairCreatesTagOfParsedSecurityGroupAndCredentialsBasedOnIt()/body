@@ -5,7 +5,8 @@
   RunningInstance instance=createMock(RunningInstance.class);
   Image image=createMock(Image.class);
   expect(instance.getId()).andReturn("id").atLeastOnce();
-  expect(instance.getKeyName()).andReturn("keyName-100").atLeastOnce();
+  expect(instance.getGroupIds()).andReturn(ImmutableSet.of("jclouds#tag")).atLeastOnce();
+  expect(instance.getKeyName()).andReturn("jclouds#keyName").atLeastOnce();
   expect(instance.getInstanceState()).andReturn(InstanceState.RUNNING);
   Location location=new LocationImpl(LocationScope.ZONE,"us-east-1a","description",null);
   Set<Location> locations=ImmutableSet.<Location>of(location);
@@ -19,7 +20,7 @@
   expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
   expect(amiClient.describeImagesInRegion(Region.US_EAST_1,imageIds("imageId"))).andReturn(ImmutableSet.<Image>of(image));
   expect(credentialProvider.execute(image)).andReturn(new Credentials("user","pass"));
-  expect(credentialsMap.get(new RegionTag(Region.US_EAST_1,"keyName-100"))).andReturn(new KeyPair(Region.US_EAST_1,"keyName-100","keyFingerprint","pass"));
+  expect(credentialsMap.get(new RegionTag(Region.US_EAST_1,"jclouds#keyName"))).andReturn(new KeyPair(Region.US_EAST_1,"jclouds#keyName","keyFingerprint","pass"));
   expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
   replay(amiClient);
@@ -29,7 +30,7 @@
   replay(jcImage);
   RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider,images,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
-  assertEquals(metadata.getTag(),"keyName");
+  assertEquals(metadata.getTag(),"tag");
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImage(),jcImage);
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
