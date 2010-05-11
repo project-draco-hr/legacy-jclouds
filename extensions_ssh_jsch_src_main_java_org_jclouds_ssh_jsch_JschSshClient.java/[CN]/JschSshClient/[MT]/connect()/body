@@ -10,10 +10,9 @@
  catch (    Exception from) {
       e=from;
       disconnect();
-      String rootMessage=Throwables.getRootCause(from).getMessage();
       if (i == sshRetries)       throw propagate(from);
-      if (Iterables.size(Iterables.filter(Throwables.getCausalChain(from),ConnectException.class)) >= 1 || Iterables.size(Iterables.filter(Throwables.getCausalChain(from),IOException.class)) >= 1 || rootMessage.indexOf("invalid privatekey") != -1 || rootMessage.indexOf("Auth fail") != -1 || rootMessage.indexOf("invalid data") != -1 || rootMessage.indexOf("End of IO Stream Read") != -1) {
-        backoffLimitedRetryHandler.imposeBackoffExponentialDelay(200L,2,i + 1,String.format("%s@%s:%d: connection error: %s",username,host.getHostAddress(),port,from.getMessage()));
+      if (shouldRetry(from)) {
+        backoffForAttempt(i + 1,from.getMessage());
         continue;
       }
       throw propagate(from);
