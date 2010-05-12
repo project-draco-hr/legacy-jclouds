@@ -1,0 +1,10 @@
+{
+  String keyPairName=options.getKeyPair();
+  if (keyPairName == null && options.shouldAutomaticallyCreateKeyPair()) {
+    RegionAndName regionAndName=new RegionAndName(region,tag);
+    KeyPair keyPair=createUniqueKeyPair.apply(regionAndName);
+    credentialsMap.put(new RegionAndName(region,keyPair.getKeyName()),keyPair);
+    keyPairName=keyPair.getKeyName();
+  }
+  return keyPairName;
+}

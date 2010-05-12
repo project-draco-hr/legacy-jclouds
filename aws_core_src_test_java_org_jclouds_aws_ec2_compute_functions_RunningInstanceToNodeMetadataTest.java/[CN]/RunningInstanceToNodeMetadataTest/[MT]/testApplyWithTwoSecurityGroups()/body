@@ -1,6 +1,6 @@
 {
   AMIClient amiClient=createMock(AMIClient.class);
-  Map<RegionTag,KeyPair> credentialsMap=createMock(Map.class);
+  Map<RegionAndName,KeyPair> credentialsMap=createMock(Map.class);
   PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
   RunningInstance instance=createMock(RunningInstance.class);
   Image image=createMock(Image.class);
@@ -20,7 +20,7 @@
   expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
   expect(amiClient.describeImagesInRegion(Region.US_EAST_1,imageIds("imageId"))).andReturn(ImmutableSet.<Image>of(image));
   expect(credentialProvider.execute(image)).andReturn(new Credentials("user","pass"));
-  expect(credentialsMap.get(new RegionTag(Region.US_EAST_1,"jclouds#keyName"))).andReturn(new KeyPair(Region.US_EAST_1,"jclouds#keyName","keyFingerprint","pass"));
+  expect(credentialsMap.get(new RegionAndName(Region.US_EAST_1,"jclouds#keyName"))).andReturn(new KeyPair(Region.US_EAST_1,"jclouds#keyName","keyFingerprint","pass"));
   expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
   replay(amiClient);

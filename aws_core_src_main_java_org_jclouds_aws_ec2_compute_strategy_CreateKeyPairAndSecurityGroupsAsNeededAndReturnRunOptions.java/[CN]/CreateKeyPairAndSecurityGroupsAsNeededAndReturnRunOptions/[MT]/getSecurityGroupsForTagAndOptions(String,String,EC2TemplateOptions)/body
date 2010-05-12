@@ -1,0 +1,19 @@
+{
+  Set<String> groups=Sets.newLinkedHashSet();
+  if (tag != null) {
+    String markerGroup="jclouds#" + tag;
+    groups.add(markerGroup);
+    RegionNameAndIngressRules regionNameAndIngessRulesForMarkerGroup;
+    if (options.getGroupIds().size() == 0) {
+      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,options.getInboundPorts(),true);
+    }
+ else {
+      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,new int[]{},false);
+    }
+    if (!securityGroupMap.containsKey(regionNameAndIngessRulesForMarkerGroup)) {
+      securityGroupMap.put(regionNameAndIngessRulesForMarkerGroup,createSecurityGroupIfNeeded.apply(regionNameAndIngessRulesForMarkerGroup));
+    }
+  }
+  groups.addAll(options.getGroupIds());
+  return groups;
+}

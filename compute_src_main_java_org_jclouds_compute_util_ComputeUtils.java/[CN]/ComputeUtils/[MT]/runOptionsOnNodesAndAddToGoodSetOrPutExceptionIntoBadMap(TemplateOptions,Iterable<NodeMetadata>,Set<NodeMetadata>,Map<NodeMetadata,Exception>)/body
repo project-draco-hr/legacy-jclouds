@@ -1,0 +1,7 @@
+{
+  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+  for (  final NodeMetadata node : runningNodes) {
+    responses.put(node,makeListenable(executor.submit(runOptionsOnNodeAndAddToGoodSetOrPutExceptionIntoBadMap(node,badNodes,goodNodes,options)),executor));
+  }
+  return responses;
+}

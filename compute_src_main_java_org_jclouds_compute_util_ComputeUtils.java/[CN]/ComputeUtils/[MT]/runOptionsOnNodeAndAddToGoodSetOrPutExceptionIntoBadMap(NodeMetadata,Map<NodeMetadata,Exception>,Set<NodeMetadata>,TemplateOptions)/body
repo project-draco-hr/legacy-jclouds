@@ -1,0 +1,17 @@
+{
+  return new Callable<Void>(){
+    @Override public Void call() throws Exception {
+      try {
+        runOptionsOnNode(node,options);
+        logger.debug("<< options applied node(%s)",node.getId());
+        goodNodes.add(node);
+      }
+ catch (      Exception e) {
+        logger.error(e,"<< problem applying options to node(%s): ",node.getId(),Throwables.getRootCause(e).getMessage());
+        badNodes.put(node,e);
+      }
+      return null;
+    }
+  }
+;
+}

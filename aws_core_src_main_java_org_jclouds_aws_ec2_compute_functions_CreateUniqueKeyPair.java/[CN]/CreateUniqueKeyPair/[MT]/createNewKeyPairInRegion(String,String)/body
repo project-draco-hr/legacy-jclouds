@@ -1,0 +1,18 @@
+{
+  checkNotNull(region,"region");
+  checkNotNull(keyPairName,"keyPairName");
+  logger.debug(">> creating keyPair region(%s) keyPairName(%s)",region,keyPairName);
+  KeyPair keyPair=null;
+  while (keyPair == null) {
+    try {
+      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(keyPairName));
+      logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
+    }
+ catch (    AWSResponseException e) {
+      if (!e.getError().getCode().equals("InvalidKeyPair.Duplicate")) {
+        throw e;
+      }
+    }
+  }
+  return keyPair;
+}
