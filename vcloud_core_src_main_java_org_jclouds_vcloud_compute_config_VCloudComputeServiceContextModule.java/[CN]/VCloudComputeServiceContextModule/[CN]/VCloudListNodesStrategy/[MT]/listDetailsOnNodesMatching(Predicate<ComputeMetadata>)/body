@@ -1,0 +1,11 @@
+{
+  Set<NodeMetadata> nodes=Sets.newHashSet();
+  for (  NamedResource vdc : client.getDefaultOrganization().getVDCs().values()) {
+    for (    NamedResource resource : client.getVDC(vdc.getId()).getResourceEntities().values()) {
+      if (resource.getType().equals(VCloudMediaType.VAPP_XML) && filter.apply(convertVAppToComputeMetadata(vdc,resource))) {
+        addVAppToSetRetryingIfNotYetPresent(nodes,vdc,resource);
+      }
+    }
+  }
+  return nodes;
+}

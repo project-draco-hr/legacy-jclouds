@@ -1,15 +1,9 @@
 {
   try {
-    return client.runScriptOnNodesMatching(new Predicate<NodeMetadata>(){
-      @Override public boolean apply(      NodeMetadata arg0){
-        return arg0.getState() == NodeState.RUNNING && tag.equals(arg0.getTag());
-      }
-    }
-,buildScript(osFamily).getBytes(),RunScriptOptions.Builder.overrideCredentialsWith(creds));
+    return client.runScriptOnNodesMatching(NodePredicates.runningWithTag(tag),buildScript(osFamily).getBytes(),RunScriptOptions.Builder.overrideCredentialsWith(creds));
   }
  catch (  SshException e) {
     if (Throwables.getRootCause(e).getMessage().contains("Auth fail")) {
-      System.err.printf("bad credentials: %s:%s for %s%n",creds.account,creds.key,client.listNodesWithTag(tag));
     }
     throw e;
   }

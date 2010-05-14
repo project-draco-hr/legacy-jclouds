@@ -1,6 +1,6 @@
 {
   log(String.format("get tag: %s",nodeElement.getTag()));
-  for (  ComputeMetadata node : computeService.listNodesWithTag(nodeElement.getTag())) {
+  for (  ComputeMetadata node : Iterables.filter(computeService.listNodesDetailsMatching(NodePredicates.all()),NodePredicates.withTag(nodeElement.getTag()))) {
     logDetails(computeService,node);
   }
 }

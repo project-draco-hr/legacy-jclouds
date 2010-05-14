@@ -1,0 +1,5 @@
+{
+  String region=getRegionFromLocation.apply(location);
+  ec2Client.getInstanceServices().terminateInstancesInRegion(region,id);
+  return instanceStateTerminated.apply(Iterables.getOnlyElement(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,id))));
+}
