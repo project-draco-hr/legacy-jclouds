@@ -1,4 +1,7 @@
 {
+  Set<Location> locations=ImmutableSet.<Location>of();
+  Set<Image> images=ImmutableSet.<Image>of();
+  Set<Size> sizes=ImmutableSet.<Size>of();
   Location defaultLocation=createMock(Location.class);
   Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
@@ -9,7 +12,7 @@
   replay(defaultLocation);
   replay(optionsProvider);
   replay(templateBuilderProvider);
-  TemplateBuilderImpl template=new TemplateBuilderImpl(ImmutableSet.<Location>of(),ImmutableSet.<Image>of(),ImmutableSet.<Size>of(),defaultLocation,optionsProvider,templateBuilderProvider);
+  TemplateBuilderImpl template=createTemplateBuilder(locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
   template.build();
   verify(defaultTemplate);
   verify(defaultLocation);

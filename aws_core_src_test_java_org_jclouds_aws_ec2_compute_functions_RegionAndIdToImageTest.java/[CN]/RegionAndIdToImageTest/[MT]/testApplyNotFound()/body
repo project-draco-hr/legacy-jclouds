@@ -1,0 +1,17 @@
+{
+  ImageParser parser=createMock(ImageParser.class);
+  AMIClient client=createMock(AMIClient.class);
+  org.jclouds.aws.ec2.domain.Image ec2Image=createMock(org.jclouds.aws.ec2.domain.Image.class);
+  Image image=createNiceMock(Image.class);
+  Set<org.jclouds.aws.ec2.domain.Image> images=ImmutableSet.<org.jclouds.aws.ec2.domain.Image>of(ec2Image);
+  expect(client.describeImagesInRegion("region",imageIds("ami"))).andReturn(images);
+  expect(parser.apply(ec2Image)).andThrow(new ResourceNotFoundException());
+  replay(image);
+  replay(parser);
+  replay(client);
+  RegionAndIdToImage function=new RegionAndIdToImage(parser,client);
+  assertEquals(function.apply(new RegionAndName("region","ami")),null);
+  verify(image);
+  verify(parser);
+  verify(client);
+}

@@ -1,0 +1,10 @@
+{
+  try {
+    org.jclouds.aws.ec2.domain.Image image=Iterables.getOnlyElement(sync.describeImagesInRegion(key.getRegion(),imageIds(key.getName())));
+    return parser.apply(image);
+  }
+ catch (  ResourceNotFoundException e) {
+    logger.warn(e,"no image found for %s/%s: %s",key.getRegion(),key.getName(),e.getMessage());
+    return null;
+  }
+}

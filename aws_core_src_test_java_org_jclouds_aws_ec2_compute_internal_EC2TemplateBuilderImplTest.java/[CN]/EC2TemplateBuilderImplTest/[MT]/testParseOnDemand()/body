@@ -1,0 +1,26 @@
+{
+  Location location=new LocationImpl(LocationScope.REGION,"region","region",null);
+  Set<Location> locations=ImmutableSet.<Location>of(location);
+  Set<Image> images=ImmutableSet.<Image>of();
+  Set<Size> sizes=ImmutableSet.<Size>of(new SizeImpl(null,null,location,null,ImmutableMap.<String,String>of(),1,1,1,EnumSet.allOf(Architecture.class)));
+  Location defaultLocation=createMock(Location.class);
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  TemplateOptions defaultOptions=createMock(TemplateOptions.class);
+  knownImage=createMock(Image.class);
+  expect(defaultLocation.getId()).andReturn("region");
+  expect(optionsProvider.get()).andReturn(defaultOptions);
+  expect(knownImage.getArchitecture()).andReturn(Architecture.X86_32);
+  replay(knownImage);
+  replay(defaultOptions);
+  replay(defaultLocation);
+  replay(optionsProvider);
+  replay(templateBuilderProvider);
+  TemplateBuilderImpl template=createTemplateBuilder(locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
+  assertEquals(template.imageId("ami").build().getImage(),knownImage);
+  verify(knownImage);
+  verify(defaultOptions);
+  verify(defaultLocation);
+  verify(optionsProvider);
+  verify(templateBuilderProvider);
+}

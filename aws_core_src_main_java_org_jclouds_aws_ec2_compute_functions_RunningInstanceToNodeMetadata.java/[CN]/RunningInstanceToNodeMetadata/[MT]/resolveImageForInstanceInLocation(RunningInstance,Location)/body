@@ -1,0 +1,16 @@
+{
+  Image image=null;
+  try {
+    image=Iterables.find(images.get(),new FindImageForInstance(location,instance));
+  }
+ catch (  NoSuchElementException e) {
+    RegionAndName key=new RegionAndName(instance.getRegion(),instance.getImageId());
+    try {
+      image=imageMap.get(key);
+    }
+ catch (    NullPointerException nex) {
+      logger.warn("could not find a matching image for instance %s in location %s",instance,location);
+    }
+  }
+  return image;
+}

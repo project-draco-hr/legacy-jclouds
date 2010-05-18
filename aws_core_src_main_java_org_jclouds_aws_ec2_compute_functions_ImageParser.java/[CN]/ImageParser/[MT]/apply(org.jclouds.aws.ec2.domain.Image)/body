@@ -12,17 +12,18 @@
   String description=from.getDescription() != null ? from.getDescription() : from.getImageLocation();
   String osDescription=from.getImageLocation();
   String version="";
-  Matcher matcher=CANONICAL_PATTERN.matcher(from.getImageLocation());
-  if (matcher.find()) {
-    try {
-      os=OsFamily.fromValue(matcher.group(1));
-      name=matcher.group(2);
-      if (NAME_VERSION_MAP.containsKey(name))       name=NAME_VERSION_MAP.get(name);
-      version=matcher.group(3).replace(".manifest.xml","");
-    }
- catch (    IllegalArgumentException e) {
-      logger.debug("<< didn't match os(%s)",matcher.group(1));
-    }
+  try {
+    Matcher matcher=getMatcherAndFind(from.getImageLocation());
+    os=OsFamily.fromValue(matcher.group(1));
+    name=matcher.group(2);
+    if (NAME_VERSION_MAP.containsKey(name))     name=NAME_VERSION_MAP.get(name);
+    version=matcher.group(3).replace(".manifest.xml","");
+  }
+ catch (  IllegalArgumentException e) {
+    logger.debug("<< didn't match os(%s)",from.getImageLocation());
+  }
+catch (  NoSuchElementException e) {
+    logger.debug("<< didn't match at all(%s)",from.getImageLocation());
   }
   Credentials defaultCredentials=credentialProvider.execute(from);
   Location location=null;

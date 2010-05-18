@@ -15,8 +15,11 @@
     try {
       return ((ListenableFuture<?>)methodMap.get(method).invoke(delegate,args)).get(timeoutMap.get(method),TimeUnit.NANOSECONDS);
     }
- catch (    Exception e) {
-      throw Throwables.getRootCause(e);
+ catch (    ExecutionException e) {
+      throw typedExceptionOrPropagate(method.getExceptionTypes(),e.getCause());
+    }
+catch (    Exception e) {
+      throw typedExceptionOrPropagate(method.getExceptionTypes(),e);
     }
   }
 }

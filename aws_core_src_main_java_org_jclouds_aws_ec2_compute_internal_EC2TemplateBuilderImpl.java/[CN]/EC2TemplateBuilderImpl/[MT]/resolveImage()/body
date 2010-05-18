@@ -1,0 +1,14 @@
+{
+  try {
+    return super.resolveImage();
+  }
+ catch (  NoSuchElementException e) {
+    RegionAndName key=new RegionAndName(this.locationId,this.imageId);
+    try {
+      return imageMap.get(key);
+    }
+ catch (    NullPointerException nex) {
+      throw new NoSuchElementException(String.format("image %s/%s not found",key.getRegion(),key.getName()));
+    }
+  }
+}

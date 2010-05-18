@@ -3,32 +3,10 @@
   if (locationId == null)   locationId=defaultLocation.getId();
   if (options == null)   options=optionsProvider.get();
   logger.debug(">> searching params(%s)",this);
-  Image image;
-  try {
-    image=DEFAULT_IMAGE_ORDERING.max(Iterables.filter(images,imagePredicate));
-  }
- catch (  NoSuchElementException exception) {
-    throw new NoSuchElementException("image didn't match: " + toString() + "\n"+ images);
-  }
-  logger.debug("<<   matched image(%s)",image);
+  Location location=resolveLocation();
+  Image image=resolveImage();
   this.arch=image.getArchitecture();
-  Ordering<Size> sizeOrdering=DEFAULT_SIZE_ORDERING;
-  if (!biggest)   sizeOrdering=sizeOrdering.reverse();
-  if (fastest)   sizeOrdering=Ordering.compound(ImmutableList.of(BY_CORES_ORDERING,sizeOrdering));
-  Size size;
-  try {
-    size=sizeOrdering.max(Iterables.filter(sizes,sizePredicate));
-  }
- catch (  NoSuchElementException exception) {
-    throw new NoSuchElementException("size didn't match: " + toString() + "\n"+ sizes);
-  }
-  logger.debug("<<   matched size(%s)",size);
-  Location location=Iterables.find(locations,new Predicate<Location>(){
-    @Override public boolean apply(    Location input){
-      return input.getId().equals(locationId);
-    }
-  }
-);
-  logger.debug("<<   matched location(%s)",location);
+  Ordering<Size> sizeOrdering=sizeSorter();
+  Size size=resolveSize(sizeOrdering);
   return new TemplateImpl(image,size,location,options);
 }

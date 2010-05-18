@@ -1,0 +1,26 @@
+{
+  if (amiOwners.length == 0) {
+    holder.logger.debug(">> no owners specified, skipping image parsing");
+  }
+ else {
+    holder.logger.debug(">> providing images");
+    Map<String,ListenableFuture<?>> parallelResponses=Maps.newHashMap();
+    for (    final String region : regionMap.keySet()) {
+      parallelResponses.put(region,ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
+        @Override public Void call() throws Exception {
+          for (          final org.jclouds.aws.ec2.domain.Image from : sync.getAMIServices().describeImagesInRegion(region,ownedBy(amiOwners))) {
+            Image image=parser.apply(from);
+            if (image != null)             images.put(new RegionAndName(region,image.getId()),image);
+ else             if (from.getImageType() == ImageType.MACHINE)             holder.logger.trace("<< image(%s) didn't parse",from.getId());
+          }
+          return null;
+        }
+      }
+),executor));
+    }
+    Map<String,Exception> exceptions=awaitCompletion(parallelResponses,executor,null,holder.logger,"images");
+    if (exceptions.size() > 0)     throw new RuntimeException(String.format("error parsing images in regions: %s",exceptions));
+    holder.logger.debug("<< images(%d)",images.size());
+  }
+  return images;
+}

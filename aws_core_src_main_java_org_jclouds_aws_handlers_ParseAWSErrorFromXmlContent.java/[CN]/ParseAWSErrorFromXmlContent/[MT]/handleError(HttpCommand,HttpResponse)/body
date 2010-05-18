@@ -2,21 +2,23 @@
   Exception exception=new HttpResponseException(command,response);
   try {
     AWSError error=parseErrorFromContentOrNull(command,response);
+    exception=error != null ? new AWSResponseException(command,response,error) : exception;
 switch (response.getStatusCode()) {
-case 401:
-      exception=new AuthorizationException(command.getRequest(),error != null ? error.getMessage() : response.getStatusLine());
+case 400:
+      if (error.getCode().equals("InvalidAMIID.NotFound") || error.getCode().equals("InvalidAMIID.Malformed"))       exception=new ResourceNotFoundException(error.getMessage(),exception);
     break;
-case 404:
-  if (!command.getRequest().getMethod().equals("DELETE")) {
-    String message=error != null ? error.getMessage() : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
-    String container=command.getRequest().getEndpoint().getHost();
-    String key=command.getRequest().getEndpoint().getPath();
-    if (key == null || key.equals("/"))     exception=new ContainerNotFoundException(container,message);
- else     exception=new KeyNotFoundException(container,key,message);
-  }
+case 401:
+  exception=new AuthorizationException(command.getRequest(),error != null ? error.getMessage() : response.getStatusLine());
 break;
-default :
-exception=error != null ? new AWSResponseException(command,response,error) : new HttpResponseException(command,response);
+case 404:
+if (!command.getRequest().getMethod().equals("DELETE")) {
+String message=error != null ? error.getMessage() : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
+String container=command.getRequest().getEndpoint().getHost();
+String key=command.getRequest().getEndpoint().getPath();
+if (key == null || key.equals("/")) exception=new ContainerNotFoundException(container,message);
+ else exception=new KeyNotFoundException(container,key,message);
+}
+break;
 }
 }
   finally {

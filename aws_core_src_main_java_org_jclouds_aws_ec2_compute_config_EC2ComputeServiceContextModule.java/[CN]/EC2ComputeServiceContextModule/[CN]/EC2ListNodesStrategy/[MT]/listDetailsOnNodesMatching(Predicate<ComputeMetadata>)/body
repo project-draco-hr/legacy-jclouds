@@ -1,7 +1,16 @@
 {
-  Set<NodeMetadata> nodes=Sets.newHashSet();
-  for (  String region : ImmutableSet.of(Region.US_EAST_1,Region.US_WEST_1,Region.EU_WEST_1)) {
-    Iterables.addAll(nodes,Iterables.transform(Iterables.concat(client.describeInstancesInRegion(region)),runningInstanceToNodeMetadata));
+  final Set<NodeMetadata> nodes=Sets.newHashSet();
+  Map<String,ListenableFuture<?>> parallelResponses=Maps.newHashMap();
+  for (  final String region : regionMap.keySet()) {
+    parallelResponses.put(region,ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        Iterables.addAll(nodes,Iterables.transform(Iterables.concat(client.describeInstancesInRegion(region)),runningInstanceToNodeMetadata));
+        return null;
+      }
+    }
+),executor));
   }
+  Map<String,Exception> exceptions=awaitCompletion(parallelResponses,executor,null,logger,"nodes");
+  if (exceptions.size() > 0)   throw new RuntimeException(String.format("error parsing nodes in regions: %s",exceptions));
   return Iterables.filter(nodes,filter);
 }

@@ -2,43 +2,14 @@
   String id=checkNotNull(instance,"instance").getId();
   String name=null;
   URI uri=null;
-  String tag=String.format("NOTAG-%s",instance.getId());
-  try {
-    tag=Iterables.getOnlyElement(Iterables.filter(instance.getGroupIds(),new Predicate<String>(){
-      @Override public boolean apply(      String input){
-        return input.startsWith("jclouds#");
-      }
-    }
-)).substring(8);
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("no tag parsed from %s's groups: %s",instance.getId(),instance.getGroupIds());
-  }
-catch (  IllegalArgumentException e) {
-    logger.warn("too many groups match %s; %s's groups: %s","jclouds#",instance.getId(),instance.getGroupIds());
-  }
-  Credentials credentials=null;
-  if (instance.getKeyName() != null) {
-    credentials=new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance,tag));
-  }
+  String tag=getTagForInstace(instance);
+  Credentials credentials=getCredentialsForInstanceWithTag(instance,tag);
   Map<String,String> userMetadata=ImmutableMap.<String,String>of();
   NodeState state=instanceToNodeState.get(instance.getInstanceState());
   Set<InetAddress> publicAddresses=nullSafeSet(instance.getIpAddress());
   Set<InetAddress> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
-  final String locationId=instance.getAvailabilityZone();
   Map<String,String> extra=getExtra(instance);
-  final Location location=Iterables.find(locations,new Predicate<Location>(){
-    @Override public boolean apply(    Location input){
-      return input.getId().equals(locationId);
-    }
-  }
-);
-  Image image=null;
-  try {
-    image=Iterables.find(images,new FindImageForInstance(location,instance));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching image for instance %s in location %s",instance,location);
-  }
+  Location location=getLocationForAvailabilityZone(instance);
+  Image image=resolveImageForInstanceInLocation(instance,location);
   return new NodeMetadataImpl(id,name,location,uri,userMetadata,tag,image,state,publicAddresses,privateAddresses,extra,credentials);
 }
