@@ -1,5 +1,11 @@
 {
-  TemplateBuilderImpl template=new TemplateBuilderImpl(ImmutableSet.<Location>of(),ImmutableSet.<Image>of(),ImmutableSet.<Size>of(),new LocationImpl(LocationScope.REGION," id","description",null),new TemplateOptions());
+  Location defaultLocation=createMock(Location.class);
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  replay(defaultLocation);
+  replay(optionsProvider);
+  replay(templateBuilderProvider);
+  TemplateBuilderImpl template=new TemplateBuilderImpl(ImmutableSet.<Location>of(),ImmutableSet.<Image>of(),ImmutableSet.<Size>of(),defaultLocation,optionsProvider,templateBuilderProvider);
   template.architecture(Architecture.X86_32);
   template.imageDescriptionMatches("imageDescriptionMatches");
   template.imageNameMatches("imageNameMatches");
@@ -21,4 +27,7 @@
   assertEquals(template.osDescription,null);
   assertEquals(template.os,null);
   assertEquals(template.imageId,"myid");
+  verify(defaultLocation);
+  verify(optionsProvider);
+  verify(templateBuilderProvider);
 }

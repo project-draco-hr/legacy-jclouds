@@ -1,0 +1,18 @@
+{
+  Location defaultLocation=createMock(Location.class);
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
+  expect(templateBuilderProvider.get()).andReturn(defaultTemplate);
+  expect(defaultTemplate.build()).andReturn(null);
+  replay(defaultTemplate);
+  replay(defaultLocation);
+  replay(optionsProvider);
+  replay(templateBuilderProvider);
+  TemplateBuilderImpl template=new TemplateBuilderImpl(ImmutableSet.<Location>of(),ImmutableSet.<Image>of(),ImmutableSet.<Size>of(),defaultLocation,optionsProvider,templateBuilderProvider);
+  template.build();
+  verify(defaultTemplate);
+  verify(defaultLocation);
+  verify(optionsProvider);
+  verify(templateBuilderProvider);
+}
