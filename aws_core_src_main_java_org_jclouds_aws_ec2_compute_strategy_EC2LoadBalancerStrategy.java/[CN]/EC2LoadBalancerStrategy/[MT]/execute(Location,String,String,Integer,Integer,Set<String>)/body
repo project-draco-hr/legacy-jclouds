@@ -7,8 +7,20 @@
   }
   ElasticLoadBalancerClient elbClient=ec2Client.getElasticLoadBalancerServices();
   dnsName=elbClient.createLoadBalancer(region,name,protocol,loadBalancerPort,instancePort,availabilityZone);
-  Set<String> registeredInstanceIds=elbClient.registerInstancesWithLoadBalancer(region,name,(String[])instanceIds.toArray());
+  List<String> instanceIdlist=new ArrayList<String>(instanceIds);
+  String[] instanceIdArray=new String[instanceIdlist.size()];
+  for (int i=0; i < instanceIdlist.size(); i++) {
+    instanceIdArray[i]=instanceIdlist.get(i);
+  }
+  Set<String> registeredInstanceIds=elbClient.registerInstancesWithLoadBalancer(region,name,instanceIdArray);
   boolean changed=registeredInstanceIds.removeAll(instanceIds);
-  if (changed)   elbClient.deregisterInstancesWithLoadBalancer(region,name,(String[])registeredInstanceIds.toArray());
+  if (changed) {
+    List<String> list=new ArrayList<String>(registeredInstanceIds);
+    instanceIdArray=new String[list.size()];
+    for (int i=0; i < list.size(); i++) {
+      instanceIdArray[i]=list.get(i);
+    }
+    if (instanceIdArray.length > 0)     elbClient.deregisterInstancesWithLoadBalancer(region,name,instanceIdArray);
+  }
   return dnsName;
 }
