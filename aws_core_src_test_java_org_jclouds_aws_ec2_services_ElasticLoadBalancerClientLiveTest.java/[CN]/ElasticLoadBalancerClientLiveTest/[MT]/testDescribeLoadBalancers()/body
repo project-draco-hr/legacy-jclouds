@@ -1,10 +1,8 @@
 {
   String name="TestDescribeLoadBalancer";
-  for (  String region : ImmutableSet.of(Region.US_EAST_1)) {
-    client.createLoadBalancer(region,name,"http",80,80,AvailabilityZone.US_EAST_1A);
+  for (  String region : ImmutableSet.of(Region.US_EAST_1,Region.US_WEST_1,Region.EU_WEST_1,Region.AP_SOUTHEAST_1)) {
     Set<ElasticLoadBalancer> allResults=client.describeLoadBalancers(region,name);
     assertNotNull(allResults);
     assert(allResults.size() >= 1);
-    client.deleteLoadBalancer(region,name);
   }
 }
