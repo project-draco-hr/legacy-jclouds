@@ -1,0 +1,14 @@
+{
+  String region=getRegionFromLocation.apply(location);
+  String dnsName=new String();
+  String availabilityZone=new String();
+  for (  String az : AvailabilityZone.zones) {
+    if (az.startsWith(region))     availabilityZone=az;
+  }
+  ElasticLoadBalancerClient elbClient=ec2Client.getElasticLoadBalancerServices();
+  dnsName=elbClient.createLoadBalancer(region,name,protocol,loadBalancerPort,instancePort,availabilityZone);
+  Set<String> registeredInstanceIds=elbClient.registerInstancesWithLoadBalancer(region,name,(String[])instanceIds.toArray());
+  boolean changed=registeredInstanceIds.removeAll(instanceIds);
+  if (changed)   elbClient.deregisterInstancesWithLoadBalancer(region,name,(String[])registeredInstanceIds.toArray());
+  return dnsName;
+}
