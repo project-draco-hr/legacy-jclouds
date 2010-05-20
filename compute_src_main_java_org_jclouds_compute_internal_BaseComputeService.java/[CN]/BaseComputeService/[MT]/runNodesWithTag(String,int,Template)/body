@@ -2,8 +2,8 @@
   checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
   checkNotNull(template.getLocation(),"location");
   logger.debug(">> running %d node%s tag(%s) location(%s) image(%s) size(%s) options(%s)",count,count > 1 ? "s" : "",tag,template.getLocation().getId(),template.getImage().getId(),template.getSize().getId(),template.getOptions());
-  final Set<NodeMetadata> nodes=Sets.newHashSet();
-  final Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
+  Set<NodeMetadata> nodes=Sets.newHashSet();
+  Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
   Map<?,ListenableFuture<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,nodes,badNodes);
   Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
   if (executionExceptions.size() > 0 || badNodes.size() > 0) {

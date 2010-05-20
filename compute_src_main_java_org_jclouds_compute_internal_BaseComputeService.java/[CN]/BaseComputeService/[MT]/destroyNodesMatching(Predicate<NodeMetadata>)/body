@@ -5,7 +5,7 @@
   for (  final NodeMetadata node : nodesMatchingFilterAndNotTerminated(filter)) {
     responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
-        destroyNode(node.getLocation(),node.getId());
+        destroyNode(node.getHandle());
         destroyedNodes.add(node);
         return null;
       }

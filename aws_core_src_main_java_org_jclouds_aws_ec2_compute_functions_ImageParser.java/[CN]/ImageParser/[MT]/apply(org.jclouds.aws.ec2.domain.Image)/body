@@ -39,5 +39,5 @@ catch (  NoSuchElementException e) {
     System.err.printf("unknown region %s for image %s; not in %s",from.getRegion(),from.getId(),locations);
     location=new LocationImpl(LocationScope.REGION,from.getRegion(),from.getRegion(),defaultLocation.getParent());
   }
-  return new ImageImpl(from.getId(),name,location,null,ImmutableMap.<String,String>of("owner",from.getImageOwnerId()),description,version,os,osDescription,from.getArchitecture() == org.jclouds.aws.ec2.domain.Image.Architecture.I386 ? Architecture.X86_32 : Architecture.X86_64,defaultCredentials);
+  return new ImageImpl(from.getId(),name,from.getRegion() + "/" + from.getId(),location,null,ImmutableMap.<String,String>of("owner",from.getImageOwnerId()),description,version,os,osDescription,from.getArchitecture() == org.jclouds.aws.ec2.domain.Image.Architecture.I386 ? Architecture.X86_32 : Architecture.X86_64,defaultCredentials);
 }

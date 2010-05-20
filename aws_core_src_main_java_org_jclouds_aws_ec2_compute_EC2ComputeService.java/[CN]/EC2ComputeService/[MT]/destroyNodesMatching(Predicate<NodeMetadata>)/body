@@ -2,7 +2,7 @@
   Set<? extends NodeMetadata> deadOnes=super.destroyNodesMatching(filter);
   Map<String,String> regionTags=Maps.newHashMap();
   for (  NodeMetadata nodeMetadata : deadOnes) {
-    if (nodeMetadata.getTag() != null)     regionTags.put(getRegionFromLocation.apply(nodeMetadata.getLocation()),nodeMetadata.getTag());
+    if (nodeMetadata.getTag() != null)     regionTags.put(parseHandle(nodeMetadata.getHandle())[0],nodeMetadata.getTag());
   }
   for (  Entry<String,String> regionTag : regionTags.entrySet()) {
     deleteKeyPair(regionTag.getKey(),regionTag.getValue());
