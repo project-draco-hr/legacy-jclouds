@@ -1,7 +1,7 @@
 {
-  String[] parts=parseHandle(handle);
+  String[] parts=parseHandle(id);
   String region=parts[0];
-  String id=parts[1];
-  ec2Client.getInstanceServices().terminateInstancesInRegion(region,id);
-  return instanceStateTerminated.apply(Iterables.getOnlyElement(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,id))));
+  String instanceId=parts[1];
+  ec2Client.getInstanceServices().terminateInstancesInRegion(region,instanceId);
+  return instanceStateTerminated.apply(Iterables.getOnlyElement(Iterables.concat(ec2Client.getInstanceServices().describeInstancesInRegion(region,instanceId))));
 }
