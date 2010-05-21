@@ -1,3 +1,10 @@
 {
-  return client.describeRegions();
+  if (regionException != null)   throw regionException;
+  try {
+    return client.describeRegions();
+  }
+ catch (  RuntimeException e) {
+    this.regionException=e;
+    throw e;
+  }
 }
