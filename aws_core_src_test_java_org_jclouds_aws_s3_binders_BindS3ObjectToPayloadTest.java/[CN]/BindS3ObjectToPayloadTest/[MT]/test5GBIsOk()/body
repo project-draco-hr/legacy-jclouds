@@ -1,0 +1,26 @@
+{
+  BindBlobToPayloadAndUserMetadataToHeadersWithPrefix blobBinder=createMock(BindBlobToPayloadAndUserMetadataToHeadersWithPrefix.class);
+  ObjectToBlob object2Blob=createMock(ObjectToBlob.class);
+  HttpRequest request=createMock(HttpRequest.class);
+  S3Object s3Object=createMock(S3Object.class);
+  Blob blob=createMock(Blob.class);
+  MutableObjectMetadata md=createNiceMock(MutableObjectMetadata.class);
+  expect(s3Object.getContentLength()).andReturn(5368709120l).atLeastOnce();
+  expect(object2Blob.apply(s3Object)).andReturn(blob);
+  blobBinder.bindToRequest(request,blob);
+  expect(s3Object.getMetadata()).andReturn(md).atLeastOnce();
+  replay(blobBinder);
+  replay(object2Blob);
+  replay(request);
+  replay(s3Object);
+  replay(blob);
+  replay(md);
+  BindS3ObjectToPayload bindS3ObjectToPayload=new BindS3ObjectToPayload(object2Blob,blobBinder);
+  bindS3ObjectToPayload.bindToRequest(request,s3Object);
+  verify(blobBinder);
+  verify(object2Blob);
+  verify(request);
+  verify(s3Object);
+  verify(blob);
+  verify(md);
+}
