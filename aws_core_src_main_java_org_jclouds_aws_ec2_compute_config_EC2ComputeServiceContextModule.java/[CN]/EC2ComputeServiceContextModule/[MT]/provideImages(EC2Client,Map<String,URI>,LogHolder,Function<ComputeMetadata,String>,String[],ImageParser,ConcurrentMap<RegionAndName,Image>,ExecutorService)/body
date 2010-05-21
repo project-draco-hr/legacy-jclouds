@@ -10,7 +10,7 @@
         @Override public Void call() throws Exception {
           for (          final org.jclouds.aws.ec2.domain.Image from : sync.getAMIServices().describeImagesInRegion(region,ownedBy(amiOwners))) {
             Image image=parser.apply(from);
-            if (image != null)             images.put(new RegionAndName(region,image.getId()),image);
+            if (image != null)             images.put(new RegionAndName(region,image.getProviderId()),image);
  else             if (from.getImageType() == ImageType.MACHINE)             holder.logger.trace("<< image(%s) didn't parse",from.getId());
           }
           return null;

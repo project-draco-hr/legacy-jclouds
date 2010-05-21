@@ -10,7 +10,7 @@
   expect(strategy.createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.execute(region,input.tag,input.template)).andReturn(ec2Options);
   expect(input.template.getLocation()).andReturn(input.location).atLeastOnce();
   expect(input.template.getImage()).andReturn(input.image).atLeastOnce();
-  expect(input.image.getId()).andReturn(imageId).atLeastOnce();
+  expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
   expect(strategy.instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn(reservation);
   expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
   expect(strategy.instanceStateRunning.apply(instance)).andReturn(true);
