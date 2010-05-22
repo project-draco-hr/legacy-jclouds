@@ -8,8 +8,8 @@
     for (    NodeMetadata node : nodes) {
       instanceIds.add(node.getProviderId());
     }
-    String dnsName=client.loadBalanceNodesMatching(NodePredicates.withTag(tag),tag,"HTTP",80,80);
-    assertNotNull(dnsName);
+    Set<String> dnsNames=client.loadBalanceNodesMatching(NodePredicates.withTag(tag),tag,"HTTP",80,80);
+    assertNotNull(dnsNames);
     Set<ElasticLoadBalancer> elbs=elbClient.describeLoadBalancersInRegion(Region.US_EAST_1,tag);
     assertNotNull(elbs);
     ElasticLoadBalancer elb=elbs.iterator().next();
