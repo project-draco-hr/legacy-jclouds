@@ -1,0 +1,32 @@
+{
+  Location defaultLocation=createMock(Location.class);
+  Image image=createMock(Image.class);
+  Image image2=createMock(Image.class);
+  Size size=new SizeImpl("sizeId",null,"sizeId",defaultLocation,null,ImmutableMap.<String,String>of(),1.0,0,0,ImagePredicates.any());
+  Set<Location> locations=ImmutableSet.<Location>of(defaultLocation);
+  Set<Image> images=ImmutableSet.<Image>of(image,image2);
+  Set<Size> sizes=ImmutableSet.<Size>of(size);
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
+  expect(defaultLocation.getId()).andReturn("locationId").atLeastOnce();
+  expect(optionsProvider.get()).andReturn(new TemplateOptions());
+  expect(image.getLocation()).andReturn(defaultLocation).atLeastOnce();
+  expect(image.getArchitecture()).andReturn(Architecture.X86_32).atLeastOnce();
+  expect(image2.getLocation()).andReturn(defaultLocation).atLeastOnce();
+  expect(image2.getArchitecture()).andReturn(Architecture.X86_64).atLeastOnce();
+  replay(image);
+  replay(image2);
+  replay(defaultTemplate);
+  replay(defaultLocation);
+  replay(optionsProvider);
+  replay(templateBuilderProvider);
+  TemplateBuilderImpl template=createTemplateBuilder(locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
+  assertEquals(template.smallest().architecture(Architecture.X86_32).build().getImage(),image);
+  verify(image);
+  verify(image2);
+  verify(defaultTemplate);
+  verify(defaultLocation);
+  verify(optionsProvider);
+  verify(templateBuilderProvider);
+}

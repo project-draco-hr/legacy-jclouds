@@ -8,9 +8,15 @@
   if (options == null)   options=optionsProvider.get();
   logger.debug(">> searching params(%s)",this);
   Location location=resolveLocation();
-  Image image=resolveImage();
+  List<? extends Image> images=resolveImages();
+  final Size size=resolveSize(sizeSorter(),images);
+  Image image=Iterables.find(images,new Predicate<Image>(){
+    @Override public boolean apply(    Image input){
+      return size.supportsImage(input);
+    }
+  }
+);
+  logger.debug("<<   matched image(%s)",image);
   this.arch=image.getArchitecture();
-  Ordering<Size> sizeOrdering=sizeSorter();
-  Size size=resolveSize(sizeOrdering);
   return new TemplateImpl(image,size,location,options);
 }

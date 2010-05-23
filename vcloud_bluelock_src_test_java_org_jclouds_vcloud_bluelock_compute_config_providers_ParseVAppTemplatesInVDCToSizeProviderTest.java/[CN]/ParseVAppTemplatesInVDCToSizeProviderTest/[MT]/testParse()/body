@@ -1,0 +1,27 @@
+{
+  InputStream is=getClass().getResourceAsStream("/bluelock/vdc.xml");
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @VCloudApi URI provide(){
+      return URI.create("https://express3.bluelock.com/api/v0.8");
+    }
+  }
+);
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  VDC vdc=factory.create(injector.getInstance(VDCHandler.class)).parse(is);
+  VCloudClient client=createMock(VCloudClient.class);
+  FindLocationForResourceInVDC findLocationForResourceInVDC=createMock(FindLocationForResourceInVDC.class);
+  ParseVAppTemplatesInVDCToSizeProvider providerParser=new ParseVAppTemplatesInVDCToSizeProvider(client,findLocationForResourceInVDC);
+  expect(findLocationForResourceInVDC.apply((NamedResource)anyObject(),(String)anyObject())).andReturn(null).atLeastOnce();
+  replay(client);
+  replay(findLocationForResourceInVDC);
+  Set<Size> sizes=Sets.newLinkedHashSet();
+  providerParser.addSizesFromVAppTemplatesInVDC(vdc,sizes);
+  assertEquals(sizes.size(),vdc.getResourceEntities().size());
+  assertEquals(Iterables.get(sizes,0),new SizeImpl("396","4CPUx2GBx20GB","396",null,null,ImmutableMap.<String,String>of(),4.0,2048,20,ImagePredicates.idEquals("396")));
+  assertEquals(Iterables.get(sizes,116),new SizeImpl("434","1CPUx512MBx40GB","434",null,null,ImmutableMap.<String,String>of(),1.0,512,40,ImagePredicates.idEquals("434")));
+  assertEquals(Iterables.getLast(sizes),new SizeImpl("383","1CPUx1GBx20GB","383",null,null,ImmutableMap.<String,String>of(),1.0,1024,20,ImagePredicates.idEquals("396")));
+  verify(client);
+  verify(findLocationForResourceInVDC);
+}

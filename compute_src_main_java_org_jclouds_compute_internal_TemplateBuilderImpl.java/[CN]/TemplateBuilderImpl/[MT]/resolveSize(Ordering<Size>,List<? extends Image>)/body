@@ -1,0 +1,24 @@
+{
+  Size size;
+  try {
+    Iterable<? extends Size> sizesThatAreCompatibleWithOurImages=Iterables.filter(sizes,new Predicate<Size>(){
+      @Override public boolean apply(      final Size size){
+        boolean returnVal=false;
+        if (size != null)         returnVal=Iterables.any(images,new Predicate<Image>(){
+          @Override public boolean apply(          Image input){
+            return size.supportsImage(input);
+          }
+        }
+);
+        return returnVal;
+      }
+    }
+);
+    size=sizeOrdering.max(Iterables.filter(sizesThatAreCompatibleWithOurImages,sizePredicate));
+  }
+ catch (  NoSuchElementException exception) {
+    throw new NoSuchElementException("size didn't match: " + toString() + "\n"+ sizes);
+  }
+  logger.debug("<<   matched size(%s)",size);
+  return size;
+}
