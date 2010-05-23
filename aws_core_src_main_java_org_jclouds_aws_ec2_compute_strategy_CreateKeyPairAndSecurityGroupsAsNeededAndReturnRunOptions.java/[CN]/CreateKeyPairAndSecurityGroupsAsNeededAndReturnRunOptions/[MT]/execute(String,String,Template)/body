@@ -1,10 +1,8 @@
 {
   checkArgument(template.getSize() instanceof EC2Size,"unexpected image type. should be EC2Size, was: " + template.getSize().getClass());
   EC2Size ec2Size=EC2Size.class.cast(template.getSize());
-  checkArgument(template.getOptions() instanceof EC2TemplateOptions,"unexpected options type. should be EC2Options, was: " + template.getOptions().getClass());
-  EC2TemplateOptions options=EC2TemplateOptions.class.cast(template.getOptions());
-  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options);
-  Set<String> groups=getSecurityGroupsForTagAndOptions(region,tag,options);
+  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
+  Set<String> groups=getSecurityGroupsForTagAndOptions(region,tag,template.getOptions());
   RunInstancesOptions instanceOptions=asType(ec2Size.getInstanceType()).withSecurityGroups(groups).withAdditionalInfo(tag);
   if (keyPairName != null)   instanceOptions.withKeyName(keyPairName);
   return instanceOptions;

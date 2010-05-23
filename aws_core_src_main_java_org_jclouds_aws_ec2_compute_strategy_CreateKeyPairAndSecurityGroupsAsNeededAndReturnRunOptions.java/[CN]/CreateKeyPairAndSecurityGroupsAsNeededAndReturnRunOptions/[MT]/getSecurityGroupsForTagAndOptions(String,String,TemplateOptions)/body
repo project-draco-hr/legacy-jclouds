@@ -4,16 +4,16 @@
     String markerGroup="jclouds#" + tag;
     groups.add(markerGroup);
     RegionNameAndIngressRules regionNameAndIngessRulesForMarkerGroup;
-    if (options.getGroupIds().size() == 0) {
-      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,options.getInboundPorts(),true);
+    if (options instanceof EC2TemplateOptions && EC2TemplateOptions.class.cast(options).getGroupIds().size() > 0) {
+      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,new int[]{},false);
+      groups.addAll(EC2TemplateOptions.class.cast(options).getGroupIds());
     }
  else {
-      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,new int[]{},false);
+      regionNameAndIngessRulesForMarkerGroup=new RegionNameAndIngressRules(region,markerGroup,options.getInboundPorts(),true);
     }
     if (!securityGroupMap.containsKey(regionNameAndIngessRulesForMarkerGroup)) {
       securityGroupMap.put(regionNameAndIngessRulesForMarkerGroup,createSecurityGroupIfNeeded.apply(regionNameAndIngessRulesForMarkerGroup));
     }
   }
-  groups.addAll(options.getGroupIds());
   return groups;
 }
