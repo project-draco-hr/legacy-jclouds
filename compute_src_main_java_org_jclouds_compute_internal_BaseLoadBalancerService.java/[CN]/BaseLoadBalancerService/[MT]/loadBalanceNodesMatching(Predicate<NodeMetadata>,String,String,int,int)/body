@@ -1,0 +1,33 @@
+{
+  checkNotNull(loadBalancerName,"loadBalancerName");
+  checkNotNull(protocol,"protocol");
+  checkArgument(protocol.toUpperCase().equals("HTTP") || protocol.toUpperCase().equals("TCP"),"Acceptable values for protocol are HTTP or TCP");
+  Map<Location,Set<String>> locationMap=Maps.newHashMap();
+  for (  NodeMetadata node : Iterables.filter(context.getComputeService().listNodesDetailsMatching(NodePredicates.all()),Predicates.and(filter,Predicates.not(NodePredicates.TERMINATED)))) {
+    Set<String> ids=locationMap.get(node.getLocation());
+    if (ids == null)     ids=Sets.newHashSet();
+    ids.add(node.getProviderId());
+    locationMap.put(node.getLocation(),ids);
+  }
+  Set<InetAddress> dnsNames=Sets.newHashSet();
+  for (  Location location : locationMap.keySet()) {
+    logger.debug(">> creating load balancer (%s)",loadBalancerName);
+    String dnsName=loadBalancerStrategy.execute(location,loadBalancerName,protocol,loadBalancerPort,instancePort,locationMap.get(location));
+    for (int i=0; i < 3; i++) {
+      try {
+        dnsNames.add(InetAddress.getByName(dnsName));
+      }
+ catch (      UnknownHostException e) {
+        try {
+          Thread.sleep(1000);
+        }
+ catch (        InterruptedException e1) {
+          Throwables.propagate(e1);
+        }
+        continue;
+      }
+    }
+    logger.debug("<< created load balancer (%s) DNS (%s)",loadBalancerName,dnsName);
+  }
+  return dnsNames;
+}

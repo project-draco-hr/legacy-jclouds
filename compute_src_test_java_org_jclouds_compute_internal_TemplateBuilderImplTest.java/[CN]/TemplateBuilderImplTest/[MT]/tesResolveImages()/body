@@ -3,9 +3,9 @@
   Image image=createMock(Image.class);
   Image image2=createMock(Image.class);
   Size size=new SizeImpl("sizeId",null,"sizeId",defaultLocation,null,ImmutableMap.<String,String>of(),1.0,0,0,ImagePredicates.any());
-  Set<Location> locations=ImmutableSet.<Location>of(defaultLocation);
-  Set<Image> images=ImmutableSet.<Image>of(image,image2);
-  Set<Size> sizes=ImmutableSet.<Size>of(size);
+  Provider<Set<? extends Location>> locations=Providers.<Set<? extends Location>>of(ImmutableSet.<Location>of(defaultLocation));
+  Provider<Set<? extends Image>> images=Providers.<Set<? extends Image>>of(ImmutableSet.<Image>of(image,image2));
+  Provider<Set<? extends Size>> sizes=Providers.<Set<? extends Size>>of(ImmutableSet.<Size>of(size));
   Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
   TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
@@ -24,7 +24,7 @@
   replay(optionsProvider);
   replay(templateBuilderProvider);
   TemplateBuilderImpl template=createTemplateBuilder(locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
-  assertEquals(template.resolveImages(),images);
+  assertEquals(template.resolveImages(),images.get());
   verify(image);
   verify(image2);
   verify(defaultTemplate);

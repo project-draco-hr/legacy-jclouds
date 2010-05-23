@@ -1,0 +1,8 @@
+{
+  account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  Properties props=new Properties();
+  props.setProperty(PROPERTY_VCLOUD_SESSIONINTERVAL,40 + "");
+  context=new ComputeServiceContextFactory().createContext("bluelock",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule()),props);
+  connection=VCloudClient.class.cast(context.getProviderSpecificContext().getApi());
+}

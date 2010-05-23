@@ -2,11 +2,17 @@
   super.configure();
   bind(String.class).annotatedWith(VCloud.class).toInstance(providerName);
   bind(AddNodeWithTagStrategy.class).to(VCloudAddNodeWithTagStrategy.class);
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<VCloudAsyncClient,VCloudClient>>(){
+  }
+).in(Scopes.SINGLETON);
   bind(RunNodesAndAddToSetStrategy.class).to(EncodeTemplateIdIntoNameRunNodesAndAddToSetStrategy.class);
   bind(ListNodesStrategy.class).to(VCloudListNodesStrategy.class);
   bind(GetNodeMetadataStrategy.class).to(VCloudGetNodeMetadataStrategy.class);
   bind(RebootNodeStrategy.class).to(VCloudRebootNodeStrategy.class);
   bind(DestroyNodeStrategy.class).to(VCloudDestroyNodeStrategy.class);
+  bindLoadBalancer();
   bindSizes();
   bindImages();
   bindLocations();

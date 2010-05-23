@@ -1,0 +1,13 @@
+{
+  if (tag == null)   tag=checkNotNull(service,"service") + "lb";
+  user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  initializeContextAndClient();
+  Injector injector=Guice.createInjector(getSshModule());
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+  Template template=client.templateBuilder().build();
+  nodes=Sets.newTreeSet(client.runNodesWithTag(tag,2,template));
+}

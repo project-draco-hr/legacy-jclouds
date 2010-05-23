@@ -3,6 +3,12 @@
   bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
   }
 ).to(ServerToNodeMetadata.class);
+  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<RimuHostingAsyncClient,RimuHostingClient>>(){
+  }
+).in(Scopes.SINGLETON);
   bind(new TypeLiteral<Function<Server,Iterable<InetAddress>>>(){
   }
 ).to(ServerToPublicAddresses.class);

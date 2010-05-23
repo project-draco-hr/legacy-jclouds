@@ -3,6 +3,12 @@
   bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
   }
 ).to(ServerToNodeMetadata.class);
+  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<GoGridAsyncClient,GoGridClient>>(){
+  }
+).in(Scopes.SINGLETON);
   bind(AddNodeWithTagStrategy.class).to(GoGridAddNodeWithTagStrategy.class);
   bind(ListNodesStrategy.class).to(GoGridListNodesStrategy.class);
   bind(GetNodeMetadataStrategy.class).to(GoGridGetNodeMetadataStrategy.class);

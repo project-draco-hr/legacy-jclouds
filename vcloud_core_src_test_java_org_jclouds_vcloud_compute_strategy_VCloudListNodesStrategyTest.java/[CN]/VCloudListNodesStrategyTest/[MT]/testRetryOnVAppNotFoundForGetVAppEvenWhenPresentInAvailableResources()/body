@@ -10,8 +10,8 @@
   replay(client);
   replay(computeClient);
   Location vdcL=new LocationImpl(LocationScope.ZONE,"1","1",null);
-  Set<? extends Location> locations=ImmutableSet.of(vdcL);
-  Set<? extends Image> images=ImmutableSet.of();
+  Provider<Set<? extends Location>> locations=Providers.<Set<? extends Location>>of(ImmutableSet.of(vdcL));
+  Provider<Set<? extends Image>> images=Providers.<Set<? extends Image>>of(ImmutableSet.<Image>of());
   FindLocationForResourceInVDC findLocationForResourceInVDC=new FindLocationForResourceInVDC(locations,null);
   VCloudListNodesStrategy strategy=new VCloudListNodesStrategy(client,computeClient,vAppStatusToNodeState,getExtra,findLocationForResourceInVDC,images);
   Set<NodeMetadata> nodes=Sets.newHashSet();
