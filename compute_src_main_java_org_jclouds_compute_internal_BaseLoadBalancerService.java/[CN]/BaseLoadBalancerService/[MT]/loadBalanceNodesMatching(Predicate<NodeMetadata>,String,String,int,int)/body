@@ -13,17 +13,12 @@
   for (  Location location : locationMap.keySet()) {
     logger.debug(">> creating load balancer (%s)",loadBalancerName);
     String dnsName=loadBalancerStrategy.execute(location,loadBalancerName,protocol,loadBalancerPort,instancePort,locationMap.get(location));
-    for (int i=0; i < 3; i++) {
+    for (int i=0; i < dnsRetries; i++) {
       try {
         dnsNames.add(InetAddress.getByName(dnsName));
       }
- catch (      UnknownHostException e) {
-        try {
-          Thread.sleep(1000);
-        }
- catch (        InterruptedException e1) {
-          Throwables.propagate(e1);
-        }
+ catch (      UnknownHostException from) {
+        backoffLimitedRetryHandler.imposeBackoffExponentialDelay(200L,2,i + 1,dnsRetries,String.format("%s/%s@%s:%d:%d connection error: %s",location,loadBalancerName,dnsName,loadBalancerPort,instancePort));
         continue;
       }
     }
