@@ -7,7 +7,10 @@
 .getType();
       String test=responseException.getContent();
       Map<String,RimuHostingResponse> responseMap=gson.fromJson(test,setType);
-      throw new RuntimeException(responseMap.values().iterator().next().getErrorInfo().getErrorClass());
+      RimuHostingResponse firstResponse=Iterables.get(responseMap.values(),0);
+      String errorClass=firstResponse.getErrorInfo().getErrorClass();
+      if (errorClass.equals("PermissionException"))       throw new AuthorizationException(responseException.getCommand().getRequest(),firstResponse.getErrorInfo().getErrorMessage());
+      throw new RuntimeException(firstResponse.getErrorInfo().getErrorMessage(),e);
     }
   }
   return propagateOrNull(e);

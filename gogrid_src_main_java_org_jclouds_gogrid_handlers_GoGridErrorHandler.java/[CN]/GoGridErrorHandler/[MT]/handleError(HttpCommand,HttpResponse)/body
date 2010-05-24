@@ -3,7 +3,7 @@
   Set<ErrorResponse> errors=parseErrorsFromContentOrNull(response.getContent());
 switch (response.getStatusCode()) {
 case 403:
-    exception=new HttpResponseException(command,response);
+    exception=new AuthorizationException(command.getRequest(),errors != null ? errors.toString() : response.getStatusLine());
   break;
 default :
 exception=errors != null ? new GoGridResponseException(command,response,errors) : new HttpResponseException(command,response);

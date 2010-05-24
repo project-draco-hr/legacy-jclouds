@@ -1,0 +1,12 @@
+{
+  if (vApp.getStatus().compareTo(VAppStatus.OFF) > 0) {
+    logger.debug(">> powering off vApp(%s), current status: %s",vApp.getId(),vApp.getStatus());
+    Task task=client.powerOffVApp(vApp.getId());
+    if (!taskTester.apply(task.getId())) {
+      throw new TaskException("powerOff",vApp,task);
+    }
+    vApp=client.getVApp(vApp.getId());
+    logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getId());
+  }
+  return vApp;
+}
