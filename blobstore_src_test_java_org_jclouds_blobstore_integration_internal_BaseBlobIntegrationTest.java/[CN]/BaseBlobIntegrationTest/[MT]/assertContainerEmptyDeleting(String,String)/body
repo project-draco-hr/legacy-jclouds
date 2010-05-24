@@ -1,4 +1,9 @@
 {
-  Set<? extends StorageMetadata> listing=context.getBlobStore().list(containerName);
-  assertEquals(listing.size(),0,String.format("deleting %s, we still have %s left in container %s, using encoding %s",key,listing.size(),containerName,LOCAL_ENCODING));
+  Iterable<? extends StorageMetadata> listing=Iterables.filter(context.getBlobStore().list(containerName),new Predicate<StorageMetadata>(){
+    @Override public boolean apply(    StorageMetadata input){
+      return input.getType() == StorageType.BLOB;
+    }
+  }
+);
+  assertEquals(Iterables.size(listing),0,String.format("deleting %s, we still have %s blobs left in container %s, using encoding %s",key,Iterables.size(listing),containerName,LOCAL_ENCODING));
 }

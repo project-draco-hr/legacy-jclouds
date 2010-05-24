@@ -1,0 +1,16 @@
+{
+  AsyncBlobStore asyncBlobStore=createMock(AsyncBlobStore.class);
+  String container="container";
+  Blob blob=createMock(Blob.class);
+  MutableBlobMetadata md=createMock(MutableBlobMetadata.class);
+  expect(blob.getMetadata()).andReturn(md).atLeastOnce();
+  expect(md.getName()).andReturn("rootpath/subpath/hello").atLeastOnce();
+  expect(asyncBlobStore.createDirectory("container","rootpath/subpath")).andReturn(null);
+  replay(asyncBlobStore);
+  replay(blob);
+  replay(md);
+  BlobStoreUtilsImpl.createParentIfNeededAsync(asyncBlobStore,container,blob);
+  verify(asyncBlobStore);
+  verify(blob);
+  verify(md);
+}
