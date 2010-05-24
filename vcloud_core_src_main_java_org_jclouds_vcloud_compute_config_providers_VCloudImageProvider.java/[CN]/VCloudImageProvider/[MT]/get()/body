@@ -18,7 +18,7 @@
             VAppTemplate template=client.getVAppTemplate(resource.getId());
             Location location=findLocationForResourceInVDC.apply(resource,vDC.getId());
             String name=getName(template.getName());
-            images.add(new ImageImpl(resource.getId(),name,resource.getId(),location,template.getLocation(),ImmutableMap.<String,String>of(),template.getDescription(),"",myOs,name,arch,new Credentials("root",null)));
+            images.add(new ImageImpl(resource.getId(),name,resource.getId(),location,template.getLocation(),ImmutableMap.<String,String>of(),template.getDescription(),"",myOs,name,arch,populateDefaultLoginCredentialsForImageStrategy.execute(template)));
             return null;
           }
         }
