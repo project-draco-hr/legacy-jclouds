@@ -8,7 +8,7 @@
   RestContext<AzureQueueAsyncClient,AzureQueueClient> context=isEnterprise ? AzureQueueContextFactory.createContext(account,encodedKey,new NullLoggingModule(),new EnterpriseConfigurationModule()) : AzureQueueContextFactory.createContext(account,encodedKey,new NullLoggingModule());
   try {
     if (purgeQueues(queueName,context)) {
-      System.out.printf("pausing 60 seconds before recreating queues%n");
+      logger.info("pausing 60 seconds before recreating queues");
       Thread.sleep(60 * 1000);
     }
     createQueue(queueName,context);
