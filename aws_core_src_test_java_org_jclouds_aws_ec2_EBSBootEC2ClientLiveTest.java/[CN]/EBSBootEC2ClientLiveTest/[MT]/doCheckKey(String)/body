@@ -1,0 +1,11 @@
+{
+  SshClient ssh=sshFactory.create(new IPSocket(address,22),"ubuntu",keyPair.getKeyMaterial().getBytes());
+  try {
+    ssh.connect();
+    ExecResponse hello=ssh.exec("echo hello");
+    assertEquals(hello.getOutput().trim(),"hello");
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+}

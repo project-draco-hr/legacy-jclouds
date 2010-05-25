@@ -6,7 +6,7 @@
   Injector injector=Guice.createInjector(getSshModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
   SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
-  socketTester=new RetryablePredicate<InetSocketAddress>(socketOpen,60,1,TimeUnit.SECONDS);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,60,1,TimeUnit.SECONDS);
   injector.injectMembers(socketOpen);
   Template template=client.templateBuilder().build();
   nodes=Sets.newTreeSet(client.runNodesWithTag(tag,2,template));

@@ -1,19 +1,19 @@
 {
   checkNotNull(path,"path");
   checkConnected();
-  logger.debug("%s@%s:%d: Opening sftp Channel.",username,host.getHostAddress(),port);
+  logger.debug("%s@%s:%d: Opening sftp Channel.",username,host,port);
   ChannelSftp sftp=null;
   try {
     sftp=(ChannelSftp)session.openChannel("sftp");
     sftp.connect();
   }
  catch (  JSchException e) {
-    throw new SshException(String.format("%s@%s:%d: Error connecting to sftp.",username,host.getHostAddress(),port),e);
+    throw new SshException(String.format("%s@%s:%d: Error connecting to sftp.",username,host,port),e);
   }
   try {
     return new CloseFtpChannelOnCloseInputStream(sftp.get(path),sftp);
   }
  catch (  SftpException e) {
-    throw new SshException(String.format("%s@%s:%d: Error getting path: %s",username,host.getHostAddress(),port,path),e);
+    throw new SshException(String.format("%s@%s:%d: Error getting path: %s",username,host,port,path),e);
   }
 }

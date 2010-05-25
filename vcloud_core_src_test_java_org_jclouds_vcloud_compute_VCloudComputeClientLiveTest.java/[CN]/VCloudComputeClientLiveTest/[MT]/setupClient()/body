@@ -5,7 +5,7 @@
   Injector injector=new VCloudContextBuilder("vcloud",new VCloudPropertiesBuilder(URI.create(endpoint),account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
   computeClient=injector.getInstance(VCloudComputeClient.class);
   client=injector.getInstance(VCloudClient.class);
-  addressTester=injector.getInstance(Key.get(new TypeLiteral<Predicate<InetAddress>>(){
+  addressTester=injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>(){
   }
 ));
   expectationMap=ImmutableMap.<OsFamily,Expectation>builder().put(OsFamily.CENTOS,new Expectation(4194304 / 2 * 10,"Red Hat Enterprise Linux 5 (64-bit)")).build();

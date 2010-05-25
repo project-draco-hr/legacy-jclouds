@@ -4,6 +4,6 @@
   Injector injector=new TerremarkVCloudContextBuilder("terremark",new TerremarkVCloudPropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
   connection=tmClient=injector.getInstance(TerremarkVCloudClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
-  socketTester=new RetryablePredicate<InetSocketAddress>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
+  socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
   successTester=new RetryablePredicate<String>(injector.getInstance(TaskSuccess.class),650,10,TimeUnit.SECONDS);
 }

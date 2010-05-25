@@ -9,19 +9,11 @@
     ids.add(node.getProviderId());
     locationMap.put(node.getLocation(),ids);
   }
-  Set<InetAddress> dnsNames=Sets.newHashSet();
+  Set<String> dnsNames=Sets.newHashSet();
   for (  Location location : locationMap.keySet()) {
     logger.debug(">> creating load balancer (%s)",loadBalancerName);
     String dnsName=loadBalancerStrategy.execute(location,loadBalancerName,protocol,loadBalancerPort,instancePort,locationMap.get(location));
-    for (int i=0; i < dnsRetries; i++) {
-      try {
-        dnsNames.add(InetAddress.getByName(dnsName));
-      }
- catch (      UnknownHostException from) {
-        backoffLimitedRetryHandler.imposeBackoffExponentialDelay(200L,2,i + 1,dnsRetries,String.format("%s/%s@%s:%d:%d connection error: %s",location,loadBalancerName,dnsName,loadBalancerPort,instancePort));
-        continue;
-      }
-    }
+    dnsNames.add(dnsName);
     logger.debug("<< created load balancer (%s) DNS (%s)",loadBalancerName,dnsName);
   }
   return dnsNames;
