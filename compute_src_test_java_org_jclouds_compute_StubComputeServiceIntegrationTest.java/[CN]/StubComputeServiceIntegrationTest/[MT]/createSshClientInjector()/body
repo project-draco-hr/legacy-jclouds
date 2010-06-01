@@ -1,0 +1,39 @@
+{
+  return Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      SshClient.Factory factory=createMock(SshClient.Factory.class);
+      SocketOpen open=createMock(SocketOpen.class);
+      SshClient client1=createMock(SshClient.class);
+      SshClient client2=createMock(SshClient.class);
+      SshClient client3=createMock(SshClient.class);
+      SshClient client4=createMock(SshClient.class);
+      expect(open.apply(new IPSocket("144.175.1.1",22))).andReturn(true);
+      expect(open.apply(new IPSocket("144.175.1.2",22))).andReturn(true);
+      expect(open.apply(new IPSocket("144.175.1.3",22))).andReturn(true);
+      expect(open.apply(new IPSocket("144.175.1.4",22))).andReturn(true);
+      expect(factory.create(eq(new IPSocket("144.175.1.1",22)),eq("root"),aryEq(keyPair.get("private").getBytes()))).andReturn(client1).atLeastOnce();
+      expect(factory.create(eq(new IPSocket("144.175.1.2",22)),eq("root"),aryEq(keyPair.get("private").getBytes()))).andReturn(client2).atLeastOnce();
+      expect(factory.create(eq(new IPSocket("144.175.1.3",22)),eq("root"),aryEq(keyPair.get("private").getBytes()))).andReturn(client3).atLeastOnce();
+      expect(factory.create(eq(new IPSocket("144.175.1.4",22)),eq("root"),aryEq(keyPair.get("private").getBytes()))).andReturn(client4).atLeastOnce();
+      helloAndJava(client1);
+      helloAndJava(client2);
+      helloAndJava(client3);
+      helloAndJava(client4);
+      replay(open);
+      replay(factory);
+      replay(client1);
+      replay(client2);
+      replay(client3);
+      replay(client4);
+      bind(SshClient.Factory.class).toInstance(factory);
+      bind(SocketOpen.class).toInstance(open);
+    }
+    private void helloAndJava(    SshClient client){
+      client.connect();
+      expect(client.exec("echo hello")).andReturn(new ExecResponse("hello","",0));
+      expect(client.exec("java -version")).andReturn(new ExecResponse("","OpenJDK",0));
+      client.disconnect();
+    }
+  }
+);
+}

@@ -1,0 +1,17 @@
+{
+  if (this.expected == null) {
+    return actual == null;
+  }
+  try {
+    String real=Utils.toStringAndClose((InputStream)actual);
+    if (!expected.equals(real)) {
+      System.err.println(real);
+      return false;
+    }
+    return true;
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+    return false;
+  }
+}
