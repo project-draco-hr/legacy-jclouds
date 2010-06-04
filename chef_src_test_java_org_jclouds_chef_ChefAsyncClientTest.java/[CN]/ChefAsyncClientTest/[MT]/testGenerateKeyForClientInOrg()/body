@@ -1,0 +1,11 @@
+{
+  Method method=ChefAsyncClient.class.getMethod("generateKeyForClientInOrg",String.class,String.class);
+  GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,"org","client");
+  assertRequestLineEquals(httpRequest,"PUT https://api.opscode.com/organizations/org/clients/client HTTP/1.1");
+  assertHeadersEqual(httpRequest,"Accept: application/json\nContent-Length: 44\nContent-Type: application/json\n");
+  assertPayloadEquals(httpRequest,"{\"clientname\":\"client\", \"private_key\": true}");
+  assertResponseParserClassEquals(method,httpRequest,ParseKeyFromJson.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}
