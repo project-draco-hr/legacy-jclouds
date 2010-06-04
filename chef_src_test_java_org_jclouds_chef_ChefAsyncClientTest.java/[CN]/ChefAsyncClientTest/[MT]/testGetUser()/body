@@ -1,0 +1,11 @@
+{
+  Method method=ChefAsyncClient.class.getMethod("getUser",String.class);
+  GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,"myuser");
+  assertRequestLineEquals(httpRequest,"GET https://api.opscode.com/users/myuser HTTP/1.1");
+  assertHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null);
+  assertResponseParserClassEquals(method,httpRequest,ParseUserFromJson.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

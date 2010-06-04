@@ -1,0 +1,19 @@
+{
+  Injector injector=Guice.createInjector(new ChefRestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new ParserModule(),new AbstractModule(){
+    protected void configure(){
+      Jsr330.bindProperties(binder(),checkNotNull(new ChefPropertiesBuilder("foo","bar")).build());
+      bind(UriBuilder.class).to(UriBuilderImpl.class);
+    }
+  }
+);
+  encryptionService=injector.getInstance(EncryptionService.class);
+  Security.addProvider(new BouncyCastleProvider());
+  KeyPair pair=KeyPair.class.cast(new PEMReader(new StringReader(PRIVATE_KEY)).readObject());
+  PrivateKey privateKey=pair.getPrivate();
+  signing_obj=new SignedHeaderAuth(new SignatureWire(),USER_ID,privateKey,new Provider<String>(){
+    @Override public String get(){
+      return TIMESTAMP_ISO8601;
+    }
+  }
+,encryptionService);
+}
