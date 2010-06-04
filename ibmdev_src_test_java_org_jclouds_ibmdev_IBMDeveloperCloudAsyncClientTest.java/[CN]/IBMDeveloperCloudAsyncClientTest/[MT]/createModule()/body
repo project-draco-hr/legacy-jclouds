@@ -1,0 +1,18 @@
+{
+  return new AbstractModule(){
+    @Override protected void configure(){
+      Jsr330.bindProperties(binder(),new IBMDeveloperCloudPropertiesBuilder(new Properties()).build());
+      bind(URI.class).annotatedWith(IBMDeveloperCloud.class).toInstance(URI.create("https://www-180.ibm.com/cloud/enterprise/beta/api/rest/20090403"));
+      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
+        public Logger getLogger(        String category){
+          return Logger.NULL;
+        }
+      }
+);
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication(    EncryptionService encryptionService) throws UnsupportedEncodingException {
+      return new BasicAuthentication("foo","bar",encryptionService);
+    }
+  }
+;
+}
