@@ -1,8 +1,9 @@
 {
+  super.configure();
+  install(new PCSObjectModule());
   bind(new TypeLiteral<Map<String,Map<String,PCSFile>>>(){
   }
 ).toInstance(map);
-  bind(PCSAsyncClient.class).to(StubPCSAsyncClient.class).asEagerSingleton();
   bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("https://localhost/pcsblob"));
   bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost/root"));
 }

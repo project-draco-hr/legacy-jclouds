@@ -1,4 +1,5 @@
 {
+  EC2Client client=createMock(EC2Client.class);
   AMIClient amiClient=createMock(AMIClient.class);
   Map<RegionAndName,KeyPair> credentialsMap=createMock(Map.class);
   org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
@@ -21,11 +22,12 @@
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
   replay(imageMap);
   replay(jcImage);
+  replay(client);
   replay(amiClient);
   replay(credentialsMap);
   replay(credentialProvider);
   replay(instance);
-  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider,new ImageProvider(jcImage),imageMap,locations,new RunningInstanceToStorageMappingUnix());
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,new ImageProvider(jcImage),imageMap,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getLocation(),locations.iterator().next());
   assertEquals(metadata.getImage(),jcImage);
@@ -33,6 +35,7 @@
   assertEquals(metadata.getCredentials(),null);
   verify(imageMap);
   verify(jcImage);
+  verify(client);
   verify(amiClient);
   verify(credentialsMap);
   verify(credentialProvider);

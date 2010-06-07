@@ -1,24 +1,12 @@
 {
-  return new AbstractModule(){
+  return new PCSRestClientModule(){
     @Override protected void configure(){
-      install(new PCSObjectModule());
-      install(new BlobStoreObjectModule<PCSAsyncClient,PCSClient>(new TypeLiteral<PCSAsyncClient>(){
-      }
-,new TypeLiteral<PCSClient>(){
-      }
-));
-      Jsr330.bindProperties(binder(),checkNotNull(new PCSPropertiesBuilder(new Properties()).build(),"properties"));
-      bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
-      bind(URI.class).annotatedWith(RootContainer.class).toInstance(URI.create("http://localhost:8080/root"));
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
+      Names.bindProperties(binder(),new PCSPropertiesBuilder(URI.create("http://localhost/stub"),"user","key").build());
+      install(new NullLoggingModule());
+      super.configure();
     }
-    @SuppressWarnings("unused") @Provides @Singleton public BasicAuthentication provideBasicAuthentication(    EncryptionService encryptionService) throws UnsupportedEncodingException {
-      return new BasicAuthentication("foo","bar",encryptionService);
+    @Override protected Response provideCloudResponse(    AsyncClientFactory factory,    URI authenticationUri) throws InterruptedException, ExecutionException, TimeoutException {
+      return new CloudXlinkHandler.PCSCloudResponseImpl(ImmutableMap.<String,URI>of("rootContainer",URI.create("http://localhost/root")));
     }
   }
 ;

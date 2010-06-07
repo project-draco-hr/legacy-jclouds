@@ -1,8 +1,13 @@
 {
-  return Guice.createInjector(new SQSRestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new ParserModule(),new AbstractModule(){
+  return Guice.createInjector(new SQSRestClientModule(),new RestModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(binder(),checkNotNull(new SQSPropertiesBuilder("user","key").build(),"properties"));
-      bind(UriBuilder.class).to(UriBuilderImpl.class);
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
+      super.configure();
+    }
+  }
+,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
+    @Override protected void configure(){
+      Names.bindProperties(binder(),checkNotNull(new SQSPropertiesBuilder("user","key").build(),"properties"));
     }
   }
 );

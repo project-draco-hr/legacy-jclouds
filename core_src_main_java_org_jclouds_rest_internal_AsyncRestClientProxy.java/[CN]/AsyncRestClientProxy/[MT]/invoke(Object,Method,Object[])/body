@@ -11,7 +11,10 @@
  else   if (method.getName().startsWith("new")) {
     return injector.getInstance(method.getReturnType());
   }
- else   if (util.getDelegateOrNull(method) != null && ListenableFuture.class.isAssignableFrom(method.getReturnType())) {
+ else   if (method.isAnnotationPresent(Delegate.class)) {
+    return delegateMap.get(new ClassMethodArgs(method.getReturnType(),method,args));
+  }
+ else   if (annotationProcessor.getDelegateOrNull(method) != null && ListenableFuture.class.isAssignableFrom(method.getReturnType())) {
     return createFuture(method,args);
   }
  else {

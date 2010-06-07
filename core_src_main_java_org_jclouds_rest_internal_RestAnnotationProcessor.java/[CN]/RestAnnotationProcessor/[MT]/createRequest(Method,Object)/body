@@ -1,11 +1,24 @@
 {
   inputParamValidator.validateMethodParametersOrThrow(method,args);
-  URI endpoint=getEndpointFor(method,args);
+  URI endpoint;
+  if (caller != null) {
+    try {
+      endpoint=getEndpointFor(caller.getMethod(),caller.getArgs());
+    }
+ catch (    IllegalStateException e) {
+      endpoint=getEndpointFor(method,args);
+    }
+  }
+ else {
+    endpoint=getEndpointFor(method,args);
+  }
   String httpMethod=getHttpMethodOrConstantOrThrowException(method);
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
-  if (declaring.isAnnotationPresent(Path.class))   builder.path(declaring);
-  builder.path(method);
-  Multimap<String,String> tokenValues=encodeValues(getPathParamKeyValues(method,args),skips);
+  Multimap<String,String> tokenValues=LinkedHashMultimap.create();
+  if (caller != null) {
+    builder.path(getPath(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs()));
+  }
+  tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
   Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
   Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
   addMatrixParams(builder,tokenValues.entries(),method,args);

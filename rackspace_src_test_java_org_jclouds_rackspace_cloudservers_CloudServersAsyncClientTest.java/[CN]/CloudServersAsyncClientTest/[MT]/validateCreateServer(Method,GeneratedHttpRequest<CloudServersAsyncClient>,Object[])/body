@@ -1,0 +1,12 @@
+{
+  assertEquals(httpMethod.getEndpoint().getHost(),"serverManagementUrl");
+  assertEquals(httpMethod.getEndpoint().getPath(),"/servers");
+  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
+  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
+  assertEquals(httpMethod.getHeaders().size(),2);
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
+  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseServerFromJsonResponse.class);
+  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  assertNotNull(processor.getMapPayloadBinderOrNull(method,new Object[]{"",1,2,new CreateServerOptions[]{CreateServerOptions.Builder.withSharedIpGroup(1)}}));
+}

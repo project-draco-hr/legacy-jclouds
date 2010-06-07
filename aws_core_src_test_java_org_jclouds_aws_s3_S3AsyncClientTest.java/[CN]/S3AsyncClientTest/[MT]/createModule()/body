@@ -1,24 +1,12 @@
 {
-  return new AbstractModule(){
+  return new S3RestClientModule(){
     @Override protected void configure(){
-      install(new BlobStoreObjectModule<S3AsyncClient,S3Client>(new TypeLiteral<S3AsyncClient>(){
-      }
-,new TypeLiteral<S3Client>(){
-      }
-));
-      install(new S3ObjectModule());
-      Jsr330.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder("user","key").build(),"properties"));
-      bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("http://stub:8080"));
-      bind(String.class).annotatedWith(S3.class).toInstance(Region.US_STANDARD);
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
+      Names.bindProperties(binder(),new S3PropertiesBuilder(new Properties()).withCredentials("user","key").build());
+      install(new NullLoggingModule());
+      super.configure();
     }
-    @SuppressWarnings("unused") @Provides @TimeStamp String provide(){
-      return "timestamp";
+    @Override protected String provideTimeStamp(    @TimeStamp Supplier<String> cache){
+      return "2009-11-08T15:54:08.897Z";
     }
   }
 ;

@@ -1,5 +1,5 @@
 {
-  RetryablePredicate<RunningInstance> runningTester=new RetryablePredicate<RunningInstance>(new InstanceStateRunning(client.getInstanceServices()),180,5,TimeUnit.SECONDS);
+  RetryablePredicate<RunningInstance> runningTester=new RetryablePredicate<RunningInstance>(new InstanceStateRunning(client),180,5,TimeUnit.SECONDS);
   System.out.printf("%d: %s awaiting instance to run %n",System.currentTimeMillis(),instance.getId());
   if (!runningTester.apply(instance))   throw new TimeoutException("timeout waiting for instance to run: " + instance.getId());
   instance=findInstanceById(client,instance.getId());

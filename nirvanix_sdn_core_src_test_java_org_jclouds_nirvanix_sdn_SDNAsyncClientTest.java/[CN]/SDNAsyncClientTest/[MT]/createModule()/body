@@ -1,20 +1,11 @@
 {
-  return new AbstractModule(){
+  return new SDNRestClientModule(){
     @Override protected void configure(){
-      install(new BlobStoreObjectModule<SDNAsyncClient,SDNClient>(new TypeLiteral<SDNAsyncClient>(){
-      }
-,new TypeLiteral<SDNClient>(){
-      }
-));
-      Jsr330.bindProperties(this.binder(),new SDNPropertiesBuilder("appKey","appname","username","password").build());
+      Names.bindProperties(binder(),new SDNPropertiesBuilder("appKey","appname","username","password").build());
+      install(new NullLoggingModule());
       bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://stub:8080"));
       bind(String.class).annotatedWith(SessionToken.class).toInstance("sessiontoken");
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
+      super.configure();
     }
   }
 ;

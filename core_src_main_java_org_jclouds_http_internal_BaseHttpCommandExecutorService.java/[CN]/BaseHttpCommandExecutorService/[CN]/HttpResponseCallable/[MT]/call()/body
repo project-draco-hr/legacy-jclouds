@@ -11,19 +11,25 @@
       if (request.getPayload() != null && wire.enabled())       request.setPayload(Payloads.newPayload(wire.output(request.getPayload().getRawContent())));
       nativeRequest=convert(request);
       HttpUtils.logRequest(headerLog,request,">>");
-      response=invoke(nativeRequest);
+      try {
+        response=invoke(nativeRequest);
+      }
+ catch (      IOException e) {
+        if (ioRetryHandler.shouldRetryRequest(command,e)) {
+          continue;
+        }
+ else {
+          command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,new HttpResponse(),e));
+          break;
+        }
+      }
       logger.debug("Receiving response %s: %s",request.hashCode(),response.getStatusLine());
       HttpUtils.logResponse(headerLog,response,"<<");
       if (response.getContent() != null && wire.enabled())       response.setContent(wire.input(response.getContent()));
       int statusCode=response.getStatusCode();
       if (statusCode >= 300) {
-        if (retryHandler.shouldRetryRequest(command,response)) {
-          continue;
-        }
- else {
-          errorHandler.handleError(command,response);
-          break;
-        }
+        if (shouldContinue(response))         continue;
+ else         break;
       }
  else {
         break;

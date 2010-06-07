@@ -1,13 +1,13 @@
 {
-  injector=Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_UID)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_KEY)).to(KEY);
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
-    }
-    @SuppressWarnings("unused") @Provides @TimeStamp String getDate(){
+  injector=Guice.createInjector(new RestModule(),new AtmosStorageRestClientModule(){
+    protected String provideTimeStamp(    @TimeStamp Supplier<String> cache){
       return "Thu, 05 Jun 2008 16:38:19 GMT";
+    }
+  }
+,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
+    protected void configure(){
+      Names.bindProperties(binder(),checkNotNull(new AtmosStoragePropertiesBuilder("user",KEY)).build());
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }
 );

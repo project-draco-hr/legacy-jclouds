@@ -1,16 +1,9 @@
 {
-  return Guice.createInjector(new RimuHostingRestClientModule(),new RimuHostingContextModule(){
+  return Guice.createInjector(new RimuHostingRestClientModule(),new RimuHostingContextModule(),new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(this.binder(),new RimuHostingPropertiesBuilder("apikey").build());
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
-      bind(UriBuilder.class).to(UriBuilderImpl.class);
-      super.configure();
+      Names.bindProperties(binder(),checkNotNull(new RimuHostingPropertiesBuilder("apikey").build(),"properties"));
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }
-,new ParserModule(),new JavaUrlHttpCommandExecutorServiceModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()));
+);
 }

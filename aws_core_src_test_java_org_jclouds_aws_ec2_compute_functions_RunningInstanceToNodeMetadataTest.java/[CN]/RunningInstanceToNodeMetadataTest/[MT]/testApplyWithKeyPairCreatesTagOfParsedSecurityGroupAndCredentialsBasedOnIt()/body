@@ -1,5 +1,7 @@
 {
+  EC2Client client=createMock(EC2Client.class);
   AMIClient amiClient=createMock(AMIClient.class);
+  expect(client.getAMIServices()).andReturn(amiClient).atLeastOnce();
   Map<RegionAndName,KeyPair> credentialsMap=createMock(Map.class);
   ConcurrentMap<RegionAndName,org.jclouds.compute.domain.Image> imageMap=createMock(ConcurrentMap.class);
   PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
@@ -24,12 +26,13 @@
   expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
   replay(imageMap);
+  replay(client);
   replay(amiClient);
   replay(credentialsMap);
   replay(credentialProvider);
   replay(instance);
   replay(jcImage);
-  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(amiClient,credentialsMap,credentialProvider,new ImageProvider(jcImage),imageMap,locations,new RunningInstanceToStorageMappingUnix());
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,new ImageProvider(jcImage),imageMap,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getTag(),"tag");
   assertEquals(metadata.getLocation(),location);
@@ -37,6 +40,7 @@
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
   verify(imageMap);
   verify(jcImage);
+  verify(client);
   verify(amiClient);
   verify(credentialsMap);
   verify(credentialProvider);

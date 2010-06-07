@@ -1,7 +1,7 @@
 {
   Injector injector=Guice.createInjector(new RestModule(),new ChefRestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     protected void configure(){
-      Jsr330.bindProperties(binder(),checkNotNull(new ChefPropertiesBuilder(URI.create("http://localhost"),"foo","bar")).build());
+      Names.bindProperties(binder(),checkNotNull(new ChefPropertiesBuilder(URI.create("http://localhost"),"foo","bar")).build());
       bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }

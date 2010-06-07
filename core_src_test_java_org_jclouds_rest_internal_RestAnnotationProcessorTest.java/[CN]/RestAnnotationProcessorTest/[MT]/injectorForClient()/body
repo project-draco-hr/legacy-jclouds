@@ -1,0 +1,11 @@
+{
+  Injector child=Guice.createInjector(Iterables.concat(MODULES,ImmutableSet.<Module>of(new RestClientModule<Caller,AsyncCaller>(Caller.class,AsyncCaller.class,ImmutableMap.<Class<?>,Class<?>>of(Callee.class,AsyncCallee.class)){
+  }
+,new AbstractModule(){
+    @Override protected void configure(){
+      bind(IOExceptionRetryHandler.class).toInstance(IOExceptionRetryHandler.NEVER_RETRY);
+    }
+  }
+)));
+  return child;
+}

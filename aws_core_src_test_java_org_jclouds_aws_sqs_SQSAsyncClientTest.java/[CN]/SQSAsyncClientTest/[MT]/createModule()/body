@@ -1,22 +1,12 @@
 {
-  return new AbstractModule(){
+  return new SQSRestClientModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(binder(),checkNotNull(new SQSPropertiesBuilder(new Properties()).build(),"properties"));
-      bind(URI.class).annotatedWith(SQS.class).toInstance(URI.create("https://default"));
-      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("key");
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
+      Names.bindProperties(binder(),new SQSPropertiesBuilder(new Properties()).withCredentials("user","key").build());
+      install(new NullLoggingModule());
+      super.configure();
     }
-    @SuppressWarnings("unused") @Provides @TimeStamp String provide(){
+    @Override protected String provideTimeStamp(    final DateService dateService,    @Named(SQSConstants.PROPERTY_AWS_EXPIREINTERVAL) final int expiration){
       return "2009-11-08T15:54:08.897Z";
-    }
-    @SuppressWarnings("unused") @Singleton @Provides @SQS Map<String,URI> provideMap(){
-      return ImmutableMap.<String,URI>of(Region.EU_WEST_1,URI.create("https://sqs.eu-west-1.amazonaws.com"),Region.US_EAST_1,URI.create("https://sqs.us-east-1.amazonaws.com"),Region.US_WEST_1,URI.create("https://sqs.us-west-1.amazonaws.com"));
     }
   }
 ;

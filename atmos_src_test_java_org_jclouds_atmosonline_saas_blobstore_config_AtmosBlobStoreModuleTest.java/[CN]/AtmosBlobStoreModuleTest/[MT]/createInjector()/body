@@ -1,14 +1,7 @@
 {
-  return Guice.createInjector(new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JDKLoggingModule(),new AtmosStorageStubClientModule(),new AtmosBlobStoreContextModule("atmos"){
+  return Guice.createInjector(new AtmosStorageStubClientModule(),new AtmosBlobStoreContextModule("atmos"),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_UID)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_KEY)).to("key");
-      bindConstant().annotatedWith(Jsr330.named(AtmosStorageConstants.PROPERTY_EMCSAAS_ENDPOINT)).to("http://localhost");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT)).to("0");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST)).to("1");
-      super.configure();
+      Names.bindProperties(binder(),checkNotNull(new AtmosStoragePropertiesBuilder("user","key").build(),"properties"));
     }
   }
 );

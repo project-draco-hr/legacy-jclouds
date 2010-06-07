@@ -1,10 +1,11 @@
 {
+  super.configure();
+  install(new S3ObjectModule());
   install(new ParserModule());
   install(new TransientBlobStoreModule());
-  bind(S3AsyncClient.class).to(StubS3AsyncClient.class).asEagerSingleton();
   bind(URI.class).annotatedWith(S3.class).toInstance(URI.create("https://localhost/s3stub"));
   bind(String.class).annotatedWith(S3.class).toInstance(Region.US_STANDARD);
   bind(new TypeLiteral<Set<String>>(){
   }
-).annotatedWith(S3.class).toInstance(ImmutableSet.of(Region.US_STANDARD,Region.US_WEST_1,Region.EU_WEST_1));
+).annotatedWith(S3.class).toInstance(Region.ALL);
 }

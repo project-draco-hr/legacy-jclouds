@@ -5,7 +5,9 @@
     int index=map.keySet().iterator().next();
     Function<Object,URI> parser=injector.getInstance(annotation.parser());
     try {
-      return parser.apply(args[index]);
+      URI returnVal=parser.apply(args[index]);
+      checkArgument(returnVal != null,String.format("endpoint for [%s] not configured for %s",args[index],method));
+      return returnVal;
     }
  catch (    NullPointerException e) {
       logger.error("argument at index %d on method %s",index,method);

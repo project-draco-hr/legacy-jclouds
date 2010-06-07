@@ -1,11 +1,11 @@
 {
   injector=Guice.createInjector(new ParserModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
-      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
-      bindConstant().annotatedWith(Jsr330.named(AWSConstants.PROPERTY_AWS_EXPIREINTERVAL)).to(30);
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
-      bindConstant().annotatedWith(Jsr330.named(Constants.PROPERTY_USER_THREADS)).to("1");
+      bindConstant().annotatedWith(Names.named(AWSConstants.PROPERTY_AWS_ACCESSKEYID)).to("foo");
+      bindConstant().annotatedWith(Names.named(AWSConstants.PROPERTY_AWS_SECRETACCESSKEY)).to("bar");
+      bindConstant().annotatedWith(Names.named(AWSConstants.PROPERTY_AWS_EXPIREINTERVAL)).to(30);
+      bindConstant().annotatedWith(Names.named(Constants.PROPERTY_IO_WORKER_THREADS)).to("1");
+      bindConstant().annotatedWith(Names.named(Constants.PROPERTY_USER_THREADS)).to("1");
     }
     @SuppressWarnings("unused") @Provides @TimeStamp protected String provideTimeStamp(    final DateService dateService,    @Named(AWSConstants.PROPERTY_AWS_EXPIREINTERVAL) final int expiration){
       return dateService.iso8601DateFormat(new Date(System.currentTimeMillis() + (expiration * 1000)));

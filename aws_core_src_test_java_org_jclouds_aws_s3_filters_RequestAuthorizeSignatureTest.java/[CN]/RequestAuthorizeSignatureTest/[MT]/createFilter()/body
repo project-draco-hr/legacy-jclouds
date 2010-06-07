@@ -1,8 +1,8 @@
 {
-  injector=Guice.createInjector(new S3RestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new ParserModule(),new AbstractModule(){
+  injector=Guice.createInjector(new RestModule(),new S3RestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     protected void configure(){
-      Jsr330.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder("foo","bar")).build());
-      bind(UriBuilder.class).to(UriBuilderImpl.class);
+      Names.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder("foo","bar")).build());
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }
 );

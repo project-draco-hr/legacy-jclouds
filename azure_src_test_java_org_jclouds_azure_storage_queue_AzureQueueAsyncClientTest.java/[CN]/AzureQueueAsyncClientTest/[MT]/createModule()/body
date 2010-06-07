@@ -1,18 +1,9 @@
 {
-  return new AbstractModule(){
+  return new AzureQueueRestClientModule(){
     @Override protected void configure(){
-      bind(URI.class).annotatedWith(AzureQueue.class).toInstance(URI.create("http://localhost:8080"));
-      Jsr330.bindProperties(this.binder(),new AzureQueuePropertiesBuilder("user","key").build());
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
-      bindConstant().annotatedWith(Jsr330.named(AzureStorageConstants.PROPERTY_AZURESTORAGE_SESSIONINTERVAL)).to(1l);
-    }
-    @SuppressWarnings("unused") @Provides @TimeStamp @Singleton String provideTS(){
-      return "timestamp";
+      Names.bindProperties(binder(),new AzureQueuePropertiesBuilder(new Properties()).withCredentials("myaccount","key").build());
+      install(new NullLoggingModule());
+      super.configure();
     }
   }
 ;

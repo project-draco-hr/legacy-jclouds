@@ -1,25 +1,3 @@
 {
-  injector=Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named("testaccount")).to("ralphie");
-      bind(URI.class).annotatedWith(Localhost.class).toInstance(URI.create("http://localhost:8080"));
-      bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:8081"));
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
-      Jsr330.bindProperties(binder(),new PropertiesBuilder(){
-        @Override public PropertiesBuilder withCredentials(        String account,        String key){
-          return null;
-        }
-        @Override public PropertiesBuilder withEndpoint(        URI endpoint){
-          return null;
-        }
-      }
-.build());
-    }
-  }
-,new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+  injector=Guice.createInjector(MODULES);
 }

@@ -2,7 +2,7 @@
   Injector injector=Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       bind(URI.class).annotatedWith(PCS.class).toInstance(URI.create("http://localhost:8080"));
-      Jsr330.bindProperties(this.binder(),new PCSPropertiesBuilder(URI.create("http://localhost:8080"),"user","key").build());
+      Names.bindProperties(this.binder(),new PCSPropertiesBuilder(URI.create("http://localhost:8080"),"user","key").build());
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
         public Logger getLogger(        String category){
           return Logger.NULL;

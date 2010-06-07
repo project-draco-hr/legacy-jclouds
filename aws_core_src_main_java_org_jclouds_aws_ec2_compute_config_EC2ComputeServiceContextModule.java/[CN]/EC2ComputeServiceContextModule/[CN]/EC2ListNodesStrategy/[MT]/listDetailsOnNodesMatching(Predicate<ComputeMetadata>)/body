@@ -4,7 +4,7 @@
   for (  final String region : regionMap.keySet()) {
     parallelResponses.put(region,ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
-        Iterables.addAll(nodes,Iterables.transform(Iterables.concat(client.describeInstancesInRegion(region)),runningInstanceToNodeMetadata));
+        Iterables.addAll(nodes,Iterables.transform(Iterables.concat(client.getInstanceServices().describeInstancesInRegion(region)),runningInstanceToNodeMetadata));
         return null;
       }
     }

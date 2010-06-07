@@ -25,8 +25,11 @@
  else     if (!method.getDeclaringClass().equals(declaring)) {
       logger.debug("skipping potentially overridden method %s",method);
     }
+ else     if (method.isAnnotationPresent(Delegate.class)) {
+      logger.debug("skipping delegate method %s",method);
+    }
  else     if (!method.getName().startsWith("new")) {
-      throw new RuntimeException("Method is not annotated as either http or constant: " + method);
+      logger.trace("Method is not annotated as either http or constant: %s",method);
     }
   }
 }

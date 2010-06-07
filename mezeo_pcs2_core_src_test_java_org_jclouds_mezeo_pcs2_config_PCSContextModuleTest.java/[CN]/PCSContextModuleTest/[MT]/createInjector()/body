@@ -1,16 +1,9 @@
 {
-  return Guice.createInjector(new PCSRestClientModule(),new PCSContextModule("mezeo"){
+  return Guice.createInjector(new PCSRestClientModule(),new PCSContextModule("pcs"),new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(this.binder(),new PCSPropertiesBuilder(URI.create("http://localhost:8080"),"user","key").build());
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
-      bind(UriBuilder.class).to(UriBuilderImpl.class);
-      super.configure();
+      Names.bindProperties(binder(),checkNotNull(new PCSPropertiesBuilder(URI.create("http://localhost"),"user","key").build(),"properties"));
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }
-,new ParserModule(),new JavaUrlHttpCommandExecutorServiceModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()));
+);
 }

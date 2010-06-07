@@ -1,12 +1,8 @@
 {
-  return Guice.createInjector(new VCloudRestClientModule(),new ParserModule(),new AbstractModule(){
+  return Guice.createInjector(new VCloudRestClientModule(),new RestModule(),new AbstractModule(){
     @Override protected void configure(){
-      bindConstant().annotatedWith(Jsr330.named(PROPERTY_VCLOUD_VERSION)).to("0.8");
-      bindConstant().annotatedWith(Jsr330.named(PROPERTY_VCLOUD_USER)).to("user");
-      bindConstant().annotatedWith(Jsr330.named(PROPERTY_VCLOUD_KEY)).to("secret");
-      bindConstant().annotatedWith(Jsr330.named(PROPERTY_VCLOUD_ENDPOINT)).to("http://localhost");
-      bindConstant().annotatedWith(Jsr330.named(PROPERTY_VCLOUD_SESSIONINTERVAL)).to("2");
-      bind(UriBuilder.class).to(UriBuilderImpl.class);
+      Names.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(URI.create("http://localhost"),"user","pass").build(),"properties"));
+      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
     }
   }
 );
