@@ -1,0 +1,10 @@
+{
+  try {
+    Set<Instance> list=gson.fromJson(new InputStreamReader(stream,"UTF-8"),InstanceListResponse.class).instances;
+    for (    Instance instance : list)     if (emptyString.equals(instance.getProductCodes()))     instance.getProductCodes().clear();
+    return list;
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException("jclouds requires UTF-8 encoding",e);
+  }
+}
