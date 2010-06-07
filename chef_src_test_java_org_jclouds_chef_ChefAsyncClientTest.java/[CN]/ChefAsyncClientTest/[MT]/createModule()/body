@@ -1,8 +1,9 @@
 {
   return new ChefRestClientModule(){
     @Override protected void configure(){
-      Jsr330.bindProperties(binder(),new ChefPropertiesBuilder(new Properties()).withCredentials("user",SignedHeaderAuthTest.PRIVATE_KEY).build());
+      Jsr330.bindProperties(binder(),new ChefPropertiesBuilder("chef-validator",SignedHeaderAuthTest.PRIVATE_KEY).build());
       install(new NullLoggingModule());
+      super.configure();
     }
     @Override protected String provideTimeStamp(    @TimeStamp Supplier<String> cache){
       return "timestamp";
