@@ -1,0 +1,22 @@
+{
+  String message=parseMessage(response);
+  Exception exception=message != null ? new HttpResponseException(command,response,message) : new HttpResponseException(command,response);
+  try {
+    message=message != null ? message : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
+switch (response.getStatusCode()) {
+case 401:
+case 403:
+      exception=new AuthorizationException(message,exception);
+    break;
+case 404:
+  if (!command.getRequest().getMethod().equals("DELETE")) {
+    exception=new ResourceNotFoundException(message,exception);
+  }
+break;
+}
+}
+  finally {
+Closeables.closeQuietly(response.getContent());
+command.setException(exception);
+}
+}
