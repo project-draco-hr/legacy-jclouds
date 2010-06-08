@@ -1,0 +1,16 @@
+{
+  String key=template.getOptions().getPublicKey();
+  if (key != null) {
+    template.getOptions().dontAuthorizePublicKey();
+    try {
+      client.addPublicKey(tag,key);
+    }
+ catch (    IllegalStateException e) {
+      client.updatePublicKey(tag,key);
+    }
+  }
+ else {
+    credentialsMap.put(tag,client.generateKeyPair(tag).getKeyMaterial());
+  }
+  return super.execute(tag,count,template,nodes,badNodes);
+}

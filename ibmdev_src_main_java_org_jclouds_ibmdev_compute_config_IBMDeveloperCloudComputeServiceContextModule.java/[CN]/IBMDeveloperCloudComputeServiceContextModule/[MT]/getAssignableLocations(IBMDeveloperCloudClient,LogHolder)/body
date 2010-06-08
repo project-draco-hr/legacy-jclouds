@@ -2,6 +2,7 @@
   final Set<Location> assignableLocations=Sets.newHashSet();
   holder.logger.debug(">> providing locations");
   Location parent=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
+  for (  org.jclouds.ibmdev.domain.Location location : sync.listLocations())   assignableLocations.add(new LocationImpl(LocationScope.ZONE,location.getId(),location.getName(),parent));
   holder.logger.debug("<< locations(%d)",assignableLocations.size());
   return assignableLocations;
 }
