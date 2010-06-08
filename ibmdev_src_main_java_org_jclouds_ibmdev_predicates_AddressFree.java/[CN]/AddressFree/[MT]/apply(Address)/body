@@ -1,0 +1,17 @@
+{
+  logger.trace("looking for state on address %s",address);
+  final String id=address.getId();
+  try {
+    address=Iterables.find(client.listAddresses(),new Predicate<Address>(){
+      @Override public boolean apply(      Address input){
+        return input.getId().equals(id);
+      }
+    }
+);
+  }
+ catch (  NoSuchElementException e) {
+    return false;
+  }
+  logger.trace("%s: looking for address state %s: currently: %s",address.getId(),Address.State.FREE,address.getState());
+  return address.getState() == Address.State.FREE;
+}

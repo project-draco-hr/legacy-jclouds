@@ -1,0 +1,8 @@
+{
+  Matcher matcher=ALL_BEFORE_HYPHEN_HEX.matcher(from.getName());
+  final String tag=matcher.find() ? matcher.group(1) : null;
+  Set<String> ipSet=ImmutableSet.of(from.getIp());
+  NodeState state=instanceStateToNodeState.get(from.getStatus());
+  Image image=images.get(from.getImageId());
+  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",locations.get(image.getLocation()),null,ImmutableMap.<String,String>of(),tag,image,state,ipSet,ImmutableList.<String>of(),ImmutableMap.<String,String>of(),new Credentials(image.getDefaultCredentials().account,credentialsMap.get(tag)));
+}
