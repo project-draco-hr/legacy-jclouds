@@ -1,0 +1,31 @@
+{
+  if (qName.equalsIgnoreCase("ID")) {
+    id=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equalsIgnoreCase("Name")) {
+    name=currentText.toString().trim();
+  }
+ else   if (qName.equalsIgnoreCase("Description")) {
+    description=currentText.toString().trim();
+    if (description.equals(""))     description=null;
+  }
+ else   if (qName.equalsIgnoreCase("Value")) {
+    capabilities.get(capabilityName).put(capabilityKey,currentText.toString().trim());
+  }
+ else   if (qName.equalsIgnoreCase("Location")) {
+    if (currentText.toString().trim().equals("")) {
+      this.loc=new Location(id,name,description,location,capabilities);
+      id=0;
+      name=null;
+      description=null;
+      location=null;
+      capabilities=Maps.newLinkedHashMap();
+      capabilityKey=null;
+      capabilityName=null;
+    }
+ else {
+      location=currentText.toString().trim();
+    }
+  }
+  currentText=new StringBuilder();
+}
