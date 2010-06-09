@@ -1,4 +1,10 @@
 {
-  log(String.format("destroy tag: %s",nodeElement.getTag()));
-  computeService.destroyNodesMatching(NodePredicates.withTag(nodeElement.getTag()));
+  if (nodeElement.getId() != null) {
+    log(String.format("destroy id: %s",nodeElement.getId()));
+    computeService.destroyNode(nodeElement.getId());
+  }
+ else {
+    log(String.format("destroy tag: %s",nodeElement.getTag()));
+    computeService.destroyNodesMatching(NodePredicates.withTag(nodeElement.getTag()));
+  }
 }
