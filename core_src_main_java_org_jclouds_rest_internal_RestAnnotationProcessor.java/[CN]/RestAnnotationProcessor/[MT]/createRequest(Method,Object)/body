@@ -60,7 +60,17 @@ catch (  UriBuilderException e) {
   GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(uriBuilderProvider,httpMethod,endpoint,this,declaring,method,args);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
-  if (formParams.size() > 0) {
+  List<? extends Part> parts=getParts(method,args);
+  if (parts.size() > 0) {
+    if (formParams.size() > 0) {
+      parts=Lists.newLinkedList(Iterables.concat(Iterables.<Entry<String,String>,Part>transform(formParams.entries(),ENTRY_TO_PART),parts));
+    }
+    MultipartForm form=new MultipartForm(BOUNDARY,parts);
+    request.setPayload(form.getData());
+    request.getHeaders().put(HttpHeaders.CONTENT_TYPE,"multipart/form-data; boundary=" + BOUNDARY);
+    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,form.getSize() + "");
+  }
+ else   if (formParams.size() > 0) {
     if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_FORM_URLENCODED);
     request.setPayload(makeQueryLine(formParams,null,skips));
   }

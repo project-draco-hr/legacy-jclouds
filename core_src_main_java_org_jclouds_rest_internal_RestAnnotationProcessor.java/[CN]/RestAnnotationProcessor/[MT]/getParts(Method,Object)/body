@@ -1,0 +1,12 @@
+{
+  List<Part> parts=Lists.newLinkedList();
+  Map<Integer,Set<Annotation>> indexToPartParam=methodToIndexOfParamToPartParamAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToPartParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      PartParam extractor=(PartParam)key;
+      Part part=injector.getInstance(extractor.value()).apply(args[entry.getKey()]);
+      parts.add(part);
+    }
+  }
+  return parts;
+}
