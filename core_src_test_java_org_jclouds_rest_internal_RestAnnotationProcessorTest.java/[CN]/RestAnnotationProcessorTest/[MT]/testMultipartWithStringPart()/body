@@ -1,0 +1,7 @@
+{
+  Method method=TestMultipartForm.class.getMethod("withStringPart",String.class);
+  GeneratedHttpRequest<TestMultipartForm> httpRequest=factory(TestMultipartForm.class).createRequest(method,"foobledata");
+  assertRequestLineEquals(httpRequest,"POST http://localhost:9999 HTTP/1.1");
+  assertHeadersEqual(httpRequest,"Content-Length: 119\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
+  assertPayloadEquals(httpRequest,"----JCLOUDS--\r\n" + "Content-Disposition: form-data; name=\"fooble\"\r\n" + "Content-Type: text/plain\r\n"+ "\r\n"+ "foobledata\r\n"+ "----JCLOUDS----\r\n");
+}

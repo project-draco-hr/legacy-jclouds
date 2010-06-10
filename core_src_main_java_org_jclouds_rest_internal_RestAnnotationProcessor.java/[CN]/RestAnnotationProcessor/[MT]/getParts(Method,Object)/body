@@ -3,8 +3,8 @@
   Map<Integer,Set<Annotation>> indexToPartParam=methodToIndexOfParamToPartParamAnnotations.get(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToPartParam.entrySet()) {
     for (    Annotation key : entry.getValue()) {
-      PartParam extractor=(PartParam)key;
-      Part part=injector.getInstance(extractor.value()).apply(args[entry.getKey()]);
+      PartParam param=(PartParam)key;
+      Part part=Part.create(param.name(),Payloads.newPayload(args[entry.getKey()]),param.contentType());
       parts.add(part);
     }
   }

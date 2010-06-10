@@ -1,9 +1,9 @@
 {
-  assertEquals(EXPECTS.length(),131);
+  assertEquals(EXPECTS.length(),113);
   BindBlobToMultipartForm binder=new BindBlobToMultipartForm();
   HttpRequest request=new HttpRequest("GET",URI.create("http://localhost:8001"));
   binder.bindToRequest(request,TEST_BLOB);
   assertEquals(Utils.toStringAndClose((InputStream)request.getPayload().getRawContent()),EXPECTS);
-  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),131 + "");
+  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),113 + "");
   assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),"multipart/form-data; boundary=" + BOUNDRY);
 }
