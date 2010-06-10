@@ -1,4 +1,9 @@
 {
+  List<String> onQuery=Lists.newArrayList(Splitter.on('?').split(uriPath));
+  if (onQuery.size() == 2) {
+    onQuery.add(urlEncode(onQuery.remove(1),'=','&'));
+    uriPath=Joiner.on('?').join(onQuery);
+  }
   if (uriPath.indexOf('@') != 1) {
     List<String> parts=Lists.newArrayList(Splitter.on('@').split(uriPath));
     String path=parts.remove(parts.size() - 1);
