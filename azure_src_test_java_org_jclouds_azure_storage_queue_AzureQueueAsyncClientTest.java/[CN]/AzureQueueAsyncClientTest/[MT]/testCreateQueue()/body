@@ -1,13 +1,11 @@
 {
-  Method method=AzureQueueAsyncClient.class.getMethod("createQueue",String.class,createOptionsVarargsClass);
-  GeneratedHttpRequest<AzureQueueAsyncClient> httpMethod=processor.createRequest(method,new Object[]{"queue"});
-  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.queue.core.windows.net");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/queue");
-  assertEquals(httpMethod.getEndpoint().getQuery(),null);
-  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  Method method=AzureQueueAsyncClient.class.getMethod("createQueue",String.class,CreateOptions[].class);
+  GeneratedHttpRequest<AzureQueueAsyncClient> httpRequest=processor.createRequest(method,"queue");
+  assertRequestLineEquals(httpRequest,"PUT https://myaccount.queue.core.windows.net/queue HTTP/1.1");
+  assertHeadersEqual(httpRequest,"Content-Length: 0\nx-ms-version: 2009-09-19\n");
+  assertPayloadEquals(httpRequest,null);
+  assertResponseParserClassEquals(method,httpRequest,ReturnTrueIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
 }

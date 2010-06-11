@@ -1,12 +1,11 @@
 {
-  Method method=AzureQueueAsyncClient.class.getMethod("listQueues",listOptionsVarargsClass);
-  GeneratedHttpRequest<AzureQueueAsyncClient> httpMethod=processor.createRequest(method,new Object[]{});
-  assertEquals(httpMethod.getEndpoint().getHost(),"myaccount.queue.core.windows.net");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"comp=list");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),1);
-  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseSax.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  Method method=AzureQueueAsyncClient.class.getMethod("listQueues",ListOptions[].class);
+  GeneratedHttpRequest<AzureQueueAsyncClient> httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"GET https://myaccount.queue.core.windows.net/?comp=list HTTP/1.1");
+  assertHeadersEqual(httpRequest,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(httpRequest,null);
+  assertResponseParserClassEquals(method,httpRequest,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,AccountNameEnumerationResultsHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
 }
