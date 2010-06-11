@@ -1,0 +1,6 @@
+{
+  InputStream is=getClass().getResourceAsStream("/queue/test_get_messages.xml");
+  Set<QueueMessage> expected=ImmutableSet.<QueueMessage>of(new QueueMessage("43190737-06f4-4ccf-b600-28f410707df3",dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:08 GMT"),dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:13 GMT"),1,"AgAAAAEAAADZcwAADlwO5JQJywE=",dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:39 GMT"),"holycow"),new QueueMessage("7b75a124-7efe-45a2-97e4-388664319718",dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:09 GMT"),dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:13 GMT"),1,"AgAAAAEAAADZcwAADlwO5JQJywE=",dateService.rfc822DateParse("Fri, 11 Jun 2010 18:35:39 GMT"),"holymoo"));
+  Set<QueueMessage> result=factory.create(injector.getInstance(QueueMessagesListHandler.class)).parse(is);
+  assertEquals(result,expected);
+}

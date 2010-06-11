@@ -1,0 +1,11 @@
+{
+  Method method=AzureQueueAsyncClient.class.getMethod("getMessages",String.class,GetOptions[].class);
+  GeneratedHttpRequest<AzureQueueAsyncClient> httpRequest=processor.createRequest(method,"myqueue",maxMessages(1).visibilityTimeout(30));
+  assertRequestLineEquals(httpRequest,"GET https://myaccount.queue.core.windows.net/myqueue/messages?numofmessages=1&visibilitytimeout=30 HTTP/1.1");
+  assertHeadersEqual(httpRequest,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(httpRequest,null);
+  assertResponseParserClassEquals(method,httpRequest,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,QueueMessagesListHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}

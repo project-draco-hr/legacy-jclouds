@@ -1,0 +1,34 @@
+{
+  if (qName.equals("MessageId")) {
+    this.messageId=currentText.toString().trim();
+  }
+ else   if (qName.equals("InsertionTime")) {
+    this.insertionTime=parseDate();
+  }
+ else   if (qName.equals("ExpirationTime")) {
+    this.expirationTime=parseDate();
+  }
+ else   if (qName.equals("DequeueCount")) {
+    this.dequeueCount=Integer.parseInt(currentText.toString().trim());
+  }
+ else   if (qName.equals("PopReceipt")) {
+    this.popReceipt=currentText.toString().trim();
+  }
+ else   if (qName.equals("TimeNextVisible")) {
+    this.timeNextVisible=parseDate();
+  }
+ else   if (qName.equals("MessageText")) {
+    this.messageText=currentText.toString().trim();
+  }
+ else   if (qName.equals("QueueMessage")) {
+    messages.add(new QueueMessage(messageId,insertionTime,expirationTime,dequeueCount,popReceipt,timeNextVisible,messageText));
+    messageId=null;
+    insertionTime=null;
+    expirationTime=null;
+    dequeueCount=-1;
+    popReceipt=null;
+    timeNextVisible=null;
+    messageText=null;
+  }
+  currentText=new StringBuilder();
+}
