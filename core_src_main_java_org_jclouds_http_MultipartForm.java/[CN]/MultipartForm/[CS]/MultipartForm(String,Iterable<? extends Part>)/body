@@ -1,9 +1,12 @@
 {
   String boundaryrn=boundary + rn;
-  chain=new InputStreamChain();
+  isRepeatable=true;
+  InputSupplier<? extends InputStream> chain=ByteStreams.join();
   for (  Part part : parts) {
-    addHeaders(boundaryrn,part);
-    addData(part);
+    if (!part.isRepeatable())     isRepeatable=false;
+    size+=part.calculateSize();
+    chain=ByteStreams.join(chain,addLengthAndReturnHeaders(boundaryrn,part),part,addLengthAndReturnRn());
   }
-  addFooter(boundary);
+  chain=ByteStreams.join(chain,addLengthAndReturnFooter(boundary));
+  this.chain=chain;
 }
