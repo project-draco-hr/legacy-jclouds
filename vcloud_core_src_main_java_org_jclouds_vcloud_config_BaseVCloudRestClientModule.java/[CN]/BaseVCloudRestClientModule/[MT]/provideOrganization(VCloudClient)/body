@@ -1,3 +1,10 @@
 {
-  return discovery.getDefaultOrganization();
+  if (authException != null)   throw authException;
+  try {
+    return discovery.getDefaultOrganization();
+  }
+ catch (  AuthorizationException e) {
+    BaseVCloudRestClientModule.this.authException=e;
+    throw e;
+  }
 }
