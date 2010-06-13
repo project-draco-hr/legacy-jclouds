@@ -1,9 +1,10 @@
 {
   if (payload == null)   return emptyStringHash;
+  payload=useTheFilePartIfForm(payload);
   checkArgument(payload != null,"payload was null");
   checkArgument(payload.isRepeatable(),"payload must be repeatable: " + payload);
   try {
-    return encryptionService.sha1Base64(Utils.toStringAndClose(payload.getInput()));
+    return encryptionService.sha1Base64(payload.getInput());
   }
  catch (  Exception e) {
     Throwables.propagateIfPossible(e);

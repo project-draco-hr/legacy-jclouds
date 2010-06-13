@@ -60,7 +60,7 @@ catch (  UriBuilderException e) {
   GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(uriBuilderProvider,httpMethod,endpoint,this,declaring,method,args);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
-  List<? extends Part> parts=getParts(method,args);
+  List<? extends Part> parts=getParts(method,args,Iterables.concat(tokenValues.entries(),formParams.entries()));
   if (parts.size() > 0) {
     if (formParams.size() > 0) {
       parts=Lists.newLinkedList(Iterables.concat(Iterables.<Entry<String,String>,Part>transform(formParams.entries(),ENTRY_TO_PART),parts));

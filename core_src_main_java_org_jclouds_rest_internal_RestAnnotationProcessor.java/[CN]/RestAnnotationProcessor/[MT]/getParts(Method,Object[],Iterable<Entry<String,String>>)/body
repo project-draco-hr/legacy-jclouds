@@ -1,0 +1,15 @@
+{
+  List<Part> parts=Lists.newLinkedList();
+  Map<Integer,Set<Annotation>> indexToPartParam=methodToIndexOfParamToPartParamAnnotations.get(method);
+  for (  Entry<Integer,Set<Annotation>> entry : indexToPartParam.entrySet()) {
+    for (    Annotation key : entry.getValue()) {
+      PartParam param=(PartParam)key;
+      PartOptions options=new PartOptions();
+      if (!PartParam.NO_CONTENT_TYPE.equals(param.contentType()))       options.contentType(param.contentType());
+      if (!PartParam.NO_FILENAME.equals(param.filename()))       options.filename(replaceTokens(param.filename(),iterable));
+      Part part=Part.create(param.name(),Payloads.newPayload(args[entry.getKey()]),options);
+      parts.add(part);
+    }
+  }
+  return parts;
+}

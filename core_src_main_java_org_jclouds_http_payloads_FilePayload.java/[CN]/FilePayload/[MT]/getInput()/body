@@ -1,8 +1,9 @@
 {
   try {
-    return new FileInputStream(content);
+    return delegate.getInput();
   }
- catch (  FileNotFoundException e) {
-    throw new IllegalStateException("file " + content + " does not exist",e);
+ catch (  IOException e) {
+    Throwables.propagate(e);
+    return null;
   }
 }

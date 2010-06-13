@@ -1,0 +1,16 @@
+{
+  if (payload instanceof MultipartForm) {
+    Iterable<? extends Part> parts=MultipartForm.class.cast(payload).getParts();
+    try {
+      payload=Iterables.find(parts,new Predicate<Part>(){
+        @Override public boolean apply(        Part input){
+          return "file".equals(input.getName());
+        }
+      }
+);
+    }
+ catch (    NoSuchElementException e) {
+    }
+  }
+  return payload;
+}

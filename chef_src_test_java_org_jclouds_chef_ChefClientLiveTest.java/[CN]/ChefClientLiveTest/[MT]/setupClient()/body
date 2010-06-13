@@ -1,8 +1,12 @@
 {
   endpoint=checkNotNull(System.getProperty("jclouds.test.endpoint"),"jclouds.test.endpoint");
-  validator=System.getProperty("jclouds.test.user");
+  validator=System.getProperty("jclouds.test.validator");
   if (validator == null || validator.equals(""))   validator="chef-validator";
+  String validatorKey=System.getProperty("jclouds.test.validator.key");
+  if (validatorKey == null || validatorKey.equals(""))   validatorKey="/etc/chef/validation.pem";
+  user=checkNotNull(System.getProperty("jclouds.test.user"));
   String keyfile=System.getProperty("jclouds.test.key");
-  if (keyfile == null || keyfile.equals(""))   keyfile="/etc/chef/validation.pem";
-  validatorConnection=createConnection(validator,Files.toString(new File(keyfile),Charsets.UTF_8));
+  if (keyfile == null || keyfile.equals(""))   keyfile=System.getProperty("user.home") + "/chef/" + user+ ".pem";
+  validatorConnection=createConnection(validator,Files.toString(new File(validatorKey),Charsets.UTF_8));
+  adminConnection=createConnection(user,Files.toString(new File(keyfile),Charsets.UTF_8));
 }
