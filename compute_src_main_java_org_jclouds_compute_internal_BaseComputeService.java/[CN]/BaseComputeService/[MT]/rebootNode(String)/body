@@ -1,6 +1,7 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> rebooting node(%s)",id);
-  boolean successful=rebootNodeStrategy.execute(id);
+  NodeMetadata node=rebootNodeStrategy.execute(id);
+  boolean successful=nodeRunning.apply(node);
   logger.debug("<< rebooted node(%s) success(%s)",id,successful);
 }

@@ -1,2 +1,15 @@
 {
+  Set<? extends NodeMetadata> metadataSet=Sets.newHashSet(Iterables.filter(client.listNodesDetailsMatching(NodePredicates.all()),Predicates.and(NodePredicates.withTag(tag),Predicates.not(NodePredicates.TERMINATED))));
+  for (  NodeMetadata node : nodes) {
+    metadataSet.remove(node);
+    NodeMetadata metadata=client.getNodeMetadata(node.getId());
+    assertEquals(metadata.getProviderId(),node.getProviderId());
+    assertEquals(metadata.getTag(),node.getTag());
+    assertLocationSameOrChild(metadata.getLocation(),template.getLocation());
+    assertEquals(metadata.getImage(),template.getImage());
+    assertEquals(metadata.getState(),NodeState.RUNNING);
+    assertEquals(metadata.getPrivateAddresses(),node.getPrivateAddresses());
+    assertEquals(metadata.getPublicAddresses(),node.getPublicAddresses());
+  }
+  assertNodeZero(metadataSet);
 }

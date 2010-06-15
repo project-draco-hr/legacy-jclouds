@@ -1,5 +1,9 @@
 {
   Reservation reservation=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(tag,count,template);
-  Iterable<NodeMetadata> runningNodes=blockUntilInstancesAreRunningAndConvertToNodes(reservation);
-  return utils.runOptionsOnNodesAndAddToGoodSetOrPutExceptionIntoBadMap(template.getOptions(),runningNodes,goodNodes,badNodes);
+  Iterable<String> ids=transform(reservation,instanceToId);
+  String idsString=Joiner.on(',').join(ids);
+  logger.debug("<< started instances(%s)",idsString);
+  all(reservation,instancePresent);
+  logger.debug("<< present instances(%s)",idsString);
+  return utils.runOptionsOnNodesAndAddToGoodSetOrPutExceptionIntoBadMap(template.getOptions(),transform(reservation,runningInstanceToNodeMetadata),goodNodes,badNodes);
 }

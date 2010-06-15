@@ -5,7 +5,7 @@
     exception=error != null ? new AWSResponseException(command,response,error) : exception;
 switch (response.getStatusCode()) {
 case 400:
-      if (error.getCode().equals("InvalidAMIID.NotFound") || error.getCode().equals("InvalidAMIID.Malformed"))       exception=new ResourceNotFoundException(error.getMessage(),exception);
+      if (error.getCode().endsWith(".NotFound"))       exception=new ResourceNotFoundException(error.getMessage(),exception);
     break;
 case 401:
   exception=new AuthorizationException(command.getRequest(),error != null ? error.getMessage() : response.getStatusLine());

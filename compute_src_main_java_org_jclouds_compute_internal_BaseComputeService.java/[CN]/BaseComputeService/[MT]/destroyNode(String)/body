@@ -1,6 +1,7 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> destroying node(%s)",id);
-  boolean successful=destroyNodeStrategy.execute(id);
+  NodeMetadata node=destroyNodeStrategy.execute(id);
+  boolean successful=node == null ? true : nodeTerminated.apply(node);
   logger.debug("<< destroyed node(%s) success(%s)",id,successful);
 }

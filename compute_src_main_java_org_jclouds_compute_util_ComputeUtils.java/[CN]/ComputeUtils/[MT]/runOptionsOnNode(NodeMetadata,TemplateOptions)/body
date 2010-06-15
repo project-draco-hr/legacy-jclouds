@@ -1,4 +1,7 @@
 {
+  if (!options.shouldBlockUntilRunning())   return node;
+  if (nodeRunning.apply(node))   node=installNewCredentials(getNode.execute(node.getId()),node.getCredentials());
+ else   throw new IllegalStateException("node didn't achieve the state running: " + node);
   List<SshCallable<?>> callables=Lists.newArrayList();
   if (options.getRunScript() != null) {
     callables.add(runScriptOnNode(node,"runscript",options.getRunScript()));
@@ -13,4 +16,5 @@
     checkNodeHasPublicIps(node);
     blockUntilPortIsListeningOnPublicIp(options.getPort(),options.getSeconds(),Iterables.get(node.getPublicAddresses(),0));
   }
+  return node;
 }

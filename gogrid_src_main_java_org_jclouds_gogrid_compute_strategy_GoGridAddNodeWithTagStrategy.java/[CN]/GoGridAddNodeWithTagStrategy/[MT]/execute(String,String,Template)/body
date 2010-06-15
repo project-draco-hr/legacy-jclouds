@@ -16,9 +16,11 @@
       notStarted=true;
     }
   }
-  serverLatestJobCompleted.apply(addedServer);
-  client.getServerServices().power(addedServer.getName(),PowerCommand.START);
-  serverLatestJobCompletedShort.apply(addedServer);
-  addedServer=Iterables.getOnlyElement(client.getServerServices().getServersByName(addedServer.getName()));
+  if (template.getOptions().shouldBlockUntilRunning()) {
+    serverLatestJobCompleted.apply(addedServer);
+    client.getServerServices().power(addedServer.getName(),PowerCommand.START);
+    serverLatestJobCompletedShort.apply(addedServer);
+    addedServer=Iterables.getOnlyElement(client.getServerServices().getServersByName(addedServer.getName()));
+  }
   return serverToNodeMetadata.apply(addedServer);
 }
