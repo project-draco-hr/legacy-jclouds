@@ -1,0 +1,17 @@
+{
+  if (NAME_VERSION_MAP.containsKey(family)) {
+    CONTAINS_SUBSTRING contains=new CONTAINS_SUBSTRING(in.replace('-','.'));
+    try {
+      String key=Iterables.find(NAME_VERSION_MAP.get(family).keySet(),contains);
+      return NAME_VERSION_MAP.get(family).get(key);
+    }
+ catch (    NoSuchElementException e) {
+      try {
+        return Iterables.find(NAME_VERSION_MAP.get(family).values(),contains);
+      }
+ catch (      NoSuchElementException e1) {
+      }
+    }
+  }
+  return "";
+}

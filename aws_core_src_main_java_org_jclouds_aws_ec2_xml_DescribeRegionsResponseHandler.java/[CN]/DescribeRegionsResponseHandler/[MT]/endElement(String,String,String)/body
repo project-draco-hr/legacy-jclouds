@@ -1,11 +1,13 @@
 {
   if (qName.equals("regionName")) {
-    region=currentText.toString().trim();
+    String pending=currentText.toString().trim();
+    if (pending.indexOf("Walrus") == -1)     region=pending;
   }
  else   if (qName.equals("regionEndpoint")) {
-    regionEndpoint=URI.create(String.format("https://%s",currentText.toString().trim()));
+    String pending=currentText.toString().trim();
+    if (pending.indexOf("Walrus") == -1)     regionEndpoint=URI.create(pending.startsWith("http") ? pending : String.format("https://%s",pending));
   }
- else   if (qName.equals("item")) {
+ else   if (qName.equals("item") && region != null) {
     regionEndpoints.put(region,regionEndpoint);
     this.region=null;
     this.regionEndpoint=null;

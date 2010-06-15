@@ -5,10 +5,13 @@
  else {
     holder.logger.debug(">> providing images");
     Map<String,ListenableFuture<?>> parallelResponses=Maps.newHashMap();
+    final DescribeImagesOptions options;
+    if (amiOwners.length == 1 && amiOwners[0].equals("*"))     options=new DescribeImagesOptions();
+ else     options=ownedBy(amiOwners);
     for (    final String region : regionMap.keySet()) {
       parallelResponses.put(region,ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
         @Override public Void call() throws Exception {
-          for (          final org.jclouds.aws.ec2.domain.Image from : sync.getAMIServices().describeImagesInRegion(region,ownedBy(amiOwners))) {
+          for (          final org.jclouds.aws.ec2.domain.Image from : sync.getAMIServices().describeImagesInRegion(region,options)) {
             Image image=parser.apply(from);
             if (image != null)             images.put(new RegionAndName(region,image.getProviderId()),image);
  else             if (from.getImageType() == ImageType.MACHINE)             holder.logger.trace("<< image(%s) didn't parse",from.getId());
