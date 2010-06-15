@@ -5,8 +5,8 @@
   String name="not found";
   try {
     long start=System.currentTimeMillis();
-    Set<? extends ComputeMetadata> nodes=context.getComputeService().listNodes();
-    if (nodes.size() > 0)     name=Iterables.get(nodes,0).getProviderId();
+    TemplateOptions options=context.getComputeService().templateOptions().blockUntilRunning(false);
+    name=context.getComputeService().templateBuilder().options(options).build().toString();
     status=((System.currentTimeMillis() - start) + "ms");
   }
  catch (  Exception e) {
