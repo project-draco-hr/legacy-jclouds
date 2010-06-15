@@ -1,16 +1,16 @@
 {
-  input=input == null ? defaultRegion : input;
+  input=input == null ? Iterables.get(defaultRegions,0) : input;
   checkArgument(input instanceof String,"this binder is only valid for Region!");
   String constraint=(String)input;
   String value=null;
-  if (Region.US_STANDARD.equals(constraint) || Region.US_EAST_1.equals(constraint)) {
+  if (Iterables.contains(defaultRegions,constraint)) {
     return;
   }
- else   if (Region.EU_WEST_1.equals(constraint))   value="EU";
- else   if (Region.US_WEST_1.equals(constraint))   value="us-west-1";
- else   if (Region.AP_SOUTHEAST_1.equals(constraint))   value="ap-southeast-1";
+ else   if (Iterables.contains(regions,constraint)) {
+    value=constraint;
+  }
  else {
-    throw new IllegalStateException("unimplemented location: " + this);
+    throw new IllegalStateException("unimplemented location: " + constraint);
   }
   String payload=String.format("<CreateBucketConfiguration><LocationConstraint>%s</LocationConstraint></CreateBucketConfiguration>",value);
   super.bindToRequest(request,payload);

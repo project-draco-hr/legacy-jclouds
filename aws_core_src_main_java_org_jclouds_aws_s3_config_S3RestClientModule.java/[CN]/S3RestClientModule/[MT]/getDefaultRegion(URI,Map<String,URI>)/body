@@ -1,3 +1,8 @@
 {
-  return ImmutableBiMap.<String,URI>builder().putAll(map).build().inverse().get(uri);
+  return Iterables.find(map.entrySet(),new Predicate<Entry<String,URI>>(){
+    @Override public boolean apply(    Entry<String,URI> input){
+      return input.getValue().equals(uri);
+    }
+  }
+).getKey();
 }

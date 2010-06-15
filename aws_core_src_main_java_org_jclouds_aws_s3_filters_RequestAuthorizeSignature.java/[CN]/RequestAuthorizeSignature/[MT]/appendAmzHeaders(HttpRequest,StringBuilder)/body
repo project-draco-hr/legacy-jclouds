@@ -1,7 +1,7 @@
 {
   Set<String> headers=new TreeSet<String>(request.getHeaders().keySet());
   for (  String header : headers) {
-    if (header.startsWith("x-amz-")) {
+    if (header.startsWith("x-" + headerTag + "-")) {
       toSign.append(header.toLowerCase()).append(":");
       for (      String value : request.getHeaders().get(header)) {
         toSign.append(Utils.replaceAll(value,NEWLINE_PATTERN,"")).append(",");

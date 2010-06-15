@@ -2,27 +2,6 @@
   MutableStorageMetadata to=new MutableStorageMetadataImpl();
   to.setName(from.getName());
   to.setType(StorageType.CONTAINER);
-  try {
-    final String region=client.getBucketLocation(from.getName());
-    if (region != null) {
-      try {
-        to.setLocation(Iterables.find(locations,new Predicate<Location>(){
-          @Override public boolean apply(          Location input){
-            return input.getId().equals(region.toString());
-          }
-        }
-));
-      }
- catch (      NoSuchElementException e) {
-        logger.error("could not get location for region %s in %s",region,locations);
-      }
-    }
- else {
-      logger.error("could not get region for %s",from.getName());
-    }
-  }
- catch (  ContainerNotFoundException e) {
-    logger.error(e,"could not get region for %s, as service suggests the bucket doesn't exist",from.getName());
-  }
+  to.setLocation(onlyLocation != null ? onlyLocation : getLocation(from));
   return to;
 }
