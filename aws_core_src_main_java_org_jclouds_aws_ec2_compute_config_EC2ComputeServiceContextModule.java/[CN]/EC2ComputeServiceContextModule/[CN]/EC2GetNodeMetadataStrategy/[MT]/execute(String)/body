@@ -2,6 +2,11 @@
   String[] parts=parseHandle(id);
   String region=parts[0];
   String instanceId=parts[1];
-  RunningInstance runningInstance=Iterables.getOnlyElement(getAllRunningInstancesInRegion(client.getInstanceServices(),region,instanceId));
-  return runningInstanceToNodeMetadata.apply(runningInstance);
+  try {
+    RunningInstance runningInstance=Iterables.getOnlyElement(getAllRunningInstancesInRegion(client.getInstanceServices(),region,instanceId));
+    return runningInstanceToNodeMetadata.apply(runningInstance);
+  }
+ catch (  NoSuchElementException e) {
+    return null;
+  }
 }
