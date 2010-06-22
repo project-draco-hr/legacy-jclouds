@@ -1,18 +1,2 @@
 {
-  if (from == null)   throw new HttpException("No input to parse");
-  try {
-    parser.setContentHandler(getHandler());
-    parser.parse(new InputSource(from));
-    return getHandler().getResult();
-  }
- catch (  Exception e) {
-    StringBuilder message=new StringBuilder();
-    if (request != null)     message.append("Error parsing input for ").append(request.getRequestLine()).append(": ");
-    message.append(e.getMessage());
-    logger.error(e,message.toString());
-    throw new HttpException(message.toString(),e);
-  }
- finally {
-    Closeables.closeQuietly(from);
-  }
 }
