@@ -4,20 +4,21 @@
   checkState(gRequest.getArgs() != null,"args should be initialized at this point");
   String name=checkNotNull(postParams.remove("name"),"name");
   String template=checkNotNull(postParams.remove("template"),"template");
-  String network=postParams.remove("network");
-  String fenceMode=postParams.remove("fenceMode");
-  String dhcpEnabled=postParams.remove("dhcpEnabled");
-  String networkName=postParams.remove("networkName");
-  SortedMap<ResourceType,String> virtualHardwareQuantity=extractVirtualQuantityFromPostParams(postParams);
+  SortedMap<ResourceType,String> virtualHardwareQuantity=Maps.newTreeMap();
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
   Map<String,String> properties=Maps.newTreeMap();
+  String network=defaultNetwork.toASCIIString();
+  String fenceMode=defaultFenceMode;
+  String networkName=name;
   if (options != null) {
-    String networkFromOptions=addQuantityOrReturnNetwork(options,virtualHardwareQuantity,network);
-    network=networkFromOptions != null ? networkFromOptions : network;
+    network=ifNullDefaultTo(options.getNetwork(),network);
+    fenceMode=ifNullDefaultTo(options.getFenceMode(),defaultFenceMode);
+    networkName=ifNullDefaultTo(options.getNetworkName(),networkName);
+    addQuantity(options,virtualHardwareQuantity);
     properties.putAll(options.getProperties());
   }
   try {
-    stringBinder.bindToRequest(request,generateXml(name,template,properties,virtualHardwareQuantity,networkName == null ? name : networkName,fenceMode == null ? defaultFenceMode : FenceMode.fromValue(fenceMode),dhcpEnabled == null ? defaultDhcpEnabled : Boolean.parseBoolean(dhcpEnabled),network == null ? defaultNetwork : URI.create(network)));
+    stringBinder.bindToRequest(request,generateXml(name,template,properties,virtualHardwareQuantity,networkName,fenceMode,URI.create(network)));
   }
  catch (  ParserConfigurationException e) {
     throw new RuntimeException(e);
