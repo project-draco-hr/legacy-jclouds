@@ -1,0 +1,11 @@
+{
+  CleanupOrphanKeys strategy=setupStrategy();
+  NodeMetadata nodeMetadata=createMock(NodeMetadata.class);
+  Iterable<? extends NodeMetadata> deadOnes=ImmutableSet.<NodeMetadata>of(nodeMetadata);
+  expect(strategy.nodeToOrgAndName.apply(nodeMetadata)).andReturn(null).atLeastOnce();
+  replay(nodeMetadata);
+  replayStrategy(strategy);
+  strategy.execute(deadOnes);
+  verify(nodeMetadata);
+  verifyStrategy(strategy);
+}

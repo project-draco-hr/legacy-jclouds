@@ -1,0 +1,17 @@
+{
+  checkNotNull(org,"org");
+  checkNotNull(keyPairName,"keyPairName");
+  logger.debug(">> creating keyPair org(%s) name(%s)",org,keyPairName);
+  KeyPair keyPair=null;
+  while (keyPair == null) {
+    try {
+      keyPair=trmkClient.generateKeyPairInOrg(org,getNextName(keyPairName),false);
+      logger.debug("<< created keyPair(%s)",keyPair.getName());
+    }
+ catch (    RuntimeException e) {
+      HttpResponseException ht=Utils.getFirstThrowableOfType(e,HttpResponseException.class);
+      if (ht == null || ht.getContent() == null || ht.getContent().indexOf("Security key with same name exists") == -1)       throw e;
+    }
+  }
+  return keyPair;
+}

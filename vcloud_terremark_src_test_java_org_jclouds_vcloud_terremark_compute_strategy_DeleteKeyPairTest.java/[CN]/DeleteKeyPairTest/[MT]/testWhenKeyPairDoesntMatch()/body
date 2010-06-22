@@ -1,0 +1,12 @@
+{
+  OrgAndName orgTag=new OrgAndName("org1","tag");
+  DeleteKeyPair strategy=setupStrategy();
+  KeyPair keyPair=createMock(KeyPair.class);
+  expect(strategy.terremarkClient.listKeyPairsInOrg(orgTag.getOrg())).andReturn(ImmutableSet.<KeyPair>of(keyPair));
+  expect(keyPair.getName()).andReturn("kclouds#" + orgTag.getName() + "-123");
+  replay(keyPair);
+  replayStrategy(strategy);
+  strategy.execute(orgTag);
+  verify(keyPair);
+  verifyStrategy(strategy);
+}

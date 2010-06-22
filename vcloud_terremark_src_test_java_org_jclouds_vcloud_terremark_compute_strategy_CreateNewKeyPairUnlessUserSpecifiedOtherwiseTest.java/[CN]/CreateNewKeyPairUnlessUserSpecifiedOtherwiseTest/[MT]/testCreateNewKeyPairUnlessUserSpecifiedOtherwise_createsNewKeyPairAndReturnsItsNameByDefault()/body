@@ -1,0 +1,19 @@
+{
+  String org="org1";
+  String tag="tag";
+  String systemGeneratedFingerprint="systemGeneratedKeyPairfinger";
+  TerremarkVCloudTemplateOptions options=new TerremarkVCloudTemplateOptions();
+  OrgAndName orgAndName=new OrgAndName("org1","tag");
+  CreateNewKeyPairUnlessUserSpecifiedOtherwise strategy=setupStrategy();
+  KeyPair keyPair=createMock(KeyPair.class);
+  expect(strategy.credentialsMap.containsKey(orgAndName)).andReturn(false);
+  expect(strategy.createUniqueKeyPair.apply(orgAndName)).andReturn(keyPair);
+  expect(keyPair.getFingerPrint()).andReturn(systemGeneratedFingerprint).atLeastOnce();
+  expect(strategy.credentialsMap.put(orgAndName,keyPair)).andReturn(null);
+  replay(keyPair);
+  replayStrategy(strategy);
+  strategy.execute(org,tag,options);
+  assertEquals(options.getSshKeyFingerprint(),systemGeneratedFingerprint);
+  verify(keyPair);
+  verifyStrategy(strategy);
+}

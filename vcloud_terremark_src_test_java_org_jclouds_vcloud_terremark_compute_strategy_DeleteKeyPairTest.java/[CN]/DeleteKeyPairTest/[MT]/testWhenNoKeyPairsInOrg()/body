@@ -1,0 +1,8 @@
+{
+  OrgAndName orgTag=new OrgAndName("org1","tag");
+  DeleteKeyPair strategy=setupStrategy();
+  expect(strategy.terremarkClient.listKeyPairsInOrg(orgTag.getOrg())).andReturn(ImmutableSet.<KeyPair>of());
+  replayStrategy(strategy);
+  strategy.execute(orgTag);
+  verifyStrategy(strategy);
+}

@@ -1,0 +1,8 @@
+{
+  Iterable<OrgAndName> orgTags=filter(transform(deadOnes,nodeToOrgAndName),notNull());
+  for (  OrgAndName orgTag : orgTags) {
+    Iterable<? extends NodeMetadata> nodesInOrg=listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg()));
+    Iterable<? extends NodeMetadata> nodesWithTag=filter(nodesInOrg,withTag(orgTag.getName()));
+    if (size(nodesWithTag) == 0 || all(nodesWithTag,TERMINATED))     deleteKeyPair.execute(orgTag);
+  }
+}

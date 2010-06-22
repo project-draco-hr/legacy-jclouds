@@ -1,5 +1,29 @@
 {
-  super.configure();
+  install(new ComputeServiceTimeoutsModule());
+  bind(String.class).annotatedWith(VCloud.class).toInstance(providerName);
+  bind(AddNodeWithTagStrategy.class).to(TerremarkVCloudAddNodeWithTagStrategy.class);
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<VCloudClient,VCloudAsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(RunNodesAndAddToSetStrategy.class).to(TerremarkEncodeTemplateIdIntoNameRunNodesAndAddToSetStrategy.class);
+  bind(ListNodesStrategy.class).to(VCloudListNodesStrategy.class);
+  bind(GetNodeMetadataStrategy.class).to(TerremarkVCloudGetNodeMetadataStrategy.class);
+  bind(RebootNodeStrategy.class).to(VCloudRebootNodeStrategy.class);
+  bind(DestroyNodeStrategy.class).to(VCloudDestroyNodeStrategy.class);
+  bindLoadBalancer();
+  bindSizes();
+  bindImages();
+  bindLocations();
+  bind(new TypeLiteral<Function<NodeMetadata,OrgAndName>>(){
+  }
+).to(new TypeLiteral<NodeMetadataToOrgAndName>(){
+  }
+);
+  bind(TemplateOptions.class).to(TerremarkVCloudTemplateOptions.class);
+  bind(ComputeService.class).to(TerremarkVCloudComputeService.class);
   bind(VCloudComputeClient.class).to(TerremarkVCloudComputeClient.class);
   bind(PopulateDefaultLoginCredentialsForImageStrategy.class).to(ParseVAppTemplateDescriptionToGetDefaultLoginCredentials.class);
+  bind(SecureRandom.class).toInstance(new SecureRandom());
 }

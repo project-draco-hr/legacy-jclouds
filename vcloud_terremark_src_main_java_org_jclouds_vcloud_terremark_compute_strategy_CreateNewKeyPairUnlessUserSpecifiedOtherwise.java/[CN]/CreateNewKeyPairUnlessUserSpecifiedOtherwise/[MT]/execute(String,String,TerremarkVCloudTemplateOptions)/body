@@ -1,0 +1,15 @@
+{
+  String sshKeyFingerprint=options.getSshKeyFingerprint();
+  boolean shouldAutomaticallyCreateKeyPair=options.shouldAutomaticallyCreateKeyPair();
+  if (sshKeyFingerprint == null && shouldAutomaticallyCreateKeyPair) {
+    OrgAndName orgAndName=new OrgAndName(org,tag);
+    if (credentialsMap.containsKey(orgAndName)) {
+      options.sshKeyFingerprint(credentialsMap.get(orgAndName).getFingerPrint());
+    }
+ else {
+      KeyPair keyPair=createUniqueKeyPair.apply(orgAndName);
+      credentialsMap.put(orgAndName,keyPair);
+      options.sshKeyFingerprint(keyPair.getFingerPrint());
+    }
+  }
+}

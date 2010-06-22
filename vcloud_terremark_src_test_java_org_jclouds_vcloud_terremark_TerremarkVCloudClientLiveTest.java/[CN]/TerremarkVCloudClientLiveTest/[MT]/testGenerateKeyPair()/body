@@ -1,0 +1,11 @@
+{
+  TerremarkOrganization org=tmClient.getDefaultOrganization();
+  key=tmClient.generateKeyPairInOrg(org.getId(),"livetest",false);
+  assertNotNull(key);
+  System.err.println(key);
+  assertEquals(key.getName(),"livetest");
+  assertNotNull(key.getPrivateKey());
+  assertNotNull(key.getFingerPrint());
+  assertEquals(key.isDefault(),false);
+  assertEquals(key.getFingerPrint(),tmClient.getKeyPair(key.getId()).getFingerPrint());
+}
