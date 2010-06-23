@@ -3,8 +3,10 @@
   EC2Size ec2Size=EC2Size.class.cast(template.getSize());
   RunInstancesOptions instanceOptions=asType(ec2Size.getInstanceType()).withAdditionalInfo(tag);
   String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
-  String subnetId=template.getOptions().as(EC2TemplateOptions.class).getSubnetId();
-  if (subnetId != null)   instanceOptions.withSubnetId(subnetId);
+  String subnetId=EC2TemplateOptions.class.cast(template.getOptions()).getSubnetId();
+  if (subnetId != null) {
+    instanceOptions.withSubnetId(subnetId);
+  }
  else {
     Set<String> groups=getSecurityGroupsForTagAndOptions(region,tag,template.getOptions());
     instanceOptions.withSecurityGroups(groups);
