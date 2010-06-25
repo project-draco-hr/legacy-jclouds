@@ -23,7 +23,7 @@
   Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
   addMatrixParams(builder,tokenValues.entries(),method,args);
   Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
-  String stringPayload=null;
+  Payload payload=null;
   HttpRequestOptions options=findOptionsIn(method,args);
   if (options != null) {
     injector.injectMembers(options);
@@ -43,8 +43,10 @@
     if (pathSuffix != null) {
       builder.path(pathSuffix);
     }
-    stringPayload=options.buildStringPayload();
+    String stringPayload=options.buildStringPayload();
+    if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
   }
+  if (payload == null)   payload=findPayloadInArgs(args);
   if (queryParams.size() > 0) {
     builder.replaceQuery(makeQueryLine(queryParams,null,skips));
   }
@@ -74,9 +76,9 @@ catch (  UriBuilderException e) {
     if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_FORM_URLENCODED);
     request.setPayload(makeQueryLine(formParams,null,skips));
   }
-  if (stringPayload != null) {
-    request.setPayload(stringPayload);
-    if (headers.get(HttpHeaders.CONTENT_LENGTH) != null)     headers.put(HttpHeaders.CONTENT_LENGTH,stringPayload.getBytes().length + "");
+ else   if (payload != null) {
+    request.setPayload(payload);
+    if (headers.get(HttpHeaders.CONTENT_LENGTH) != null)     headers.put(HttpHeaders.CONTENT_LENGTH,payload.calculateSize() + "");
     if (headers.get(HttpHeaders.CONTENT_TYPE) != null)     headers.put(HttpHeaders.CONTENT_TYPE,"application/unknown");
   }
   request.getHeaders().putAll(headers);

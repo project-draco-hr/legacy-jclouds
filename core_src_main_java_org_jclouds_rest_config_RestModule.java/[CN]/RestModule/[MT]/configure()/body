@@ -2,4 +2,6 @@
   install(new ParserModule());
   bind(UriBuilder.class).to(UriBuilderImpl.class);
   bind(AsyncRestClientProxy.Factory.class).to(Factory.class).in(Scopes.SINGLETON);
+  BinderUtils.bindAsyncClient(binder(),HttpAsyncClient.class);
+  BinderUtils.bindClient(binder(),HttpClient.class,HttpAsyncClient.class,ImmutableMap.<Class<?>,Class<?>>of(HttpClient.class,HttpAsyncClient.class));
 }

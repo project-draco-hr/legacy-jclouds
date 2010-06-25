@@ -5,7 +5,7 @@
   Files.write("".getBytes(),file);
   GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,"cookbook",file);
   assertRequestLineEquals(httpRequest,"PUT http://localhost:4000/cookbooks/cookbook/_content HTTP/1.1");
-  assertHeadersEqual(httpRequest,"Accept: application/json\nContent-Length: " + (file.getName().length() + 206) + "\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
+  assertHeadersEqual(httpRequest,"Accept: application/json\nContent-Length: " + (file.getName().length() + 206) + "\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\nX-Chef-Version: 0.9.0\n");
   assertPayloadEquals(httpRequest,COOOKBOOK_BODY.replace("cookbook.tar.gz",file.getName()));
   assertResponseParserClassEquals(method,httpRequest,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
