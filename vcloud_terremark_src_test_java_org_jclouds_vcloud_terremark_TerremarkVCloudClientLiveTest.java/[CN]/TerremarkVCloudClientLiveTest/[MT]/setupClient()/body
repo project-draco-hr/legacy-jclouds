@@ -1,10 +1,10 @@
 {
-  String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
-  String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
   String endpoint=System.getProperty("jclouds.test.endpoint");
   Properties props=new Properties();
   if (endpoint != null && !"".equals(endpoint))   props.setProperty("terremark.endpoint",endpoint);
-  Injector injector=new RestContextFactory().createContextBuilder("terremark",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),props).buildInjector();
+  Injector injector=new RestContextFactory().createContextBuilder("terremark",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),props).buildInjector();
   connection=tmClient=injector.getInstance(TerremarkVCloudClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
