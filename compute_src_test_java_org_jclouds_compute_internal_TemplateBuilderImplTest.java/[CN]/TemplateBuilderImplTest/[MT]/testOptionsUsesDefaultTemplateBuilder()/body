@@ -1,5 +1,6 @@
 {
-  TemplateOptions options=new TemplateOptions();
+  TemplateOptions options=provideTemplateOptions();
+  TemplateOptions from=provideTemplateOptions();
   Provider<Set<? extends Location>> locations=Providers.<Set<? extends Location>>of(ImmutableSet.<Location>of());
   Provider<Set<? extends Image>> images=Providers.<Set<? extends Image>>of(ImmutableSet.<Image>of());
   Provider<Set<? extends Size>> sizes=Providers.<Set<? extends Size>>of(ImmutableSet.<Size>of());
@@ -10,6 +11,7 @@
   expect(templateBuilderProvider.get()).andReturn(defaultTemplate);
   expect(defaultTemplate.options(options)).andReturn(defaultTemplate);
   expect(defaultTemplate.build()).andReturn(null);
+  expect(optionsProvider.get()).andReturn(from).atLeastOnce();
   replay(defaultTemplate);
   replay(defaultLocation);
   replay(optionsProvider);
