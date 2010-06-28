@@ -1,6 +1,7 @@
 {
   injector=Guice.createInjector(new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule(),new AbstractModule(){
     protected void configure(){
+      install(new SDNAuthRestClientModule());
       bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
         public Logger getLogger(        String category){
           return Logger.NULL;
@@ -11,7 +12,7 @@
       expect(sessionManager.getSessionToken()).andReturn("token").anyTimes();
       replay(sessionManager);
       bind(AddSessionTokenToRequest.class).toInstance(sessionManager);
-      Names.bindProperties(this.binder(),new SDNPropertiesBuilder("appkey","appname","username","password").build());
+      Names.bindProperties(this.binder(),new SDNPropertiesBuilder(new Properties()).credentials("appkey/appname/username","password").build());
     }
   }
 );

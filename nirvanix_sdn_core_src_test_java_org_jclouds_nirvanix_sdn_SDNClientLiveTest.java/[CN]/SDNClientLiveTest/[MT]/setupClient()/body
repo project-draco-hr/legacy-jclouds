@@ -1,7 +1,6 @@
 {
-  String appname=checkNotNull(System.getProperty("jclouds.test.appname"),"jclouds.test.appname");
-  String appid=checkNotNull(System.getProperty("jclouds.test.appid"),"jclouds.test.appid");
   String user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  connection=new SDNContextBuilder("nirvanix",new SDNPropertiesBuilder(appid,appname,user,password).build()).withModules(new Log4JLoggingModule()).buildContext().getApi();
+  this.context=new RestContextFactory().createContext("sdn",user,password,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  this.connection=context.getApi();
 }

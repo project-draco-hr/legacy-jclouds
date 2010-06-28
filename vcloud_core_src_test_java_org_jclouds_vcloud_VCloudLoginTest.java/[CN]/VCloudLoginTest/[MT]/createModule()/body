@@ -1,20 +1,9 @@
 {
-  return new AbstractModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(new Properties()).build(),"properties"));
-      bind(URI.class).annotatedWith(org.jclouds.vcloud.endpoints.VCloudLogin.class).toInstance(URI.create("http://localhost:8080/login"));
-      try {
-        bind(BasicAuthentication.class).toInstance(new BasicAuthentication("user","pass",new JCEEncryptionService()));
-      }
- catch (      UnsupportedEncodingException e) {
-        throw new RuntimeException(e);
-      }
-      bind(Logger.LoggerFactory.class).toInstance(new LoggerFactory(){
-        public Logger getLogger(        String category){
-          return Logger.NULL;
-        }
-      }
-);
+  return new Module(){
+    @Override public void configure(    Binder binder){
+    }
+    @SuppressWarnings("unused") @Provides @VCloudLogin URI provideURI(    @Provider URI uri){
+      return uri;
     }
   }
 ;

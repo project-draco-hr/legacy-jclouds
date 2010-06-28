@@ -8,8 +8,8 @@
       if (resource.getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
         responses.put(resource.getName(),ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
           @Override public Void call() throws Exception {
-            OsFamily myOs=ComputeUtils.parseOsFamilyOrNull(resource.getName());
-            Architecture arch=ComputeUtils.parseArchitectureOrNull(resource.getName());
+            OsFamily myOs=parseOsFamilyOrNull(resource.getName());
+            Architecture arch=parseArchitectureOrNull(resource.getName());
             VAppTemplate template=client.getVAppTemplate(resource.getId());
             Location location=findLocationForResourceInVDC.apply(resource,vDC.getId());
             String name=getName(template.getName());

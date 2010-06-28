@@ -1,10 +1,5 @@
 {
-  injector=Guice.createInjector(createModule(),new RestModule(){
-    @Override protected void configure(){
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-      super.configure();
-    }
-  }
-,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()));
+  ContextSpec<?,?> contextSpec=createContextSpec();
+  injector=createContextBuilder(contextSpec,ImmutableSet.of(new MockModule(),new NullLoggingModule(),createModule())).buildInjector();
   processor=injector.getInstance(Key.get(createTypeLiteral()));
 }

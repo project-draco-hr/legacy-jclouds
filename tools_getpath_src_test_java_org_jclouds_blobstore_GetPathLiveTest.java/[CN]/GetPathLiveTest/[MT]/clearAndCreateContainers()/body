@@ -1,17 +1,18 @@
 {
   container=checkNotNull(System.getProperty(PROPERTY_GETPATH_CONTAINER));
   path=checkNotNull(System.getProperty(PROPERTY_GETPATH_PATH));
-  BlobStoreContext s3Context=S3ContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_AWS_ACCESSKEYID),PROPERTY_AWS_ACCESSKEYID),System.getProperty(PROPERTY_AWS_SECRETACCESSKEY,PROPERTY_AWS_SECRETACCESSKEY),new Log4JLoggingModule());
-  urisToTest.add(String.format("blobstore://%s:%s@%s/%s/%s",System.getProperty(PROPERTY_AWS_ACCESSKEYID),System.getProperty(PROPERTY_AWS_SECRETACCESSKEY),"s3",container,path));
-  BlobStoreContext cfContext=CloudFilesContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_RACKSPACE_USER),PROPERTY_RACKSPACE_USER),System.getProperty(PROPERTY_RACKSPACE_KEY,PROPERTY_RACKSPACE_KEY),new Log4JLoggingModule());
-  urisToTest.add(String.format("blobstore://%s:%s@%s/%s/%s",System.getProperty(PROPERTY_RACKSPACE_USER),System.getProperty(PROPERTY_RACKSPACE_KEY),"cloudfiles",container,path));
-  BlobStoreContext azContext=AzureBlobContextFactory.createContext(checkNotNull(System.getProperty(PROPERTY_AZURESTORAGE_ACCOUNT),PROPERTY_AZURESTORAGE_ACCOUNT),System.getProperty(PROPERTY_AZURESTORAGE_KEY,PROPERTY_AZURESTORAGE_KEY),new Log4JLoggingModule());
-  urisToTest.add(String.format("blobstore://%s:%s@%s/%s/%s",System.getProperty(PROPERTY_AZURESTORAGE_ACCOUNT),System.getProperty(PROPERTY_AZURESTORAGE_KEY),"azureblob",container,path));
-  this.contexts=ImmutableSet.of(s3Context,cfContext,azContext);
+  contexts=Sets.newLinkedHashSet();
+  BlobStoreContextFactory factory=new BlobStoreContextFactory();
+  for (  String provider : new String[]{"s3","cloudfiles","azureblob"}) {
+    String identity=checkNotNull(System.getProperty("jclouds.test.identity." + provider),"jclouds.test.identity." + provider);
+    String credential=checkNotNull(System.getProperty("jclouds.test.credential." + provider),"jclouds.test.credential." + provider);
+    contexts.add(factory.createContext(provider,identity,credential,ImmutableSet.of(new Log4JLoggingModule())));
+    urisToTest.add(String.format("blobstore://%s:%s@%s/%s/%s",identity,credential,provider,container,path));
+  }
   boolean deleted=false;
   for (  BlobStoreContext context : contexts) {
     if (context.getBlobStore().containerExists(container)) {
-      System.err.printf("deleting container %s at %s%n",container,context.getProviderSpecificContext().getEndPoint());
+      System.err.printf("deleting container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
       context.getBlobStore().deleteContainer(container);
       deleted=true;
     }
@@ -21,7 +22,7 @@
     Thread.sleep(30000);
   }
   for (  BlobStoreContext context : contexts) {
-    System.err.printf("creating container %s at %s%n",container,context.getProviderSpecificContext().getEndPoint());
+    System.err.printf("creating container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
     context.getBlobStore().createContainerInLocation(null,container);
   }
   if (deleted) {
@@ -29,7 +30,7 @@
     Thread.sleep(30000);
   }
   for (  BlobStoreContext context : contexts) {
-    System.err.printf("creating directory %s in container %s at %s%n",container,path,context.getProviderSpecificContext().getEndPoint());
+    System.err.printf("creating directory %s in container %s at %s%n",container,path,context.getProviderSpecificContext().getEndpoint());
     context.getBlobStore().createDirectory(container,path);
   }
 }

@@ -1,7 +1,8 @@
 {
   String user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  client=GoGridContextFactory.createContext(user,password,new Log4JLoggingModule()).getApi();
+  context=new RestContextFactory().createContext("gogrid",user,password,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  client=context.getApi();
   serverLatestJobCompleted=new RetryablePredicate<Server>(new ServerLatestJobCompleted(client.getJobServices()),800,20,TimeUnit.SECONDS);
   loadBalancerLatestJobCompleted=new RetryablePredicate<LoadBalancer>(new LoadBalancerLatestJobCompleted(client.getJobServices()),800,20,TimeUnit.SECONDS);
 }

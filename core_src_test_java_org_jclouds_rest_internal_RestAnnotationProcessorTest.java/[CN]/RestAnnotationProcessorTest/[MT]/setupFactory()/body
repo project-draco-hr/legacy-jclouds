@@ -1,3 +1,9 @@
 {
-  injector=Guice.createInjector(MODULES);
+  ContextSpec<String,Integer> contextSpec=contextSpec("test","http://localhost:9999","1","userfoo",null,String.class,Integer.class);
+  injector=createContextBuilder(contextSpec,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:1111"));
+    }
+  }
+)).buildInjector();
 }

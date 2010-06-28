@@ -1,15 +1,4 @@
 {
-  injector=Guice.createInjector(new RestModule(),new AtmosStorageRestClientModule(){
-    protected String provideTimeStamp(    @TimeStamp Supplier<String> cache){
-      return "Thu, 05 Jun 2008 16:38:19 GMT";
-    }
-  }
-,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new AtmosStoragePropertiesBuilder("user",KEY)).build());
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-    }
-  }
-);
+  Injector injector=new RestContextFactory().createContextBuilder("atmosonline","user",KEY,ImmutableSet.<Module>of(new MockModule(),new TestAtmosStorageRestClientModule(),new NullLoggingModule()),new Properties()).buildInjector();
   filter=injector.getInstance(SignRequest.class);
 }

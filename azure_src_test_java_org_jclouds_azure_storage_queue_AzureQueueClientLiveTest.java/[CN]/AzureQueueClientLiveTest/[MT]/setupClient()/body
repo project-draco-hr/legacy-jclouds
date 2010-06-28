@@ -1,6 +1,5 @@
 {
   account=System.getProperty("jclouds.test.user");
   String key=System.getProperty("jclouds.test.key");
-  Injector injector=new AzureQueueContextBuilder("azurequeue",new AzureQueuePropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule()).buildInjector();
-  connection=injector.getInstance(AzureQueueClient.class);
+  connection=(AzureQueueClient)new RestContextFactory().createContext("azurequeue",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule())).getApi();
 }

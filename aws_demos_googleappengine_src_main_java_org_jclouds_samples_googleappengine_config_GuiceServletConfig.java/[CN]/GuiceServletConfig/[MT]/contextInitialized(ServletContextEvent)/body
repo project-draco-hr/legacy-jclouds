@@ -5,12 +5,7 @@
   props.setProperty(PROPERTY_TIMEOUT_SCRIPT_COMPLETE,"25000");
   props.setProperty(PROPERTY_TIMEOUT_PORT_OPEN,"25000");
   ImmutableSet<Module> modules=ImmutableSet.<Module>of(new GoogleAppEngineConfigurationModule());
-  try {
-    blobsStoreContexts=ImmutableMap.<String,BlobStoreContext>of("s3",new BlobStoreContextFactory().createContext("s3",modules,props));
-    computeServiceContexts=ImmutableMap.<String,ComputeServiceContext>of("ec2",new ComputeServiceContextFactory().createContext("ec2",modules,props));
-  }
- catch (  IOException e) {
-    Throwables.propagate(e);
-  }
+  blobsStoreContexts=ImmutableMap.<String,BlobStoreContext>of("s3",new BlobStoreContextFactory().createContext("s3",modules,props));
+  computeServiceContexts=ImmutableMap.<String,ComputeServiceContext>of("ec2",new ComputeServiceContextFactory().createContext("ec2",modules,props));
   super.contextInitialized(servletContextEvent);
 }

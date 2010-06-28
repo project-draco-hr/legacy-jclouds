@@ -1,18 +1,10 @@
 {
-  addContextModule(providerName,modules);
+  addContextModule(modules);
   addClientModuleIfNotPresent(modules);
   addLoggingModuleIfNotPresent(modules);
   addHttpModuleIfNeededAndNotPresent(modules);
   ifHttpConfigureRestOtherwiseGuiceClientFactory(modules);
   addExecutorServiceIfNotPresent(modules);
-  modules.add(new AbstractModule(){
-    @Override protected void configure(){
-      Properties toBind=new Properties();
-      toBind.putAll(checkNotNull(properties,"properties"));
-      toBind.putAll(System.getProperties());
-      Names.bindProperties(binder(),toBind);
-    }
-  }
-);
+  modules.add(new BindPropertiesAndPrincipalContext(properties));
   return Guice.createInjector(modules);
 }

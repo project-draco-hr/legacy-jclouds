@@ -1,3 +1,5 @@
 {
-  return ChefContextFactory.createContext(URI.create(endpoint),identity,key,new Log4JLoggingModule());
+  Properties props=new Properties();
+  props.setProperty("chef.endpoint",endpoint);
+  return new RestContextFactory().createContext("chef",identity,key,ImmutableSet.<Module>of(new Log4JLoggingModule()),props);
 }

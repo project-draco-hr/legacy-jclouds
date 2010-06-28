@@ -1,9 +1,16 @@
 {
-  super.configure();
+  bind(new TypeLiteral<BlobStoreContext>(){
+  }
+).to(new TypeLiteral<BlobStoreContextImpl<TransientBlobStore,AsyncBlobStore>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(new TypeLiteral<ConcurrentMap<String,ConcurrentMap<String,Blob>>>(){
+  }
+).toInstance(map);
+  bind(new TypeLiteral<ConcurrentMap<String,Location>>(){
+  }
+).toInstance(containerToLocation);
   install(new BlobStoreObjectModule());
   install(new BlobStoreMapModule());
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
-  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<TransientBlobStore,AsyncBlobStore>>(){
-  }
-).in(Scopes.SINGLETON);
 }

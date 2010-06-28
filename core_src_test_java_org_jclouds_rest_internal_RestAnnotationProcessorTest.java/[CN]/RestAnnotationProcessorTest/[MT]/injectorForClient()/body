@@ -1,11 +1,4 @@
 {
-  Injector child=Guice.createInjector(Iterables.concat(MODULES,ImmutableSet.<Module>of(new RestClientModule<Caller,AsyncCaller>(Caller.class,AsyncCaller.class,ImmutableMap.<Class<?>,Class<?>>of(Callee.class,AsyncCallee.class)){
-  }
-,new AbstractModule(){
-    @Override protected void configure(){
-      bind(IOExceptionRetryHandler.class).toInstance(IOExceptionRetryHandler.NEVER_RETRY);
-    }
-  }
-)));
-  return child;
+  ContextSpec<Caller,AsyncCaller> contextSpec=contextSpec("test","http://localhost:9999","1","userfoo",null,Caller.class,AsyncCaller.class);
+  return createContextBuilder(contextSpec,ImmutableSet.of(new MockModule(),new NullLoggingModule(),new CallerCalleeModule())).buildInjector();
 }

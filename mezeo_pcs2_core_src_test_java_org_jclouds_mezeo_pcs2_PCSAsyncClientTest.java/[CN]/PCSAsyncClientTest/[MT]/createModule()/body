@@ -1,13 +1,3 @@
 {
-  return new PCSRestClientModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),new PCSPropertiesBuilder(URI.create("http://localhost/stub"),"user","key").build());
-      install(new NullLoggingModule());
-      super.configure();
-    }
-    @Override protected Response provideCloudResponse(    AsyncClientFactory factory,    URI authenticationUri) throws InterruptedException, ExecutionException, TimeoutException {
-      return new CloudXlinkHandler.PCSCloudResponseImpl(ImmutableMap.<String,URI>of("rootContainer",URI.create("http://localhost/root")));
-    }
-  }
-;
+  return new TestPCSRestClientModule();
 }

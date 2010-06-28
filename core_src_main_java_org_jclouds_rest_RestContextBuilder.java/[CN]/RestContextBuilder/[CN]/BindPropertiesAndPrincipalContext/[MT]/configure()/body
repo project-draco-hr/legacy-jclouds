@@ -1,0 +1,12 @@
+{
+  Properties toBind=new Properties();
+  toBind.putAll(checkNotNull(properties,"properties"));
+  toBind.putAll(System.getProperties());
+  Names.bindProperties(binder(),toBind);
+  bind(String.class).annotatedWith(Provider.class).toInstance(checkNotNull(toBind.getProperty(PROPERTY_PROVIDER),PROPERTY_PROVIDER));
+  bind(URI.class).annotatedWith(Provider.class).toInstance(URI.create(checkNotNull(toBind.getProperty(PROPERTY_ENDPOINT),PROPERTY_ENDPOINT)));
+  if (toBind.containsKey(PROPERTY_API))   bind(String.class).annotatedWith(Api.class).toInstance(toBind.getProperty(PROPERTY_API));
+  if (toBind.containsKey(PROPERTY_API_VERSION))   bind(String.class).annotatedWith(ApiVersion.class).toInstance(toBind.getProperty(PROPERTY_API_VERSION));
+  if (toBind.containsKey(PROPERTY_IDENTITY))   bind(String.class).annotatedWith(Identity.class).toInstance(checkNotNull(toBind.getProperty(PROPERTY_IDENTITY),PROPERTY_IDENTITY));
+  if (toBind.containsKey(PROPERTY_CREDENTIAL))   bind(String.class).annotatedWith(Credential.class).toInstance(toBind.getProperty(PROPERTY_CREDENTIAL));
+}

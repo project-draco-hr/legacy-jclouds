@@ -1,5 +1,5 @@
 {
   super(awsCredentials);
-  context=S3ContextFactory.createContext(awsCredentials.getAccessKey(),awsCredentials.getSecretKey(),modules);
+  context=new BlobStoreContextFactory().createContext("s3",awsCredentials.getAccessKey(),awsCredentials.getSecretKey(),ImmutableList.<Module>copyOf(modules));
   connection=(S3Client)context.getProviderSpecificContext().getApi();
 }

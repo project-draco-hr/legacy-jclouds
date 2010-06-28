@@ -1,7 +1,7 @@
 {
   String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  Injector injector=new HostingDotComVCloudContextBuilder("hostingdotcom",new HostingDotComVCloudPropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
+  Injector injector=new RestContextFactory().createContextBuilder("hostingdotcom",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule()),new Properties()).buildInjector();
   computeClient=injector.getInstance(HostingDotComVCloudComputeClient.class);
   client=injector.getInstance(HostingDotComVCloudClient.class);
   addressTester=injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>(){

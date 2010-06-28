@@ -1,14 +1,3 @@
 {
-  return Guice.createInjector(new AzureBlobRestClientModule(),new RestModule(){
-    @Override protected void configure(){
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-      super.configure();
-    }
-  }
-,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new AzureBlobPropertiesBuilder("user","secret").build(),"properties"));
-    }
-  }
-);
+  return new RestContextFactory().createContextBuilder("azurequeue","foo","bar",ImmutableSet.<Module>of(new Log4JLoggingModule())).buildInjector();
 }

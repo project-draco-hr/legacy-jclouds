@@ -1,18 +1,4 @@
 {
-  injector=Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      bindConstant().annotatedWith(Names.named("testaccount")).to("ralphie");
-      bind(URI.class).annotatedWith(RestAnnotationProcessorTest.Localhost.class).toInstance(URI.create("http://localhost:8080"));
-      Names.bindProperties(binder(),new PropertiesBuilder(){
-        @Override public PropertiesBuilder withCredentials(        String account,        String key){
-          return null;
-        }
-        @Override public PropertiesBuilder withEndpoint(        URI endpoint){
-          return null;
-        }
-      }
-.build());
-    }
-  }
-,new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+  ContextSpec<IntegrationTestClient,IntegrationTestAsyncClient> contextSpec=contextSpec("test","http://localhost:9999","1","userFoo",null,IntegrationTestClient.class,IntegrationTestAsyncClient.class);
+  injector=createContextBuilder(contextSpec).buildInjector();
 }

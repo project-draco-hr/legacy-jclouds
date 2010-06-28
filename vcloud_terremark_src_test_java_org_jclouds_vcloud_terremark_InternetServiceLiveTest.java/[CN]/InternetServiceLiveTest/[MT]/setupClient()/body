@@ -1,9 +1,9 @@
 {
   String account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  TerremarkVCloudPropertiesBuilder propertiesBuilder=new TerremarkVCloudPropertiesBuilder(account,key);
   String endpoint=System.getProperty("jclouds.test.endpoint");
-  if (endpoint != null && !"".equals(endpoint))   propertiesBuilder.withEndpoint(URI.create(endpoint));
-  Injector injector=new TerremarkVCloudContextBuilder("terremark",propertiesBuilder.build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
-  tmClient=injector.getInstance(TerremarkVCloudClient.class);
+  Properties props=new Properties();
+  if (endpoint != null && !"".equals(endpoint))   props.setProperty("terremark.endpoint",endpoint);
+  context=new RestContextFactory().createContext("terremark",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),props);
+  tmClient=context.getApi();
 }

@@ -1,7 +1,11 @@
 {
+  String endpoint=System.getProperty("jclouds.test.endpoint");
   user=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  connection=(IBMDeveloperCloudClient)IBMDeveloperCloudContextFactory.createContext(user,password,new Log4JLoggingModule()).getProviderSpecificContext().getApi();
+  Properties props=new Properties();
+  if (endpoint != null)   props.setProperty("ibmdev.endpoint",endpoint);
+  context=new RestContextFactory().createContext("ibmdev",user,password,ImmutableSet.<Module>of(new Log4JLoggingModule()),props);
+  connection=context.getApi();
   for (  Instance instance : connection.listInstances()) {
     try {
       connection.deleteInstance(instance.getId());

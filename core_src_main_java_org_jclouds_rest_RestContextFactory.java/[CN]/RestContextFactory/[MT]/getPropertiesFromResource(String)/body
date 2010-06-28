@@ -1,6 +1,11 @@
 {
   Properties properties=new Properties();
-  properties.load(Resources.newInputStreamSupplier(Resources.getResource(filename)).getInput());
+  try {
+    properties.load(RestContextFactory.class.getResourceAsStream(filename));
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
   properties.putAll(System.getProperties());
   return properties;
 }

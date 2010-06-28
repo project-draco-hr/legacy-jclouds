@@ -1,14 +1,3 @@
 {
-  return Guice.createInjector(new S3RestClientModule(),new RestModule(){
-    @Override protected void configure(){
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-      super.configure();
-    }
-  }
-,new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new S3PropertiesBuilder("user","key").build(),"properties"));
-    }
-  }
-);
+  return new RestContextFactory().createContextBuilder("s3","foo","bar",ImmutableSet.of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
 }

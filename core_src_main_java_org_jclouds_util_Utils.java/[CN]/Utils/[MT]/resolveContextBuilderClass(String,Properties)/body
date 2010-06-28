@@ -1,0 +1,15 @@
+{
+  String contextBuilderClassName=properties.getProperty(provider + ".contextbuilder");
+  String syncClassName=properties.getProperty(provider + ".sync");
+  String asyncClassName=properties.getProperty(provider + ".async");
+  if (syncClassName != null) {
+    checkArgument(asyncClassName != null,"please configure async class for " + syncClassName);
+    Class.forName(syncClassName);
+    Class.forName(asyncClassName);
+    return (Class<RestContextBuilder<S,A>>)(contextBuilderClassName != null ? Class.forName(contextBuilderClassName) : RestContextBuilder.class);
+  }
+ else {
+    checkArgument(contextBuilderClassName != null,"please configure contextbuilder class");
+    return (Class<RestContextBuilder<S,A>>)Class.forName(contextBuilderClassName);
+  }
+}

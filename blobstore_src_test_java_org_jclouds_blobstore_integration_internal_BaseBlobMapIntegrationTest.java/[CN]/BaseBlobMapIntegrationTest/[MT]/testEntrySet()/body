@@ -7,7 +7,7 @@
     Set<Entry<String,Blob>> entries=map.entrySet();
     assertEquals(entries.size(),5);
     for (    Entry<String,Blob> entry : entries) {
-      assertEquals(fiveStrings.get(entry.getKey()),BlobStoreUtilsImpl.getContentAsStringOrNullAndClose(entry.getValue()));
+      assertEquals(fiveStrings.get(entry.getKey()),getContentAsStringOrNullAndClose(entry.getValue()));
       Blob value=entry.getValue();
       value.setPayload("");
       value.generateMD5();
@@ -17,7 +17,7 @@
       public void run(){
         for (        Blob value : map.values()) {
           try {
-            assertEquals(BlobStoreUtilsImpl.getContentAsStringOrNullAndClose(value),"");
+            assertEquals(getContentAsStringOrNullAndClose(value),"");
           }
  catch (          IOException e) {
             Throwables.propagate(e);

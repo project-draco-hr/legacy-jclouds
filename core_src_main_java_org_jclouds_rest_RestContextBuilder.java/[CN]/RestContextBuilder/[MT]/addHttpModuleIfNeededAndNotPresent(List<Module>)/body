@@ -1,13 +1,3 @@
 {
-  if (Iterables.any(modules,new Predicate<Module>(){
-    public boolean apply(    Module input){
-      return input.getClass().isAnnotationPresent(RequiresHttp.class);
-    }
-  }
-) && (!Iterables.any(modules,new Predicate<Module>(){
-    public boolean apply(    Module input){
-      return input.getClass().isAnnotationPresent(ConfiguresHttpCommandExecutorService.class);
-    }
-  }
-)))   modules.add(new JavaUrlHttpCommandExecutorServiceModule());
+  if (defaultOrAtLeastOneModuleRequiresHttp(modules) && nothingConfiguresAnHttpService(modules))   modules.add(new JavaUrlHttpCommandExecutorServiceModule());
 }

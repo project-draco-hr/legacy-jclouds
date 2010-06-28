@@ -1,14 +1,11 @@
 {
   return new MapMaker().makeComputingMap(new Function<URI,ComputeServiceContext>(){
     @SuppressWarnings("unchecked") @Override public ComputeServiceContext apply(    URI from){
-      try {
-        Properties props=getPropertiesFromResource("compute.properties");
-        props.putAll(projectProvider.get().getProperties());
-        return new ComputeServiceContextFactory(props).createContext(from,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
-      }
- catch (      IOException e) {
-        throw new RuntimeException(e);
-      }
+      Properties props=getPropertiesFromResource("compute.properties");
+      props.putAll(projectProvider.get().getProperties());
+      String provider=from.getHost();
+      Credentials creds=Credentials.parse(from);
+      return new ComputeServiceContextFactory(props).createContext(provider,creds.account,creds.key,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
     }
   }
 );

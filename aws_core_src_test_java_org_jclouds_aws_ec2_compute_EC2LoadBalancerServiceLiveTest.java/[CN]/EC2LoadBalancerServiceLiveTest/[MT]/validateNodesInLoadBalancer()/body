@@ -1,11 +1,11 @@
 {
-  ElasticLoadBalancerClient elbClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getElasticLoadBalancerServices();
+  ELBClient elbClient=elbContext.getApi();
   Set<String> instanceIds=new HashSet<String>();
   for (  NodeMetadata node : nodes) {
     instanceIds.add(node.getProviderId());
   }
-  Set<ElasticLoadBalancer> elbs=elbClient.describeLoadBalancersInRegion(Region.US_EAST_1,tag);
+  Set<LoadBalancer> elbs=elbClient.describeLoadBalancersInRegion(Region.US_EAST_1,tag);
   assertNotNull(elbs);
-  ElasticLoadBalancer elb=elbs.iterator().next();
+  LoadBalancer elb=elbs.iterator().next();
   assertEquals(elb.getInstanceIds(),instanceIds);
 }

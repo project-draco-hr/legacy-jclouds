@@ -1,16 +1,21 @@
 {
   inputParamValidator.validateMethodParametersOrThrow(method,args);
   URI endpoint;
-  if (caller != null) {
-    try {
-      endpoint=getEndpointFor(caller.getMethod(),caller.getArgs());
+  try {
+    if (caller != null) {
+      try {
+        endpoint=getEndpointFor(caller.getMethod(),caller.getArgs());
+      }
+ catch (      IllegalStateException e) {
+        endpoint=getEndpointFor(method,args);
+      }
     }
- catch (    IllegalStateException e) {
+ else {
       endpoint=getEndpointFor(method,args);
     }
   }
- else {
-    endpoint=getEndpointFor(method,args);
+ catch (  IllegalStateException e) {
+    endpoint=injector.getInstance(Key.get(URI.class,org.jclouds.rest.annotations.Provider.class));
   }
   String httpMethod=getHttpMethodOrConstantOrThrowException(method);
   UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);

@@ -1,6 +1,6 @@
 {
   account=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
   String key=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  Injector injector=new BlueLockVCloudContextBuilder("bluelock",new BlueLockVCloudPropertiesBuilder(account,key).build()).withModules(new Log4JLoggingModule(),new JschSshClientModule()).buildInjector();
-  connection=injector.getInstance(VCloudClient.class);
+  context=new RestContextFactory().createContext("bluelock",account,key,ImmutableSet.<Module>of(new Log4JLoggingModule()),new Properties());
+  connection=context.getApi();
 }

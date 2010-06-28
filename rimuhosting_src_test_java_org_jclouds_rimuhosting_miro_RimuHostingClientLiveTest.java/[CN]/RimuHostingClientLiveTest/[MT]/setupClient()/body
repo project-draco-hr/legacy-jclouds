@@ -1,4 +1,5 @@
 {
   String password=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
-  connection=(RimuHostingClient)RimuHostingContextFactory.createContext(password,new Log4JLoggingModule()).getProviderSpecificContext().getApi();
+  this.context=new RestContextFactory().createContext("rimuhosting",password,password,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  this.connection=context.getApi();
 }

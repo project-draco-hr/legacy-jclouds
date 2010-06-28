@@ -1,9 +1,0 @@
-{
-  return Guice.createInjector(new TwitterRestClientModule(),new TwitterContextModule("tweet"),new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new TwitterPropertiesBuilder("user","pass").build(),"properties"));
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-    }
-  }
-);
-}

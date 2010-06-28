@@ -1,11 +1,5 @@
 {
-  Injector injector=Guice.createInjector(new RestModule(),new ChefRestClientModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new ChefPropertiesBuilder(URI.create("http://localhost"),"foo","bar")).build());
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-    }
-  }
-);
+  Injector injector=new RestContextFactory().createContextBuilder("chef",USER_ID,PRIVATE_KEY,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
   encryptionService=injector.getInstance(EncryptionService.class);
   Security.addProvider(new BouncyCastleProvider());
   KeyPair pair=KeyPair.class.cast(new PEMReader(new StringReader(PRIVATE_KEY)).readObject());

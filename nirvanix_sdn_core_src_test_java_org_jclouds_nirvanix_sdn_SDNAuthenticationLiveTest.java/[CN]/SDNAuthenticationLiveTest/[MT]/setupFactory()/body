@@ -1,11 +1,7 @@
 {
-  injector=Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
-      bind(URI.class).annotatedWith(SDN.class).toInstance(URI.create("http://services.nirvanix.com"));
-    }
-    @SuppressWarnings("unused") @Provides @Singleton protected SDNAuthentication provideCloud(    AsyncClientFactory factory){
-      return factory.create(SDNAuthentication.class);
-    }
-  }
-,new RestModule(),new Log4JLoggingModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new JavaUrlHttpCommandExecutorServiceModule());
+  String endpoint="http://services.nirvanix.com";
+  identity=checkNotNull(System.getProperty("jclouds.test.user"),"jclouds.test.user");
+  credential=checkNotNull(System.getProperty("jclouds.test.key"),"jclouds.test.key");
+  ContextSpec<SDNAuthClient,SDNAuthAsyncClient> contextSpec=contextSpec("test",endpoint,"1",identity,credential,SDNAuthClient.class,SDNAuthAsyncClient.class);
+  context=createContextBuilder(contextSpec,ImmutableSet.<Module>of(new Log4JLoggingModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()))).buildContext();
 }

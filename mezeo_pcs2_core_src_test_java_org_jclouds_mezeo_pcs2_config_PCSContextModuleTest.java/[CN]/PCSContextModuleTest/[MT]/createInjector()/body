@@ -1,9 +1,0 @@
-{
-  return Guice.createInjector(new PCSRestClientModule(),new PCSContextModule("pcs"),new RestModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
-    @Override protected void configure(){
-      Names.bindProperties(binder(),checkNotNull(new PCSPropertiesBuilder(URI.create("http://localhost"),"user","key").build(),"properties"));
-      bind(TransformingHttpCommandExecutorService.class).toInstance(createMock(TransformingHttpCommandExecutorService.class));
-    }
-  }
-);
-}

@@ -1,0 +1,11 @@
+{
+  if (regionException != null)   throw regionException;
+  EC2Client client=injector.getInstance(EC2Client.class);
+  try {
+    return client.getAvailabilityZoneAndRegionServices().describeRegions();
+  }
+ catch (  RuntimeException e) {
+    this.regionException=e;
+    throw e;
+  }
+}

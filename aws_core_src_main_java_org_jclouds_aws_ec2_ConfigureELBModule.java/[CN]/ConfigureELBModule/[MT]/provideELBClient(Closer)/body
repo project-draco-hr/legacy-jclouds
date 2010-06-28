@@ -1,0 +1,10 @@
+{
+  final RestContext<ELBClient,ELBAsyncClient> context=new RestContextFactory().createContext("elb",infra,properties);
+  closer.addToClose(new Closeable(){
+    @Override public void close(){
+      if (context != null)       context.close();
+    }
+  }
+);
+  return context.getApi();
+}
