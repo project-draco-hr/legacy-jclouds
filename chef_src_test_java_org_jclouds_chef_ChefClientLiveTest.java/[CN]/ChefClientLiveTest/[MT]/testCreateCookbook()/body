@@ -1,17 +1,2 @@
 {
-  adminConnection.getApi().deleteCookbook(COOKBOOK_NAME);
-  InputStream in=null;
-  try {
-    in=URI.create(COOKBOOK_URI).toURL().openStream();
-    cookbookContent=ByteStreams.toByteArray(in);
-    cookbookFile=File.createTempFile("foo",".tar.gz");
-    Files.write(cookbookContent,cookbookFile);
-    cookbookFile.deleteOnExit();
-    adminConnection.getApi().createCookbook(COOKBOOK_NAME,cookbookFile);
-    adminConnection.getApi().deleteCookbook(COOKBOOK_NAME);
-    adminConnection.getApi().createCookbook(COOKBOOK_NAME,cookbookContent);
-  }
-  finally {
-    if (in != null)     in.close();
-  }
 }
