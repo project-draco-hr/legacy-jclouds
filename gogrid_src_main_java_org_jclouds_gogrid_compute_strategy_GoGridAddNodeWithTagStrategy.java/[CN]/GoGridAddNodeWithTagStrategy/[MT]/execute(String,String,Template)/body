@@ -3,7 +3,7 @@
   boolean notStarted=true;
   int numOfRetries=20;
   while (notStarted) {
-    Set<Ip> availableIps=client.getIpServices().getIpList(new GetIpListOptions().onlyUnassigned().onlyWithType(IpType.PUBLIC));
+    Set<Ip> availableIps=client.getIpServices().getIpList(new GetIpListOptions().onlyUnassigned().onlyWithType(IpType.PUBLIC).inDatacenter(template.getLocation().getId()));
     if (availableIps.size() == 0)     throw new RuntimeException("No public IPs available on this identity.");
     int ipIndex=new SecureRandom().nextInt(availableIps.size());
     Ip availableIp=Iterables.get(availableIps,ipIndex);
