@@ -1,8 +1,8 @@
 {
   if (response.getFirstHeaderOrNull(HttpHeaders.LOCATION) == null && (response.getStatusCode() == 301 || response.getStatusCode() == 307)) {
-    byte[] content=HttpUtils.closeClientButKeepContentStream(response);
+    byte[] content=closeClientButKeepContentStream(response);
     if (command.getRequest().getMethod() == HttpMethod.HEAD) {
-      command.changeToGETRequest();
+      changeToGETRequest(command.getRequest());
       return true;
     }
  else {
@@ -15,7 +15,7 @@
             return backoffHandler.shouldRetryRequest(command,response);
           }
  else {
-            command.changeSchemeHostAndPortTo(command.getRequest().getEndpoint().getScheme(),host,command.getRequest().getEndpoint().getPort());
+            changeSchemeHostAndPortTo(command.getRequest(),command.getRequest().getEndpoint().getScheme(),host,command.getRequest().getEndpoint().getPort(),uriBuilderProvider.get());
           }
           return true;
         }

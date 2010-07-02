@@ -1,11 +1,11 @@
 {
   Method method=S3AsyncClient.class.getMethod("putObject",String.class,S3Object.class,Array.newInstance(PutObjectOptions.class,0).getClass());
-  GeneratedHttpRequest<S3AsyncClient> httpMethod=processor.createRequest(method,"bucket",blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB));
-  assertRequestLineEquals(httpMethod,"PUT https://bucket.s3.amazonaws.com/hello HTTP/1.1");
-  assertHeadersEqual(httpMethod,"Content-Length: 5\nContent-Type: text/plain\nHost: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(httpMethod,"hello");
-  assertResponseParserClassEquals(method,httpMethod,ParseETagHeader.class);
+  HttpRequest request=processor.createRequest(method,"bucket",blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB));
+  assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/hello HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 5\nContent-Type: text/plain\nHost: bucket.s3.amazonaws.com\n");
+  assertPayloadEquals(request,"hello");
+  assertResponseParserClassEquals(method,request,ParseETagHeader.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpMethod);
+  checkFilters(request);
 }

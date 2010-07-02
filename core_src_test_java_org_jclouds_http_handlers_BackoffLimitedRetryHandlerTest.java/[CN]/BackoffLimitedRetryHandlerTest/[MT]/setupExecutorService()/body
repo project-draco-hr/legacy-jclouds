@@ -1,5 +1,8 @@
 {
   ExecutorService execService=Executors.newCachedThreadPool();
-  JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(execService,new DelegatingRetryHandler(uriBuilderProvider),new BackoffLimitedRetryHandler(),new DelegatingErrorHandler(),new HttpWire(),new HttpUtils(0,500,1,1),null);
+  BackoffLimitedRetryHandler backoff=new BackoffLimitedRetryHandler();
+  utils=new HttpUtils(0,500,1,1);
+  RedirectionRetryHandler retry=new RedirectionRetryHandler(uriBuilderProvider,backoff);
+  JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(execService,new DelegatingRetryHandler(backoff,retry),new BackoffLimitedRetryHandler(),new DelegatingErrorHandler(),new HttpWire(),utils,null);
   executorService=new TransformingHttpCommandExecutorServiceImpl(httpService);
 }

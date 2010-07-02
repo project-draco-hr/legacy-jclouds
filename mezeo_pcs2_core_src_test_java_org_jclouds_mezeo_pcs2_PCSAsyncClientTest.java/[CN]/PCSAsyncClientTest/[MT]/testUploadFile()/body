@@ -1,11 +1,11 @@
 {
   Method method=PCSAsyncClient.class.getMethod("uploadFile",URI.class,PCSFile.class);
-  GeneratedHttpRequest<PCSAsyncClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/mycontainer"),blobToPCSFile.apply(BindBlobToMultipartFormTest.TEST_BLOB)});
-  assertRequestLineEquals(httpMethod,"POST http://localhost/mycontainer/contents HTTP/1.1");
-  assertHeadersEqual(httpMethod,"Content-Length: 113\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
-  assertPayloadEquals(httpMethod,BindBlobToMultipartFormTest.EXPECTS);
-  assertResponseParserClassEquals(method,httpMethod,ParseURIFromListOrLocationHeaderIf20x.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{URI.create("http://localhost/mycontainer"),blobToPCSFile.apply(BindBlobToMultipartFormTest.TEST_BLOB)});
+  assertRequestLineEquals(request,"POST http://localhost/mycontainer/contents HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 113\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
+  assertPayloadEquals(request,BindBlobToMultipartFormTest.EXPECTS);
+  assertResponseParserClassEquals(method,request,ParseURIFromListOrLocationHeaderIf20x.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpMethod);
+  checkFilters(request);
 }

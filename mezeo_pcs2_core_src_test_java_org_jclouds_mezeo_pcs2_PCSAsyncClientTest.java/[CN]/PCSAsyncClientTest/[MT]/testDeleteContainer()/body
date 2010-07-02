@@ -1,11 +1,11 @@
 {
   Method method=PCSAsyncClient.class.getMethod("deleteContainer",URI.class);
-  GeneratedHttpRequest<PCSAsyncClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/container/1234")});
-  assertEquals(httpMethod.getRequestLine(),"DELETE http://localhost/container/1234 HTTP/1.1");
-  assertEquals(httpMethod.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{URI.create("http://localhost/container/1234")});
+  assertEquals(request.getRequestLine(),"DELETE http://localhost/container/1234 HTTP/1.1");
+  assertEquals(request.getHeaders().size(),0);
+  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
   assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),null);
-  assertEquals(httpMethod.getFilters().size(),1);
-  assertEquals(httpMethod.getFilters().get(0).getClass(),BasicAuthentication.class);
+  assertEquals(request.getFilters().size(),1);
+  assertEquals(request.getFilters().get(0).getClass(),BasicAuthentication.class);
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnVoidOnNotFoundOr404.class);
 }

@@ -1,7 +1,11 @@
 {
-  BindMetadataToQueryParams binder=new BindMetadataToQueryParams();
-  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
-  request.addQueryParam("metadata","imagename:foo","serverid:2");
-  replay(request);
+  HttpRequest request=new HttpRequest("GET",URI.create("http://momma/"),new char[]{'/',':'});
+  BindMetadataToQueryParams binder=new BindMetadataToQueryParams(new Provider<UriBuilder>(){
+    @Override public UriBuilder get(){
+      return new UriBuilderImpl();
+    }
+  }
+);
   binder.bindToRequest(request,ImmutableMap.of("imageName","foo","serverId","2"));
+  assertEquals(request.getRequestLine(),"GET http://momma/?metadata=imagename:foo&metadata=serverid:2 HTTP/1.1");
 }

@@ -1,11 +1,11 @@
 {
   Method method=AzureQueueAsyncClient.class.getMethod("putMessage",String.class,String.class,PutMessageOptions[].class);
-  GeneratedHttpRequest<AzureQueueAsyncClient> httpRequest=processor.createRequest(method,"queue","message",withTTL(3));
-  assertRequestLineEquals(httpRequest,"POST https://identity.queue.core.windows.net/queue/messages?messagettl=3 HTTP/1.1");
-  assertHeadersEqual(httpRequest,"Content-Length: 63\nContent-Type: application/unknown\nx-ms-version: 2009-09-19\n");
-  assertPayloadEquals(httpRequest,"<QueueMessage><MessageText>message</MessageText></QueueMessage>");
-  assertResponseParserClassEquals(method,httpRequest,CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,"queue","message",withTTL(3));
+  assertRequestLineEquals(request,"POST https://identity.queue.core.windows.net/queue/messages?messagettl=3 HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 63\nContent-Type: application/unknown\nx-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,"<QueueMessage><MessageText>message</MessageText></QueueMessage>");
+  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpRequest);
+  checkFilters(request);
 }

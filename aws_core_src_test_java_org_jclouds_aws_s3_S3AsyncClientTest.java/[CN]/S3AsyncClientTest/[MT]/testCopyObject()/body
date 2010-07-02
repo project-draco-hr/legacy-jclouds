@@ -1,11 +1,11 @@
 {
   Method method=S3AsyncClient.class.getMethod("copyObject",String.class,String.class,String.class,String.class,Array.newInstance(CopyObjectOptions.class,0).getClass());
-  GeneratedHttpRequest<S3AsyncClient> httpMethod=processor.createRequest(method,"sourceBucket","sourceObject","destinationbucket","destinationObject");
-  assertRequestLineEquals(httpMethod,"PUT https://destinationbucket.s3.amazonaws.com/destinationObject HTTP/1.1");
-  assertHeadersEqual(httpMethod,"Content-Length: 0\nHost: destinationbucket.s3.amazonaws.com\nx-amz-copy-source: /sourceBucket/sourceObject\n");
-  assertPayloadEquals(httpMethod,null);
-  assertResponseParserClassEquals(method,httpMethod,ParseSax.class);
+  HttpRequest request=processor.createRequest(method,"sourceBucket","sourceObject","destinationbucket","destinationObject");
+  assertRequestLineEquals(request,"PUT https://destinationbucket.s3.amazonaws.com/destinationObject HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 0\nHost: destinationbucket.s3.amazonaws.com\nx-amz-copy-source: /sourceBucket/sourceObject\n");
+  assertPayloadEquals(request,null);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,CopyObjectHandler.class);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpMethod);
+  checkFilters(request);
 }

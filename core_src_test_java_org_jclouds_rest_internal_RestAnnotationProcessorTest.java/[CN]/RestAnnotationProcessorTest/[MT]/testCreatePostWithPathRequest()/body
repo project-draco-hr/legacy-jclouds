@@ -1,6 +1,6 @@
 {
   Method method=TestPost.class.getMethod("postWithPath",String.class,MapBinder.class);
-  GeneratedHttpRequest<?> httpMethod=factory(TestPost.class).createRequest(method,new Object[]{"data",new org.jclouds.rest.MapBinder(){
+  HttpRequest request=factory(TestPost.class).createRequest(method,new Object[]{"data",new org.jclouds.rest.MapBinder(){
     public void bindToRequest(    HttpRequest request,    Map<String,String> postParams){
       request.setPayload(postParams.get("fooble"));
     }
@@ -9,9 +9,9 @@
     }
   }
 });
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/data");
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
-  assertEquals(httpMethod.getHeaders().size(),1);
-  assertEquals(httpMethod.getPayload().toString(),"data");
+  assertEquals(request.getEndpoint().getHost(),"localhost");
+  assertEquals(request.getEndpoint().getPath(),"/data");
+  assertEquals(request.getMethod(),HttpMethod.POST);
+  assertEquals(request.getHeaders().size(),1);
+  assertEquals(request.getPayload().toString(),"data");
 }

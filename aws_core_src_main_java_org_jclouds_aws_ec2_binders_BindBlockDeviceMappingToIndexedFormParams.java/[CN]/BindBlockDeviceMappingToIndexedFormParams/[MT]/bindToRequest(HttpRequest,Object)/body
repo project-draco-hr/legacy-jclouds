@@ -1,16 +1,14 @@
 {
-  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests");
   checkArgument(checkNotNull(input,"input") instanceof BlockDeviceMapping,"this binder is only valid for BlockDeviceMapping");
   BlockDeviceMapping blockDeviceMapping=(BlockDeviceMapping)input;
-  GeneratedHttpRequest generatedRequest=(GeneratedHttpRequest)request;
   int amazonOneBasedIndex=1;
   for (  String ebsBlockDeviceName : blockDeviceMapping.getEbsBlockDevices().keySet()) {
     for (    RunningInstance.EbsBlockDevice ebsBlockDevice : blockDeviceMapping.getEbsBlockDevices().get(ebsBlockDeviceName)) {
-      generatedRequest.addFormParam(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDevice.getVolumeId());
+      addFormParamTo(request,format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDevice.getVolumeId());
       if (ebsBlockDeviceName != null) {
-        generatedRequest.addFormParam(format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDeviceName);
+        addFormParamTo(request,format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDeviceName);
       }
-      generatedRequest.addFormParam(format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDevice.isDeleteOnTermination()));
+      addFormParamTo(request,format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDevice.isDeleteOnTermination()));
       amazonOneBasedIndex++;
     }
   }

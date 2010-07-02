@@ -1,14 +1,14 @@
 {
   Method method=AzureBlobAsyncClient.class.getMethod("setResourceMetadata",String.class,Map.class);
-  GeneratedHttpRequest<AzureBlobAsyncClient> httpMethod=processor.createRequest(method,new Object[]{"container",ImmutableMap.of("key","value")});
-  assertEquals(httpMethod.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/container");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container&comp=metadata");
-  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
-  assertEquals(httpMethod.getHeaders().size(),3);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("0"));
-  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(httpMethod.getHeaders().get("x-ms-meta-key"),Collections.singletonList("value"));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{"container",ImmutableMap.of("key","value")});
+  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
+  assertEquals(request.getEndpoint().getPath(),"/container");
+  assertEquals(request.getEndpoint().getQuery(),"restype=container&comp=metadata");
+  assertEquals(request.getMethod(),HttpMethod.PUT);
+  assertEquals(request.getHeaders().size(),3);
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("0"));
+  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(request.getHeaders().get("x-ms-meta-key"),Collections.singletonList("value"));
+  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
 }

@@ -1,11 +1,11 @@
 {
   Method method=PCSAsyncClient.class.getMethod("uploadBlock",URI.class,PCSFile.class,Array.newInstance(PutBlockOptions.class,0).getClass());
-  GeneratedHttpRequest<PCSAsyncClient> httpMethod=processor.createRequest(method,new Object[]{URI.create("http://localhost/mycontainer"),blobToPCSFile.apply(BindBlobToMultipartFormTest.TEST_BLOB)});
-  assertRequestLineEquals(httpMethod,"PUT http://localhost/mycontainer/content HTTP/1.1");
-  assertHeadersEqual(httpMethod,"Content-Length: 5\n");
-  assertPayloadEquals(httpMethod,"hello");
-  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{URI.create("http://localhost/mycontainer"),blobToPCSFile.apply(BindBlobToMultipartFormTest.TEST_BLOB)});
+  assertRequestLineEquals(request,"PUT http://localhost/mycontainer/content HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 5\n");
+  assertPayloadEquals(request,"hello");
+  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpMethod);
+  checkFilters(request);
 }

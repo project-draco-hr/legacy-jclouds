@@ -1,13 +1,11 @@
 {
-  checkArgument(checkNotNull(request,"request is null") instanceof GeneratedHttpRequest<?>,"this binder is only valid for GeneratedHttpRequests!");
-  GeneratedHttpRequest<?> generatedRequest=(GeneratedHttpRequest<?>)request;
   if (checkNotNull(input,"input is null") instanceof Long[]) {
     Long[] names=(Long[])input;
-    for (    long id : names)     generatedRequest.addQueryParam(ID_KEY,id + "");
+    addQueryParamTo(request,ID_KEY,ImmutableList.copyOf(names),builder.get());
   }
  else   if (input instanceof long[]) {
     long[] names=(long[])input;
-    for (    long id : names)     generatedRequest.addQueryParam(ID_KEY,id + "");
+    addQueryParamTo(request,ID_KEY,Longs.asList(names),builder.get());
   }
  else {
     throw new IllegalArgumentException("this binder is only valid for Long[] arguments: " + input.getClass());

@@ -1,15 +1,15 @@
 {
   Method method=AzureBlobAsyncClient.class.getMethod("createRootContainer",Array.newInstance(CreateContainerOptions.class,0).getClass());
-  GeneratedHttpRequest<AzureBlobAsyncClient> httpMethod=processor.createRequest(method,new Object[]{withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar"))});
-  assertEquals(httpMethod.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/$root");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
-  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
-  assertEquals(httpMethod.getHeaders().size(),4);
-  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(httpMethod.getHeaders().get("x-ms-meta-foo"),Collections.singletonList("bar"));
-  assertEquals(httpMethod.getHeaders().get("x-ms-prop-publicaccess"),Collections.singletonList("true"));
-  assertEquals(httpMethod.getHeaders().get("Content-Length"),Collections.singletonList("0"));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ReturnTrueIf2xx.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar"))});
+  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
+  assertEquals(request.getEndpoint().getPath(),"/$root");
+  assertEquals(request.getEndpoint().getQuery(),"restype=container");
+  assertEquals(request.getMethod(),HttpMethod.PUT);
+  assertEquals(request.getHeaders().size(),4);
+  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(request.getHeaders().get("x-ms-meta-foo"),Collections.singletonList("bar"));
+  assertEquals(request.getHeaders().get("x-ms-prop-publicaccess"),Collections.singletonList("true"));
+  assertEquals(request.getHeaders().get("Content-Length"),Collections.singletonList("0"));
+  assertEquals(processor.createResponseParser(method,request).getClass(),ReturnTrueIf2xx.class);
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseIfContainerAlreadyExists.class);
 }

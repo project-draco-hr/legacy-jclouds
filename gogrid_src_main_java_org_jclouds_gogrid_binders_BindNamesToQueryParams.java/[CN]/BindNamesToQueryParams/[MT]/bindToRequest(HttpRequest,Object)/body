@@ -1,9 +1,5 @@
 {
-  checkArgument(checkNotNull(request,"request is null") instanceof GeneratedHttpRequest<?>,"this binder is only valid for GeneratedHttpRequests!");
   checkArgument(checkNotNull(input,"input is null") instanceof String[],"this binder is only valid for String[] arguments");
   String[] names=(String[])input;
-  GeneratedHttpRequest<?> generatedRequest=(GeneratedHttpRequest<?>)request;
-  for (  String name : names) {
-    generatedRequest.addQueryParam(NAME_KEY,name);
-  }
+  addQueryParamTo(request,NAME_KEY,ImmutableList.copyOf(names),builder.get());
 }

@@ -1,5 +1,4 @@
 {
-  checkArgument(checkNotNull(request,"input") instanceof GeneratedHttpRequest<?>,"this decorator is only valid for GeneratedHttpRequests!");
   String sessionToken=sessionManager.getSessionToken();
   int prefixIndex=request.getEndpoint().getPath().indexOf(pathPrefix);
   String path;
@@ -9,5 +8,5 @@
  else {
     path="/" + sessionToken + request.getEndpoint().getPath().substring(prefixIndex);
   }
-  ((GeneratedHttpRequest<?>)request).replacePath(path);
+  changePathTo(request,path,builder.get());
 }

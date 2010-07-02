@@ -1,9 +1,12 @@
 {
-  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   String[] input={"hello","world"};
-  BindNamesToQueryParams binder=new BindNamesToQueryParams();
-  request.addQueryParam("name","hello");
-  request.addQueryParam("name","world");
-  replay(request);
+  HttpRequest request=new HttpRequest("GET",URI.create("http://momma/"));
+  BindNamesToQueryParams binder=new BindNamesToQueryParams(new Provider<UriBuilder>(){
+    @Override public UriBuilder get(){
+      return new UriBuilderImpl();
+    }
+  }
+);
   binder.bindToRequest(request,input);
+  assertEquals(request.getRequestLine(),"GET http://momma/?name=hello&name=world HTTP/1.1");
 }

@@ -1,12 +1,12 @@
 {
   Method method=AzureBlobAsyncClient.class.getMethod("getContainerProperties",String.class);
-  GeneratedHttpRequest<AzureBlobAsyncClient> httpMethod=processor.createRequest(method,new Object[]{"container"});
-  assertEquals(httpMethod.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/container");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"restype=container");
-  assertEquals(httpMethod.getMethod(),HttpMethod.HEAD);
-  assertEquals(httpMethod.getHeaders().size(),1);
-  assertEquals(httpMethod.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseContainerPropertiesFromHeaders.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{"container"});
+  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
+  assertEquals(request.getEndpoint().getPath(),"/container");
+  assertEquals(request.getEndpoint().getQuery(),"restype=container");
+  assertEquals(request.getMethod(),HttpMethod.HEAD);
+  assertEquals(request.getHeaders().size(),1);
+  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
+  assertEquals(processor.createResponseParser(method,request).getClass(),ParseContainerPropertiesFromHeaders.class);
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnNullOnContainerNotFound.class);
 }

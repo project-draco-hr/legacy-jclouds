@@ -1,11 +1,11 @@
 {
   Method method=S3AsyncClient.class.getMethod("enableBucketLogging",String.class,BucketLogging.class);
-  GeneratedHttpRequest<S3AsyncClient> httpMethod=processor.createRequest(method,"bucket",new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL))));
-  assertRequestLineEquals(httpMethod,"PUT https://bucket.s3.amazonaws.com/?logging HTTP/1.1");
-  assertHeadersEqual(httpMethod,"Content-Length: 433\nContent-Type: text/xml\nHost: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(httpMethod,Utils.toStringAndClose(getClass().getResourceAsStream("/s3/bucket_logging.xml")));
-  assertResponseParserClassEquals(method,httpMethod,CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,"bucket",new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL))));
+  assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/?logging HTTP/1.1");
+  assertHeadersEqual(request,"Content-Length: 433\nContent-Type: text/xml\nHost: bucket.s3.amazonaws.com\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/s3/bucket_logging.xml")));
+  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
-  checkFilters(httpMethod);
+  checkFilters(request);
 }

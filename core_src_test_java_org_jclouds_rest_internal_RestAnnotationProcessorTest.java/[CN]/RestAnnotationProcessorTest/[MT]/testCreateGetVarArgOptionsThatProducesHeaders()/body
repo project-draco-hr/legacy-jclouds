@@ -3,11 +3,11 @@
   GetOptions options=GetOptions.Builder.ifModifiedSince(date);
   HttpRequestOptions[] optionsHolder=new HttpRequestOptions[]{};
   Method method=TestRequest.class.getMethod("get",String.class,optionsHolder.getClass());
-  GeneratedHttpRequest<?> httpMethod=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/1");
-  assertEquals(httpMethod.getMethod(),HttpMethod.GET);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.HOST),Collections.singletonList("localhost"));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.IF_MODIFIED_SINCE),Collections.singletonList(dateService.rfc822DateFormat(date)));
+  HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
+  assertEquals(request.getEndpoint().getHost(),"localhost");
+  assertEquals(request.getEndpoint().getPath(),"/1");
+  assertEquals(request.getMethod(),HttpMethod.GET);
+  assertEquals(request.getHeaders().size(),2);
+  assertEquals(request.getHeaders().get(HttpHeaders.HOST),Collections.singletonList("localhost"));
+  assertEquals(request.getHeaders().get(HttpHeaders.IF_MODIFIED_SINCE),Collections.singletonList(dateService.rfc822DateFormat(date)));
 }

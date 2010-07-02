@@ -1,12 +1,12 @@
 {
   Method method=TestRequest.class.getMethod("putHeader",String.class,String.class);
-  GeneratedHttpRequest<?> httpMethod=factory(TestRequest.class).createRequest(method,new Object[]{"1","data"});
-  assertEquals(httpMethod.getEndpoint().getHost(),"localhost");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/1");
-  assertEquals(httpMethod.getMethod(),HttpMethod.PUT);
-  assertEquals(httpMethod.getHeaders().size(),3);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("data".getBytes().length + ""));
-  assertEquals(httpMethod.getHeaders().get("foo"),Collections.singletonList("--1--"));
-  assertEquals(httpMethod.getPayload().toString(),"data");
+  HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1","data"});
+  assertEquals(request.getEndpoint().getHost(),"localhost");
+  assertEquals(request.getEndpoint().getPath(),"/1");
+  assertEquals(request.getMethod(),HttpMethod.PUT);
+  assertEquals(request.getHeaders().size(),3);
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("data".getBytes().length + ""));
+  assertEquals(request.getHeaders().get("foo"),Collections.singletonList("--1--"));
+  assertEquals(request.getPayload().toString(),"data");
 }

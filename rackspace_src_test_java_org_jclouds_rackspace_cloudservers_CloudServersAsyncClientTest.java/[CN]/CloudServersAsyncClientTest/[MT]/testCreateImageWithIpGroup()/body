@@ -1,15 +1,15 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("createImageFromServer",String.class,int.class);
-  GeneratedHttpRequest<CloudServersAsyncClient> httpMethod=processor.createRequest(method,new Object[]{"ralphie",2});
-  assertEquals("{\"image\":{\"serverId\":2,\"name\":\"ralphie\"}}",httpMethod.getPayload().getRawContent());
-  assertEquals(httpMethod.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/images");
-  assertEquals(httpMethod.getEndpoint().getQuery(),"format=json");
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),ParseImageFromJsonResponse.class);
+  HttpRequest request=processor.createRequest(method,new Object[]{"ralphie",2});
+  assertEquals("{\"image\":{\"serverId\":2,\"name\":\"ralphie\"}}",request.getPayload().getRawContent());
+  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
+  assertEquals(request.getEndpoint().getPath(),"/images");
+  assertEquals(request.getEndpoint().getQuery(),"format=json");
+  assertEquals(request.getMethod(),HttpMethod.POST);
+  assertEquals(request.getHeaders().size(),2);
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals(processor.createResponseParser(method,request).getClass(),ParseImageFromJsonResponse.class);
   assertNotNull(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method));
   assertNotNull(processor.getMapPayloadBinderOrNull(method,new Object[]{"",2}));
 }

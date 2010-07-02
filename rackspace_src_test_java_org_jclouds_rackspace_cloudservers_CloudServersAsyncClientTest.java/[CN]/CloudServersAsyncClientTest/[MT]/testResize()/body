@@ -1,13 +1,13 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("resizeServer",int.class,int.class);
-  GeneratedHttpRequest<CloudServersAsyncClient> httpMethod=processor.createRequest(method,new Object[]{2,3});
-  assertEquals(httpMethod.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(httpMethod.getEndpoint().getPath(),"/servers/2/action");
-  assertEquals(httpMethod.getMethod(),HttpMethod.POST);
-  assertEquals(httpMethod.getHeaders().size(),2);
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(httpMethod.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(httpMethod.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals("{\"resize\":{\"flavorId\":3}}",httpMethod.getPayload().getRawContent());
+  HttpRequest request=processor.createRequest(method,new Object[]{2,3});
+  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
+  assertEquals(request.getEndpoint().getPath(),"/servers/2/action");
+  assertEquals(request.getMethod(),HttpMethod.POST);
+  assertEquals(request.getHeaders().size(),2);
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
+  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
+  assertEquals("{\"resize\":{\"flavorId\":3}}",request.getPayload().getRawContent());
   assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
-  assertEquals(processor.createResponseParser(method,httpMethod).getClass(),CloseContentAndReturn.class);
+  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
 }

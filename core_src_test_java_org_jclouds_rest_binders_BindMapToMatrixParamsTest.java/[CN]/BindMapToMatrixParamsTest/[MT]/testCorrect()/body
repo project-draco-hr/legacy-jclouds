@@ -1,8 +1,16 @@
 {
-  BindMapToMatrixParams binder=new BindMapToMatrixParams();
-  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
-  request.replaceMatrixParam("imageName","foo");
-  request.replaceMatrixParam("serverId","2");
+  HttpRequest request=createMock(HttpRequest.class);
+  expect(request.getEndpoint()).andReturn(URI.create("http://momma/"));
+  request.setEndpoint(URI.create("http://momma/;imageName=foo"));
+  expect(request.getEndpoint()).andReturn(URI.create("http://momma/;imageName=foo"));
+  request.setEndpoint(URI.create("http://momma/;imageName=foo;serverId=2"));
   replay(request);
+  BindMapToMatrixParams binder=new BindMapToMatrixParams(new Provider<UriBuilder>(){
+    @Override public UriBuilder get(){
+      return new UriBuilderImpl();
+    }
+  }
+);
   binder.bindToRequest(request,ImmutableMap.of("imageName","foo","serverId","2"));
+  verify(request);
 }
