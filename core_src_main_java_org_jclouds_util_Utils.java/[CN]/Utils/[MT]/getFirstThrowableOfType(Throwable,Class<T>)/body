@@ -1,6 +1,7 @@
 {
+  if (from instanceof ProvisionException)   return getFirstThrowableOfType(ProvisionException.class.cast(from),clazz);
   try {
-    return (T)Iterables.find(Throwables.getCausalChain(from),Predicates.instanceOf(clazz));
+    return (T)find(getCausalChain(from),instanceOf(clazz));
   }
  catch (  NoSuchElementException e) {
     return null;
