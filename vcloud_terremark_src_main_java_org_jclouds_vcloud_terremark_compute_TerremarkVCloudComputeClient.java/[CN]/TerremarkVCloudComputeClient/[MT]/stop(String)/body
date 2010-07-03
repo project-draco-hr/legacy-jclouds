@@ -3,10 +3,13 @@
   Set<PublicIpAddress> ipAddresses=deleteInternetServicesAndNodesAssociatedWithVApp(vApp);
   deletePublicIpAddressesWithNoServicesAttached(ipAddresses);
   if (vApp.getStatus() != VAppStatus.OFF) {
-    logger.debug(">> powering off vApp(%s), current status: %s",vApp.getId(),vApp.getStatus());
-    Task task=client.powerOffVApp(vApp.getId());
-    if (!taskTester.apply(task.getId())) {
-      throw new TaskException("powerOff",vApp,task);
+    try {
+      powerOffAndWait(vApp);
+    }
+ catch (    IllegalStateException e) {
+      logger.warn("<< %s vApp(%s)",e.getMessage(),vApp.getId());
+      blockOnLastTask(vApp);
+      powerOffAndWait(vApp);
     }
     vApp=client.getVApp(id);
     logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getId());

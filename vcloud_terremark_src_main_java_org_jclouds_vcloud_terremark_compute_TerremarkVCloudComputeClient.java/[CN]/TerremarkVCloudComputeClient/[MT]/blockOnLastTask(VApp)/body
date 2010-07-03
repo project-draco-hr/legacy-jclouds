@@ -1,0 +1,14 @@
+{
+  TasksList list=client.getDefaultTasksList();
+  try {
+    Task lastTask=getLast(filter(list.getTasks(),new Predicate<Task>(){
+      @Override public boolean apply(      Task input){
+        return input.getStatus() == TaskStatus.QUEUED || input.getStatus() == TaskStatus.RUNNING;
+      }
+    }
+));
+    if (!taskTester.apply(lastTask.getId()))     throw new TaskException("powerOff",vApp,lastTask);
+  }
+ catch (  NoSuchElementException ex) {
+  }
+}

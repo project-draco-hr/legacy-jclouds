@@ -10,7 +10,7 @@
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
       if (request.getPayload() != null && wire.enabled())       request.setPayload(Payloads.newPayload(wire.output(request.getPayload().getRawContent())));
       nativeRequest=convert(request);
-      HttpUtils.logRequest(headerLog,request,">>");
+      logRequest(headerLog,request,">>");
       try {
         response=invoke(nativeRequest);
       }
@@ -24,7 +24,7 @@
         }
       }
       logger.debug("Receiving response %s: %s",request.hashCode(),response.getStatusLine());
-      HttpUtils.logResponse(headerLog,response,"<<");
+      logResponse(headerLog,response,"<<");
       if (response.getContent() != null && wire.enabled())       response.setContent(wire.input(response.getContent()));
       int statusCode=response.getStatusCode();
       if (statusCode >= 300) {

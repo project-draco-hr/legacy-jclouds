@@ -1,12 +1,17 @@
 {
   VApp vApp=client.getVApp(id);
-  Set<String> ipAddresses=Sets.newHashSet();
-  for (  InternetService service : client.getAllInternetServicesInVDC(vApp.getVDC().getId())) {
-    for (    Node node : client.getNodes(service.getId())) {
-      if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
-        ipAddresses.add(service.getPublicIpAddress().getAddress());
+  if (vApp != null) {
+    Set<String> ipAddresses=Sets.newHashSet();
+    for (    InternetService service : client.getAllInternetServicesInVDC(vApp.getVDC().getId())) {
+      for (      Node node : client.getNodes(service.getId())) {
+        if (vApp.getNetworkToAddresses().containsValue(node.getIpAddress())) {
+          ipAddresses.add(service.getPublicIpAddress().getAddress());
+        }
       }
     }
+    return ipAddresses;
   }
-  return ipAddresses;
+ else {
+    return ImmutableSet.<String>of();
+  }
 }

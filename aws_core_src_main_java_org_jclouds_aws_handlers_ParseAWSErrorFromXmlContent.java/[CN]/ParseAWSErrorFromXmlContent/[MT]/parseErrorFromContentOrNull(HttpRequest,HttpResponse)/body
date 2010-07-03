@@ -1,0 +1,12 @@
+{
+  if (response.getContent() != null) {
+    try {
+      String content=Utils.toStringAndClose(response.getContent());
+      if (content != null && content.indexOf('<') >= 0)       return utils.parseAWSErrorFromContent(request,response,content);
+    }
+ catch (    IOException e) {
+      logger.warn(e,"exception reading error from response",response);
+    }
+  }
+  return null;
+}
