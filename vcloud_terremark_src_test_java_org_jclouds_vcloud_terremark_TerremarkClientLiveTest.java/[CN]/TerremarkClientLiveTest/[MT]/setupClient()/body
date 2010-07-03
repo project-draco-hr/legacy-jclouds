@@ -1,0 +1,12 @@
+{
+  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
+  String endpoint=System.getProperty("jclouds.test.endpoint");
+  Properties props=new Properties();
+  if (endpoint != null && !"".equals(endpoint))   props.setProperty("terremark.endpoint",endpoint);
+  Injector injector=new RestContextFactory().createContextBuilder(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),props).buildInjector();
+  connection=tmClient=injector.getInstance(TerremarkClient.class);
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
+  successTester=new RetryablePredicate<String>(injector.getInstance(TaskSuccess.class),650,10,TimeUnit.SECONDS);
+}

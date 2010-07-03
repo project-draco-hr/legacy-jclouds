@@ -1,0 +1,12 @@
+{
+  TerremarkVCloudClient tmVCloudClient=TerremarkVCloudClient.class.cast(tmClient);
+  TerremarkOrganization org=tmVCloudClient.getDefaultOrganization();
+  key=tmVCloudClient.generateKeyPairInOrg(org.getId(),"livetest",false);
+  assertNotNull(key);
+  System.err.println(key);
+  assertEquals(key.getName(),"livetest");
+  assertNotNull(key.getPrivateKey());
+  assertNotNull(key.getFingerPrint());
+  assertEquals(key.isDefault(),false);
+  assertEquals(key.getFingerPrint(),tmVCloudClient.getKeyPair(key.getId()).getFingerPrint());
+}

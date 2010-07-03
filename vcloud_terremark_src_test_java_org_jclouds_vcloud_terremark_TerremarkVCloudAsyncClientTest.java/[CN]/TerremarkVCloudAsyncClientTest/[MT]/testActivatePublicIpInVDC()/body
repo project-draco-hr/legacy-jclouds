@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkVCloudAsyncClient.class.getMethod("activatePublicIpInVDC",String.class);
+  HttpRequest request=processor.createRequest(method,"1");
+  assertRequestLineEquals(request,"POST https://vcloud/extensions/1/publicIps HTTP/1.1");
+  assertHeadersEqual(request,"");
+  assertPayloadEquals(request,null);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,PublicIpAddressesHandler.class);
+  assertExceptionParserClassEquals(method,ReturnVoidOnNotFoundOr404.class);
+  checkFilters(request);
+}

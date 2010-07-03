@@ -4,7 +4,7 @@
   String port=checkNotNull(postParams.get("port"),"port parameter not present");
   String enabled=checkNotNull(postParams.get("enabled"),"enabled parameter not present");
   String description=postParams.get("description");
-  String payload=replaceTokens(xmlTemplate,ImmutableMap.of("name",name,"protocol",protocol,"port",port,"enabled",enabled));
+  String payload=replaceTokens(xmlTemplate,ImmutableMap.of("name",name,"protocol",protocol,"port",port,"enabled",enabled,"ns",ns));
   payload=Utils.replaceAll(payload,Patterns.TOKEN_TO_PATTERN.get("description"),description == null ? "" : String.format("\n    <Description>%s</Description>",description));
   stringBinder.bindToRequest(request,payload);
 }

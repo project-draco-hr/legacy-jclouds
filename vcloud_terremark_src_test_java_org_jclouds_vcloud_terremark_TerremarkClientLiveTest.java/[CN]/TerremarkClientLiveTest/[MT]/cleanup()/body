@@ -1,0 +1,20 @@
+{
+  if (node != null)   tmClient.deleteNode(node.getId());
+  if (is != null)   tmClient.deleteInternetService(is.getId());
+  if (vApp != null) {
+    try {
+      successTester.apply(tmClient.powerOffVApp(vApp.getId()).getId());
+    }
+ catch (    Exception e) {
+    }
+    tmClient.deleteVApp(vApp.getId());
+  }
+  if (clone != null) {
+    try {
+      successTester.apply(tmClient.powerOffVApp(clone.getId()).getId());
+    }
+ catch (    Exception e) {
+    }
+    tmClient.deleteVApp(clone.getId());
+  }
+}
