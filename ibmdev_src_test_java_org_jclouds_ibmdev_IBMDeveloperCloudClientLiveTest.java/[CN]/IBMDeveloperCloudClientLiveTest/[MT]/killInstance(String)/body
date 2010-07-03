@@ -1,0 +1,14 @@
+{
+  Set<? extends Instance> instances=connection.listInstances();
+  try {
+    instance=Iterables.find(instances,new Predicate<Instance>(){
+      @Override public boolean apply(      Instance input){
+        return input.getName().equals(nameToKill);
+      }
+    }
+);
+    connection.deleteInstance(instance.getId());
+  }
+ catch (  NoSuchElementException ex) {
+  }
+}
