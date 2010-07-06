@@ -1,14 +1,11 @@
 {
   HttpResponse response=new HttpResponse();
   response.setStatusCode(nativeResponse.getStatusCode());
-  for (  Pair<String,String> header : nativeResponse.getHeaders()) {
-    response.getHeaders().put(header.getFirst(),header.getSecond());
+  for (  Entry<String,List<String>> header : nativeResponse.getHeaders()) {
+    response.getHeaders().putAll(header.getKey(),header.getValue());
   }
   try {
-    String responseBody=nativeResponse.getResponseBody();
-    if (responseBody != null) {
-      response.setContent(Utils.toInputStream(responseBody));
-    }
+    response.setContent(nativeResponse.getResponseBodyAsStream());
   }
  catch (  IOException e) {
     throw Throwables.propagate(e);
