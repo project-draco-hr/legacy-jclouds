@@ -1,0 +1,17 @@
+{
+  checkNotNull(contextSpec,"contextSpec");
+  Properties props=new Properties();
+  props.setProperty(contextSpec.provider + ".endpoint",contextSpec.endpoint);
+  props.setProperty(contextSpec.provider + ".apiversion",contextSpec.apiVersion);
+  props.setProperty(contextSpec.provider + ".identity",contextSpec.identity);
+  if (contextSpec.credential != null)   props.setProperty(contextSpec.provider + ".credential",contextSpec.credential);
+  if (contextSpec.sync != null) {
+    props.setProperty(contextSpec.provider + ".sync",contextSpec.sync.getName());
+    props.setProperty(contextSpec.provider + ".async",checkNotNull(contextSpec.async,"contextSpec.async").getName());
+  }
+ else {
+    props.setProperty(contextSpec.provider + ".contextbuilder",checkNotNull(contextSpec.contextBuilderClass,"contextSpec.contextBuilderClass").getName());
+    props.setProperty(contextSpec.provider + ".propertiesbuilder",checkNotNull(contextSpec.propertiesBuilderClass,"contextSpec.propertiesBuilderClass").getName());
+  }
+  return props;
+}
