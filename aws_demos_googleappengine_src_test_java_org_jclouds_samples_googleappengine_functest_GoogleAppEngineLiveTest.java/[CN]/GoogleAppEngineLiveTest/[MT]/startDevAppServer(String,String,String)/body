@@ -3,8 +3,8 @@
   Properties props=new Properties();
   String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
   String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  props=new S3PropertiesBuilder(props).credentials(identity,credential).build();
-  props=new EC2PropertiesBuilder(props).credentials(identity,credential).build();
+  props.setProperty("jclouds.identity",identity);
+  props.setProperty("jclouds.credential",credential);
   server=new GoogleDevServer();
   server.writePropertiesAndStartServer(address,port,warfile,props);
 }
