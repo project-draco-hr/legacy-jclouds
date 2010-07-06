@@ -1,0 +1,13 @@
+{
+  ContextSpec<IntegrationTestClient,IntegrationTestAsyncClient> contextSpec=contextSpec("test","http://localhost","1","dummy","credential",IntegrationTestClient.class,IntegrationTestAsyncClient.class);
+  Properties props=RestContextFactory.toProperties(contextSpec);
+  assertEquals(props.getProperty("test.endpoint"),"http://localhost");
+  assertEquals(props.getProperty("test.apiversion"),"1");
+  assertEquals(props.getProperty("test.identity"),"dummy");
+  assertEquals(props.getProperty("test.credential"),"credential");
+  assertEquals(props.getProperty("test.sync"),IntegrationTestClient.class.getName());
+  assertEquals(props.getProperty("test.async"),IntegrationTestAsyncClient.class.getName());
+  assertEquals(props.getProperty("test.propertiesbuilder"),null);
+  assertEquals(props.getProperty("test.contextbuilder"),null);
+  new RestContextFactory().createContext("test",props);
+}
