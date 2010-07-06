@@ -2,11 +2,16 @@
   BlobStoreContext context=checkNotNull(contexts.get(contextName),"no context for " + contextName + " in "+ contexts.keySet());
   BlobMap map=context.createBlobMap(container);
   for (  Status status : allAboutMe) {
+    Blob blob=null;
     try {
-      map.put(status.getId() + "",new StatusToBlob(map).apply(status));
+      blob=new StatusToBlob(map).apply(status);
+      map.put(status.getId() + "",blob);
     }
- catch (    Exception e) {
-      logger.error(e,"Error storing tweet %s on map %s/%s",status.getId(),context,container);
+ catch (    AuthorizationException e) {
+      throw e;
+    }
+catch (    Exception e) {
+      logger.error(e,"Error storing tweet %s (blob[%s]) on map %s/%s",status.getId(),blob,context,container);
     }
   }
 }

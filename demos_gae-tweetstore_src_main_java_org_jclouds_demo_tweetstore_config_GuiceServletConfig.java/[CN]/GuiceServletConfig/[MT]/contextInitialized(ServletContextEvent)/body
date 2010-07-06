@@ -1,9 +1,15 @@
 {
-  BlobStoreContextFactory blobStoreContextFactory=null;
-  blobStoreContextFactory=new BlobStoreContextFactory();
+  BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
   Properties props=loadJCloudsProperties(servletContextEvent);
   Module googleModule=new GoogleAppEngineConfigurationModule();
   Set<Module> modules=ImmutableSet.<Module>of(googleModule);
+  try {
+    twitterClient=(TwitterClient)new RestContextFactory().createContext("twitter",modules,props).getApi();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("properties for twitter not configured properly in " + props.toString(),e);
+  }
+  container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   providerTypeToBlobStoreMap=Maps.newHashMap();
   for (  String hint : Splitter.on(',').split(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS))) {
     providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
