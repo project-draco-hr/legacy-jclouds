@@ -5,9 +5,6 @@
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/1");
   assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(request.getHeaders().size(),3);
-  assertEquals(request.getHeaders().get(HttpHeaders.HOST),Collections.singletonList("localhost"));
+  assertEquals(HttpUtils.sortAndConcatHeadersIntoString(request.getHeaders()),"Content-Length: 3\nContent-Type: application/unknown\nHost: localhost\n");
   assertEquals(request.getPayload().toString(),"foo");
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("foo".getBytes().length + ""));
 }
