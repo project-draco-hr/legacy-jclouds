@@ -1,0 +1,30 @@
+{
+  MessageDigest digest;
+  try {
+    digest=MessageDigest.getInstance(algorithm);
+  }
+ catch (  NoSuchAlgorithmException e1) {
+    Throwables.propagate(e1);
+    return null;
+  }
+  byte[] buffer=new byte[1024];
+  long length=0;
+  int numRead=-1;
+  try {
+    do {
+      numRead=plainBytes.read(buffer);
+      if (numRead > 0) {
+        length+=numRead;
+        digest.update(buffer,0,numRead);
+      }
+    }
+ while (numRead != -1);
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    Closeables.closeQuietly(plainBytes);
+  }
+  return digest.digest();
+}

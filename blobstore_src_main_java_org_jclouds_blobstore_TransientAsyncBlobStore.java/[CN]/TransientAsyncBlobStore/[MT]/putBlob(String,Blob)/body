@@ -3,29 +3,35 @@
   if (container == null) {
     new RuntimeException("containerName not found: " + containerName);
   }
-  try {
-    byte[] data=toByteArray(object.getPayload().getRawContent());
-    object.getMetadata().setSize(data.length);
-    MutableBlobMetadata newMd=copy(object.getMetadata());
-    newMd.setLastModified(new Date());
-    final byte[] md5=encryptionService.md5(data);
-    final String eTag=encryptionService.toHexString(md5);
-    newMd.setETag(eTag);
-    newMd.setContentMD5(md5);
-    newMd.setContentType(object.getMetadata().getContentType());
-    Blob blob=blobFactory.create(newMd);
-    blob.setPayload(data);
-    container.put(blob.getMetadata().getName(),blob);
-    blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
-    blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
-    blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,newMd.getContentType());
-    blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,newMd.getSize() + "");
-    for (    Entry<String,String> userMD : newMd.getUserMetadata().entrySet()) {
-      blob.getAllHeaders().put(userMD.getKey(),userMD.getValue());
+  Payload payload=object.getPayload();
+  if (!payload.isRepeatable()) {
+    try {
+      payload=newByteArrayPayload(toByteArray(payload.getInput()));
     }
-    return immediateFuture(eTag);
+ catch (    IOException e) {
+      propagate(e);
+    }
+ finally {
+      closeQuietly(payload.getInput());
+    }
   }
- catch (  IOException e) {
-    return immediateFailedFuture(new RuntimeException(e));
+  object.getMetadata().setSize(payload.calculateSize());
+  MutableBlobMetadata newMd=copy(object.getMetadata());
+  newMd.setLastModified(new Date());
+  byte[] md5=encryptionService.md5(payload.getInput());
+  String eTag=encryptionService.hex(md5);
+  newMd.setETag(eTag);
+  newMd.setContentMD5(md5);
+  newMd.setContentType(object.getMetadata().getContentType());
+  Blob blob=blobFactory.create(newMd);
+  blob.setPayload(payload);
+  container.put(blob.getMetadata().getName(),blob);
+  blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
+  blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,newMd.getContentType());
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,newMd.getSize() + "");
+  for (  Entry<String,String> userMD : newMd.getUserMetadata().entrySet()) {
+    blob.getAllHeaders().put(userMD.getKey(),userMD.getValue());
   }
+  return immediateFuture(eTag);
 }

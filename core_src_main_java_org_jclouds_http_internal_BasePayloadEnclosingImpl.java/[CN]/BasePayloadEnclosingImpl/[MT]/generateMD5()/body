@@ -1,12 +1,12 @@
 {
   checkState(payload != null,"payload");
-  if (payload instanceof InputStreamPayload) {
-    MD5InputStreamResult result=encryptionService.generateMD5Result(((InputStreamPayload)payload).getInput());
+  if (!payload.isRepeatable()) {
+    MD5InputStreamResult result=encryptionService.md5Result(payload.getInput());
     setContentMD5(result.md5);
     setContentLength(result.length);
     setPayload(result.data);
   }
  else {
-    setContentMD5(encryptionService.md5(payload.getRawContent()));
+    setContentMD5(encryptionService.md5(payload.getInput()));
   }
 }

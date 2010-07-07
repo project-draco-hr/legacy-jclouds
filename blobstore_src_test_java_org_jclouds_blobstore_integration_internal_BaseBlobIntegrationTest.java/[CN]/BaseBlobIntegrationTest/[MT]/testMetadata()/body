@@ -5,7 +5,7 @@
   object.getMetadata().setContentType(MediaType.TEXT_PLAIN);
   object.getMetadata().setSize(new Long(TEST_STRING.length()));
   object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
-  object.getMetadata().setContentMD5(new JCEEncryptionService().md5(TEST_STRING.getBytes()));
+  object.getMetadata().setContentMD5(new JCEEncryptionService().md5(Utils.toInputStream(TEST_STRING)));
   String containerName=getContainerName();
   try {
     assertNull(context.getBlobStore().blobMetadata(containerName,"powderpuff"));

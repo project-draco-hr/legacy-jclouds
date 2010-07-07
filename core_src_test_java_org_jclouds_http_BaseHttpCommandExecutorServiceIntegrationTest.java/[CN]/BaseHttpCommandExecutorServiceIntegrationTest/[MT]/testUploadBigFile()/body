@@ -7,7 +7,13 @@
     f.deleteOnExit();
     long length=(long)(Runtime.getRuntime().freeMemory() * 1.1);
     os=new BufferedOutputStream(new FileOutputStream(f.getAbsolutePath()));
-    MessageDigest eTag=JCEEncryptionService.getDigest();
+    MessageDigest eTag;
+    try {
+      eTag=MessageDigest.getInstance("MD5");
+    }
+ catch (    NoSuchAlgorithmException e) {
+      throw new RuntimeException("Could not find the MD5 algorithm",e);
+    }
     ByteArrayOutputStream out=new ByteArrayOutputStream();
     try {
       for (long i=0; i < length; i++) {
@@ -22,7 +28,7 @@
  finally {
       Closeables.closeQuietly(out);
     }
-    assertEquals(client.postWithMd5("fileso",this.encryptionService.toBase64String(eTag.digest()),f).trim(),"created");
+    assertEquals(client.postWithMd5("fileso",this.encryptionService.base64(eTag.digest()),f).trim(),"created");
   }
   finally {
     if (os != null)     os.close();
