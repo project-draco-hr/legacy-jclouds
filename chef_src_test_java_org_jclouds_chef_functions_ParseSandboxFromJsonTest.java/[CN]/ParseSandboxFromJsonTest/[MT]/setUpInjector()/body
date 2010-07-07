@@ -1,4 +1,10 @@
 {
-  Injector injector=Guice.createInjector(new ParserModule());
+  Injector injector=Guice.createInjector(new ParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(DateAdapter.class).to(Iso8601DateAdapter.class);
+    }
+  }
+);
   handler=injector.getInstance(ParseSandboxFromJson.class);
+  dateService=injector.getInstance(DateService.class);
 }

@@ -1,0 +1,7 @@
+{
+  BindMD5sToJsonPayload binder=new BindMD5sToJsonPayload(encservice);
+  injector.injectMembers(binder);
+  HttpRequest request=new HttpRequest(HttpMethod.POST,URI.create("http://localhost"));
+  binder.bindToRequest(request,ImmutableSet.of(encservice.fromHex("abddef"),encservice.fromHex("1234")));
+  assertEquals(request.getPayload().getRawContent(),"{\"checksums\":{\"abddef\":null,\"1234\":null}}");
+}

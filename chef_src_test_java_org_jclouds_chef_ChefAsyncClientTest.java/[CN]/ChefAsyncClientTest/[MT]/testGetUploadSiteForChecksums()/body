@@ -1,0 +1,12 @@
+{
+  EncryptionService encservice=injector.getInstance(EncryptionService.class);
+  Method method=ChefAsyncClient.class.getMethod("getUploadSiteForChecksums",Set.class);
+  GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,ImmutableSet.of(encservice.fromHex("0189e76ccc476701d6b374e5a1a27347"),encservice.fromHex("0c5ecd7788cf4f6c7de2a57193897a6c"),encservice.fromHex("1dda05ed139664f1f89b9dec482b77c0")));
+  assertRequestLineEquals(httpRequest,"POST http://localhost:4000/sandboxes HTTP/1.1");
+  assertHeadersEqual(httpRequest,"Accept: application/json\nContent-Length: 135\nContent-Type: application/json\nX-Chef-Version: 0.9.6\n");
+  assertPayloadEquals(httpRequest,"{\"checksums\":{\"0189e76ccc476701d6b374e5a1a27347\":null,\"0c5ecd7788cf4f6c7de2a57193897a6c\":null,\"1dda05ed139664f1f89b9dec482b77c0\":null}}");
+  assertResponseParserClassEquals(method,httpRequest,ParseUploadSiteFromJson.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}
