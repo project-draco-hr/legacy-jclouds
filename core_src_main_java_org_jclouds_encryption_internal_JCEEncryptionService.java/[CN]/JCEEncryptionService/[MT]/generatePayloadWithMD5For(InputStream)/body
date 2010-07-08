@@ -1,0 +1,26 @@
+{
+  MessageDigest eTag=getDigest();
+  byte[] buffer=new byte[1024];
+  ByteArrayOutputStream out=new ByteArrayOutputStream();
+  long length=0;
+  int numRead=-1;
+  try {
+    do {
+      numRead=toEncode.read(buffer);
+      if (numRead > 0) {
+        length+=numRead;
+        eTag.update(buffer,0,numRead);
+        out.write(buffer,0,numRead);
+      }
+    }
+ while (numRead != -1);
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    Closeables.closeQuietly(out);
+    Closeables.closeQuietly(toEncode);
+  }
+  return new ByteArrayPayload(out.toByteArray(),eTag.digest());
+}

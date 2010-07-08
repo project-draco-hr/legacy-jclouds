@@ -1,8 +1,7 @@
 {
   encryptionService=Guice.createInjector().getInstance(EncryptionService.class);
-  MD5InputStreamResult result=encryptionService.md5Result(getTestDataSupplier().getInput());
-  oneHundredOneConstitutions=result.data;
-  oneHundredOneConstitutionsMD5=result.md5;
-  oneHundredOneConstitutionsLength=result.length;
+  Payload result=encryptionService.generatePayloadWithMD5For(getTestDataSupplier().getInput());
+  oneHundredOneConstitutions=(byte[])result.getRawContent();
+  oneHundredOneConstitutionsMD5=result.getContentMD5();
   super.setUpResourcesOnThisThread(testContext);
 }

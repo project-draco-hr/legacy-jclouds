@@ -1,10 +1,7 @@
 {
   BindNodeConfigurationToXmlPayload binder=injector.getInstance(BindNodeConfigurationToXmlPayload.class);
-  Multimap<String,String> headers=Multimaps.synchronizedMultimap(HashMultimap.<String,String>create());
   HttpRequest request=createMock(HttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getFirstHeaderOrNull("Content-Type")).andReturn(null).atLeastOnce();
-  expect(request.getHeaders()).andReturn(headers).atLeastOnce();
   request.setPayload(expectedPayload);
   replay(request);
   binder.bindToRequest(request,config);

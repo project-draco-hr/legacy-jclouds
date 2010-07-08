@@ -10,8 +10,15 @@
   }
   gaeRequest.addHeader(new HTTPHeader(HttpHeaders.USER_AGENT,USER_AGENT));
   if (request.getPayload() != null) {
-    changeRequestContentToBytes(request);
-    gaeRequest.setPayload(((ByteArrayPayload)request.getPayload()).getRawContent());
+    InputStream input=request.getPayload().getInput();
+    try {
+      byte[] array=toByteArray(input);
+      if (!request.getPayload().isRepeatable())       request.setPayload(array);
+      gaeRequest.setPayload(array);
+    }
+  finally {
+      closeQuietly(input);
+    }
   }
  else {
     gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));

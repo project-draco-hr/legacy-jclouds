@@ -1,0 +1,8 @@
+{
+  String filename=options != null ? options.getFilename() : null;
+  if (delegate instanceof FilePayload)   filename=FilePayload.class.cast(delegate).getRawContent().getName();
+  Part.PartMap returnVal;
+  returnVal=(filename != null) ? create(name,filename) : create(name);
+  if (options != null)   returnVal.contentType(options.getContentType());
+  return returnVal;
+}

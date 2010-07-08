@@ -1,22 +1,22 @@
 {
+  if (jsObject.getDataInputStream() != null) {
+    jcObject.setPayload(jsObject.getDataInputStream());
+  }
+ else {
+    jcObject.setPayload("");
+  }
+  jcObject.getPayload().setContentLength(jsObject.getContentLength());
   jcObject.getMetadata().setKey(jsObject.getKey());
   jcObject.getMetadata().setCacheControl((String)jsObject.getMetadata("Cache-Control"));
   jcObject.getMetadata().setContentDisposition(jsObject.getContentDisposition());
   jcObject.getMetadata().setContentEncoding(jsObject.getContentEncoding());
   jcObject.getMetadata().setLastModified(jsObject.getLastModifiedDate());
-  jcObject.setContentLength(jsObject.getContentLength());
   if (jsObject.getStorageClass() != null)   jcObject.getMetadata().setStorageClass(StorageClass.valueOf(jsObject.getStorageClass()));
   if (jsObject.getMd5HashAsHex() != null) {
     jcObject.getMetadata().setETag(jsObject.getMd5HashAsHex());
   }
   if (jsObject.getOwner() != null) {
     jcObject.getMetadata().setOwner(new CanonicalUser(jsObject.getOwner().getId()));
-  }
-  if (jsObject.getDataInputStream() != null) {
-    jcObject.setPayload(jsObject.getDataInputStream());
-  }
- else {
-    jcObject.setPayload("");
   }
   if (jsObject.getContentType() != null) {
     jcObject.getMetadata().setContentType(jsObject.getContentType());

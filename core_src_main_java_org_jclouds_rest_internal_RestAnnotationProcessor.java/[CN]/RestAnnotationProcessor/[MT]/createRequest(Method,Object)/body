@@ -49,9 +49,8 @@
       builder.path(pathSuffix);
     }
     String stringPayload=options.buildStringPayload();
-    if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
+    if (stringPayload != null)     payload=newStringPayload(stringPayload);
   }
-  if (payload == null)   payload=findPayloadInArgs(args);
   if (queryParams.size() > 0) {
     builder.replaceQuery(makeQueryLine(queryParams,null,skips));
   }
@@ -67,24 +66,19 @@ catch (  UriBuilderException e) {
   GeneratedHttpRequest<T> request=new GeneratedHttpRequest<T>(httpMethod,endpoint,skips,declaring,method,args);
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
-  List<? extends Part> parts=getParts(method,args,Iterables.concat(tokenValues.entries(),formParams.entries()));
+  if (payload == null)   payload=findPayloadInArgs(args);
+  List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
   if (parts.size() > 0) {
     if (formParams.size() > 0) {
-      parts=Lists.newLinkedList(Iterables.concat(Iterables.<Entry<String,String>,Part>transform(formParams.entries(),ENTRY_TO_PART),parts));
+      parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
     }
-    MultipartForm form=new MultipartForm(BOUNDARY,parts);
-    request.setPayload(form);
-    request.getHeaders().put(HttpHeaders.CONTENT_TYPE,"multipart/form-data; boundary=" + BOUNDARY);
-    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,form.calculateSize() + "");
+    payload=new MultipartForm(BOUNDARY,parts);
   }
  else   if (formParams.size() > 0) {
-    if (headers.get(HttpHeaders.CONTENT_TYPE).size() == 0)     headers.put(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_FORM_URLENCODED);
-    request.setPayload(makeQueryLine(formParams,null,skips));
+    payload=newUrlEncodedFormPayload(formParams,skips);
   }
- else   if (payload != null) {
+  if (payload != null) {
     request.setPayload(payload);
-    if (headers.get(HttpHeaders.CONTENT_LENGTH).size() == 0)     headers.put(HttpHeaders.CONTENT_LENGTH,payload.calculateSize() + "");
-    if (headers.get(HttpHeaders.CONTENT_TYPE).size() == 0)     headers.put(HttpHeaders.CONTENT_TYPE,"application/unknown");
   }
   request.getHeaders().putAll(headers);
   decorateRequest(request);

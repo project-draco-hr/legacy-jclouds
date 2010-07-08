@@ -1,0 +1,12 @@
+{
+  checkNotNull(payload,"payload");
+  if (!payload.isRepeatable()) {
+    String oldContentType=payload.getContentType();
+    payload=generatePayloadWithMD5For(payload.getInput());
+    payload.setContentType(oldContentType);
+  }
+ else {
+    payload.setContentMD5(md5(payload.getInput()));
+  }
+  return payload;
+}

@@ -1,0 +1,13 @@
+{
+  super(content,"multipart/form-data; boundary=" + boundary,0l,null);
+  String boundaryrn=boundary + rn;
+  isRepeatable=true;
+  InputSupplier<? extends InputStream> chain=join();
+  for (  Part part : content) {
+    if (!part.isRepeatable())     isRepeatable=false;
+    contentLength+=part.getContentLength();
+    chain=join(chain,addLengthAndReturnHeaders(boundaryrn,part),part,addLengthAndReturnRn());
+  }
+  chain=join(chain,addLengthAndReturnFooter(boundary));
+  this.chain=chain;
+}

@@ -3,35 +3,33 @@
   if (container == null) {
     new RuntimeException("containerName not found: " + containerName);
   }
-  Payload payload=object.getPayload();
-  if (!payload.isRepeatable()) {
+  ByteArrayPayload payload=(object.getPayload() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(object.getPayload()) : null;
+  if (payload == null)   payload=(object.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(object.getPayload()).getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class.cast(object.getPayload()).getDelegate()) : null : null;
+  if (payload == null || !(payload instanceof ByteArrayPayload)) {
+    InputStream input=object.getPayload().getInput();
     try {
-      payload=newByteArrayPayload(toByteArray(payload.getInput()));
+      String oldContentType=object.getPayload().getContentType();
+      payload=encryptionService.generatePayloadWithMD5For(input);
+      payload.setContentType(oldContentType);
     }
- catch (    IOException e) {
-      propagate(e);
-    }
- finally {
-      closeQuietly(payload.getInput());
+  finally {
+      Closeables.closeQuietly(input);
     }
   }
-  object.getMetadata().setSize(payload.calculateSize());
-  MutableBlobMetadata newMd=copy(object.getMetadata());
-  newMd.setLastModified(new Date());
-  byte[] md5=encryptionService.md5(payload.getInput());
-  String eTag=encryptionService.hex(md5);
-  newMd.setETag(eTag);
-  newMd.setContentMD5(md5);
-  newMd.setContentType(object.getMetadata().getContentType());
-  Blob blob=blobFactory.create(newMd);
+ else {
+    if (payload.getContentMD5() == null)     payload=(ByteArrayPayload)encryptionService.generateMD5BufferingIfNotRepeatable(payload);
+  }
+  Blob blob=blobFactory.create(copy(object.getMetadata()));
   blob.setPayload(payload);
+  blob.getMetadata().setLastModified(new Date());
+  String eTag=encryptionService.hex(payload.getContentMD5());
+  blob.getMetadata().setETag(eTag);
   container.put(blob.getMetadata().getName(),blob);
-  blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(newMd.getLastModified()));
+  blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(blob.getMetadata().getLastModified()));
   blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,newMd.getContentType());
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,newMd.getSize() + "");
-  for (  Entry<String,String> userMD : newMd.getUserMetadata().entrySet()) {
-    blob.getAllHeaders().put(userMD.getKey(),userMD.getValue());
-  }
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,blob.getMetadata().getContentType());
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,blob.getMetadata().getSize() + "");
+  blob.getAllHeaders().put("Content-MD5",encryptionService.base64(payload.getContentMD5()));
+  blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
   return immediateFuture(eTag);
 }

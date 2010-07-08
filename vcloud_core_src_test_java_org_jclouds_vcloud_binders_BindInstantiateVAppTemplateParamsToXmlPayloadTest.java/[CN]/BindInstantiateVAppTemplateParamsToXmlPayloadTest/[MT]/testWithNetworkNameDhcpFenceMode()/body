@@ -1,11 +1,8 @@
 {
   String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/newvapp-hostingnetworknamedhcpfencemode.xml"));
-  Multimap<String,String> headers=Multimaps.synchronizedMultimap(HashMultimap.<String,String>create());
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
   expect(request.getArgs()).andReturn(new Object[]{}).atLeastOnce();
-  expect(request.getFirstHeaderOrNull("Content-Type")).andReturn(null).atLeastOnce();
-  expect(request.getHeaders()).andReturn(headers).atLeastOnce();
   request.setPayload(expected);
   replay(request);
   BindInstantiateVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindInstantiateVAppTemplateParamsToXmlPayload.class);

@@ -1,0 +1,29 @@
+{
+  BindUserMetadataToHeadersWithPrefix mdBinder=createMock(BindUserMetadataToHeadersWithPrefix.class);
+  ObjectToBlob object2Blob=createMock(ObjectToBlob.class);
+  HttpRequest request=createMock(HttpRequest.class);
+  CFObject object=createMock(CFObject.class);
+  Payload payload=createMock(Payload.class);
+  Blob blob=createMock(Blob.class);
+  MutableObjectInfoWithMetadata md=createMock(MutableObjectInfoWithMetadata.class);
+  expect(object.getPayload()).andReturn(payload).atLeastOnce();
+  expect(payload.getContentLength()).andReturn(5368709120l).atLeastOnce();
+  expect(object2Blob.apply(object)).andReturn(blob);
+  mdBinder.bindToRequest(request,blob);
+  replay(payload);
+  replay(mdBinder);
+  replay(object2Blob);
+  replay(request);
+  replay(object);
+  replay(blob);
+  replay(md);
+  BindCFObjectToPayload binder=new BindCFObjectToPayload(object2Blob,mdBinder);
+  binder.bindToRequest(request,object);
+  verify(payload);
+  verify(mdBinder);
+  verify(object2Blob);
+  verify(request);
+  verify(object);
+  verify(blob);
+  verify(md);
+}

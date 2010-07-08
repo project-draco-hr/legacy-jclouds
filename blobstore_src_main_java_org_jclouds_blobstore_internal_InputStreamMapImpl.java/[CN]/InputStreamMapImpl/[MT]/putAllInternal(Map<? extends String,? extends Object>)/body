@@ -1,8 +1,8 @@
 {
-  putBlobsStrategy.execute(containerName,Iterables.transform(map.entrySet(),new Function<Map.Entry<? extends String,? extends Object>,Blob>(){
+  putBlobsStrategy.execute(containerName,transform(map.entrySet(),new Function<Map.Entry<? extends String,? extends Object>,Blob>(){
     @Override public Blob apply(    Map.Entry<? extends String,? extends Object> from){
       Blob blob=blobstore.newBlob(prefixer.apply(from.getKey()));
-      blob.setPayload(Payloads.newPayload(from.getValue()));
+      blob.setPayload(newPayload(from.getValue()));
       blob.generateMD5();
       return blob;
     }

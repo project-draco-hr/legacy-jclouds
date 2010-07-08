@@ -23,7 +23,7 @@
     if (options.getAcl() != null)     keyToAcl.put(destinationBucket + "/" + destinationObject,options.getAcl());
     newMd.setLastModified(new Date());
     Blob newBlob=blobProvider.create(newMd);
-    newBlob.setPayload(sourceS3.getContent());
+    newBlob.setPayload(sourceS3.getPayload());
     dest.put(destinationObject,newBlob);
     return immediateFuture((ObjectMetadata)blob2ObjectMetadata.apply(TransientAsyncBlobStore.copy(newMd)));
   }

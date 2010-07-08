@@ -1,15 +1,10 @@
 {
   CFObject object=(CFObject)payload;
-  if (object.getContentLength() != null && object.getContentLength() >= 0) {
-    checkArgument(object.getContentLength() <= 5 * 1024 * 1024* 1024,"maximum size for put object is 5GB");
-    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,object.getContentLength() + "");
+  if (object.getPayload().getContentLength() != null && object.getPayload().getContentLength() >= 0) {
+    checkArgument(object.getPayload().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
   }
  else {
     request.getHeaders().put("Transfer-Encoding","chunked");
   }
-  super.bindToRequest(request,object2Blob.apply(object));
-  if (object.getInfo().getHash() != null) {
-    request.getHeaders().put(HttpHeaders.ETAG,encryptionService.hex(object.getInfo().getHash()));
-    request.getHeaders().removeAll("Content-MD5");
-  }
+  mdBinder.bindToRequest(request,object2Blob.apply(object));
 }

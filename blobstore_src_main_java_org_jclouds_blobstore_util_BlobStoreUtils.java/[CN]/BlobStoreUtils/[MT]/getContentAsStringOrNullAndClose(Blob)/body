@@ -1,9 +1,10 @@
 {
   checkNotNull(blob,"blob");
-  if (blob.getContent() == null)   return null;
-  Object o=blob.getContent();
+  checkNotNull(blob.getPayload(),"blob.payload");
+  if (blob.getPayload().getInput() == null)   return null;
+  Object o=blob.getPayload().getInput();
   if (o instanceof InputStream) {
-    return Utils.toStringAndClose((InputStream)o);
+    return toStringAndClose((InputStream)o);
   }
  else {
     throw new IllegalArgumentException("Object type not supported: " + o.getClass().getName());
