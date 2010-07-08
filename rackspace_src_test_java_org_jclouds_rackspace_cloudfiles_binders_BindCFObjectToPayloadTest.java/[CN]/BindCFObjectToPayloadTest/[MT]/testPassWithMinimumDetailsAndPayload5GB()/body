@@ -7,6 +7,8 @@
   Blob blob=createMock(Blob.class);
   MutableObjectInfoWithMetadata md=createMock(MutableObjectInfoWithMetadata.class);
   expect(object.getPayload()).andReturn(payload).atLeastOnce();
+  expect(payload.getContentType()).andReturn(null).atLeastOnce();
+  payload.setContentType(MediaType.APPLICATION_OCTET_STREAM);
   expect(payload.getContentLength()).andReturn(5368709120l).atLeastOnce();
   expect(object2Blob.apply(object)).andReturn(blob);
   mdBinder.bindToRequest(request,blob);

@@ -8,6 +8,8 @@
   MutableObjectInfoWithMetadata md=createMock(MutableObjectInfoWithMetadata.class);
   Multimap<String,String> headers=createMock(Multimap.class);
   expect(object.getPayload()).andReturn(payload).atLeastOnce();
+  expect(payload.getContentType()).andReturn(null).atLeastOnce();
+  payload.setContentType(MediaType.APPLICATION_OCTET_STREAM);
   expect(payload.getContentLength()).andReturn(null).atLeastOnce();
   expect(object2Blob.apply(object)).andReturn(blob);
   mdBinder.bindToRequest(request,blob);
