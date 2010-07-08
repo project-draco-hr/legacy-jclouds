@@ -1,7 +1,7 @@
 {
   Method method=TestTransformers.class.getMethod("put",PayloadEnclosing.class);
-  PayloadEnclosing payloadEnclosing=new PayloadEnclosingImpl(injector.getInstance(EncryptionService.class),newStringPayload("whoops"));
-  payloadEnclosing.generateMD5();
+  PayloadEnclosing payloadEnclosing=new PayloadEnclosingImpl(newStringPayload("whoops"));
+  injector.getInstance(EncryptionService.class).generateMD5BufferingIfNotRepeatable(payloadEnclosing);
   HttpRequest request=factory(TestQuery.class).createRequest(method,payloadEnclosing);
   assertRequestLineEquals(request,"PUT http://localhost:9999?x-ms-version=2009-07-17 HTTP/1.1");
   assertHeadersEqual(request,"Content-Length: 6\nContent-MD5: 2M+SrvaXyLZujY8rtQVwMQ==\nContent-Type: application/unknown\n");

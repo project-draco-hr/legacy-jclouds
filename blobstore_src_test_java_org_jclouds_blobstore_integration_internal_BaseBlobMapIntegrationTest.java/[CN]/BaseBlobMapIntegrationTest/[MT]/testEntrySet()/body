@@ -8,16 +8,16 @@
     assertEquals(entries.size(),5);
     for (    Entry<String,Blob> entry : entries) {
       assertEquals(fiveStrings.get(entry.getKey()),getContentAsStringOrNullAndClose(entry.getValue()));
-      Blob value=entry.getValue();
-      value.setPayload("");
-      value.generateMD5();
-      entry.setValue(value);
+      Blob blob=entry.getValue();
+      blob.setPayload("");
+      context.utils().encryption().generateMD5BufferingIfNotRepeatable(blob);
+      entry.setValue(blob);
     }
     assertConsistencyAware(new Runnable(){
       public void run(){
-        for (        Blob value : map.values()) {
+        for (        Blob blob : map.values()) {
           try {
-            assertEquals(getContentAsStringOrNullAndClose(value),"");
+            assertEquals(getContentAsStringOrNullAndClose(blob),"");
           }
  catch (          IOException e) {
             Throwables.propagate(e);

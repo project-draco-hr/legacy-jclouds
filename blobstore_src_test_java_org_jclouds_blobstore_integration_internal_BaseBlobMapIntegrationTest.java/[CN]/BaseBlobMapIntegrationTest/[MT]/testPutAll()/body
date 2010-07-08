@@ -4,10 +4,10 @@
     Map<String,Blob> map=createMap(context,bucketName);
     Map<String,Blob> newMap=new HashMap<String,Blob>();
     for (    String key : fiveInputs.keySet()) {
-      Blob object=context.getBlobStore().newBlob(key);
-      object.setPayload(fiveInputs.get(key));
-      object.getPayload().setContentLength((long)fiveBytes.get(key).length);
-      newMap.put(key,object);
+      Blob blob=context.getBlobStore().newBlob(key);
+      blob.setPayload(fiveInputs.get(key));
+      blob.getPayload().setContentLength((long)fiveBytes.get(key).length);
+      newMap.put(key,blob);
     }
     map.putAll(newMap);
     assertConsistencyAwareMapSize(map,5);

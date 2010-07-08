@@ -1,8 +1,6 @@
 {
   InputStream returnVal=containsKey(name) ? get(name) : null;
-  Blob blob=blobstore.newBlob(prefixer.apply(name));
-  blob.setPayload(payload);
-  blob.generateMD5();
+  Blob blob=newBlobWithMD5(name,payload);
   blobstore.putBlob(containerName,blob);
   return returnVal;
 }

@@ -3,10 +3,10 @@
   try {
     Map<String,Blob> map=createMap(context,bucketName);
     putStringWithMD5(map,"one","apple");
-    Blob object=context.getBlobStore().newBlob("one");
-    object.setPayload("apple");
-    object.generateMD5();
-    assertConsistencyAwareContainsValue(map,object);
+    Blob blob=context.getBlobStore().newBlob("one");
+    blob.setPayload("apple");
+    context.utils().encryption().generateMD5BufferingIfNotRepeatable(blob);
+    assertConsistencyAwareContainsValue(map,blob);
   }
   finally {
     returnContainer(bucketName);

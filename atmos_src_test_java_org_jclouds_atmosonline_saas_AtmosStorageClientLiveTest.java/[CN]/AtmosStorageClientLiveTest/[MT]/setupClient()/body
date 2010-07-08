@@ -1,12 +1,12 @@
 {
   String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
   String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  BlobStoreContext blobStoreContext=new BlobStoreContextFactory().createContext("atmosonline",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()));
-  RestContext<AtmosStorageClient,AtmosStorageAsyncClient> context=blobStoreContext.getProviderSpecificContext();
-  connection=context.getApi();
+  context=new BlobStoreContextFactory().createContext("atmosonline",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  RestContext<AtmosStorageClient,AtmosStorageAsyncClient> restContext=context.getProviderSpecificContext();
+  connection=restContext.getApi();
   for (  DirectoryEntry entry : connection.listDirectories()) {
     if (entry.getObjectName().startsWith(containerPrefix)) {
-      blobStoreContext.getBlobStore().deleteContainer(entry.getObjectName());
+      context.getBlobStore().deleteContainer(entry.getObjectName());
     }
   }
 }
