@@ -1,6 +1,6 @@
 {
   InputStream is=Utils.toInputStream("{\"error\":[\"invalid tarball: tarball root must contain java-bytearray\"]}");
-  ParseErrorFromJsonOrReturnBody parser=new ParseErrorFromJsonOrReturnBody();
-  String response=parser.apply(new HttpResponse(is));
+  ParseErrorFromJsonOrReturnBody parser=new ParseErrorFromJsonOrReturnBody(new ReturnStringIf200());
+  String response=parser.apply(new HttpResponse(200,"ok",Payloads.newPayload(is)));
   assertEquals(response,"invalid tarball: tarball root must contain java-bytearray");
 }

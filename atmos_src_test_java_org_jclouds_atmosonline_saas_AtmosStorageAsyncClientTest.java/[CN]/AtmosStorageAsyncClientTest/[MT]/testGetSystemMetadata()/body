@@ -2,8 +2,8 @@
   Method method=AtmosStorageAsyncClient.class.getMethod("getSystemMetadata",String.class);
   HttpRequest request=processor.createRequest(method,"dir/file");
   assertRequestLineEquals(request,"HEAD https://accesspoint.atmosonline.com/rest/namespace/dir/file HTTP/1.1");
-  assertHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSystemMetadataFromHeaders.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);

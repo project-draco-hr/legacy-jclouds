@@ -1,0 +1,15 @@
+{
+  if (response.getPayload() != null) {
+    InputStream input=response.getPayload().getInput();
+    try {
+      return toByteArray(input);
+    }
+ catch (    IOException e) {
+      propagate(e);
+    }
+ finally {
+      closeQuietly(input);
+    }
+  }
+  return null;
+}

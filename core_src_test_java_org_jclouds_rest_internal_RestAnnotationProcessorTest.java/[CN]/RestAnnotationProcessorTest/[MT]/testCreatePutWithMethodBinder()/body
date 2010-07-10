@@ -1,12 +1,7 @@
 {
   Method method=TestPut.class.getMethod("putWithMethodBinder",String.class);
-  HttpRequest request=factory(TestPut.class).createRequest(method,new Object[]{"data"});
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"/data");
-  assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/json"));
-  String expected="{\"fooble\":\"data\"}";
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(expected.getBytes().length + ""));
-  assertEquals(request.getPayload().getRawContent(),expected);
+  HttpRequest request=factory(TestPut.class).createRequest(method,"data");
+  assertRequestLineEquals(request,"PUT http://localhost:9999/data HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);
 }

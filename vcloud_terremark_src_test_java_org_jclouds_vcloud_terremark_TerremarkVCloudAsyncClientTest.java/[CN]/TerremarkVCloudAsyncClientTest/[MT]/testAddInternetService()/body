@@ -2,8 +2,8 @@
   Method method=TerremarkVCloudExpressAsyncClient.class.getMethod("addInternetServiceToVDC",String.class,String.class,Protocol.class,int.class,Array.newInstance(AddInternetServiceOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"1","name",Protocol.TCP,22);
   assertRequestLineEquals(request,"POST https://vcloud/extensions/vdc/1/internetServices HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.tmrk.vCloud.internetService+xml\nContent-Length: 298\nContent-Type: application/vnd.tmrk.vCloud.internetService+xml\n");
-  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/CreateInternetService-test2.xml")));
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.vCloud.internetService+xml\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/CreateInternetService-test2.xml")),"application/vnd.tmrk.vCloud.internetService+xml",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,InternetServiceHandler.class);
   assertExceptionParserClassEquals(method,null);

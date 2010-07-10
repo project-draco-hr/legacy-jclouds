@@ -2,8 +2,8 @@
   Method method=ElasticBlockStoreAsyncClient.class.getMethod("createSnapshotInRegion",String.class,String.class,Array.newInstance(CreateSnapshotOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,null,"volumeId");
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 58\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-11-30&Action=CreateSnapshot&VolumeId=volumeId");
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2009-11-30&Action=CreateSnapshot&VolumeId=volumeId","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,SnapshotHandler.class);
   assertExceptionParserClassEquals(method,null);

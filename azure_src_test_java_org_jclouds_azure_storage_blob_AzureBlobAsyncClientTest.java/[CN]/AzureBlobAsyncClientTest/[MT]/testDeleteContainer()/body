@@ -1,12 +1,10 @@
 {
   Method method=AzureBlobAsyncClient.class.getMethod("deleteContainer",String.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{"container"});
-  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(request.getEndpoint().getPath(),"/container");
-  assertEquals(request.getEndpoint().getQuery(),"restype=container");
-  assertEquals(request.getMethod(),HttpMethod.DELETE);
-  assertEquals(request.getHeaders().size(),1);
-  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnVoidOnNotFoundOr404.class);
+  HttpRequest request=processor.createRequest(method,"container");
+  assertRequestLineEquals(request,"DELETE https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnVoidOnNotFoundOr404.class);
 }

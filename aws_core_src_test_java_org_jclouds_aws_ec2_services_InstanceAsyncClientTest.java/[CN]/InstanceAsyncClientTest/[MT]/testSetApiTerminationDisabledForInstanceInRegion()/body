@@ -2,9 +2,9 @@
   Method method=InstanceAsyncClient.class.getMethod("setApiTerminationDisabledForInstanceInRegion",String.class,String.class,boolean.class);
   HttpRequest request=processor.createRequest(method,null,"1",true);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 105\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-11-30&Action=ModifyInstanceAttribute&Attribute=disableApiTermination&Value=true&InstanceId=1");
-  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2009-11-30&Action=ModifyInstanceAttribute&Attribute=disableApiTermination&Value=true&InstanceId=1","application/x-www-form-urlencoded",false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(request);

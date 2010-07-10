@@ -2,7 +2,7 @@
   InputStream is=getClass().getResourceAsStream("/test_error_handler.json");
   GoGridErrorHandler handler=new GoGridErrorHandler(new ParseErrorFromJsonResponse(new GsonBuilder().create()));
   HttpCommand command=createHttpCommand();
-  handler.handleError(command,new HttpResponse(is));
+  handler.handleError(command,new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   Exception createdException=command.getException();
   assertNotNull(createdException,"There should've been an exception generated");
   String message=createdException.getMessage();

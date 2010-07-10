@@ -1,2 +1,7 @@
 {
+  AtmosObject object=objectProvider.create(systemMetadataParser.apply(from),userMetadataParser.apply(from));
+  object.getAllHeaders().putAll(from.getHeaders());
+  object.setPayload(from.getPayload());
+  object.getContentMetadata().setContentLength(attemptToParseSizeAndRangeFromHeaders(from));
+  return object;
 }

@@ -1,5 +1,4 @@
 {
-  String contentType=from.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE);
-  if (contentType == null)   throw new HttpException(HttpHeaders.CONTENT_TYPE + " not found in headers");
- else   metadata.setContentType(contentType);
+  if (from.getPayload() != null)   metadata.setContentType(from.getPayload().getContentType());
+  if (metadata.getContentType() == null || "application/unknown".equals(metadata.getContentType()))   throw new HttpException(HttpHeaders.CONTENT_TYPE + " not found in headers");
 }

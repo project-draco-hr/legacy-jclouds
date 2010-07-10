@@ -1,17 +1,4 @@
 {
-  if (response.getContent() == null)   return null;
-  try {
-    return Utils.toStringAndClose(response.getContent());
-  }
- catch (  IOException e) {
-    throw new RuntimeException(e);
-  }
- finally {
-    try {
-      response.getContent().close();
-    }
- catch (    IOException e) {
-      Throwables.propagate(e);
-    }
-  }
+  if (response.getPayload() == null)   return null;
+  return Utils.toStringAndClose(response.getPayload().getInput());
 }

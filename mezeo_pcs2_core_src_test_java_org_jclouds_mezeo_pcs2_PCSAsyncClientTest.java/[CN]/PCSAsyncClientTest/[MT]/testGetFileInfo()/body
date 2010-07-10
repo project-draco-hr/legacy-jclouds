@@ -1,12 +1,11 @@
 {
   Method method=PCSAsyncClient.class.getMethod("getFileInfo",URI.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{URI.create("http://localhost/myfile")});
-  assertEquals(request.getRequestLine(),"GET http://localhost/myfile HTTP/1.1");
-  assertEquals(request.getHeaders().size(),1);
-  assertEquals(request.getHeaders().get("X-Cloud-Depth"),Collections.singletonList("2"));
-  assertEquals(processor.createResponseParser(method,request).getClass(),ParseSax.class);
-  assertEquals(RestAnnotationProcessor.getSaxResponseParserClassOrNull(method),FileHandler.class);
-  assertEquals(request.getFilters().size(),1);
-  assertEquals(request.getFilters().get(0).getClass(),BasicAuthentication.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnNullOnKeyNotFound.class);
+  HttpRequest request=processor.createRequest(method,URI.create("http://localhost/myfile"));
+  assertRequestLineEquals(request,"GET http://localhost/myfile HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"X-Cloud-Depth: 2\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,FileHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnKeyNotFound.class);
+  checkFilters(request);
 }

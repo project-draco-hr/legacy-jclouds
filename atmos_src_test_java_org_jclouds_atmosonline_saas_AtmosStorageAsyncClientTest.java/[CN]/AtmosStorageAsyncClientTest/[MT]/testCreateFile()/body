@@ -2,8 +2,8 @@
   Method method=AtmosStorageAsyncClient.class.getMethod("createFile",String.class,AtmosObject.class);
   HttpRequest request=processor.createRequest(method,"dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB));
   assertRequestLineEquals(request,"POST https://accesspoint.atmosonline.com/rest/namespace/dir/hello HTTP/1.1");
-  assertHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\nContent-Length: 5\nContent-Type: text/plain\n");
-  assertPayloadEquals(request,"hello");
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
+  assertPayloadEquals(request,"hello","text/plain",false);
   assertResponseParserClassEquals(method,request,ParseURIFromListOrLocationHeaderIf20x.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

@@ -1,4 +1,20 @@
 {
-  org.apache.http.HttpResponse nativeResponse=executeRequest(nativeRequest);
-  return ApacheHCUtils.convertToJCloudsResponse(nativeResponse);
+  org.apache.http.HttpResponse apacheResponse=executeRequest(nativeRequest);
+  Payload payload=null;
+  if (apacheResponse.getEntity() != null)   try {
+    payload=Payloads.newInputStreamPayload(consumeOnClose(apacheResponse.getEntity().getContent()));
+    if (apacheResponse.getEntity().getContentLength() >= 0)     payload.setContentLength(apacheResponse.getEntity().getContentLength());
+    if (apacheResponse.getEntity().getContentType() != null)     payload.setContentType(apacheResponse.getEntity().getContentType().getValue());
+  }
+ catch (  IOException e) {
+    logger.warn(e,"couldn't receive payload for request: %s",nativeRequest.getRequestLine());
+    throw e;
+  }
+  HttpResponse response=new HttpResponse(apacheResponse.getStatusLine().getStatusCode(),apacheResponse.getStatusLine().getReasonPhrase(),payload);
+  Multimap<String,String> headers=LinkedHashMultimap.create();
+  for (  Header header : apacheResponse.getAllHeaders()) {
+    headers.put(header.getName(),header.getValue());
+  }
+  utils.setPayloadPropertiesFromHeaders(headers,response);
+  return response;
 }

@@ -4,7 +4,6 @@
   HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
   BindBucketLoggingToXmlPayload binder=injector.getInstance(BindBucketLoggingToXmlPayload.class);
   binder.bindToRequest(request,bucketLogging);
-  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE),"text/xml");
-  assertEquals(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH),"433");
+  assertEquals(request.getPayload().getContentType(),"text/xml");
   assertEquals(request.getPayload().getRawContent(),expected);
 }

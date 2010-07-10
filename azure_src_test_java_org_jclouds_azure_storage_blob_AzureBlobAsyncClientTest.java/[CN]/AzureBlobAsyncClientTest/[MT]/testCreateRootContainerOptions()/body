@@ -1,15 +1,10 @@
 {
-  Method method=AzureBlobAsyncClient.class.getMethod("createRootContainer",Array.newInstance(CreateContainerOptions.class,0).getClass());
-  HttpRequest request=processor.createRequest(method,new Object[]{withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar"))});
-  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(request.getEndpoint().getPath(),"/$root");
-  assertEquals(request.getEndpoint().getQuery(),"restype=container");
-  assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(request.getHeaders().size(),4);
-  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(request.getHeaders().get("x-ms-meta-foo"),Collections.singletonList("bar"));
-  assertEquals(request.getHeaders().get("x-ms-prop-publicaccess"),Collections.singletonList("true"));
-  assertEquals(request.getHeaders().get("Content-Length"),Collections.singletonList("0"));
-  assertEquals(processor.createResponseParser(method,request).getClass(),ReturnTrueIf2xx.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseIfContainerAlreadyExists.class);
+  Method method=AzureBlobAsyncClient.class.getMethod("createRootContainer",CreateContainerOptions[].class);
+  HttpRequest request=processor.createRequest(method,withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar")));
+  assertRequestLineEquals(request,"PUT https://identity.blob.core.windows.net/%24root?restype=container HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"x-ms-meta-foo: bar\nx-ms-prop-publicaccess: true\nx-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReturnTrueIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnFalseIfContainerAlreadyExists.class);
 }

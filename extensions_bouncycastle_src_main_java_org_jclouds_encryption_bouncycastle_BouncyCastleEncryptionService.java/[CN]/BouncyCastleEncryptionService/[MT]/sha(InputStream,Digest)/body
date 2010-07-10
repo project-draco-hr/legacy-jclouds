@@ -1,6 +1,6 @@
 {
   byte[] resBuf=new byte[digest.getDigestSize()];
-  byte[] buffer=new byte[1024];
+  byte[] buffer=new byte[BUF_SIZE];
   long length=0;
   int numRead=-1;
   try {
@@ -14,10 +14,10 @@
  while (numRead != -1);
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    propagate(e);
   }
  finally {
-    Closeables.closeQuietly(plainBytes);
+    closeQuietly(plainBytes);
   }
   digest.doFinal(resBuf,0);
   return resBuf;

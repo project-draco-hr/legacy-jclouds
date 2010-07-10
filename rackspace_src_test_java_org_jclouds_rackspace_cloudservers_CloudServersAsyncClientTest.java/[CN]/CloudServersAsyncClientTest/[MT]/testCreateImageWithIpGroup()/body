@@ -1,15 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("createImageFromServer",String.class,int.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{"ralphie",2});
-  assertEquals("{\"image\":{\"serverId\":2,\"name\":\"ralphie\"}}",request.getPayload().getRawContent());
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/images");
-  assertEquals(request.getEndpoint().getQuery(),"format=json");
-  assertEquals(request.getMethod(),HttpMethod.POST);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals(processor.createResponseParser(method,request).getClass(),ParseImageFromJsonResponse.class);
-  assertNotNull(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method));
-  assertNotNull(processor.getMapPayloadBinderOrNull(method,new Object[]{"",2}));
+  HttpRequest request=processor.createRequest(method,"ralphie",2);
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/images?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"image\":{\"serverId\":2,\"name\":\"ralphie\"}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ParseImageFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

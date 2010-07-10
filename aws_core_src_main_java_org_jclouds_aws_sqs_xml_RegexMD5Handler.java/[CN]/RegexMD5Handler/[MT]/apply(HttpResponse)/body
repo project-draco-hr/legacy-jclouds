@@ -1,20 +1,10 @@
 {
   byte[] value=null;
-  try {
-    Matcher matcher=pattern.matcher(Utils.toStringAndClose(response.getContent()));
+  String content=returnStringIf200.apply(response);
+  if (content != null) {
+    Matcher matcher=pattern.matcher(content);
     if (matcher.find()) {
       value=encryptionService.fromHex(matcher.group(1));
-    }
-  }
- catch (  IOException e) {
-    Throwables.propagate(e);
-  }
- finally {
-    try {
-      response.getContent().close();
-    }
- catch (    IOException e) {
-      Throwables.propagate(e);
     }
   }
   return value;

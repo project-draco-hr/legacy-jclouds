@@ -3,15 +3,15 @@
   Blob blob=BindBlobToMultipartFormTest.TEST_BLOB;
   HttpRequest request=processor.createRequest(method,URI.create("http://uploader"),"token","adriansmovies",blob);
   assertRequestLineEquals(request,"POST http://uploader/Upload.ashx?output=json&destFolderPath=adriansmovies&uploadToken=token HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 113\nContent-Type: multipart/form-data; boundary=--JCLOUDS--\n");
+  assertNonPayloadHeadersEqual(request,"");
   StringBuffer expects=new StringBuffer();
   expects.append("----JCLOUDS--\r\n");
   expects.append("Content-Disposition: form-data; name=\"hello\"\r\n");
   expects.append("Content-Type: text/plain\r\n\r\n");
   expects.append("hello\r\n");
   expects.append("----JCLOUDS----\r\n");
-  assertPayloadEquals(request,expects.toString());
-  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
+  assertPayloadEquals(request,expects.toString(),"multipart/form-data; boundary=--JCLOUDS--",false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(request);

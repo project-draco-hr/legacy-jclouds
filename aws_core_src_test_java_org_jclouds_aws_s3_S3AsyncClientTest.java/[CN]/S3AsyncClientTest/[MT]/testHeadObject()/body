@@ -2,8 +2,8 @@
   Method method=S3AsyncClient.class.getMethod("headObject",String.class,String.class);
   HttpRequest request=processor.createRequest(method,"bucket","object");
   assertRequestLineEquals(request,"HEAD https://bucket.s3.amazonaws.com/object HTTP/1.1");
-  assertHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseObjectMetadataFromHeaders.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnNullOnKeyNotFound.class);

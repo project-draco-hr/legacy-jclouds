@@ -2,8 +2,8 @@
   Method method=TerremarkVCloudExpressAsyncClient.class.getMethod("getNode",int.class);
   HttpRequest request=processor.createRequest(method,12);
   assertRequestLineEquals(request,"GET https://vcloud/extensions/nodeService/12 HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.tmrk.vCloud.nodeService+xml\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.vCloud.nodeService+xml\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,NodeHandler.class);
   assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);

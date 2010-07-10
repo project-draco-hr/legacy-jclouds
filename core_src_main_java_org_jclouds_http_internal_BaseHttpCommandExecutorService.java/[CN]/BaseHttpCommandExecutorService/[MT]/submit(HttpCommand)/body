@@ -1,3 +1,5 @@
 {
+  HttpRequest request=command.getRequest();
+  checkRequestHasContentLengthOrChunkedEncoding(request,"if the request has a payload, it must be set to chunked encoding or specify a content length: " + request);
   return makeListenable(ioWorkerExecutor.submit(new HttpResponseCallable(command)),ioWorkerExecutor);
 }

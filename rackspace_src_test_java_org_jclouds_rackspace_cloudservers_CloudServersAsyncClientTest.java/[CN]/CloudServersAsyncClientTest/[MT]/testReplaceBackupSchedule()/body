@@ -1,13 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("replaceBackupSchedule",int.class,BackupSchedule.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{2,new BackupSchedule(WeeklyBackup.MONDAY,DailyBackup.H_0800_1000,true)});
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/servers/2/backup_schedule");
-  assertEquals(request.getMethod(),HttpMethod.POST);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals(request.getPayload().getRawContent(),"{\"backupSchedule\":{\"daily\":\"H_0800_1000\",\"enabled\":true,\"weekly\":\"MONDAY\"}}");
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOn404.class);
-  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,2,new BackupSchedule(WeeklyBackup.MONDAY,DailyBackup.H_0800_1000,true));
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/2/backup_schedule HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"backupSchedule\":{\"daily\":\"H_0800_1000\",\"enabled\":true,\"weekly\":\"MONDAY\"}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnFalseOn404.class);
+  checkFilters(request);
 }

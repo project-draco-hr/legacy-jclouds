@@ -4,9 +4,8 @@
   outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
   try {
     String stringPayload=generateBuilder(from).asString(outputProperties);
-    request.getHeaders().put(HttpHeaders.CONTENT_TYPE,MediaType.TEXT_XML);
-    request.getHeaders().put(HttpHeaders.CONTENT_LENGTH,stringPayload.getBytes().length + "");
     request.setPayload(stringPayload);
+    request.getPayload().setContentType(MediaType.TEXT_XML);
   }
  catch (  Exception e) {
     Throwables.propagateIfPossible(e);

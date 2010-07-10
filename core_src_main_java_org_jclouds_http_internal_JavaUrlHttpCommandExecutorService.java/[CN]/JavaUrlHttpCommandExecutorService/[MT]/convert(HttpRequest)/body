@@ -1,18 +1,11 @@
 {
+  boolean chunked="chunked".equals(request.getFirstHeaderOrNull("Transfer-Encoding"));
   URL url=request.getEndpoint().toURL();
-  boolean chunked=false;
-  for (  String header : request.getHeaders().keySet()) {
-    for (    String value : request.getHeaders().get(header)) {
-      if ("Transfer-Encoding".equals(header) && "chunked".equals(value)) {
-        chunked=true;
-      }
-    }
-  }
   HttpURLConnection connection;
   if (utils.useSystemProxies()) {
     System.setProperty("java.net.useSystemProxies","true");
     Iterable<Proxy> proxies=ProxySelector.getDefault().select(request.getEndpoint());
-    Proxy proxy=Iterables.getLast(proxies);
+    Proxy proxy=getLast(proxies);
     connection=(HttpURLConnection)url.openConnection(proxy);
   }
  else   if (utils.getProxyHost() != null) {
@@ -48,18 +41,22 @@
   if (request.getPayload() != null) {
     OutputStream out=null;
     try {
+      if (request.getPayload().getContentMD5() != null)       connection.setRequestProperty("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5()));
+      if (request.getPayload().getContentType() != null)       connection.setRequestProperty(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType());
       if (chunked) {
-        connection.setChunkedStreamingMode(8192);
+        connection.setChunkedStreamingMode(8196);
       }
  else {
-        connection.setFixedLengthStreamingMode(Integer.parseInt(request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH)));
+        Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
+        connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,length.toString());
+        connection.setFixedLengthStreamingMode(length.intValue());
       }
       out=connection.getOutputStream();
       request.getPayload().writeTo(out);
       out.flush();
     }
   finally {
-      Closeables.closeQuietly(out);
+      closeQuietly(out);
     }
   }
  else {

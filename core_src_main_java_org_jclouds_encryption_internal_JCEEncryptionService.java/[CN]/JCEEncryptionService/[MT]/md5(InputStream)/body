@@ -1,6 +1,6 @@
 {
   MessageDigest eTag=getDigest();
-  byte[] buffer=new byte[1024];
+  byte[] buffer=new byte[BUF_SIZE];
   int numRead=-1;
   try {
     do {
@@ -12,10 +12,10 @@
  while (numRead != -1);
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    propagate(e);
   }
  finally {
-    Closeables.closeQuietly(toEncode);
+    closeQuietly(toEncode);
   }
   return eTag.digest();
 }

@@ -21,13 +21,7 @@
   Payload payload=request.getPayload();
   if (apacheRequest instanceof HttpEntityEnclosingRequest) {
     if (payload != null) {
-      String lengthString=request.getFirstHeaderOrNull(HttpHeaders.CONTENT_LENGTH);
-      if (lengthString == null) {
-        throw new IllegalStateException("no Content-Length header on request: " + apacheRequest);
-      }
-      long contentLength=Long.parseLong(lengthString);
-      String contentType=request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE);
-      addEntityForContent(HttpEntityEnclosingRequest.class.cast(apacheRequest),payload.getRawContent(),contentType,contentLength);
+      addEntityForContent(HttpEntityEnclosingRequest.class.cast(apacheRequest),payload);
     }
   }
  else {

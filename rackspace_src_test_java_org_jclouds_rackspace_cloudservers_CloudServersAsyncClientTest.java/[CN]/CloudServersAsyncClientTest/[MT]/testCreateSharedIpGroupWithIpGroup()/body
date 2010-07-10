@@ -1,6 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("createSharedIpGroup",String.class,createSharedIpGroupOptionsVarargsClass);
-  HttpRequest request=processor.createRequest(method,new Object[]{"ralphie",withServer(2)});
-  assertEquals("{\"sharedIpGroup\":{\"name\":\"ralphie\",\"server\":2}}",request.getPayload().getRawContent());
-  validateCreateSharedIpGroup(method,request);
+  HttpRequest request=processor.createRequest(method,"ralphie",withServer(2));
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/shared_ip_groups?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"sharedIpGroup\":{\"name\":\"ralphie\",\"server\":2}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ParseSharedIpGroupFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

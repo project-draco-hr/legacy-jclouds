@@ -1,14 +1,3 @@
 {
-  Function<HttpResponse,?> transformer;
-  Class<? extends HandlerWithResult<?>> handler=getSaxResponseParserClassOrNull(method);
-  if (handler != null) {
-    transformer=parserFactory.create(injector.getInstance(handler));
-  }
- else {
-    transformer=injector.getInstance(getParserOrThrowException(method));
-  }
-  if (transformer instanceof InvocationContext) {
-    ((InvocationContext)transformer).setContext((GeneratedHttpRequest<T>)request);
-  }
-  return transformer;
+  return createResponseParser(parserFactory,injector,method,request);
 }

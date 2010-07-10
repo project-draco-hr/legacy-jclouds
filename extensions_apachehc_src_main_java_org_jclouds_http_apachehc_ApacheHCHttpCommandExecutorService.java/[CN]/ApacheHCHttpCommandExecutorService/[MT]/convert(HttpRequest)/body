@@ -1,3 +1,5 @@
 {
-  return ApacheHCUtils.convertToApacheRequest(request);
+  HttpUriRequest returnVal=ApacheHCUtils.convertToApacheRequest(request);
+  if (request.getPayload() != null && request.getPayload().getContentMD5() != null)   returnVal.addHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5()));
+  return returnVal;
 }

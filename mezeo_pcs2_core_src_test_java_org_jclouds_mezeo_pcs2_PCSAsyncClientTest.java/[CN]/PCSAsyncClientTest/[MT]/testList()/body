@@ -1,9 +1,9 @@
 {
   Method method=PCSAsyncClient.class.getMethod("list");
-  HttpRequest request=processor.createRequest(method,new Object[]{});
+  HttpRequest request=processor.createRequest(method);
   assertRequestLineEquals(request,"GET http://root HTTP/1.1");
-  assertHeadersEqual(request,"X-Cloud-Depth: 2\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"X-Cloud-Depth: 2\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,ContainerHandler.class);
   assertExceptionParserClassEquals(method,null);

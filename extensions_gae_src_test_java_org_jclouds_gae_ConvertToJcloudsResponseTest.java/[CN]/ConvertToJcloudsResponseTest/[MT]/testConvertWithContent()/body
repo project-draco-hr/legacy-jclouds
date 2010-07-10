@@ -1,0 +1,14 @@
+{
+  HTTPResponse gaeResponse=createMock(HTTPResponse.class);
+  expect(gaeResponse.getResponseCode()).andReturn(200);
+  List<HTTPHeader> headers=new ArrayList<HTTPHeader>();
+  headers.add(new HTTPHeader(HttpHeaders.CONTENT_TYPE,"text/xml"));
+  expect(gaeResponse.getHeaders()).andReturn(headers);
+  expect(gaeResponse.getContent()).andReturn("hello".getBytes()).atLeastOnce();
+  replay(gaeResponse);
+  HttpResponse response=req.apply(gaeResponse);
+  assertEquals(response.getStatusCode(),200);
+  assertEquals(Utils.toStringAndClose(response.getPayload().getInput()),"hello");
+  assertEquals(response.getHeaders().size(),0);
+  assertEquals(response.getPayload().getContentType(),"text/xml");
+}

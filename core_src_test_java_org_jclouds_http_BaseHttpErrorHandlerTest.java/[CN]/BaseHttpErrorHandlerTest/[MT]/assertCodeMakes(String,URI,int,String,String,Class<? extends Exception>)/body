@@ -2,9 +2,7 @@
   HttpErrorHandler function=Guice.createInjector(new ParserModule()).getInstance(getHandlerClass());
   HttpCommand command=createMock(HttpCommand.class);
   HttpRequest request=new HttpRequest(method,uri);
-  HttpResponse response=new HttpResponse(Utils.toInputStream(content));
-  response.setStatusCode(statusCode);
-  response.setMessage(message);
+  HttpResponse response=new HttpResponse(statusCode,null,Payloads.newStringPayload(content));
   expect(command.getRequest()).andReturn(request).atLeastOnce();
   command.setException(classEq(expected));
   replay(command);

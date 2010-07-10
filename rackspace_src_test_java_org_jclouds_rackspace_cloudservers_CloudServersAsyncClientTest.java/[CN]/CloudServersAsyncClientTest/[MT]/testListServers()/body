@@ -1,11 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("listServers",listOptionsVarargsClass);
-  HttpRequest request=processor.createRequest(method,new Object[]{});
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/servers");
-  assertEquals(request.getEndpoint().getQuery(),"format=json");
-  assertEquals(request.getMethod(),HttpMethod.GET);
-  assertEquals(request.getHeaders().size(),0);
-  assertEquals(processor.createResponseParser(method,request).getClass(),ParseServerListFromJsonResponse.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  HttpRequest request=processor.createRequest(method);
+  assertRequestLineEquals(request,"GET http://serverManagementUrl/servers?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseServerListFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

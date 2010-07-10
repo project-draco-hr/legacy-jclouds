@@ -2,8 +2,8 @@
   Method method=VCloudAsyncClient.class.getMethod("powerOnVApp",String.class);
   HttpRequest request=processor.createRequest(method,1);
   assertRequestLineEquals(request,"POST https://vcloud.safesecureweb.com/api/v0.8/vApp/1/power/action/powerOn HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,TaskHandler.class);
   assertExceptionParserClassEquals(method,null);

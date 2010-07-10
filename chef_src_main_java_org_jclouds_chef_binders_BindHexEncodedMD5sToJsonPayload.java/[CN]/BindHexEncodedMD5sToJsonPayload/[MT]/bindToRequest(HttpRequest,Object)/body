@@ -6,6 +6,6 @@
   for (  String hexEncodedmd5 : hexEncodedmd5s)   builder.append(String.format("\"%s\":null,",hexEncodedmd5));
   builder.deleteCharAt(builder.length() - 1);
   builder.append("}}");
-  request.getHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,ImmutableSet.of(MediaType.APPLICATION_JSON));
   super.bindToRequest(request,builder.toString());
+  request.getPayload().setContentType(MediaType.APPLICATION_JSON);
 }

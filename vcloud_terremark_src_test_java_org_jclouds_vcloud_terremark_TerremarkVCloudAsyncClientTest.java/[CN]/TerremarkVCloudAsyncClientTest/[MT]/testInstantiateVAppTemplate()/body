@@ -2,8 +2,8 @@
   Method method=TerremarkVCloudExpressAsyncClient.class.getMethod("instantiateVAppTemplateInVDC",String.class,String.class,String.class,Array.newInstance(InstantiateVAppTemplateOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"1","name",3 + "");
   assertRequestLineEquals(request,"POST https://vcloud/vdc/1/action/instantiateVAppTemplate HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\nContent-Length: 695\nContent-Type: application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml\n");
-  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/InstantiateVAppTemplateParams-test.xml")));
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/terremark/InstantiateVAppTemplateParams-test.xml")),"application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,VAppHandler.class);
   assertExceptionParserClassEquals(method,null);

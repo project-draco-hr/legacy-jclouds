@@ -1,5 +1,5 @@
 {
-  InputStream gson=from.getContent();
+  InputStream gson=from.getPayload().getInput();
   try {
     return apply(gson);
   }
@@ -10,6 +10,6 @@
     throw new HttpResponseException(message.toString() + "\n" + from,null,from,e);
   }
  finally {
-    Closeables.closeQuietly(gson);
+    releasePayload(from);
   }
 }

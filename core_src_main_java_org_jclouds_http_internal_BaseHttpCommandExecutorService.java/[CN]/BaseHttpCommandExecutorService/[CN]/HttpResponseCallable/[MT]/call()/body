@@ -7,25 +7,15 @@
       for (      HttpRequestFilter filter : request.getFilters()) {
         filter.filter(request);
       }
+      checkRequestHasContentLengthOrChunkedEncoding(request,"After filtering, the request has niether chunked encoding nor content length: " + request);
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
-      if (request.getPayload() != null && wire.enabled())       request.setPayload(Payloads.newPayload(wire.output(request.getPayload().getRawContent())));
+      wirePayloadIfEnabled(request);
       nativeRequest=convert(request);
-      logRequest(headerLog,request,">>");
-      try {
-        response=invoke(nativeRequest);
-      }
- catch (      IOException e) {
-        if (ioRetryHandler.shouldRetryRequest(command,e)) {
-          continue;
-        }
- else {
-          command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,new HttpResponse(),e));
-          break;
-        }
-      }
+      utils.logRequest(headerLog,request,">>");
+      response=invoke(nativeRequest);
       logger.debug("Receiving response %s: %s",request.hashCode(),response.getStatusLine());
-      logResponse(headerLog,response,"<<");
-      if (response.getContent() != null && wire.enabled())       response.setContent(wire.input(response.getContent()));
+      utils.logResponse(headerLog,response,"<<");
+      if (response.getPayload() != null && wire.enabled())       wire.input(response);
       int statusCode=response.getStatusCode();
       if (statusCode >= 300) {
         if (shouldContinue(response))         continue;
@@ -35,7 +25,17 @@
         break;
       }
     }
-  finally {
+ catch (    Exception e) {
+      IOException ioe=Utils.getFirstThrowableOfType(e,IOException.class);
+      if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
+        continue;
+      }
+ else {
+        command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,null,e));
+        break;
+      }
+    }
+ finally {
       cleanup(nativeRequest);
     }
   }

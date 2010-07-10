@@ -2,8 +2,8 @@
   Method method=AzureQueueAsyncClient.class.getMethod("createQueue",String.class,CreateOptions[].class);
   HttpRequest request=processor.createRequest(method,"queue",withMetadata(ImmutableMultimap.of("foo","bar")));
   assertRequestLineEquals(request,"PUT https://identity.queue.core.windows.net/queue HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 0\nx-ms-meta-foo: bar\nx-ms-version: 2009-09-19\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"x-ms-meta-foo: bar\nx-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ReturnTrueIf2xx.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

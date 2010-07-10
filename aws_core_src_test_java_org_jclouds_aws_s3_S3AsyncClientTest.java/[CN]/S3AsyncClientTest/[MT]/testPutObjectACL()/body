@@ -2,8 +2,8 @@
   Method method=S3AsyncClient.class.getMethod("putObjectACL",String.class,String.class,AccessControlList.class);
   HttpRequest request=processor.createRequest(method,"bucket","key",AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE,"1234"));
   assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/key?acl HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 321\nContent-Type: text/xml\nHost: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(request,"<AccessControlPolicy xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Owner><ID>1234</ID></Owner><AccessControlList><Grant><Grantee xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"CanonicalUser\"><ID>1234</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>");
+  assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
+  assertPayloadEquals(request,"<AccessControlPolicy xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Owner><ID>1234</ID></Owner><AccessControlList><Grant><Grantee xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"CanonicalUser\"><ID>1234</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>","text/xml",false);
   assertResponseParserClassEquals(method,request,ReturnTrueIf2xx.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

@@ -1,0 +1,39 @@
+{
+  URL url=null;
+  try {
+    url=request.getEndpoint().toURL();
+  }
+ catch (  MalformedURLException e) {
+    Throwables.propagate(e);
+  }
+  FetchOptions options=disallowTruncate();
+  options.doNotFollowRedirects();
+  HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
+  for (  String header : request.getHeaders().keySet()) {
+    for (    String value : request.getHeaders().get(header)) {
+      if (!"Transfer-Encoding".equals(header))       gaeRequest.addHeader(new HTTPHeader(header,value));
+    }
+  }
+  gaeRequest.addHeader(new HTTPHeader(HttpHeaders.USER_AGENT,USER_AGENT));
+  if (request.getPayload() != null) {
+    InputStream input=request.getPayload().getInput();
+    try {
+      byte[] array=toByteArray(input);
+      if (!request.getPayload().isRepeatable())       request.setPayload(array);
+      gaeRequest.setPayload(array);
+    }
+ catch (    IOException e) {
+      Throwables.propagate(e);
+    }
+ finally {
+      closeQuietly(input);
+    }
+    if (request.getPayload().getContentMD5() != null)     gaeRequest.addHeader(new HTTPHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5())));
+    Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
+    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,length.toString()));
+  }
+ else {
+    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
+  }
+  return gaeRequest;
+}

@@ -2,8 +2,8 @@
   Method method=AzureQueueAsyncClient.class.getMethod("listQueues",ListOptions[].class);
   HttpRequest request=processor.createRequest(method,maxResults(1).marker("marker").prefix("prefix"));
   assertRequestLineEquals(request,"GET https://identity.queue.core.windows.net/?comp=list&maxresults=1&marker=marker&prefix=prefix HTTP/1.1");
-  assertHeadersEqual(request,"x-ms-version: 2009-09-19\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,AccountNameEnumerationResultsHandler.class);
   assertExceptionParserClassEquals(method,null);

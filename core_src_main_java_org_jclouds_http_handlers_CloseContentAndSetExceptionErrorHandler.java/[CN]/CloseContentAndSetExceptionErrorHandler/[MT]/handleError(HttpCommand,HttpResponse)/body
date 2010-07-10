@@ -1,10 +1,13 @@
 {
   String content;
   try {
-    content=response.getContent() != null ? Utils.toStringAndClose(response.getContent()) : null;
-    command.setException(new HttpResponseException(command,response,content));
+    content=from.getPayload() != null ? Utils.toStringAndClose(from.getPayload().getInput()) : null;
+    command.setException(new HttpResponseException(command,from,content));
   }
  catch (  IOException e) {
-    command.setException(new HttpResponseException(command,response));
+    command.setException(new HttpResponseException(command,from));
+  }
+ finally {
+    releasePayload(from);
   }
 }

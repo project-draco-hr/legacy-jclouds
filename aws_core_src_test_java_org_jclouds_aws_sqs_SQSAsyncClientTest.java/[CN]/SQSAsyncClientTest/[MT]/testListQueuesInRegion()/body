@@ -2,8 +2,8 @@
   Method method=SQSAsyncClient.class.getMethod("listQueuesInRegion",String.class,Array.newInstance(ListQueuesOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,(String)null);
   assertRequestLineEquals(request,"POST https://sqs.us-east-1.amazonaws.com/ HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 36\nContent-Type: application/x-www-form-urlencoded\nHost: sqs.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-02-01&Action=ListQueues");
+  assertNonPayloadHeadersEqual(request,"Host: sqs.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2009-02-01&Action=ListQueues","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,RegexListQueuesResponseHandler.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

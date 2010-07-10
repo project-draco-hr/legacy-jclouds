@@ -2,8 +2,8 @@
   Method method=AvailabilityZoneAndRegionAsyncClient.class.getMethod("describeAvailabilityZonesInRegion",String.class,Array.newInstance(DescribeAvailabilityZonesOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,Region.US_WEST_1);
   assertRequestLineEquals(request,"POST https://ec2.us-west-1.amazonaws.com/ HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 51\nContent-Type: application/x-www-form-urlencoded\nHost: ec2.us-west-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-11-30&Action=DescribeAvailabilityZones");
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-west-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2009-11-30&Action=DescribeAvailabilityZones","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,DescribeAvailabilityZonesResponseHandler.class);
   assertExceptionParserClassEquals(method,null);

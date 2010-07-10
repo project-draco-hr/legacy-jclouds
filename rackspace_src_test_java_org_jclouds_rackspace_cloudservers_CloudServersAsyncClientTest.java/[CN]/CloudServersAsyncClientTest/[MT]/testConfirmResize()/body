@@ -1,13 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("confirmResizeServer",int.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{2});
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/servers/2/action");
-  assertEquals(request.getMethod(),HttpMethod.POST);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals("{\"confirmResize\":null}",request.getPayload().getRawContent());
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
-  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,2);
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/2/action?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"confirmResize\":null}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

@@ -2,9 +2,9 @@
   Method method=VCloudAsyncClient.class.getMethod("deleteVApp",String.class);
   HttpRequest request=processor.createRequest(method,1);
   assertRequestLineEquals(request,"DELETE https://vcloud.safesecureweb.com/api/v0.8/vApp/1 HTTP/1.1");
-  assertHeadersEqual(request,"");
-  assertPayloadEquals(request,null);
-  assertResponseParserClassEquals(method,request,CloseContentAndReturn.class);
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnVoidOnNotFoundOr404.class);
   checkFilters(request);

@@ -4,10 +4,10 @@
     digest=MessageDigest.getInstance(algorithm);
   }
  catch (  NoSuchAlgorithmException e1) {
-    Throwables.propagate(e1);
+    propagate(e1);
     return null;
   }
-  byte[] buffer=new byte[1024];
+  byte[] buffer=new byte[BUF_SIZE];
   long length=0;
   int numRead=-1;
   try {
@@ -21,10 +21,10 @@
  while (numRead != -1);
   }
  catch (  IOException e) {
-    throw new RuntimeException(e);
+    propagate(e);
   }
  finally {
-    Closeables.closeQuietly(plainBytes);
+    closeQuietly(plainBytes);
   }
   return digest.digest();
 }

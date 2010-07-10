@@ -1,12 +1,10 @@
 {
-  Method method=AzureBlobAsyncClient.class.getMethod("listBlobs",Array.newInstance(ListBlobsOptions.class,0).getClass());
-  HttpRequest request=processor.createRequest(method,new Object[]{});
-  assertEquals(request.getEndpoint().getHost(),"identity.blob.core.windows.net");
-  assertEquals(request.getEndpoint().getPath(),"/$root");
-  assertEquals(request.getEndpoint().getQuery(),"restype=container&comp=list");
-  assertEquals(request.getMethod(),HttpMethod.GET);
-  assertEquals(request.getHeaders().size(),1);
-  assertEquals(request.getHeaders().get("x-ms-version"),Collections.singletonList("2009-09-19"));
-  assertEquals(processor.createResponseParser(method,request).getClass(),ParseSax.class);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
+  Method method=AzureBlobAsyncClient.class.getMethod("listBlobs",ListBlobsOptions[].class);
+  HttpRequest request=processor.createRequest(method);
+  assertRequestLineEquals(request,"GET https://identity.blob.core.windows.net/%24root?restype=container&comp=list HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,ContainerNameEnumerationResultsHandler.class);
+  assertExceptionParserClassEquals(method,null);
 }

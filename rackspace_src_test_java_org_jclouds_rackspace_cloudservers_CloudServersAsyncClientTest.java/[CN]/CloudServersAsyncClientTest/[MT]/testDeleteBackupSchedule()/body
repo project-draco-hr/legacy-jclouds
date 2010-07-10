@@ -1,10 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("deleteBackupSchedule",int.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{2});
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/servers/2/backup_schedule");
-  assertEquals(request.getMethod(),HttpMethod.DELETE);
-  assertEquals(request.getHeaders().size(),0);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),ReturnFalseOnNotFoundOr404.class);
-  assertEquals(processor.createResponseParser(method,request).getClass(),ReturnTrueIf2xx.class);
+  HttpRequest request=processor.createRequest(method,2);
+  assertRequestLineEquals(request,"DELETE http://serverManagementUrl/servers/2/backup_schedule HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReturnTrueIf2xx.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnFalseOnNotFoundOr404.class);
+  checkFilters(request);
 }

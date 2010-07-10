@@ -2,15 +2,19 @@
   if (from.getStatusCode() > 206)   throw new HttpException(String.format("Unhandled status code  - %1$s",from));
   if ("text/uri-list".equals(from.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE))) {
     try {
-      if (from.getContent() == null)       throw new HttpResponseException("no content",null,from);
-      String toParse=Utils.toStringAndClose(from.getContent());
+      if (from.getPayload().getInput() == null)       throw new HttpResponseException("no content",null,from);
+      String toParse=Utils.toStringAndClose(from.getPayload().getInput());
       return URI.create(toParse.trim());
     }
  catch (    IOException e) {
       throw new HttpResponseException("couldn't parse uri from content",null,from,e);
     }
+ finally {
+      releasePayload(from);
+    }
   }
  else {
+    releasePayload(from);
     String location=from.getFirstHeaderOrNull(HttpHeaders.LOCATION);
     if (location == null)     location=from.getFirstHeaderOrNull("location");
     if (location != null) {

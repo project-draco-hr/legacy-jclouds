@@ -1,6 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("createServer",String.class,int.class,int.class,createServerOptionsVarargsClass);
-  HttpRequest request=processor.createRequest(method,new Object[]{"ralphie",2,1,new CreateServerOptions[]{withFile("/etc/jclouds","foo".getBytes())}});
-  assertEquals("{\"server\":{\"name\":\"ralphie\",\"imageId\":2,\"flavorId\":1,\"personality\":[{\"path\":\"/etc/jclouds\",\"contents\":\"Zm9v\"}]}}",request.getPayload().getRawContent());
-  validateCreateServer(method,request,null);
+  HttpRequest request=processor.createRequest(method,"ralphie",2,1,withFile("/etc/jclouds","foo".getBytes()));
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"server\":{\"name\":\"ralphie\",\"imageId\":2,\"flavorId\":1,\"personality\":[{\"path\":\"/etc/jclouds\",\"contents\":\"Zm9v\"}]}}","application/json",false);
+  assertResponseParserClassEquals(method,request,ParseServerFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

@@ -2,8 +2,8 @@
   Method method=AtmosStorageAsyncClient.class.getMethod("readFile",String.class,Array.newInstance(GetOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"dir/file");
   assertRequestLineEquals(request,"GET https://accesspoint.atmosonline.com/rest/namespace/dir/file HTTP/1.1");
-  assertHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseObjectFromHeadersAndHttpContent.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);

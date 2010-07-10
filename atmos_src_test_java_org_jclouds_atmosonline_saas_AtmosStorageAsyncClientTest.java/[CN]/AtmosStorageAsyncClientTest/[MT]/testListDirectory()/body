@@ -2,8 +2,8 @@
   Method method=AtmosStorageAsyncClient.class.getMethod("listDirectory",String.class,Array.newInstance(ListOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"directory");
   assertRequestLineEquals(request,"GET https://accesspoint.atmosonline.com/rest/namespace/directory/ HTTP/1.1");
-  assertHeadersEqual(request,HttpHeaders.ACCEPT + ": text/xml\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": text/xml\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseDirectoryListFromContentAndHeaders.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ThrowContainerNotFoundOn404.class);

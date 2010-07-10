@@ -2,8 +2,8 @@
   Method method=VCloudAsyncClient.class.getMethod("getOrganization",String.class);
   HttpRequest request=processor.createRequest(method,"1");
   assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/org/1 HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.org+xml\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.org+xml\n");
+  assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,OrgHandler.class);
   assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);

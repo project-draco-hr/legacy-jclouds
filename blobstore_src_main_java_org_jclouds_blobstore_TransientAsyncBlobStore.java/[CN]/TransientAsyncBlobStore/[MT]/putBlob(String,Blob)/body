@@ -22,13 +22,16 @@
   Blob blob=blobFactory.create(copy(object.getMetadata()));
   blob.setPayload(payload);
   blob.getMetadata().setLastModified(new Date());
+  blob.getMetadata().setSize(payload.getContentLength());
+  blob.getMetadata().setContentMD5(payload.getContentMD5());
+  blob.getMetadata().setContentType(payload.getContentType());
   String eTag=encryptionService.hex(payload.getContentMD5());
   blob.getMetadata().setETag(eTag);
   container.put(blob.getMetadata().getName(),blob);
   blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(blob.getMetadata().getLastModified()));
   blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,blob.getMetadata().getContentType());
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,blob.getMetadata().getSize() + "");
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,payload.getContentType());
+  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,payload.getContentLength() + "");
   blob.getAllHeaders().put("Content-MD5",encryptionService.base64(payload.getContentMD5()));
   blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
   return immediateFuture(eTag);

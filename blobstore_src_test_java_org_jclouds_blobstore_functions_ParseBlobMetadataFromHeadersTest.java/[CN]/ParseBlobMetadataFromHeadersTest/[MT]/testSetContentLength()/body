@@ -1,6 +1,6 @@
 {
-  HttpResponse from=new HttpResponse();
-  from.getHeaders().put(HttpHeaders.CONTENT_LENGTH,"100");
+  HttpResponse from=new HttpResponse(200,"ok",Payloads.newStringPayload(""));
+  from.getPayload().setContentLength(100l);
   MutableBlobMetadata metadata=blobMetadataProvider.get();
   parser.setContentLength(from,metadata);
   assertEquals(metadata.getSize(),new Long(100));

@@ -1,7 +1,8 @@
 {
-  String message=parseMessage(response);
-  Exception exception=message != null ? new HttpResponseException(command,response,message) : new HttpResponseException(command,response);
+  Exception exception=new HttpResponseException(command,response);
   try {
+    String message=parseMessage(response);
+    exception=message != null ? new HttpResponseException(command,response,message) : exception;
     message=message != null ? message : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
 switch (response.getStatusCode()) {
 case 401:
@@ -23,8 +24,10 @@ exception=new ResourceNotFoundException(message,exception);
 break;
 }
 }
-  finally {
-Closeables.closeQuietly(response.getContent());
+ catch (IOException e) {
+}
+ finally {
+releasePayload(response);
 command.setException(exception);
 }
 }

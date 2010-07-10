@@ -1,12 +1,7 @@
 {
   Method method=TestRequest.class.getMethod("putHeader",String.class,String.class);
-  HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1","data"});
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"/1");
-  assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(request.getHeaders().size(),3);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("data".getBytes().length + ""));
-  assertEquals(request.getHeaders().get("foo"),Collections.singletonList("--1--"));
-  assertEquals(request.getPayload().getRawContent(),"data");
+  HttpRequest request=factory(TestRequest.class).createRequest(method,"1","data");
+  assertRequestLineEquals(request,"PUT http://localhost:9999/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"foo: --1--\n");
+  assertPayloadEquals(request,"data","application/unknown",false);
 }

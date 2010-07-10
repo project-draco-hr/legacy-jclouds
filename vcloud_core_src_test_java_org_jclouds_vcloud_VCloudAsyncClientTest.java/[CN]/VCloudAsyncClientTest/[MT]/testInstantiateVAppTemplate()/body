@@ -2,8 +2,8 @@
   Method method=VCloudAsyncClient.class.getMethod("instantiateVAppTemplateInVDC",String.class,String.class,String.class,Array.newInstance(InstantiateVAppTemplateOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"1","my-vapp",3 + "");
   assertRequestLineEquals(request,"POST https://vcloud.safesecureweb.com/api/v0.8/vdc/1/action/instantiateVAppTemplate HTTP/1.1");
-  assertHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\nContent-Length: 667\nContent-Type: application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml\n");
-  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/newvapp-hosting.xml")));
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/newvapp-hosting.xml")),"application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,VAppHandler.class);
   assertExceptionParserClassEquals(method,null);

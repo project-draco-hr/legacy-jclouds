@@ -1,6 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("rebuildServer",int.class,rebuildServerOptionsVarargsClass);
-  HttpRequest request=processor.createRequest(method,new Object[]{3});
-  assertEquals("{\"rebuild\":{}}",request.getPayload().getRawContent());
-  validateRebuildServer(method,request);
+  HttpRequest request=processor.createRequest(method,3);
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/3/action?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"rebuild\":{}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

@@ -1,0 +1,14 @@
+{
+  this.declaring=(Class<T>)typeLiteral.getRawType();
+  this.injector=injector;
+  this.parserFactory=parserFactory;
+  this.utils=utils;
+  this.uriBuilderProvider=injector.getProvider(UriBuilder.class);
+  seedCache(declaring);
+  if (declaring.isAnnotationPresent(SkipEncoding.class)) {
+    skips=declaring.getAnnotation(SkipEncoding.class).value();
+  }
+ else {
+    skips=new char[]{};
+  }
+}

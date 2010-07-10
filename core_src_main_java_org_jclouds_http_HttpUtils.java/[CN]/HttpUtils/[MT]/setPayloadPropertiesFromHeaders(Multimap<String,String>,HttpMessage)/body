@@ -1,0 +1,31 @@
+{
+  Payload payload=request.getPayload();
+  boolean chunked=any(headers.entries(),new Predicate<Entry<String,String>>(){
+    @Override public boolean apply(    Entry<String,String> input){
+      return "Transfer-Encoding".equalsIgnoreCase(input.getKey()) && "chunked".equalsIgnoreCase(input.getValue());
+    }
+  }
+);
+  for (  Entry<String,String> header : headers.entries()) {
+    if (!chunked && CONTENT_LENGTH.equalsIgnoreCase(header.getKey())) {
+      if (payload != null)       payload.setContentLength(new Long(header.getValue()));
+    }
+ else     if ("Content-MD5".equalsIgnoreCase(header.getKey())) {
+      if (payload != null)       payload.setContentMD5(encryptionService.fromBase64(header.getValue()));
+    }
+ else     if (CONTENT_TYPE.equalsIgnoreCase(header.getKey())) {
+      if (payload != null)       payload.setContentType(header.getValue());
+    }
+ else {
+      request.getHeaders().put(header.getKey(),header.getValue());
+    }
+  }
+  String contentRange=request.getFirstHeaderOrNull("Content-Range");
+  if (contentRange != null) {
+    payload.setContentLength(Long.parseLong(contentRange.substring(0,contentRange.lastIndexOf('/'))));
+  }
+  checkArgument(request.getPayload() == null || request.getFirstHeaderOrNull(CONTENT_TYPE) == null,"configuration error please use request.getPayload().setContentType(value) as opposed to adding a content type   header: " + request);
+  checkArgument(request.getPayload() == null || request.getFirstHeaderOrNull(CONTENT_LENGTH) == null,"configuration error please use request.getPayload().setContentLength(value) as opposed to adding a content length header: " + request);
+  checkArgument(request.getPayload() == null || request.getPayload().getContentLength() != null || "chunked".equalsIgnoreCase(request.getFirstHeaderOrNull("Transfer-Encoding")),"either chunked encoding must be set on the http request or contentlength set on the payload: " + request);
+  checkArgument(request.getPayload() == null || request.getFirstHeaderOrNull("Content-MD5") == null,"configuration error please use request.getPayload().setContentMD5(value) as opposed to adding a content md5 header: " + request);
+}

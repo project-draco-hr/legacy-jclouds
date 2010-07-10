@@ -1,0 +1,46 @@
+{
+  org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(request.getJavaMethod(),request.getArgs());
+  Map<String,String> mapParams=buildPostParams(request.getJavaMethod(),request.getArgs());
+  if (mapBinder != null) {
+    mapBinder.bindToRequest(request,mapParams);
+  }
+ else {
+    OUTER:     for (    Entry<Integer,Set<Annotation>> entry : filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
+      public boolean apply(      Set<Annotation> input){
+        return input.size() >= 1;
+      }
+    }
+).entrySet()) {
+      boolean shouldBreak=false;
+      BinderParam payloadAnnotation=(BinderParam)entry.getValue().iterator().next();
+      Binder binder=injector.getInstance(payloadAnnotation.value());
+      if (request.getArgs().length >= entry.getKey() + 1 && request.getArgs()[entry.getKey()] != null) {
+        Object input;
+        Class<?> parameterType=request.getJavaMethod().getParameterTypes()[entry.getKey()];
+        Class<? extends Object> argType=request.getArgs()[entry.getKey()].getClass();
+        if (!argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+          int arrayLength=request.getArgs().length - request.getJavaMethod().getParameterTypes().length + 1;
+          if (arrayLength == 0)           break OUTER;
+          input=(Object[])Array.newInstance(request.getArgs()[entry.getKey()].getClass(),arrayLength);
+          System.arraycopy(request.getArgs(),entry.getKey(),input,0,arrayLength);
+          shouldBreak=true;
+        }
+ else         if (argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+          input=request.getArgs()[entry.getKey()];
+        }
+ else {
+          input=request.getArgs()[entry.getKey()];
+          if (input.getClass().isArray()) {
+            Object[] payloadArray=(Object[])input;
+            input=payloadArray.length > 0 ? payloadArray[0] : null;
+          }
+        }
+        if (input != null) {
+          binder.bindToRequest(request,input);
+        }
+        if (shouldBreak)         break OUTER;
+      }
+    }
+  }
+  utils.setPayloadPropertiesFromHeaders(headers,request);
+}

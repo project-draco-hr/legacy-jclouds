@@ -1,0 +1,10 @@
+{
+  byte[] returnVal=toByteArrayOrNull(response);
+  if (returnVal != null && !response.getPayload().isRepeatable()) {
+    Payload newPayload=Payloads.newByteArrayPayload(returnVal);
+    newPayload.setContentMD5(response.getPayload().getContentMD5());
+    newPayload.setContentType(response.getPayload().getContentType());
+    response.setPayload(newPayload);
+  }
+  return returnVal;
+}

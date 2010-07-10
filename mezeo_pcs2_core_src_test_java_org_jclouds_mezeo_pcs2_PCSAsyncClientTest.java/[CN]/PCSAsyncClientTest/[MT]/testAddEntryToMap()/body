@@ -1,8 +1,11 @@
 {
   Method method=PCSAsyncClient.class.getMethod("addMetadataItemToMap",URI.class,String.class,Map.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{URI.create("http://localhost/pow"),"newkey",ImmutableMap.of("key","value")});
-  assertEquals(request.getRequestLine(),"GET http://localhost/pow/metadata/newkey HTTP/1.1");
-  assertEquals(request.getHeaders().size(),0);
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
-  assertEquals(processor.createResponseParser(method,request).getClass(),AddMetadataItemIntoMap.class);
+  HttpRequest request=processor.createRequest(method,URI.create("http://localhost/pow"),"newkey",ImmutableMap.of("key","value"));
+  assertRequestLineEquals(request,"GET http://localhost/pow/metadata/newkey HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,AddMetadataItemIntoMap.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }

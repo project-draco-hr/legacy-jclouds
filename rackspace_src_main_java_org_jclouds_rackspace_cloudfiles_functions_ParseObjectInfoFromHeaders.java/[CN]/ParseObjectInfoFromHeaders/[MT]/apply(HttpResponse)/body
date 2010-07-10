@@ -1,6 +1,7 @@
 {
   BlobMetadata base=blobMetadataParser.apply(from);
   MutableObjectInfoWithMetadata to=blobToObjectInfo.apply(base);
+  to.setBytes(attemptToParseSizeAndRangeFromHeaders(from));
   String eTagHeader=from.getFirstHeaderOrNull("Etag");
   if (eTagHeader != null) {
     String hashString=Utils.replaceAll(eTagHeader,'"',"");

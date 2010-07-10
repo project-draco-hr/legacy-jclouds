@@ -1,8 +1,7 @@
 {
   Injector injector=new RestContextFactory().createContextBuilder("s3","foo","bar",ImmutableSet.of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
   utils=injector.getInstance(S3Utils.class);
-  response=new HttpResponse();
-  response.setStatusCode(400);
+  response=new HttpResponse(400,"boa",Payloads.newStringPayload(""));
   response.getHeaders().put(S3Headers.REQUEST_ID,"requestid");
   response.getHeaders().put(S3Headers.REQUEST_TOKEN,"requesttoken");
   command=createMock(HttpCommand.class);

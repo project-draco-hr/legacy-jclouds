@@ -3,6 +3,6 @@
   Method method=TestRequest.class.getMethod("get",String.class,HttpRequestOptions.class);
   HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
   assertRequestLineEquals(request,"GET http://localhost:9999/1?prefix=1 HTTP/1.1");
-  assertHeadersEqual(request,"Host: localhost\n");
-  assertPayloadEquals(request,null);
+  assertNonPayloadHeadersEqual(request,"Host: localhost\n");
+  assertPayloadEquals(request,null,null,false);
 }

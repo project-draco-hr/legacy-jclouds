@@ -1,10 +1,8 @@
 {
   PayloadOptions options=new PayloadOptions();
   Method method=TestRequest.class.getMethod("putOptions",String.class,HttpRequestOptions.class);
-  HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"/1");
-  assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(sortAndConcatHeadersIntoString(request.getHeaders()),"Content-Length: 3\nContent-Type: application/unknown\nHost: localhost\n");
-  assertEquals(request.getPayload().getRawContent(),"foo");
+  HttpRequest request=factory(TestRequest.class).createRequest(method,"1",options);
+  assertRequestLineEquals(request,"PUT http://localhost:9999/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: localhost\n");
+  assertPayloadEquals(request,"foo","application/unknown",false);
 }

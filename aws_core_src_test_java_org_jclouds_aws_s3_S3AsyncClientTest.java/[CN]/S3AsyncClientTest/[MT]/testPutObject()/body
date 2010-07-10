@@ -2,8 +2,8 @@
   Method method=S3AsyncClient.class.getMethod("putObject",String.class,S3Object.class,Array.newInstance(PutObjectOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,"bucket",blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB));
   assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/hello HTTP/1.1");
-  assertHeadersEqual(request,"Content-Length: 5\nContent-Type: text/plain\nHost: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(request,"hello");
+  assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
+  assertPayloadEquals(request,"hello","text/plain",false);
   assertResponseParserClassEquals(method,request,ParseETagHeader.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

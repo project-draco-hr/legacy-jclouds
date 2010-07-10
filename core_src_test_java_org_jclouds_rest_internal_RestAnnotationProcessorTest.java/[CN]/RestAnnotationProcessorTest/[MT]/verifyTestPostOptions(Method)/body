@@ -1,5 +1,5 @@
 {
-  HttpRequest request=factory(TestPayloadParamVarargs.class).createRequest(method,new Object[]{new HttpRequestOptions(){
+  HttpRequest request=factory(TestPayloadParamVarargs.class).createRequest(method,new HttpRequestOptions(){
     public Multimap<String,String> buildMatrixParameters(){
       return LinkedHashMultimap.create();
     }
@@ -19,12 +19,8 @@
       return "fooya";
     }
   }
-});
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"");
-  assertEquals(request.getMethod(),HttpMethod.POST);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList("application/unknown"));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList("fooya".getBytes().length + ""));
-  assertEquals(request.getPayload().getRawContent(),"fooya");
+);
+  assertRequestLineEquals(request,"POST http://localhost:9999 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"fooya","application/unknown",false);
 }

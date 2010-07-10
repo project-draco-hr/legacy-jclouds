@@ -1,6 +1,7 @@
 {
   Injector injector=new RestContextFactory().createContextBuilder("chef",USER_ID,PRIVATE_KEY,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
   encryptionService=injector.getInstance(EncryptionService.class);
+  HttpUtils utils=injector.getInstance(HttpUtils.class);
   Security.addProvider(new BouncyCastleProvider());
   KeyPair pair=KeyPair.class.cast(new PEMReader(new StringReader(PRIVATE_KEY)).readObject());
   PrivateKey privateKey=pair.getPrivate();
@@ -9,5 +10,5 @@
       return TIMESTAMP_ISO8601;
     }
   }
-,encryptionService);
+,encryptionService,utils);
 }

@@ -1,13 +1,11 @@
 {
   Method method=CloudServersAsyncClient.class.getMethod("changeAdminPass",int.class,String.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{2,"foo"});
-  assertEquals(request.getEndpoint().getHost(),"serverManagementUrl");
-  assertEquals(request.getEndpoint().getPath(),"/servers/2");
-  assertEquals(request.getMethod(),HttpMethod.PUT);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_LENGTH),Collections.singletonList(request.getPayload().getRawContent().toString().getBytes().length + ""));
-  assertEquals(request.getHeaders().get(HttpHeaders.CONTENT_TYPE),Collections.singletonList(MediaType.APPLICATION_JSON));
-  assertEquals("{\"server\":{\"adminPass\":\"foo\"}}",request.getPayload().getRawContent());
-  assertEquals(processor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method).getClass(),MapHttp4xxCodesToExceptions.class);
-  assertEquals(processor.createResponseParser(method,request).getClass(),CloseContentAndReturn.class);
+  HttpRequest request=processor.createRequest(method,2,"foo");
+  assertRequestLineEquals(request,"PUT http://serverManagementUrl/servers/2 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"server\":{\"adminPass\":\"foo\"}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
 }
