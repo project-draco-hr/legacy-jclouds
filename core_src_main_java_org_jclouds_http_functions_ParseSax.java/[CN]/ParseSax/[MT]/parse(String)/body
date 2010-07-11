@@ -1,0 +1,10 @@
+{
+  try {
+    checkNotNull(from,"xml string");
+    checkArgument(from.indexOf('<') >= 0,String.format("not an xml document [%s] ",from));
+  }
+ catch (  RuntimeException e) {
+    return addRequestDetailsToException(e);
+  }
+  return parse(new InputSource(new StringReader(from)));
+}

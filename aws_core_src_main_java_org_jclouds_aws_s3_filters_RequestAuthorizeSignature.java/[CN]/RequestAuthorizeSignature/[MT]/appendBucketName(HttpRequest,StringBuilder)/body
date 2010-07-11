@@ -1,5 +1,17 @@
 {
-  String hostHeader=request.getFirstHeaderOrNull(HttpHeaders.HOST);
-  if (hostHeader == null)   hostHeader=checkNotNull(request.getEndpoint().getHost(),"request.getEndPoint().getHost()");
-  if (hostHeader.matches(".*" + srvExpr))   toSign.append("/").append(hostHeader.replaceAll(srvExpr,""));
+  checkArgument(req instanceof GeneratedHttpRequest<?>,"this should be a generated http request");
+  GeneratedHttpRequest<?> request=GeneratedHttpRequest.class.cast(req);
+  String bucketName=null;
+  for (int i=0; i < request.getJavaMethod().getParameterAnnotations().length; i++) {
+    if (Iterables.any(Arrays.asList(request.getJavaMethod().getParameterAnnotations()[i]),new Predicate<Annotation>(){
+      public boolean apply(      Annotation input){
+        return input.annotationType().equals(Bucket.class);
+      }
+    }
+)) {
+      bucketName=(String)request.getArgs()[i];
+      break;
+    }
+  }
+  if (bucketName != null)   toSign.append(servicePath).append(bucketName);
 }

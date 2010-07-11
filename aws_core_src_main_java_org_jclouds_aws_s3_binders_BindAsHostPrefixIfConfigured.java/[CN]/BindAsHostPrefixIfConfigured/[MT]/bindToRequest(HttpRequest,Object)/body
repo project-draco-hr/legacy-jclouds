@@ -1,0 +1,16 @@
+{
+  if (isVhostStyle) {
+    bindAsHostPrefix.bindToRequest(request,payload);
+    request.getHeaders().replaceValues(HttpHeaders.HOST,ImmutableSet.of(request.getEndpoint().getHost()));
+  }
+ else {
+    UriBuilder builder=uriBuilderProvider.get().uri(request.getEndpoint());
+    StringBuilder path=new StringBuilder(urlEncode(request.getEndpoint().getPath(),S3AsyncClient.class.getAnnotation(SkipEncoding.class).value()));
+    int indexToInsert=path.indexOf(servicePath);
+    indexToInsert=indexToInsert == -1 ? 0 : indexToInsert;
+    indexToInsert+=servicePath.length();
+    path.insert(indexToInsert,"/" + payload.toString());
+    builder.replacePath(path.toString());
+    request.setEndpoint(builder.buildFromEncodedMap(Maps.<String,Object>newHashMap()));
+  }
+}

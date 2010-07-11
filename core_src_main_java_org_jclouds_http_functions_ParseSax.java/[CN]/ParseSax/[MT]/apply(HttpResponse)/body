@@ -1,3 +1,11 @@
 {
+  try {
+    checkNotNull(from,"http response");
+    checkNotNull(from.getPayload(),"payload in " + from);
+  }
+ catch (  NullPointerException e) {
+    return addRequestDetailsToException(e);
+  }
+  if (from.getStatusCode() >= 300)   return convertStreamToStringAndParse(from);
   return parse(from.getPayload().getInput());
 }

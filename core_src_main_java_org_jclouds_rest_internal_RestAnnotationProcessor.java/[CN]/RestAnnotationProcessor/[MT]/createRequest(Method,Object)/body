@@ -18,7 +18,7 @@
     endpoint=injector.getInstance(Key.get(URI.class,org.jclouds.rest.annotations.Provider.class));
   }
   String httpMethod=getHttpMethodOrConstantOrThrowException(method);
-  UriBuilder builder=addHostPrefixIfPresent(endpoint,method,args);
+  UriBuilder builder=uriBuilderProvider.get().uri(endpoint);
   Multimap<String,String> tokenValues=LinkedHashMultimap.create();
   if (caller != null) {
     builder.path(getPath(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs()));

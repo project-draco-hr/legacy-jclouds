@@ -2,7 +2,7 @@
   HttpRequest request=command.getRequest();
   Exception exception=new HttpResponseException(command,response);
   try {
-    AWSError error=parseErrorFromContentOrNull(request,response);
+    AWSError error=utils.parseAWSErrorFromContent(request,response);
     exception=error != null ? new AWSResponseException(command,response,error) : exception;
 switch (response.getStatusCode()) {
 case 400:

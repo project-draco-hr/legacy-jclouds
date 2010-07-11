@@ -1,12 +1,15 @@
 {
+  checkState(headerTag != null,"headerTag should have been injected!");
   checkState(metadataPrefix != null,"metadataPrefix should have been injected!");
   Multimap<String,String> returnVal=LinkedHashMultimap.create();
-  returnVal.putAll(headers);
+  for (  Entry<String,String> entry : headers.entries()) {
+    returnVal.put(entry.getKey().replace("aws",headerTag),entry.getValue());
+  }
   if (metadata != null) {
     for (    String key : metadata.keySet()) {
       returnVal.put(key.startsWith(metadataPrefix) ? key : metadataPrefix + key,metadata.get(key));
     }
-    returnVal.put("x-amz-metadata-directive","REPLACE");
+    returnVal.put("x-" + headerTag + "-metadata-directive","REPLACE");
   }
   return returnVal;
 }

@@ -1,5 +1,6 @@
 {
   CopyObjectOptions options=ifSourceModifiedSince(now).ifSourceETagDoesntMatch(etag).overrideMetadataWith(goodMeta);
+  options.setHeaderTag("amz");
   options.setMetadataPrefix("x-amz-meta-");
   Multimap<String,String> headers=options.buildRequestHeaders();
   assertEquals(headers.get("x-amz-copy-source-if-modified-since").iterator().next(),new SimpleDateFormatDateService().rfc822DateFormat(now));

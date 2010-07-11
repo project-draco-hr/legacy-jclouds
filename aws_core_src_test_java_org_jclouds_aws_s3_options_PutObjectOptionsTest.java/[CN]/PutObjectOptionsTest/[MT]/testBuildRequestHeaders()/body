@@ -1,4 +1,6 @@
 {
-  Multimap<String,String> headers=withAcl(CannedAccessPolicy.AUTHENTICATED_READ).buildRequestHeaders();
+  PutObjectOptions options=withAcl(CannedAccessPolicy.AUTHENTICATED_READ);
+  options.setHeaderTag("amz");
+  Multimap<String,String> headers=options.buildRequestHeaders();
   assertEquals(headers.get(S3Headers.CANNED_ACL).iterator().next(),CannedAccessPolicy.AUTHENTICATED_READ.toString());
 }
