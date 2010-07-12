@@ -1,0 +1,22 @@
+{
+  if (from.getPayload() == null)   return null;
+  try {
+    if (from.getStatusCode() >= 200) {
+      InputStream payload=from.getPayload().getInput();
+      String toReturn=null;
+      try {
+        toReturn=Utils.toStringAndClose(payload);
+      }
+ catch (      IOException e) {
+        throw new HttpException(String.format("Couldn't receive response %1$s, payload: %2$s ",from,toReturn),e);
+      }
+      return toReturn;
+    }
+ else {
+      throw new HttpException(String.format("Unhandled status code  - %1$s",from));
+    }
+  }
+  finally {
+    releasePayload(from);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Set,"this binder is only valid for Set!");
+  Set<List<Byte>> md5s=(Set<List<Byte>>)input;
+  StringBuilder builder=new StringBuilder();
+  builder.append("{\"checksums\":{");
+  for (  List<Byte> md5 : md5s)   builder.append(String.format("\"%s\":null,",encryptionService.hex(Bytes.toArray(md5))));
+  builder.deleteCharAt(builder.length() - 1);
+  builder.append("}}");
+  super.bindToRequest(request,builder.toString());
+  request.getPayload().setContentType(MediaType.APPLICATION_JSON);
+}
