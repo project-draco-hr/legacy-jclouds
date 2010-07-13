@@ -22,6 +22,12 @@
 ),executor));
     }
     Map<String,Exception> exceptions=awaitCompletion(parallelResponses,executor,null,holder.logger,"images");
+    for (    String ccAmi : ccAmis) {
+      String region=ccAmi.split("/")[0];
+      org.jclouds.aws.ec2.domain.Image from=Iterables.getOnlyElement(sync.getAMIServices().describeImagesInRegion(region,imageIds(ccAmi.split("/")[1])));
+      Image image=parser.apply(from);
+      if (image != null)       images.put(new RegionAndName(region,image.getProviderId()),image);
+    }
     if (exceptions.size() > 0)     throw new RuntimeException(String.format("error parsing images in regions: %s",exceptions));
     holder.logger.debug("<< images(%d)",images.size());
   }

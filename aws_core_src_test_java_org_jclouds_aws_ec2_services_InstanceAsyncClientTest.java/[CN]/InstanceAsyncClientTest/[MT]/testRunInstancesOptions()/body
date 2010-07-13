@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,Region.EU_WEST_1,AvailabilityZone.EU_WEST_1A,"ami-voo",1,5,new RunInstancesOptions().withKernelId("kernelId").enableMonitoring().withSecurityGroups("group1","group2"));
   assertRequestLineEquals(request,"POST https://ec2.eu-west-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.eu-west-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-11-30&Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=eu-west-1a","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,"Version=2010-06-15&Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=eu-west-1a","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,RunInstancesResponseHandler.class);
   assertExceptionParserClassEquals(method,null);

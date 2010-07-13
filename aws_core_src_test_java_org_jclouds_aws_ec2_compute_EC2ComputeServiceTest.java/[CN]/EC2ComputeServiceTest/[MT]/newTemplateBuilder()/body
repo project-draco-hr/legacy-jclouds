@@ -1,15 +1,14 @@
 {
-  Location location=new LocationImpl(LocationScope.REGION,"us-east-1","us east",null);
   Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
   TemplateOptions defaultOptions=createMock(TemplateOptions.class);
   expect(optionsProvider.get()).andReturn(defaultOptions);
-  Image image=new ImageImpl("ami-image","image","us-east-1/ami-image",location,null,Maps.<String,String>newHashMap(),"description","1.0",null,"ubuntu",Architecture.X86_64,new Credentials("root",null));
+  Image image=new ImageImpl("cc-image","image","us-east-1/cc-image",location,null,Maps.<String,String>newHashMap(),"description","1.0",null,"ubuntu",Architecture.X86_64,new Credentials("root",null));
   replay(optionsProvider);
   replay(templateBuilderProvider);
   Provider<Set<? extends Location>> locations=Providers.<Set<? extends Location>>of(ImmutableSet.<Location>of(location));
   Provider<Set<? extends Image>> images=Providers.<Set<? extends Image>>of(ImmutableSet.<Image>of(image));
-  Provider<Set<? extends Size>> sizes=Providers.<Set<? extends Size>>of(ImmutableSet.<Size>of(EC2Size.C1_MEDIUM,EC2Size.C1_XLARGE,EC2Size.M1_LARGE,EC2Size.M1_SMALL,EC2Size.M1_XLARGE,EC2Size.M2_XLARGE,EC2Size.M2_2XLARGE,EC2Size.M2_4XLARGE));
+  Provider<Set<? extends Size>> sizes=Providers.<Set<? extends Size>>of(ImmutableSet.<Size>of(EC2Size.C1_MEDIUM,EC2Size.C1_XLARGE,EC2Size.M1_LARGE,EC2Size.M1_SMALL,EC2Size.M1_XLARGE,EC2Size.M2_XLARGE,EC2Size.M2_2XLARGE,EC2Size.M2_4XLARGE,CC1_4XLARGE));
   return new TemplateBuilderImpl(locations,images,sizes,location,optionsProvider,templateBuilderProvider){
   }
 ;

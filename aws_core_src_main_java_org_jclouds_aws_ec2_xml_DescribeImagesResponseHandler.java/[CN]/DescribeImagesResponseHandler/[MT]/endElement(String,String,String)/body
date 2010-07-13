@@ -62,6 +62,9 @@
  else   if (qName.equals("rootDeviceName")) {
     rootDeviceName=currentText.toString().trim();
   }
+ else   if (qName.equals("virtualizationType")) {
+    virtualizationType=currentText.toString().trim();
+  }
  else   if (qName.equals("item")) {
     if (inBlockDeviceMapping) {
       ebsBlockDevices.put(deviceName,new Image.EbsBlockDevice(snapshotId,volumeSize,deleteOnTermination));
@@ -74,7 +77,7 @@
       try {
         String region=EC2Utils.findRegionInArgsOrNull((GeneratedHttpRequest<?>)request);
         if (region == null)         region=defaultRegion;
-        contents.add(new Image(region,architecture,this.name,description,imageId,imageLocation,imageOwnerId,imageState,imageType,isPublic,productCodes,kernelId,platform,ramdiskId,rootDeviceType,rootDeviceName,ebsBlockDevices));
+        contents.add(new Image(region,architecture,this.name,description,imageId,imageLocation,imageOwnerId,imageState,imageType,isPublic,productCodes,kernelId,platform,ramdiskId,rootDeviceType,rootDeviceName,ebsBlockDevices,virtualizationType));
       }
  catch (      NullPointerException e) {
         logger.warn(e,"malformed image: %s",imageId);
@@ -95,6 +98,7 @@
       this.rootDeviceType=null;
       this.rootDeviceName=null;
       this.ebsBlockDevices=Maps.newHashMap();
+      this.virtualizationType="paravirtual";
     }
   }
   currentText=new StringBuilder();

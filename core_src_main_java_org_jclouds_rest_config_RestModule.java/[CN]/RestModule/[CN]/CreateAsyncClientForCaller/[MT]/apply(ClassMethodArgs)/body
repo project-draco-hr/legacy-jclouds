@@ -1,15 +1,8 @@
 {
   Class clazz=from.getAsyncClass();
   TypeLiteral typeLiteral=TypeLiteral.get(clazz);
-  Injector injector=this.injector.createChildInjector(callerModule,new AbstractModule(){
-    @Override protected void configure(){
-      bind(ClassMethodArgs.class).annotatedWith(Caller.class).toInstance(from);
-      install(callerModule);
-    }
-  }
-);
   RestAnnotationProcessor util=(RestAnnotationProcessor)injector.getInstance(Key.get(TypeLiteral.get(Types.newParameterizedType(RestAnnotationProcessor.class,clazz))));
-  injector.injectMembers(util);
+  util.setCaller(from);
   ConcurrentMap<ClassMethodArgs,Object> delegateMap=injector.getInstance(Key.get(new TypeLiteral<ConcurrentMap<ClassMethodArgs,Object>>(){
   }
 ,Names.named("async")));
