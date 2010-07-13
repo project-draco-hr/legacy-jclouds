@@ -1,0 +1,6 @@
+{
+  BlobToHttpGetOptions converter=new BlobToHttpGetOptions();
+  org.jclouds.blobstore.options.GetOptions blobGet=new org.jclouds.blobstore.options.GetOptions().range(2,5);
+  GetOptions httpGet=converter.apply(blobGet);
+  assertEquals(httpGet.buildRequestHeaders().get("Range"),ImmutableSet.of("bytes=2-5"));
+}
