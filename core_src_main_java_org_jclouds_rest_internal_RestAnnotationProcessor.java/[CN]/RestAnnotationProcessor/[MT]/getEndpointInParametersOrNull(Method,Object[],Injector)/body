@@ -1,5 +1,5 @@
 {
-  Map<Integer,Set<Annotation>> map=indexWithOnlyOneAnnotation(method,"@EndpointParam",methodToIndexOfParamToEndpointParamAnnotations);
+  Map<Integer,Set<Annotation>> map=RestAnnotationProcessor.indexWithOnlyOneAnnotation(method,"@EndpointParam",RestAnnotationProcessor.methodToIndexOfParamToEndpointParamAnnotations);
   if (map.size() == 1 && args.length > 0) {
     EndpointParam annotation=(EndpointParam)map.values().iterator().next().iterator().next();
     int index=map.keySet().iterator().next();
@@ -10,8 +10,7 @@
       return returnVal;
     }
  catch (    NullPointerException e) {
-      logger.error("argument at index %d on method %s",index,method);
-      throw e;
+      throw new IllegalArgumentException(String.format("argument at index %d on method %s",index,method),e);
     }
   }
   return null;

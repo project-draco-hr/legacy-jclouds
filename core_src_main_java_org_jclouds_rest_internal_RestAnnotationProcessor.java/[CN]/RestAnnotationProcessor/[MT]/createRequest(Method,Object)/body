@@ -1,18 +1,8 @@
 {
   inputParamValidator.validateMethodParametersOrThrow(method,args);
-  URI endpoint;
+  URI endpoint=callerEndpoint;
   try {
-    if (caller != null) {
-      try {
-        endpoint=getEndpointFor(caller.getMethod(),caller.getArgs());
-      }
- catch (      IllegalStateException e) {
-        endpoint=getEndpointFor(method,args);
-      }
-    }
- else {
-      endpoint=getEndpointFor(method,args);
-    }
+    if (endpoint == null)     endpoint=getEndpointFor(method,args,injector);
   }
  catch (  IllegalStateException e) {
     endpoint=injector.getInstance(Key.get(URI.class,org.jclouds.rest.annotations.Provider.class));
@@ -49,7 +39,7 @@
       builder.path(pathSuffix);
     }
     String stringPayload=options.buildStringPayload();
-    if (stringPayload != null)     payload=newStringPayload(stringPayload);
+    if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
   }
   if (queryParams.size() > 0) {
     builder.replaceQuery(makeQueryLine(queryParams,null,skips));
@@ -67,15 +57,15 @@ catch (  UriBuilderException e) {
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
   if (payload == null)   payload=findPayloadInArgs(args);
-  List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
+  List<? extends Part> parts=getParts(method,args,Iterables.concat(tokenValues.entries(),formParams.entries()));
   if (parts.size() > 0) {
     if (formParams.size() > 0) {
-      parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
+      parts=newLinkedList(Iterables.concat(Iterables.transform(formParams.entries(),ENTRY_TO_PART),parts));
     }
     payload=new MultipartForm(BOUNDARY,parts);
   }
  else   if (formParams.size() > 0) {
-    payload=newUrlEncodedFormPayload(formParams,skips);
+    payload=Payloads.newUrlEncodedFormPayload(formParams,skips);
   }
   if (payload != null) {
     request.setPayload(payload);
