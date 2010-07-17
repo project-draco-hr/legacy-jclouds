@@ -1,0 +1,6 @@
+{
+  String encodedJson=encryptionService.base64(checkNotNull(input,"json").toString().getBytes());
+  addFormParamTo(request,"Storage.S3.UploadPolicy",encodedJson);
+  String signature=signer.sign(encodedJson);
+  addFormParamTo(request,"Storage.S3.UploadPolicySignature",signature);
+}

@@ -1,0 +1,9 @@
+{
+  DateService dateService=injector.getInstance(DateService.class);
+  InputStream is=getClass().getResourceAsStream("/ec2/describe_bundle_tasks.xml");
+  BundleTask expected=new BundleTask(defaultRegion,"bun-c1a540a8",null,"i-12345678",20,dateService.iso8601DateParse("2008-10-07T11:41:50.000Z"),"canceling","my-bucket","winami",dateService.iso8601DateParse("2008-10-07T11:51:50.000Z"));
+  DescribeBundleTasksResponseHandler handler=injector.getInstance(DescribeBundleTasksResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  BundleTask result=Iterables.getOnlyElement(factory.create(handler).parse(is));
+  assertEquals(result,expected);
+}
