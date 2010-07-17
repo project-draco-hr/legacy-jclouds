@@ -1,0 +1,12 @@
+{
+  List<String> accept=Collections.emptyList();
+  if (method.getDeclaringClass().isAnnotationPresent(Consumes.class)) {
+    Consumes header=method.getDeclaringClass().getAnnotation(Consumes.class);
+    accept=asList(header.value());
+  }
+  if (method.isAnnotationPresent(Consumes.class)) {
+    Consumes header=method.getAnnotation(Consumes.class);
+    accept=asList(header.value());
+  }
+  return accept;
+}

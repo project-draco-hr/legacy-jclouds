@@ -1,10 +1,4 @@
 {
-  if (declaring.isAnnotationPresent(Consumes.class)) {
-    Consumes header=declaring.getAnnotation(Consumes.class);
-    headers.replaceValues(ACCEPT,asList(header.value()));
-  }
-  if (method.isAnnotationPresent(Consumes.class)) {
-    Consumes header=method.getAnnotation(Consumes.class);
-    headers.replaceValues(ACCEPT,asList(header.value()));
-  }
+  List<String> accept=getAcceptHeadersOrNull(method);
+  if (accept.size() > 0)   headers.replaceValues(ACCEPT,accept);
 }

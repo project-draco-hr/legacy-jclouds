@@ -1,7 +1,9 @@
 {
   InputStream is=getClass().getResourceAsStream("/cloudservers/test_list_flavors_detail.json");
-  ParseFlavorListFromJsonResponse parser=new ParseFlavorListFromJsonResponse(i.getInstance(Gson.class));
-  List<Flavor> response=parser.apply(is);
+  UnwrapOnlyJsonValue<List<Flavor>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Flavor>>>(){
+  }
+));
+  List<Flavor> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   assertEquals(response.get(0).getId(),1);
   assertEquals(response.get(0).getName(),"256 MB Server");
   assertEquals(response.get(0).getDisk(),new Integer(10));

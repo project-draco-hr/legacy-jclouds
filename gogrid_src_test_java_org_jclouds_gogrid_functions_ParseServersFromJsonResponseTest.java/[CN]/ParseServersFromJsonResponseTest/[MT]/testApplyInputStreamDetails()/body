@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_get_server_list.json");
-  ParseServerListFromJsonResponse parser=new ParseServerListFromJsonResponse(i.getInstance(Gson.class));
-  SortedSet<Server> response=parser.apply(is);
+  ParseServerListFromJsonResponse parser=i.getInstance(ParseServerListFromJsonResponse.class);
+  SortedSet<Server> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   Option dc=new Option(1l,"US-West-1","US West 1 Datacenter");
   Option centOs=new Option(13L,"CentOS 5.2 (32-bit)","CentOS 5.2 (32-bit)");
   Option webServer=new Option(1L,"Web Server","Web or Application Server");

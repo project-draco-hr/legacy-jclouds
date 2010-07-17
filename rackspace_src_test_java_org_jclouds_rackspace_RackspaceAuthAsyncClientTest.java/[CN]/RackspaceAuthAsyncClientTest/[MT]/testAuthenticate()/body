@@ -1,11 +1,10 @@
 {
   Method method=RackspaceAuthAsyncClient.class.getMethod("authenticate",String.class,String.class);
-  HttpRequest request=processor.createRequest(method,"foo","bar");
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"/auth");
-  assertEquals(request.getMethod(),HttpMethod.GET);
-  assertEquals(request.getHeaders().size(),2);
-  assertEquals(request.getHeaders().get(RackspaceHeaders.AUTH_USER),Collections.singletonList("foo"));
-  assertEquals(request.getHeaders().get(RackspaceHeaders.AUTH_KEY),Collections.singletonList("bar"));
-  assertEquals(RestAnnotationProcessor.getParserOrThrowException(method),ParseAuthenticationResponseFromHeaders.class);
+  HttpRequest httpRequest=processor.createRequest(method,"foo","bar");
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/auth HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"X-Auth-Key: bar\nX-Auth-User: foo\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseAuthenticationResponseFromHeaders.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
 }

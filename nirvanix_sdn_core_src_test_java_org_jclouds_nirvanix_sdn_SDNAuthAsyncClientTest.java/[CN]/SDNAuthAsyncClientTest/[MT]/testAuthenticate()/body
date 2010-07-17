@@ -1,10 +1,10 @@
 {
   Method method=SDNAuthAsyncClient.class.getMethod("authenticate",String.class,String.class,String.class);
-  HttpRequest request=processor.createRequest(method,new Object[]{"apple","foo","bar"});
-  assertEquals(request.getEndpoint().getHost(),"localhost");
-  assertEquals(request.getEndpoint().getPath(),"/ws/Authentication/Login.ashx");
-  assertEquals(request.getEndpoint().getQuery(),"output=json&appKey=apple&password=bar&username=foo");
-  assertEquals(request.getMethod(),HttpMethod.GET);
-  assertEquals(request.getHeaders().size(),0);
-  assertEquals(RestAnnotationProcessor.getParserOrThrowException(method),ParseSessionTokenFromJsonResponse.class);
+  HttpRequest httpRequest=processor.createRequest(method,"apple","foo","bar");
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/ws/Authentication/Login.ashx?output=json&appKey=apple&password=bar&username=foo HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseSessionTokenFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
 }

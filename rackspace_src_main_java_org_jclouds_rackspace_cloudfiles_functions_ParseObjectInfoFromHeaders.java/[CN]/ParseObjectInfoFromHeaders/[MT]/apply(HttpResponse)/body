@@ -4,8 +4,7 @@
   to.setBytes(attemptToParseSizeAndRangeFromHeaders(from));
   String eTagHeader=from.getFirstHeaderOrNull("Etag");
   if (eTagHeader != null) {
-    String hashString=Utils.replaceAll(eTagHeader,'"',"");
-    to.setHash(encryptionService.fromHex(hashString));
+    to.setHash(encryptionService.fromHex(eTagHeader));
   }
   return to;
 }

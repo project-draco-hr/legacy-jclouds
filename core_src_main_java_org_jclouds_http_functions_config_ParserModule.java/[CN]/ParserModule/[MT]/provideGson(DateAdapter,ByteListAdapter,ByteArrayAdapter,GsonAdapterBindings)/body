@@ -1,0 +1,12 @@
+{
+  GsonBuilder gson=new GsonBuilder();
+  gson.registerTypeAdapter(Date.class,adapter);
+  gson.registerTypeAdapter(new TypeToken<List<Byte>>(){
+  }
+.getType(),byteListAdapter);
+  gson.registerTypeAdapter(byte[].class,byteArrayAdapter);
+  for (  Map.Entry<Type,Object> binding : bindings.getBindings().entrySet()) {
+    gson.registerTypeAdapter(binding.getKey(),binding.getValue());
+  }
+  return gson.create();
+}

@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_get_job_list.json");
-  ParseJobListFromJsonResponse parser=new ParseJobListFromJsonResponse(i.getInstance(Gson.class));
-  SortedSet<Job> response=parser.apply(is);
+  ParseJobListFromJsonResponse parser=i.getInstance(ParseJobListFromJsonResponse.class);
+  SortedSet<Job> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   Map<String,String> details=Maps.newTreeMap();
   details.put("description",null);
   details.put("image","GSI-f8979644-e646-4711-ad58-d98a5fa3612c");

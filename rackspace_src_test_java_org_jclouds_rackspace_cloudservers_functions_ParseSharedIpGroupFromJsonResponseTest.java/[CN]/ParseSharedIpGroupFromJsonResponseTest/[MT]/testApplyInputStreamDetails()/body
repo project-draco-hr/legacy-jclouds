@@ -1,7 +1,9 @@
 {
   InputStream is=getClass().getResourceAsStream("/cloudservers/test_get_sharedipgroup_details.json");
-  ParseSharedIpGroupFromJsonResponse parser=new ParseSharedIpGroupFromJsonResponse(i.getInstance(Gson.class));
-  SharedIpGroup response=parser.apply(is);
+  UnwrapOnlyJsonValue<SharedIpGroup> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<SharedIpGroup>>(){
+  }
+));
+  SharedIpGroup response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   assertEquals(response.getId(),1234);
   assertEquals(response.getName(),"Shared IP Group 1");
   assertEquals(response.getServers(),ImmutableList.of(422));

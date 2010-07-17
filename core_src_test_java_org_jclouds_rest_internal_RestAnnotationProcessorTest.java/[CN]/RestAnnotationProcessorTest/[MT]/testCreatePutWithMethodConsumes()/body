@@ -4,4 +4,7 @@
   assertRequestLineEquals(request,"PUT http://localhost:9999/data HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: application/json\n");
   assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);
+  assertResponseParserClassEquals(method,request,ParseJson.class);
+  Function<HttpResponse,Wrapper> parser=(Function<HttpResponse,Wrapper>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  assertEquals(parser.apply(new HttpResponse(200,"ok",Payloads.newStringPayload("{ foo:\"bar\"}"))).foo,"bar");
 }

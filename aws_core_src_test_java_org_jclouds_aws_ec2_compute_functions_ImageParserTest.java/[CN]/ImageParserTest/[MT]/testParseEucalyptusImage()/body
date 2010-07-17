@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/ec2/eucalyptus_images.xml");
   Set<Image> result=parseImages(is);
-  assertEquals(result.size(),11);
+  assertEquals(result.size(),4);
   ImageParser parser=new ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),ImmutableSet.<Location>of(defaultLocation),defaultLocation);
   org.jclouds.compute.domain.Image image=parser.apply(Iterables.get(result,0));
   assertEquals(image.getArchitecture(),org.jclouds.compute.domain.Architecture.X86_64);
@@ -13,15 +13,6 @@
   assertEquals(image.getOsFamily(),OsFamily.CENTOS);
   assertEquals(image.getUserMetadata(),ImmutableMap.<String,String>of("owner","admin"));
   assertEquals(image.getVersion(),"");
-  image=parser.apply(Iterables.get(result,6));
-  assertEquals(image.getDescription(),"Lean/ubuntu.9-04.x86-64.img.manifest.xml");
-  assertEquals(image.getArchitecture(),org.jclouds.compute.domain.Architecture.X86_64);
-  assertEquals(image.getDescription(),"Lean/ubuntu.9-04.x86-64.img.manifest.xml");
-  assertEquals(image.getProviderId(),"emi-CBEA100C");
-  assertEquals(image.getLocation(),defaultLocation);
-  assertEquals(image.getName(),"9.04");
-  assertEquals(image.getOsDescription(),"Lean/ubuntu.9-04.x86-64.img.manifest.xml");
-  assertEquals(image.getOsFamily(),OsFamily.UBUNTU);
-  assertEquals(image.getUserMetadata(),ImmutableMap.<String,String>of("owner","mashaobing1"));
-  assertEquals(image.getVersion(),"");
+  image=parser.apply(Iterables.get(result,3));
+  assertEquals(image,null);
 }

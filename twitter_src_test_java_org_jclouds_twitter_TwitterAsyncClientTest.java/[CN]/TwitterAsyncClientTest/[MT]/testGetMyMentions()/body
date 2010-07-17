@@ -2,9 +2,9 @@
   Method method=TwitterAsyncClient.class.getMethod("getMyMentions");
   HttpRequest request=processor.createRequest(method);
   assertRequestLineEquals(request,"GET http://twitter.com/statuses/mentions.json HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,"");
+  assertNonPayloadHeadersEqual(request,"Accept: application/json\n");
   assertPayloadEquals(request,null,null,false);
-  assertResponseParserClassEquals(method,request,ParseStatusesFromJsonResponse.class);
+  assertResponseParserClassEquals(method,request,ParseJson.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(request);

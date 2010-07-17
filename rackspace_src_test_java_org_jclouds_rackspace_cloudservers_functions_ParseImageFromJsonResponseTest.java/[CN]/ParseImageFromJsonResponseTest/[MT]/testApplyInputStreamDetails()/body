@@ -1,7 +1,9 @@
 {
   InputStream is=getClass().getResourceAsStream("/cloudservers/test_get_image_details.json");
-  ParseImageFromJsonResponse parser=new ParseImageFromJsonResponse(i.getInstance(Gson.class));
-  Image response=parser.apply(is);
+  UnwrapOnlyJsonValue<Image> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<Image>>(){
+  }
+));
+  Image response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
   assertEquals(response.getId(),2);
   assertEquals(response.getName(),"CentOS 5.2");
   assertEquals(response.getCreated(),dateService.iso8601SecondsDateParse("2010-08-10T12:00:00Z"));
