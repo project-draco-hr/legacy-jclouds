@@ -7,7 +7,7 @@
     String notFoundMessage=error != null ? error.getMessage() : String.format("%s -> %s",request.getRequestLine(),response.getStatusLine());
 switch (response.getStatusCode()) {
 case 400:
-      if (error.getCode().endsWith(".NotFound"))       exception=new ResourceNotFoundException(notFoundMessage,exception);
+      if (error.getCode().endsWith(".NotFound") || error.getCode().endsWith(".Unknown"))       exception=new ResourceNotFoundException(notFoundMessage,exception);
  else       if (error.getCode().equals("IncorrectState"))       exception=new IllegalStateException(error.getMessage(),exception);
  else       if (error.getCode().equals("AuthFailure"))       exception=new AuthorizationException(command.getRequest(),error != null ? error.getMessage() : response.getStatusLine());
     break;
