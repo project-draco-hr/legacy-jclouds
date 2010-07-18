@@ -1,0 +1,11 @@
+{
+  logger.trace("looking for state on group %s",group);
+  try {
+    group=refresh(group);
+  }
+ catch (  NoSuchElementException e) {
+    return true;
+  }
+  logger.trace("%s: looking for group state %s: currently: %s",group.getName(),PlacementGroup.State.DELETED,group.getState());
+  return group.getState() == PlacementGroup.State.DELETED;
+}

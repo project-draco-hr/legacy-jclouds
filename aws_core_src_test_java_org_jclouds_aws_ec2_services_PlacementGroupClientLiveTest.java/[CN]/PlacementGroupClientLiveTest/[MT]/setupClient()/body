@@ -1,0 +1,9 @@
+{
+  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
+  keyPair=BaseComputeServiceLiveTest.setupKeyPair();
+  context=new ComputeServiceContextFactory().createContext("ec2",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()));
+  client=EC2Client.class.cast(context.getProviderSpecificContext().getApi());
+  availableTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupAvailable(client),60,1,TimeUnit.SECONDS);
+  deletedTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupDeleted(client),60,1,TimeUnit.SECONDS);
+}

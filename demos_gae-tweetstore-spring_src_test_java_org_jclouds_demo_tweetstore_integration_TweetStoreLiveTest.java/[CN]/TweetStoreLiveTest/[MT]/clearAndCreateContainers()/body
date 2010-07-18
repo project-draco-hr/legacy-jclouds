@@ -12,7 +12,7 @@
   }
   RestContext<TwitterClient,TwitterAsyncClient> twitterContext=new RestContextFactory().createContext("twitter",wiring,props);
   StoreTweetsController controller=new StoreTweetsController(contexts,container,twitterContext.getApi());
-  SortedSet<Status> statuses=twitterContext.getApi().getMyMentions();
+  Set<Status> statuses=twitterContext.getApi().getMyMentions();
   boolean deleted=false;
   for (  BlobStoreContext context : contexts.values()) {
     if (context.getBlobStore().containerExists(container)) {

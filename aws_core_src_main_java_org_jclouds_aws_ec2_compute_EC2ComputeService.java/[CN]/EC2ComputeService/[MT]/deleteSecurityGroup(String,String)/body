@@ -1,6 +1,6 @@
 {
   checkNotEmpty(tag,"tag");
-  String group="jclouds#" + tag;
+  String group=String.format("jclouds#%s#%s",tag,region);
   if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,group).size() > 0) {
     logger.debug(">> deleting securityGroup(%s)",group);
     ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,group);

@@ -1,0 +1,14 @@
+{
+  logger.trace("looking for state on group %s",group);
+  try {
+    group=refresh(group);
+    logger.trace("%s: looking for group state %s: currently: %s",group.getName(),PlacementGroup.State.AVAILABLE,group.getState());
+    return group.getState() == PlacementGroup.State.AVAILABLE;
+  }
+ catch (  ResourceNotFoundException e) {
+    return false;
+  }
+catch (  NoSuchElementException e) {
+    return false;
+  }
+}

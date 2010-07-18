@@ -1,0 +1,16 @@
+{
+  String placementGroupName=null;
+  boolean shouldAutomaticallyCreatePlacementGroup=true;
+  if (options instanceof EC2TemplateOptions) {
+    placementGroupName=EC2TemplateOptions.class.cast(options).getPlacementGroup();
+    if (placementGroupName == null)     shouldAutomaticallyCreatePlacementGroup=EC2TemplateOptions.class.cast(options).shouldAutomaticallyCreatePlacementGroup();
+  }
+  if (placementGroupName == null && shouldAutomaticallyCreatePlacementGroup) {
+    placementGroupName=String.format("jclouds#%s#%s",tag,region);
+    RegionAndName regionAndName=new RegionAndName(region,placementGroupName);
+    if (!placementGroupMap.containsKey(regionAndName)) {
+      placementGroupMap.put(regionAndName,createPlacementGroupIfNeeded.apply(regionAndName));
+    }
+  }
+  return placementGroupName;
+}

@@ -1,0 +1,18 @@
+{
+  checkArgument(template.getSize() instanceof EC2Size,"unexpected image type. should be EC2Size, was: " + template.getSize().getClass());
+  EC2Size ec2Size=EC2Size.class.cast(template.getSize());
+  RunInstancesOptions instanceOptions=asType(ec2Size.getInstanceType()).withAdditionalInfo(tag);
+  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
+  String placementGroupName=ec2Size.getId().startsWith("cc") ? createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,template.getOptions()) : null;
+  String subnetId=EC2TemplateOptions.class.cast(template.getOptions()).getSubnetId();
+  if (subnetId != null) {
+    instanceOptions.withSubnetId(subnetId);
+  }
+ else {
+    Set<String> groups=getSecurityGroupsForTagAndOptions(region,tag,template.getOptions());
+    instanceOptions.withSecurityGroups(groups);
+  }
+  if (keyPairName != null)   instanceOptions.withKeyName(keyPairName);
+  if (placementGroupName != null)   instanceOptions.inPlacementGroup(placementGroupName);
+  return instanceOptions;
+}

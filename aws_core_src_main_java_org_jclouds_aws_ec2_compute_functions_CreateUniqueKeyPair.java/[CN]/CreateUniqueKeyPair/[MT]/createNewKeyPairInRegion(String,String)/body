@@ -1,11 +1,11 @@
 {
   checkNotNull(region,"region");
-  checkNotNull(keyPairName,"keyPairName");
-  logger.debug(">> creating keyPair region(%s) keyPairName(%s)",region,keyPairName);
+  checkNotNull(tag,"tag");
+  logger.debug(">> creating keyPair region(%s) tag(%s)",region,tag);
   KeyPair keyPair=null;
   while (keyPair == null) {
     try {
-      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(keyPairName));
+      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(region,tag));
       logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
     }
  catch (    AWSResponseException e) {

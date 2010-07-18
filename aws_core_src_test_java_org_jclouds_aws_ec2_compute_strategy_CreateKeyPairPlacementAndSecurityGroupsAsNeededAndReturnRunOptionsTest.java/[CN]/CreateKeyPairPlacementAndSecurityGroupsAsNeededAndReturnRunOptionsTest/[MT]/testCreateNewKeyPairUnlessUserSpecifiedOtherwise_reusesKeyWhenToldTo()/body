@@ -1,0 +1,16 @@
+{
+  String region=Region.AP_SOUTHEAST_1;
+  String tag="tag";
+  String userSuppliedKeyPair="myKeyPair";
+  CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
+  EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
+  KeyPair keyPair=createMock(KeyPair.class);
+  expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
+  replay(options);
+  replay(keyPair);
+  replayStrategy(strategy);
+  assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options),userSuppliedKeyPair);
+  verify(options);
+  verify(keyPair);
+  verifyStrategy(strategy);
+}
