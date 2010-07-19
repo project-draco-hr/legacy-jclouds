@@ -4,8 +4,8 @@
   SshClient client=sshFactory.create(socket,"root",pass);
   try {
     client.connect();
-    InputStream etcPasswd=client.get("/etc/jclouds.txt");
-    String etcPasswdContents=Utils.toStringAndClose(etcPasswd);
+    Payload etcPasswd=client.get("/etc/jclouds.txt");
+    String etcPasswdContents=Utils.toStringAndClose(etcPasswd.getInput());
     assertEquals("rackspace",etcPasswdContents.trim());
   }
   finally {

@@ -1,12 +1,19 @@
 {
-  String key=template.getOptions().getPublicKey();
+  Payload key=template.getOptions().getPublicKey();
   if (key != null) {
+    String keyAsText;
+    try {
+      keyAsText=Utils.toStringAndClose(key.getInput());
+    }
+ catch (    IOException e1) {
+      throw new RuntimeException(e1);
+    }
     template.getOptions().dontAuthorizePublicKey();
     try {
-      client.addPublicKey(tag,key);
+      client.addPublicKey(tag,keyAsText);
     }
  catch (    IllegalStateException e) {
-      client.updatePublicKey(tag,key);
+      client.updatePublicKey(tag,keyAsText);
     }
   }
  else {

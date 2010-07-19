@@ -1,18 +1,18 @@
 {
   try {
-    client.destroyNodesMatching(NodePredicates.withTag(tag));
+    client.destroyNodesMatching(withTag(tag));
   }
  catch (  HttpResponseException e) {
   }
 catch (  NoSuchElementException e) {
   }
   template=buildTemplate(client.templateBuilder());
-  template.getOptions().installPrivateKey(keyPair.get("private")).authorizePublicKey(keyPair.get("public")).runScript(buildScript(template.getImage().getOsFamily()).getBytes());
+  template.getOptions().installPrivateKey(newStringPayload(keyPair.get("private"))).authorizePublicKey(newStringPayload(keyPair.get("public"))).runScript(newStringPayload(buildScript(template.getImage().getOsFamily())));
   try {
-    nodes=Sets.newTreeSet(client.runNodesWithTag(tag,2,template));
+    nodes=newTreeSet(client.runNodesWithTag(tag,2,template));
   }
  catch (  RunNodesException e) {
-    nodes=Sets.newTreeSet(Iterables.concat(e.getSuccessfulNodes(),e.getNodeErrors().keySet()));
+    nodes=newTreeSet(concat(e.getSuccessfulNodes(),e.getNodeErrors().keySet()));
     throw e;
   }
   assertEquals(nodes.size(),2);

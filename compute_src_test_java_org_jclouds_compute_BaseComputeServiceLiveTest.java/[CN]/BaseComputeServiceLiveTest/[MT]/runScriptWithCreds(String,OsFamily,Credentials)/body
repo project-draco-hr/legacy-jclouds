@@ -1,9 +1,9 @@
 {
   try {
-    return client.runScriptOnNodesMatching(NodePredicates.runningWithTag(tag),buildScript(osFamily).getBytes(),RunScriptOptions.Builder.overrideCredentialsWith(creds));
+    return client.runScriptOnNodesMatching(runningWithTag(tag),newStringPayload(buildScript(osFamily)),overrideCredentialsWith(creds));
   }
  catch (  SshException e) {
-    if (Throwables.getRootCause(e).getMessage().contains("Auth fail")) {
+    if (getRootCause(e).getMessage().contains("Auth fail")) {
     }
     throw e;
   }

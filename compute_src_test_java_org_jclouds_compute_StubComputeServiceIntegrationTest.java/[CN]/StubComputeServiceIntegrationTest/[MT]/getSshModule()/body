@@ -30,15 +30,15 @@
       expect(client.exec("mkdir .ssh")).andReturn(EXEC_GOOD);
       expect(client.exec("cat .ssh/id_rsa.pub >> .ssh/authorized_keys")).andReturn(EXEC_GOOD);
       expect(client.exec("chmod 600 .ssh/authorized_keys")).andReturn(EXEC_GOOD);
-      client.put(eq(".ssh/id_rsa.pub"),isEq(keyPair.get("public")));
+      client.put(eq(".ssh/id_rsa.pub"),payloadEq(keyPair.get("public")));
       expect(client.exec("mkdir .ssh")).andReturn(EXEC_GOOD);
-      client.put(eq(".ssh/id_rsa"),isEq(keyPair.get("private")));
+      client.put(eq(".ssh/id_rsa"),payloadEq(keyPair.get("private")));
       expect(client.exec("chmod 600 .ssh/id_rsa")).andReturn(EXEC_GOOD);
       client.disconnect();
       client.disconnect();
     }
     private void runScript(    SshClient client,    String scriptName,    int nodeId){
-      client.put(eq("" + scriptName + ""),isEq(initScript(scriptName,buildScript(OsFamily.UBUNTU))));
+      client.put(eq("" + scriptName + ""),payloadEq(initScript(scriptName,buildScript(OsFamily.UBUNTU))));
       expect(client.exec("chmod 755 " + scriptName + "")).andReturn(EXEC_GOOD);
       expect(client.getUsername()).andReturn("root").atLeastOnce();
       expect(client.getHostAddress()).andReturn(nodeId + "").atLeastOnce();

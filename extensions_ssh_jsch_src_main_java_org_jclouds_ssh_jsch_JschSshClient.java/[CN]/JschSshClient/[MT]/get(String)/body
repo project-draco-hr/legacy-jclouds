@@ -11,7 +11,7 @@
     throw new SshException(String.format("%s@%s:%d: Error connecting to sftp.",username,host,port),e);
   }
   try {
-    return new CloseFtpChannelOnCloseInputStream(sftp.get(path),sftp);
+    return Payloads.newInputStreamPayload(new CloseFtpChannelOnCloseInputStream(sftp.get(path),sftp));
   }
  catch (  SftpException e) {
     throw new SshException(String.format("%s@%s:%d: Error getting path: %s",username,host,port,path),e);
