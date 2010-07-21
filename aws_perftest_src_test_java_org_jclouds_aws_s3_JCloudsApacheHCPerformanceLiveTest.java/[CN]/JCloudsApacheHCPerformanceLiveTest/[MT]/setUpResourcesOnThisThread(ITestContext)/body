@@ -1,7 +1,7 @@
 {
   exec=Executors.newCachedThreadPool();
-  String accesskeyid=System.getProperty("jclouds.test.user");
-  String secretkey=System.getProperty("jclouds.test.key");
+  String accesskeyid=System.getProperty("jclouds.test.identity");
+  String secretkey=System.getProperty("jclouds.test.credential");
   Properties overrides=new Properties();
   overrides.setProperty(PROPERTY_SO_TIMEOUT,5000 + "");
   overrides.setProperty(PROPERTY_CONNECTION_TIMEOUT,5000 + "");
@@ -11,5 +11,5 @@
   overrides.setProperty(PROPERTY_USER_THREADS,0 + "");
   String contextName="enterprise";
   overrideWithSysPropertiesAndPrint(overrides,contextName);
-  context=S3ContextFactory.createContext(overrides,accesskeyid,secretkey,new NullLoggingModule(),new ApacheHCHttpCommandExecutorServiceModule(),new EnterpriseConfigurationModule());
+  context=new BlobStoreContextFactory().createContext("s3",accesskeyid,secretkey,ImmutableSet.of(new NullLoggingModule(),new ApacheHCHttpCommandExecutorServiceModule(),new EnterpriseConfigurationModule()),overrides);
 }
