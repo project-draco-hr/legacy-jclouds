@@ -1,4 +1,6 @@
 {
   releasePayload(from);
-  return new AuthenticationResponseImpl(checkNotNull(from.getFirstHeaderOrNull(AUTH_TOKEN),AUTH_TOKEN),checkNotNull(from.getFirstHeaderOrNull(CDN_MANAGEMENT_URL),CDN_MANAGEMENT_URL),checkNotNull(from.getFirstHeaderOrNull(SERVER_MANAGEMENT_URL),SERVER_MANAGEMENT_URL),checkNotNull(from.getFirstHeaderOrNull(STORAGE_URL),STORAGE_URL + " not found in headers:" + from.getStatusLine()+ " - "+ from.getHeaders()));
+  AuthenticationResponse response=new AuthenticationResponseImpl(checkNotNull(from.getFirstHeaderOrNull(AUTH_TOKEN),AUTH_TOKEN),checkNotNull(from.getFirstHeaderOrNull(CDN_MANAGEMENT_URL),CDN_MANAGEMENT_URL),checkNotNull(from.getFirstHeaderOrNull(SERVER_MANAGEMENT_URL),SERVER_MANAGEMENT_URL),checkNotNull(from.getFirstHeaderOrNull(STORAGE_URL),STORAGE_URL + " not found in headers:" + from.getStatusLine()+ " - "+ from.getHeaders()));
+  logger.debug("will connect to: ",response);
+  return response;
 }
