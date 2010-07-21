@@ -21,7 +21,7 @@
   }
  else {
     InputStream inputStream=payload.getInput();
-    if (!new Long(1).equals(payload.getContentLength()))     throw new IllegalArgumentException("you must specify size when content is an InputStream");
+    if (payload.getContentLength() == null)     throw new IllegalArgumentException("you must specify size when content is an InputStream");
     InputStreamEntity Entity=new InputStreamEntity(inputStream,payload.getContentLength());
     Entity.setContentType(payload.getContentType());
     apacheRequest.setEntity(Entity);

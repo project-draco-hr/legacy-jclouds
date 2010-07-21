@@ -19,7 +19,12 @@
     InputStream input=request.getPayload().getInput();
     try {
       byte[] array=toByteArray(input);
-      if (!request.getPayload().isRepeatable())       request.setPayload(array);
+      if (!request.getPayload().isRepeatable()) {
+        Payload oldPayload=request.getPayload();
+        request.setPayload(array);
+        if (oldPayload.getContentMD5() != null)         request.getPayload().setContentMD5(oldPayload.getContentMD5());
+        if (oldPayload.getContentType() != null)         request.getPayload().setContentType(oldPayload.getContentType());
+      }
       gaeRequest.setPayload(array);
     }
  catch (    IOException e) {
@@ -28,12 +33,13 @@
  finally {
       closeQuietly(input);
     }
-    if (request.getPayload().getContentMD5() != null)     gaeRequest.addHeader(new HTTPHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5())));
+    if (request.getPayload().getContentMD5() != null)     gaeRequest.setHeader(new HTTPHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5())));
+    if (request.getPayload().getContentType() != null)     gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType()));
     Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
-    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,length.toString()));
+    gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,length.toString()));
   }
  else {
-    gaeRequest.addHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
+    gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
   }
   return gaeRequest;
 }

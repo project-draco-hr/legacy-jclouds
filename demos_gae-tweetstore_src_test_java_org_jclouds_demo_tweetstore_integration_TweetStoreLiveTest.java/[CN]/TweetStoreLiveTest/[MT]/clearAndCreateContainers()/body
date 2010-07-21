@@ -15,10 +15,15 @@
   Set<Status> statuses=twitterContext.getApi().getMyMentions();
   boolean deleted=false;
   for (  BlobStoreContext context : contexts.values()) {
-    if (context.getBlobStore().containerExists(container)) {
-      System.err.printf("deleting container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
-      context.getBlobStore().deleteContainer(container);
-      deleted=true;
+    try {
+      if (context.getBlobStore().containerExists(container)) {
+        System.err.printf("deleting container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
+        context.getBlobStore().deleteContainer(container);
+        deleted=true;
+      }
+    }
+ catch (    AuthorizationException e) {
+      throw new AuthorizationException("for context: " + context,e);
     }
   }
   if (deleted) {
