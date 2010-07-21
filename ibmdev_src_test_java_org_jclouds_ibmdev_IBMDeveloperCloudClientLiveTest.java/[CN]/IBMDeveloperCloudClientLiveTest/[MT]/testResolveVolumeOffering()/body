@@ -1,0 +1,21 @@
+{
+  Ordering<StorageOffering> cheapestOrdering=new Ordering<StorageOffering>(){
+    public int compare(    StorageOffering left,    StorageOffering right){
+      return ComparisonChain.start().compare(left.getPrice().getRate(),right.getPrice().getRate()).result();
+    }
+  }
+.reverse();
+  Iterable<? extends StorageOffering> storageOfferingsThatAreInOurLocationAndCorrectFormat=filter(connection.listStorageOfferings(),new Predicate<StorageOffering>(){
+    @Override public boolean apply(    StorageOffering arg0){
+      return arg0.getLocation().equals(location.getId()) && Iterables.any(arg0.getFormats(),new Predicate<StorageOffering.Format>(){
+        @Override public boolean apply(        Format arg0){
+          return arg0.getId().equals(FORMAT);
+        }
+      }
+);
+    }
+  }
+);
+  cheapestStorage=cheapestOrdering.max(storageOfferingsThatAreInOurLocationAndCorrectFormat);
+  System.out.println(cheapestStorage);
+}

@@ -1,0 +1,15 @@
+{
+  String name=TAG + "1";
+  killInstance(name);
+  instance2=connection.createInstanceInLocation(location.getId(),name,image.getId(),instanceType.getId(),attachIp(ip.getId()).authorizePublicKey(key.getName()).mountVolume(volume.getId(),"/mnt"));
+  assertBeginState(instance2,name);
+  assertIpHostAndStatusNEW(instance2);
+  blockUntilRunning(instance2);
+  instance2=assertRunning(instance2,name);
+  volume=connection.getVolume(volume.getId());
+  assertEquals(volume.getInstanceId(),instance2.getId());
+  refreshIpAndReturnAllAddresses();
+  assertEquals(ip.getInstanceId(),instance2.getId());
+  assertEquals(ip.getIp(),instance2.getIp());
+  sshAndDf(new IPSocket(instance2.getIp(),22),new Credentials("idcuser",keyPair.get("private")));
+}

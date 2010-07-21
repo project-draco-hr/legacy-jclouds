@@ -1,0 +1,28 @@
+{
+  Iterable<? extends Image> imagesThatAreInOurLocationAndNotBYOL=filter(connection.listImages(),new Predicate<Image>(){
+    @Override public boolean apply(    Image arg0){
+      return arg0.getLocation().equals(location.getId()) && arg0.getPlatform().equals(PLATFORM) && !arg0.getName().contains("BYOL")&& !arg0.getName().contains("PAYG");
+    }
+  }
+);
+  Ordering<InstanceType> cheapestOrdering=new Ordering<InstanceType>(){
+    public int compare(    InstanceType left,    InstanceType right){
+      return ComparisonChain.start().compare(left.getPrice().getRate(),right.getPrice().getRate()).result();
+    }
+  }
+.reverse();
+  Set<InstanceType> instanceTypes=Sets.newLinkedHashSet();
+  for (  Image image : imagesThatAreInOurLocationAndNotBYOL)   Iterables.addAll(instanceTypes,image.getSupportedInstanceTypes());
+  instanceType=cheapestOrdering.max(instanceTypes);
+  final InstanceType cheapestInstanceType=instanceType;
+  System.err.println(cheapestInstanceType);
+  image=Iterables.find(imagesThatAreInOurLocationAndNotBYOL,new Predicate<Image>(){
+    @Override public boolean apply(    Image arg0){
+      return arg0.getSupportedInstanceTypes().contains(cheapestInstanceType);
+    }
+  }
+);
+  System.err.println(image);
+  connection.getManifest(connection.getImage(image.getId()).getManifest());
+  connection.getManifest(connection.getImage(image.getId()).getDocumentation());
+}
