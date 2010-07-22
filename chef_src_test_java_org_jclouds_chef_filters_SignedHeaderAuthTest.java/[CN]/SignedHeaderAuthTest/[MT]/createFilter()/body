@@ -2,9 +2,7 @@
   Injector injector=new RestContextFactory().createContextBuilder("chef",USER_ID,PRIVATE_KEY,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
   encryptionService=injector.getInstance(EncryptionService.class);
   HttpUtils utils=injector.getInstance(HttpUtils.class);
-  Security.addProvider(new BouncyCastleProvider());
-  KeyPair pair=KeyPair.class.cast(new PEMReader(new StringReader(PRIVATE_KEY)).readObject());
-  PrivateKey privateKey=pair.getPrivate();
+  PrivateKey privateKey=injector.getInstance(PrivateKey.class);
   signing_obj=new SignedHeaderAuth(new SignatureWire(),USER_ID,privateKey,new Provider<String>(){
     @Override public String get(){
       return TIMESTAMP_ISO8601;

@@ -1,0 +1,22 @@
+{
+  PEMReader reader;
+  try {
+    reader=new PEMReader(pem);
+    byte[] bytes=reader.getDerBytes();
+    KeySpec keySpec;
+    if (PEMReader.PRIVATE_PKCS1_MARKER.equals(reader.getBeginMarker())) {
+      keySpec=(new PKCS1EncodedKeySpec(bytes)).getKeySpec();
+    }
+ else     if (PEMReader.PRIVATE_PKCS8_MARKER.equals(reader.getBeginMarker())) {
+      keySpec=new PKCS8EncodedKeySpec(bytes);
+    }
+ else {
+      throw new IOException("Invalid PEM file: Unknown marker " + "for private key " + reader.getBeginMarker());
+    }
+    return rsaKeyFactory.generatePrivate(keySpec);
+  }
+ catch (  Exception e) {
+    Throwables.propagate(e);
+    return null;
+  }
+}

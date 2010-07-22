@@ -1,0 +1,12 @@
+{
+  if (command.getFailureCount() > retryCountLimit)   return false;
+  if (response.getStatusCode() == 400 && command.getRequest().getMethod().equals("PUT") && command.getRequest().getEndpoint().getPath().indexOf("sandboxes") != -1) {
+    if (response.getPayload() != null) {
+      String error=new String(closeClientButKeepContentStream(response));
+      if (error != null && error.indexOf("was not uploaded") != -1) {
+        return backoffLimitedRetryHandler.shouldRetryRequest(command,response);
+      }
+    }
+  }
+  return false;
+}
