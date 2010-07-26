@@ -7,13 +7,6 @@
   now=nowBuilder.toString();
   returnVal.put("ohai_time",new JsonBall(now));
   returnVal.put("java",new JsonBall(json.toJson(systemProperties)));
-  try {
-    String mac=byteArrayToMacAddress.apply(defaultNetworkInterface.getHardwareAddress());
-    returnVal.put("macaddress",new JsonBall(mac));
-  }
- catch (  SocketException e) {
-    logger.warn(e,"could not read address from %s",defaultNetworkInterface.getDisplayName());
-  }
   String platform=systemProperties.getProperty("os.name");
   platform=platform.replaceAll("[ -]","").toLowerCase();
   returnVal.put("platform",new JsonBall(platform));

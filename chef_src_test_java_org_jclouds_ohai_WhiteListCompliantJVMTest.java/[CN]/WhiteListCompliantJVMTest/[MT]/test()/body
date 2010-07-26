@@ -1,5 +1,4 @@
 {
-  byte[] mac=NetworkInterface.getNetworkInterfaces().nextElement().getHardwareAddress();
   final Properties sysProperties=new Properties();
   sysProperties.setProperty("os.name","Mac OS X");
   sysProperties.setProperty("os.version","10.3.0");
@@ -13,8 +12,7 @@
     }
   }
 );
-  String macString=injector.getInstance(ByteArrayToMacAddress.class).apply(mac);
   Json json=injector.getInstance(Json.class);
   WhiteListCompliantJVM WhiteListCompliantJVM=injector.getInstance(WhiteListCompliantJVM.class);
-  assertEquals(json.toJson(WhiteListCompliantJVM.get()),"{\"ohai_time\":1279992919.32529,\"java\":{\"user.name\":\"user\",\"os.version\":\"10.3.0\",\"os.name\":\"Mac OS X\"},\"macaddress\":\"" + macString + "\",\"platform\":\"macosx\",\"platform_version\":\"10.3.0\",\"current_user\":\"user\"}");
+  assertEquals(json.toJson(WhiteListCompliantJVM.get()),"{\"ohai_time\":1279992919.32529,\"java\":{\"user.name\":\"user\",\"os.version\":\"10.3.0\",\"os.name\":\"Mac OS X\"},\"platform\":\"macosx\",\"platform_version\":\"10.3.0\",\"current_user\":\"user\"}");
 }
