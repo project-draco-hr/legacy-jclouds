@@ -1,0 +1,15 @@
+{
+  final RuntimeMXBean runtime=createMock(RuntimeMXBean.class);
+  expect(runtime.getUptime()).andReturn(69876000l);
+  replay(runtime);
+  Injector injector=Guice.createInjector(new ChefParserModule(),new GsonModule(),new OhaiModule(){
+    @Override protected RuntimeMXBean provideRuntimeMXBean(){
+      return runtime;
+    }
+  }
+);
+  Json json=injector.getInstance(Json.class);
+  JMX jmx=injector.getInstance(JMX.class);
+  assertEquals(json.toJson(jmx.get()),"{\"uptime_seconds\":69876}");
+  verify(runtime);
+}
