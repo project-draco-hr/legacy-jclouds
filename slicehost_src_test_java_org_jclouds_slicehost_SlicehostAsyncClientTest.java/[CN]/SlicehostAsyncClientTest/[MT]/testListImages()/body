@@ -1,0 +1,11 @@
+{
+  Method method=SlicehostAsyncClient.class.getMethod("listImages");
+  HttpRequest request=processor.createRequest(method);
+  assertRequestLineEquals(request,"GET https://api.slicehost.com/images.xml HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,ImagesHandler.class);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
+  checkFilters(request);
+}

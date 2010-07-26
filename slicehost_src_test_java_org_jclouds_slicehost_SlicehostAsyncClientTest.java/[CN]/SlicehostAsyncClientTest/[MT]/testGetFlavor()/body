@@ -1,0 +1,11 @@
+{
+  Method method=SlicehostAsyncClient.class.getMethod("getFlavor",int.class);
+  HttpRequest request=processor.createRequest(method,2);
+  assertRequestLineEquals(request,"GET https://api.slicehost.com/flavors/2.xml HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,FlavorHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

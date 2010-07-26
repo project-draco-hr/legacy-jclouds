@@ -1,0 +1,9 @@
+{
+  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  Injector injector=new RestContextFactory().createContextBuilder("slicehost",identity,null,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),new Properties()).buildInjector();
+  client=injector.getInstance(SlicehostClient.class);
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,120,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+}

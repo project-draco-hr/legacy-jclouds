@@ -1,0 +1,11 @@
+{
+  Method method=SlicehostAsyncClient.class.getMethod("rebuildSliceFromImage",int.class,int.class);
+  HttpRequest request=processor.createRequest(method,3,1);
+  assertRequestLineEquals(request,"PUT https://api.slicehost.com/slices/3/rebuild.xml?image_id=1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

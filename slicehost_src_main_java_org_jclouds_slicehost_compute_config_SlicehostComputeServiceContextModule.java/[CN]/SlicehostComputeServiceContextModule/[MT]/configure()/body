@@ -1,0 +1,22 @@
+{
+  install(new ComputeServiceTimeoutsModule());
+  bind(new TypeLiteral<Function<Slice,NodeMetadata>>(){
+  }
+).to(SliceToNodeMetadata.class);
+  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<SlicehostClient,SlicehostAsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(new TypeLiteral<RestContext<SlicehostClient,SlicehostAsyncClient>>(){
+  }
+).to(new TypeLiteral<RestContextImpl<SlicehostClient,SlicehostAsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(AddNodeWithTagStrategy.class).to(SlicehostAddNodeWithTagStrategy.class);
+  bind(ListNodesStrategy.class).to(SlicehostListNodesStrategy.class);
+  bind(GetNodeMetadataStrategy.class).to(SlicehostGetNodeMetadataStrategy.class);
+  bind(RebootNodeStrategy.class).to(SlicehostRebootNodeStrategy.class);
+  bind(DestroyNodeStrategy.class).to(SlicehostDestroyNodeStrategy.class);
+}
