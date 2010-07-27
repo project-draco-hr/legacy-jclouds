@@ -9,7 +9,7 @@
       }
       checkRequestHasContentLengthOrChunkedEncoding(request,"After filtering, the request has niether chunked encoding nor content length: " + request);
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
-      wirePayloadIfEnabled(request);
+      wirePayloadIfEnabled(wire,request);
       nativeRequest=convert(request);
       utils.logRequest(headerLog,request,">>");
       response=invoke(nativeRequest);
@@ -26,7 +26,7 @@
       }
     }
  catch (    Exception e) {
-      IOException ioe=Utils.getFirstThrowableOfType(e,IOException.class);
+      IOException ioe=getFirstThrowableOfType(e,IOException.class);
       if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
         continue;
       }

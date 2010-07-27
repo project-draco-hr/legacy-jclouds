@@ -1,3 +1,50 @@
 {
-  return Futures.compose(ConcurrentUtils.makeListenable(urlFetchService.fetchAsync(convertToGaeRequest.apply(command.getRequest())),sameThreadExecutor()),convertToJcloudsResponse);
+  HTTPRequest nativeRequest=filterLogAndConvertRe(command.getRequest());
+  Future<HTTPResponse> future=urlFetchService.fetchAsync(nativeRequest);
+  Future<HttpResponse> response=compose(future,convertToJcloudsResponse);
+  return compose(ConcurrentUtils.makeListenable(response,sameThreadExecutor()),new Function<HttpResponse,HttpResponse>(){
+    @Override public HttpResponse apply(    HttpResponse response){
+      try {
+        logger.debug("Receiving response %s: %s",command.getRequest().hashCode(),response.getStatusLine());
+        utils.logResponse(headerLog,response,"<<");
+        if (response.getPayload() != null && wire.enabled())         wire.input(response);
+        int statusCode=response.getStatusCode();
+        if (statusCode >= 300) {
+          if (shouldContinue(response))           return submit(command).get();
+ else           return response;
+        }
+        return response;
+      }
+ catch (      Exception e) {
+        IOException ioe=getFirstThrowableOfType(e,IOException.class);
+        if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
+          try {
+            return submit(command).get();
+          }
+ catch (          Exception e1) {
+            command.setException(e1);
+            return response;
+          }
+        }
+ else {
+          command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,null,e));
+          return response;
+        }
+      }
+ finally {
+        if (command.getException() != null)         propagate(command.getException());
+      }
+    }
+    private boolean shouldContinue(    HttpResponse response){
+      boolean shouldContinue=false;
+      if (retryHandler.shouldRetryRequest(command,response)) {
+        shouldContinue=true;
+      }
+ else {
+        errorHandler.handleError(command,response);
+      }
+      return shouldContinue;
+    }
+  }
+);
 }
