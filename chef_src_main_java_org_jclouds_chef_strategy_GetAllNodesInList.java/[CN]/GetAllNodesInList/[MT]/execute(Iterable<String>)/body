@@ -1,0 +1,26 @@
+{
+  Map<String,Exception> exceptions=newHashMap();
+  final Set<Node> nodes=newHashSet();
+  Map<String,ListenableFuture<?>> responses=newHashMap();
+  for (  String nodeName : toGet) {
+    final ListenableFuture<? extends Node> future=chefAsyncClient.getNode(nodeName);
+    future.addListener(new Runnable(){
+      @Override public void run(){
+        try {
+          nodes.add(future.get());
+        }
+ catch (        InterruptedException e) {
+          propagate(e);
+        }
+catch (        ExecutionException e) {
+          propagate(e);
+        }
+      }
+    }
+,sameThreadExecutor());
+    responses.put(nodeName,future);
+  }
+  exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("getting nodes: %s",toGet));
+  if (exceptions.size() > 0)   throw new RuntimeException(String.format("errors getting  nodes: %s: %s",toGet,exceptions));
+  return nodes;
+}

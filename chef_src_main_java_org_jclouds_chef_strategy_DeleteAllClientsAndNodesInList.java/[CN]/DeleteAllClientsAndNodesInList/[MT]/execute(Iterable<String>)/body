@@ -1,0 +1,10 @@
+{
+  Map<String,Exception> exceptions=newHashMap();
+  Map<String,ListenableFuture<?>> responses=newHashMap();
+  for (  String name : names) {
+    responses.put(name,chefAsyncClient.deleteClient(name));
+    responses.put(name,chefAsyncClient.deleteNode(name));
+  }
+  exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("getting deleting clients and nodes: %s",names));
+  if (exceptions.size() > 0)   throw new RuntimeException(String.format("errors deleting clients and nodes: %s: %s",names,exceptions));
+}
