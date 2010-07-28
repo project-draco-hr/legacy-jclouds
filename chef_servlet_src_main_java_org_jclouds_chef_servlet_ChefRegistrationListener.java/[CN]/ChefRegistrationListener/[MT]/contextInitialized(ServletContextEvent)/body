@@ -1,0 +1,39 @@
+{
+  try {
+    logger.debug("starting initialization");
+    Properties overrides=new Properties();
+    Enumeration<String> e=servletContextEvent.getServletContext().getInitParameterNames();
+    while (e.hasMoreElements()) {
+      String propertyName=e.nextElement();
+      overrides.setProperty(propertyName,servletContextEvent.getServletContext().getInitParameter(propertyName));
+    }
+    String role=getInitParam(servletContextEvent,"chef.role");
+    logger.trace("creating validator connection");
+    ChefService validatorService=createService(overrides);
+    logger.debug("created validator connection");
+    ChefService clientService=null;
+    String nodeName;
+    try {
+      while (true) {
+        nodeName=findNextClientAndNodeName(validatorService,role);
+        try {
+          clientService=createClientAndNode(validatorService,role,nodeName,overrides);
+          break;
+        }
+ catch (        IllegalStateException ex) {
+          logger.debug("node or client already exists %s: %s",nodeName,ex.getMessage());
+        }
+      }
+    }
+  finally {
+      validatorService.getContext().close();
+    }
+    servletContextEvent.getServletContext().setAttribute(CHEF_NODENAME,nodeName);
+    servletContextEvent.getServletContext().setAttribute(CHEF_SERVICE_CLIENT,clientService);
+    logger.debug("initialized");
+  }
+ catch (  RuntimeException e) {
+    logger.error(e,"error registering");
+    throw e;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  ListenableFuture<Set<String>> nodes=validatorService.getContext().getAsyncApi().listNodes();
+  ListenableFuture<Set<String>> clients=validatorService.getContext().getAsyncApi().listClients();
+  try {
+    String nodeName;
+    Set<String> names=newHashSet(concat(nodes.get(),clients.get()));
+    int index=0;
+    while (true) {
+      nodeName=prefix + "-" + index++;
+      if (!names.contains(nodeName))       break;
+    }
+    logger.trace("nodeName %s not in %s",nodeName,names);
+    return nodeName;
+  }
+ catch (  InterruptedException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+catch (  ExecutionException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+}
