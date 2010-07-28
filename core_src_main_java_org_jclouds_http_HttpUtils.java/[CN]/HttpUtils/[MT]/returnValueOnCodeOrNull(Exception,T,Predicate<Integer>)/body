@@ -1,0 +1,7 @@
+{
+  Iterable<HttpResponseException> throwables=filter(getCausalChain(from),HttpResponseException.class);
+  if (size(throwables) >= 1 && get(throwables,0).getResponse() != null && codePredicate.apply(get(throwables,0).getResponse().getStatusCode())) {
+    return value;
+  }
+  return null;
+}

@@ -1,9 +1,4 @@
 {
-  if (from instanceof HttpResponseException) {
-    HttpResponseException responseException=(HttpResponseException)from;
-    if (responseException.getResponse().getStatusCode() == 404) {
-      return false;
-    }
-  }
-  return Boolean.class.cast(propagateOrNull(from));
+  Boolean returnVal=returnValueOnCodeOrNull(from,false,equalTo(404));
+  return returnVal != null ? returnVal : Boolean.class.cast(propagateOrNull(from));
 }
