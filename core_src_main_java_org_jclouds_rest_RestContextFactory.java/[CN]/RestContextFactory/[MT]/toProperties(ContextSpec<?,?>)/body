@@ -13,5 +13,13 @@
     props.setProperty(contextSpec.provider + ".contextbuilder",checkNotNull(contextSpec.contextBuilderClass,"contextSpec.contextBuilderClass").getName());
     props.setProperty(contextSpec.provider + ".propertiesbuilder",checkNotNull(contextSpec.propertiesBuilderClass,"contextSpec.propertiesBuilderClass").getName());
   }
+  if (size(contextSpec.modules) > 0) {
+    props.setProperty(contextSpec.provider + ".modules",Joiner.on(',').join(transform(contextSpec.modules,new Function<Module,String>(){
+      @Override public String apply(      Module from){
+        return from.getClass().getName();
+      }
+    }
+)));
+  }
   return props;
 }

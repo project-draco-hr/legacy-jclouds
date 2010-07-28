@@ -1,0 +1,23 @@
+{
+  File file=File.createTempFile("foo","bar");
+  file.deleteOnExit();
+  Files.write("bar",file,Charsets.UTF_8);
+  Properties props=new Properties();
+  props.setProperty("test.endpoint","http://localhost");
+  props.setProperty("test.apiversion","1");
+  props.setProperty("test.identity","foo");
+  props.setProperty("test.credential.file",file.getAbsolutePath());
+  props.setProperty("test.propertiesbuilder",PropertiesBuilder.class.getName());
+  props.setProperty("test.contextbuilder",IntegrationTestContextBuilder.class.getName());
+  props.setProperty("jclouds.modules","org.jclouds.rest.RestContextFactoryTest$A,org.jclouds.rest.RestContextFactoryTest$B");
+  new RestContextFactory(){
+    @SuppressWarnings("hiding") @Override public <S,A>ContextSpec<S,A> createContextSpec(    String providerName,    String identity,    String credential,    Iterable<? extends Module> wiring,    Properties _overrides){
+      ContextSpec<S,A> spec=super.createContextSpec(providerName,identity,credential,wiring,_overrides);
+      assertEquals(spec.identity,"foo");
+      assertEquals(spec.credential,"bar");
+      assertEquals(Iterables.size(spec.modules),2);
+      return spec;
+    }
+  }
+.createContext("test",props);
+}
