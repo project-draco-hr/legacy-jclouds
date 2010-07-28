@@ -1,0 +1,14 @@
+{
+  Set<String> runList=ImmutableSet.of("role[" + prefix + "]");
+  try {
+    chef.createNode(new Node(prefix,runList));
+    strategy.execute(prefix);
+    Node node=chef.getNode(prefix);
+    assertEquals(node.getName(),prefix);
+    assertEquals(node.getRunList(),runList);
+    assertEquals(node.getAutomatic().get("foo").toString(),"\"bar\"");
+  }
+  finally {
+    injector.getInstance(ChefClient.class).deleteNode(prefix);
+  }
+}
