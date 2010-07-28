@@ -7,7 +7,7 @@
       String propertyName=e.nextElement();
       overrides.setProperty(propertyName,servletContextEvent.getServletContext().getInitParameter(propertyName));
     }
-    String role=getInitParam(servletContextEvent,"chef.role");
+    String role=getInitParam(servletContextEvent,CHEF_ROLE);
     logger.trace("creating validator connection");
     ChefService validatorService=createService(overrides);
     logger.debug("created validator connection");
@@ -28,7 +28,8 @@
   finally {
       validatorService.getContext().close();
     }
-    servletContextEvent.getServletContext().setAttribute(CHEF_NODENAME,nodeName);
+    servletContextEvent.getServletContext().setAttribute(CHEF_NODE,nodeName);
+    servletContextEvent.getServletContext().setAttribute(CHEF_ROLE,role);
     servletContextEvent.getServletContext().setAttribute(CHEF_SERVICE_CLIENT,clientService);
     logger.debug("initialized");
   }
