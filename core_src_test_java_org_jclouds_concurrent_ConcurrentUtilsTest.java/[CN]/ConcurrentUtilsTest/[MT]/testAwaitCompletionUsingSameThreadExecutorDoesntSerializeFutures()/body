@@ -1,0 +1,12 @@
+{
+  long expectedMax=CALLABLE_DURATION;
+  long expectedMin=CALLABLE_DURATION;
+  long expectedOverhead=COUNT + FUDGE;
+  ExecutorService callableExecutor=newCachedThreadPool();
+  ExecutorService chainExecutor=sameThreadExecutor();
+  long start=System.currentTimeMillis();
+  Map<String,ListenableFuture<Long>> responses=runCallables(callableExecutor,chainExecutor);
+  Map<String,Exception> exceptions=awaitCompletion(responses,sameThreadExecutor(),null,Logger.CONSOLE,"test same thread");
+  assertEquals(exceptions.size(),0);
+  checkTimeThresholds(expectedMin,expectedMax,expectedOverhead,start,responses);
+}
