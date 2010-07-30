@@ -4,7 +4,7 @@
   String tag=null;
   Image image=null;
   Matcher matcher=vApp.getName() != null ? TAG_PATTERN_WITH_TEMPLATE.matcher(vApp.getName()) : null;
-  final Location location=findLocationForResourceInVDC.apply(vApp,vApp.getVDC().getId());
+  final Location location=findLocationForResourceInVDC.apply(vApp.getVDC());
   if (matcher != null && matcher.find()) {
     tag=matcher.group(1);
     String templateIdInHexWithoutLeadingZeros=matcher.group(2).replaceAll("^[0]+","");
@@ -12,7 +12,7 @@
     try {
       image=Iterables.find(images.get(),new Predicate<Image>(){
         @Override public boolean apply(        Image input){
-          return input.getProviderId().equals(templateId) && input.getLocation().equals(location);
+          return input.getProviderId().equals(templateId) && (input.getLocation().equals(location) || input.getLocation().equals(location.getParent()));
         }
       }
 );

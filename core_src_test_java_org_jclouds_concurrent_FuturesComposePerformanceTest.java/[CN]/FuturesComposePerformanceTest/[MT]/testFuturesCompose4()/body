@@ -1,0 +1,14 @@
+{
+  long expectedMax=(CALLABLE_DURATION * COUNT) + (LISTENER_DURATION * COUNT);
+  long expectedMin=CALLABLE_DURATION + LISTENER_DURATION;
+  long expectedOverhead=COUNT + FUDGE;
+  ExecutorService userthreads=newCachedThreadPool();
+  try {
+    ExecutorService chainExecutor=sameThreadExecutor();
+    ExecutorService listenerExecutor=sameThreadExecutor();
+    checkThresholdsUsingFuturesCompose(expectedMin,expectedMax,expectedOverhead,callableExecutor,chainExecutor,listenerExecutor);
+  }
+  finally {
+    userthreads.shutdownNow();
+  }
+}

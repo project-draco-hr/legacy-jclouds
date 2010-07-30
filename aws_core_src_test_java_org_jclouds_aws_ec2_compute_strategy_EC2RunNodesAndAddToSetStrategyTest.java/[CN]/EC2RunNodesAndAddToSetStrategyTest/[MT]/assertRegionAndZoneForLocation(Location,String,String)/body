@@ -6,14 +6,14 @@
   InstanceClient instanceClient=createMock(InstanceClient.class);
   RunInstancesOptions ec2Options=createMock(RunInstancesOptions.class);
   RunningInstance instance=createMock(RunningInstance.class);
-  Reservation reservation=new Reservation(region,ImmutableSet.<String>of(),ImmutableSet.<RunningInstance>of(instance),"ownerId","requesterId","reservationId");
+  Reservation<? extends RunningInstance> reservation=new Reservation<RunningInstance>(region,ImmutableSet.<String>of(),ImmutableSet.<RunningInstance>of(instance),"ownerId","requesterId","reservationId");
   NodeMetadata nodeMetadata=createMock(NodeMetadata.class);
   expect(strategy.client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
   expect(strategy.createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.execute(region,input.tag,input.template)).andReturn(ec2Options);
   expect(input.template.getLocation()).andReturn(input.location).atLeastOnce();
   expect(input.template.getImage()).andReturn(input.image).atLeastOnce();
   expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
-  expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn(reservation);
+  expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn((Reservation)reservation);
   expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
   expect(strategy.instancePresent.apply(instance)).andReturn(true);
   expect(input.template.getOptions()).andReturn(input.options).atLeastOnce();

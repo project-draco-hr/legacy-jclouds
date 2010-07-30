@@ -1,36 +1,9 @@
 {
-  Map<BlobMetadata,Exception> exceptions=Maps.newHashMap();
-  final Set<Blob> objects=Sets.newHashSet();
-  Iterable<? extends BlobMetadata> toGet=getAllBlobMetadata.execute(container,options);
-  for (int i=0; i < 3; i++) {
-    Map<BlobMetadata,ListenableFuture<?>> responses=Maps.newHashMap();
-    for (    BlobMetadata md : toGet) {
-      final ListenableFuture<? extends Blob> future=ablobstore.getBlob(container,md.getName());
-      future.addListener(new Runnable(){
-        @Override public void run(){
-          try {
-            objects.add(future.get());
-          }
- catch (          InterruptedException e) {
-            Throwables.propagate(e);
-          }
-catch (          ExecutionException e) {
-            Throwables.propagate(e);
-          }
-        }
-      }
-,sameThreadExecutor());
-      responses.put(md,future);
-    }
-    exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("getting from containerName: %s",container));
-    if (exceptions.size() > 0) {
-      toGet=exceptions.keySet();
-      retryHandler.imposeBackoffExponentialDelay(i + 1,String.format("blob %s/%s not found",container,toGet));
-    }
- else {
-      break;
+  Iterable<? extends BlobMetadata> list=getAllBlobMetadata.execute(container,options);
+  return transformParallel(list,new Function<BlobMetadata,Future<Blob>>(){
+    @Override public Future<Blob> apply(    BlobMetadata from){
+      return ablobstore.getBlob(container,from.getName());
     }
   }
-  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("errors getting from container %s: %s",container,exceptions));
-  return objects;
+,userExecutor,maxTime,logger,String.format("getting from containerName: %s",container),retryHandler,3);
 }

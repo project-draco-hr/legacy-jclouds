@@ -1,10 +1,10 @@
 {
-  Iterable<? extends NodeMetadata> nodes=verifyParametersAndListNodes(filter,runScript,(options != null) ? options : RunScriptOptions.NONE);
+  Iterable<NodeMetadata> nodes=verifyParametersAndListNodes(filter,runScript,(options != null) ? options : RunScriptOptions.NONE);
   final Map<NodeMetadata,ExecResponse> execs=Maps.newHashMap();
   final Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
-  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
+  Map<NodeMetadata,Future<Void>> responses=Maps.newHashMap();
   for (  final NodeMetadata node : nodes) {
-    responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
+    responses.put(node,executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
         try {
           RunScriptOnNode callable;
@@ -26,7 +26,7 @@
         return null;
       }
     }
-),executor));
+));
   }
   Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
   if (exceptions.size() > 0 || badNodes.size() > 0) {

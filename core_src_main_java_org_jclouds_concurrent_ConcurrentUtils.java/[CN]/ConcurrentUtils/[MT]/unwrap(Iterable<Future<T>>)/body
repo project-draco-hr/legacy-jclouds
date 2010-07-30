@@ -1,0 +1,17 @@
+{
+  return Iterables.transform(values,new Function<Future<T>,T>(){
+    @Override public T apply(    Future<T> from){
+      try {
+        return from.get();
+      }
+ catch (      InterruptedException e) {
+        Throwables.propagate(e);
+      }
+catch (      ExecutionException e) {
+        Throwables.propagate(e);
+      }
+      return null;
+    }
+  }
+);
+}

@@ -1,32 +1,15 @@
 {
   checkState(container != null,"container name should be initialized");
-  Map<? extends StorageMetadata,Exception> exceptions=Maps.newHashMap();
-  final Set<StorageMetadata> metadata=Sets.newHashSet();
-  Map<StorageMetadata,ListenableFuture<?>> responses=Maps.newHashMap();
-  for (  StorageMetadata md : in) {
-    if (md.getType() == StorageType.BLOB) {
-      final ListenableFuture<? extends StorageMetadata> future=ablobstore.blobMetadata(container,md.getName());
-      future.addListener(new Runnable(){
-        @Override public void run(){
-          try {
-            metadata.add(future.get());
-          }
- catch (          InterruptedException e) {
-            Throwables.propagate(e);
-          }
-catch (          ExecutionException e) {
-            Throwables.propagate(e);
-          }
-        }
-      }
-,sameThreadExecutor());
-      responses.put(md,future);
-    }
- else {
-      metadata.add(md);
+  Iterable<BlobMetadata> returnv=transformParallel(Iterables.filter(in,new Predicate<StorageMetadata>(){
+    @Override public boolean apply(    StorageMetadata input){
+      return input.getType() == StorageType.BLOB;
     }
   }
-  exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("getting metadata from containerName: %s",container));
-  if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("errors getting from container %s: %s",container,exceptions));
-  return new PageSetImpl<StorageMetadata>(metadata,in.getNextMarker());
+),new Function<StorageMetadata,Future<BlobMetadata>>(){
+    @Override public Future<BlobMetadata> apply(    StorageMetadata from){
+      return ablobstore.blobMetadata(container,from.getName());
+    }
+  }
+,userExecutor,maxTime,logger,String.format("getting metadata from containerName: %s",container));
+  return new PageSetImpl<BlobMetadata>(returnv,in.getNextMarker());
 }

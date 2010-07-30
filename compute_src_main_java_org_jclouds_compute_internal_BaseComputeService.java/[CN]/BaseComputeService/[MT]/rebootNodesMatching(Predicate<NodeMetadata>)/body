@@ -1,15 +1,11 @@
 {
   logger.debug(">> rebooting nodes matching(%s)",filter);
-  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
-  for (  final NodeMetadata node : nodesMatchingFilterAndNotTerminated(filter)) {
-    responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        rebootNode(node.getId());
-        return null;
-      }
+  transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<Void>>(){
+    @Override public Future<Void> apply(    NodeMetadata from){
+      rebootNode(from.getId());
+      return Futures.immediateFuture(null);
     }
-),executor));
   }
-  awaitCompletion(responses,executor,null,logger,"rebooting nodes");
+,executor,null,logger,"rebooting nodes");
   logger.debug("<< rebooted");
 }

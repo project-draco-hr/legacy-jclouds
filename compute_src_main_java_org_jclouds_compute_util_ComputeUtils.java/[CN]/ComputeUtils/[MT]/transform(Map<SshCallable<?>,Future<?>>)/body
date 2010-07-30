@@ -1,0 +1,15 @@
+{
+  Map<SshCallable<?>,T> actualResponses=Maps.newHashMap();
+  for (  Map.Entry<SshCallable<?>,Future<?>> entry : responses.entrySet()) {
+    try {
+      actualResponses.put(entry.getKey(),(T)entry.getValue().get());
+    }
+ catch (    InterruptedException e) {
+      throw Throwables.propagate(e);
+    }
+catch (    ExecutionException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+  return actualResponses;
+}

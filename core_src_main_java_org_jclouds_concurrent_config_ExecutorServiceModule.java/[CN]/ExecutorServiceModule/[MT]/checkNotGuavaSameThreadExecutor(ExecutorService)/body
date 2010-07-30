@@ -1,0 +1,7 @@
+{
+  if (executor != null && !(executor.getClass().isAnnotationPresent(SingleThreaded.class)) && executor.getClass().getSimpleName().indexOf("SameThread") != -1) {
+    Logger.CONSOLE.warn("please switch from %s to %s or annotate your same threaded executor with @SingleThreaded",executor.getClass().getName(),SameThreadExecutorService.class.getName());
+    return sameThreadExecutor();
+  }
+  return executor;
+}

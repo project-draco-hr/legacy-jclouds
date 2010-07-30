@@ -1,11 +1,9 @@
 {
-  return chain(directoryExists(containerName,directory),new Function<Boolean,ListenableFuture<Void>>(){
-    @Override public ListenableFuture<Void> apply(    Boolean from){
-      if (!from) {
-        blobUtils.createDirectory(containerName,directory);
-      }
-      return immediateFuture(null);
+  return blobUtils.directoryExists(containerName,directory) ? Futures.immediateFuture((Void)null) : makeListenable(service.submit(new Callable<Void>(){
+    public Void call() throws Exception {
+      blobUtils.createDirectory(containerName,directory);
+      return null;
     }
   }
-,service);
+),service);
 }

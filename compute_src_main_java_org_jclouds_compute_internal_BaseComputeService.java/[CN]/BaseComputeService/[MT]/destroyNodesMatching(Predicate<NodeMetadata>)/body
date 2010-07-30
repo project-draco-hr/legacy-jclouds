@@ -1,18 +1,17 @@
 {
   logger.debug(">> destroying nodes matching(%s)",filter);
-  Map<NodeMetadata,ListenableFuture<Void>> responses=Maps.newHashMap();
-  final Set<NodeMetadata> destroyedNodes=Sets.newLinkedHashSet();
-  for (  final NodeMetadata node : nodesMatchingFilterAndNotTerminated(filter)) {
-    responses.put(node,makeListenable(executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        destroyNode(node.getId());
-        destroyedNodes.add(node);
-        return null;
+  Set<NodeMetadata> set=Sets.newLinkedHashSet(transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<NodeMetadata>>(){
+    @Override public Future<NodeMetadata> apply(    final NodeMetadata from){
+      return executor.submit(new Callable<NodeMetadata>(){
+        @Override public NodeMetadata call() throws Exception {
+          destroyNode(from.getId());
+          return from;
+        }
       }
+);
     }
-),executor));
   }
-  awaitCompletion(responses,executor,null,logger,"destroying nodes");
-  logger.debug("<< destroyed");
-  return destroyedNodes;
+,executor,null,logger,"destroying nodes"));
+  logger.debug("<< destroyed(%d)",set.size());
+  return set;
 }

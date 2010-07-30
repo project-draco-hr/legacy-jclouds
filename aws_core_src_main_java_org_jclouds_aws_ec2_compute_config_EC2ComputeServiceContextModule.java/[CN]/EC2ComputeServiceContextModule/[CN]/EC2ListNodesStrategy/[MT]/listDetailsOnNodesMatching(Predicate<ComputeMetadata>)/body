@@ -1,16 +1,11 @@
 {
-  final Set<NodeMetadata> nodes=Sets.newHashSet();
-  Map<String,ListenableFuture<?>> parallelResponses=Maps.newHashMap();
-  for (  final String region : regionMap.keySet()) {
-    parallelResponses.put(region,ConcurrentUtils.makeListenable(executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        Iterables.addAll(nodes,Iterables.transform(Iterables.concat(client.getInstanceServices().describeInstancesInRegion(region)),runningInstanceToNodeMetadata));
-        return null;
-      }
+  Iterable<Set<? extends Reservation<? extends RunningInstance>>> reservations=transformParallel(regionMap.keySet(),new Function<String,Future<Set<? extends Reservation<? extends RunningInstance>>>>(){
+    @Override public Future<Set<? extends Reservation<? extends RunningInstance>>> apply(    String from){
+      return client.getInstanceServices().describeInstancesInRegion(from);
     }
-),executor));
   }
-  Map<String,Exception> exceptions=awaitCompletion(parallelResponses,executor,null,logger,"nodes");
-  if (exceptions.size() > 0)   throw new RuntimeException(String.format("error parsing nodes in regions: %s",exceptions));
-  return Iterables.filter(nodes,filter);
+,executor,null,logger,"reservations");
+  Iterable<? extends RunningInstance> instances=concat(concat(reservations));
+  Iterable<? extends NodeMetadata> nodes=filter(transform(instances,runningInstanceToNodeMetadata),filter);
+  return newLinkedHashSet(nodes);
 }

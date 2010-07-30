@@ -1,0 +1,19 @@
+{
+  Map<F,Exception> exceptions=newHashMap();
+  Map<F,Future<T>> responses=newHashMap();
+  for (int i=0; i < maxRetries; i++) {
+    for (    F from : fromIterable) {
+      responses.put(from,function.apply(from));
+    }
+    exceptions=awaitCompletion(responses,exec,maxTime,logger,logPrefix);
+    if (exceptions.size() > 0) {
+      fromIterable=exceptions.keySet();
+      retryHandler.imposeBackoffExponentialDelay(i + 1,String.format("error %s: %s: %s",logPrefix,fromIterable,exceptions));
+    }
+ else {
+      break;
+    }
+  }
+  if (exceptions.size() > 0)   throw new RuntimeException(String.format("error %s: %s: %s",logPrefix,fromIterable,exceptions));
+  return unwrap(responses.values());
+}

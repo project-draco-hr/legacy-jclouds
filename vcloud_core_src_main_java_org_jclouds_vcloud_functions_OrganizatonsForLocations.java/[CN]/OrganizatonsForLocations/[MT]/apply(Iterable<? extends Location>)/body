@@ -1,0 +1,13 @@
+{
+  return transformParallel(filter(from,new Predicate<Location>(){
+    @Override public boolean apply(    Location input){
+      return input.getScope() == LocationScope.ZONE;
+    }
+  }
+),new Function<Location,Future<Organization>>(){
+    @SuppressWarnings("unchecked") @Override public Future<Organization> apply(    Location from){
+      return (Future<Organization>)aclient.getOrganization(from.getParent().getId());
+    }
+  }
+,executor,null,logger,"organizations for locations");
+}

@@ -2,5 +2,5 @@
   ListBucketOptions httpOptions=container2BucketListOptions.apply(options);
   ListenableFuture<ListBucketResponse> returnVal=async.listBucket(container,httpOptions);
   ListenableFuture<PageSet<? extends StorageMetadata>> list=compose(returnVal,bucket2ResourceList,service);
-  return options.isDetailed() ? compose(list,fetchBlobMetadataProvider.get().setContainerName(container),service) : list;
+  return (options.isDetailed()) ? compose(list,fetchBlobMetadataProvider.get().setContainerName(container),service) : list;
 }

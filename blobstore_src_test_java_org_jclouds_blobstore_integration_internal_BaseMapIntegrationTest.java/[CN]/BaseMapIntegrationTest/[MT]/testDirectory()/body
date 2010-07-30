@@ -1,11 +1,11 @@
 {
   String containerName=getContainerName();
+  String directory="apps";
+  Map<String,V> rootMap=createMap(context,containerName);
+  Map<String,V> rootRecursiveMap=createMap(context,containerName,recursive());
+  Map<String,V> inDirectoryMap=createMap(context,containerName,inDirectory(directory));
+  Map<String,V> inDirectoryRecursiveMap=createMap(context,containerName,inDirectory(directory).recursive());
   try {
-    String directory="apps";
-    Map<String,V> rootMap=createMap(context,containerName);
-    Map<String,V> rootRecursiveMap=createMap(context,containerName,recursive());
-    Map<String,V> inDirectoryMap=createMap(context,containerName,inDirectory(directory));
-    Map<String,V> inDirectoryRecursiveMap=createMap(context,containerName,inDirectory(directory).recursive());
     context.getBlobStore().createDirectory(containerName,directory);
     addTenObjectsUnderRoot(containerName);
     assertEquals(rootMap.size(),10);

@@ -11,9 +11,9 @@
   Factory factory=injector.getInstance(ParseSax.Factory.class);
   VDC vdc=factory.create(injector.getInstance(VDCHandler.class)).parse(is);
   VCloudClient client=createMock(VCloudClient.class);
-  FindLocationForResourceInVDC findLocationForResourceInVDC=createMock(FindLocationForResourceInVDC.class);
+  FindLocationForResource findLocationForResourceInVDC=createMock(FindLocationForResource.class);
   ParseVAppTemplatesInVDCToSizeProvider providerParser=new ParseVAppTemplatesInVDCToSizeProvider(client,findLocationForResourceInVDC);
-  expect(findLocationForResourceInVDC.apply((NamedResource)anyObject(),(String)anyObject())).andReturn(null).atLeastOnce();
+  expect(findLocationForResourceInVDC.apply((NamedResource)anyObject())).andReturn(null).atLeastOnce();
   replay(client);
   replay(findLocationForResourceInVDC);
   Set<Size> sizes=Sets.newLinkedHashSet();

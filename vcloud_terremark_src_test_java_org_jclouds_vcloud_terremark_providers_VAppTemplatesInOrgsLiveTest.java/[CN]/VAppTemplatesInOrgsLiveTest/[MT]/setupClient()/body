@@ -1,0 +1,12 @@
+{
+  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
+  String endpoint=System.getProperty("jclouds.test.endpoint");
+  Properties props=new Properties();
+  if (endpoint != null && !"".equals(endpoint))   props.setProperty("terremark.endpoint",endpoint);
+  Injector injector=new RestContextFactory().createContextBuilder("trmk-vcloudexpress",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()),props).buildInjector();
+  tmClient=injector.getInstance(TerremarkVCloudClient.class);
+  allCatalogItemsInOrganization=injector.getInstance(AllCatalogItemsInOrganization.class);
+  parser=injector.getInstance(VAppTemplatesInOrgs.class);
+  closer=injector.getInstance(Closer.class);
+}

@@ -3,7 +3,7 @@
   long timeOut=messageCount * 200;
   for (  Queue queue : queues) {
     logger.info("context: %s, region: %s, queueName: %s",contextName,queue.getRegion(),queue.getName());
-    Map<QueueMessage,ListenableFuture<byte[]>> responses=Maps.newHashMap();
+    Map<QueueMessage,Future<byte[]>> responses=Maps.newHashMap();
     for (int i=0; i < messageCount; i++) {
       responses.put(new QueueMessage(queue,message),context.getAsyncApi().sendMessage(queue,message));
     }

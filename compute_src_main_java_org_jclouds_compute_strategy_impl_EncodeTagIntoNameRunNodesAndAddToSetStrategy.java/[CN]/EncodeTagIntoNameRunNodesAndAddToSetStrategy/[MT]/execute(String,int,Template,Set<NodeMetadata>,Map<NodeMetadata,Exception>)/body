@@ -1,7 +1,7 @@
 {
-  Map<String,ListenableFuture<Void>> responses=Maps.newHashMap();
+  Map<String,Future<Void>> responses=Maps.newHashMap();
   for (  final String name : getNextNames(tag,template,count)) {
-    responses.put(name,makeListenable(executor.submit(new Callable<Void>(){
+    responses.put(name,executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
         NodeMetadata node=null;
         logger.debug(">> starting node(%s) tag(%s)",name,tag);
@@ -11,7 +11,7 @@
         return null;
       }
     }
-),executor));
+));
   }
   return responses;
 }

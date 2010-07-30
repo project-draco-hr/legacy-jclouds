@@ -1,7 +1,7 @@
 {
-  Set<Reservation> reservations=client.getInstanceServices().describeInstancesInRegion(null);
+  Set<? extends Reservation<? extends RunningInstance>> reservations=client.getInstanceServices().describeInstancesInRegion(null);
   Set<RunningInstance> allInstances=Sets.newHashSet();
-  for (  Reservation reservation : reservations) {
+  for (  Reservation<? extends RunningInstance> reservation : reservations) {
     allInstances.addAll(reservation);
   }
   return Iterables.find(allInstances,new Predicate<RunningInstance>(){

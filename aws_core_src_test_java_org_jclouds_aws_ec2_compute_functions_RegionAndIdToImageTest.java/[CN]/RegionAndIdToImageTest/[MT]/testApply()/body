@@ -4,9 +4,9 @@
   AMIClient client=createMock(AMIClient.class);
   org.jclouds.aws.ec2.domain.Image ec2Image=createMock(org.jclouds.aws.ec2.domain.Image.class);
   Image image=createNiceMock(Image.class);
-  Set<org.jclouds.aws.ec2.domain.Image> images=ImmutableSet.<org.jclouds.aws.ec2.domain.Image>of(ec2Image);
+  Set<? extends org.jclouds.aws.ec2.domain.Image> images=ImmutableSet.<org.jclouds.aws.ec2.domain.Image>of(ec2Image);
   expect(caller.getAMIServices()).andReturn(client).atLeastOnce();
-  expect(client.describeImagesInRegion("region",imageIds("ami"))).andReturn(images);
+  expect(client.describeImagesInRegion("region",imageIds("ami"))).andReturn((Set)images);
   expect(parser.apply(ec2Image)).andReturn(image);
   replay(caller);
   replay(image);
