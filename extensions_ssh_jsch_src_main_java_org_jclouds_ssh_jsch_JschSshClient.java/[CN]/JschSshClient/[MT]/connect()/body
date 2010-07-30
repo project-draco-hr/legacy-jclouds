@@ -12,7 +12,7 @@
       disconnect();
       if (i == sshRetries)       throw propagate(from);
       if (shouldRetry(from)) {
-        backoffForAttempt(i + 1,from.getMessage());
+        backoffForAttempt(i + 1,String.format("%s@%s:%d: connection error: %s",username,host,port,from.getMessage()));
         continue;
       }
       throw propagate(from);

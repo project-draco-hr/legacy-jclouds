@@ -13,7 +13,13 @@
     executor.setErrStream(error);
     try {
       executor.connect();
-      return new ExecResponse(Utils.toStringAndClose(executor.getInputStream()),error.toString(),executor.getExitStatus());
+      String outputString=Utils.toStringAndClose(executor.getInputStream());
+      String errorString=error.toString();
+      int errorStatus=executor.getExitStatus();
+      int i=0;
+      while ((errorStatus=executor.getExitStatus()) == -1 && i < this.sshRetries)       backoffForAttempt(++i,String.format("%s@%s:%d: bad status: -1",username,host,port));
+      if (errorStatus == -1)       throw new SshException(String.format("%s@%s:%d: received exit status %d executing %s",username,host,port,executor.getExitStatus(),command));
+      return new ExecResponse(outputString,errorString,errorStatus);
     }
  catch (    Exception e) {
       throw new SshException(String.format("%s@%s:%d: Error executing command: %s",username,host,port,command),e);
