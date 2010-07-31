@@ -1,6 +1,6 @@
 {
-  Client user=new Client("-----BEGIN CERTIFICATE-----dXQ==-----END CERTIFICATE-----","jclouds","adrian-jcloudstest","adrian-jcloudstest",false);
-  String toParse="{ \"certificate\":\"-----BEGIN CERTIFICATE-----dXQ==-----END CERTIFICATE-----\", \"orgname\":\"jclouds\", \"clientname\":\"adrian-jcloudstest\",   \"name\": \"adrian-jcloudstest\",\"validator\": false }";
-  System.out.println(toParse);
-  assertEquals(handler.apply(new HttpResponse(200,"ok",newStringPayload(toParse))),user);
+  Client user=new Client(certificate,"jclouds","adriancole-jcloudstest","adriancole-jcloudstest",false,privateKey);
+  byte[] encrypted=encryptionService.rsaEncrypt(Payloads.newPayload("fooya"),user.getCertificate().getPublicKey());
+  assertEquals(encryptionService.rsaDecrypt(Payloads.newPayload(encrypted),user.getPrivateKey()),"fooya".getBytes());
+  assertEquals(handler.apply(new HttpResponse(200,"ok",newInputStreamPayload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")))),user);
 }

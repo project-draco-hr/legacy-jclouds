@@ -1,5 +1,5 @@
 {
-  clientKey=validatorConnection.getApi().getChefClientForOrg(orgname).generateKeyForClient(PREFIX);
+  clientKey=validatorConnection.utils().encryption().toPem(validatorConnection.getApi().getChefClientForOrg(orgname).createClient(PREFIX).getPrivateKey());
   assertNotNull(clientKey);
   clientConnection.close();
   clientConnection=createConnection(PREFIX,clientKey);
