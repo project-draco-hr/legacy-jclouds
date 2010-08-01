@@ -1,4 +1,7 @@
 {
-  IdHolder idHolder=context.deserialize(json,IdHolder.class);
-  return new DataBagItem(idHolder.id,json.toString());
+  String text=jsonElement.toString();
+  IdHolder idHolder=json.fromJson(text,IdHolder.class);
+  checkState(idHolder.id != null,"databag item must be a json hash ex. {\"id\":\"item1\",\"my_key\":\"my_data\"}; was %s",text);
+  text=text.replaceFirst(String.format("\\{\"id\"[ ]?:\"%s\",",idHolder.id),"{");
+  return new DatabagItem(idHolder.id,text);
 }

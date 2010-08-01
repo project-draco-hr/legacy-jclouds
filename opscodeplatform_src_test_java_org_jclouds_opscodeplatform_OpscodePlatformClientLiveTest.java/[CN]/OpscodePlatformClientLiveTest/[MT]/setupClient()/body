@@ -1,6 +1,12 @@
 {
-  orgname=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
+  validator=checkNotNull(System.getProperty("jclouds.test.validator"),"jclouds.test.validator");
+  orgname=Iterables.get(Splitter.on('-').split(validator),0);
+  String validatorKey=System.getProperty("jclouds.test.validator.key");
+  if (validatorKey == null || validatorKey.equals(""))   validatorKey=System.getProperty("user.home") + "/.chef/" + orgname+ "-validator.pem";
+  user=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
   String keyfile=System.getProperty("jclouds.test.credential");
-  if (keyfile == null || keyfile.equals(""))   keyfile="/etc/chef/validation.pem";
-  validatorConnection=createConnection(orgname + "-validator",Files.toString(new File(keyfile),Charsets.UTF_8));
+  if (keyfile == null || keyfile.equals(""))   keyfile=System.getProperty("user.home") + "/.chef/" + user+ ".pem";
+  validatorConnection=createConnection(validator,Files.toString(new File(validatorKey),Charsets.UTF_8));
+  adminConnection=createConnection(user,Files.toString(new File(keyfile),Charsets.UTF_8));
+  json=Guice.createInjector(new GsonModule(),new ChefParserModule()).getInstance(Json.class);
 }

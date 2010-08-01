@@ -1,0 +1,11 @@
+{
+  Method method=ChefAsyncClient.class.getMethod("updateDatabagItem",String.class,DatabagItem.class);
+  GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,"name",new DatabagItem("id","{\"my_key\": \"my_data\"}"));
+  assertRequestLineEquals(httpRequest,"PUT http://localhost:4000/data/name/id HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\nX-Chef-Version: 0.9.8\n");
+  assertPayloadEquals(httpRequest,"{\"id\":\"id\",\"my_key\": \"my_data\"}","application/json",false);
+  assertResponseParserClassEquals(method,httpRequest,ParseJson.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}

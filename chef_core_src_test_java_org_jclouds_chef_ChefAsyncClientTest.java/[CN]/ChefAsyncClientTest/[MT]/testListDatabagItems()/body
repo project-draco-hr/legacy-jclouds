@@ -1,0 +1,11 @@
+{
+  Method method=ChefAsyncClient.class.getMethod("listDatabagItems",String.class);
+  GeneratedHttpRequest<ChefAsyncClient> httpRequest=processor.createRequest(method,"name");
+  assertRequestLineEquals(httpRequest,"GET http://localhost:4000/data/name HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\nX-Chef-Version: 0.9.8\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseKeySetFromJson.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

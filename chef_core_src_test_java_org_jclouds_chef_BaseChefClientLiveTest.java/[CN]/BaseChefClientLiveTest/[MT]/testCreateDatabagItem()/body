@@ -1,0 +1,9 @@
+{
+  Properties config=new Properties();
+  config.setProperty("foo","bar");
+  getAdminConnection().deleteDatabagItem(PREFIX,PREFIX);
+  databagItem=getAdminConnection().createDatabagItem(PREFIX,new DatabagItem("config",json.toJson(config)));
+  assertNotNull(databagItem);
+  assertEquals(databagItem.getId(),"config");
+  assertEquals(config,json.fromJson(databagItem.toString(),Properties.class));
+}
