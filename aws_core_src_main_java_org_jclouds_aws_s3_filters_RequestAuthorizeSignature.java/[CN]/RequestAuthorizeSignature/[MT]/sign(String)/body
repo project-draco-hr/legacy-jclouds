@@ -1,7 +1,7 @@
 {
   String signature;
   try {
-    signature=encryptionService.base64(encryptionService.hmacSha1(toSign,secretKey.getBytes()));
+    signature=CryptoStreams.base64(CryptoStreams.mac(InputSuppliers.of(toSign),crypto.hmacSHA1(secretKey.getBytes())));
   }
  catch (  Exception e) {
     throw new HttpException("error signing request",e);

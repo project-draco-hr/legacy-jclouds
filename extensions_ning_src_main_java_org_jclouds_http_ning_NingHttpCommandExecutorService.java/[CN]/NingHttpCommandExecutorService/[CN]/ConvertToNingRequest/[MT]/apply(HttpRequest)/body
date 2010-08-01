@@ -26,7 +26,7 @@
   Payload payload=request.getPayload();
   if (payload != null) {
     boolean chunked="chunked".equals(request.getFirstHeaderOrNull("Transfer-Encoding"));
-    if (request.getPayload().getContentMD5() != null)     nativeRequestBuilder.addHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5()));
+    if (request.getPayload().getContentMD5() != null)     nativeRequestBuilder.addHeader("Content-MD5",CryptoStreams.base64(request.getPayload().getContentMD5()));
     if (request.getPayload().getContentType() != null)     nativeRequestBuilder.addHeader(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType());
     if (!chunked) {
       Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");

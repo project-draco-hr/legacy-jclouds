@@ -1,6 +1,6 @@
 {
   Client user=new Client(certificate,"jclouds","adriancole-jcloudstest","adriancole-jcloudstest",false,privateKey);
-  byte[] encrypted=encryptionService.rsaEncrypt(Payloads.newPayload("fooya"),user.getCertificate().getPublicKey());
-  assertEquals(encryptionService.rsaDecrypt(Payloads.newPayload(encrypted),user.getPrivateKey()),"fooya".getBytes());
+  byte[] encrypted=ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newPayload("fooya"),user.getCertificate().getPublicKey()));
+  assertEquals(ByteStreams.toByteArray(new RSADecryptingPayload(Payloads.newPayload(encrypted),user.getPrivateKey())),"fooya".getBytes());
   assertEquals(handler.apply(new HttpResponse(200,"ok",newInputStreamPayload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")))),user);
 }

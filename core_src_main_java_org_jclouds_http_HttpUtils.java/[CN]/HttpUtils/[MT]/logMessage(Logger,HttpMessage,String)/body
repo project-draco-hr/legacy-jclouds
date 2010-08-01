@@ -5,6 +5,11 @@
   if (message.getPayload() != null) {
     if (message.getPayload().getContentType() != null)     logger.debug("%s %s: %s",prefix,HttpHeaders.CONTENT_TYPE,message.getPayload().getContentType());
     if (message.getPayload().getContentLength() != null)     logger.debug("%s %s: %s",prefix,HttpHeaders.CONTENT_LENGTH,message.getPayload().getContentLength());
-    if (message.getPayload().getContentMD5() != null)     logger.debug("%s %s: %s",prefix,"Content-MD5",encryptionService.base64(message.getPayload().getContentMD5()));
+    if (message.getPayload().getContentMD5() != null)     try {
+      logger.debug("%s %s: %s",prefix,"Content-MD5",CryptoStreams.base64Encode(InputSuppliers.of(message.getPayload().getContentMD5())));
+    }
+ catch (    IOException e) {
+      logger.warn(e," error getting md5 for %s",message);
+    }
   }
 }

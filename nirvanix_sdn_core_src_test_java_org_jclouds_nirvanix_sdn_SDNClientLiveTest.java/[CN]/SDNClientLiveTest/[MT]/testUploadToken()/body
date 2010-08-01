@@ -7,7 +7,7 @@
   Blob blob=connection.newBlob();
   blob.getMetadata().setName("test.txt");
   blob.setPayload("value");
-  context.utils().encryption().generateMD5BufferingIfNotRepeatable(blob);
+  Payloads.calculateMD5(blob);
   byte[] md5=blob.getMetadata().getContentMD5();
   connection.upload(uploadInfo.getHost(),uploadInfo.getToken(),containerName,blob);
   Map<String,String> metadata=connection.getMetadata(containerName + "/test.txt");

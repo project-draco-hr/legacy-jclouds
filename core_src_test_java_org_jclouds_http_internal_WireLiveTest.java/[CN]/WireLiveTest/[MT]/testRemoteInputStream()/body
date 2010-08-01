@@ -2,9 +2,9 @@
   URL url=new URL(checkNotNull(sysHttpStreamUrl,"sysHttpStreamUrl"));
   URLConnection connection=url.openConnection();
   HttpWire wire=setUp();
-  InputStream in=wire.input(connection.getInputStream());
-  byte[] compare=encryptionService.md5(in);
+  final InputStream in=wire.input(connection.getInputStream());
+  byte[] compare=CryptoStreams.md5(InputSuppliers.of(in));
   Thread.sleep(100);
-  assertEquals(encryptionService.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
+  assertEquals(CryptoStreams.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
   assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
 }

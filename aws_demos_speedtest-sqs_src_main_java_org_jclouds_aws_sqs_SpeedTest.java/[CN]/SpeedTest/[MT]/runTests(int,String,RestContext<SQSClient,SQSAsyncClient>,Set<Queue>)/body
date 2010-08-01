@@ -7,7 +7,7 @@
     for (int i=0; i < messageCount; i++) {
       responses.put(new QueueMessage(queue,message),context.getAsyncApi().sendMessage(queue,message));
     }
-    Map<QueueMessage,Exception> exceptions=awaitCompletion(responses,sameThreadExecutor(),timeOut,traceLogger,String.format("context: %s, region: %s",contextName,queue.getRegion()));
+    Map<QueueMessage,Exception> exceptions=awaitCompletion(responses,MoreExecutors.sameThreadExecutor(),timeOut,traceLogger,String.format("context: %s, region: %s",contextName,queue.getRegion()));
     if (exceptions.size() > 0)     logger.error("problems in context: %s, region: %s: %s",contextName,queue.getRegion(),exceptions);
     System.gc();
     logger.info("pausing 5 seconds before the next run");

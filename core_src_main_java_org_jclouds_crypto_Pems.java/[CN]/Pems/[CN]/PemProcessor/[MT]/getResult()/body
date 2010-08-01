@@ -1,0 +1,15 @@
+{
+  try {
+    PEMReader reader=new PEMReader(out.toByteArray());
+    byte[] bytes=reader.getDerBytes();
+    if (parsers.containsKey(reader.getBeginMarker())) {
+      return parsers.get(reader.getBeginMarker()).parseResult(bytes);
+    }
+ else {
+      throw new IOException(String.format("Invalid PEM file: no parsers for marker %s in %s",reader.getBeginMarker(),parsers.keySet()));
+    }
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+}

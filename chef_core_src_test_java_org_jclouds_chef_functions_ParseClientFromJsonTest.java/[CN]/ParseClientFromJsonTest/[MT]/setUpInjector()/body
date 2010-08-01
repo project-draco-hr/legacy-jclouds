@@ -3,7 +3,7 @@
   handler=injector.getInstance(Key.get(new TypeLiteral<ParseJson<Client>>(){
   }
 ));
-  encryptionService=injector.getInstance(EncryptionService.class);
-  certificate=encryptionService.x509CertificateFromPEM(CERTIFICATE.getBytes("UTF-8"));
-  privateKey=encryptionService.privateKeyFromPEM(PRIVATE_KEY.getBytes("UTF-8"));
+  crypto=injector.getInstance(Crypto.class);
+  certificate=Pems.x509Certificate(Payloads.newStringPayload(CERTIFICATE),null);
+  privateKey=crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(Payloads.newStringPayload(PRIVATE_KEY)));
 }

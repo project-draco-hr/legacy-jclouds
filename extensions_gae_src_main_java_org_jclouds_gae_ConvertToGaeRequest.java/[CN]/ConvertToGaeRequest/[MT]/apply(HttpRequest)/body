@@ -33,7 +33,7 @@
  finally {
       closeQuietly(input);
     }
-    if (request.getPayload().getContentMD5() != null)     gaeRequest.setHeader(new HTTPHeader("Content-MD5",encryptionService.base64(request.getPayload().getContentMD5())));
+    if (request.getPayload().getContentMD5() != null)     gaeRequest.setHeader(new HTTPHeader("Content-MD5",CryptoStreams.base64(request.getPayload().getContentMD5())));
     if (request.getPayload().getContentType() != null)     gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType()));
     Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
     gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,length.toString()));

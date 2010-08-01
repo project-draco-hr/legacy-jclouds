@@ -28,7 +28,7 @@
  finally {
       Closeables.closeQuietly(out);
     }
-    assertEquals(client.postWithMd5("fileso",this.encryptionService.base64(eTag.digest()),f).trim(),"created");
+    assertEquals(client.postWithMd5("fileso",CryptoStreams.base64Encode(InputSuppliers.of(eTag.digest())),f).trim(),"created");
   }
   finally {
     if (os != null)     os.close();

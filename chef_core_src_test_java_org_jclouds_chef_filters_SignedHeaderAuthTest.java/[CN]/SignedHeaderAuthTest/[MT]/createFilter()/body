@@ -1,6 +1,6 @@
 {
   Injector injector=new RestContextFactory().createContextBuilder("chef",USER_ID,PRIVATE_KEY,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule()),new Properties()).buildInjector();
-  encryptionService=injector.getInstance(EncryptionService.class);
+  crypto=injector.getInstance(Crypto.class);
   HttpUtils utils=injector.getInstance(HttpUtils.class);
   PrivateKey privateKey=injector.getInstance(PrivateKey.class);
   signing_obj=new SignedHeaderAuth(new SignatureWire(),USER_ID,privateKey,new Provider<String>(){
@@ -8,5 +8,5 @@
       return TIMESTAMP_ISO8601;
     }
   }
-,encryptionService,utils);
+,crypto,utils);
 }

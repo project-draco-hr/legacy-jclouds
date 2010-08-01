@@ -3,7 +3,7 @@
   final BlockingQueue<Boolean> queue=new SynchronousQueue<Boolean>();
   Map<String,Future<?>> responses=Maps.newHashMap();
   for (  BlobMetadata md : getAllBlobMetadata.execute(containerName,options)) {
-    final ListenableFuture<AtmosObject> future=makeListenable(client.headFile(containerName + "/" + md.getName()),userExecutor);
+    final ListenableFuture<AtmosObject> future=Futures.makeListenable(client.headFile(containerName + "/" + md.getName()),userExecutor);
     future.addListener(new Runnable(){
       public void run(){
         try {

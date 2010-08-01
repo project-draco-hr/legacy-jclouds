@@ -1,7 +1,7 @@
 {
   try {
-    byte[] encrypted=encryptionService.rsaEncrypt(Payloads.newStringPayload(toSign),privateKey);
-    return encryptionService.base64(encrypted);
+    byte[] encrypted=ByteStreams.toByteArray(new RSAEncryptingPayload(Payloads.newStringPayload(toSign),privateKey));
+    return CryptoStreams.base64(encrypted);
   }
  catch (  Exception e) {
     throw new HttpException("error signing request",e);

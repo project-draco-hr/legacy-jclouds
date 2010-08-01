@@ -8,13 +8,14 @@
     clientProperties.putAll(overrides);
     removeCredentials(clientProperties);
     clientProperties.setProperty("chef.identity",id);
-    clientProperties.setProperty("chef.credential",validatorClient.getContext().utils().encryption().toPem(client.getPrivateKey()));
+    clientProperties.setProperty("chef.credential",Pems.pem(client.getPrivateKey()));
     clientService=createService(clientProperties);
     clientService.createNodeAndPopulateAutomaticAttributes(id,singleton("role[" + role + "]"));
     return clientService;
   }
- catch (  RuntimeException e) {
+ catch (  Exception e) {
     logger.error(e,"error creating node %s",id);
-    throw e;
+    Throwables.propagate(e);
+    return null;
   }
 }

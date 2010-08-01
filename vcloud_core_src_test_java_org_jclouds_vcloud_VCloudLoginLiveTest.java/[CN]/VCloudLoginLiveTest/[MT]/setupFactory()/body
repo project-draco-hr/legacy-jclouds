@@ -3,7 +3,7 @@
   String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
   String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
   ContextSpec<VCloudLoginClient,VCloudLoginAsyncClient> contextSpec=contextSpec("test",endpoint,"1",identity,credential,VCloudLoginClient.class,VCloudLoginAsyncClient.class);
-  context=createContextBuilder(contextSpec,ImmutableSet.<Module>of(new Log4JLoggingModule(),new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()),new AbstractModule(){
+  context=createContextBuilder(contextSpec,ImmutableSet.<Module>of(new Log4JLoggingModule(),new ExecutorServiceModule(MoreExecutors.sameThreadExecutor(),MoreExecutors.sameThreadExecutor()),new AbstractModule(){
     @Override protected void configure(){
     }
     @SuppressWarnings("unused") @Provides @VCloudLogin URI provideURI(    @Provider URI uri){

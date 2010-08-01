@@ -1,9 +1,17 @@
 {
   String keyText=json.getAsString().replaceAll("\\n","\n");
   try {
-    return encryptionService.x509CertificateFromPEM(keyText.getBytes("UTF-8"));
+    return Pems.x509Certificate(InputSuppliers.of(keyText),crypto.certFactory());
   }
  catch (  UnsupportedEncodingException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+catch (  IOException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+catch (  CertificateException e) {
     Throwables.propagate(e);
     return null;
   }

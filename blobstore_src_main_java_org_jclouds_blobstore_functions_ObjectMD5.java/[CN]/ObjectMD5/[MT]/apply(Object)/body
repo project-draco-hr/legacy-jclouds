@@ -7,6 +7,11 @@
     object=blobFactory.create(null);
     object.setPayload(Payloads.newPayload(from));
   }
-  if (object.getMetadata().getContentMD5() == null)   encryptionService.generateMD5BufferingIfNotRepeatable(object);
+  if (object.getMetadata().getContentMD5() == null)   try {
+    Payloads.calculateMD5(object,crypto.md5());
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
   return object.getPayload().getContentMD5();
 }

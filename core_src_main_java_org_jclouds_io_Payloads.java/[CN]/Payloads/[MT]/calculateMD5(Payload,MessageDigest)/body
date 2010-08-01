@@ -1,0 +1,16 @@
+{
+  checkNotNull(payload,"payload");
+  if (!payload.isRepeatable()) {
+    String oldContentType=payload.getContentType();
+    Payload oldPayload=payload;
+    try {
+      payload=newByteArrayPayload(toByteArray(payload));
+    }
+  finally {
+      oldPayload.release();
+    }
+    payload.setContentType(oldContentType);
+  }
+  payload.setContentMD5(CryptoStreams.digest(payload,md5));
+  return payload;
+}

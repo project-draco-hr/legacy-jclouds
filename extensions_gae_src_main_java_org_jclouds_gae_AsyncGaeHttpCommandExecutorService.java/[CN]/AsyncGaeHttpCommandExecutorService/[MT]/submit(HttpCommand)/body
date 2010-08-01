@@ -1,7 +1,7 @@
 {
   HTTPRequest nativeRequest=filterLogAndConvertRe(command.getRequest());
-  ListenableFuture<HttpResponse> response=compose(urlFetchService.fetchAsync(nativeRequest),convertToJcloudsResponse,service);
-  return compose(response,new Function<HttpResponse,HttpResponse>(){
+  ListenableFuture<HttpResponse> response=Futures.compose(urlFetchService.fetchAsync(nativeRequest),convertToJcloudsResponse,service);
+  return Futures.compose(response,new Function<HttpResponse,HttpResponse>(){
     @Override public HttpResponse apply(    HttpResponse response){
       try {
         logger.debug("Receiving response %s: %s",command.getRequest().hashCode(),response.getStatusLine());

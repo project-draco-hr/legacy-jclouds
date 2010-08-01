@@ -1,9 +1,13 @@
 {
   ExecutorService execService=Executors.newCachedThreadPool();
   BackoffLimitedRetryHandler backoff=new BackoffLimitedRetryHandler();
-  EncryptionService encService=new JCEEncryptionService();
-  utils=new HttpUtils(encService,0,500,1,1);
+  utils=new HttpUtils(0,500,1,1);
   RedirectionRetryHandler retry=new RedirectionRetryHandler(uriBuilderProvider,backoff);
-  JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(utils,execService,new DelegatingRetryHandler(backoff,retry),new BackoffLimitedRetryHandler(),new DelegatingErrorHandler(),new HttpWire(),null,encService);
+  JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(utils,execService,new DelegatingRetryHandler(backoff,retry),new BackoffLimitedRetryHandler(),new DelegatingErrorHandler(),new HttpWire(),new HostnameVerifier(){
+    @Override public boolean verify(    String hostname,    SSLSession session){
+      return false;
+    }
+  }
+);
   executorService=new TransformingHttpCommandExecutorServiceImpl(httpService,execService);
 }

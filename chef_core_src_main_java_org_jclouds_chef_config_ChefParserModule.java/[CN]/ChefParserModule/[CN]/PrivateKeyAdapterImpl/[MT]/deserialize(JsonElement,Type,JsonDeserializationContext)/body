@@ -1,9 +1,17 @@
 {
   String keyText=json.getAsString().replaceAll("\\n","\n");
   try {
-    return encryptionService.privateKeyFromPEM(keyText.getBytes("UTF-8"));
+    return crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(InputSuppliers.of(keyText)));
   }
  catch (  UnsupportedEncodingException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+catch (  InvalidKeySpecException e) {
+    Throwables.propagate(e);
+    return null;
+  }
+catch (  IOException e) {
     Throwables.propagate(e);
     return null;
   }

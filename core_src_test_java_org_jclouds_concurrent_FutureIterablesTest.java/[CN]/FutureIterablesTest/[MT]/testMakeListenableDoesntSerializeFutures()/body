@@ -1,0 +1,10 @@
+{
+  long expectedMax=CALLABLE_DURATION;
+  long expectedMin=CALLABLE_DURATION;
+  long expectedOverhead=COUNT + FUDGE;
+  ExecutorService callableExecutor=newCachedThreadPool();
+  ExecutorService chainExecutor=MoreExecutors.sameThreadExecutor();
+  long start=System.currentTimeMillis();
+  Map<String,Future<Long>> responses=runCallables(callableExecutor,chainExecutor);
+  checkTimeThresholds(expectedMin,expectedMax,expectedOverhead,start,responses);
+}

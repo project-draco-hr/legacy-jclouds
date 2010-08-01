@@ -2,10 +2,10 @@
   HttpWire wire=setUp();
   InputStream in=wire.input(fromServer);
   ByteArrayOutputStream out=new ByteArrayOutputStream();
-  ByteStreams.copy(in,out);
-  byte[] compare=encryptionService.md5(new ByteArrayInputStream(out.toByteArray()));
+  copy(in,out);
+  byte[] compare=CryptoStreams.md5(out.toByteArray());
   Thread.sleep(100);
-  assertEquals(encryptionService.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
+  assertEquals(CryptoStreams.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
   assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
   return null;
 }

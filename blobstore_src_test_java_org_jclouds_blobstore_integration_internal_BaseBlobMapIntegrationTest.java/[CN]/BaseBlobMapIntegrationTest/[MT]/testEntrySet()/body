@@ -10,7 +10,7 @@
       assertEquals(fiveStrings.get(entry.getKey()),getContentAsStringOrNullAndClose(entry.getValue()));
       Blob blob=entry.getValue();
       blob.setPayload("");
-      context.utils().encryption().generateMD5BufferingIfNotRepeatable(blob);
+      Payloads.calculateMD5(blob);
       entry.setValue(blob);
     }
     assertConsistencyAware(new Runnable(){

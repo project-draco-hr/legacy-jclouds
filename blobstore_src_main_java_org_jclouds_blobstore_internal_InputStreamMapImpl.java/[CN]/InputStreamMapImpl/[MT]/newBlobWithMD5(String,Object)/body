@@ -1,6 +1,11 @@
 {
   Blob blob=blobstore.newBlob(prefixer.apply(name));
   blob.setPayload(newPayload(value));
-  encryptionService.generateMD5BufferingIfNotRepeatable(blob);
+  try {
+    Payloads.calculateMD5(blob,crypto.md5());
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
   return blob;
 }
