@@ -1,11 +1,7 @@
 {
   String region=getRegionFromLocation.apply(location);
   String dnsName=new String();
-  String availabilityZone=new String();
-  for (  String az : AvailabilityZone.zones) {
-    if (az.startsWith(region))     availabilityZone=az;
-  }
-  dnsName=elbClient.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,availabilityZone);
+  dnsName=elbClient.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,EC2Utils.getAvailabilityZonesForRegion(region));
   List<String> instanceIdlist=new ArrayList<String>(instanceIds);
   String[] instanceIdArray=new String[instanceIdlist.size()];
   for (int i=0; i < instanceIdlist.size(); i++) {
