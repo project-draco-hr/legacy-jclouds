@@ -1,8 +1,18 @@
 {
-  adminConnection.getApi().deleteOrganization(PREFIX);
-  adminConnection.getApi().createOrganization(new Organization(PREFIX));
-  org=adminConnection.getApi().getOrganization(PREFIX);
+  createdOrgname=orgname + 1;
+  adminConnection.getApi().deleteOrganization(createdOrgname);
+  org=adminConnection.getApi().createOrganization(new Organization(createdOrgname,Organization.Type.BUSINESS));
   assertNotNull(org);
-  assertEquals(org.getName(),PREFIX);
-  assertEquals(org.getClientname(),PREFIX + "-validator");
+  assertNull(org.getName());
+  assertNull(org.getFullName());
+  assertEquals(org.getClientname(),createdOrgname + "-validator");
+  assertNull(org.getOrgType());
+  assertNotNull(org.getPrivateKey());
+  OpscodePlatformContext connection=null;
+  try {
+    connection=createConnection(org.getClientname(),Pems.pem(org.getPrivateKey()));
+  }
+  finally {
+    if (connection != null)     connection.close();
+  }
 }
