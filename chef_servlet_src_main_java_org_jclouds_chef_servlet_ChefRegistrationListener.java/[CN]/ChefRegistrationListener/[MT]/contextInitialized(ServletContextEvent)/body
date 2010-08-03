@@ -3,29 +3,28 @@
     logger.debug("starting initialization");
     Properties overrides=InitParamsToProperties.INSTANCE.apply(servletContextEvent);
     String role=getInitParam(servletContextEvent,CHEF_ROLE);
-    logger.trace("creating validator connection");
-    ChefService validatorService=createService(overrides);
-    logger.debug("created validator connection");
-    ChefService clientService=null;
+    logger.trace("creating client connection");
+    ChefService client=createService(overrides);
+    logger.debug("created client connection");
     String nodeName;
     try {
       while (true) {
-        nodeName=findNextClientAndNodeName(validatorService,role);
+        nodeName=findNextNodeName(client,role);
         try {
-          clientService=createClientAndNode(validatorService,role,nodeName,overrides);
+          client.createNodeAndPopulateAutomaticAttributes(nodeName,singleton("role[" + role + "]"));
           break;
         }
  catch (        IllegalStateException ex) {
-          logger.debug("node or client already exists %s: %s",nodeName,ex.getMessage());
+          logger.debug("client already exists %s: %s",nodeName,ex.getMessage());
         }
       }
     }
   finally {
-      validatorService.getContext().close();
+      client.getContext().close();
     }
     servletContextEvent.getServletContext().setAttribute(CHEF_NODE,nodeName);
     servletContextEvent.getServletContext().setAttribute(CHEF_ROLE,role);
-    servletContextEvent.getServletContext().setAttribute(CHEF_SERVICE_CLIENT,clientService);
+    servletContextEvent.getServletContext().setAttribute(CHEF_SERVICE_CLIENT,client);
     logger.debug("initialized");
   }
  catch (  RuntimeException e) {
