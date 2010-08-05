@@ -1,10 +1,10 @@
 {
   try {
     logger.debug("starting initialization");
-    Properties overrides=InitParamsToProperties.INSTANCE.apply(servletContextEvent);
+    Properties overrides=InitParamsToProperties.INSTANCE.apply(servletContextEvent.getServletContext());
     String role=getInitParam(servletContextEvent,CHEF_ROLE);
     logger.trace("creating client connection");
-    ChefService client=createService(overrides);
+    ChefService client=createService(overrides,servletContextEvent);
     logger.debug("created client connection");
     String nodeName;
     try {

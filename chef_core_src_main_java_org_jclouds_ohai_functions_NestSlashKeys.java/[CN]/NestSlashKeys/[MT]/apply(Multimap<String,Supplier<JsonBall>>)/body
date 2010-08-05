@@ -1,0 +1,21 @@
+{
+  Map<String,JsonBall> autoAttrs=mergeSameKeys(from);
+  Map<String,JsonBall> modifiableFlatMap=Maps.newLinkedHashMap(Maps.filterKeys(autoAttrs,new Predicate<String>(){
+    @Override public boolean apply(    String input){
+      return input.indexOf('/') == -1;
+    }
+  }
+));
+  Map<String,JsonBall> withSlashesMap=Maps.difference(autoAttrs,modifiableFlatMap).entriesOnlyOnLeft();
+  for (  Entry<String,JsonBall> entry : withSlashesMap.entrySet()) {
+    List<String> keyParts=Lists.newArrayList(Splitter.on('/').split(entry.getKey()));
+    JsonBall toInsert=entry.getValue();
+    try {
+      putUnderContext(keyParts,toInsert,modifiableFlatMap);
+    }
+ catch (    IllegalArgumentException e) {
+      throw new IllegalArgumentException("error inserting value in entry: " + entry.getKey(),e);
+    }
+  }
+  return modifiableFlatMap;
+}

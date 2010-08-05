@@ -1,0 +1,23 @@
+{
+  final ServletContext servletContext=createMock(ServletContext.class);
+  final InitParamsToProperties converter=createMock(InitParamsToProperties.class);
+  Properties props=new Properties();
+  props.setProperty("foo","bar");
+  expect(servletContext.getContextPath()).andReturn(null);
+  expect(servletContext.getServerInfo()).andReturn("serverinfo");
+  expect(converter.apply(servletContext)).andReturn(props);
+  replay(servletContext);
+  replay(converter);
+  Injector injector=Guice.createInjector(new GsonModule(),new ServletOhaiModule(){
+    @SuppressWarnings("unused") @Provides protected ServletContext provideServletContext(){
+      return servletContext;
+    }
+    @SuppressWarnings("unused") @Provides protected InitParamsToProperties provideInitParamsToProperties(){
+      return converter;
+    }
+  }
+);
+  Json json=injector.getInstance(Json.class);
+  ServletContextInfoSupplier ohai=injector.getInstance(ServletContextInfoSupplier.class);
+  assertEquals(json.toJson(ohai.get()),"{\"/\":{\"server_info\":\"serverinfo\",\"init_params\":{\"foo\":\"bar\"}}}");
+}

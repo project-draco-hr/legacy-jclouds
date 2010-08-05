@@ -1,0 +1,32 @@
+{
+  final Properties sysProperties=new Properties();
+  sysProperties.setProperty("os.name","Mac OS X");
+  sysProperties.setProperty("os.version","10.3.0");
+  sysProperties.setProperty("user.name","user");
+  Injector injector=Guice.createInjector(new ChefParserModule(),new GsonModule(),new OhaiModule(){
+    @Override protected Long millis(){
+      return 1279992919l;
+    }
+    @Override protected Properties systemProperties(){
+      return sysProperties;
+    }
+  }
+,new AbstractModule(){
+    @Override protected void configure(){
+      MapBinder<String,Supplier<JsonBall>> mapbinder=ohaiAutomaticAttributeBinder(binder());
+      mapbinder.addBinding("test").toProvider(Providers.of(Suppliers.ofInstance(new JsonBall("{\"prop1\":\"test1\"}"))));
+    }
+  }
+,new AbstractModule(){
+    @Override protected void configure(){
+      MapBinder<String,Supplier<JsonBall>> mapbinder=ohaiAutomaticAttributeBinder(binder());
+      mapbinder.addBinding("test").toProvider(Providers.of(Suppliers.ofInstance(new JsonBall("{\"prop2\":\"test2\"}"))));
+    }
+  }
+);
+  Ohai ohai=injector.getInstance(Ohai.class);
+  Json json=injector.getInstance(Json.class);
+  assertEquals(json.toJson(ohai.ohai.get(),new TypeLiteral<Map<String,JsonBall>>(){
+  }
+.getType()),"{\"ohai_time\":1279992919,\"platform\":\"macosx\",\"platform_version\":\"10.3.0\",\"current_user\":\"user\",\"test\":{\"prop1\":\"test1\",\"prop2\":\"test2\"},\"jvm\":{\"system\":{\"user.name\":\"user\",\"os.version\":\"10.3.0\",\"os.name\":\"Mac OS X\"}}}");
+}

@@ -1,0 +1,12 @@
+{
+  Map<String,JsonBall> merged=Maps.newLinkedHashMap();
+  for (  Entry<String,Supplier<JsonBall>> entry : from.entries()) {
+    if (merged.containsKey(entry.getKey())) {
+      mergeAsPeer(entry.getKey(),entry.getValue().get(),merged);
+    }
+ else {
+      merged.put(entry.getKey(),entry.getValue().get());
+    }
+  }
+  return merged;
+}
