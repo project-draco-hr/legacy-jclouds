@@ -1,8 +1,8 @@
 {
   ChefService client=getContextAttributeOrNull(servletContextEvent,CHEF_SERVICE_CLIENT);
-  String nodename=getContextAttributeOrNull(servletContextEvent,CHEF_NODE);
-  if (nodename != null && client != null) {
-    client.deleteAllNodesInList(singleton(nodename));
+  Node node=getContextAttributeOrNull(servletContextEvent,CHEF_NODE);
+  if (node != null && client != null) {
+    client.deleteAllNodesInList(singleton(node.getName()));
   }
   if (client != null) {
     client.getContext().close();

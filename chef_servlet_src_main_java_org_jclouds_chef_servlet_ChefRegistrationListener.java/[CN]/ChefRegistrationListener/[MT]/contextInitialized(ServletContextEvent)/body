@@ -2,28 +2,22 @@
   try {
     logger.debug("starting initialization");
     Properties overrides=InitParamsToProperties.INSTANCE.apply(servletContextEvent.getServletContext());
-    String role=getInitParam(servletContextEvent,CHEF_ROLE);
     logger.trace("creating client connection");
     ChefService client=createService(overrides,servletContextEvent);
     logger.debug("created client connection");
+    Node node;
     String nodeName;
-    try {
-      while (true) {
-        nodeName=findNextNodeName(client,role);
-        try {
-          client.createNodeAndPopulateAutomaticAttributes(nodeName,singleton("role[" + role + "]"));
-          break;
-        }
- catch (        IllegalStateException ex) {
-          logger.debug("client already exists %s: %s",nodeName,ex.getMessage());
-        }
+    while (true) {
+      nodeName=findNextNodeName(client,getInitParam(servletContextEvent,CHEF_NODE_PATTERN));
+      try {
+        node=client.createNodeAndPopulateAutomaticAttributes(nodeName,Splitter.on(',').split(getInitParam(servletContextEvent,CHEF_RUN_LIST)));
+        break;
+      }
+ catch (      IllegalStateException ex) {
+        logger.debug("client already exists %s: %s",nodeName,ex.getMessage());
       }
     }
-  finally {
-      client.getContext().close();
-    }
-    servletContextEvent.getServletContext().setAttribute(CHEF_NODE,nodeName);
-    servletContextEvent.getServletContext().setAttribute(CHEF_ROLE,role);
+    servletContextEvent.getServletContext().setAttribute(CHEF_NODE,node);
     servletContextEvent.getServletContext().setAttribute(CHEF_SERVICE_CLIENT,client);
     logger.debug("initialized");
   }
