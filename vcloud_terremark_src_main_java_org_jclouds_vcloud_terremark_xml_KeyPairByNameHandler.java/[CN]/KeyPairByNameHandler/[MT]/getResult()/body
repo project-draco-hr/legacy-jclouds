@@ -1,0 +1,15 @@
+{
+  final String name=getRequest().getArgs()[1].toString();
+  try {
+    return Iterables.find(handler.getResult(),new Predicate<KeyPair>(){
+      @Override public boolean apply(      KeyPair input){
+        return input.getName().equals(name);
+      }
+    }
+);
+  }
+ catch (  NoSuchElementException e) {
+    logger.debug("keypair %s/%s not found in %s",getRequest().getArgs()[0],name,handler.getResult());
+    return null;
+  }
+}

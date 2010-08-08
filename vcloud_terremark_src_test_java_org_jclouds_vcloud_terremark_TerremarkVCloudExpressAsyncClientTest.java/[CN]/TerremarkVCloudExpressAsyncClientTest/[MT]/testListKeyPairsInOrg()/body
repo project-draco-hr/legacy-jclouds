@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkVCloudExpressAsyncClient.class.getMethod("listKeyPairsInOrg",String.class);
+  HttpRequest request=processor.createRequest(method,"org");
+  assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/org/1/keysList HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.vcloudExpress.keysList+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,KeyPairsHandler.class);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
+  checkFilters(request);
+}

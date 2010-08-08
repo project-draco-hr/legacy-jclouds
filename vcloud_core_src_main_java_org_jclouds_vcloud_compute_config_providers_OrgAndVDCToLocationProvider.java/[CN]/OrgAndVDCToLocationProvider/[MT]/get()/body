@@ -2,8 +2,8 @@
   Location provider=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
   Set<Location> locations=Sets.newLinkedHashSet();
   for (  NamedResource org : cache.get().getOrgs().values()) {
-    Location orgL=new LocationImpl(LocationScope.REGION,org.getId(),org.getName(),provider);
-    for (    NamedResource vdc : client.getOrganization(org.getId()).getVDCs().values()) {
+    Location orgL=new LocationImpl(LocationScope.REGION,org.getName(),org.getLocation().toASCIIString(),provider);
+    for (    NamedResource vdc : client.getOrganizationNamed(org.getName()).getVDCs().values()) {
       locations.add(new LocationImpl(LocationScope.ZONE,vdc.getId(),vdc.getName(),orgL));
     }
   }
