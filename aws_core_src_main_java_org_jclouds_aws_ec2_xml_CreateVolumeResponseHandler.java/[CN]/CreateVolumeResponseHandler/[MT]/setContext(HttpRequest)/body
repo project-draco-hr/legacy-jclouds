@@ -1,8 +1,8 @@
 {
   super.setContext(request);
-  region=EC2Utils.findRegionInArgsOrNull((GeneratedHttpRequest<?>)request);
+  region=EC2Utils.findRegionInArgsOrNull(getRequest());
   if (region == null) {
-    String zone=EC2Utils.findAvailabilityZoneInArgsOrNull((GeneratedHttpRequest<?>)request);
+    String zone=EC2Utils.findAvailabilityZoneInArgsOrNull(getRequest());
     if (zone != null) {
       region=checkNotNull(availabilityZoneToRegion.get(zone),String.format("zone %s not in %s",zone,availabilityZoneToRegion));
     }
