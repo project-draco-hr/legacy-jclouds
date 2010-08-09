@@ -1,16 +1,34 @@
 {
-  Map<Integer,Set<Annotation>> map=RestAnnotationProcessor.indexWithOnlyOneAnnotation(method,"@EndpointParam",RestAnnotationProcessor.methodToIndexOfParamToEndpointParamAnnotations);
-  if (map.size() == 1 && args.length > 0) {
-    EndpointParam annotation=(EndpointParam)map.values().iterator().next().iterator().next();
-    int index=map.keySet().iterator().next();
-    Function<Object,URI> parser=injector.getInstance(annotation.parser());
-    try {
-      URI returnVal=parser.apply(args[index]);
-      checkArgument(returnVal != null,String.format("endpoint for [%s] not configured for %s",args[index],method));
-      return returnVal;
+  Map<Integer,Set<Annotation>> map=indexWithAtLeastOneAnnotation(method,methodToIndexOfParamToEndpointParamAnnotations);
+  if (map.size() >= 1 && args.length > 0) {
+    EndpointParam firstAnnotation=(EndpointParam)Iterables.get(Iterables.get(map.values(),0),0);
+    Function<Object,URI> parser=injector.getInstance(firstAnnotation.parser());
+    if (map.size() == 1) {
+      int index=map.keySet().iterator().next();
+      try {
+        URI returnVal=parser.apply(args[index]);
+        checkArgument(returnVal != null,String.format("endpoint for [%s] not configured for %s",args[index],method));
+        return returnVal;
+      }
+ catch (      NullPointerException e) {
+        throw new IllegalArgumentException(String.format("argument at index %d on method %s",index,method),e);
+      }
     }
- catch (    NullPointerException e) {
-      throw new IllegalArgumentException(String.format("argument at index %d on method %s",index,method),e);
+ else {
+      Iterable<Object> argsToParse=Iterables.transform(map.keySet(),new Function<Integer,Object>(){
+        @Override public Object apply(        Integer from){
+          return args[from];
+        }
+      }
+);
+      try {
+        URI returnVal=parser.apply(argsToParse);
+        checkArgument(returnVal != null,String.format("endpoint for [%s] not configured for %s",argsToParse,method));
+        return returnVal;
+      }
+ catch (      NullPointerException e) {
+        throw new IllegalArgumentException(String.format("argument at indexes %s on method %s",map.keySet(),method),e);
+      }
     }
   }
   return null;

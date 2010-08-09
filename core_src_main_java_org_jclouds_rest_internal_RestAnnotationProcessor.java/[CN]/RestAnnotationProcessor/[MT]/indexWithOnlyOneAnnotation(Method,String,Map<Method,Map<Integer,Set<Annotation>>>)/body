@@ -1,10 +1,5 @@
 {
-  Map<Integer,Set<Annotation>> indexToPayloadAnnotation=filterValues(toRefine.get(method),new Predicate<Set<Annotation>>(){
-    public boolean apply(    Set<Annotation> input){
-      return input.size() == 1;
-    }
-  }
-);
+  Map<Integer,Set<Annotation>> indexToPayloadAnnotation=indexWithAtLeastOneAnnotation(method,toRefine);
   if (indexToPayloadAnnotation.size() > 1) {
     throw new IllegalStateException(String.format("You must not specify more than one %s annotation on: %s; found %s",description,method.toString(),indexToPayloadAnnotation));
   }
