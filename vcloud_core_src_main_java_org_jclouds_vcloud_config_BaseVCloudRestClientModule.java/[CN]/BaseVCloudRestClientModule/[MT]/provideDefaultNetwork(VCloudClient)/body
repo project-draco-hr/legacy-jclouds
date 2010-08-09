@@ -1,5 +1,5 @@
 {
-  if (authException != null)   throw authException;
+  if (authException.get() != null)   throw authException.get();
   try {
     org.jclouds.vcloud.domain.VDC vDC=client.getDefaultVDC();
     Map<String,NamedResource> networks=vDC.getAvailableNetworks();
@@ -7,7 +7,7 @@
     return Iterables.get(networks.values(),0).getLocation();
   }
  catch (  AuthorizationException e) {
-    BaseVCloudRestClientModule.this.authException=e;
+    authException.set(e);
     throw e;
   }
 }
