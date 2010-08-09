@@ -6,7 +6,7 @@
   TerremarkVCloudExpressClient client=createMock(TerremarkVCloudExpressClient.class);
   expect(client.getVAppTemplate("templateId")).andReturn(template);
   VApp vApp=createMock(VApp.class);
-  expect(client.instantiateVAppTemplateInVDC("vDCId","name","templateId",new TerremarkInstantiateVAppTemplateOptions().productProperty("password","password"))).andReturn(vApp);
+  expect(client.instantiateVAppTemplateInOrg("org","vDC","name","templateId",new TerremarkInstantiateVAppTemplateOptions().productProperty("password","password"))).andReturn(vApp);
   Task task=createMock(Task.class);
   expect(vApp.getId()).andReturn("1").atLeastOnce();
   expect(client.getVAppTemplate("templateId")).andReturn(template);
@@ -30,7 +30,7 @@
   replay(successTester);
   replay(notFoundTester);
   replay(vAppStatusToNodeState);
-  Map<String,String> response=computeClient.start("vDCId","name","templateId",new TerremarkInstantiateVAppTemplateOptions());
+  Map<String,String> response=computeClient.start("org","vDC","name","templateId",new TerremarkInstantiateVAppTemplateOptions());
   assertEquals(response.get("id"),"1");
   assertEquals(response.get("username"),"Administrator");
   assertEquals(response.get("password"),"password");
