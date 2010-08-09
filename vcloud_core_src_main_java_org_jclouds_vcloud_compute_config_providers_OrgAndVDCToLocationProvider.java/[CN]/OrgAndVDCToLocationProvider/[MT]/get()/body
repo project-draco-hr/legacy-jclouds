@@ -2,9 +2,9 @@
   Location provider=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
   Set<Location> locations=Sets.newLinkedHashSet();
   for (  NamedResource org : orgNameToResource.get().values()) {
-    Location orgL=new LocationImpl(LocationScope.REGION,org.getName(),org.getLocation().toASCIIString(),provider);
+    Location orgL=new VCloudLocation(org,provider);
     for (    NamedResource vdc : orgNameToVDCResource.get().get(org.getName()).values()) {
-      locations.add(new LocationImpl(LocationScope.ZONE,vdc.getName(),vdc.getLocation().toASCIIString(),orgL));
+      locations.add(new VCloudLocation(vdc,orgL));
     }
   }
   return locations;
