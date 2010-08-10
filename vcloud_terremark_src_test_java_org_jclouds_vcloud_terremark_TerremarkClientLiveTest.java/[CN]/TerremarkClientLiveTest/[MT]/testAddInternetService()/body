@@ -1,4 +1,12 @@
 {
-  is=tmClient.addInternetServiceToVDC(tmClient.getDefaultVDC().getId(),"SSH",Protocol.TCP,22);
-  publicIp=is.getPublicIpAddress().getAddress();
+  PublicIpAddress ip;
+  if (tmClient instanceof TerremarkVCloudExpressClient) {
+    is=TerremarkVCloudExpressClient.class.cast(tmClient).addInternetServiceToVDC(tmClient.getVDCInOrg(null,null).getId(),"SSH",Protocol.TCP,22);
+    ip=is.getPublicIpAddress();
+  }
+ else {
+    ip=TerremarkECloudClient.class.cast(tmClient).activatePublicIpInVDC(tmClient.getVDCInOrg(null,null).getId());
+    is=tmClient.addInternetServiceToExistingIp(ip.getId(),"SSH",Protocol.TCP,22);
+  }
+  publicIp=ip.getAddress();
 }
