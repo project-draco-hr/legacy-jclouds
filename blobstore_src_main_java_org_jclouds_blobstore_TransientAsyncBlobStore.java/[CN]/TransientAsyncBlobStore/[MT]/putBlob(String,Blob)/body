@@ -7,15 +7,11 @@
   if (payload == null)   payload=(object.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(object.getPayload()).getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class.cast(object.getPayload()).getDelegate()) : null : null;
   try {
     if (payload == null || !(payload instanceof ByteArrayPayload)) {
-      InputStream input=object.getPayload().getInput();
-      try {
-        String oldContentType=object.getPayload().getContentType();
-        payload=(ByteArrayPayload)Payloads.calculateMD5(Payloads.newPayload(object.getPayload().getInput()));
-        payload.setContentType(oldContentType);
-      }
-  finally {
-        Closeables.closeQuietly(input);
-      }
+      String oldContentType=object.getPayload().getContentType();
+      ByteArrayOutputStream out=new ByteArrayOutputStream();
+      object.getPayload().writeTo(out);
+      payload=(ByteArrayPayload)Payloads.calculateMD5(Payloads.newPayload(out.toByteArray()));
+      payload.setContentType(oldContentType);
     }
  else {
       if (payload.getContentMD5() == null)       Payloads.calculateMD5(object,crypto.md5());

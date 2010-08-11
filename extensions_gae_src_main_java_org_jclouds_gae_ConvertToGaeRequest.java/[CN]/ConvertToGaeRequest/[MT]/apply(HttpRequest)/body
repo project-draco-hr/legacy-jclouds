@@ -18,7 +18,9 @@
   if (request.getPayload() != null) {
     InputStream input=request.getPayload().getInput();
     try {
-      byte[] array=toByteArray(input);
+      ByteArrayOutputStream out=new ByteArrayOutputStream();
+      request.getPayload().writeTo(out);
+      byte[] array=out.toByteArray();
       if (!request.getPayload().isRepeatable()) {
         Payload oldPayload=request.getPayload();
         request.setPayload(array);
