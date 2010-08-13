@@ -1,39 +1,9 @@
 {
-  Map<String,Blob> container=getContainerToBlobs().get(containerName);
+  ConcurrentMap<String,Blob> container=getContainerToBlobs().get(containerName);
   if (container == null) {
-    new RuntimeException("containerName not found: " + containerName);
+    new IllegalStateException("containerName not found: " + containerName);
   }
-  ByteArrayPayload payload=(object.getPayload() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(object.getPayload()) : null;
-  if (payload == null)   payload=(object.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(object.getPayload()).getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class.cast(object.getPayload()).getDelegate()) : null : null;
-  try {
-    if (payload == null || !(payload instanceof ByteArrayPayload)) {
-      String oldContentType=object.getPayload().getContentType();
-      ByteArrayOutputStream out=new ByteArrayOutputStream();
-      object.getPayload().writeTo(out);
-      payload=(ByteArrayPayload)Payloads.calculateMD5(Payloads.newPayload(out.toByteArray()));
-      payload.setContentType(oldContentType);
-    }
- else {
-      if (payload.getContentMD5() == null)       Payloads.calculateMD5(object,crypto.md5());
-    }
-  }
- catch (  IOException e) {
-    Throwables.propagate(e);
-  }
-  Blob blob=blobFactory.create(copy(object.getMetadata()));
-  blob.setPayload(payload);
-  blob.getMetadata().setLastModified(new Date());
-  blob.getMetadata().setSize(payload.getContentLength());
-  blob.getMetadata().setContentMD5(payload.getContentMD5());
-  blob.getMetadata().setContentType(payload.getContentType());
-  String eTag=CryptoStreams.hex(payload.getContentMD5());
-  blob.getMetadata().setETag(eTag);
+  Blob blob=createUpdatedCopyOfBlob(in);
   container.put(blob.getMetadata().getName(),blob);
-  blob.getAllHeaders().put(HttpHeaders.LAST_MODIFIED,dateService.rfc822DateFormat(blob.getMetadata().getLastModified()));
-  blob.getAllHeaders().put(HttpHeaders.ETAG,eTag);
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_TYPE,payload.getContentType());
-  blob.getAllHeaders().put(HttpHeaders.CONTENT_LENGTH,payload.getContentLength() + "");
-  blob.getAllHeaders().put("Content-MD5",CryptoStreams.base64(payload.getContentMD5()));
-  blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
-  return immediateFuture(eTag);
+  return immediateFuture(Iterables.getOnlyElement(blob.getAllHeaders().get(HttpHeaders.ETAG)));
 }

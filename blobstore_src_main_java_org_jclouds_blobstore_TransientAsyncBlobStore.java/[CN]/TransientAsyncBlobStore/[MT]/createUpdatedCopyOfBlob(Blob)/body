@@ -1,0 +1,34 @@
+{
+  ByteArrayPayload payload=(in.getPayload() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(in.getPayload()) : null;
+  if (payload == null)   payload=(in.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(in.getPayload()).getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class.cast(in.getPayload()).getDelegate()) : null : null;
+  try {
+    if (payload == null || !(payload instanceof ByteArrayPayload)) {
+      String oldContentType=in.getPayload().getContentType();
+      ByteArrayOutputStream out=new ByteArrayOutputStream();
+      in.getPayload().writeTo(out);
+      payload=(ByteArrayPayload)Payloads.calculateMD5(Payloads.newPayload(out.toByteArray()));
+      payload.setContentType(oldContentType);
+    }
+ else {
+      if (payload.getContentMD5() == null)       Payloads.calculateMD5(in,crypto.md5());
+    }
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
+  Blob blob=blobFactory.create(copy(in.getMetadata()));
+  blob.setPayload(payload);
+  blob.getMetadata().setLastModified(new Date());
+  blob.getMetadata().setSize(payload.getContentLength());
+  blob.getMetadata().setContentMD5(payload.getContentMD5());
+  blob.getMetadata().setContentType(payload.getContentType());
+  String eTag=CryptoStreams.hex(payload.getContentMD5());
+  blob.getMetadata().setETag(eTag);
+  blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,Collections.singleton(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
+  blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,Collections.singleton(eTag));
+  blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,Collections.singleton(payload.getContentType()));
+  blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singleton(payload.getContentLength() + ""));
+  blob.getAllHeaders().replaceValues("Content-MD5",Collections.singleton(CryptoStreams.base64(payload.getContentMD5())));
+  blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
+  return blob;
+}

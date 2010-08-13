@@ -1,0 +1,9 @@
+{
+  ConcurrentMap<String,Blob> container=getContainerToBlobs().get(containerName);
+  if (container == null) {
+    new IllegalStateException("containerName not found: " + containerName);
+  }
+  Blob blob=createUpdatedCopyOfBlob(in);
+  Blob old=container.put(blob.getMetadata().getName(),blob);
+  return immediateFuture(old);
+}
