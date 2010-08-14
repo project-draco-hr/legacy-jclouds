@@ -1,9 +1,9 @@
 {
-  Iterable<Catalog> catalogItems=transformParallel(from.getCatalogs().values(),new Function<NamedResource,Future<Catalog>>(){
+  Iterable<Catalog> catalogs=transformParallel(org.getCatalogs().values(),new Function<NamedResource,Future<Catalog>>(){
     @SuppressWarnings("unchecked") @Override public Future<Catalog> apply(    NamedResource from){
-      return (Future<Catalog>)aclient.getCatalog(from.getId());
+      return (Future<Catalog>)aclient.findCatalogInOrgNamed(org.getName(),from.getName());
     }
   }
-,executor,null,logger,"catalogs in " + from.getName());
-  return catalogItems;
+,executor,null,logger,"catalogs in " + org.getName());
+  return catalogs;
 }

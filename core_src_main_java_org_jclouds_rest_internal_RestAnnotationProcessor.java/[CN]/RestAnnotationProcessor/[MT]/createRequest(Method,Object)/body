@@ -66,10 +66,10 @@ catch (  UriBuilderException e) {
   addHostHeaderIfAnnotatedWithVirtualHost(headers,request.getEndpoint().getHost(),method);
   addFiltersIfAnnotated(method,request);
   if (payload == null)   payload=findPayloadInArgs(args);
-  List<? extends Part> parts=getParts(method,args,Iterables.concat(tokenValues.entries(),formParams.entries()));
+  List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
   if (parts.size() > 0) {
     if (formParams.size() > 0) {
-      parts=newLinkedList(Iterables.concat(Iterables.transform(formParams.entries(),ENTRY_TO_PART),parts));
+      parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
     }
     payload=new MultipartForm(BOUNDARY,parts);
   }

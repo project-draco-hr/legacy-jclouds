@@ -3,8 +3,9 @@
   String serverName=getCompatibleServerName(toTest);
   int processorCount=1;
   int memory=512;
+  VAppTemplate template=client.findVAppTemplateInOrgCatalogNamed(null,null,templateName);
   InstantiateVAppTemplateOptions options=processorCount(1).memory(512).disk(10 * 1025 * 1024).productProperties(ImmutableMap.of("foo","bar"));
-  id=computeClient.start(null,null,serverName,templateId,options).get("id");
+  id=computeClient.start(null,template.getLocation(),templateName,options).get("id");
   Expectation expectation=expectationMap.get(toTest);
   VApp vApp=client.getVApp(id);
   verifyConfigurationOfVApp(vApp,serverName,expectation.os,processorCount,memory,expectation.hardDisk);

@@ -1,0 +1,23 @@
+{
+  checkNotNull(options,"options");
+  logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
+  VDC vdc=client.getVDC(VDC);
+  VAppTemplate template=client.getVAppTemplate(templateId);
+  VApp vAppResponse=client.instantiateVAppTemplateInVDC(vdc.getLocation(),template.getLocation(),name,options);
+  logger.debug("<< instantiated VApp(%s)",vAppResponse.getId());
+  logger.debug(">> deploying vApp(%s)",vAppResponse.getId());
+  Task task=client.deployVApp(vAppResponse.getId());
+  if (options.shouldBlockOnDeploy()) {
+    if (!taskTester.apply(task.getId())) {
+      throw new TaskException("deploy",vAppResponse,task);
+    }
+    logger.debug("<< deployed vApp(%s)",vAppResponse.getId());
+    logger.debug(">> powering vApp(%s)",vAppResponse.getId());
+    task=client.powerOnVApp(vAppResponse.getId());
+    if (!taskTester.apply(task.getId())) {
+      throw new TaskException("powerOn",vAppResponse,task);
+    }
+    logger.debug("<< on vApp(%s)",vAppResponse.getId());
+  }
+  return parseAndValidateResponse(template,vAppResponse);
+}

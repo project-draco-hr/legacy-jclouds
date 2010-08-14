@@ -1,7 +1,7 @@
 {
   InstantiateVAppTemplateOptions options=processorCount(Double.valueOf(template.getSize().getCores()).intValue()).memory(template.getSize().getRam()).disk(template.getSize().getDisk() * 1024 * 1024l);
   if (!template.getOptions().shouldBlockUntilRunning())   options.blockOnDeploy(false);
-  Map<String,String> metaMap=computeClient.start(template.getLocation().getParent().getId(),template.getLocation().getId(),name,template.getImage().getProviderId(),options,template.getOptions().getInboundPorts());
+  Map<String,String> metaMap=computeClient.start(URI.create(template.getLocation().getDescription()),URI.create(template.getImage().getId()),name,options,template.getOptions().getInboundPorts());
   VApp vApp=client.getVApp(metaMap.get("id"));
   return newCreateNodeResponse(tag,template,metaMap,vApp);
 }

@@ -1,8 +1,8 @@
 {
-  Catalog response=connection.getCatalogInOrg(null,null);
+  Catalog response=connection.findCatalogInOrgNamed(null,null);
   for (  NamedResource resource : response.values()) {
     if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
-      CatalogItem item=connection.getCatalogItem(resource.getId());
+      CatalogItem item=connection.findCatalogItemInOrgCatalogNamed(null,null,resource.getName());
       assertNotNull(item);
       assertNotNull(item.getEntity());
       assertNotNull(item.getId());

@@ -1,0 +1,14 @@
+{
+  return new RetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Map<String,String>>(authException,seconds,new Supplier<Map<String,String>>(){
+    @Override public Map<String,String> get(){
+      Map<String,String> returnVal=newLinkedHashMap();
+      for (      Entry<String,? extends Organization> orgr : orgToVDCSupplier.get().entrySet()) {
+        for (        String vdc : orgr.getValue().getVDCs().keySet()) {
+          returnVal.put(vdc,orgr.getKey());
+        }
+      }
+      return returnVal;
+    }
+  }
+);
+}

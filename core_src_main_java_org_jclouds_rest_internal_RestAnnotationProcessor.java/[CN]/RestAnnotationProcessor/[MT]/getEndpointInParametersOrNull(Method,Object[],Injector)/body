@@ -1,7 +1,7 @@
 {
   Map<Integer,Set<Annotation>> map=indexWithAtLeastOneAnnotation(method,methodToIndexOfParamToEndpointParamAnnotations);
   if (map.size() >= 1 && args.length > 0) {
-    EndpointParam firstAnnotation=(EndpointParam)Iterables.get(Iterables.get(map.values(),0),0);
+    EndpointParam firstAnnotation=(EndpointParam)get(get(map.values(),0),0);
     Function<Object,URI> parser=injector.getInstance(firstAnnotation.parser());
     if (map.size() == 1) {
       int index=map.keySet().iterator().next();
@@ -15,7 +15,8 @@
       }
     }
  else {
-      Iterable<Object> argsToParse=Iterables.transform(map.keySet(),new Function<Integer,Object>(){
+      SortedSet<Integer> keys=newTreeSet(map.keySet());
+      Iterable<Object> argsToParse=transform(keys,new Function<Integer,Object>(){
         @Override public Object apply(        Integer from){
           return args[from];
         }
