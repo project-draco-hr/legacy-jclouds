@@ -1,9 +1,9 @@
 {
   assertEquals(vApp.getName(),serverName);
   assertEquals(vApp.getOperatingSystemDescription(),expectedOs);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)).getVirtualQuantity(),processorCount);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.SCSI_CONTROLLER)).getVirtualQuantity(),1);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.MEMORY)).getVirtualQuantity(),memory);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.DISK_DRIVE)).getVirtualQuantity(),hardDisk);
-  assertEquals(vApp.getSize().longValue(),Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.DISK_DRIVE)).getVirtualQuantity());
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)).getVirtualQuantity(),processorCount);
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.SCSI_CONTROLLER)).getVirtualQuantity(),1);
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity(),memory);
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.DISK_DRIVE)).getVirtualQuantity(),hardDisk);
+  assertEquals(vApp.getSize().longValue(),find(vApp.getResourceAllocations(),resourceType(ResourceType.DISK_DRIVE)).getVirtualQuantity());
 }

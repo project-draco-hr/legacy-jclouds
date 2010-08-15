@@ -1,4 +1,5 @@
 {
+  URI id=URI.create(in);
   VApp vApp=client.getVApp(id);
   if (vApp == null)   return null;
   String tag=null;
@@ -11,5 +12,5 @@
     tag="NOTAG-" + vApp.getName();
   }
   Location location=findLocationForResourceInVDC.apply(vApp.getVDC());
-  return new NodeMetadataImpl(vApp.getId(),vApp.getName(),vApp.getId(),location,vApp.getLocation(),ImmutableMap.<String,String>of(),tag,image,vAppStatusToNodeState.get(vApp.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(vApp),null);
+  return new NodeMetadataImpl(vApp.getId().toASCIIString(),vApp.getName(),vApp.getId().toASCIIString(),location,vApp.getId(),ImmutableMap.<String,String>of(),tag,image,vAppStatusToNodeState.get(vApp.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(vApp),null);
 }

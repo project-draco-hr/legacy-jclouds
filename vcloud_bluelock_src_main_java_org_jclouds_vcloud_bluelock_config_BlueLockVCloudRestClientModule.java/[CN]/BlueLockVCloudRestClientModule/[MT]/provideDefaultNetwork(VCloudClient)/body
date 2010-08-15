@@ -1,5 +1,5 @@
 {
-  org.jclouds.vcloud.domain.VDC vDC=client.getDefaultVDC();
+  org.jclouds.vcloud.domain.VDC vDC=client.findVDCInOrgNamed(null,null);
   Map<String,NamedResource> networks=vDC.getAvailableNetworks();
   checkState(networks.size() > 0,"No networks present in vDC: " + vDC.getName());
   return Iterables.getOnlyElement(Iterables.filter(networks.values(),new Predicate<NamedResource>(){
@@ -7,5 +7,5 @@
       return input.getName().equals("Internal In and Out");
     }
   }
-)).getLocation();
+)).getId();
 }

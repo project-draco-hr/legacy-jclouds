@@ -1,10 +1,11 @@
 {
-  OrgAndName orgTag=new OrgAndName("org1","tag");
+  URI org=URI.create("org1");
+  OrgAndName orgTag=new OrgAndName(org,"tag");
   DeleteKeyPair strategy=setupStrategy();
   KeyPair keyPair=createMock(KeyPair.class);
   expect(strategy.terremarkClient.listKeyPairsInOrg(orgTag.getOrg())).andReturn(ImmutableSet.<KeyPair>of(keyPair));
   expect(keyPair.getName()).andReturn("jclouds#" + orgTag.getName() + "-123").atLeastOnce();
-  expect(keyPair.getLocation()).andReturn(URI.create("1245"));
+  expect(keyPair.getId()).andReturn(URI.create("1245"));
   strategy.terremarkClient.deleteKeyPair(URI.create("1245"));
   expect(strategy.credentialsMap.remove(orgTag)).andReturn(null);
   replay(keyPair);

@@ -1,13 +1,12 @@
 {
   InputStream is=getClass().getResourceAsStream("/terremark/get_vapp2disks.xml");
   VApp vApp=factory.create(injector.getInstance(VAppHandler.class)).parse(is);
-  assertEquals(vApp.getId(),15639 + "");
   assertEquals(vApp.getName(),"eduardo");
   assertEquals(vApp.getStatus(),VAppStatus.OFF);
   assertEquals(vApp.getSize().longValue(),30408704);
   assertEquals(vApp.getOperatingSystemDescription(),"Ubuntu Linux (32-bit)");
-  assertEquals(vApp.getLocation(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vapp/15639"));
-  assertEquals(vApp.getVDC(),new NamedResourceImpl("32",null,VCloudMediaType.VDC_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32")));
+  assertEquals(vApp.getId(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vapp/15639"));
+  assertEquals(vApp.getVDC(),new NamedResourceImpl(null,VCloudMediaType.VDC_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32")));
   assertEquals(vApp.getSystem(),new VirtualSystem(0,"Virtual Hardware Family","eduardo","vmx-07"));
   assertEquals(vApp.getNetworkToAddresses().get("Internal"),ImmutableList.of("10.114.34.131"));
   ResourceAllocation cpu=new ResourceAllocation(1,"2 virtual CPU(s)","Number of Virtual CPUs",ResourceType.PROCESSOR,null,null,null,null,null,null,2,"hertz * 10^6");
@@ -16,10 +15,10 @@
   ResourceAllocation disk=new ResourceAllocation(9,"Hard Disk 1",null,ResourceType.DISK_DRIVE,null,"4194304",null,0,3,null,4194304,"byte * 2^20");
   ResourceAllocation disk2=new ResourceAllocation(9,"Hard Disk 2",null,ResourceType.DISK_DRIVE,null,"26214400",null,1,3,null,26214400,"byte * 2^20");
   assertEquals(vApp.getResourceAllocations(),ImmutableSet.of(cpu,memory,controller,disk,disk2));
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)).getVirtualQuantity(),2);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.SCSI_CONTROLLER)).getVirtualQuantity(),1);
-  assertEquals(Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.MEMORY)).getVirtualQuantity(),1024);
-  List<ResourceAllocation> disks=Lists.newArrayList(vApp.getResourceAllocationByType().get(ResourceType.DISK_DRIVE));
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)).getVirtualQuantity(),2);
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.SCSI_CONTROLLER)).getVirtualQuantity(),1);
+  assertEquals(find(vApp.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity(),1024);
+  List<ResourceAllocation> disks=Lists.newArrayList(filter(vApp.getResourceAllocations(),resourceType(ResourceType.DISK_DRIVE)));
   assertEquals(disks.get(0).getVirtualQuantity(),4194304);
   assertEquals(disks.get(1).getVirtualQuantity(),26214400);
 }

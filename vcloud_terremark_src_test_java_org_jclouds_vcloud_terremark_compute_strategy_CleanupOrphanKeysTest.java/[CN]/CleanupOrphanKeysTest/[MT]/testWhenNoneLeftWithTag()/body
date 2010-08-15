@@ -2,9 +2,9 @@
   CleanupOrphanKeys strategy=setupStrategy();
   NodeMetadata nodeMetadata=createMock(NodeMetadata.class);
   Iterable<? extends NodeMetadata> deadOnes=ImmutableSet.<NodeMetadata>of(nodeMetadata);
-  OrgAndName orgTag=new OrgAndName("location","tag");
+  OrgAndName orgTag=new OrgAndName(URI.create("location"),"tag");
   expect(strategy.nodeToOrgAndName.apply(nodeMetadata)).andReturn(orgTag).atLeastOnce();
-  expect((Object)strategy.listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg()))).andReturn(ImmutableSet.of());
+  expect((Object)strategy.listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg().toASCIIString()))).andReturn(ImmutableSet.of());
   strategy.deleteKeyPair.execute(orgTag);
   replay(nodeMetadata);
   replayStrategy(strategy);

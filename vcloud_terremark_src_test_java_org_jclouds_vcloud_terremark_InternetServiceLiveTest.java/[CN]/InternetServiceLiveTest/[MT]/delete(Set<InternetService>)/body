@@ -1,5 +1,5 @@
 {
-  Set<Integer> publicIps=Sets.newHashSet();
+  Set<URI> publicIps=Sets.newHashSet();
   for (  InternetService service : set) {
     for (    Node node : tmClient.getNodes(service.getId())) {
       tmClient.deleteNode(node.getId());
@@ -7,7 +7,7 @@
     tmClient.deleteInternetService(service.getId());
     publicIps.add(service.getPublicIpAddress().getId());
   }
-  for (  int id : publicIps) {
+  for (  URI id : publicIps) {
     tmClient.deletePublicIp(id);
   }
 }

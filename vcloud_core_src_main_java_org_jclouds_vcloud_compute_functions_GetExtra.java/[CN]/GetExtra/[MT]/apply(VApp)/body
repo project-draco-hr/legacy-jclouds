@@ -1,9 +1,9 @@
 {
-  Map<String,String> extra=Maps.newHashMap();
+  Map<String,String> extra=newHashMap();
   try {
-    extra.put("memory/mb",Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.MEMORY)).getVirtualQuantity() + "");
-    extra.put("processor/count",Iterables.getOnlyElement(vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)).getVirtualQuantity() + "");
-    for (    ResourceAllocation disk : vApp.getResourceAllocationByType().get(ResourceType.PROCESSOR)) {
+    extra.put("memory/mb",find(vApp.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity() + "");
+    extra.put("processor/count",find(vApp.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)).getVirtualQuantity() + "");
+    for (    ResourceAllocation disk : filter(vApp.getResourceAllocations(),resourceType(ResourceType.DISK_DRIVE))) {
       extra.put(String.format("disk_drive/%s/kb",disk.getId()),disk.getVirtualQuantity() + "");
     }
     for (    Entry<String,String> net : vApp.getNetworkToAddresses().entries()) {

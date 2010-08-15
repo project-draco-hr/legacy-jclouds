@@ -1,19 +1,11 @@
 {
   InputStream is=getClass().getResourceAsStream("/org-hosting.xml");
-  Injector injector=Guice.createInjector(new SaxParserModule(),new AbstractModule(){
-    @Override protected void configure(){
-    }
-    @SuppressWarnings("unused") @Provides @Singleton @VCloudApi URI provide(){
-      return URI.create("https://vcloud.safesecureweb.com/api/v0.8");
-    }
-  }
-);
+  Injector injector=Guice.createInjector(new SaxParserModule());
   Factory factory=injector.getInstance(ParseSax.Factory.class);
   Organization result=(Organization)factory.create(injector.getInstance(OrgHandler.class)).parse(is);
   assertEquals(result.getName(),"Customer 188849");
-  assertEquals(result.getId(),188849 + "");
-  assertEquals(result.getLocation(),URI.create("https://vcloud.safesecureweb.com/api/v0.8/org/188849"));
-  assertEquals(result.getCatalogs(),ImmutableMap.of("HMS Shared Catalog",new NamedResourceImpl("1","HMS Shared Catalog",CATALOG_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalog/1"))));
-  assertEquals(result.getVDCs(),ImmutableMap.of("188849 Virtual DataCenter",new NamedResourceImpl("188849","188849 Virtual DataCenter",VCloudMediaType.VDC_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/188849"))));
-  assertEquals(result.getTasksLists(),ImmutableMap.of("188849 Task List",new NamedResourceImpl("188849","188849 Task List",TASKSLIST_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/tasksList/188849"))));
+  assertEquals(result.getId(),URI.create("https://vcloud.safesecureweb.com/api/v0.8/org/188849"));
+  assertEquals(result.getCatalogs(),ImmutableMap.of("HMS Shared Catalog",new NamedResourceImpl("HMS Shared Catalog",CATALOG_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/catalog/1"))));
+  assertEquals(result.getVDCs(),ImmutableMap.of("188849 Virtual DataCenter",new NamedResourceImpl("188849 Virtual DataCenter",VCloudMediaType.VDC_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/188849"))));
+  assertEquals(result.getTasksLists(),ImmutableMap.of("188849 Task List",new NamedResourceImpl("188849 Task List",TASKSLIST_XML,URI.create("https://vcloud.safesecureweb.com/api/v0.8/tasksList/188849"))));
 }

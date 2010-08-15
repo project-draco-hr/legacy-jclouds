@@ -1,12 +1,13 @@
 {
-  String org="org1";
+  URI org=URI.create("org1");
+  String identity="identity";
   String tag="tag";
   TerremarkVCloudTemplateOptions options=noKeyPair();
   CreateNewKeyPairUnlessUserSpecifiedOtherwise strategy=setupStrategy();
   KeyPair keyPair=createMock(KeyPair.class);
   replay(keyPair);
   replayStrategy(strategy);
-  strategy.execute(org,tag,options);
+  strategy.execute(org,tag,identity,options);
   assertEquals(options.getSshKeyFingerprint(),null);
   verify(keyPair);
   verifyStrategy(strategy);

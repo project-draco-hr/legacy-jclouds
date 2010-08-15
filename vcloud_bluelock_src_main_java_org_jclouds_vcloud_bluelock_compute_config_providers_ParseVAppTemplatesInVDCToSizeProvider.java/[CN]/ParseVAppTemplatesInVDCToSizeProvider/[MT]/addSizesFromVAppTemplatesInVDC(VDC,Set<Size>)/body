@@ -9,8 +9,8 @@
         if (matcher.pattern().equals(GBRAM_PATTERN))         ram*=1024;
         int disk=Integer.parseInt(matcher.group(3));
         String name=resource.getName().split(" ")[1];
-        String id=vdc.getId() + "/" + resource.getId();
-        sizes.add(new SizeImpl(resource.getId(),name,id,location,null,ImmutableMap.<String,String>of(),cores,ram,disk,ImagePredicates.idEquals(id)));
+        String id=resource.getId().toASCIIString();
+        sizes.add(new SizeImpl(id,name,id,location,null,ImmutableMap.<String,String>of(),cores,ram,disk,ImagePredicates.idEquals(id)));
       }
  catch (      NoSuchElementException e) {
         logger.debug("<< didn't match at all(%s)",resource);

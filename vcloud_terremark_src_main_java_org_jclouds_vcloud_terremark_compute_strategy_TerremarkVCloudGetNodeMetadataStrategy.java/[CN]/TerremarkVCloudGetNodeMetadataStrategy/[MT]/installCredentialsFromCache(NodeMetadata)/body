@@ -1,12 +1,8 @@
 {
   OrgAndName orgAndName=getOrgAndNameFromNode(node);
   if (credentialsMap.containsKey(orgAndName)) {
-    String identity=getLoginAccountForNode(node);
-    if (identity != null) {
-      String privateKey=credentialsMap.get(orgAndName).getPrivateKey();
-      Credentials creds=new Credentials(identity,privateKey);
-      node=installNewCredentials(node,creds);
-    }
+    Credentials creds=credentialsMap.get(orgAndName);
+    node=installNewCredentials(node,creds);
   }
   return node;
 }
