@@ -47,8 +47,8 @@
       launchTime=dateService.iso8601SecondsDateParse(currentOrNull());
     }
   }
- else   if (qName.equals("enabled")) {
-    monitoring=Boolean.parseBoolean(currentOrNull());
+ else   if (qName.equals("state") && inMonitoring) {
+    monitoringState=MonitoringState.fromValue(currentOrNull());
   }
  else   if (qName.equals("availabilityZone")) {
     availabilityZone=currentOrNull();
@@ -92,6 +92,9 @@
   }
  else   if (qName.equals("groupSet")) {
     inGroups=false;
+  }
+ else   if (qName.equals("monitoring")) {
+    inMonitoring=false;
   }
  else   if (qName.equals("blockDeviceMapping")) {
     inBlockDeviceMapping=false;
