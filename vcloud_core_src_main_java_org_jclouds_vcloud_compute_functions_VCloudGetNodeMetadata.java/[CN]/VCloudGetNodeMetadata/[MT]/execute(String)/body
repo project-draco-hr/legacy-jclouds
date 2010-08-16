@@ -1,16 +1,8 @@
 {
   URI id=URI.create(in);
-  VApp vApp=client.getVApp(id);
-  if (vApp == null)   return null;
-  String tag=null;
-  Image image=null;
-  Matcher matcher=TAG_PATTERN_WITHOUT_TEMPLATE.matcher(vApp.getName());
-  if (matcher.find()) {
-    tag=matcher.group(1);
-  }
- else {
-    tag="NOTAG-" + vApp.getName();
-  }
-  Location location=findLocationForResourceInVDC.apply(vApp.getVDC());
-  return new NodeMetadataImpl(vApp.getId().toASCIIString(),vApp.getName(),vApp.getId().toASCIIString(),location,vApp.getId(),ImmutableMap.<String,String>of(),tag,image,vAppStatusToNodeState.get(vApp.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(vApp),null);
+  VApp from=client.getVApp(id);
+  if (from == null)   return null;
+  String tag=parseTagFromName(from.getName());
+  Location location=findLocationForResourceInVDC.apply(from.getVDC());
+  return new NodeMetadataImpl(in,from.getName(),in,location,from.getId(),ImmutableMap.<String,String>of(),tag,null,vAppStatusToNodeState.get(from.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(from),null);
 }
