@@ -5,7 +5,7 @@
   Map<ServerState,NodeState> serverStateToNodeState=createMock(Map.class);
   org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
   Option dc=new Option(1l,"US-West-1","US West 1 Datacenter");
-  Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
+  Set<? extends org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
   Server server=createMock(Server.class);
   expect(server.getId()).andReturn(1000l).atLeastOnce();
   expect(server.getName()).andReturn("tag-ff").atLeastOnce();
@@ -30,7 +30,7 @@
   replay(image);
   replay(jcImage);
   replay(credentialsMap);
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,caller,images,locations);
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,caller,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImage(),jcImage);

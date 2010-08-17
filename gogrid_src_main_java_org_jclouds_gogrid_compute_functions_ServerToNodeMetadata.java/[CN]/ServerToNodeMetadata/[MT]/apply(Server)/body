@@ -5,10 +5,10 @@
   Credentials creds=client.getServerServices().getServerCredentialsList().get(from.getName());
   Image image=null;
   try {
-    image=Iterables.find(images,new FindImageForServer(from));
+    image=Iterables.find(images.get(),new FindImageForServer(from));
   }
  catch (  NoSuchElementException e) {
     logger.warn("could not find a matching image for server %s",from);
   }
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",locations.get(from.getDatacenter().getId() + ""),null,ImmutableMap.<String,String>of(),tag,image,state,ipSet,ImmutableList.<String>of(),ImmutableMap.<String,String>of(),creds);
+  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",locations.get().get(from.getDatacenter().getId() + ""),null,ImmutableMap.<String,String>of(),tag,image,state,ipSet,ImmutableList.<String>of(),ImmutableMap.<String,String>of(),creds);
 }

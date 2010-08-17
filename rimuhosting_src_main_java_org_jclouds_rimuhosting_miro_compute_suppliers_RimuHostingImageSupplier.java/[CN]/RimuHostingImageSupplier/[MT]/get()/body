@@ -1,0 +1,23 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  logger.debug(">> providing images");
+  for (  final org.jclouds.rimuhosting.miro.domain.Image from : sync.getImageList()) {
+    OsFamily os=null;
+    Architecture arch=from.getId().indexOf("64") == -1 ? Architecture.X86_32 : Architecture.X86_64;
+    String osDescription="";
+    String version="";
+    osDescription=from.getId();
+    Matcher matcher=RIMU_PATTERN.matcher(from.getId());
+    if (matcher.find()) {
+      try {
+        os=OsFamily.fromValue(matcher.group(1).toLowerCase());
+      }
+ catch (      IllegalArgumentException e) {
+        logger.debug("<< didn't match os(%s)",matcher.group(2));
+      }
+    }
+    images.add(new ImageImpl(from.getId(),from.getDescription(),from.getId(),null,null,ImmutableMap.<String,String>of(),from.getDescription(),version,os,osDescription,arch,new Credentials("root",null)));
+  }
+  logger.debug("<< images(%d)",images.size());
+  return images;
+}

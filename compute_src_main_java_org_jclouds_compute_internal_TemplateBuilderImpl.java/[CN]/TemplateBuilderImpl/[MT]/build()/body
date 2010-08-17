@@ -4,11 +4,13 @@
     if (options != null)     defaultTemplate.options(options);
     return defaultTemplate.build();
   }
-  if (location == null)   location=defaultLocation;
+  if (location == null)   location=defaultLocation.get();
   if (options == null)   options=optionsProvider.get();
   logger.debug(">> searching params(%s)",this);
-  Size size=resolveSize(sizeSorter(),getImages());
-  Image image=resolveImage(size);
+  Set<? extends Image> images=getImages();
+  Iterable<? extends Image> supportedImages=filter(images,buildImagePredicate());
+  Size size=resolveSize(sizeSorter(),supportedImages);
+  Image image=resolveImage(size,supportedImages);
   logger.debug("<<   matched image(%s)",image);
   this.arch=image.getArchitecture();
   return new TemplateImpl(image,size,location,options);

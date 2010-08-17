@@ -1,3 +1,5 @@
 {
-  return concat(transform(concat(allVDCsInOrganization.get().get(from).values()),imagesInVDC));
+  Iterable<? extends CatalogItem> catalogs=allCatalogItemsInOrganization.apply(from);
+  Iterable<? extends VAppTemplate> vAppTemplates=vAppTemplatesForCatalogItems.apply(catalogs);
+  return Iterables.transform(vAppTemplates,imageForVAppTemplateProvider.get().withParent(from));
 }

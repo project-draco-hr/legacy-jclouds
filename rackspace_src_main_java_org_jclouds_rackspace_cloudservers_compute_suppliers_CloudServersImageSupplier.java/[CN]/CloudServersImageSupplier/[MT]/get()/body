@@ -1,0 +1,29 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  logger.debug(">> providing images");
+  for (  final org.jclouds.rackspace.cloudservers.domain.Image from : sync.listImages(ListOptions.Builder.withDetails())) {
+    OsFamily os=null;
+    Architecture arch=Architecture.X86_64;
+    String osDescription="";
+    String version="";
+    Matcher matcher=RACKSPACE_PATTERN.matcher(from.getName());
+    osDescription=from.getName();
+    if (from.getName().indexOf("Red Hat EL") != -1) {
+      os=OsFamily.RHEL;
+    }
+ else     if (from.getName().indexOf("Oracle EL") != -1) {
+      os=OsFamily.OEL;
+    }
+ else     if (matcher.find()) {
+      try {
+        os=OsFamily.fromValue(matcher.group(2).toLowerCase());
+      }
+ catch (      IllegalArgumentException e) {
+        logger.debug("<< didn't match os(%s)",matcher.group(2));
+      }
+    }
+    images.add(new ImageImpl(from.getId() + "",from.getName(),from.getId() + "",location.get(),null,ImmutableMap.<String,String>of(),from.getName(),version,os,osDescription,arch,new Credentials("root",null)));
+  }
+  logger.debug("<< images(%d)",images.size());
+  return images;
+}

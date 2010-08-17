@@ -27,7 +27,7 @@ catch (  NoSuchElementException e) {
   Credentials defaultCredentials=credentialProvider.execute(from);
   Location location=null;
   try {
-    location=Iterables.find(locations,new Predicate<Location>(){
+    location=Iterables.find(locations.get(),new Predicate<Location>(){
       @Override public boolean apply(      Location input){
         return input.getId().equals(from.getRegion());
       }
@@ -36,7 +36,7 @@ catch (  NoSuchElementException e) {
   }
  catch (  NoSuchElementException e) {
     System.err.printf("unknown region %s for image %s; not in %s",from.getRegion(),from.getId(),locations);
-    location=new LocationImpl(LocationScope.REGION,from.getRegion(),from.getRegion(),defaultLocation.getParent());
+    location=new LocationImpl(LocationScope.REGION,from.getRegion(),from.getRegion(),defaultLocation.get().getParent());
   }
   return new ImageImpl(from.getId(),name,from.getRegion() + "/" + from.getId(),location,null,ImmutableMap.<String,String>of("owner",from.getImageOwnerId()),description,version,os,osDescription,from.getArchitecture() == org.jclouds.aws.ec2.domain.Image.Architecture.I386 ? Architecture.X86_32 : Architecture.X86_64,defaultCredentials);
 }

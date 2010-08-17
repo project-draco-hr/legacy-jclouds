@@ -1,0 +1,11 @@
+{
+  Supplier<Map<RegionAndName,? extends Image>> map=injector.getInstance(Key.get(new TypeLiteral<Supplier<Map<RegionAndName,? extends Image>>>(){
+  }
+));
+  return Suppliers.compose(new Function<Map<RegionAndName,? extends Image>,Set<? extends Image>>(){
+    @Override public Set<? extends Image> apply(    Map<RegionAndName,? extends Image> from){
+      return ImmutableSet.copyOf(from.values());
+    }
+  }
+,map);
+}

@@ -1,8 +1,8 @@
 {
-  OsFamily myOs=parseOsFamilyOrNull(from.getName());
+  OsFamily myOs=parseOsFamilyOrNull(checkNotNull(from,"vapp template").getName());
   Architecture arch=parseArchitectureOrNull(from.getName());
-  Location location=findLocationForResource.apply(parent);
+  Location location=findLocationForResource.apply(checkNotNull(parent,"parent"));
   String name=getName(from.getName());
   String desc=from.getDescription() != null ? from.getDescription() : from.getName();
-  return new ImageImpl(from.getId().toASCIIString(),name,from.getId().toASCIIString(),location,from.getId(),ImmutableMap.<String,String>of(),desc,"",myOs,name,arch,credentialsProvider.execute(from));
+  return new VCloudImage(from,from.getId().toASCIIString(),name,from.getId().toASCIIString(),location,from.getId(),ImmutableMap.<String,String>of(),desc,"",myOs,name,arch,credentialsProvider.execute(from));
 }

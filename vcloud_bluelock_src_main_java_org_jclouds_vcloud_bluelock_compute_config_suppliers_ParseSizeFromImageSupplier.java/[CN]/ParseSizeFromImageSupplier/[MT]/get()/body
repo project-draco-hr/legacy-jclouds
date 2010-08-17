@@ -1,0 +1,21 @@
+{
+  return newLinkedHashSet(filter(transform(images.get(),new Function<Image,Size>(){
+    @Override public Size apply(    Image from){
+      try {
+        VAppTemplate template=VCloudImage.class.cast(from).getVAppTemplate();
+        Matcher matcher=getMatcherAndFind(template.getName());
+        double cores=Double.parseDouble(matcher.group(1));
+        int ram=Integer.parseInt(matcher.group(2));
+        if (matcher.pattern().equals(GBRAM_PATTERN))         ram*=1024;
+        int disk=Integer.parseInt(matcher.group(3));
+        String name=template.getName().split(" ")[1];
+        return new SizeImpl(from.getId(),name,from.getId(),from.getLocation(),null,ImmutableMap.<String,String>of(),cores,ram,disk,ImagePredicates.idEquals(from.getId()));
+      }
+ catch (      NoSuchElementException e) {
+        logger.debug("<< didn't match at all(%s)",from);
+        return null;
+      }
+    }
+  }
+),Predicates.notNull()));
+}

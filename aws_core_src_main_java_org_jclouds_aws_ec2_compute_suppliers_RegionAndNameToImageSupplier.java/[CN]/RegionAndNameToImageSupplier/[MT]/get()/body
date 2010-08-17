@@ -1,0 +1,18 @@
+{
+  if (amiOwners.length == 0) {
+    logger.debug(">> no owners specified, skipping image parsing");
+  }
+ else {
+    logger.debug(">> providing images");
+    Iterable<Entry<String,DescribeImagesOptions>> queries=concat(getDescribeQueriesForOwnersInRegions(regionMap,amiOwners).entrySet(),ccAmisToDescribeQueries(ccAmis).entrySet());
+    Iterable<? extends Image> parsedImages=filter(transform(describer.apply(queries),parser),Predicates.notNull());
+    images.putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+      @Override public RegionAndName apply(      Image from){
+        return new RegionAndName(from.getLocation().getId(),from.getProviderId());
+      }
+    }
+));
+    logger.debug("<< images(%d)",images.size());
+  }
+  return images;
+}

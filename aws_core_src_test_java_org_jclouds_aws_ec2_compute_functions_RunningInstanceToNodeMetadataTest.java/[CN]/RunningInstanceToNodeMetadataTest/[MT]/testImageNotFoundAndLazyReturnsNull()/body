@@ -5,7 +5,7 @@
   org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
   ConcurrentMap<RegionAndName,org.jclouds.compute.domain.Image> imageMap=createMock(ConcurrentMap.class);
   Location location=new LocationImpl(LocationScope.ZONE,"us-east-1a","description",null);
-  Set<Location> locations=ImmutableSet.<Location>of(location);
+  Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(location));
   PopulateDefaultLoginCredentialsForImageStrategy credentialProvider=createMock(PopulateDefaultLoginCredentialsForImageStrategy.class);
   RunningInstance instance=createMock(RunningInstance.class);
   expect(instance.getId()).andReturn("id").atLeastOnce();
@@ -19,7 +19,6 @@
   expect(instance.getPrivateIpAddress()).andReturn("127.0.0.1");
   expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
   expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
-  expect(jcImage.getProviderId()).andReturn("notImageId").atLeastOnce();
   expect(instance.getRegion()).andReturn("us-east-1").atLeastOnce();
   expect(imageMap.get(new RegionAndName("us-east-1","imageId"))).andReturn(null);
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
@@ -30,9 +29,9 @@
   replay(credentialsMap);
   replay(credentialProvider);
   replay(instance);
-  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,new ImageProvider(jcImage),imageMap,locations,new RunningInstanceToStorageMappingUnix());
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,imageMap,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
-  assertEquals(metadata.getLocation(),locations.iterator().next());
+  assertEquals(metadata.getLocation(),locations.get().iterator().next());
   assertEquals(metadata.getImage(),null);
   assertEquals(metadata.getTag(),"NOTAG-id");
   assertEquals(metadata.getCredentials(),null);

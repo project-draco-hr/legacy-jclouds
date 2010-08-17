@@ -1,3 +1,10 @@
 {
-  new ComputeServiceContextFactory().createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new Log4JLoggingModule())).close();
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory().createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new Log4JLoggingModule()));
+    context.getComputeService().listNodes();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
 }
