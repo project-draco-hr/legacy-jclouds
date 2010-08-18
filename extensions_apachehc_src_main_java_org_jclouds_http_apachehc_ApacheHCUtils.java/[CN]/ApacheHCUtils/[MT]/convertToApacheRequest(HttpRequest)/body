@@ -16,7 +16,20 @@
     apacheRequest=new HttpPost(request.getEndpoint());
   }
  else {
-    throw new UnsupportedOperationException(request.getMethod());
+    final String method=request.getMethod();
+    if (request.getPayload() != null)     apacheRequest=new HttpEntityEnclosingRequestBase(){
+      @Override public String getMethod(){
+        return method;
+      }
+    }
+;
+ else     apacheRequest=new HttpRequestBase(){
+      @Override public String getMethod(){
+        return method;
+      }
+    }
+;
+    HttpRequestBase.class.cast(apacheRequest).setURI(request.getEndpoint());
   }
   Payload payload=request.getPayload();
   if (apacheRequest instanceof HttpEntityEnclosingRequest) {

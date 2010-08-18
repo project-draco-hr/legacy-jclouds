@@ -30,7 +30,18 @@
   connection.setDoOutput(true);
   connection.setAllowUserInteraction(false);
   connection.setInstanceFollowRedirects(false);
-  connection.setRequestMethod(request.getMethod().toString());
+  try {
+    connection.setRequestMethod(request.getMethod());
+  }
+ catch (  ProtocolException e) {
+    try {
+      methodField.set(connection,request.getMethod());
+    }
+ catch (    Exception e1) {
+      logger.error(e,"could not set request method: ",request.getMethod());
+      Throwables.propagate(e1);
+    }
+  }
   for (  String header : request.getHeaders().keySet()) {
     for (    String value : request.getHeaders().get(header)) {
       connection.setRequestProperty(header,value);
