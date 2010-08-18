@@ -1,0 +1,20 @@
+{
+  return new Predicate<OperatingSystem>(){
+    @Override public boolean apply(    OperatingSystem os){
+      if (os.getFamily() != null) {
+switch (os.getFamily()) {
+case CENTOS:
+case FEDORA:
+case RHEL:
+          return true;
+      }
+    }
+    String toMatch=os.getName() != null ? os.getName() : os.getDescription();
+    return (toMatch.toLowerCase().indexOf("centos") != -1 || toMatch.toLowerCase().indexOf("rhel") != -1 || toMatch.toLowerCase().replace(" ","").indexOf("redhate") != -1 || toMatch.toLowerCase().indexOf("fedora") != -1);
+  }
+  @Override public String toString(){
+    return "supportsYum()";
+  }
+}
+;
+}

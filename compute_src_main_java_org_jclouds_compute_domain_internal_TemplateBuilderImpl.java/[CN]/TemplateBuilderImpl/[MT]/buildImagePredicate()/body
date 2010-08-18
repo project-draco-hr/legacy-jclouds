@@ -1,0 +1,26 @@
+{
+  List<Predicate<Image>> predicates=newArrayList();
+  if (imageId != null) {
+    predicates.add(idPredicate);
+  }
+ else {
+    predicates.add(new Predicate<Image>(){
+      @Override public boolean apply(      Image input){
+        return locationPredicate.apply(input);
+      }
+    }
+);
+    predicates.add(new Predicate<Image>(){
+      @Override public boolean apply(      Image input){
+        return Predicates.and(ImmutableSet.of(osFamilyPredicate,osNamePredicate,osDescriptionPredicate,osVersionPredicate,os64BitPredicate,osArchPredicate)).apply(input.getOperatingSystem());
+      }
+    }
+);
+    predicates.add(imageArchPredicate);
+    predicates.add(imageVersionPredicate);
+    predicates.add(imageNamePredicate);
+    predicates.add(imageDescriptionPredicate);
+  }
+  Predicate<Image> imagePredicate=and(predicates);
+  return imagePredicate;
+}
