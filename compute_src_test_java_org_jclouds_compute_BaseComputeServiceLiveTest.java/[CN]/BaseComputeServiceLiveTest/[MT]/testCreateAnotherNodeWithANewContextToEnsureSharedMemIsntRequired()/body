@@ -1,10 +1,11 @@
 {
   initializeContextAndClient();
+  refreshTemplate();
   TreeSet<NodeMetadata> nodes=newTreeSet(client.runNodesWithTag(tag,1,template));
   checkNodes(nodes,tag);
   NodeMetadata node=nodes.first();
   this.nodes.add(node);
   assertEquals(nodes.size(),1);
   assertLocationSameOrChild(node.getLocation(),template.getLocation());
-  assertEquals(node.getOperatingSystem().getFamily(),template.getImage().getOperatingSystem().getFamily());
+  checkOsMatchesTemplate(node);
 }

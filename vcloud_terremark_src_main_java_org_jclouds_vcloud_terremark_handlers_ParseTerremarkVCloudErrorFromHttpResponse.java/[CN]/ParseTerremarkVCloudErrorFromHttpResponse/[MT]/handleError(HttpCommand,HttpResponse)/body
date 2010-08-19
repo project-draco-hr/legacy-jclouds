@@ -11,18 +11,16 @@ case 401:
 break;
 case 403:
 case 404:
-if (!command.getRequest().getMethod().equals("DELETE")) {
 String path=command.getRequest().getEndpoint().getPath();
 Matcher matcher=RESOURCE_PATTERN.matcher(path);
 String message;
 if (matcher.find()) {
-  message=String.format("%s %s not found",matcher.group(1),matcher.group(2));
+message=String.format("%s %s not found",matcher.group(1),matcher.group(2));
 }
  else {
-  message=path;
+message=path;
 }
 exception=new ResourceNotFoundException(message,exception);
-}
 break;
 case 500:
 if ((response.getMessage().indexOf("because there is a pending task running") != -1) || (response.getMessage().indexOf("because it is already powered off") != -1) || (response.getMessage().indexOf("already exists") != -1)|| (response.getMessage().indexOf("same name exists") != -1)) exception=new IllegalStateException(response.getMessage(),exception);
