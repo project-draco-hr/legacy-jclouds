@@ -4,5 +4,5 @@
   if (from == null)   return null;
   String tag=parseTagFromName(from.getName());
   Location location=findLocationForResourceInVDC.apply(from.getVDC());
-  return new NodeMetadataImpl(in,from.getName(),in,location,from.getId(),ImmutableMap.<String,String>of(),tag,null,vAppStatusToNodeState.get(from.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(from),null);
+  return new NodeMetadataImpl(in,from.getName(),in,location,from.getId(),ImmutableMap.<String,String>of(),tag,null,new CIMOperatingSystem(CIMOperatingSystem.OSType.fromValue(from.getOsType()),null,null,from.getOperatingSystemDescription()),vAppStatusToNodeState.get(from.getStatus()),computeClient.getPublicAddresses(id),computeClient.getPrivateAddresses(id),getExtra.apply(from),null);
 }

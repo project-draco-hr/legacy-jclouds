@@ -22,6 +22,8 @@
   expect(instance.getRegion()).andReturn("us-east-1").atLeastOnce();
   org.jclouds.compute.domain.Image lateImage=createMock(org.jclouds.compute.domain.Image.class);
   expect(imageMap.get(new RegionAndName("us-east-1","imageId"))).andReturn(lateImage).atLeastOnce();
+  expect(lateImage.getId()).andReturn("us-east-1/imageId").atLeastOnce();
+  expect(lateImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
   replay(lateImage);
   replay(imageMap);
@@ -34,7 +36,7 @@
   RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,imageMap,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getLocation(),locations.get().iterator().next());
-  assertEquals(metadata.getImage(),lateImage);
+  assertEquals(metadata.getImageId(),lateImage.getId());
   assertEquals(metadata.getTag(),"NOTAG-id");
   assertEquals(metadata.getCredentials(),null);
   verify(lateImage);

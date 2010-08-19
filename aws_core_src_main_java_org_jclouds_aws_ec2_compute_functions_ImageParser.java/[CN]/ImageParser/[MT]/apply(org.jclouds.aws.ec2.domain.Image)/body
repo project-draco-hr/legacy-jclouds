@@ -7,15 +7,19 @@
     logger.trace("skipping as not a machine image(%s)",from.getId());
     return null;
   }
-  OsFamily os=parseOsFamilyOrNull(from.getImageLocation());
-  String name=parseVersionOrReturnEmptyString(os,from.getImageLocation());
+  String name=null;
   String description=from.getDescription() != null ? from.getDescription() : from.getImageLocation();
+  String version=null;
+  OsFamily osFamily=parseOsFamilyOrNull(from.getImageLocation());
+  String osName=null;
+  String osArch=from.getVirtualizationType();
+  String osVersion=parseVersionOrReturnEmptyString(osFamily,from.getImageLocation());
   String osDescription=from.getImageLocation();
-  String version="";
+  boolean is64Bit=from.getArchitecture() == Architecture.X86_64;
   try {
     Matcher matcher=getMatcherAndFind(from.getImageLocation());
-    os=OsFamily.fromValue(matcher.group(1));
-    name=parseVersionOrReturnEmptyString(os,matcher.group(2));
+    osFamily=OsFamily.fromValue(matcher.group(1));
+    osVersion=parseVersionOrReturnEmptyString(osFamily,matcher.group(2));
     version=matcher.group(3).replace(".manifest.xml","");
   }
  catch (  IllegalArgumentException e) {
@@ -38,5 +42,6 @@ catch (  NoSuchElementException e) {
     System.err.printf("unknown region %s for image %s; not in %s",from.getRegion(),from.getId(),locations);
     location=new LocationImpl(LocationScope.REGION,from.getRegion(),from.getRegion(),defaultLocation.get().getParent());
   }
-  return new ImageImpl(from.getId(),name,from.getRegion() + "/" + from.getId(),location,null,ImmutableMap.<String,String>of("owner",from.getImageOwnerId()),description,version,os,osDescription,from.getArchitecture() == org.jclouds.aws.ec2.domain.Image.Architecture.I386 ? Architecture.X86_32 : Architecture.X86_64,defaultCredentials);
+  OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
+  return new ImageImpl(from.getId(),name,from.getRegion() + "/" + from.getId(),location,null,ImmutableMap.<String,String>of("owner",from.getImageOwnerId()),os,description,version,defaultCredentials);
 }

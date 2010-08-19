@@ -19,6 +19,7 @@
   expect(instance.getIpAddress()).andReturn("127.0.0.1");
   expect(instance.getPrivateIpAddress()).andReturn("127.0.0.1");
   expect(instance.getAvailabilityZone()).andReturn(AvailabilityZone.US_EAST_1A).atLeastOnce();
+  expect(jcImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();
   expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
   expect(imageMap.get(new RegionAndName(Region.US_EAST_1,"imageId"))).andReturn(jcImage);
   expect(instance.getInstanceType()).andReturn(InstanceType.C1_XLARGE).atLeastOnce();
@@ -32,7 +33,7 @@
   RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(client,credentialsMap,credentialProvider,imageMap,locations,new RunningInstanceToStorageMappingUnix());
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getLocation(),locations.get().iterator().next());
-  assertEquals(metadata.getImage(),jcImage);
+  assertEquals(metadata.getImageId(),"us-east-1/imageId");
   assertEquals(metadata.getTag(),"NOTAG-id");
   assertEquals(metadata.getCredentials(),null);
   verify(imageMap);

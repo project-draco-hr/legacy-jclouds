@@ -13,11 +13,11 @@
   TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
   expect(optionsProvider.get()).andReturn(new TemplateOptions());
   expect(image.getLocation()).andReturn(defaultLocation).atLeastOnce();
-  expect(image.getArchitecture()).andReturn(Architecture.X86_32).atLeastOnce();
   expect(image2.getLocation()).andReturn(defaultLocation).atLeastOnce();
-  expect(image2.getArchitecture()).andReturn(Architecture.X86_64).atLeastOnce();
   expect(image.getOperatingSystem()).andReturn(os).atLeastOnce();
   expect(image2.getOperatingSystem()).andReturn(os2).atLeastOnce();
+  expect(os.getArch()).andReturn("X86_32").atLeastOnce();
+  expect(os2.getArch()).andReturn("X86_64").atLeastOnce();
   replay(image);
   replay(image2);
   replay(os);
@@ -27,7 +27,7 @@
   replay(optionsProvider);
   replay(templateBuilderProvider);
   TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
-  assertEquals(template.smallest().architecture(Architecture.X86_32).build().getImage(),image);
+  assertEquals(template.smallest().osArchMatches("X86_32").build().getImage(),image);
   verify(image);
   verify(image2);
   verify(os);

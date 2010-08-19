@@ -23,6 +23,7 @@
   expect(image.getId()).andReturn(2000l).atLeastOnce();
   expect(jcImage.getProviderId()).andReturn("2000").atLeastOnce();
   expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
+  expect(jcImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();
   replay(caller);
   replay(client);
   replay(serverStateToNodeState);
@@ -33,7 +34,7 @@
   ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,caller,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
-  assertEquals(metadata.getImage(),jcImage);
+  assertEquals(metadata.getImageId(),"2000");
   assertEquals(metadata.getTag(),"tag");
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
   verify(caller);

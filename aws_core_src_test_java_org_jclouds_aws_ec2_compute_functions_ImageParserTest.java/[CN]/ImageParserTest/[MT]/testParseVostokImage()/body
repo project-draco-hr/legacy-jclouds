@@ -3,13 +3,17 @@
   Set<Image> result=parseImages(is);
   ImageParser parser=new ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation));
   org.jclouds.compute.domain.Image image=parser.apply(Iterables.get(result,0));
-  assertEquals(image.getArchitecture(),org.jclouds.compute.domain.Architecture.X86_32);
+  assertEquals(image.getOperatingSystem().is64Bit(),false);
   assertEquals(image.getDescription(),"vostok-builds/vostok-0.95-5622/vostok-0.95-5622.manifest.xml");
+  assertEquals(image.getId(),"us-east-1/ami-870de2ee");
   assertEquals(image.getProviderId(),"ami-870de2ee");
   assertEquals(image.getLocation(),defaultLocation);
-  assertEquals(image.getName(),"");
-  assertEquals(image.getOsDescription(),"vostok-builds/vostok-0.95-5622/vostok-0.95-5622.manifest.xml");
-  assertEquals(image.getOsFamily(),OsFamily.UNKNOWN);
+  assertEquals(image.getName(),null);
+  assertEquals(image.getOperatingSystem().getName(),null);
+  assertEquals(image.getOperatingSystem().getVersion(),"");
+  assertEquals(image.getOperatingSystem().getArch(),"paravirtual");
+  assertEquals(image.getOperatingSystem().getDescription(),"vostok-builds/vostok-0.95-5622/vostok-0.95-5622.manifest.xml");
+  assertEquals(image.getOperatingSystem().getFamily(),OsFamily.UNKNOWN);
   assertEquals(image.getUserMetadata(),ImmutableMap.<String,String>of("owner","133804938231"));
   assertEquals(image.getVersion(),"5622");
 }

@@ -20,6 +20,7 @@
   expect(instance.getIpAddress()).andReturn("127.0.0.1");
   expect(instance.getPrivateIpAddress()).andReturn("127.0.0.1");
   expect(instance.getRegion()).andReturn(Region.US_EAST_1).atLeastOnce();
+  expect(jcImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();
   expect(instance.getImageId()).andReturn("imageId").atLeastOnce();
   expect(imageMap.get(new RegionAndName(Region.US_EAST_1,"imageId"))).andReturn(jcImage);
   expect(amiClient.describeImagesInRegion(Region.US_EAST_1,imageIds("imageId"))).andReturn((Set)ImmutableSet.<Image>of(image));
@@ -38,7 +39,7 @@
   NodeMetadata metadata=parser.apply(instance);
   assertEquals(metadata.getTag(),"tag");
   assertEquals(metadata.getLocation(),location);
-  assertEquals(metadata.getImage(),jcImage);
+  assertEquals(metadata.getImageId(),"us-east-1/imageId");
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
   verify(imageMap);
   verify(jcImage);

@@ -38,7 +38,7 @@
       client.disconnect();
     }
     private void runScript(    SshClient client,    String scriptName,    int nodeId){
-      client.put(eq("" + scriptName + ""),payloadEq(initScript(scriptName,buildScript(OsFamily.UBUNTU))));
+      client.put(eq("" + scriptName + ""),payloadEq(initScript(scriptName,BaseComputeServiceLiveTest.APT_RUN_SCRIPT)));
       expect(client.exec("chmod 755 " + scriptName + "")).andReturn(EXEC_GOOD);
       expect(client.getUsername()).andReturn("root").atLeastOnce();
       expect(client.getHostAddress()).andReturn(nodeId + "").atLeastOnce();

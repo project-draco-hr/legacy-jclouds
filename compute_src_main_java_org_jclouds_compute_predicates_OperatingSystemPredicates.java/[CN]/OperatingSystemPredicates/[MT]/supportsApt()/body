@@ -8,8 +8,8 @@ case UBUNTU:
           return true;
       }
     }
-    String toMatch=os.getName() != null ? os.getName() : os.getDescription();
-    return (toMatch.toLowerCase().indexOf("ubuntu") != -1 || toMatch.toLowerCase().indexOf("debian") != -1);
+    for (    String toMatch : ImmutableSet.of(os.getName(),os.getDescription()))     if (toMatch != null && toMatch.toLowerCase().indexOf("ubuntu") != -1 || toMatch.toLowerCase().indexOf("debian") != -1)     return true;
+    return false;
   }
   @Override public String toString(){
     return "supportsApt()";
