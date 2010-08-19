@@ -1,0 +1,9 @@
+{
+  Iterable<VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<NamedResource,Future<VDC>>(){
+    @SuppressWarnings("unchecked") @Override public Future<VDC> apply(    NamedResource from){
+      return (Future<VDC>)aclient.getVDC(from.getId());
+    }
+  }
+,executor,null,logger,"vdcs in org " + org.getName());
+  return catalogItems;
+}

@@ -1,0 +1,13 @@
+{
+  Catalog response=connection.findCatalogInOrgNamed(null,null);
+  for (  NamedResource resource : response.values()) {
+    if (resource.getType().equals(VCloudExpressMediaType.CATALOGITEM_XML)) {
+      CatalogItem item=connection.findCatalogItemInOrgCatalogNamed(null,null,resource.getName());
+      assertNotNull(item);
+      assertNotNull(item.getEntity());
+      assertNotNull(item.getId());
+      assertNotNull(item.getProperties());
+      assertNotNull(item.getType());
+    }
+  }
+}

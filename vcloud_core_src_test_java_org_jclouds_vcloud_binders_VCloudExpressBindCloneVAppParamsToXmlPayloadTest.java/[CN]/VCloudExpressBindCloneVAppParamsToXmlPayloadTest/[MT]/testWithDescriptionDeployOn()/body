@@ -1,0 +1,15 @@
+{
+  String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/express/cloneVApp.xml"));
+  CloneVAppOptions options=new CloneVAppOptions().deploy().powerOn().withDescription("The description of the new vApp");
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
+  expect(request.getArgs()).andReturn(new Object[]{options}).atLeastOnce();
+  request.setPayload(expected);
+  replay(request);
+  BindCloneVAppParamsToXmlPayload binder=injector.getInstance(BindCloneVAppParamsToXmlPayload.class);
+  Map<String,String> map=Maps.newHashMap();
+  map.put("newName","new-linux-server");
+  map.put("vApp","https://vcloud.safesecureweb.com/api/v0.8/vapp/201");
+  binder.bindToRequest(request,map);
+  verify(request);
+}

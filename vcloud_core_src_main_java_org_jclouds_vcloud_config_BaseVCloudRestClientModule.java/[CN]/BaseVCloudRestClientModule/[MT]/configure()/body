@@ -1,4 +1,33 @@
 {
-  requestInjection(this);
   super.configure();
+  bind(new TypeLiteral<Function<Catalog,Iterable<? extends CatalogItem>>>(){
+  }
+).to(new TypeLiteral<AllCatalogItemsInCatalog>(){
+  }
+);
+  bind(new TypeLiteral<Function<Organization,Iterable<? extends Catalog>>>(){
+  }
+).to(new TypeLiteral<AllCatalogsInOrganization>(){
+  }
+);
+  bind(new TypeLiteral<Function<Organization,Iterable<? extends VDC>>>(){
+  }
+).to(new TypeLiteral<AllVDCsInOrganization>(){
+  }
+);
+  bind(new TypeLiteral<Function<Iterable<String>,Iterable<? extends Organization>>>(){
+  }
+).to(new TypeLiteral<OrganizationsForNames>(){
+  }
+);
+  bind(new TypeLiteral<Function<Iterable<? extends Location>,Iterable<? extends Organization>>>(){
+  }
+).to(new TypeLiteral<OrganizatonsForLocations>(){
+  }
+);
+  bind(new TypeLiteral<Function<Iterable<? extends CatalogItem>,Iterable<? extends VAppTemplate>>>(){
+  }
+).to(new TypeLiteral<VAppTemplatesForCatalogItems>(){
+  }
+);
 }
