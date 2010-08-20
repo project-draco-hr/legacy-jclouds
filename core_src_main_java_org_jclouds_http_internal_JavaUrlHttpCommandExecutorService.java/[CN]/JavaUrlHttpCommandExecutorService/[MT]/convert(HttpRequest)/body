@@ -23,9 +23,10 @@
  else {
     connection=(HttpURLConnection)url.openConnection();
   }
-  if (utils.relaxHostname() && connection instanceof HttpsURLConnection) {
+  if (connection instanceof HttpsURLConnection) {
     HttpsURLConnection sslCon=(HttpsURLConnection)connection;
-    sslCon.setHostnameVerifier(verifier);
+    if (utils.relaxHostname())     sslCon.setHostnameVerifier(verifier);
+    if (utils.trustAllCerts())     sslCon.setSSLSocketFactory(untrustedSSLContextProvider.get().getSocketFactory());
   }
   connection.setDoOutput(true);
   connection.setAllowUserInteraction(false);
