@@ -1,0 +1,14 @@
+{
+  Iterable<Object> orgVdc=(Iterable<Object>)checkNotNull(from,"args");
+  Object org=Iterables.get(orgVdc,0);
+  Object vdc=Iterables.get(orgVdc,1);
+  if (org == null && vdc == null)   return defaultUri;
+ else   if (org == null)   org=defaultOrg;
+  try {
+    Map<String,NamedResource> vdcs=checkNotNull(orgNameToVDCEndpoint.get().get(org)).getVDCs();
+    return vdc == null ? Iterables.getLast(vdcs.values()).getId() : vdcs.get(vdc).getId();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException(org + "/" + vdc+ " not found in "+ orgNameToVDCEndpoint.get());
+  }
+}
