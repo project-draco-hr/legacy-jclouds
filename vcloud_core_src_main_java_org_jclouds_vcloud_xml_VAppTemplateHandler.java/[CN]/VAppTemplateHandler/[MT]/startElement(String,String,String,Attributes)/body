@@ -1,6 +1,16 @@
 {
-  if (qName.equals("VAppTemplate")) {
-    catalog=Utils.newNamedResource(attributes);
-    if (attributes.getIndex("status") != -1)     status=Status.fromValue(attributes.getValue(attributes.getIndex("status")));
+  if (qName.equals("Children")) {
+    inChildren=true;
+  }
+ else   if (qName.equals("VAppTemplate")) {
+    template=newNamedResource(attributes);
+    String status=Utils.attrOrNull(attributes,"status");
+    if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
+  }
+ else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel")) && !inChildren) {
+    vdc=newNamedResource(attributes);
+  }
+ else {
+    taskHandler.startElement(uri,localName,qName,attributes);
   }
 }

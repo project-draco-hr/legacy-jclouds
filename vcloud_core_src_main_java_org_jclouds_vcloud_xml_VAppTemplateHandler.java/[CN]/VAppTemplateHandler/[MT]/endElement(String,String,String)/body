@@ -1,6 +1,19 @@
 {
-  if (qName.equals("Description")) {
+  taskHandler.endElement(uri,name,qName);
+  if (qName.equals("Children")) {
+    inChildren=false;
+  }
+ else   if (qName.equals("Task") && !inChildren) {
+    this.tasks.add(taskHandler.getResult());
+  }
+ else   if (qName.equals("Description") && !inChildren) {
     description=currentOrNull();
+  }
+ else   if (qName.equals("VAppScopedLocalId")) {
+    vAppScopedLocalId=currentOrNull();
+  }
+ else   if (qName.equals("ovfDescriptorUploaded")) {
+    ovfDescriptorUploaded=Boolean.parseBoolean(currentOrNull());
   }
   currentText=new StringBuilder();
 }

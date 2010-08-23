@@ -1,0 +1,13 @@
+{
+  return transformParallel(filter(checkNotNull(from,"named resources"),new Predicate<NamedResource>(){
+    @Override public boolean apply(    NamedResource input){
+      return input.getType().equals(VCloudExpressMediaType.VAPPTEMPLATE_XML);
+    }
+  }
+),new Function<NamedResource,Future<VCloudExpressVAppTemplate>>(){
+    @SuppressWarnings("unchecked") @Override public Future<VCloudExpressVAppTemplate> apply(    NamedResource from){
+      return (Future<VCloudExpressVAppTemplate>)aclient.getVAppTemplate(from.getId());
+    }
+  }
+,executor,null,logger,"vappTemplates in");
+}
