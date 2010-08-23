@@ -3,7 +3,9 @@
     NamedResource resource=Utils.newNamedResource(attributes);
     name=resource.getName();
     location=resource.getId();
-    status=VAppStatus.fromValue(attributes.getValue(attributes.getIndex("status")));
+    String statusString=attributes.getValue(attributes.getIndex("status"));
+    if (apiVersion.indexOf("0.8") != -1 && "2".equals(statusString))     status=Status.OFF;
+ else     status=Status.fromValue(statusString);
     if (attributes.getIndex("size") != -1)     size=new Long(attributes.getValue(attributes.getIndex("size")));
   }
  else   if (qName.equals("Link")) {

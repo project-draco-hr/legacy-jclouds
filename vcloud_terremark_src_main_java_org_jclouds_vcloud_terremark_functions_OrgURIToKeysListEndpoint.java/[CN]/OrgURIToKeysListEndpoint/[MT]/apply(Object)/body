@@ -1,12 +1,12 @@
 {
-  Map<URI,? extends Organization> uriToOrg=Maps.uniqueIndex(orgMap.get().values(),new Function<Organization,URI>(){
-    @Override public URI apply(    Organization from){
+  Map<URI,? extends Org> uriToOrg=Maps.uniqueIndex(orgMap.get().values(),new Function<Org,URI>(){
+    @Override public URI apply(    Org from){
       return from.getId();
     }
   }
 );
   try {
-    return TerremarkOrganization.class.cast(uriToOrg.get(from == null ? defaultOrg : from)).getKeysList().getId();
+    return TerremarkOrg.class.cast(uriToOrg.get(from == null ? defaultOrg : from)).getKeysList().getId();
   }
  catch (  NullPointerException e) {
     throw new ResourceNotFoundException("org " + from + " not found in "+ uriToOrg);
