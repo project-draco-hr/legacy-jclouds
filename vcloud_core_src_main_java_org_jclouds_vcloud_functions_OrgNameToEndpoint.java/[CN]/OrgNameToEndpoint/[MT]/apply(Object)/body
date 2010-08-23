@@ -1,8 +1,9 @@
 {
   try {
-    return from == null ? defaultUri : orgNameToEndpoint.get().get(from).getId();
+    Map<String,NamedResource> orgNameToEndpoint=orgNameToEndpointSupplier.get();
+    return from == null ? defaultUri : orgNameToEndpoint.get(from).getId();
   }
  catch (  NullPointerException e) {
-    throw new NoSuchElementException("org " + from + " not found in "+ orgNameToEndpoint.get().keySet());
+    throw new NoSuchElementException("org " + from + " not found in "+ orgNameToEndpointSupplier.get().keySet());
   }
 }

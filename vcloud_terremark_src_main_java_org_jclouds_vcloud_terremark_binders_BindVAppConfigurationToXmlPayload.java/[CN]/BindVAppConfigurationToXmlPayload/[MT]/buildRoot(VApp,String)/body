@@ -1,4 +1,6 @@
 {
-  XMLBuilder rootBuilder=XMLBuilder.create("VApp").a("type",vApp.getType()).a("name",name).a("status",vApp.getStatus().value()).a("size",vApp.getSize() + "").a("xmlns",ns).a("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance").a("xsi:schemaLocation",ns + " " + schema);
+  String status=vApp.getStatus().value();
+  if (apiVersion.indexOf("0.8") != -1 && "8".equals(status))   status="2";
+  XMLBuilder rootBuilder=XMLBuilder.create("VApp").a("type",vApp.getType()).a("name",name).a("status",status).a("size",vApp.getSize() + "").a("xmlns",ns).a("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance").a("xsi:schemaLocation",ns + " " + schema);
   return rootBuilder;
 }

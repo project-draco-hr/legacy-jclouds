@@ -1,0 +1,14 @@
+{
+  Iterable<CatalogItem> catalogItems=transformParallel(filter(from.values(),new Predicate<NamedResource>(){
+    @Override public boolean apply(    NamedResource input){
+      return input.getType().equals(VCloudExpressMediaType.CATALOGITEM_XML);
+    }
+  }
+),new Function<NamedResource,Future<CatalogItem>>(){
+    @SuppressWarnings("unchecked") @Override public Future<CatalogItem> apply(    NamedResource from){
+      return (Future<CatalogItem>)aclient.getCatalogItem(from.getId());
+    }
+  }
+,executor,null,logger,"catalogItems in " + from.getId());
+  return catalogItems;
+}

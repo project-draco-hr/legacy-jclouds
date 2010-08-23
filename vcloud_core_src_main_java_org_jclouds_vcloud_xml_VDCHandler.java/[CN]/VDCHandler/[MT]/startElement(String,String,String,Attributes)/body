@@ -1,11 +1,19 @@
 {
   if (qName.equals("Vdc")) {
     vDC=newNamedResource(attributes);
+    String status=Utils.attrOrNull(attributes,"status");
+    if (status != null)     this.status=VDCStatus.fromValue(Integer.parseInt(status));
   }
  else   if (qName.equals("Network")) {
     putNamedResource(availableNetworks,attributes);
   }
  else   if (qName.equals("ResourceEntity")) {
     putNamedResource(resourceEntities,attributes);
+  }
+ else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
+    org=newNamedResource(attributes);
+  }
+ else {
+    taskHandler.startElement(uri,localName,qName,attributes);
   }
 }

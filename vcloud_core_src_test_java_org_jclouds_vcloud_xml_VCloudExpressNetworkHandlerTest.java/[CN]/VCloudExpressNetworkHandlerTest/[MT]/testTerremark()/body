@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/express/network-terremark.xml");
+  injector=Guice.createInjector(new SaxParserModule());
+  factory=injector.getInstance(ParseSax.Factory.class);
+  VCloudExpressNetwork result=factory.create(injector.getInstance(VCloudExpressNetworkHandler.class)).parse(is);
+  assertEquals(result,new VCloudExpressNetworkImpl("10.114.34.128/26","application/vnd.vmware.vcloud.network+xml",URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/network/1708"),null,ImmutableSet.<String>of(),"10.114.34.129","255.255.255.192",ImmutableSet.<FenceMode>of(FenceMode.ISOLATED),null,ImmutableSet.<PortForwardingRule>of(),ImmutableSet.<FirewallRule>of()));
+}

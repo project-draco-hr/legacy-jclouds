@@ -1,0 +1,10 @@
+{
+  Org org=connection.findOrgNamed(null);
+  for (  NamedResource cat : org.getCatalogs().values()) {
+    Catalog response=connection.getCatalog(cat.getId());
+    assertNotNull(response);
+    assertNotNull(response.getName());
+    assertNotNull(response.getId());
+    assertEquals(connection.findCatalogInOrgNamed(null,response.getName()),response);
+  }
+}

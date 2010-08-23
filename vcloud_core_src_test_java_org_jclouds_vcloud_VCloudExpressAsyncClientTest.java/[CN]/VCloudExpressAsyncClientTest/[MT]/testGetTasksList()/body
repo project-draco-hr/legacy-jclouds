@@ -1,0 +1,11 @@
+{
+  Method method=VCloudExpressAsyncClient.class.getMethod("getTasksList",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/tasksList/1"));
+  assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/tasksList/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.tasksList+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TasksListHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

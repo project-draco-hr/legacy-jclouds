@@ -1,0 +1,11 @@
+{
+  Method method=VCloudExpressAsyncClient.class.getMethod("instantiateVAppTemplateInVDC",URI.class,URI.class,String.class,InstantiateVAppTemplateOptions[].class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/1"),URI.create("https://vcloud.safesecureweb.com/api/v0.8/vAppTemplate/3"),"my-vapp",processorCount(1).memory(512).disk(1024).fenceMode(FenceMode.BRIDGED).inNetwork(URI.create("https://vcloud.safesecureweb.com/network/1990")));
+  assertRequestLineEquals(request,"POST https://vcloud.safesecureweb.com/api/v0.8/vdc/1/action/instantiateVAppTemplate HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/express/newvapp-hostingcpumemdisk.xml")),"application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,VAppHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

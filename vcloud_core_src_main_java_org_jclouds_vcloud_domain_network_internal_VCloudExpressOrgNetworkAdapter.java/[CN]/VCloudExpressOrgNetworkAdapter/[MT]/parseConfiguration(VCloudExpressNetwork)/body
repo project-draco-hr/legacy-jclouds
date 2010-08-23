@@ -1,0 +1,11 @@
+{
+  String dns1=(in.getDnsServers().size() > 0) ? Iterables.get(in.getDnsServers(),0) : null;
+  String dns2=(in.getDnsServers().size() > 1) ? Iterables.get(in.getDnsServers(),1) : null;
+  String gateway=in.getGateway();
+  String netmask=in.getNetmask();
+  FenceMode mode=in.getFenceModes().size() > 0 ? Iterables.get(in.getFenceModes(),0) : FenceMode.BRIDGED;
+  DhcpService dhcp=in.isDhcp() != null && in.isDhcp() ? new DhcpService(true,null,null,null) : null;
+  NatService nat=in.getNatRules().size() > 0 ? new NatService(true,null,null,in.getNatRules()) : null;
+  FirewallService firewall=in.getFirewallRules().size() > 0 ? new FirewallService(true,in.getFirewallRules()) : null;
+  return new OrgNetworkImpl.ConfigurationImpl(new IpScope(true,gateway,netmask,dns1,dns2,null,ImmutableSet.<IpRange>of(),ImmutableSet.<String>of()),null,mode,new Features(dhcp,firewall,nat));
+}

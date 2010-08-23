@@ -1,0 +1,11 @@
+{
+  Method method=VCloudExpressAsyncClient.class.getMethod("getNetwork",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/network/2"));
+  assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/network/2 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.network+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,OrgNetworkFromVCloudExpressNetworkHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}
