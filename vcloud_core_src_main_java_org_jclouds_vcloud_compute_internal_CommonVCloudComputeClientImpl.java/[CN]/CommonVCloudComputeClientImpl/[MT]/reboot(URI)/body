@@ -1,9 +1,9 @@
 {
-  VApp vApp=client.getVApp(id);
+  A vApp=refreshVApp(id);
   logger.debug(">> resetting vApp(%s)",vApp.getName());
   Task task=client.resetVApp(vApp.getId());
   if (!taskTester.apply(task.getLocation())) {
-    throw new TaskException("resetVApp",vApp,task);
+    throw new RuntimeException(String.format("failed to %s %s: %s","resetVApp",vApp.getName(),task));
   }
   logger.debug("<< on vApp(%s)",vApp.getName());
 }

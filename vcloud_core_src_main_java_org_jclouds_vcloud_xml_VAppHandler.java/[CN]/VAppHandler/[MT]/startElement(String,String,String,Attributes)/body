@@ -1,27 +1,13 @@
 {
   if (qName.equals("VApp")) {
-    NamedResource resource=Utils.newNamedResource(attributes);
-    name=resource.getName();
-    location=resource.getId();
+    vApp=Utils.newNamedResource(attributes);
     String statusString=attributes.getValue(attributes.getIndex("status"));
-    if (apiVersion.indexOf("0.8") != -1 && "2".equals(statusString))     status=Status.OFF;
- else     status=Status.fromValue(statusString);
-    if (attributes.getIndex("size") != -1)     size=new Long(attributes.getValue(attributes.getIndex("size")));
+    status=Status.fromValue(statusString);
   }
- else   if (qName.equals("Link")) {
-    if (attributes.getIndex("type") != -1 && attributes.getValue(attributes.getIndex("type")).equals(VCloudExpressMediaType.VDC_XML)) {
-      vDC=Utils.newNamedResource(attributes);
-    }
-  }
- else   if (qName.equals("OperatingSystemSection")) {
-    inOs=true;
-    for (int i=0; i < attributes.getLength(); i++)     if (attributes.getQName(i).indexOf("id") != -1)     osType=Integer.parseInt(attributes.getValue(i));
-  }
- else   if (qName.endsWith("NetworkConnection")) {
-    networkName=attributes.getValue(attributes.getIndex("Network"));
+ else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
+    vdc=Utils.newNamedResource(attributes);
   }
  else {
-    systemHandler.startElement(uri,localName,qName,attributes);
-    allocationHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attributes);
   }
 }
