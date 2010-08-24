@@ -1,0 +1,24 @@
+{
+  if (edit != null) {
+    ResourceAllocation allocation=new EditableResourceAllocation(instanceID,elementName,description,resourceType,resourceSubType,hostResource,address,addressOnParent,parent,connected,virtualQuantity,virtualQuantityUnits,edit);
+    this.edit=null;
+    return allocation;
+  }
+ else   if (busSubType != null) {
+    ResourceAllocation allocation=new VCloudHardDisk(instanceID,elementName,description,resourceType,resourceSubType,hostResource,address,addressOnParent,parent,connected,virtualQuantity,virtualQuantityUnits,capacity,busType,busSubType);
+    capacity=-1;
+    busType=-1;
+    busSubType=null;
+    return allocation;
+  }
+ else   if (ipAddress != null) {
+    ResourceAllocation allocation=new VCloudNetworkAdapter(instanceID,elementName,description,resourceType,resourceSubType,hostResource,address,addressOnParent,parent,connected,virtualQuantity,virtualQuantityUnits,ipAddress,primaryNetworkConnection,ipAddressingMode);
+    ipAddress=null;
+    primaryNetworkConnection=false;
+    ipAddressingMode=null;
+    return allocation;
+  }
+ else {
+    return super.newResourceAllocation();
+  }
+}

@@ -1,12 +1,17 @@
 {
-  if (qName.equals("Tasks")) {
-    inTasks=false;
+  if (qName.endsWith("VirtualHardwareSection")) {
+    inHardware=false;
+    this.hardware=virtualHardwareHandler.getResult();
   }
-  if (inTasks) {
+ else   if (qName.endsWith("Tasks")) {
+    inTasks=false;
+    this.tasks.add(taskHandler.getResult());
+  }
+  if (inHardware) {
+    virtualHardwareHandler.endElement(uri,name,qName);
+  }
+ else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);
-    if (qName.equals("Task")) {
-      this.tasks.add(taskHandler.getResult());
-    }
   }
  else   if (qName.equals("Description")) {
     description=currentOrNull();

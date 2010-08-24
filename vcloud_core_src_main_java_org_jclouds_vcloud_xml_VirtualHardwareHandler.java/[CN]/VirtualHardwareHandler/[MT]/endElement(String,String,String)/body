@@ -1,0 +1,20 @@
+{
+  if (qName.endsWith("System")) {
+    inSystem=false;
+    system=systemHandler.getResult();
+  }
+ else   if (qName.endsWith("Item")) {
+    inItem=false;
+    allocations.add(allocationHandler.getResult());
+  }
+  if (inSystem) {
+    systemHandler.endElement(uri,localName,qName);
+  }
+ else   if (inItem) {
+    allocationHandler.endElement(uri,localName,qName);
+  }
+ else   if (qName.endsWith("Info")) {
+    this.info=currentText.toString().trim();
+  }
+  currentText=new StringBuilder();
+}

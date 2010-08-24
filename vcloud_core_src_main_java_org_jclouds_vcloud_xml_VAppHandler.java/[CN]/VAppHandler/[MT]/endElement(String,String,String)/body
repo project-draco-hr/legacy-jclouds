@@ -1,21 +1,17 @@
 {
-  if (qName.equals("Children")) {
+  if (qName.endsWith("Children")) {
     inChildren=false;
+    this.children.add(vmHandler.getResult());
   }
- else   if (!inChildren && qName.equals("Tasks")) {
+ else   if (qName.endsWith("Tasks")) {
     inTasks=false;
+    this.tasks.add(taskHandler.getResult());
   }
   if (inChildren) {
     vmHandler.endElement(uri,name,qName);
-    if (qName.equals("Vm")) {
-      this.children.add(vmHandler.getResult());
-    }
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);
-    if (qName.equals("Task")) {
-      this.tasks.add(taskHandler.getResult());
-    }
   }
  else   if (qName.equals("Description")) {
     description=currentOrNull();

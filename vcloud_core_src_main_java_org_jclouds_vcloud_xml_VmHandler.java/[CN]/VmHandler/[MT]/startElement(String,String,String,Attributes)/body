@@ -1,9 +1,15 @@
 {
   Map<String,String> attributes=cleanseAttributes(attrs);
-  if (qName.equals("Tasks")) {
+  if (qName.endsWith("VirtualHardwareSection")) {
+    inHardware=true;
+  }
+ else   if (qName.endsWith("Tasks")) {
     inTasks=true;
   }
-  if (inTasks) {
+  if (inHardware) {
+    virtualHardwareHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (qName.equals("Vm")) {
