@@ -5,13 +5,8 @@
   }
  catch (  RuntimeException e) {
     if (e.getCause() instanceof ParseException) {
-      try {
-        if (!toParse.endsWith("Z"))         toParse+="Z";
-        return dateService.iso8601SecondsDateParse(toParse);
-      }
- catch (      RuntimeException ex) {
-        logger.error(e,"error parsing date");
-      }
+      if (!toParse.endsWith("Z"))       toParse+="Z";
+      return dateService.iso8601SecondsDateParse(toParse);
     }
  else {
       logger.error(e,"error parsing date");

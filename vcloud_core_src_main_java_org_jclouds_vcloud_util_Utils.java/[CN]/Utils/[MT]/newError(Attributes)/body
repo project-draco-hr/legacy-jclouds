@@ -1,3 +1,13 @@
 {
-  return new ErrorImpl(attrOrNull(attributes,"message"),attrOrNull(attributes,"majorErrorCode"),attrOrNull(attributes,"minorErrorCode"));
+  String minorErrorCode=attrOrNull(attributes,"minorErrorCode");
+  String vendorSpecificErrorCode=attrOrNull(attributes,"vendorSpecificErrorCode");
+  int errorCode;
+  try {
+    errorCode=Integer.parseInt(attrOrNull(attributes,"majorErrorCode"));
+  }
+ catch (  NumberFormatException e) {
+    errorCode=500;
+    vendorSpecificErrorCode=attrOrNull(attributes,"majorErrorCode");
+  }
+  return new ErrorImpl(attrOrNull(attributes,"message"),errorCode,minorErrorCode,vendorSpecificErrorCode,attrOrNull(attributes,"stackTrace"));
 }

@@ -2,7 +2,7 @@
   if (getStatus(vApp).compareTo(Status.RESOLVED) > 0) {
     logger.debug(">> undeploying vApp(%s), current status: %s",vApp.getName(),getStatus(vApp));
     Task task=client.undeployVApp(vApp.getId());
-    if (!taskTester.apply(task.getLocation())) {
+    if (!taskTester.apply(task.getId())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","undeploy",vApp.getName(),task));
     }
     vApp=refreshVApp(vApp.getId());

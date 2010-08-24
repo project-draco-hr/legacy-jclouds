@@ -2,7 +2,7 @@
   if (getStatus(vApp).compareTo(Status.OFF) > 0) {
     logger.debug(">> powering off vApp(%s), current status: %s",vApp.getName(),getStatus(vApp));
     Task task=client.powerOffVApp(vApp.getId());
-    if (!taskTester.apply(task.getLocation())) {
+    if (!taskTester.apply(task.getId())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","powerOff",vApp.getName(),task));
     }
     vApp=refreshVApp(vApp.getId());
