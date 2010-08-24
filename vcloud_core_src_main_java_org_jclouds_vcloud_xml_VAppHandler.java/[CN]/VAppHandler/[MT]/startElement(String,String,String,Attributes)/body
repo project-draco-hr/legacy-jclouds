@@ -1,13 +1,22 @@
 {
-  if (qName.equals("VApp")) {
-    vApp=Utils.newNamedResource(attributes);
-    String statusString=attributes.getValue(attributes.getIndex("status"));
-    status=Status.fromValue(statusString);
+  if (qName.equals("Children")) {
+    inChildren=true;
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
-    vdc=Utils.newNamedResource(attributes);
+ else   if (qName.equals("Tasks")) {
+    inTasks=true;
   }
- else {
+  if (inChildren) {
+    vmHandler.startElement(uri,localName,qName,attributes);
+  }
+ else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attributes);
+  }
+ else   if (qName.equals("VApp")) {
+    template=newNamedResource(attributes);
+    String status=Utils.attrOrNull(attributes,"status");
+    if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
+  }
+ else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel")) && !inChildren) {
+    vdc=newNamedResource(attributes);
   }
 }

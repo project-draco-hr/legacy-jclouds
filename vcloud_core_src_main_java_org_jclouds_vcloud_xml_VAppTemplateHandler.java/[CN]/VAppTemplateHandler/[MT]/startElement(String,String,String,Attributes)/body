@@ -2,6 +2,15 @@
   if (qName.equals("Children")) {
     inChildren=true;
   }
+ else   if (qName.equals("Tasks")) {
+    inTasks=true;
+  }
+  if (inChildren) {
+    vmHandler.startElement(uri,localName,qName,attributes);
+  }
+ else   if (inTasks) {
+    taskHandler.startElement(uri,localName,qName,attributes);
+  }
  else   if (qName.equals("VAppTemplate")) {
     template=newNamedResource(attributes);
     String status=Utils.attrOrNull(attributes,"status");
@@ -9,8 +18,5 @@
   }
  else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel")) && !inChildren) {
     vdc=newNamedResource(attributes);
-  }
- else {
-    taskHandler.startElement(uri,localName,qName,attributes);
   }
 }

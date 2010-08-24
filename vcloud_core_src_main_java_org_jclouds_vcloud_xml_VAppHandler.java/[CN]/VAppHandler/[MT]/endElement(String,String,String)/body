@@ -1,10 +1,27 @@
 {
-  taskHandler.endElement(uri,name,qName);
-  if (qName.equals("Task")) {
-    this.tasks.add(taskHandler.getResult());
+  if (qName.equals("Children")) {
+    inChildren=false;
+  }
+ else   if (qName.equals("Tasks")) {
+    inTasks=false;
+  }
+  if (inChildren) {
+    vmHandler.endElement(uri,name,qName);
+    if (qName.equals("Vm")) {
+      this.children.add(vmHandler.getResult());
+    }
+  }
+ else   if (inTasks) {
+    taskHandler.endElement(uri,name,qName);
+    if (qName.equals("Task")) {
+      this.tasks.add(taskHandler.getResult());
+    }
   }
  else   if (qName.equals("Description")) {
     description=currentOrNull();
+  }
+ else   if (qName.equals("ovfDescriptorUploaded")) {
+    ovfDescriptorUploaded=Boolean.parseBoolean(currentOrNull());
   }
   currentText=new StringBuilder();
 }

@@ -6,14 +6,14 @@
   VCloudExpressVApp vAppResponse=VCloudExpressClient.class.cast(client).instantiateVAppTemplateInVDC(vdc.getId(),template.getId(),name,options);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
   logger.debug(">> deploying vApp(%s)",vAppResponse.getName());
-  Task task=client.deployVApp(vAppResponse.getId());
+  Task task=VCloudExpressClient.class.cast(client).deployVApp(vAppResponse.getId());
   if (options.shouldBlockOnDeploy()) {
     if (!taskTester.apply(task.getId())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","deploy",vAppResponse.getName(),task));
     }
     logger.debug("<< deployed vApp(%s)",vAppResponse.getName());
     logger.debug(">> powering vApp(%s)",vAppResponse.getName());
-    task=client.powerOnVApp(vAppResponse.getId());
+    task=VCloudExpressClient.class.cast(client).powerOnVApp(vAppResponse.getId());
     if (!taskTester.apply(task.getId())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","powerOn",vAppResponse.getName(),task));
     }

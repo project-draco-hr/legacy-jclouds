@@ -1,0 +1,12 @@
+{
+  String expected="<DeployVAppParams xmlns=\"http://www.vmware.com/vcloud/v1.0\" powerOn=\"true\"/>";
+  GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
+  request.setPayload(expected);
+  replay(request);
+  BindDeployVAppParamsToXmlPayload binder=injector.getInstance(BindDeployVAppParamsToXmlPayload.class);
+  Map<String,String> map=Maps.newHashMap();
+  map.put("powerOn","true");
+  binder.bindToRequest(request,map);
+  verify(request);
+}
