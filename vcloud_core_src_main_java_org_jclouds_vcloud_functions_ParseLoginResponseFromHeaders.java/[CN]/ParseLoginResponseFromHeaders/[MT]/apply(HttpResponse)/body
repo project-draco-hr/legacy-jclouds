@@ -4,12 +4,12 @@
   boolean matchFound=matcher.find();
   try {
     if (matchFound) {
-      final Map<String,NamedResource> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
+      final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
       return new VCloudSession(){
         @VCloudToken public String getVCloudToken(){
           return matcher.group(1);
         }
-        @Org public Map<String,NamedResource> getOrgs(){
+        @Org public Map<String,ReferenceType> getOrgs(){
           return org;
         }
       }

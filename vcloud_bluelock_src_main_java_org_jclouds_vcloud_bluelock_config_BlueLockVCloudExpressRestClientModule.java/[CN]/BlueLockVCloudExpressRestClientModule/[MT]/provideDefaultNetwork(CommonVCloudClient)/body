@@ -1,11 +1,11 @@
 {
   org.jclouds.vcloud.domain.VDC vDC=client.findVDCInOrgNamed(null,null);
-  Map<String,NamedResource> networks=vDC.getAvailableNetworks();
+  Map<String,ReferenceType> networks=vDC.getAvailableNetworks();
   checkState(networks.size() > 0,"No networks present in vDC: " + vDC.getName());
-  return Iterables.getOnlyElement(Iterables.filter(networks.values(),new Predicate<NamedResource>(){
-    @Override public boolean apply(    NamedResource input){
+  return Iterables.getOnlyElement(Iterables.filter(networks.values(),new Predicate<ReferenceType>(){
+    @Override public boolean apply(    ReferenceType input){
       return input.getName().equals("Internal In and Out");
     }
   }
-)).getId();
+)).getHref();
 }

@@ -22,12 +22,12 @@ break;
 }
 if (ip == null) {
 if (client instanceof TerremarkVCloudExpressClient) {
-is=TerremarkVCloudExpressClient.class.cast(client).addInternetServiceToVDC(vApp.getVDC().getId(),vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getName(),vApp.getName())));
+is=TerremarkVCloudExpressClient.class.cast(client).addInternetServiceToVDC(vApp.getVDC().getHref(),vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getName(),vApp.getName())));
 ip=is.getPublicIpAddress();
 }
  else {
 logger.debug(">> creating InternetService in vDC %s:%s:%d",vApp.getVDC().getName(),protocol,port);
-ip=TerremarkECloudClient.class.cast(client).activatePublicIpInVDC(vApp.getVDC().getId());
+ip=TerremarkECloudClient.class.cast(client).activatePublicIpInVDC(vApp.getVDC().getHref());
 is=client.addInternetServiceToExistingIp(ip.getId(),vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getName(),vApp.getName())));
 }
 }

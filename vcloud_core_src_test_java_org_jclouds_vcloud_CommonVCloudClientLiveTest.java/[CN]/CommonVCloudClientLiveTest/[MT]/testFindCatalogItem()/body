@@ -1,8 +1,8 @@
 {
   Org org=connection.findOrgNamed(null);
-  for (  NamedResource cat : org.getCatalogs().values()) {
-    Catalog response=connection.getCatalog(cat.getId());
-    for (    NamedResource resource : response.values()) {
+  for (  ReferenceType cat : org.getCatalogs().values()) {
+    Catalog response=connection.getCatalog(cat.getHref());
+    for (    ReferenceType resource : response.values()) {
       if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
         CatalogItem item=connection.findCatalogItemInOrgCatalogNamed(org.getName(),response.getName(),resource.getName());
         verifyCatalogItem(item);

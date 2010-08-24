@@ -1,0 +1,13 @@
+{
+  return transformParallel(filter(checkNotNull(from,"named resources"),new Predicate<ReferenceType>(){
+    @Override public boolean apply(    ReferenceType input){
+      return input.getType().equals(VCloudMediaType.VAPPTEMPLATE_XML);
+    }
+  }
+),new Function<ReferenceType,Future<VAppTemplate>>(){
+    @SuppressWarnings("unchecked") @Override public Future<VAppTemplate> apply(    ReferenceType from){
+      return (Future<VAppTemplate>)aclient.getVAppTemplate(from.getHref());
+    }
+  }
+,executor,null,logger,"vappTemplates in");
+}

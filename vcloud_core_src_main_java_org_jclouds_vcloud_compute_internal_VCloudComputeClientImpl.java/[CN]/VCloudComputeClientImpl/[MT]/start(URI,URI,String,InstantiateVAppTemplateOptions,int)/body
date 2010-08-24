@@ -3,12 +3,12 @@
   logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
   VDC vdc=client.getVDC(VDC);
   VAppTemplate template=VCloudClient.class.cast(client).getVAppTemplate(templateId);
-  VApp vAppResponse=VCloudClient.class.cast(client).instantiateVAppTemplateInVDC(vdc.getId(),template.getId(),name,options);
+  VApp vAppResponse=VCloudClient.class.cast(client).instantiateVAppTemplateInVDC(vdc.getHref(),template.getHref(),name,options);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
   logger.debug(">> deploying vApp(%s)",vAppResponse.getName());
-  Task task=VCloudClient.class.cast(client).deployAndPowerOnVAppOrVm(vAppResponse.getId());
+  Task task=VCloudClient.class.cast(client).deployAndPowerOnVAppOrVm(vAppResponse.getHref());
   if (options.shouldBlockOnDeploy()) {
-    if (!taskTester.apply(task.getId())) {
+    if (!taskTester.apply(task.getHref())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","deploy and power on",vAppResponse.getName(),task));
     }
     logger.debug("<< deployed and powered on vApp(%s)",vAppResponse.getName());

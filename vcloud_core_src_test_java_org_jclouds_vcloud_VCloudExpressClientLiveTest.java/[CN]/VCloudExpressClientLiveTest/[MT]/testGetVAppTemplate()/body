@@ -1,12 +1,12 @@
 {
   Org org=connection.findOrgNamed(null);
-  for (  NamedResource cat : org.getCatalogs().values()) {
-    Catalog response=connection.getCatalog(cat.getId());
-    for (    NamedResource resource : response.values()) {
+  for (  ReferenceType cat : org.getCatalogs().values()) {
+    Catalog response=connection.getCatalog(cat.getHref());
+    for (    ReferenceType resource : response.values()) {
       if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
-        CatalogItem item=connection.getCatalogItem(resource.getId());
+        CatalogItem item=connection.getCatalogItem(resource.getHref());
         if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
-          assertNotNull(connection.getVAppTemplate(item.getEntity().getId()));
+          assertNotNull(connection.getVAppTemplate(item.getEntity().getHref()));
         }
       }
     }

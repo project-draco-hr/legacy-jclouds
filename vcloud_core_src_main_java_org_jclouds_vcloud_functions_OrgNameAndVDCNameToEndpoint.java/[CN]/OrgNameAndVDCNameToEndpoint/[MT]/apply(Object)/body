@@ -5,8 +5,8 @@
   if (org == null && vdc == null)   return defaultUri;
  else   if (org == null)   org=defaultOrg;
   try {
-    Map<String,NamedResource> vdcs=checkNotNull(orgNameToVDCEndpoint.get().get(org)).getVDCs();
-    return vdc == null ? Iterables.getLast(vdcs.values()).getId() : vdcs.get(vdc).getId();
+    Map<String,ReferenceType> vdcs=checkNotNull(orgNameToVDCEndpoint.get().get(org)).getVDCs();
+    return vdc == null ? Iterables.getLast(vdcs.values()).getHref() : vdcs.get(vdc).getHref();
   }
  catch (  NullPointerException e) {
     throw new NoSuchElementException(org + "/" + vdc+ " not found in "+ orgNameToVDCEndpoint.get());

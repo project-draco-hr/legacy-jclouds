@@ -1,14 +1,14 @@
 {
-  Iterable<CatalogItem> catalogItems=transformParallel(filter(from.values(),new Predicate<NamedResource>(){
-    @Override public boolean apply(    NamedResource input){
+  Iterable<CatalogItem> catalogItems=transformParallel(filter(from.values(),new Predicate<ReferenceType>(){
+    @Override public boolean apply(    ReferenceType input){
       return input.getType().equals(VCloudExpressMediaType.CATALOGITEM_XML);
     }
   }
-),new Function<NamedResource,Future<CatalogItem>>(){
-    @SuppressWarnings("unchecked") @Override public Future<CatalogItem> apply(    NamedResource from){
-      return (Future<CatalogItem>)aclient.getCatalogItem(from.getId());
+),new Function<ReferenceType,Future<CatalogItem>>(){
+    @SuppressWarnings("unchecked") @Override public Future<CatalogItem> apply(    ReferenceType from){
+      return (Future<CatalogItem>)aclient.getCatalogItem(from.getHref());
     }
   }
-,executor,null,logger,"catalogItems in " + from.getId());
+,executor,null,logger,"catalogItems in " + from.getHref());
   return catalogItems;
 }

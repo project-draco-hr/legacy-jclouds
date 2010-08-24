@@ -1,10 +1,10 @@
 {
   Org org=connection.findOrgNamed(null);
-  for (  NamedResource vdc : org.getVDCs().values()) {
-    VDC response=connection.getVDC(vdc.getId());
-    for (    NamedResource resource : response.getAvailableNetworks().values()) {
+  for (  ReferenceType vdc : org.getVDCs().values()) {
+    VDC response=connection.getVDC(vdc.getHref());
+    for (    ReferenceType resource : response.getAvailableNetworks().values()) {
       if (resource.getType().equals(VCloudMediaType.NETWORK_XML)) {
-        OrgNetwork item=connection.getNetwork(resource.getId());
+        OrgNetwork item=connection.getNetwork(resource.getHref());
         assertNotNull(item);
       }
     }

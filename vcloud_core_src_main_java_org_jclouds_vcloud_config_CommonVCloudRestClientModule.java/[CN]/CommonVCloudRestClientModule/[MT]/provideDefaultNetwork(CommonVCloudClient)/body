@@ -2,9 +2,9 @@
   if (authException.get() != null)   throw authException.get();
   try {
     org.jclouds.vcloud.domain.VDC vDC=client.findVDCInOrgNamed(null,null);
-    Map<String,NamedResource> networks=vDC.getAvailableNetworks();
+    Map<String,ReferenceType> networks=vDC.getAvailableNetworks();
     checkState(networks.size() > 0,"No networks present in vDC: " + vDC.getName());
-    return get(networks.values(),0).getId();
+    return get(networks.values(),0).getHref();
   }
  catch (  AuthorizationException e) {
     authException.set(e);
