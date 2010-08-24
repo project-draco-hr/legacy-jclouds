@@ -2,7 +2,7 @@
   if (qName.equals("Children")) {
     inChildren=true;
   }
- else   if (qName.equals("Tasks")) {
+ else   if (!inChildren && qName.equals("Tasks")) {
     inTasks=true;
   }
   if (inChildren) {
@@ -16,7 +16,7 @@
     String status=Utils.attrOrNull(attributes,"status");
     if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel")) && !inChildren) {
+ else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
     vdc=newNamedResource(attributes);
   }
 }

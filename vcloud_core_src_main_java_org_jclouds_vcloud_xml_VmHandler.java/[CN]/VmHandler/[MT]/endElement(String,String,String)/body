@@ -1,7 +1,12 @@
 {
-  taskHandler.endElement(uri,name,qName);
-  if (qName.equals("Task")) {
-    this.tasks.add(taskHandler.getResult());
+  if (qName.equals("Tasks")) {
+    inTasks=false;
+  }
+  if (inTasks) {
+    taskHandler.endElement(uri,name,qName);
+    if (qName.equals("Task")) {
+      this.tasks.add(taskHandler.getResult());
+    }
   }
  else   if (qName.equals("Description")) {
     description=currentOrNull();
