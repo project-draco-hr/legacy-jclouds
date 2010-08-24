@@ -1,10 +1,10 @@
 {
-  super.startElement(uri,localName,qName,attributes);
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  super.startElement(uri,localName,qName,attrs);
   if (qName.equals("Link")) {
-    int typeIndex=attributes.getIndex("type");
-    if (typeIndex != -1) {
-      if (attributes.getValue(typeIndex).equals(KEYSLIST_XML)) {
-        keysList=newNamedResource(attributes);
+    if (attributes.containsKey("type")) {
+      if (attributes.get("type").equals(KEYSLIST_XML)) {
+        keysList=newReferenceType(attributes);
       }
     }
   }

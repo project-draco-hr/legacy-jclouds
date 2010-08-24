@@ -1,14 +1,15 @@
 {
+  Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equals("Catalog")) {
-    catalog=Utils.newNamedResource(attributes,VCloudMediaType.CATALOG_XML);
+    catalog=newReferenceType(attributes,VCloudMediaType.CATALOG_XML);
   }
  else   if (qName.equals("CatalogItem")) {
-    Utils.putNamedResource(contents,attributes);
+    putReferenceType(contents,attributes);
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
-    org=newNamedResource(attributes);
+ else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+    org=newReferenceType(attributes);
   }
  else {
-    taskHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
 }

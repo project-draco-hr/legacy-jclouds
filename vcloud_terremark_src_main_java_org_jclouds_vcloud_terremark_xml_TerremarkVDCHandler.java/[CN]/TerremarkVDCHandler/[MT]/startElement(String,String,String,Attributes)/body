@@ -1,17 +1,18 @@
 {
-  super.startElement(uri,localName,qName,attributes);
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  super.startElement(uri,localName,qName,attrs);
   if (qName.equals("Link")) {
-    String name=attributes.getValue(attributes.getIndex("name"));
+    String name=attributes.get("name");
     if (name.equals("Internet Services")) {
-      internetServices=Utils.newNamedResource(attributes);
+      internetServices=Utils.newReferenceType(attributes);
     }
  else     if (name.equals("Public IPs")) {
-      publicIps=Utils.newNamedResource(attributes);
+      publicIps=Utils.newReferenceType(attributes);
     }
  else {
-      String type=attributes.getValue(attributes.getIndex("type"));
+      String type=attributes.get("type");
       if (type.equals(VCloudExpressMediaType.CATALOG_XML)) {
-        catalog=Utils.newNamedResource(attributes);
+        catalog=Utils.newReferenceType(attributes);
       }
     }
   }

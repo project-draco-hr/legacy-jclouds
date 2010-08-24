@@ -1,23 +1,24 @@
 {
+  Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equals("OrgNetwork")) {
-    network=newNamedResource(attributes);
+    network=newReferenceType(attributes);
   }
  else   if (qName.equals("FirewallRule")) {
     this.inFirewallRule=true;
   }
  else   if (qName.equals("ParentNetwork")) {
-    parentNetwork=newNamedResource(attributes);
+    parentNetwork=newReferenceType(attributes);
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
-    org=newNamedResource(attributes);
+ else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+    org=newReferenceType(attributes);
   }
  else {
-    taskHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
-  int typeIndex=attributes.getIndex("type");
-  if (typeIndex != -1) {
-    if (attributes.getValue(typeIndex).indexOf("networkPool+xml") != -1) {
-      networkPool=newNamedResource(attributes);
+  String type=attributes.get("type");
+  if (type != null) {
+    if (type.indexOf("networkPool+xml") != -1) {
+      networkPool=newReferenceType(attributes);
     }
   }
 }

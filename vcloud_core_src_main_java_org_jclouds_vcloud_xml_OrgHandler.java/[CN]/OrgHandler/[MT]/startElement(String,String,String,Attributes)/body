@@ -1,25 +1,26 @@
 {
+  Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equals("Org")) {
-    org=newNamedResource(attributes);
+    org=newReferenceType(attributes);
   }
  else   if (qName.equals("Link")) {
-    int typeIndex=attributes.getIndex("type");
-    if (typeIndex != -1) {
-      if (attributes.getValue(typeIndex).indexOf("vdc+xml") != -1) {
-        putNamedResource(vdcs,attributes);
+    String type=attributes.get("type");
+    if (type != null) {
+      if (type.indexOf("vdc+xml") != -1) {
+        putReferenceType(vdcs,attributes);
       }
- else       if (attributes.getValue(typeIndex).indexOf("catalog+xml") != -1) {
-        putNamedResource(catalogs,attributes);
+ else       if (type.indexOf("catalog+xml") != -1) {
+        putReferenceType(catalogs,attributes);
       }
- else       if (attributes.getValue(typeIndex).indexOf("tasksList+xml") != -1) {
-        tasksList=newNamedResource(attributes);
+ else       if (type.indexOf("tasksList+xml") != -1) {
+        tasksList=newReferenceType(attributes);
       }
- else       if (attributes.getValue(typeIndex).indexOf("network+xml") != -1) {
-        putNamedResource(networks,attributes);
+ else       if (type.indexOf("network+xml") != -1) {
+        putReferenceType(networks,attributes);
       }
     }
   }
  else {
-    taskHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
 }

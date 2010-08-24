@@ -1,4 +1,5 @@
 {
+  Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equals("Children")) {
     inChildren=true;
   }
@@ -6,17 +7,16 @@
     inTasks=true;
   }
   if (inChildren) {
-    vmHandler.startElement(uri,localName,qName,attributes);
+    vmHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (inTasks) {
-    taskHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (qName.equals("VAppTemplate")) {
-    template=newNamedResource(attributes);
-    String status=Utils.attrOrNull(attributes,"status");
-    if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
+    template=newReferenceType(attributes);
+    if (attributes.containsKey("status"))     this.status=Status.fromValue(Integer.parseInt(attributes.get("status")));
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
-    vdc=newNamedResource(attributes);
+ else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+    vdc=newReferenceType(attributes);
   }
 }

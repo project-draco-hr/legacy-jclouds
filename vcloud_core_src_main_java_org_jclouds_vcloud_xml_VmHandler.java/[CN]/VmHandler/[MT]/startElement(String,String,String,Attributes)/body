@@ -1,16 +1,17 @@
 {
+  Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equals("Tasks")) {
     inTasks=true;
   }
   if (inTasks) {
-    taskHandler.startElement(uri,localName,qName,attributes);
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (qName.equals("Vm")) {
-    vm=newNamedResource(attributes);
-    String status=Utils.attrOrNull(attributes,"status");
+    vm=newReferenceType(attributes);
+    String status=attributes.get("status");
     if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
   }
- else   if (qName.equals("Link") && "up".equals(Utils.attrOrNull(attributes,"rel"))) {
-    vdc=newNamedResource(attributes);
+ else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+    vdc=newReferenceType(attributes);
   }
 }
