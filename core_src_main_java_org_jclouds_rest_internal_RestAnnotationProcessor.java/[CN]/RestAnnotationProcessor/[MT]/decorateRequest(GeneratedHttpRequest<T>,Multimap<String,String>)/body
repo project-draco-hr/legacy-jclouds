@@ -1,7 +1,11 @@
 {
   org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(request.getJavaMethod(),request.getArgs());
-  Map<String,String> mapParams=buildPostParams(request.getJavaMethod(),request.getArgs());
   if (mapBinder != null) {
+    Map<String,String> mapParams=buildPostParams(request.getJavaMethod(),request.getArgs());
+    if (request.getJavaMethod().isAnnotationPresent(MapPayloadParams.class)) {
+      MapPayloadParams params=request.getJavaMethod().getAnnotation(MapPayloadParams.class);
+      addMapPayload(mapParams,params,headers.entries());
+    }
     mapBinder.bindToRequest(request,mapParams);
   }
  else {
