@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/virtualsystem.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  VirtualSystem result=factory.create(injector.getInstance(VirtualSystemHandler.class)).parse(is);
+  checkVirtualSystem(result);
+}
