@@ -1,0 +1,33 @@
+{
+  if (qName.endsWith("VirtualHardwareSection")) {
+    inHardware=false;
+    hardware=hardwareHandler.getResult();
+  }
+ else   if (qName.endsWith("OperatingSystemSection")) {
+    inOs=false;
+    operatingSystem=osHandler.getResult();
+  }
+ else   if (qName.endsWith("NetworkConnectionSection")) {
+    inNetwork=false;
+  }
+ else   if (qName.endsWith("GuestCustomizationSection")) {
+    inNetwork=false;
+  }
+  if (inHardware) {
+    hardwareHandler.endElement(uri,localName,qName);
+  }
+ else   if (inOs) {
+    osHandler.endElement(uri,localName,qName);
+  }
+ else   if (inNetwork) {
+  }
+ else   if (inGuest) {
+  }
+ else   if (qName.endsWith("Info")) {
+    info=currentText.toString().trim();
+  }
+ else   if (qName.endsWith("Name")) {
+    name=currentText.toString().trim();
+  }
+  currentText=new StringBuilder();
+}
