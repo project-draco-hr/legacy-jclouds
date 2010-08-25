@@ -3,12 +3,19 @@
     inHardware=false;
     this.hardware=virtualHardwareHandler.getResult();
   }
+ else   if (qName.endsWith("OperatingSystemSection")) {
+    inOs=false;
+    os=operatingSystemHandler.getResult();
+  }
  else   if (qName.endsWith("Tasks")) {
     inTasks=false;
     this.tasks.add(taskHandler.getResult());
   }
   if (inHardware) {
     virtualHardwareHandler.endElement(uri,name,qName);
+  }
+ else   if (inOs) {
+    operatingSystemHandler.endElement(uri,name,qName);
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);

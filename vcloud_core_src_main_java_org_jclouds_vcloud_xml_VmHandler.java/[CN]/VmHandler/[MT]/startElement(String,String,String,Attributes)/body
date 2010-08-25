@@ -3,11 +3,17 @@
   if (qName.endsWith("VirtualHardwareSection")) {
     inHardware=true;
   }
+ else   if (qName.endsWith("OperatingSystemSection")) {
+    inOs=true;
+  }
  else   if (qName.endsWith("Tasks")) {
     inTasks=true;
   }
   if (inHardware) {
     virtualHardwareHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inOs) {
+    operatingSystemHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attrs);

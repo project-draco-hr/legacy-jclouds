@@ -1,3 +1,12 @@
 {
-  return ImmutableSet.of();
+  Set<String> ips=Sets.newLinkedHashSet();
+  VApp vApp=refreshVApp(id);
+  Vm vm=Iterables.get(vApp.getChildren(),0);
+  for (  ResourceAllocation net : filter(vm.getHardware().getResourceAllocations(),resourceType(ResourceType.ETHERNET_ADAPTER))) {
+    if (net instanceof VCloudNetworkAdapter) {
+      VCloudNetworkAdapter vNet=VCloudNetworkAdapter.class.cast(net);
+      ips.add(vNet.getIpAddress());
+    }
+  }
+  return ips;
 }
