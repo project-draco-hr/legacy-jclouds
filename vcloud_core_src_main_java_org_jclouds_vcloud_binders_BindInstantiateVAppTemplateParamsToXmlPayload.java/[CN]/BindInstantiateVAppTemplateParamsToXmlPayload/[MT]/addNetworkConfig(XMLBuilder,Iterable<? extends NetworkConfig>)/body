@@ -1,0 +1,11 @@
+{
+  XMLBuilder networkConfigBuilder=instantiationParamsBuilder.e("NetworkConfigSection");
+  networkConfigBuilder.e("ovf:Info").t("Configuration parameters for logical networks");
+  for (  NetworkConfig n : networkConfig) {
+    XMLBuilder configurationBuilder=networkConfigBuilder.e("NetworkConfig").a("networkName",n.getNetworkName()).e("Configuration");
+    configurationBuilder.e("ParentNetwork").a("href",n.getParentNetwork().toASCIIString());
+    if (n.getFenceMode() != null) {
+      configurationBuilder.e("FenceMode").t(n.getFenceMode().toString());
+    }
+  }
+}

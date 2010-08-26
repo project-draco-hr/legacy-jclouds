@@ -7,11 +7,18 @@
     inTasks=false;
     this.tasks.add(taskHandler.getResult());
   }
+ else   if (qName.endsWith("NetworkSection")) {
+    inNetworkSection=false;
+    this.networkSection=networkSectionHandler.getResult();
+  }
   if (inChildren) {
     vmHandler.endElement(uri,name,qName);
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);
+  }
+ else   if (inNetworkSection) {
+    networkSectionHandler.endElement(uri,name,qName);
   }
  else   if (qName.equals("Description")) {
     description=currentOrNull();
