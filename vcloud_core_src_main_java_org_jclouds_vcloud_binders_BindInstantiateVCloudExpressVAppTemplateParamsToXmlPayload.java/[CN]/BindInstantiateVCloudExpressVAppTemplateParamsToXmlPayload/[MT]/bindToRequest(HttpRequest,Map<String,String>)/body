@@ -6,7 +6,6 @@
   String template=checkNotNull(postParams.remove("template"),"template");
   SortedMap<ResourceType,String> virtualHardwareQuantity=Maps.newTreeMap();
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
-  Map<String,String> properties=Maps.newTreeMap();
   String network=defaultNetwork.toASCIIString();
   String fenceMode=defaultFenceMode;
   String networkName=name;
@@ -16,10 +15,9 @@
     if (apiVersion.indexOf("0.8") != -1 && fenceMode.equals("bridged"))     fenceMode="allowInOut";
     networkName=ifNullDefaultTo(options.getNetworkName(),networkName);
     addQuantity(options,virtualHardwareQuantity);
-    properties.putAll(options.getProperties());
   }
   try {
-    stringBinder.bindToRequest(request,generateXml(name,template,properties,virtualHardwareQuantity,networkName,fenceMode,URI.create(network)));
+    stringBinder.bindToRequest(request,generateXml(name,template,virtualHardwareQuantity,networkName,fenceMode,URI.create(network)));
   }
  catch (  ParserConfigurationException e) {
     throw new RuntimeException(e);

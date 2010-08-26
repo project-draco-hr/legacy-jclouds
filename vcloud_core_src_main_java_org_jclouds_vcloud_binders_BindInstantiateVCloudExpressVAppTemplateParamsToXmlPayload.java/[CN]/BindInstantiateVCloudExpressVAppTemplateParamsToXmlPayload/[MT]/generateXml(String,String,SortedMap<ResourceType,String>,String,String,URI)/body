@@ -1,0 +1,10 @@
+{
+  XMLBuilder rootBuilder=buildRoot(name);
+  rootBuilder.e("VAppTemplate").a("href",template);
+  XMLBuilder instantiationParamsBuilder=rootBuilder.e("InstantiationParams");
+  addVirtualQuantityIfPresent(instantiationParamsBuilder,virtualHardwareQuantity);
+  addNetworkConfig(instantiationParamsBuilder,networkName,fenceMode,network);
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  return rootBuilder.asString(outputProperties);
+}

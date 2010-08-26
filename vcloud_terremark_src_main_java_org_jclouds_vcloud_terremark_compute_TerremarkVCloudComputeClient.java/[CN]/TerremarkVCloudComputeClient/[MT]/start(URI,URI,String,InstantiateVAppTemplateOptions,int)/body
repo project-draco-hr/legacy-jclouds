@@ -2,12 +2,12 @@
   if (options.getDiskSizeKilobytes() != null) {
     logger.warn("trmk does not support resizing the primary disk; unsetting disk size");
   }
-  if (portsToOpen.length > 0 && !options.shouldBlockOnDeploy())   throw new IllegalArgumentException("We cannot open ports on terremark unless we can deploy the vapp");
+  if (portsToOpen.length > 0 && !options.shouldBlock())   throw new IllegalArgumentException("We cannot open ports on terremark unless we can deploy the vapp");
   String password=null;
   VCloudExpressVAppTemplate template=client.getVAppTemplate(templateId);
-  if (template.getDescription().indexOf("Windows") != -1) {
+  if (template.getDescription().indexOf("Windows") != -1 && options instanceof TerremarkInstantiateVAppTemplateOptions) {
     password=passwordGenerator.get();
-    options.getProperties().put("password",password);
+    TerremarkInstantiateVAppTemplateOptions.class.cast(options).getProperties().put("password",password);
   }
   Map<String,String> response=super.start(VDC,templateId,name,options,portsToOpen);
   if (password != null) {

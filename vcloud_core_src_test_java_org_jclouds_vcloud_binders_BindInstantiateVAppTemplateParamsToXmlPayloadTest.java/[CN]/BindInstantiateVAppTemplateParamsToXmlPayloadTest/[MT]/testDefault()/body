@@ -1,11 +1,11 @@
 {
-  String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/newvapp.xml"));
+  String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/instantiationparams.xml"));
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
   expect(request.getArgs()).andReturn(new Object[]{}).atLeastOnce();
   request.setPayload(expected);
   replay(request);
-  BindInstantiateVCloudExpressVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindInstantiateVCloudExpressVAppTemplateParamsToXmlPayload.class);
+  BindInstantiateVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindInstantiateVAppTemplateParamsToXmlPayload.class);
   Map<String,String> map=Maps.newHashMap();
   map.put("name","my-vapp");
   map.put("template","https://vcenterprise.bluelock.com/api/v1.0/vAppTemplate/3");

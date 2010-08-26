@@ -1,0 +1,33 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest gRequest=(GeneratedHttpRequest)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  String name=checkNotNull(postParams.remove("name"),"name");
+  String template=checkNotNull(postParams.remove("template"),"template");
+  String network=defaultNetwork.toASCIIString();
+  FenceMode fenceMode=defaultFenceMode;
+  logger.warn("hack alert; we need to actually get the network name from the vAppTemplate's ovf:Network ovf:name");
+  String networkName="vAppNet-vApp Internal";
+  boolean deploy=true;
+  boolean powerOn=true;
+  InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
+  if (options != null) {
+    network=ifNullDefaultTo(options.getNetwork(),network);
+    fenceMode=ifNullDefaultTo(options.getFenceMode(),defaultFenceMode);
+    networkName=ifNullDefaultTo(options.getNetworkName(),networkName);
+    deploy=ifNullDefaultTo(options.shouldDeploy(),deploy);
+    powerOn=ifNullDefaultTo(options.shouldPowerOn(),powerOn);
+  }
+  try {
+    stringBinder.bindToRequest(request,generateXml(name,deploy,powerOn,template,networkName,fenceMode,URI.create(network)));
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  FactoryConfigurationError e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException e) {
+    throw new RuntimeException(e);
+  }
+}
