@@ -7,6 +7,10 @@
     inOs=false;
     os=operatingSystemHandler.getResult();
   }
+ else   if (qName.endsWith("GuestCustomizationSection")) {
+    inGuestCustomization=false;
+    guestCustomization=guestCustomizationHandler.getResult();
+  }
  else   if (qName.endsWith("Tasks")) {
     inTasks=false;
     this.tasks.add(taskHandler.getResult());
@@ -16,6 +20,9 @@
   }
  else   if (inOs) {
     operatingSystemHandler.endElement(uri,name,qName);
+  }
+ else   if (inGuestCustomization) {
+    guestCustomizationHandler.endElement(uri,name,qName);
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);

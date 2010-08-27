@@ -1,0 +1,8 @@
+{
+  vAppResponse=VCloudClient.class.cast(client).getVApp(vAppResponse.getHref());
+  Map<String,String> config=Maps.newLinkedHashMap();
+  config.put("id",vAppResponse.getHref().toASCIIString());
+  config.put("username","root");
+  config.put("password",Iterables.get(vAppResponse.getChildren(),0).getGuestCustomization().getAdminPassword());
+  return config;
+}
