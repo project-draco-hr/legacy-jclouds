@@ -7,6 +7,10 @@
     inOs=false;
     os=operatingSystemHandler.getResult();
   }
+ else   if (qName.endsWith("NetworkConnectionSection")) {
+    inNetworkConnectionSection=false;
+    networkConnectionSection=networkConnectionSectionHandler.getResult();
+  }
  else   if (qName.endsWith("GuestCustomizationSection")) {
     inGuestCustomization=false;
     guestCustomization=guestCustomizationHandler.getResult();
@@ -23,6 +27,9 @@
   }
  else   if (inGuestCustomization) {
     guestCustomizationHandler.endElement(uri,name,qName);
+  }
+ else   if (inNetworkConnectionSection) {
+    networkConnectionSectionHandler.endElement(uri,name,qName);
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);

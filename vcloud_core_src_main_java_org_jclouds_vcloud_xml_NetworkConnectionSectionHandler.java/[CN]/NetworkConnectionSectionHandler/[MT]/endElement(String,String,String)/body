@@ -1,0 +1,16 @@
+{
+  if (qName.endsWith("NetworkConnection")) {
+    inConnections=false;
+    connections.add(networkConnectionHandler.getResult());
+  }
+  if (inConnections) {
+    networkConnectionHandler.endElement(uri,localName,qName);
+  }
+ else   if (qName.endsWith("Info")) {
+    this.info=currentOrNull();
+  }
+ else   if (qName.endsWith("PrimaryNetworkConnectionIndex")) {
+    this.primaryNetworkConnectionIndex=new Integer(currentOrNull());
+  }
+  currentText=new StringBuilder();
+}
