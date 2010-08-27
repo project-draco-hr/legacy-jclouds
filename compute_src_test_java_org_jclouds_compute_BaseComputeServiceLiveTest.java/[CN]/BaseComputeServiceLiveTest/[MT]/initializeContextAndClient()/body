@@ -1,5 +1,8 @@
 {
   if (context != null)   context.close();
-  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.of(new Log4JLoggingModule(),getSshModule()));
+  Properties props=new Properties();
+  props.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS,"true");
+  props.setProperty(Constants.PROPERTY_RELAX_HOSTNAME,"true");
+  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.of(new Log4JLoggingModule(),getSshModule()),props);
   client=context.getComputeService();
 }
