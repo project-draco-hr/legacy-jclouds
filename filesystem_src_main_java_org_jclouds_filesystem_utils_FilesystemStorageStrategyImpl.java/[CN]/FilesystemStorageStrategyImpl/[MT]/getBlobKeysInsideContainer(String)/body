@@ -1,0 +1,15 @@
+{
+  if (!containerExists(container)) {
+    return new HashSet<String>();
+  }
+  File containerFile=openFolder(container);
+  final int containerPathLenght=containerFile.getAbsolutePath().length() + 1;
+  Set<String> blobNames=new HashSet<String>(){
+    @Override public boolean add(    String e){
+      return super.add(e.substring(containerPathLenght));
+    }
+  }
+;
+  populateBlobKeysInContainer(containerFile,blobNames);
+  return blobNames;
+}

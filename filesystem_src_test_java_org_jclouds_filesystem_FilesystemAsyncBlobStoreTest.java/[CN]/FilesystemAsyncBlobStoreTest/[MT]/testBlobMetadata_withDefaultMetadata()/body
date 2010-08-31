@@ -1,0 +1,17 @@
+{
+  String BLOB_KEY=TestUtils.createRandomBlobKey(null,null);
+  TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{BLOB_KEY});
+  BlobMetadata metadata=blobStore.blobMetadata(CONTAINER_NAME,BLOB_KEY);
+  assertNotNull(metadata,"Metadata null");
+  assertEquals(metadata.getName(),BLOB_KEY,"Wrong blob name");
+  assertEquals(metadata.getType(),StorageType.BLOB,"Wrong blob type");
+  assertEquals(metadata.getContentType(),"","Wrong blob content-type");
+  assertEquals(metadata.getContentMD5(),null,"Wrong blob MD5");
+  assertEquals(metadata.getLocation(),null,"Wrong blob location");
+  assertEquals(metadata.getProviderId(),null,"Wrong blob provider id");
+  assertEquals(metadata.getUri(),null,"Wrong blob URI");
+  assertNotNull(metadata.getUserMetadata(),"No blob UserMetadata");
+  assertEquals(metadata.getUserMetadata().size(),0,"Wrong blob UserMetadata");
+  File file=new File(TARGET_CONTAINER_NAME + File.separator + BLOB_KEY);
+  assertEquals(metadata.getSize(),new Long(file.length()),"Wrong blob size");
+}

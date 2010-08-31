@@ -1,0 +1,15 @@
+{
+  try {
+    File containerFile=openFolder(container);
+    File[] children=containerFile.listFiles();
+    if (null != children) {
+      for (      File child : children) {
+        FileUtils.forceDelete(child);
+      }
+    }
+  }
+ catch (  IOException e) {
+    logger.error(e,"An error occurred while clearing container %s",container);
+    Throwables.propagate(e);
+  }
+}

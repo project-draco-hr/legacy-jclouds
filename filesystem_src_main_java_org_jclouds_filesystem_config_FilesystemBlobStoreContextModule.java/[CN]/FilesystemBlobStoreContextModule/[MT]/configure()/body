@@ -1,0 +1,12 @@
+{
+  bind(new TypeLiteral<BlobStoreContext>(){
+  }
+).to(new TypeLiteral<BlobStoreContextImpl<FilesystemBlobStore,AsyncBlobStore>>(){
+  }
+).in(Scopes.SINGLETON);
+  install(new BlobStoreObjectModule());
+  install(new BlobStoreMapModule());
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+  bind(FilesystemStorageStrategy.class).to(FilesystemStorageStrategyImpl.class);
+  bind(BlobUtils.class).to(FileSystemBlobUtilsImpl.class);
+}

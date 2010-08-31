@@ -1,0 +1,26 @@
+{
+  PageSet<StorageMetadata> containersRetrieved;
+  Set<String> containersCreated=new HashSet<String>();
+  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  assertTrue(containersRetrieved.isEmpty(),"List operation returns a not empty set of container");
+  String[] containerNames=new String[]{"34343","aaaa","bbbbb"};
+  containersCreated=new HashSet<String>();
+  for (  String containerName : containerNames) {
+    blobStore.createContainerInLocation(null,containerName);
+    containersCreated.add(containerName);
+  }
+  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  assertEquals(containersCreated.size(),containersRetrieved.size(),"Different numbers of container");
+  for (  StorageMetadata data : containersRetrieved) {
+    String containerName=data.getName();
+    if (!containersCreated.remove(containerName)) {
+      fail("Container list contains unexpected value [" + containerName + "]");
+    }
+  }
+  assertTrue(containersCreated.isEmpty(),"List operation doesn't return all values.");
+  for (  String containerName : containerNames) {
+    blobStore.deleteContainer(containerName);
+  }
+  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  assertTrue(containersRetrieved.isEmpty(),"List operation returns a not empty set of container");
+}

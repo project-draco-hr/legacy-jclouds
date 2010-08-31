@@ -1,0 +1,15 @@
+{
+  String blobKey;
+  Blob newBlob;
+  blobKey=TestUtils.createRandomBlobKey("blobtest-",".txt");
+  newBlob=storageStrategy.newBlob(blobKey);
+  assertNotNull(newBlob,"Created blob was null");
+  assertNotNull(newBlob.getMetadata(),"Created blob metadata were null");
+  assertEquals(newBlob.getMetadata().getName(),blobKey,"Created blob name is different");
+  blobKey=TestUtils.createRandomBlobKey("blobtest-","");
+  newBlob=storageStrategy.newBlob(blobKey);
+  assertEquals(newBlob.getMetadata().getName(),blobKey,"Created blob name is different");
+  blobKey=TestUtils.createRandomBlobKey("asd/asd/asdasd/afadsf-","");
+  newBlob=storageStrategy.newBlob(blobKey);
+  assertEquals(newBlob.getMetadata().getName(),blobKey,"Created blob name is different");
+}

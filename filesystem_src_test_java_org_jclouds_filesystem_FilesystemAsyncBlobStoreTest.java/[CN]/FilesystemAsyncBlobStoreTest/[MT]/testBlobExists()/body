@@ -1,0 +1,19 @@
+{
+  boolean result;
+  String blobKey;
+  blobKey=TestUtils.createRandomBlobKey();
+  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
+  assertFalse(result,"Blob exists");
+  blobStore.createContainerInLocation(null,CONTAINER_NAME);
+  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
+  assertFalse(result,"Blob exists");
+  TestUtils.createBlobAsFile(CONTAINER_NAME,blobKey,TestUtils.getImageForBlobPayload());
+  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
+  assertTrue(result,"Blob doesn't exist");
+  blobKey=TestUtils.createRandomBlobKey("ss/asdas/","");
+  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
+  assertFalse(result,"Blob exists");
+  TestUtils.createBlobAsFile(CONTAINER_NAME,blobKey,TestUtils.getImageForBlobPayload());
+  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
+  assertTrue(result,"Blob doesn't exist");
+}

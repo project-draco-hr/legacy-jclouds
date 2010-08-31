@@ -1,0 +1,15 @@
+{
+  storageStrategy.createContainer(CONTAINER_NAME);
+  Set<String> blobs=TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{TestUtils.createRandomBlobKey("clean_container-",".jpg"),TestUtils.createRandomBlobKey("bf/sd/as/clean_container-",".jpg")});
+  for (  String blob : blobs) {
+    TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + blob,true);
+  }
+  storageStrategy.clearContainer(CONTAINER_NAME);
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME,true);
+  for (  String blob : blobs) {
+    TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + blob,false);
+  }
+  storageStrategy.deleteContainer(CONTAINER_NAME);
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME,false);
+  assertFalse(storageStrategy.containerExists(CONTAINER_NAME),"Container still exists");
+}

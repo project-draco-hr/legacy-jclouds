@@ -1,0 +1,19 @@
+{
+  Iterable<String> resultList;
+  resultList=storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+  assertNotNull(resultList,"Result is null");
+  assertFalse(resultList.iterator().hasNext(),"Blobs detected");
+  storageStrategy.createContainer(CONTAINER_NAME);
+  Set<String> createBlobKeys=TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{TestUtils.createRandomBlobKey("GetBlobKeys-",".jpg"),TestUtils.createRandomBlobKey("GetBlobKeys-",".jpg"),TestUtils.createRandomBlobKey("563" + File.separator + "g3sx2"+ File.separator+ "removeBlob-",".jpg"),TestUtils.createRandomBlobKey("563" + File.separator + "g3sx2"+ File.separator+ "removeBlob-",".jpg")});
+  storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+  List<String> retrievedBlobKeys=new ArrayList<String>();
+  resultList=storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+  Iterator<String> containersIterator=resultList.iterator();
+  while (containersIterator.hasNext()) {
+    retrievedBlobKeys.add(containersIterator.next());
+  }
+  assertEquals(retrievedBlobKeys.size(),createBlobKeys.size(),"Different blobs number");
+  for (  String createdBlobKey : createBlobKeys) {
+    assertTrue(retrievedBlobKeys.contains(createdBlobKey),"Blob " + createdBlobKey + " not found");
+  }
+}

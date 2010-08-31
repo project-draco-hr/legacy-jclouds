@@ -1,0 +1,13 @@
+{
+  String blobKey=object.getMetadata().getName();
+  logger.debug("Put object with key [%s] to container [%s]",blobKey,containerName);
+  String eTag=getEtag(object);
+  try {
+    storageStrategy.writePayloadOnFile(containerName,blobKey,object.getPayload());
+  }
+ catch (  IOException e) {
+    logger.error(e,"An error occurred storing the new object with name [%s] to container [%s].",blobKey,containerName);
+    Throwables.propagate(e);
+  }
+  return immediateFuture(eTag);
+}

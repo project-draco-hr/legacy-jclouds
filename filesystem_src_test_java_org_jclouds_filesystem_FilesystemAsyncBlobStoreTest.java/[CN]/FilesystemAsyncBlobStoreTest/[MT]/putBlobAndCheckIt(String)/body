@@ -1,0 +1,9 @@
+{
+  Blob blob;
+  TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + blobKey,false);
+  blob=createBlob(blobKey,TestUtils.getImageForBlobPayload());
+  String eTag=blobStore.putBlob(CONTAINER_NAME,blob);
+  assertNotNull(eTag,"putBlob result null");
+  assertNotSame(eTag,"","putBlob result empty");
+  TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + blobKey,true);
+}
