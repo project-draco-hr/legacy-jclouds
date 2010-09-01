@@ -1,7 +1,7 @@
 {
-  PageSet<StorageMetadata> containersRetrieved;
+  PageSet<? extends StorageMetadata> containersRetrieved;
   Set<String> containersCreated=new HashSet<String>();
-  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  containersRetrieved=blobStore.list();
   assertTrue(containersRetrieved.isEmpty(),"List operation returns a not empty set of container");
   String[] containerNames=new String[]{"34343","aaaa","bbbbb"};
   containersCreated=new HashSet<String>();
@@ -9,7 +9,7 @@
     blobStore.createContainerInLocation(null,containerName);
     containersCreated.add(containerName);
   }
-  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  containersRetrieved=blobStore.list();
   assertEquals(containersCreated.size(),containersRetrieved.size(),"Different numbers of container");
   for (  StorageMetadata data : containersRetrieved) {
     String containerName=data.getName();
@@ -21,6 +21,6 @@
   for (  String containerName : containerNames) {
     blobStore.deleteContainer(containerName);
   }
-  containersRetrieved=(PageSet<StorageMetadata>)blobStore.list();
+  containersRetrieved=blobStore.list();
   assertTrue(containersRetrieved.isEmpty(),"List operation returns a not empty set of container");
 }
