@@ -26,9 +26,7 @@
       statements.add(new AddExportToFile(export,Utils.replaceTokens("{varl}" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,export) + "{varr}",tokenMap),runScript));
     }
     statements.add(appendToFile("{cd} " + pwd,runScript,family));
-    for (    String execLine : execLines) {
-      statements.add(appendToFile(execLine,runScript,family));
-    }
+    statements.addAll(statements);
     for (    String line : Splitter.on(ShellToken.LF.to(family)).split(ShellToken.END_SCRIPT.to(family))) {
       if (!line.equals(""))       statements.add(appendToFile(line,runScript,family));
     }

@@ -4,13 +4,19 @@
   switchClause.append(Utils.replaceTokens(OS_TO_SWITCH_PATTERN.get(family),ImmutableMap.of("arg",arg + "")));
   for (  Entry<String,Statement> entry : valueToActions.entrySet()) {
     StringBuilder actionBuilder=new StringBuilder();
+    boolean shouldIndent=true;
     boolean inRunScript=false;
+    boolean inCreateFile=false;
     for (    String line : Splitter.on(ShellToken.LF.to(family)).split(entry.getValue().render(family))) {
-      if (!inRunScript)       actionBuilder.append(INDENT);
+      if (shouldIndent)       actionBuilder.append(INDENT);
       actionBuilder.append(line).append(ShellToken.LF.to(family));
       if (line.indexOf(CreateRunScript.MARKER) != -1) {
         inRunScript=inRunScript ? false : true;
       }
+      if (line.indexOf(CreateFile.MARKER) != -1) {
+        inCreateFile=inCreateFile ? false : true;
+      }
+      shouldIndent=!inCreateFile && !inRunScript;
     }
     actionBuilder.delete(actionBuilder.lastIndexOf(ShellToken.LF.to(family)),actionBuilder.length());
     switchClause.append(Utils.replaceTokens(OS_TO_CASE_PATTERN.get(family),ImmutableMap.of("value",entry.getKey(),"action",actionBuilder.toString())));
