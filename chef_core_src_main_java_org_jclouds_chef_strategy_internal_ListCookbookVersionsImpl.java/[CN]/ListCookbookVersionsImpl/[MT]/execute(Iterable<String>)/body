@@ -1,0 +1,13 @@
+{
+  return concat(transform(toGet,new Function<String,Iterable<? extends CookbookVersion>>(){
+    @Override public Iterable<? extends CookbookVersion> apply(    final String cookbook){
+      return transformParallel(chefClient.getVersionsOfCookbook(cookbook),new Function<String,Future<CookbookVersion>>(){
+        @Override public Future<CookbookVersion> apply(        String version){
+          return chefAsyncClient.getCookbook(cookbook,version);
+        }
+      }
+,userExecutor,maxTime,logger,"getting versions of cookbook " + cookbook);
+    }
+  }
+));
+}
