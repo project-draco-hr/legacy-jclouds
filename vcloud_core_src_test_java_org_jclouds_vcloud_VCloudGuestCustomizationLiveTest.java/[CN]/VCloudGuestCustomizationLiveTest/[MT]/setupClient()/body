@@ -1,0 +1,13 @@
+{
+  setupCredentials();
+  Properties props=new Properties();
+  props.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS,"true");
+  props.setProperty(Constants.PROPERTY_RELAX_HOSTNAME,"true");
+  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()),props);
+  client=context.getComputeService();
+  Injector injector=createSshClientInjector();
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,60,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+}

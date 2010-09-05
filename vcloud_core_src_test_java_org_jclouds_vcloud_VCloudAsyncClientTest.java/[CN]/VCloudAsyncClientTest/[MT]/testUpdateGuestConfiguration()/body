@@ -1,0 +1,13 @@
+{
+  Method method=VCloudAsyncClient.class.getMethod("updateGuestCustomizationOfVm",URI.class,GuestCustomizationSection.class);
+  GuestCustomizationSection guest=new GuestCustomizationSection(URI.create("http://vcloud.example.com/api/v1.0/vApp/vm-12/guestCustomizationSection"));
+  guest.setCustomizationScript("cat > /tmp/foo.txt<<EOF\nI love candy\nEOF");
+  HttpRequest request=processor.createRequest(method,URI.create("http://vcloud.example.com/api/v1.0/vApp/vm-12"),guest);
+  assertRequestLineEquals(request,"PUT http://vcloud.example.com/api/v1.0/vApp/vm-12/guestCustomizationSection HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
+  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/guestCustomizationSection.xml")),"application/vnd.vmware.vcloud.guestCustomizationSection+xml",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TaskHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

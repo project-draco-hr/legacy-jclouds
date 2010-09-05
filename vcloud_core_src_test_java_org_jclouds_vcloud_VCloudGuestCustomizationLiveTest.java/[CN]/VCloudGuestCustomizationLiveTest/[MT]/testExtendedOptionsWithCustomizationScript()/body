@@ -1,0 +1,26 @@
+{
+  String tag="customize";
+  TemplateOptions options=client.templateOptions();
+  options.as(VCloudTemplateOptions.class).customizationScript("cat > /root/foo.txt<<EOF\nI love candy\nEOF\n");
+  String nodeId=null;
+  try {
+    Set<? extends NodeMetadata> nodes=client.runNodesWithTag(tag,1,options);
+    NodeMetadata node=Iterables.get(nodes,0);
+    nodeId=node.getId();
+    IPSocket socket=new IPSocket(get(node.getPublicAddresses(),0),22);
+    socketTester.apply(socket);
+    SshClient ssh=sshFactory.create(socket,node.getCredentials().identity,node.getCredentials().credential);
+    try {
+      ssh.connect();
+      System.out.println(ssh.exec("vmtoolsd --cmd=\"info-get guestinfo.ovfenv\" |grep vCloud_CustomizationInfo|sed 's/.*value=\"\\(.*\\)\".*/\\1/g'|base64 -d"));
+      ExecResponse hello=ssh.exec("cat /root/foo.txt");
+      assertEquals(hello.getOutput().trim(),"I love candy");
+    }
+  finally {
+      if (ssh != null)       ssh.disconnect();
+    }
+  }
+  finally {
+    if (nodeId != null)     client.destroyNode(nodeId);
+  }
+}
