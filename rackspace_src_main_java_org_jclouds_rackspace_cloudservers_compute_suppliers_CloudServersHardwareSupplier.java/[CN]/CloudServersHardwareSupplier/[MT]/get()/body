@@ -1,0 +1,9 @@
+{
+  final Set<Hardware> sizes=Sets.newHashSet();
+  logger.debug(">> providing sizes");
+  for (  final Flavor from : sync.listFlavors(ListOptions.Builder.withDetails())) {
+    sizes.add(new HardwareImpl(from.getId() + "",from.getName(),from.getId() + "",location.get(),null,ImmutableMap.<String,String>of(),ImmutableList.of(new Processor(from.getDisk() / 10.0,1.0)),from.getRam(),from.getDisk(),ImagePredicates.any()));
+  }
+  logger.debug("<< sizes(%d)",sizes.size());
+  return sizes;
+}

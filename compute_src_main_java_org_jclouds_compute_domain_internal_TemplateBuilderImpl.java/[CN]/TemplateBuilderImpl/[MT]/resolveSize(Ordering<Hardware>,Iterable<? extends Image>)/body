@@ -1,0 +1,26 @@
+{
+  Set<? extends Hardware> hardwaresl=hardwares.get();
+  Hardware hardware;
+  try {
+    Iterable<? extends Hardware> hardwaresThatAreCompatibleWithOurImages=filter(hardwaresl,new Predicate<Hardware>(){
+      @Override public boolean apply(      final Hardware hardware){
+        return Iterables.any(images,new Predicate<Image>(){
+          @Override public boolean apply(          Image input){
+            return hardware.supportsImage(input);
+          }
+          @Override public String toString(){
+            return "hardware(" + hardware + ").supportsImage()";
+          }
+        }
+);
+      }
+    }
+);
+    hardware=hardwareOrdering.max(filter(hardwaresThatAreCompatibleWithOurImages,hardwarePredicate));
+  }
+ catch (  NoSuchElementException exception) {
+    throw new NoSuchElementException("hardwares don't support any images: " + toString() + "\n"+ hardwaresl+ "\n"+ images);
+  }
+  logger.debug("<<   matched hardware(%s)",hardware);
+  return hardware;
+}

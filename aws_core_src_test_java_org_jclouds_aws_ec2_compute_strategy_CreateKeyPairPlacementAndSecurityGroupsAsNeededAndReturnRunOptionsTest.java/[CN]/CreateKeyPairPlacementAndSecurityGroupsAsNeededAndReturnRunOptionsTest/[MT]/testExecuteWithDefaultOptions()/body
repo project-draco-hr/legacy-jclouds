@@ -1,14 +1,14 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String tag="tag";
-  EC2Size size=EC2Size.M1_SMALL;
+  EC2Hardware size=EC2Hardware.M1_SMALL;
   String systemGeneratedKeyPairName="systemGeneratedKeyPair";
   String generatedGroup="group";
   Set<String> generatedGroups=ImmutableSet.of(generatedGroup);
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=createMock(CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,new Method[]{CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("createNewKeyPairUnlessUserSpecifiedOtherwise",String.class,String.class,TemplateOptions.class),CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("createNewPlacementGroupUnlessUserSpecifiedOtherwise",String.class,String.class,TemplateOptions.class),CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("getSecurityGroupsForTagAndOptions",String.class,String.class,TemplateOptions.class)});
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   Template template=createMock(Template.class);
-  expect(template.getSize()).andReturn(size).atLeastOnce();
+  expect(template.getHardware()).andReturn(size).atLeastOnce();
   expect(template.getOptions()).andReturn(options).atLeastOnce();
   expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options)).andReturn(systemGeneratedKeyPairName);
   expect(strategy.getSecurityGroupsForTagAndOptions(region,tag,options)).andReturn(generatedGroups);

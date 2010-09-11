@@ -1,0 +1,20 @@
+{
+  final Set<Hardware> sizes=Sets.newHashSet();
+  logger.debug(">> providing sizes");
+  for (  final PricingPlan from : sync.getPricingPlanList()) {
+    try {
+      final Location location=Iterables.find(locations.get(),new Predicate<Location>(){
+        @Override public boolean apply(        Location input){
+          return input.getId().equals(from.getDataCenter().getId());
+        }
+      }
+);
+      sizes.add(new HardwareImpl(from.getId(),from.getId(),from.getId(),location,null,ImmutableMap.<String,String>of(),ImmutableList.of(new Processor(1,1.0)),from.getRam(),from.getDiskSize(),ImagePredicates.any()));
+    }
+ catch (    NullPointerException e) {
+      logger.warn("datacenter not present in " + from.getId());
+    }
+  }
+  logger.debug("<< sizes(%d)",sizes.size());
+  return sizes;
+}
