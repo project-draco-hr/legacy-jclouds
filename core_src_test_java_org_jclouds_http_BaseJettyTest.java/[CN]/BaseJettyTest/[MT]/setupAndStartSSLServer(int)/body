@@ -1,0 +1,56 @@
+{
+  Handler server2Handler=new AbstractHandler(){
+    public void handle(    String target,    HttpServletRequest request,    HttpServletResponse response,    int dispatch) throws IOException, ServletException {
+      if (request.getMethod().equals("PUT")) {
+        if (request.getContentLength() > 0) {
+          response.setStatus(HttpServletResponse.SC_OK);
+          response.getWriter().println(toStringAndClose(request.getInputStream()) + "PUTREDIRECT");
+        }
+      }
+ else       if (request.getMethod().equals("POST")) {
+        if (request.getContentLength() > 0) {
+          if (request.getHeader("Content-MD5") != null) {
+            String expectedMd5=request.getHeader("Content-MD5");
+            String realMd5FromRequest;
+            realMd5FromRequest=CryptoStreams.md5Base64(InputSuppliers.of(request.getInputStream()));
+            boolean matched=expectedMd5.equals(realMd5FromRequest);
+            if (matched) {
+              response.setContentType("text/xml");
+              response.setStatus(HttpServletResponse.SC_OK);
+              response.getWriter().println("created");
+            }
+          }
+ else {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().println(toStringAndClose(request.getInputStream()) + "POST");
+          }
+        }
+ else {
+          handleAction(request,response);
+        }
+      }
+ else       if (request.getMethod().equals("HEAD")) {
+        response.setContentType("text/xml");
+        response.setStatus(HttpServletResponse.SC_OK);
+      }
+ else {
+        response.setContentType("text/xml");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().println(XML2);
+      }
+      ((Request)request).setHandled(true);
+    }
+  }
+;
+  server2=new Server();
+  server2.setHandler(server2Handler);
+  SslSocketConnector ssl=new SslSocketConnector();
+  ssl.setPort(testPort + 1);
+  ssl.setMaxIdleTime(30000);
+  ssl.setKeystore("src/test/resources/test.jks");
+  ssl.setKeyPassword("jclouds");
+  ssl.setTruststore("src/test/resources/test.jks");
+  ssl.setTrustPassword("jclouds");
+  server2.setConnectors(new Connector[]{ssl});
+  server2.start();
+}
