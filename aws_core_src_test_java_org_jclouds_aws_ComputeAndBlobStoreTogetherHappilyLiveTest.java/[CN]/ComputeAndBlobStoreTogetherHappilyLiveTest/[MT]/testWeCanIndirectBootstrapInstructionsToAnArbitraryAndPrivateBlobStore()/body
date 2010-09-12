@@ -1,0 +1,8 @@
+{
+  OperatingSystem defaultOperatingSystem=computeContext.getComputeService().templateBuilder().build().getImage().getOperatingSystem();
+  uploadBlob(tag,"openjdk/install",buildScript(defaultOperatingSystem));
+  HttpRequest signedRequestOfInstallScript=blobContext.getBlobStore().signRequestForBlob(tag,"openjdk/install");
+  TemplateOptions runOpenJDKInstallDirectlyFromBlobStore=runScript(newStringPayload(buildCurlsh(signedRequestOfInstallScript)));
+  Iterable<? extends NodeMetadata> nodes=computeContext.getComputeService().runNodesWithTag(tag,1,runOpenJDKInstallDirectlyFromBlobStore);
+  assertSshOutputOfCommandContains(nodes,"openjdk -version","OpenJDK");
+}

@@ -5,6 +5,7 @@
   Map<ServerState,NodeState> serverStateToNodeState=createMock(Map.class);
   org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
   Option dc=new Option(1l,"US-West-1","US West 1 Datacenter");
+  Option ram=new Option(1l,"512MB","Server with 512MB RAM");
   Set<? extends org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
   Server server=createMock(Server.class);
   expect(server.getId()).andReturn(1000l).atLeastOnce();
@@ -19,6 +20,7 @@
   expect(server.getIp()).andReturn(new Ip("127.0.0.1"));
   ServerImage image=createMock(ServerImage.class);
   expect(server.getImage()).andReturn(image).atLeastOnce();
+  expect(server.getRam()).andReturn(ram).atLeastOnce();
   expect(server.getDatacenter()).andReturn(dc).atLeastOnce();
   expect(image.getId()).andReturn(2000l).atLeastOnce();
   expect(jcImage.getProviderId()).andReturn("2000").atLeastOnce();
@@ -31,7 +33,7 @@
   replay(image);
   replay(jcImage);
   replay(credentialsMap);
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,caller,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,caller,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(GoGridHardwareSupplier.H_ALL),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImageId(),"2000");

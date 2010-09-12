@@ -8,8 +8,11 @@
   NodeState state=instanceToNodeState.get(instance.getInstanceState());
   Set<String> publicAddresses=nullSafeSet(instance.getIpAddress());
   Set<String> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
-  Map<String,String> extra=getExtra(instance);
+  Hardware hardware=getHardwareForInstance(instance);
+  if (hardware != null) {
+    hardware=ComputeServiceUtils.replacesVolumes(hardware,addEBS(instance,hardware.getVolumes()));
+  }
   Location location=getLocationForAvailabilityZone(instance);
   Image image=resolveImageForInstanceInLocation(instance,location);
-  return new NodeMetadataImpl(id,name,instance.getRegion() + "/" + instance.getId(),location,uri,userMetadata,tag,instance.getRegion() + "/" + instance.getImageId(),image != null ? image.getOperatingSystem() : null,state,publicAddresses,privateAddresses,extra,credentials);
+  return new NodeMetadataImpl(id,name,instance.getRegion() + "/" + instance.getId(),location,uri,userMetadata,tag,hardware,instance.getRegion() + "/" + instance.getImageId(),image != null ? image.getOperatingSystem() : null,state,publicAddresses,privateAddresses,credentials);
 }

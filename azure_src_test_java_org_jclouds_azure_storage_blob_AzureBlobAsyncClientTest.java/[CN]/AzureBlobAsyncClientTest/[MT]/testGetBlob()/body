@@ -1,0 +1,10 @@
+{
+  Method method=AzureBlobAsyncClient.class.getMethod("getBlob",String.class,String.class,GetOptions[].class);
+  HttpRequest request=processor.createRequest(method,"container","blob");
+  assertRequestLineEquals(request,"GET https://identity.blob.core.windows.net/container/blob HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"x-ms-version: 2009-09-19\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseBlobFromHeadersAndHttpContent.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnKeyNotFound.class);
+}

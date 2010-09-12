@@ -1,0 +1,9 @@
+{
+  String headers=Joiner.on(' ').join(Iterables.transform(request.getHeaders().entries(),new Function<Entry<String,String>,String>(){
+    @Override public String apply(    Entry<String,String> from){
+      return String.format("-H \"%s: %s\"",from.getKey(),from.getValue());
+    }
+  }
+));
+  return String.format("curl -s --retry 20 %s %s |bash\n",headers,request.getEndpoint().toASCIIString());
+}

@@ -1,0 +1,16 @@
+{
+  checkNotNull(from,"VApp");
+  Vm vm=from.getChildren().size() == 0 ? null : Iterables.get(from.getChildren(),0);
+  if (vm == null)   return null;
+  Location location=findLocationForResource.apply(checkNotNull(from,"from").getVDC());
+  VirtualHardwareSection hardware=vm.getVirtualHardwareSection();
+  int ram=(int)find(hardware.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
+  List<Processor> processors=Lists.newArrayList(transform(filter(hardware.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
+    @Override public Processor apply(    ResourceAllocation arg0){
+      return new Processor(arg0.getVirtualQuantity(),1);
+    }
+  }
+));
+  Iterable<? extends Volume> volumes=resourceAllocationsToVolumes.apply(hardware.getResourceAllocations());
+  return new HardwareImpl(from.getHref().toASCIIString(),from.getName() + String.format(": vpus(%s), ram(%d), volumes(%s)",processors,ram,volumes),from.getHref().toASCIIString(),location,null,ImmutableMap.<String,String>of(),processors,ram,volumes,ImagePredicates.idEquals(from.getHref().toASCIIString()));
+}

@@ -4,9 +4,5 @@
   setupCredentials();
   setupKeyPairForTest();
   initializeContextAndClient();
-  Injector injector=createSshClientInjector();
-  sshFactory=injector.getInstance(SshClient.Factory.class);
-  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
-  socketTester=new RetryablePredicate<IPSocket>(socketOpen,60,1,TimeUnit.SECONDS);
-  injector.injectMembers(socketOpen);
+  buildSocketTester();
 }

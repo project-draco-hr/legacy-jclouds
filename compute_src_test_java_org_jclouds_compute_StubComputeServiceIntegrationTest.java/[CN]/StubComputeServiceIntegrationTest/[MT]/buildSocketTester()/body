@@ -1,0 +1,9 @@
+{
+  SocketOpen socketOpen=createMock(SocketOpen.class);
+  expect(socketOpen.apply(new IPSocket("144.175.1.1",22))).andReturn(true);
+  expect(socketOpen.apply(new IPSocket("144.175.1.2",22))).andReturn(true);
+  expect(socketOpen.apply(new IPSocket("144.175.1.3",22))).andReturn(true);
+  expect(socketOpen.apply(new IPSocket("144.175.1.4",22))).andReturn(true);
+  replay(socketOpen);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,60,1,TimeUnit.SECONDS);
+}
