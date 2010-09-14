@@ -1,7 +1,7 @@
 {
   OperatingSystem defaultOperatingSystem=computeContext.getComputeService().templateBuilder().build().getImage().getOperatingSystem();
   uploadBlob(tag,"openjdk/install",buildScript(defaultOperatingSystem));
-  HttpRequest signedRequestOfInstallScript=blobContext.getBlobStore().signRequestForBlob(tag,"openjdk/install");
+  HttpRequest signedRequestOfInstallScript=blobContext.getSigner().signGetBlob(tag,"openjdk/install");
   Statement installOpenJDK=execHttpResponse(signedRequestOfInstallScript);
   String mavenVersion="3.0-beta-3";
   Statement extractMavenIntoUsrLocal=extractTargzIntoDirectory(URI.create("http://mirrors.ibiblio.org/pub/mirrors/apache//maven/binaries/apache-maven-" + mavenVersion + "-bin.tar.gz"),"/usr/local");

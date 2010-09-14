@@ -1,0 +1,17 @@
+{
+  String name="hello";
+  String text="fooooooooooooooooooooooo";
+  Blob blob=context.getBlobStore().newBlob(name);
+  blob.setPayload(text);
+  blob.getPayload().setContentType("text/plain");
+  String container=getContainerName();
+  try {
+    context.getBlobStore().putBlob(container,blob);
+    HttpRequest request=context.getSigner().signGetBlob(container,name);
+    assertEquals(request.getFilters().size(),0);
+    assertEquals(Utils.toStringAndClose(context.utils().http().invoke(request)),text);
+  }
+  finally {
+    returnContainer(container);
+  }
+}
