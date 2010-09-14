@@ -1,0 +1,12 @@
+{
+  String blobKey;
+  File fileForPayload;
+  String fullPath=(new File(TARGET_CONTAINER_NAME).getAbsolutePath()) + File.separator;
+  blobKey=TestUtils.createRandomBlobKey("getFileForBlobKey-",".img");
+  fileForPayload=storageStrategy.getFileForBlobKey(CONTAINER_NAME,blobKey);
+  assertNotNull(fileForPayload,"Result File object is null");
+  assertEquals(fileForPayload.getAbsolutePath(),fullPath + blobKey,"Wrong file path");
+  blobKey=TestUtils.createRandomBlobKey("asd/vmad/andsnf/getFileForBlobKey-",".img");
+  fileForPayload=storageStrategy.getFileForBlobKey(CONTAINER_NAME,blobKey);
+  assertEquals(fileForPayload.getAbsolutePath(),fullPath + blobKey,"Wrong file path");
+}

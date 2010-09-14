@@ -1,0 +1,16 @@
+{
+  storageStrategy.createContainer(CONTAINER_NAME);
+  Set<String> blobKeys=TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{TestUtils.createRandomBlobKey("removeBlob-",".jpg"),TestUtils.createRandomBlobKey("removeBlob-",".jpg"),TestUtils.createRandomBlobKey("346" + File.separator + "g3sx2"+ File.separator+ "removeBlob-",".jpg"),TestUtils.createRandomBlobKey("346" + File.separator + "g3sx2"+ File.separator+ "removeBlob-",".jpg")});
+  Set<String> remainingBlobKeys=new HashSet<String>();
+  for (  String key : blobKeys) {
+    remainingBlobKeys.add(key);
+  }
+  for (  String blobKeyToRemove : blobKeys) {
+    storageStrategy.removeBlob(CONTAINER_NAME,blobKeyToRemove);
+    TestUtils.fileExists(blobKeyToRemove,false);
+    remainingBlobKeys.remove(blobKeyToRemove);
+    for (    String remainingBlobKey : remainingBlobKeys) {
+      TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + remainingBlobKey,true);
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  filesystemContainerNameValidator.validate(container);
+  filesystemBlobKeyValidator.validate(blobKey);
+  File outputFile=null;
+  OutputStream output=null;
+  InputStream input=null;
+  try {
+    outputFile=getFileForBlobKey(container,blobKey);
+    File parentDirectory=outputFile.getParentFile();
+    if (!parentDirectory.exists()) {
+      if (!parentDirectory.mkdirs()) {
+        throw new IOException("An error occurred creating directory [" + parentDirectory.getName() + "].");
+      }
+    }
+    output=new FileOutputStream(outputFile);
+    input=payload.getInput();
+    copy(input,output);
+  }
+ catch (  IOException ex) {
+    if (outputFile != null) {
+      outputFile.delete();
+    }
+    throw ex;
+  }
+ finally {
+    if (input != null) {
+      try {
+        input.close();
+      }
+ catch (      IOException ex) {
+      }
+    }
+    if (output != null) {
+      try {
+        output.close();
+      }
+ catch (      IOException ex) {
+      }
+    }
+  }
+}

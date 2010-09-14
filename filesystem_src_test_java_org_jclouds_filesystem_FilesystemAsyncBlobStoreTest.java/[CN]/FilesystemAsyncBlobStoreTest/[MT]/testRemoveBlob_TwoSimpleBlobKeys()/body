@@ -1,0 +1,26 @@
+{
+  final String BLOB_KEY1=TestUtils.createRandomBlobKey(null,null);
+  final String BLOB_KEY2=TestUtils.createRandomBlobKey(null,null);
+  boolean result;
+  blobStore.createContainerInLocation(null,CONTAINER_NAME);
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY1);
+  assertFalse(result,"Blob1 exists");
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY2);
+  assertFalse(result,"Blob2 exists");
+  TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{BLOB_KEY1,BLOB_KEY2});
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY1);
+  assertTrue(result,"Blob " + BLOB_KEY1 + " doesn't exist");
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY2);
+  assertTrue(result,"Blob " + BLOB_KEY2 + " doesn't exist");
+  blobStore.removeBlob(CONTAINER_NAME,BLOB_KEY1);
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY1);
+  assertFalse(result,"Blob1 still exists");
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY2);
+  assertTrue(result,"Blob2 doesn't exist");
+  TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + BLOB_KEY1,false);
+  TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + BLOB_KEY2,true);
+  blobStore.removeBlob(CONTAINER_NAME,BLOB_KEY2);
+  result=blobStore.blobExists(CONTAINER_NAME,BLOB_KEY2);
+  assertFalse(result,"Blob2 still exists");
+  TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + BLOB_KEY2,false);
+}

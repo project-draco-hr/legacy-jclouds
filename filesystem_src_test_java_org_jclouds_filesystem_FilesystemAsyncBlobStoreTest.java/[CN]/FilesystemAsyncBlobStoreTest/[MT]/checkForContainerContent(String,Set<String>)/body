@@ -1,0 +1,20 @@
+{
+  ListContainerOptions options=ListContainerOptions.Builder.recursive();
+  PageSet<? extends StorageMetadata> blobsRetrieved=blobStore.list(containerName,options);
+  if (null == expectedBlobKeys) {
+    assertTrue(blobsRetrieved.isEmpty(),"Wrong blob number retrieved in the containter [" + containerName + "]");
+    return;
+  }
+  Set<String> expectedBlobKeysCopy=new HashSet<String>();
+  for (  String value : expectedBlobKeys) {
+    expectedBlobKeysCopy.add(value);
+  }
+  assertEquals(blobsRetrieved.size(),expectedBlobKeysCopy.size(),"Wrong blob number retrieved in the containter [" + containerName + "]");
+  for (  StorageMetadata data : blobsRetrieved) {
+    String blobName=data.getName();
+    if (!expectedBlobKeysCopy.remove(blobName)) {
+      fail("List for container [" + containerName + "] contains unexpected value ["+ blobName+ "]");
+    }
+  }
+  assertTrue(expectedBlobKeysCopy.isEmpty(),"List operation for container [" + containerName + "] doesn't return all values.");
+}

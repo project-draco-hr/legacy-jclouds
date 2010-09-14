@@ -1,0 +1,10 @@
+{
+  String[] sourceBlobKeys=new String[]{TestUtils.createRandomBlobKey("blobExists-",".jpg"),TestUtils.createRandomBlobKey("blobExists-",".jpg"),TestUtils.createRandomBlobKey("afasd" + File.separator + "asdma"+ File.separator+ "blobExists-",".jpg")};
+  for (  String blobKey : sourceBlobKeys) {
+    assertFalse(storageStrategy.blobExists(CONTAINER_NAME,blobKey),"Blob " + blobKey + " exists");
+  }
+  TestUtils.createBlobsInContainer(CONTAINER_NAME,sourceBlobKeys);
+  for (  String blobKey : sourceBlobKeys) {
+    assertTrue(storageStrategy.blobExists(CONTAINER_NAME,blobKey),"Blob " + blobKey + " doesn't exist");
+  }
+}

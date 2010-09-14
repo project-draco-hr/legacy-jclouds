@@ -1,0 +1,26 @@
+{
+  boolean result;
+  String CONTAINER_NAME2="container-to-delete";
+  String TARGET_CONTAINER_NAME2=TestUtils.TARGET_BASE_DIR + CONTAINER_NAME2;
+  blobStore.createContainerInLocation(null,CONTAINER_NAME);
+  blobStore.createContainerInLocation(null,CONTAINER_NAME2);
+  result=blobStore.containerExists(CONTAINER_NAME);
+  assertTrue(result,"Container [" + CONTAINER_NAME + "] doesn't exists");
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME,true);
+  result=blobStore.containerExists(CONTAINER_NAME2);
+  assertTrue(result,"Container [" + CONTAINER_NAME2 + "] doesn't exists");
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME2,true);
+  TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{TestUtils.createRandomBlobKey("testutils-",null),TestUtils.createRandomBlobKey("testutils-",null),TestUtils.createRandomBlobKey("ab123s" + File.separator + "testutils-",null)});
+  TestUtils.createBlobsInContainer(CONTAINER_NAME,new String[]{TestUtils.createRandomBlobKey("testutils-",null),TestUtils.createRandomBlobKey("testutils-",null),TestUtils.createRandomBlobKey("asda123s" + File.separator + "testutils-",null),TestUtils.createRandomBlobKey("123-_3s" + File.separator + "testutils-",null)});
+  blobStore.deleteContainer(CONTAINER_NAME);
+  result=blobStore.containerExists(CONTAINER_NAME);
+  assertFalse(result,"Container [" + CONTAINER_NAME + "] still exists");
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME,false);
+  result=blobStore.containerExists(CONTAINER_NAME2);
+  assertTrue(result,"Container [" + CONTAINER_NAME2 + "] still exists");
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME2,true);
+  blobStore.deleteContainer(CONTAINER_NAME2);
+  result=blobStore.containerExists(CONTAINER_NAME2);
+  assertFalse(result,"Container [" + CONTAINER_NAME2 + "] still exists");
+  TestUtils.directoryExists(TARGET_CONTAINER_NAME2,false);
+}
