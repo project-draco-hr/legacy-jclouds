@@ -1,9 +1,14 @@
 {
-  if (resourceToAuthenticate == null)   return new Credentials("root",null);
-  checkArgument(resourceToAuthenticate instanceof Image,"Resource must be an image (for EC2)");
-  Image image=(Image)resourceToAuthenticate;
-  Credentials credentials;
-  if (image != null && image.getImageOwnerId().matches("063491364108|099720109477"))   credentials=new Credentials("ubuntu",null);
- else   credentials=new Credentials("root",null);
+  Credentials credentials=new Credentials("root",null);
+  if (resourceToAuthenticate != null) {
+    checkArgument(resourceToAuthenticate instanceof Image,"Resource must be an image (for EC2)");
+    Image image=(Image)resourceToAuthenticate;
+    if (image.getImageOwnerId().matches("063491364108|099720109477")) {
+      credentials=new Credentials("ubuntu",null);
+    }
+ else     if (image.getImageOwnerId().equals("137112412989")) {
+      credentials=new Credentials("ec2-user",null);
+    }
+  }
   return credentials;
 }
