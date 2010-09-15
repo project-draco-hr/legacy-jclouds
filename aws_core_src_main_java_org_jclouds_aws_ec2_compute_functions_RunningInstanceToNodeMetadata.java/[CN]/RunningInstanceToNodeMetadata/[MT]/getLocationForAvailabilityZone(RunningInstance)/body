@@ -1,10 +1,16 @@
 {
   final String locationId=instance.getAvailabilityZone();
-  Location location=Iterables.find(locations.get(),new Predicate<Location>(){
-    @Override public boolean apply(    Location input){
-      return input.getId().equals(locationId);
+  try {
+    Location location=Iterables.find(locations.get(),new Predicate<Location>(){
+      @Override public boolean apply(      Location input){
+        return input.getId().equals(locationId);
+      }
     }
-  }
 );
-  return location;
+    return location;
+  }
+ catch (  NoSuchElementException e) {
+    logger.debug("couldn't match instance location %s in: %s",locationId,locations.get());
+    return null;
+  }
 }
