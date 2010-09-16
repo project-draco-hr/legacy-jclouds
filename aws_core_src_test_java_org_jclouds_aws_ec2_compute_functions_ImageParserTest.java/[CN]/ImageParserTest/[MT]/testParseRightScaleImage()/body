@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/ec2/rightscale_images.xml");
   Set<Image> result=parseImages(is);
-  ImageParser parser=new ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation));
+  ImageParser parser=new ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation),"ec2");
   org.jclouds.compute.domain.Image image=parser.apply(Iterables.get(result,0));
   assertEquals(image.getOperatingSystem().is64Bit(),true);
   assertEquals(image.getDescription(),"rightscale-us-east/CentOS_5.4_x64_v4.4.10.manifest.xml");
