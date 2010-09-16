@@ -1,13 +1,19 @@
 {
   checkNotNull(from,"VApp");
   Location location=findLocationForResource.apply(checkNotNull(from,"from").getVDC());
-  int ram=(int)find(from.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
-  List<Processor> processors=Lists.newArrayList(transform(filter(from.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
-    @Override public Processor apply(    ResourceAllocation arg0){
-      return new Processor(arg0.getVirtualQuantity(),1);
+  try {
+    int ram=(int)find(from.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
+    List<Processor> processors=Lists.newArrayList(transform(filter(from.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
+      @Override public Processor apply(      ResourceAllocation arg0){
+        return new Processor(arg0.getVirtualQuantity(),1);
+      }
     }
-  }
 ));
-  Iterable<? extends Volume> volumes=resourceAllocationsToVolumes.apply(from.getResourceAllocations());
-  return new HardwareImpl(from.getHref().toASCIIString(),from.getName(),from.getHref().toASCIIString(),location,null,ImmutableMap.<String,String>of(),processors,ram,volumes,ImagePredicates.idEquals(from.getHref().toASCIIString()));
+    Iterable<? extends Volume> volumes=resourceAllocationsToVolumes.apply(from.getResourceAllocations());
+    return new HardwareImpl(from.getHref().toASCIIString(),from.getName(),from.getHref().toASCIIString(),location,null,ImmutableMap.<String,String>of(),processors,ram,volumes,ImagePredicates.idEquals(from.getHref().toASCIIString()));
+  }
+ catch (  NoSuchElementException e) {
+    logger.debug("incomplete data to form vApp %s",from.getHref());
+    return null;
+  }
 }
