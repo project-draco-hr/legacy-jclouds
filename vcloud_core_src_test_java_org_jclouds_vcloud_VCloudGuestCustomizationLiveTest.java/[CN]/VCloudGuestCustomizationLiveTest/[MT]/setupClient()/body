@@ -1,0 +1,9 @@
+{
+  setupCredentials();
+  Properties props=new Properties();
+  props.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS,"true");
+  props.setProperty(Constants.PROPERTY_RELAX_HOSTNAME,"true");
+  client=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()),props).getComputeService();
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),60,1,TimeUnit.SECONDS);
+  sshFactory=Guice.createInjector(getSshModule()).getInstance(Factory.class);
+}

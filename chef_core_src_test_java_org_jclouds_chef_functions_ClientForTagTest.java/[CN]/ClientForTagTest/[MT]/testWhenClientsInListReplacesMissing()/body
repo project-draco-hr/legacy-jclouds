@@ -1,0 +1,17 @@
+{
+  ChefClient chefClient=createMock(ChefClient.class);
+  Client client=createMock(Client.class);
+  PrivateKey privateKey=createMock(PrivateKey.class);
+  ClientForTag fn=new ClientForTag(chefClient);
+  expect(chefClient.listClients()).andReturn(ImmutableSet.<String>of("foo-validator-00","foo-validator-02"));
+  expect(chefClient.createClient("foo-validator-01")).andReturn(client);
+  expect(client.getPrivateKey()).andReturn(privateKey);
+  replay(client);
+  replay(chefClient);
+  Client compare=fn.apply("foo");
+  assertEquals(compare.getClientname(),"foo-validator-01");
+  assertEquals(compare.getName(),"foo-validator-01");
+  assertEquals(compare.getPrivateKey(),privateKey);
+  verify(client);
+  verify(chefClient);
+}

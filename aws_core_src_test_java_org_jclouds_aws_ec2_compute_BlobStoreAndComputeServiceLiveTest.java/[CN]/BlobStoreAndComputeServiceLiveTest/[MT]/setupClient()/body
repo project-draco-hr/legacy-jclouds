@@ -1,0 +1,7 @@
+{
+  setupCredentials();
+  computeContext=new ComputeServiceContextFactory().createContext(computeServiceProvider,identity,credential,ImmutableSet.of(new Log4JLoggingModule(),new JschSshClientModule()));
+  blobContext=new BlobStoreContextFactory().createContext(blobStoreProvider,identity,credential,ImmutableSet.of(new Log4JLoggingModule()));
+  blobContext.getAsyncBlobStore().createContainerInLocation(null,tag);
+  computeContext.getComputeService().destroyNodesMatching(NodePredicates.withTag(tag));
+}

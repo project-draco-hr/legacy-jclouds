@@ -1,10 +1,25 @@
 {
-  ComputeServiceContext context=null;
-  try {
-    context=new ComputeServiceContextFactory().createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new Log4JLoggingModule()));
-    context.getComputeService().listNodes();
-  }
-  finally {
-    if (context != null)     context.close();
+synchronized (ComputeServiceContext.class) {
+    ComputeServiceContext context=null;
+    String oldIdentity=System.getProperty(provider + ".identity");
+    String oldCredential=System.getProperty(provider + ".credential");
+    try {
+      System.setProperty(provider + ".identity","MOMMA");
+      System.setProperty(provider + ".credential","MIA");
+      context=new ComputeServiceContextFactory().createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new Log4JLoggingModule()));
+      context.getComputeService().listNodes();
+    }
+ catch (    AuthorizationException e) {
+      throw e;
+    }
+catch (    RuntimeException e) {
+      e.printStackTrace();
+      throw e;
+    }
+ finally {
+      if (oldIdentity != null)       System.setProperty(provider + ".identity",oldIdentity);
+      if (oldCredential != null)       System.setProperty(provider + ".credential",oldCredential);
+      if (context != null)       context.close();
+    }
   }
 }

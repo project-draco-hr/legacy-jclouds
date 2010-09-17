@@ -11,8 +11,8 @@
   Predicate<Image> imagePredicate=buildImagePredicate();
   Iterable<? extends Image> supportedImages=filter(images,buildImagePredicate());
   if (Iterables.size(supportedImages) == 0)   throw new NoSuchElementException(String.format("no image matched predicate %s images that didn't match below:\n%s",imagePredicate,images));
-  Size size=resolveSize(sizeSorter(),supportedImages);
-  Image image=resolveImage(size,supportedImages);
+  Hardware hardware=resolveSize(hardwareSorter(),supportedImages);
+  Image image=resolveImage(hardware,supportedImages);
   logger.debug("<<   matched image(%s)",image);
-  return new TemplateImpl(image,size,location,options);
+  return new TemplateImpl(image,hardware,location,options);
 }

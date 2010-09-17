@@ -1,0 +1,9 @@
+{
+  Map<String,Exception> exceptions=newHashMap();
+  Map<String,Future<?>> responses=newHashMap();
+  for (  String name : names) {
+    responses.put(name,chefAsyncClient.deleteClient(name));
+  }
+  exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("deleting clients: %s",names));
+  if (exceptions.size() > 0)   throw new RuntimeException(String.format("errors deleting clients: %s: %s",names,exceptions));
+}

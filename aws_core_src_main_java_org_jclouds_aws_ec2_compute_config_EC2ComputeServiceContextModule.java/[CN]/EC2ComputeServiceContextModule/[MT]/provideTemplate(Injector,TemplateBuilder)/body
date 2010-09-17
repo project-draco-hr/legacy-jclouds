@@ -1,4 +1,6 @@
 {
-  String region=injector.getInstance(Key.get(String.class,Region.class));
-  return "Eucalyptus".equals(region) ? template.osFamily(CENTOS).smallest() : template.os64Bit(false).osFamily(UBUNTU).osVersionMatches(".*10\\.?04.*").osDescriptionMatches("^ubuntu-images.*");
+  String provider=injector.getInstance(Key.get(String.class,Provider.class));
+  if ("eucalyptus".equals(provider))   return template.osFamily(CENTOS);
+ else   if ("nova".equals(provider))   return template.osFamily(UBUNTU);
+ else   return template.osFamily(AMZN_LINUX).os64Bit(true);
 }

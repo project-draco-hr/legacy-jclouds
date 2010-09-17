@@ -1,0 +1,30 @@
+{
+  checkNotNull(from,"VAppTemplate");
+  if (!from.isOvfDescriptorUploaded()) {
+    logger.warn("cannot parse hardware as ovf descriptor for %s is not uploaded",from);
+    return null;
+  }
+  OvfEnvelope ovf=client.getOvfEnvelopeForVAppTemplate(from.getHref());
+  if (ovf == null) {
+    logger.warn("cannot parse hardware as no ovf envelope found for %s",from);
+    return null;
+  }
+  Location location=findLocationForResource.apply(checkNotNull(parent,"parent"));
+  if (ovf.getVirtualSystem().getHardware().size() == 0) {
+    logger.warn("cannot parse hardware for %s as no hardware sections exist in ovf %s",ovf);
+    return null;
+  }
+  if (ovf.getVirtualSystem().getHardware().size() > 1) {
+    logger.warn("multiple hardware choices found. using first",ovf);
+  }
+  VirtualHardwareSection hardware=Iterables.get(ovf.getVirtualSystem().getHardware(),0);
+  int ram=(int)find(hardware.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
+  List<Processor> processors=Lists.newArrayList(transform(filter(hardware.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
+    @Override public Processor apply(    ResourceAllocation arg0){
+      return new Processor(arg0.getVirtualQuantity(),1);
+    }
+  }
+));
+  Iterable<? extends Volume> volumes=resourceAllocationsToVolumes.apply(hardware.getResourceAllocations());
+  return new HardwareImpl(from.getHref().toASCIIString(),from.getName(),from.getHref().toASCIIString(),location,null,ImmutableMap.<String,String>of(),processors,ram,volumes,ImagePredicates.idEquals(from.getHref().toASCIIString()));
+}

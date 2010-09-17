@@ -1,0 +1,11 @@
+{
+  XMLBuilder rootBuilder=buildRoot(name).a("deploy",deploy + "").a("powerOn",powerOn + "");
+  XMLBuilder instantiationParamsBuilder=rootBuilder.e("InstantiationParams");
+  addNetworkConfig(instantiationParamsBuilder,networkConfig);
+  addCustomizationConfig(instantiationParamsBuilder,customizeOnInstantiate);
+  rootBuilder.e("Source").a("href",template.toASCIIString());
+  rootBuilder.e("AllEULAsAccepted").t("true");
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  return rootBuilder.asString(outputProperties);
+}

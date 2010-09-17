@@ -25,7 +25,11 @@
     instanceId=currentOrNull();
   }
  else   if (qName.equals("name")) {
-    instanceState=InstanceState.fromValue(currentOrNull());
+    String state=currentOrNull();
+    if (state != null) {
+      if ("shutdown".equalsIgnoreCase(state))       instanceState=InstanceState.TERMINATED;
+ else       instanceState=InstanceState.fromValue(state);
+    }
   }
  else   if (qName.equals("instanceType")) {
     instanceType=currentOrNull();
@@ -77,6 +81,9 @@
   }
  else   if (qName.equals("subnetId")) {
     subnetId=currentOrNull();
+  }
+ else   if (qName.equals("spotInstanceRequestId")) {
+    spotInstanceRequestId=currentOrNull();
   }
  else   if (qName.equals("vpcId")) {
     vpcId=currentOrNull();

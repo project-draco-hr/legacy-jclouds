@@ -7,7 +7,14 @@
  catch (  NoSuchElementException e) {
     logger.warn("could not find a matching image for slice %s in location %s",from,location);
   }
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",location.get(),null,ImmutableMap.<String,String>of(),tag,from.getImageId() + "",image != null ? image.getOperatingSystem() : null,sliceToNodeState.get(from.getStatus()),Iterables.filter(from.getAddresses(),new Predicate<String>(){
+  Hardware hardware=null;
+  try {
+    hardware=Iterables.find(hardwares.get(),new FindHardwareForSlice(from));
+  }
+ catch (  NoSuchElementException e) {
+    logger.warn("could not find a matching hardware for slice %s",from);
+  }
+  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",location.get(),null,ImmutableMap.<String,String>of(),tag,hardware,from.getImageId() + "",image != null ? image.getOperatingSystem() : null,sliceToNodeState.get(from.getStatus()),Iterables.filter(from.getAddresses(),new Predicate<String>(){
     @Override public boolean apply(    String input){
       return !input.startsWith("10.");
     }
@@ -17,5 +24,5 @@
       return input.startsWith("10.");
     }
   }
-),ImmutableMap.<String,String>of(),null);
+),null);
 }

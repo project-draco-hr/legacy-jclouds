@@ -1,0 +1,17 @@
+{
+  Iterable<Volume> ebsVolumes=Iterables.transform(instance.getEbsBlockDevices().entrySet(),new Function<Entry<String,EbsBlockDevice>,Volume>(){
+    @Override public Volume apply(    Entry<String,EbsBlockDevice> from){
+      return new VolumeImpl(from.getValue().getVolumeId(),Volume.Type.SAN,null,from.getKey(),instance.getRootDeviceName() != null && instance.getRootDeviceName().equals(from.getKey()),true);
+    }
+  }
+);
+  if (instance.getRootDeviceType() == RootDeviceType.EBS) {
+    volumes=Iterables.filter(volumes,new Predicate<Volume>(){
+      @Override public boolean apply(      Volume input){
+        return !input.isBootDevice();
+      }
+    }
+);
+  }
+  return Iterables.concat(volumes,ebsVolumes);
+}

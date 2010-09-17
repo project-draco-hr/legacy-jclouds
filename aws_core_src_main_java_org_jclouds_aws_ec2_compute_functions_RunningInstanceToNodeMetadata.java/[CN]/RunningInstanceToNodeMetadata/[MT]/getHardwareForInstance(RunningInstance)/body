@@ -1,0 +1,14 @@
+{
+  try {
+    return Iterables.find(hardware.get(),new Predicate<Hardware>(){
+      @Override public boolean apply(      Hardware input){
+        return input.getId().equals(instance.getInstanceType());
+      }
+    }
+);
+  }
+ catch (  NoSuchElementException e) {
+    logger.debug("couldn't match instance type %s in: %s",instance.getInstanceType(),hardware.get());
+    return null;
+  }
+}

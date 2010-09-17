@@ -6,17 +6,19 @@
   final URI template=URI.create(checkNotNull(postParams.remove("template"),"template"));
   boolean deploy=true;
   boolean powerOn=true;
+  Boolean customizeOnInstantiate=null;
   Set<? extends NetworkConfig> networkConfig=null;
-  NetworknetworkConfigDecorator networknetworkConfigDecorator=new NetworknetworkConfigDecorator(template,defaultNetwork,defaultFenceMode,defaultNetworkNameInTemplate);
+  NetworkConfigDecorator networknetworkConfigDecorator=new NetworkConfigDecorator(template,defaultNetwork,defaultFenceMode,defaultNetworkNameInTemplate);
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
   if (options != null) {
     if (options.getNetworkConfig().size() > 0)     networkConfig=Sets.newLinkedHashSet(Iterables.transform(options.getNetworkConfig(),networknetworkConfigDecorator));
     deploy=ifNullDefaultTo(options.shouldDeploy(),deploy);
     powerOn=ifNullDefaultTo(options.shouldPowerOn(),powerOn);
+    customizeOnInstantiate=options.shouldCustomizeOnInstantiate();
   }
   if (networkConfig == null)   networkConfig=ImmutableSet.of(networknetworkConfigDecorator.apply(null));
   try {
-    stringBinder.bindToRequest(request,generateXml(name,deploy,powerOn,template,networkConfig));
+    stringBinder.bindToRequest(request,generateXml(name,deploy,powerOn,template,networkConfig,customizeOnInstantiate));
   }
  catch (  ParserConfigurationException e) {
     throw new RuntimeException(e);

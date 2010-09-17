@@ -2,7 +2,7 @@
   final Calendar expired=Calendar.getInstance();
   expired.setTime(new Date());
   expired.add(Calendar.SECOND,-secondsStale);
-  Iterable<? extends Node> staleNodes=filter(getAllNodes.execute(new Predicate<String>(){
+  Iterable<? extends Node> staleNodes=filter(nodeLister.execute(new Predicate<String>(){
     @Override public boolean apply(    String input){
       return input.startsWith(prefix);
     }
@@ -17,10 +17,12 @@
     }
   }
 ));
-  deleter.execute(transform(staleNodes,new Function<Node,String>(){
+  Iterable<String> nodeNames=transform(staleNodes,new Function<Node,String>(){
     @Override public String apply(    Node from){
       return from.getName();
     }
   }
-));
+);
+  nodeDeleter.execute(nodeNames);
+  clientDeleter.execute(nodeNames);
 }

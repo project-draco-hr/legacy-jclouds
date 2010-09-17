@@ -1,0 +1,9 @@
+{
+  if (options.shouldBlock()) {
+    if (!successTester.apply(task.getHref())) {
+      throw new RuntimeException(String.format("failed to %s %s: %s","deploy and power on",vAppResponse.getName(),task));
+    }
+    logger.debug("<< ready vApp(%s)",vAppResponse.getName());
+  }
+  return getNode.execute(vAppResponse.getHref().toASCIIString());
+}

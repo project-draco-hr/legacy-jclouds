@@ -1,0 +1,10 @@
+{
+  Set<? extends Vm> vms=Sets.newLinkedHashSet();
+  if (customizationScript != null) {
+    VAppTemplate vAppTemplate=client.getVAppTemplate(template);
+    checkArgument(vAppTemplate != null,"vAppTemplate %s not found!",template);
+    vms=vAppTemplate.getChildren();
+    checkArgument(vms.size() > 0,"no vms found in vAppTemplate %s",vAppTemplate);
+  }
+  return vms;
+}

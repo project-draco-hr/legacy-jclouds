@@ -1,3 +1,4 @@
 {
-  return new StringBuilder("-----BEGIN PUBLIC KEY-----\n").append(CryptoStreams.base64Encode(ByteStreams.newInputStreamSupplier(key.getEncoded()))).append("\n-----END PUBLIC KEY-----\n").toString();
+  String marker=key instanceof RSAPublicKey ? PUBLIC_PKCS1_MARKER : PUBLIC_X509_MARKER;
+  return pem(key.getEncoded(),marker);
 }

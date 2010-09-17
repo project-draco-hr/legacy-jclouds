@@ -1,5 +1,5 @@
 {
   String path="/tmp/" + scriptName;
-  InitBuilder initBuilder=new InitBuilder(scriptName,path,path,Collections.<String,String>emptyMap(),splitOnNewlines(script));
+  InitBuilder initBuilder=new InitBuilder(scriptName,path,path,Collections.<String,String>emptyMap(),ImmutableList.<Statement>of(Statements.interpret(splitOnNewlines(script))));
   return Payloads.newByteArrayPayload(initBuilder.build(OsFamily.UNIX).getBytes());
 }

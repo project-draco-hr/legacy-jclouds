@@ -1,5 +1,7 @@
 {
   super.configure();
+  bind(TemplateOptions.class).to(VCloudTemplateOptions.class);
+  bind(TemplateBuilder.class).to(VCloudTemplateBuilderImpl.class);
   bind(RebootNodeStrategy.class).to(VCloudRebootNodeStrategy.class);
   bind(GetNodeMetadataStrategy.class).to(VCloudGetNodeMetadataStrategy.class);
   bind(new TypeLiteral<ComputeServiceContext>(){
@@ -17,9 +19,9 @@
 ).to(new TypeLiteral<ImagesInOrg>(){
   }
 );
-  bind(new TypeLiteral<Function<Org,Iterable<? extends Size>>>(){
+  bind(new TypeLiteral<Function<Org,Iterable<? extends Hardware>>>(){
   }
-).to(new TypeLiteral<SizesInOrg>(){
+).to(new TypeLiteral<HardwareInOrg>(){
   }
 );
   bind(AddNodeWithTagStrategy.class).to(VCloudAddNodeWithTagStrategy.class);
