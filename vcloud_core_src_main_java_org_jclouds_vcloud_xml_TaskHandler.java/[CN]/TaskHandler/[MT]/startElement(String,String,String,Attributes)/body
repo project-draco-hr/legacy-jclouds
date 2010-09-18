@@ -1,8 +1,9 @@
 {
   Map<String,String> attributes=cleanseAttributes(attrs);
   if (qName.equalsIgnoreCase("Task")) {
-    if (attributes.get("href") != null)     taskLink=Utils.newReferenceType(attributes);
+    if (attributes.get("href") != null && !inOwner)     taskLink=Utils.newReferenceType(attributes);
     status=TaskStatus.fromValue(attributes.get("status"));
+    operation=attributes.get("operation");
     if (attributes.containsKey("startTime"))     startTime=parseDate(attributes.get("startTime"));
     if (attributes.containsKey("endTime"))     endTime=parseDate(attributes.get("endTime"));
     if (attributes.containsKey("expiryTime"))     expiryTime=parseDate(attributes.get("expiryTime"));
