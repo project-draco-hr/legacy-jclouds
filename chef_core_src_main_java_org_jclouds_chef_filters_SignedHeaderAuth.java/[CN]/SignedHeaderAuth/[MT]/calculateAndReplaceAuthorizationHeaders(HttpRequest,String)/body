@@ -1,8 +1,0 @@
-{
-  String signature=sign(toSign);
-  if (signatureWire.enabled())   signatureWire.input(Utils.toInputStream(signature));
-  String[] signatureLines=Iterables.toArray(Splitter.fixedLength(60).split(signature),String.class);
-  for (int i=0; i < signatureLines.length; i++) {
-    request.getHeaders().replaceValues("X-Ops-Authorization-" + (i + 1),Collections.singletonList(signatureLines[i]));
-  }
-}
