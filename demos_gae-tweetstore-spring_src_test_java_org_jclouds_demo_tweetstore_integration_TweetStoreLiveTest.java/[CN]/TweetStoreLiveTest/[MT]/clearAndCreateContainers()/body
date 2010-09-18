@@ -10,9 +10,9 @@
   for (  String provider : blobstores) {
     contexts.put(provider,factory.createContext(provider,wiring,props));
   }
-  RestContext<TwitterClient,TwitterAsyncClient> twitterContext=new RestContextFactory().createContext("twitter",wiring,props);
-  StoreTweetsController controller=new StoreTweetsController(contexts,container,twitterContext.getApi());
-  Set<Status> statuses=twitterContext.getApi().getMyMentions();
+  Twitter client=new TwitterFactory().getInstance(props.getProperty("twitter.identity"),props.getProperty("twitter.credential"));
+  StoreTweetsController controller=new StoreTweetsController(contexts,container,client);
+  ResponseList<Status> statuses=client.getMentions();
   boolean deleted=false;
   for (  BlobStoreContext context : contexts.values()) {
     if (context.getBlobStore().containerExists(container)) {
