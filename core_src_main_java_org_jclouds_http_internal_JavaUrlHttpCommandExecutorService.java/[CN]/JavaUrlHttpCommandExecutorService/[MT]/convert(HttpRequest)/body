@@ -51,25 +51,23 @@
   connection.setRequestProperty(HttpHeaders.HOST,request.getEndpoint().getHost());
   connection.setRequestProperty(HttpHeaders.USER_AGENT,USER_AGENT);
   if (request.getPayload() != null) {
-    OutputStream out=null;
-    try {
-      if (request.getPayload().getContentMD5() != null)       connection.setRequestProperty("Content-MD5",CryptoStreams.base64(request.getPayload().getContentMD5()));
-      if (request.getPayload().getContentType() != null)       connection.setRequestProperty(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType());
-      if (request.getPayload().getContentDisposition() != null)       connection.setRequestProperty("Content-Disposition",request.getPayload().getContentDisposition());
-      if (chunked) {
-        connection.setChunkedStreamingMode(8196);
-      }
- else {
-        Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
-        connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,length.toString());
-        connection.setFixedLengthStreamingMode(length.intValue());
-      }
-      out=connection.getOutputStream();
-      request.getPayload().writeTo(out);
-      out.flush();
+    if (request.getPayload().getContentMD5() != null)     connection.setRequestProperty("Content-MD5",CryptoStreams.base64(request.getPayload().getContentMD5()));
+    if (request.getPayload().getContentType() != null)     connection.setRequestProperty(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType());
+    if (request.getPayload().getContentDisposition() != null)     connection.setRequestProperty("Content-Disposition",request.getPayload().getContentDisposition());
+    if (chunked) {
+      connection.setChunkedStreamingMode(8196);
     }
-  finally {
-      closeQuietly(out);
+ else {
+      Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
+      connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,length.toString());
+      connection.setFixedLengthStreamingMode(length.intValue());
+    }
+    try {
+      request.getPayload().writeTo(connection.getOutputStream());
+    }
+ catch (    IOException e) {
+      e.printStackTrace();
+      throw e;
     }
   }
  else {

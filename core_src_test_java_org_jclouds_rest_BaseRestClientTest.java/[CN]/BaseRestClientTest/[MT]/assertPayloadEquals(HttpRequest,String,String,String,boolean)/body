@@ -1,0 +1,22 @@
+{
+  if (request.getPayload() == null) {
+    assertNull(toMatch);
+  }
+ else {
+    String payload=null;
+    try {
+      payload=toStringAndClose(request.getPayload().getInput());
+    }
+ catch (    IOException e) {
+      propagate(e);
+    }
+    assertEquals(payload,toMatch);
+    Long length=new Long(payload.getBytes().length);
+    try {
+      assertContentHeadersEqual(request,contentType,contentDispositon,length,contentMD5 ? CryptoStreams.md5(request.getPayload()) : null);
+    }
+ catch (    IOException e) {
+      propagate(e);
+    }
+  }
+}

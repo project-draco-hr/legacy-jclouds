@@ -1,0 +1,34 @@
+{
+  try {
+    if (request.getHeader("Content-MD5") != null) {
+      String expectedMd5=request.getHeader("Content-MD5");
+      String realMd5FromRequest;
+      realMd5FromRequest=CryptoStreams.md5Base64(InputSuppliers.of(request.getInputStream()));
+      boolean matched=expectedMd5.equals(realMd5FromRequest);
+      if (matched) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("x-Content-MD5",realMd5FromRequest);
+      }
+ else {
+        response.sendError(500,"didn't match");
+      }
+    }
+ else {
+      for (      String header : new String[]{"Content-Disposition",HttpHeaders.CONTENT_LANGUAGE,HttpHeaders.CONTENT_ENCODING})       if (request.getHeader(header) != null) {
+        response.addHeader("x-" + header,request.getHeader(header));
+      }
+      response.setStatus(HttpServletResponse.SC_OK);
+      String responseString="POST";
+      if (request.getContentLength() < 10240) {
+        responseString=toStringAndClose(request.getInputStream()) + "POST";
+      }
+ else {
+        closeQuietly(request.getInputStream());
+      }
+      response.getWriter().println(responseString);
+    }
+  }
+ catch (  IOException e) {
+    response.sendError(500,e.toString());
+  }
+}

@@ -7,17 +7,11 @@
     f.deleteOnExit();
     long length=(long)(Runtime.getRuntime().freeMemory() * 1.1);
     os=new BufferedOutputStream(new FileOutputStream(f.getAbsolutePath()));
-    MessageDigest eTag;
-    try {
-      eTag=MessageDigest.getInstance("MD5");
-    }
- catch (    NoSuchAlgorithmException e) {
-      throw new RuntimeException("Could not find the MD5 algorithm",e);
-    }
+    MessageDigest digester=context.utils().crypto().md5();
     ByteArrayOutputStream out=new ByteArrayOutputStream();
     try {
       for (long i=0; i < length; i++) {
-        eTag.update((byte)'a');
+        digester.update((byte)'a');
         os.write((byte)'a');
       }
       os.flush();
@@ -28,7 +22,12 @@
  finally {
       Closeables.closeQuietly(out);
     }
-    assertEquals(client.postWithMd5("fileso",CryptoStreams.base64Encode(InputSuppliers.of(eTag.digest())),f).trim(),"created");
+    Payload payload=Payloads.newFilePayload(f);
+    byte[] digest=digester.digest();
+    payload.setContentMD5(digest);
+    Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
+    assertEquals(headers.get("x-Content-MD5"),Collections.singleton(CryptoStreams.base64Encode(InputSuppliers.of(digest))));
+    payload.release();
   }
   finally {
     if (os != null)     os.close();

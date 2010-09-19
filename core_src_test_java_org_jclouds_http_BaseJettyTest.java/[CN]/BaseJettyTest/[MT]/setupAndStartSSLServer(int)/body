@@ -9,21 +9,7 @@
       }
  else       if (request.getMethod().equals("POST")) {
         if (request.getContentLength() > 0) {
-          if (request.getHeader("Content-MD5") != null) {
-            String expectedMd5=request.getHeader("Content-MD5");
-            String realMd5FromRequest;
-            realMd5FromRequest=CryptoStreams.md5Base64(InputSuppliers.of(request.getInputStream()));
-            boolean matched=expectedMd5.equals(realMd5FromRequest);
-            if (matched) {
-              response.setContentType("text/xml");
-              response.setStatus(HttpServletResponse.SC_OK);
-              response.getWriter().println("created");
-            }
-          }
- else {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println(toStringAndClose(request.getInputStream()) + "POST");
-          }
+          handlePost(request,response);
         }
  else {
           handleAction(request,response);

@@ -1,3 +1,7 @@
 {
-  assertEquals(client.postWithContentDisposition("","attachment; filename=photo.jpg","foo").trim(),"content-disposition:photo.jpg");
+  Payload payload=Payloads.newStringPayload("foo");
+  payload.setContentDisposition("attachment; filename=photo.jpg");
+  Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
+  assertEquals(headers.get("x-Content-Disposition"),Collections.singleton("attachment; filename=photo.jpg"));
+  payload.release();
 }
