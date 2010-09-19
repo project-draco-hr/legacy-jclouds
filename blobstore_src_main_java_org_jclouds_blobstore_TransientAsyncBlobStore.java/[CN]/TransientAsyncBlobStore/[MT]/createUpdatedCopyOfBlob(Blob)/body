@@ -23,13 +23,13 @@
   blob.getMetadata().setContentMD5(payload.getContentMD5());
   blob.getMetadata().setContentType(payload.getContentType());
   blob.getMetadata().setContentDisposition(payload.getContentDisposition());
+  blob.getMetadata().setContentEncoding(payload.getContentEncoding());
+  blob.getMetadata().setContentLanguage(payload.getContentLanguage());
   String eTag=CryptoStreams.hex(payload.getContentMD5());
   blob.getMetadata().setETag(eTag);
   blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,Collections.singleton(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
   blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,Collections.singleton(eTag));
-  blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,Collections.singleton(payload.getContentType()));
-  blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singleton(payload.getContentLength() + ""));
-  blob.getAllHeaders().replaceValues("Content-MD5",Collections.singleton(CryptoStreams.base64(payload.getContentMD5())));
+  copyPayloadHeadersToBlob(payload,blob);
   blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
   return blob;
 }
