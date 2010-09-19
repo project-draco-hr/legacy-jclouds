@@ -1,6 +1,6 @@
 {
-  String identity=checkNotNull(System.getProperty("trmk-vcloudexpress.identity"),"trmk-vcloudexpress.identity");
-  String credential=checkNotNull(System.getProperty("trmk-vcloudexpress.credential"),"trmk-vcloudexpress.credential");
-  context=new ComputeServiceContextFactory().createContext("trmk-vcloudexpress",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule())).getProviderSpecificContext();
+  setupCredentials();
+  Properties overrides=setupProperties();
+  context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).getProviderSpecificContext();
   tmClient=context.getApi();
 }

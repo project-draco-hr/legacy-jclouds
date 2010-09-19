@@ -1,7 +1,7 @@
 {
-  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
-  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  Injector injector=new RestContextFactory().createContextBuilder("ec2",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule())).buildInjector();
+  setupCredentials();
+  Properties overrides=setupProperties();
+  Injector injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides).buildInjector();
   client=injector.getInstance(EC2Client.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   runningTester=new RetryablePredicate<RunningInstance>(new InstanceStateRunning(client),180,5,TimeUnit.SECONDS);

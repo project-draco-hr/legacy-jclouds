@@ -1,6 +1,7 @@
 {
   setupCredentials();
-  Injector injector=new RestContextFactory().createContextBuilder(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule())).buildInjector();
+  Properties overrides=setupProperties();
+  Injector injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
   connection=tmClient=injector.getInstance(TerremarkVCloudClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);

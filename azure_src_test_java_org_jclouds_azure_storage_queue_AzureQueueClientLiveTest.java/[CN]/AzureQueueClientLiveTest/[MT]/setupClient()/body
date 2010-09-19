@@ -1,5 +1,5 @@
 {
-  identity=System.getProperty("jclouds.test.identity");
-  String credential=System.getProperty("jclouds.test.credential");
-  connection=(AzureQueueClient)new RestContextFactory().createContext("azurequeue",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule())).getApi();
+  setupCredentials();
+  Properties overrides=setupProperties();
+  connection=(AzureQueueClient)new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides).getApi();
 }

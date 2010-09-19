@@ -1,7 +1,7 @@
 {
-  String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
-  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  Injector injector=new RestContextFactory().createContextBuilder("cloudservers",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),new Properties()).buildInjector();
+  setupCredentials();
+  Properties overrides=setupProperties();
+  Injector injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
   client=injector.getInstance(CloudServersClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   SocketOpen socketOpen=injector.getInstance(SocketOpen.class);

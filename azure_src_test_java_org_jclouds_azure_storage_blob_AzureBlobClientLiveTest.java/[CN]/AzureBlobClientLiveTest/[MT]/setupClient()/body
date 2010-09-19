@@ -1,6 +1,6 @@
 {
-  identity=System.getProperty("jclouds.test.identity");
-  String credential=System.getProperty("jclouds.test.credential");
-  context=new BlobStoreContextFactory().createContext("azureblob",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  setupCredentials();
+  Properties overrides=setupProperties();
+  context=new BlobStoreContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
   client=(AzureBlobClient)context.getProviderSpecificContext().getApi();
 }

@@ -1,14 +1,16 @@
 {
-  String endpoint=System.getProperty("jclouds.test.endpoint");
-  String app=System.getProperty("jclouds.test.app");
-  String identity=System.getProperty("jclouds.test.identity");
-  String credential=System.getProperty("jclouds.test.credential");
-  if (endpoint != null)   testContext.setAttribute("jclouds.test.endpoint",endpoint);
-  if (app != null)   testContext.setAttribute("jclouds.test.app",app);
-  if (identity != null)   testContext.setAttribute("jclouds.test.identity",identity);
-  if (credential != null)   testContext.setAttribute("jclouds.test.credential",credential);
+  String endpoint=System.getProperty("test." + provider + ".endpoint");
+  String app=System.getProperty("test.app");
+  String identity=System.getProperty("test." + provider + ".identity");
+  String credential=System.getProperty("test." + provider + ".credential");
+  String apiversion=System.getProperty("test." + provider + ".apiversion");
+  if (endpoint != null)   testContext.setAttribute("test." + provider + ".endpoint",endpoint);
+  if (app != null)   testContext.setAttribute("test.app",app);
+  if (identity != null)   testContext.setAttribute("test." + provider + ".identity",identity);
+  if (credential != null)   testContext.setAttribute("test." + provider + ".credential",credential);
+  if (credential != null)   testContext.setAttribute("test." + provider + ".apiversion",apiversion);
   if (identity != null) {
-    return createLiveContext(configurationModule,endpoint,app,identity,credential);
+    return createLiveContext(configurationModule,endpoint,apiversion,app,identity,credential);
   }
  else {
     return createStubContext();

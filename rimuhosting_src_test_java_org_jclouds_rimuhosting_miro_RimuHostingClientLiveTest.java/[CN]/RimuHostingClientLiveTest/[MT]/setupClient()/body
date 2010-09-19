@@ -1,5 +1,6 @@
 {
-  String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  this.context=new RestContextFactory().createContext("rimuhosting",credential,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()));
+  setupCredentials();
+  Properties overrides=setupProperties();
+  this.context=new RestContextFactory().createContext("rimuhosting",ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
   this.connection=context.getApi();
 }
