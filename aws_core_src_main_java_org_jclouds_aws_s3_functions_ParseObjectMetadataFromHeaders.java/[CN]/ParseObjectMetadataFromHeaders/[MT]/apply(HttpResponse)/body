@@ -2,10 +2,6 @@
   BlobMetadata base=blobMetadataParser.apply(from);
   MutableObjectMetadata to=blobToObjectMetadata.apply(base);
   addETagTo(from,to);
-  to.setSize(attemptToParseSizeAndRangeFromHeaders(from));
-  to.setContentMD5(CryptoStreams.hex(Utils.replaceAll(to.getETag(),'"',"")));
   to.setCacheControl(from.getFirstHeaderOrNull(HttpHeaders.CACHE_CONTROL));
-  to.setContentDisposition(from.getFirstHeaderOrNull("Content-Disposition"));
-  to.setContentEncoding(from.getFirstHeaderOrNull(HttpHeaders.CONTENT_ENCODING));
   return to;
 }

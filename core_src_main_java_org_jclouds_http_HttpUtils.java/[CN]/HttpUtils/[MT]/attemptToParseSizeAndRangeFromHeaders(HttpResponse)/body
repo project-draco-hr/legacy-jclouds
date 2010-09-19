@@ -1,7 +1,7 @@
 {
   String contentRange=from.getFirstHeaderOrNull("Content-Range");
   if (contentRange == null && from.getPayload() != null) {
-    return from.getPayload().getContentLength();
+    return from.getPayload().getContentMetadata().getContentLength();
   }
  else   if (contentRange != null) {
     return Long.parseLong(contentRange.substring(contentRange.lastIndexOf('/') + 1));

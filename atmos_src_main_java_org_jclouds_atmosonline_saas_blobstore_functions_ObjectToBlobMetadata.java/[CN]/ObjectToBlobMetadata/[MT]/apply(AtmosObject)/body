@@ -3,10 +3,8 @@
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   to.setId(from.getSystemMetadata().getObjectID());
   to.setLastModified(from.getSystemMetadata().getLastUserDataModification());
-  to.setContentMD5(from.getSystemMetadata().getContentMD5());
-  if (from.getContentMetadata().getContentType() != null)   to.setContentType(from.getContentMetadata().getContentType());
+  HttpUtils.copy(from.getContentMetadata(),to.getContentMetadata());
   to.setName(objectName.apply(from));
-  to.setSize(from.getSystemMetadata().getSize());
   if (from.getSystemMetadata().getType() == FileType.DIRECTORY) {
     to.setType(StorageType.FOLDER);
   }

@@ -1,6 +1,6 @@
 {
   Payload payload=Payloads.newStringPayload("foo");
-  payload.setContentDisposition("attachment; filename=photo.jpg");
+  payload.getContentMetadata().setContentDisposition("attachment; filename=photo.jpg");
   Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
   assertEquals(headers.get("x-Content-Disposition"),Collections.singleton("attachment; filename=photo.jpg"));
   payload.release();

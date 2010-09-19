@@ -3,7 +3,7 @@
     byte[] toSearch=objectMD5.apply(value);
     for (    BlobMetadata metadata : getAllBlobMetadata.execute(containerName,options)) {
       BlobProperties properties=client.getBlobProperties(containerName,metadata.getName());
-      if (Arrays.equals(toSearch,properties.getContentMD5()))       return true;
+      if (Arrays.equals(toSearch,properties.getContentMetadata().getContentMD5()))       return true;
     }
     return false;
   }

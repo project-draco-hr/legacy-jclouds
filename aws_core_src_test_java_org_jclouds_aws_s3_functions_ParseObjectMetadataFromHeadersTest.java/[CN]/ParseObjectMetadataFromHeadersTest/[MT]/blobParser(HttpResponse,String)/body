@@ -1,11 +1,14 @@
 {
   ParseSystemAndUserMetadataFromHeaders parser=createMock(ParseSystemAndUserMetadataFromHeaders.class);
   MutableBlobMetadata md=new MutableBlobMetadataImpl();
-  md.setContentType("type");
+  md.getContentMetadata().setContentType("type");
   md.setETag(etag);
   md.setName("key");
   md.setLastModified(now);
-  md.setSize(1025l);
+  md.getContentMetadata().setContentLength(1025l);
+  md.getContentMetadata().setContentDisposition("contentDisposition");
+  md.getContentMetadata().setContentEncoding("encoding");
+  md.getContentMetadata().setContentMD5(CryptoStreams.hex("abcd"));
   md.setUserMetadata(userMetadata);
   expect(parser.apply(response)).andReturn(md);
   replay(parser);

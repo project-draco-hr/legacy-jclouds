@@ -24,11 +24,7 @@
       if (!request.getPayload().isRepeatable()) {
         Payload oldPayload=request.getPayload();
         request.setPayload(array);
-        if (oldPayload.getContentMD5() != null)         request.getPayload().setContentMD5(oldPayload.getContentMD5());
-        if (oldPayload.getContentType() != null)         request.getPayload().setContentType(oldPayload.getContentType());
-        if (oldPayload.getContentDisposition() != null)         request.getPayload().setContentDisposition(oldPayload.getContentDisposition());
-        if (oldPayload.getContentEncoding() != null)         request.getPayload().setContentEncoding(oldPayload.getContentEncoding());
-        if (oldPayload.getContentLanguage() != null)         request.getPayload().setContentLanguage(oldPayload.getContentLanguage());
+        HttpUtils.copy(oldPayload.getContentMetadata(),request.getPayload().getContentMetadata());
       }
       gaeRequest.setPayload(array);
     }
@@ -38,13 +34,11 @@
  finally {
       closeQuietly(input);
     }
-    if (request.getPayload().getContentMD5() != null)     gaeRequest.setHeader(new HTTPHeader("Content-MD5",CryptoStreams.base64(request.getPayload().getContentMD5())));
-    if (request.getPayload().getContentType() != null)     gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_TYPE,request.getPayload().getContentType()));
-    if (request.getPayload().getContentDisposition() != null)     gaeRequest.setHeader(new HTTPHeader("Content-Disposition",request.getPayload().getContentDisposition()));
-    if (request.getPayload().getContentEncoding() != null)     gaeRequest.setHeader(new HTTPHeader("Content-Encoding",request.getPayload().getContentEncoding()));
-    if (request.getPayload().getContentLanguage() != null)     gaeRequest.setHeader(new HTTPHeader("Content-Language",request.getPayload().getContentLanguage()));
-    Long length=checkNotNull(request.getPayload().getContentLength(),"payload.getContentLength");
-    gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,length.toString()));
+    LinkedHashMultimap<String,String> map=LinkedHashMultimap.create();
+    HttpUtils.addContentHeadersFromMetadata(request.getPayload().getContentMetadata(),map);
+    for (    Entry<String,String> header : map.entries()) {
+      gaeRequest.setHeader(new HTTPHeader(header.getKey(),header.getValue()));
+    }
   }
  else {
     gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));

@@ -1,8 +1,5 @@
 {
-  MutableContentMetadata to=new MutableContentMetadata();
-  to.setContentType(base.getContentType());
-  to.setContentMD5(base.getContentMD5());
-  to.setName(base.getName());
-  if (base.getSize() != null)   to.setContentLength(base.getSize());
-  return to;
+  MutableBlobMetadataImpl to=new MutableBlobMetadataImpl();
+  HttpUtils.copy(base.getContentMetadata(),to.getContentMetadata());
+  return new DelegatingMutableContentMetadata(base.getName(),to.getContentMetadata());
 }

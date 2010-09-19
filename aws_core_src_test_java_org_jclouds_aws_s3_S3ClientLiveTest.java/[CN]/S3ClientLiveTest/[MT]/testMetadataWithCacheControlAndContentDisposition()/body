@@ -4,13 +4,13 @@
   object.getMetadata().setKey(key);
   object.setPayload(TEST_STRING);
   object.getMetadata().setCacheControl("no-cache");
-  object.getMetadata().setContentDisposition("attachment; filename=hello.txt");
+  object.getMetadata().getContentMetadata().setContentDisposition("attachment; filename=hello.txt");
   String containerName=getContainerName();
   try {
     getApi().putObject(containerName,object);
     S3Object newObject=validateObject(containerName,key);
     assertEquals(newObject.getMetadata().getCacheControl(),"no-cache");
-    assertEquals(newObject.getMetadata().getContentDisposition(),"attachment; filename=hello.txt");
+    assertEquals(newObject.getMetadata().getContentMetadata().getContentDisposition(),"attachment; filename=hello.txt");
   }
   finally {
     returnContainer(containerName);

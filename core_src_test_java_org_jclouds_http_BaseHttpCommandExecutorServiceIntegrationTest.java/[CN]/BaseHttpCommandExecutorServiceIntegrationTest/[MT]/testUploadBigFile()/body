@@ -24,7 +24,7 @@
     }
     Payload payload=Payloads.newFilePayload(f);
     byte[] digest=digester.digest();
-    payload.setContentMD5(digest);
+    payload.getContentMetadata().setContentMD5(digest);
     Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
     assertEquals(headers.get("x-Content-MD5"),Collections.singleton(CryptoStreams.base64Encode(InputSuppliers.of(digest))));
     payload.release();

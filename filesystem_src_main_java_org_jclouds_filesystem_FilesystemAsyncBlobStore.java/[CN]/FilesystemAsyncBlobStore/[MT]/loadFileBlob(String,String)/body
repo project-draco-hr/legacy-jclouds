@@ -5,7 +5,7 @@
   MutableBlobMetadata metadata=new MutableBlobMetadataImpl();
   metadata.setName(key);
   metadata.setLastModified(new Date(blobPayload.lastModified()));
-  metadata.setSize(blobPayload.length());
+  metadata.getContentMetadata().setContentLength(blobPayload.length());
   try {
     payload=Payloads.calculateMD5(payload);
   }
@@ -13,8 +13,8 @@
     logger.error("An error occurred calculating MD5 for blob %s from container ",key,container);
     Throwables.propagateIfPossible(e);
   }
-  metadata.setContentType("");
-  String eTag=CryptoStreams.hex(payload.getContentMD5());
+  metadata.getContentMetadata().setContentType("");
+  String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
   metadata.setETag(eTag);
   Blob blob=blobFactory.create(metadata);
   blob.setPayload(blobPayload);

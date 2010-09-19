@@ -3,14 +3,14 @@
   if (payload == null)   payload=(in.getPayload() instanceof DelegatingPayload) ? (DelegatingPayload.class.cast(in.getPayload()).getDelegate() instanceof ByteArrayPayload) ? ByteArrayPayload.class.cast(DelegatingPayload.class.cast(in.getPayload()).getDelegate()) : null : null;
   try {
     if (payload == null || !(payload instanceof ByteArrayPayload)) {
-      String oldContentType=in.getPayload().getContentType();
+      MutableContentMetadata oldMd=in.getPayload().getContentMetadata();
       ByteArrayOutputStream out=new ByteArrayOutputStream();
       in.getPayload().writeTo(out);
       payload=(ByteArrayPayload)Payloads.calculateMD5(Payloads.newPayload(out.toByteArray()));
-      payload.setContentType(oldContentType);
+      HttpUtils.copy(oldMd,payload.getContentMetadata());
     }
  else {
-      if (payload.getContentMD5() == null)       Payloads.calculateMD5(in,crypto.md5());
+      if (payload.getContentMetadata().getContentMD5() == null)       Payloads.calculateMD5(in,crypto.md5());
     }
   }
  catch (  IOException e) {
@@ -19,13 +19,7 @@
   Blob blob=blobFactory.create(copy(in.getMetadata()));
   blob.setPayload(payload);
   blob.getMetadata().setLastModified(new Date());
-  blob.getMetadata().setSize(payload.getContentLength());
-  blob.getMetadata().setContentMD5(payload.getContentMD5());
-  blob.getMetadata().setContentType(payload.getContentType());
-  blob.getMetadata().setContentDisposition(payload.getContentDisposition());
-  blob.getMetadata().setContentEncoding(payload.getContentEncoding());
-  blob.getMetadata().setContentLanguage(payload.getContentLanguage());
-  String eTag=CryptoStreams.hex(payload.getContentMD5());
+  String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
   blob.getMetadata().setETag(eTag);
   blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,Collections.singleton(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
   blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,Collections.singleton(eTag));

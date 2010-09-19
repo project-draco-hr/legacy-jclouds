@@ -3,13 +3,16 @@
     if (header.getKey() != null)     logger.debug("%s %s: %s",prefix,header.getKey(),header.getValue());
   }
   if (message.getPayload() != null) {
-    if (message.getPayload().getContentType() != null)     logger.debug("%s %s: %s",prefix,HttpHeaders.CONTENT_TYPE,message.getPayload().getContentType());
-    if (message.getPayload().getContentLength() != null)     logger.debug("%s %s: %s",prefix,HttpHeaders.CONTENT_LENGTH,message.getPayload().getContentLength());
-    if (message.getPayload().getContentMD5() != null)     try {
-      logger.debug("%s %s: %s",prefix,"Content-MD5",CryptoStreams.base64Encode(InputSuppliers.of(message.getPayload().getContentMD5())));
+    if (message.getPayload().getContentMetadata().getContentType() != null)     logger.debug("%s %s: %s",prefix,CONTENT_TYPE,message.getPayload().getContentMetadata().getContentType());
+    if (message.getPayload().getContentMetadata().getContentLength() != null)     logger.debug("%s %s: %s",prefix,CONTENT_LENGTH,message.getPayload().getContentMetadata().getContentLength());
+    if (message.getPayload().getContentMetadata().getContentMD5() != null)     try {
+      logger.debug("%s %s: %s",prefix,"Content-MD5",CryptoStreams.base64Encode(InputSuppliers.of(message.getPayload().getContentMetadata().getContentMD5())));
     }
  catch (    IOException e) {
       logger.warn(e," error getting md5 for %s",message);
     }
+    if (message.getPayload().getContentMetadata().getContentDisposition() != null)     logger.debug("%s %s: %s",prefix,"Content-Disposition",message.getPayload().getContentMetadata().getContentDisposition());
+    if (message.getPayload().getContentMetadata().getContentEncoding() != null)     logger.debug("%s %s: %s",prefix,CONTENT_ENCODING,message.getPayload().getContentMetadata().getContentEncoding());
+    if (message.getPayload().getContentMetadata().getContentLanguage() != null)     logger.debug("%s %s: %s",prefix,CONTENT_LANGUAGE,message.getPayload().getContentMetadata().getContentLanguage());
   }
 }

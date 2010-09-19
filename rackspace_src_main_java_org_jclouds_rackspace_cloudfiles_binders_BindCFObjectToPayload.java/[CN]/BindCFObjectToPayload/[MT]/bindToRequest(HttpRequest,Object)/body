@@ -1,8 +1,8 @@
 {
   CFObject object=(CFObject)payload;
-  if (object.getPayload().getContentType() == null)   object.getPayload().setContentType(MediaType.APPLICATION_OCTET_STREAM);
-  if (object.getPayload().getContentLength() != null && object.getPayload().getContentLength() >= 0) {
-    checkArgument(object.getPayload().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
+  if (object.getPayload().getContentMetadata().getContentType() == null)   object.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+  if (object.getPayload().getContentMetadata().getContentLength() != null && object.getPayload().getContentMetadata().getContentLength() >= 0) {
+    checkArgument(object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
   }
  else {
     request.getHeaders().put("Transfer-Encoding","chunked");

@@ -2,11 +2,9 @@
   String objectKey=getKeyFor(request,from);
   MutableBlobMetadata to=metadataFactory.get();
   to.setName(objectKey);
-  setContentTypeOrThrowException(from,to);
+  HttpUtils.copy(from.getPayload().getContentMetadata(),to.getContentMetadata());
   addETagTo(from,to);
-  addContentMD5To(from,to);
   parseLastModifiedOrThrowException(from,to);
-  setContentLength(from,to);
   addUserMetadataTo(from,to);
   return to;
 }

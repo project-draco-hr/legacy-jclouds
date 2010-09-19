@@ -2,8 +2,9 @@
   byte[] returnVal=toByteArrayOrNull(response);
   if (returnVal != null && !response.getPayload().isRepeatable()) {
     Payload newPayload=Payloads.newByteArrayPayload(returnVal);
-    newPayload.setContentMD5(response.getPayload().getContentMD5());
-    newPayload.setContentType(response.getPayload().getContentType());
+    MutableContentMetadata fromMd=response.getPayload().getContentMetadata();
+    MutableContentMetadata toMd=newPayload.getContentMetadata();
+    copy(fromMd,toMd);
     response.setPayload(newPayload);
   }
   return returnVal;

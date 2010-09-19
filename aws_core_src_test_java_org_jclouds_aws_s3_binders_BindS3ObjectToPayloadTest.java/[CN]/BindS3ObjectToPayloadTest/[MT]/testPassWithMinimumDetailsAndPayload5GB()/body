@@ -6,15 +6,16 @@
   Payload payload=createMock(Payload.class);
   Blob blob=createMock(Blob.class);
   MutableObjectMetadata md=createMock(MutableObjectMetadata.class);
+  MutableContentMetadata content=createMock(MutableContentMetadata.class);
   expect(object.getPayload()).andReturn(payload).atLeastOnce();
-  expect(payload.getContentLength()).andReturn(5368709120l).atLeastOnce();
+  expect(payload.getContentMetadata()).andReturn(content).atLeastOnce();
+  expect(content.getContentLength()).andReturn(5368709120l).atLeastOnce();
   expect(object2Blob.apply(object)).andReturn(blob);
   mdBinder.bindToRequest(request,blob);
   expect(object.getMetadata()).andReturn(md).atLeastOnce();
   expect(md.getCacheControl()).andReturn(null).atLeastOnce();
-  expect(md.getContentDisposition()).andReturn(null).atLeastOnce();
-  expect(md.getContentEncoding()).andReturn(null).atLeastOnce();
   replay(payload);
+  replay(content);
   replay(mdBinder);
   replay(object2Blob);
   replay(request);
@@ -24,6 +25,7 @@
   BindS3ObjectToPayload binder=new BindS3ObjectToPayload(object2Blob,mdBinder);
   binder.bindToRequest(request,object);
   verify(payload);
+  verify(content);
   verify(mdBinder);
   verify(object2Blob);
   verify(request);

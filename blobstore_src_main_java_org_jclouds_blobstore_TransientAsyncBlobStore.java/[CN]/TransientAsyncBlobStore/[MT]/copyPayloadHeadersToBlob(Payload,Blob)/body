@@ -1,8 +1,3 @@
 {
-  if (payload.getContentType() != null)   blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_TYPE,Collections.singleton(payload.getContentType()));
-  if (payload.getContentDisposition() != null)   blob.getAllHeaders().replaceValues("Content-Disposition",Collections.singleton(payload.getContentDisposition()));
-  if (payload.getContentEncoding() != null)   blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_ENCODING,Collections.singleton(payload.getContentEncoding()));
-  if (payload.getContentEncoding() != null)   blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_LANGUAGE,Collections.singleton(payload.getContentLanguage()));
-  if (payload.getContentLength() != null)   blob.getAllHeaders().replaceValues(HttpHeaders.CONTENT_LENGTH,Collections.singleton(payload.getContentLength() + ""));
-  if (payload.getContentMD5() != null)   blob.getAllHeaders().replaceValues("Content-MD5",Collections.singleton(CryptoStreams.base64(payload.getContentMD5())));
+  HttpUtils.addContentHeadersFromMetadata(payload.getContentMetadata(),blob.getAllHeaders());
 }

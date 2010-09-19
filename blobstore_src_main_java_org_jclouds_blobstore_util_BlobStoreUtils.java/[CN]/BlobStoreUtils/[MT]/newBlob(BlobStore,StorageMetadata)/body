@@ -1,8 +1,7 @@
 {
   Blob blob=blobStore.newBlob(blobMeta.getName());
   if (blobMeta instanceof BlobMetadata) {
-    blob.getMetadata().setContentMD5(((BlobMetadata)blobMeta).getContentMD5());
-    blob.getMetadata().setContentType(((BlobMetadata)blobMeta).getContentType());
+    HttpUtils.copy(((BlobMetadata)blobMeta).getContentMetadata(),blob.getMetadata().getContentMetadata());
   }
   blob.getMetadata().setETag(blobMeta.getETag());
   blob.getMetadata().setId(blobMeta.getProviderId());

@@ -1,6 +1,6 @@
 {
   Payload payload=newInputStreamPayload(toInputStream("whoops"));
-  payload.setContentLength((long)"whoops".length());
+  payload.getContentMetadata().setContentLength((long)"whoops".length());
   Method method=TestTransformers.class.getMethod("put",Payload.class);
   HttpRequest request=factory(TestQuery.class).createRequest(method,payload);
   assertRequestLineEquals(request,"PUT http://localhost:9999?x-ms-version=2009-07-17 HTTP/1.1");

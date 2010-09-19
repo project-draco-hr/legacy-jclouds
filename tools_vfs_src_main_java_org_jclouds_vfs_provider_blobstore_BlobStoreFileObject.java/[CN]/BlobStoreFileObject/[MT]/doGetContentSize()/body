@@ -1,6 +1,8 @@
 {
-  if (metadata == null || metadata.getSize() == null || metadata.getSize() == 0) {
-    getMetadataAtPath(getNameTrimLeadingSlashes());
+  if (metadata == null && metadata.getType() == StorageType.BLOB)   getMetadataAtPath(getNameTrimLeadingSlashes());
+  if (metadata != null && metadata.getType() == StorageType.BLOB) {
+    BlobMetadata blobMd=BlobMetadata.class.cast(metadata);
+    return blobMd.getContentMetadata().getContentLength() != null ? blobMd.getContentMetadata().getContentLength() : 0;
   }
-  return metadata.getSize() != null ? metadata.getSize() : 0;
+  return 0;
 }
