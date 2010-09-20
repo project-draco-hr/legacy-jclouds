@@ -10,7 +10,13 @@
     value=constraint;
   }
  else {
-    throw new IllegalStateException("unimplemented location: " + constraint);
+    if (constraint.equals(Region.EU_WEST_1)) {
+      value="EU";
+    }
+ else {
+      logger.warn("region %s not in %s ",constraint,regions);
+      value=constraint;
+    }
   }
   String payload=String.format("<CreateBucketConfiguration><LocationConstraint>%s</LocationConstraint></CreateBucketConfiguration>",value);
   super.bindToRequest(request,payload);

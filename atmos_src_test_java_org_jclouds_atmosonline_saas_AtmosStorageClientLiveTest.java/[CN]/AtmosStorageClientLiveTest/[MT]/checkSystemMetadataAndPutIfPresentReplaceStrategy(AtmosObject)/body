@@ -2,14 +2,14 @@
   long time=System.currentTimeMillis();
   boolean update=true;
   try {
-    connection.getSystemMetadata(privateDirectory + "/object");
+    getApi().getSystemMetadata(privateDirectory + "/object");
   }
  catch (  KeyNotFoundException ex) {
     update=false;
   }
   try {
-    if (update)     connection.updateFile(privateDirectory,object);
- else     connection.createFile(privateDirectory,object);
+    if (update)     getApi().updateFile(privateDirectory,object);
+ else     getApi().createFile(privateDirectory,object);
     System.err.printf("%s %s; %dms%n",update ? "updated" : "created",object.getPayload() instanceof InputStreamPayload ? "stream" : "string",System.currentTimeMillis() - time);
   }
  catch (  Exception e) {
