@@ -14,6 +14,8 @@
       }
     }
  catch (    RuntimeException e) {
+      AuthorizationException aex=Utils.getFirstThrowableOfType(e,AuthorizationException.class);
+      if (aex != null)       e=aex;
       if (exceptionParser != null) {
         try {
           return Futures.immediateFuture(exceptionParser.apply(e));

@@ -1,7 +1,21 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> destroying node(%s)",id);
-  NodeMetadata node=destroyNodeStrategy.execute(id);
-  boolean successful=node == null ? true : nodeTerminated.apply(node);
+  final AtomicReference<NodeMetadata> node=new AtomicReference<NodeMetadata>();
+  RetryablePredicate<String> tester=new RetryablePredicate<String>(new Predicate<String>(){
+    @Override public boolean apply(    String input){
+      try {
+        NodeMetadata md=destroyNodeStrategy.execute(id);
+        if (md != null)         node.set(md);
+        return true;
+      }
+ catch (      IllegalStateException e) {
+        logger.warn("<< illegal state destroying node(%s)",id);
+        return false;
+      }
+    }
+  }
+,timeouts.nodeRunning,1000,TimeUnit.MILLISECONDS);
+  boolean successful=tester.apply(id) && (node.get() == null || nodeTerminated.apply(node.get()));
   logger.debug("<< destroyed node(%s) success(%s)",id,successful);
 }
