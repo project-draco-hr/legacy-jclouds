@@ -8,10 +8,7 @@
       keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(region,tag));
       logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
     }
- catch (    AWSResponseException e) {
-      if (!e.getError().getCode().equals("InvalidKeyPair.Duplicate")) {
-        throw e;
-      }
+ catch (    IllegalStateException e) {
     }
   }
   return keyPair;
