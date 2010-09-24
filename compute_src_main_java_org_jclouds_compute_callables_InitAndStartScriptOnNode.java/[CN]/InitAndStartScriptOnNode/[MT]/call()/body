@@ -1,0 +1,10 @@
+{
+  ssh.put(scriptName,Payloads.newPayload(script.render(OsFamily.UNIX)));
+  ExecResponse returnVal=ssh.exec("chmod 755 " + scriptName);
+  returnVal=ssh.exec("./" + scriptName + " init");
+  logger.debug("<< initialized(%d)",returnVal.getExitCode());
+  String command=(runAsRoot) ? startScriptAsRoot() : startScriptAsDefaultUser();
+  returnVal=runCommand(command);
+  logger.debug("<< start(%d)",returnVal.getExitCode());
+  return returnVal;
+}

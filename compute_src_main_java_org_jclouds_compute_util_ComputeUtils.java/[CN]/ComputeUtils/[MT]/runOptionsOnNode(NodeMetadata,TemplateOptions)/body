@@ -2,19 +2,10 @@
   if (!options.shouldBlockUntilRunning())   return node;
   if (nodeRunning.apply(node))   node=installNewCredentials(getNode.execute(node.getId()),node.getCredentials());
  else   throw new IllegalStateException(String.format("node didn't achieve the state running on node %s within %d seconds, final state: %s",node.getId(),timeouts.nodeRunning / 1000,node.getState()));
-  List<SshCallable<?>> callables=Lists.newArrayList();
-  if (options.getRunScript() != null) {
-    callables.add(runScriptOnNode(node,"runscript",options.getRunScript()));
-  }
-  if (options.getPublicKey() != null) {
-    callables.add(authorizeKeyOnNode(node,options.getPublicKey()));
-  }
-  if (callables.size() > 0 || options.getPrivateKey() != null) {
-    runCallablesOnNode(node,callables,options.getPrivateKey() != null ? installKeyOnNode(node,options.getPrivateKey()) : null);
-  }
-  if (options.getPort() > 0) {
-    checkNodeHasPublicIps(node);
-    blockUntilPortIsListeningOnPublicIp(options.getPort(),options.getSeconds(),Iterables.get(node.getPublicAddresses(),0));
-  }
+  List<Statement> bootstrap=Lists.newArrayList();
+  if (options.getRunScript() != null)   bootstrap.add(options.getRunScript());
+  if (options.getPublicKey() != null)   bootstrap.add(new AuthorizeRSAPublicKey(options.getPublicKey()));
+  if (options.getPrivateKey() != null)   bootstrap.add(new InstallRSAPrivateKey(options.getPrivateKey()));
+  if (bootstrap.size() > 0)   runScriptOnNode(node,new StatementList(bootstrap),options);
   return node;
 }

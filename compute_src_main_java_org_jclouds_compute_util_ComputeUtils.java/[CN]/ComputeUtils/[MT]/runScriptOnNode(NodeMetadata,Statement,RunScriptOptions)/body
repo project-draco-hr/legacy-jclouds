@@ -1,0 +1,23 @@
+{
+  RunScriptOnNode callable;
+  String taskName=options.getTaskName();
+  ExecResponse response;
+  if (options.isRunAsRoot()) {
+    callable=runScriptOnNode(node,taskName,runScript);
+  }
+ else   callable=runScriptOnNodeAsDefaultUser(node,taskName,runScript);
+  SshClient ssh=createSshClientOncePortIsListeningOnNode(node);
+  try {
+    ssh.connect();
+    callable.setConnection(ssh,logger);
+    response=callable.call();
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+  if (options.getPort() > 0) {
+    checkNodeHasPublicIps(node);
+    blockUntilPortIsListeningOnPublicIp(options.getPort(),options.getSeconds(),Iterables.get(node.getPublicAddresses(),0));
+  }
+  return response;
+}

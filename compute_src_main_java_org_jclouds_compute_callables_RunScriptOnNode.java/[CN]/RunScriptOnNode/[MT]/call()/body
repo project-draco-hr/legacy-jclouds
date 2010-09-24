@@ -1,11 +1,5 @@
 {
-  ssh.put(scriptName,script);
-  ExecResponse returnVal=ssh.exec("chmod 755 " + scriptName);
-  returnVal=ssh.exec("./" + scriptName + " init");
-  logger.debug("<< initialized(%d)",returnVal.getExitCode());
-  String command=(runAsRoot) ? runScriptAsRoot() : runScriptAsDefaultUser();
-  returnVal=runCommand(command);
-  logger.debug("<< start(%d)",returnVal.getExitCode());
+  ExecResponse returnVal=super.call();
   boolean complete=runScriptNotRunning.apply(new CommandUsingClient("./" + scriptName + " status",ssh));
   logger.debug("<< complete(%s)",complete);
   if (logger.isDebugEnabled() || returnVal.getExitCode() != 0) {

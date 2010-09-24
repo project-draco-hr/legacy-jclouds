@@ -1,5 +1,9 @@
 {
-  checkNotNull(script,"script");
-  this.script=script;
-  return this;
+  try {
+    return runScript(Statements.exec(Utils.toStringAndClose(checkNotNull(script,"script").getInput())));
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+    return this;
+  }
 }
