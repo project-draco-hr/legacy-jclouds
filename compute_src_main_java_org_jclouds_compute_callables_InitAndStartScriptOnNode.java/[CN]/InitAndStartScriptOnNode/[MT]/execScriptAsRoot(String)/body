@@ -1,0 +1,13 @@
+{
+  String command;
+  if (node.getCredentials().identity.equals("root")) {
+    command="./" + init.getInstanceName() + " "+ action;
+  }
+ else   if (ComputeServiceUtils.isKeyAuth(node)) {
+    command="sudo ./" + init.getInstanceName() + " "+ action;
+  }
+ else {
+    command=String.format("echo '%s'|sudo -S ./%s %s",node.getCredentials().credential,init.getInstanceName(),action);
+  }
+  return command;
+}

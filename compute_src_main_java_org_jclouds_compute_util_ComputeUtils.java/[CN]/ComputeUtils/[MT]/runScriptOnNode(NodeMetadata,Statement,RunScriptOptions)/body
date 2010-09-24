@@ -1,11 +1,6 @@
 {
-  RunScriptOnNode callable;
-  String taskName=options.getTaskName();
+  InitAndStartScriptOnNode callable=generateScript(node,runScript,options);
   ExecResponse response;
-  if (options.isRunAsRoot()) {
-    callable=runScriptOnNode(node,taskName,runScript);
-  }
- else   callable=runScriptOnNodeAsDefaultUser(node,taskName,runScript);
   SshClient ssh=createSshClientOncePortIsListeningOnNode(node);
   try {
     ssh.connect();
