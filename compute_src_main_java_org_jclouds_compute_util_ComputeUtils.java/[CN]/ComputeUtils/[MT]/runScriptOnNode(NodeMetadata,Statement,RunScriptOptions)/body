@@ -1,0 +1,18 @@
+{
+  InitAndStartScriptOnNode callable=generateScript(node,runScript,options);
+  ExecResponse response;
+  SshClient ssh=createSshClientOncePortIsListeningOnNode(node);
+  try {
+    ssh.connect();
+    callable.setConnection(ssh,logger);
+    response=callable.call();
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+  if (options.getPort() > 0) {
+    checkNodeHasPublicIps(node);
+    blockUntilPortIsListeningOnPublicIp(options.getPort(),options.getSeconds(),Iterables.get(node.getPublicAddresses(),0));
+  }
+  return response;
+}

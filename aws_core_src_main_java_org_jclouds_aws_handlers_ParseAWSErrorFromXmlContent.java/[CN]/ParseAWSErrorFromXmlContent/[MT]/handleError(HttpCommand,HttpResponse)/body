@@ -25,7 +25,7 @@
 switch (response.getStatusCode()) {
 case 400:
       if (error != null && error.getCode() != null && (error.getCode().endsWith(".NotFound") || error.getCode().endsWith(".Unknown")))       exception=new ResourceNotFoundException(message,exception);
- else       if ((error != null && error.getCode() != null && (error.getCode().equals("IncorrectState") || error.getCode().equals("InvalidGroup.Duplicate"))) || (message != null && message.indexOf("already exists") != -1))       exception=new IllegalStateException(message,exception);
+ else       if ((error != null && error.getCode() != null && (error.getCode().equals("IncorrectState") || error.getCode().endsWith(".Duplicate"))) || (message != null && message.indexOf("already exists") != -1))       exception=new IllegalStateException(message,exception);
  else       if (error != null && error.getCode() != null && error.getCode().equals("AuthFailure"))       exception=new AuthorizationException(command.getRequest(),message);
  else       if (message != null && message.indexOf("Failed to bind the following fields") != -1)       exception=new IllegalArgumentException(message,exception);
     break;

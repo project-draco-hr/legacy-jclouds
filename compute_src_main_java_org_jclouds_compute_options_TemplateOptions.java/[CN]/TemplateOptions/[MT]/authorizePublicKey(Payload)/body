@@ -1,4 +1,9 @@
 {
-  this.publicKey=checkNotNull(publicKey,"publicKey");
-  return this;
+  try {
+    return authorizePublicKey(Utils.toStringAndClose(checkNotNull(publicKey,"publicKey").getInput()));
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+    return this;
+  }
 }

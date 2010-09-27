@@ -1,15 +1,6 @@
 {
   checkNotNull(path,"path");
-  checkConnected();
-  logger.debug("%s@%s:%d: Opening sftp Channel.",username,host,port);
-  ChannelSftp sftp=null;
-  try {
-    sftp=(ChannelSftp)session.openChannel("sftp");
-    sftp.connect();
-  }
- catch (  JSchException e) {
-    throw new SshException(String.format("%s@%s:%d: Error connecting to sftp.",username,host,port),e);
-  }
+  ChannelSftp sftp=getSftp();
   try {
     return Payloads.newInputStreamPayload(new CloseFtpChannelOnCloseInputStream(sftp.get(path),sftp));
   }

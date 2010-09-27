@@ -1,0 +1,17 @@
+{
+  String tag=this.tag + "service";
+  try {
+    client.destroyNodesMatching(withTag(tag));
+  }
+ catch (  Exception e) {
+  }
+  template=client.templateBuilder().options(blockOnComplete(false).blockOnPort(8080,300).inboundPorts(22,8080)).build();
+  template.getOptions().runScript(RunScriptData.createScriptInstallAndStartJBoss(keyPair.get("public"),template.getImage().getOperatingSystem()));
+  try {
+    TreeSet<NodeMetadata> nodes=newTreeSet(client.runNodesWithTag(tag,1,template));
+    checkHttpGet(nodes);
+  }
+  finally {
+    client.destroyNodesMatching(withTag(tag));
+  }
+}

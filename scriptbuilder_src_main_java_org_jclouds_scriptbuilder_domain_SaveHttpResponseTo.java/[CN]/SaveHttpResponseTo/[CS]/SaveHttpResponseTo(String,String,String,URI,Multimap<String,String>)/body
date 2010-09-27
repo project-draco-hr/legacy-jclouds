@@ -1,0 +1,8 @@
+{
+  super(String.format("({md} %s &&{cd} %s &&curl -X %s -s --retry 20 %s %s >%s\n",dir,dir,method,Joiner.on(' ').join(Iterables.transform(headers.entries(),new Function<Entry<String,String>,String>(){
+    @Override public String apply(    Entry<String,String> from){
+      return String.format("-H \"%s: %s\"",from.getKey(),from.getValue());
+    }
+  }
+)),endpoint.toASCIIString(),file));
+}

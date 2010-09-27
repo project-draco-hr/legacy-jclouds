@@ -1,24 +1,19 @@
 {
-  Iterable<NodeMetadata> nodes=verifyParametersAndListNodes(filter,runScript,(options != null) ? options : RunScriptOptions.NONE);
+  checkNotNull(filter,"Filter must be provided");
+  checkNotNull(runScript,"runScript");
+  checkNotNull(options,"options");
+  if (options.getTaskName() == null)   options.nameTask("jclouds-script-" + System.currentTimeMillis());
+  Iterable<? extends NodeMetadata> nodes=Iterables.filter(detailsOnAllNodes(),filter);
   final Map<NodeMetadata,ExecResponse> execs=Maps.newHashMap();
+  final Map<NodeMetadata,Future<Void>> responses=Maps.newHashMap();
   final Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
-  Map<NodeMetadata,Future<Void>> responses=Maps.newHashMap();
+  nodes=filterNodesWhoCanRunScripts(nodes,badNodes,options.getOverrideCredentials());
   for (  final NodeMetadata node : nodes) {
     responses.put(node,executor.submit(new Callable<Void>(){
       @Override public Void call() throws Exception {
         try {
-          RunScriptOnNode callable;
-          if (options.isRunAsRoot())           callable=utils.runScriptOnNode(node,"computeserv",runScript);
- else           callable=utils.runScriptOnNodeAsDefaultUser(node,"computeserv",runScript);
-          SshClient ssh=utils.createSshClientOncePortIsListeningOnNode(node);
-          try {
-            ssh.connect();
-            callable.setConnection(ssh,logger);
-            execs.put(node,callable.call());
-          }
-  finally {
-            if (ssh != null)             ssh.disconnect();
-          }
+          ExecResponse response=utils.runScriptOnNode(node,Statements.exec(Utils.toStringAndClose(runScript.getInput())),options);
+          if (response != null)           execs.put(node,response);
         }
  catch (        Exception e) {
           badNodes.put(node,e);
@@ -28,7 +23,7 @@
     }
 ));
   }
-  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"starting nodes");
+  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"running script on nodes");
   if (exceptions.size() > 0 || badNodes.size() > 0) {
     throw new RunScriptOnNodesException(runScript,options,execs,exceptions,badNodes);
   }
