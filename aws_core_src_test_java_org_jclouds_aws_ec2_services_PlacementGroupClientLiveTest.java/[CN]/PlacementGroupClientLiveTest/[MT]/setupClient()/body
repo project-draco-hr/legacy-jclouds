@@ -2,7 +2,7 @@
   setupCredentials();
   Properties overrides=setupProperties();
   context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
-  keyPair=BaseComputeServiceLiveTest.setupKeyPair();
+  keyPair=setupKeyPair();
   client=EC2Client.class.cast(context.getProviderSpecificContext().getApi());
   availableTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupAvailable(client),60,1,TimeUnit.SECONDS);
   deletedTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupDeleted(client),60,1,TimeUnit.SECONDS);
