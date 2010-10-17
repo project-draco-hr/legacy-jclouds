@@ -4,10 +4,10 @@
   OperatingSystem os=createMock(OperatingSystem.class);
   Image image2=createMock(Image.class);
   OperatingSystem os2=createMock(OperatingSystem.class);
-  Hardware size=new HardwareImpl("hardwareId",null,"hardwareId",defaultLocation,null,ImmutableMap.<String,String>of(),ImmutableList.of(new Processor(1.0,1.0)),0,ImmutableList.<Volume>of(),ImagePredicates.any());
+  Hardware hardware=new HardwareBuilder().id("hardwareId").build();
   Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation));
   Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(image,image2));
-  Supplier<Set<? extends Hardware>> sizes=Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of(size));
+  Supplier<Set<? extends Hardware>> hardwares=Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of(hardware));
   Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
   TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
@@ -33,8 +33,8 @@
   replay(defaultLocation);
   replay(optionsProvider);
   replay(templateBuilderProvider);
-  TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,sizes,defaultLocation,optionsProvider,templateBuilderProvider);
-  assertEquals(template.resolveImage(size,images.get()),image2);
+  TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,hardwares,defaultLocation,optionsProvider,templateBuilderProvider);
+  assertEquals(template.resolveImage(hardware,images.get()),image2);
   verify(image);
   verify(image2);
   verify(os);

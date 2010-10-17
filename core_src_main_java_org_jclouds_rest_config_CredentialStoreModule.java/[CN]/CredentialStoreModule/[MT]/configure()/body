@@ -1,0 +1,23 @@
+{
+  bind(new TypeLiteral<Function<Credentials,InputStream>>(){
+  }
+).to(CredentialsToJsonInputStream.class);
+  bind(new TypeLiteral<Function<InputStream,Credentials>>(){
+  }
+).to(CredentialsFromJsonInputStream.class);
+  if (backing != null) {
+    bind(new TypeLiteral<Map<String,InputStream>>(){
+    }
+).toInstance(backing);
+  }
+ else {
+    bind(new TypeLiteral<Map<String,InputSupplier<InputStream>>>(){
+    }
+).toInstance(BACKING);
+    bind(new TypeLiteral<Map<String,InputStream>>(){
+    }
+).to(new TypeLiteral<CopyInputStreamInputSupplierMap>(){
+    }
+);
+  }
+}

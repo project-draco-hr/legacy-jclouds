@@ -3,6 +3,8 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions=createMock(CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class);
   Predicate<RunningInstance> instanceStateRunning=createMock(Predicate.class);
   RunningInstanceToNodeMetadata runningInstanceToNodeMetadata=createMock(RunningInstanceToNodeMetadata.class);
+  Function<RunningInstance,Credentials> instanceToCredentials=createMock(Function.class);
+  Map<String,Credentials> credentialStore=createMock(Map.class);
   ComputeUtils utils=createMock(ComputeUtils.class);
-  return new EC2RunNodesAndAddToSetStrategy(client,createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions,instanceStateRunning,runningInstanceToNodeMetadata,utils);
+  return new EC2RunNodesAndAddToSetStrategy(client,createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions,instanceStateRunning,runningInstanceToNodeMetadata,instanceToCredentials,credentialStore,utils);
 }

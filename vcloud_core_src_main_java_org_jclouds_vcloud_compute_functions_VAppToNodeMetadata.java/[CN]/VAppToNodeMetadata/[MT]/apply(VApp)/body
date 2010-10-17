@@ -1,0 +1,17 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.uri(from.getHref());
+  builder.name(from.getName());
+  builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
+  builder.tag(parseTagFromName(from.getName()));
+  builder.operatingSystem(toComputeOs(from,null));
+  builder.hardware(hardwareForVApp.apply(from));
+  builder.state(vAppStatusToNodeState.get(from.getStatus()));
+  builder.publicAddresses(getPublicIpsFromVApp(from));
+  builder.privateAddresses(getPrivateIpsFromVApp(from));
+  builder.credentials(getCredentialsFrom(from));
+  if (!credentialStore.containsKey(from.getHref().toASCIIString()))   credentialStore.put(from.getHref().toASCIIString(),getCredentialsFrom(from));
+  builder.credentials(credentialStore.get(from.getHref().toASCIIString()));
+  return builder.build();
+}

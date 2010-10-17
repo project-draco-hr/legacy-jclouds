@@ -1,6 +1,6 @@
 {
   NewServerResponse serverResponse=client.createServer(name,checkNotNull(template.getImage().getProviderId(),"imageId"),checkNotNull(template.getHardware().getProviderId(),"hardwareId"));
-  Server server=client.getServer(serverResponse.getServer().getId());
-  NodeMetadata node=new NodeMetadataImpl(server.getId().toString(),name,server.getId().toString(),template.getLocation(),null,ImmutableMap.<String,String>of(),tag,template.getHardware(),template.getImage().getId(),template.getImage().getOperatingSystem(),runningStateToNodeState.get(server.getState()),getPublicAddresses.apply(server),ImmutableList.<String>of(),new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()));
-  return node;
+  Server from=client.getServer(serverResponse.getServer().getId());
+  credentialStore.put(from.getId() + "",new Credentials("root",serverResponse.getNewInstanceRequest().getCreateOptions().getPassword()));
+  return serverToNodeMetadata.apply(from);
 }

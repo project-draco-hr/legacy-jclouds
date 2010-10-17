@@ -1,0 +1,5 @@
+{
+  RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.<Hardware>of(),ImmutableSet.of(provider),ImageParserTest.convertImages("/ec2/nova_images.xml"),ImmutableMap.<String,Credentials>of());
+  RunningInstance server=firstInstanceFromResource("/ec2/describe_instances_nova.xml");
+  assertEquals(parser.apply(server),new NodeMetadataBuilder().state(NodeState.TERMINATED).privateAddresses(ImmutableSet.of("10.128.207.5")).tag("NOTAG-i-9slweygo").imageId("us-east-1/ami-25CB1213").operatingSystem(new OperatingSystemBuilder().family(OsFamily.UBUNTU).version("9.10").arch("paravirtual").description("nebula/ubuntu-karmic").is64Bit(true).build()).id("us-east-1/i-9slweygo").providerId("i-9slweygo").location(provider).build());
+}

@@ -8,7 +8,10 @@
 ).in(Scopes.SINGLETON);
   bind(RunNodesAndAddToSetStrategy.class).to(TerremarkEncodeTagIntoNameRunNodesAndAddToSetStrategy.class);
   bind(ListNodesStrategy.class).to(VCloudExpressListNodesStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(TerremarkVCloudGetNodeMetadataStrategy.class);
+  bind(new TypeLiteral<Function<VCloudExpressVApp,NodeMetadata>>(){
+  }
+).to(TerremarkVCloudExpressVAppToNodeMetadata.class);
+  bind(GetNodeMetadataStrategy.class).to(VCloudExpressGetNodeMetadataStrategy.class);
   bind(RebootNodeStrategy.class).to(VCloudExpressRebootNodeStrategy.class);
   bind(DestroyNodeStrategy.class).to(VCloudExpressDestroyNodeStrategy.class);
   bindLoadBalancer();

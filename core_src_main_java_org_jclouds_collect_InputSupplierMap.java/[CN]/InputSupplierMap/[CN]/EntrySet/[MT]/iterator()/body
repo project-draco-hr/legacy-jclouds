@@ -1,0 +1,30 @@
+{
+  final Iterator<java.util.Map.Entry<K,InputSupplier<V>>> mapIterator=toMap.entrySet().iterator();
+  return new Iterator<Entry<K,V>>(){
+    public boolean hasNext(){
+      return mapIterator.hasNext();
+    }
+    public Entry<K,V> next(){
+      final java.util.Map.Entry<K,InputSupplier<V>> entry=mapIterator.next();
+      return new AbstractMapEntry<K,V>(){
+        @Override public K getKey(){
+          return entry.getKey();
+        }
+        @Override public V getValue(){
+          try {
+            return entry.getValue().getInput();
+          }
+ catch (          IOException e) {
+            Throwables.propagate(e);
+            return null;
+          }
+        }
+      }
+;
+    }
+    public void remove(){
+      mapIterator.remove();
+    }
+  }
+;
+}

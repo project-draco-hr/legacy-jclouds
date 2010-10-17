@@ -1,8 +1,16 @@
 {
   super.configure();
+  bind(new TypeLiteral<Function<VApp,NodeMetadata>>(){
+  }
+).to(VAppToNodeMetadata.class);
   bind(TemplateOptions.class).to(VCloudTemplateOptions.class);
   bind(TemplateBuilder.class).to(VCloudTemplateBuilderImpl.class);
   bind(RebootNodeStrategy.class).to(VCloudRebootNodeStrategy.class);
+  bind(new TypeLiteral<Function<VApp,Hardware>>(){
+  }
+).to(new TypeLiteral<HardwareForVApp>(){
+  }
+);
   bind(GetNodeMetadataStrategy.class).to(VCloudGetNodeMetadataStrategy.class);
   bind(new TypeLiteral<ComputeServiceContext>(){
   }

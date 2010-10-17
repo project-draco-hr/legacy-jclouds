@@ -1,18 +1,19 @@
 {
-  String id=checkNotNull(instance,"instance").getId();
-  String name=null;
-  URI uri=null;
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  String providerId=checkNotNull(instance,"instance").getId();
+  builder.providerId(providerId);
+  builder.id(instance.getRegion() + "/" + providerId);
   String tag=getTagForInstance(instance);
-  Credentials credentials=getCredentialsForInstanceWithTag(instance,tag);
-  Map<String,String> userMetadata=ImmutableMap.<String,String>of();
-  NodeState state=instanceToNodeState.get(instance.getInstanceState());
-  Set<String> publicAddresses=nullSafeSet(instance.getIpAddress());
-  Set<String> privateAddresses=nullSafeSet(instance.getPrivateIpAddress());
-  Hardware hardware=getHardwareForInstance(instance);
-  if (hardware != null) {
-    hardware=ComputeServiceUtils.replacesVolumes(hardware,addEBS(instance,hardware.getVolumes()));
-  }
+  builder.tag(tag);
+  builder.credentials(credentialStore.get(instance.getRegion() + "/" + providerId));
+  builder.state(instanceToNodeState.get(instance.getInstanceState()));
+  builder.publicAddresses(nullSafeSet(instance.getIpAddress()));
+  builder.privateAddresses(nullSafeSet(instance.getPrivateIpAddress()));
+  builder.hardware(parseHardware(instance));
   Location location=getLocationForAvailabilityZoneOrRegion(instance);
-  Image image=resolveImageForInstanceInLocation(instance,location);
-  return new NodeMetadataImpl(id,name,instance.getRegion() + "/" + instance.getId(),location,uri,userMetadata,tag,hardware,instance.getRegion() + "/" + instance.getImageId(),image != null ? image.getOperatingSystem() : null,state,publicAddresses,privateAddresses,credentials);
+  builder.location(location);
+  builder.imageId(instance.getRegion() + "/" + instance.getImageId());
+  Image image=instanceToImage.get(new RegionAndName(instance.getRegion(),instance.getImageId()));
+  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
+  return builder.build();
 }

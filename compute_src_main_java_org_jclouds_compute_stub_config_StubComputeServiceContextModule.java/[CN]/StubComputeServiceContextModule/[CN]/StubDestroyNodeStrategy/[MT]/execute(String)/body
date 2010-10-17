@@ -1,9 +1,8 @@
 {
-  final int nodeId=Integer.parseInt(id);
-  StubNodeMetadata node=nodes.get(nodeId);
+  NodeMetadata node=nodes.get(id);
   if (node == null)   return node;
-  node.setState(NodeState.PENDING,0);
-  node.setState(NodeState.TERMINATED,50);
+  setState(node,NodeState.PENDING,0);
+  setState(node,NodeState.TERMINATED,50);
   service.execute(new Runnable(){
     @Override public void run(){
       try {
@@ -13,7 +12,7 @@
         Throwables.propagate(e);
       }
  finally {
-        nodes.remove(nodeId);
+        nodes.remove(id);
       }
     }
   }

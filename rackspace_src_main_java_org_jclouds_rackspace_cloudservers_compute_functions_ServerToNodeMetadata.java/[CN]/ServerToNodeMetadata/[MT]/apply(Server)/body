@@ -1,19 +1,16 @@
 {
-  String tag=parseTagFromName(from.getName());
-  Location host=new LocationImpl(LocationScope.HOST,from.getHostId(),from.getHostId(),location.get());
-  Image image=null;
-  try {
-    image=Iterables.find(images.get(),new FindImageForServer(host,from));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching image for server %s in location %s",from,location);
-  }
-  Hardware hardware=null;
-  try {
-    hardware=Iterables.find(hardwares.get(),new FindHardwareForServer(from));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching hardware for server %s",from);
-  }
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",host,null,from.getMetadata(),tag,hardware,from.getImageId() + "",image != null ? image.getOperatingSystem() : null,serverToNodeState.get(from.getStatus()),from.getAddresses().getPublicAddresses(),from.getAddresses().getPrivateAddresses(),null);
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getId() + "");
+  builder.name(from.getName());
+  builder.location(new LocationImpl(LocationScope.HOST,from.getHostId(),from.getHostId(),location.get()));
+  builder.userMetadata(from.getMetadata());
+  builder.tag(parseTagFromName(from.getName()));
+  builder.imageId(from.getImageId() + "");
+  builder.operatingSystem(parseOperatingSystem(from));
+  builder.hardware(parseHardware(from));
+  builder.state(serverToNodeState.get(from.getStatus()));
+  builder.publicAddresses(from.getAddresses().getPublicAddresses());
+  builder.privateAddresses(from.getAddresses().getPrivateAddresses());
+  builder.credentials(credentialStore.get(from.getId() + ""));
+  return builder.build();
 }

@@ -1,8 +1,12 @@
 {
+  ImageBuilder builder=new ImageBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.uri(from.getHref());
+  builder.name(from.getName());
+  builder.location(findLocationForResource.apply(checkNotNull(parent,"parent")));
+  builder.description(from.getDescription() != null ? from.getDescription() : from.getName());
   OvfEnvelope ovf=client.getOvfEnvelopeForVAppTemplate(from.getHref());
-  OperatingSystem os=toComputeOs(ovf);
-  Location location=findLocationForResource.apply(checkNotNull(parent,"parent"));
-  String name=getName(from.getName());
-  String desc=from.getDescription() != null ? from.getDescription() : from.getName();
-  return new VCloudImage(from,from.getHref().toASCIIString(),name,from.getHref().toASCIIString(),location,from.getHref(),ImmutableMap.<String,String>of(),os,desc,"",credentialsProvider.execute(from));
+  builder.operatingSystem(toComputeOs(ovf));
+  builder.defaultCredentials(credentialsProvider.execute(from));
+  return builder.build();
 }

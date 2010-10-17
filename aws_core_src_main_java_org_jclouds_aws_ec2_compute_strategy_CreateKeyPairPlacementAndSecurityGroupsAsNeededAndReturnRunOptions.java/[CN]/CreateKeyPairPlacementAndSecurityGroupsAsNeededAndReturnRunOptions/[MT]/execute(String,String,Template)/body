@@ -1,9 +1,7 @@
 {
-  checkArgument(template.getHardware() instanceof EC2Hardware,"unexpected image type. should be EC2Size, was: " + template.getHardware().getClass());
-  EC2Hardware ec2Size=EC2Hardware.class.cast(template.getHardware());
-  RunInstancesOptions instanceOptions=asType(ec2Size.getInstanceType()).withAdditionalInfo(tag);
+  RunInstancesOptions instanceOptions=asType(template.getHardware().getId()).withAdditionalInfo(tag);
   String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
-  String placementGroupName=ec2Size.getId().startsWith("cc") ? createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,template.getOptions()) : null;
+  String placementGroupName=template.getHardware().getId().startsWith("cc") ? createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,template.getOptions()) : null;
   String subnetId=EC2TemplateOptions.class.cast(template.getOptions()).getSubnetId();
   if (subnetId != null) {
     instanceOptions.withSubnetId(subnetId);

@@ -1,0 +1,15 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.uri(from.getHref());
+  builder.name(from.getName());
+  builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
+  builder.tag(parseTagFromName(from.getName()));
+  builder.operatingSystem(from.getOsType() != null ? new CIMOperatingSystem(CIMOperatingSystem.OSType.fromValue(from.getOsType()),null,null,from.getOperatingSystemDescription()) : null);
+  builder.hardware(hardwareForVCloudExpressVApp.apply(from));
+  builder.state(vAppStatusToNodeState.get(from.getStatus()));
+  builder.publicAddresses(computeClient.getPublicAddresses(from.getHref()));
+  builder.privateAddresses(computeClient.getPrivateAddresses(from.getHref()));
+  builder.credentials(credentialStore.get(from.getHref().toASCIIString()));
+  return builder.build();
+}

@@ -1,0 +1,25 @@
+{
+  OsFamily osFamily=null;
+  String osName=null;
+  String osArch=null;
+  String osVersion=null;
+  String osDescription=from.getName();
+  boolean is64Bit=true;
+  Matcher matcher=SLICEHOST_PATTERN.matcher(from.getName());
+  if (from.getName().indexOf("Red Hat EL") != -1) {
+    osFamily=OsFamily.RHEL;
+  }
+ else   if (from.getName().indexOf("Oracle EL") != -1) {
+    osFamily=OsFamily.OEL;
+  }
+ else   if (matcher.find()) {
+    try {
+      osFamily=OsFamily.fromValue(matcher.group(2).toLowerCase());
+    }
+ catch (    IllegalArgumentException e) {
+      logger.debug("<< didn't match os(%s)",matcher.group(2));
+    }
+  }
+  OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
+  return os;
+}

@@ -1,32 +1,7 @@
 {
-  final Set<Image> images=Sets.newHashSet();
+  Set<Image> images;
   logger.debug(">> providing images");
-  for (  final org.jclouds.rackspace.cloudservers.domain.Image from : sync.listImages(ListOptions.Builder.withDetails())) {
-    String version=from.getUpdated().getTime() + "";
-    Matcher matcher=RACKSPACE_PATTERN.matcher(from.getName());
-    OsFamily osFamily=null;
-    String osName=null;
-    String osArch=null;
-    String osVersion=null;
-    String osDescription=from.getName();
-    boolean is64Bit=true;
-    if (from.getName().indexOf("Red Hat EL") != -1) {
-      osFamily=OsFamily.RHEL;
-    }
- else     if (from.getName().indexOf("Oracle EL") != -1) {
-      osFamily=OsFamily.OEL;
-    }
- else     if (matcher.find()) {
-      try {
-        osFamily=OsFamily.fromValue(matcher.group(2).toLowerCase());
-      }
- catch (      IllegalArgumentException e) {
-        logger.debug("<< didn't match os(%s)",matcher.group(2));
-      }
-    }
-    OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
-    images.add(new ImageImpl(from.getId() + "",from.getName(),from.getId() + "",location.get(),null,ImmutableMap.<String,String>of(),os,from.getName(),version,new Credentials("root",null)));
-  }
+  images=Sets.<Image>newLinkedHashSet(Iterables.transform(sync.listImages(withDetails()),cloudServersImageToImage));
   logger.debug("<< images(%d)",images.size());
   return images;
 }

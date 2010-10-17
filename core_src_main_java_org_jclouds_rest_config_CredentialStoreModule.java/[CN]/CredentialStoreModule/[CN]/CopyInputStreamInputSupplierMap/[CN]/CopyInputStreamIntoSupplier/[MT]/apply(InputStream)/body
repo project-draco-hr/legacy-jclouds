@@ -1,0 +1,18 @@
+{
+  if (from == null)   return new InputSupplier<InputStream>(){
+    @Override public InputStream getInput() throws IOException {
+      return null;
+    }
+  }
+;
+  try {
+    return InputSupplier.class.cast(ByteStreams.newInputStreamSupplier(ByteStreams.toByteArray(from)));
+  }
+ catch (  Exception e) {
+    logger.warn(e,"ignoring problem retrieving credentials");
+    return null;
+  }
+ finally {
+    Closeables.closeQuietly(from);
+  }
+}
