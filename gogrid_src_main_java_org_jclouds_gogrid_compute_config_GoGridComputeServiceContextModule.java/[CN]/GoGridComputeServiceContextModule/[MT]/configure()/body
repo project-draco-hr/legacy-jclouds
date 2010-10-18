@@ -1,22 +1,4 @@
 {
-  install(new ComputeServiceTimeoutsModule());
-  bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
-  }
-).to(ServerToNodeMetadata.class);
-  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
-  bind(new TypeLiteral<ComputeServiceContext>(){
-  }
-).to(new TypeLiteral<ComputeServiceContextImpl<GoGridClient,GoGridAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<RestContext<GoGridClient,GoGridAsyncClient>>(){
-  }
-).to(new TypeLiteral<RestContextImpl<GoGridClient,GoGridAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(AddNodeWithTagStrategy.class).to(GoGridAddNodeWithTagStrategy.class);
-  bind(ListNodesStrategy.class).to(GoGridListNodesStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(GoGridGetNodeMetadataStrategy.class);
-  bind(RebootNodeStrategy.class).to(GoGridRebootNodeStrategy.class);
-  bind(DestroyNodeStrategy.class).to(GoGridDestroyNodeStrategy.class);
+  install(new GoGridComputeServiceDependenciesModule());
+  super.configure();
 }

@@ -1,0 +1,21 @@
+{
+  bind(TemplateBuilder.class).to(EC2TemplateBuilderImpl.class);
+  bind(TemplateOptions.class).to(EC2TemplateOptions.class);
+  bind(ComputeService.class).to(EC2ComputeService.class);
+  bind(new TypeLiteral<Function<RunningInstance,NodeMetadata>>(){
+  }
+).to(RunningInstanceToNodeMetadata.class);
+  bind(new TypeLiteral<Function<RunningInstance,Credentials>>(){
+  }
+).to(CredentialsForInstance.class);
+  bind(new TypeLiteral<ComputeServiceContext>(){
+  }
+).to(new TypeLiteral<ComputeServiceContextImpl<EC2Client,EC2AsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(new TypeLiteral<RestContext<EC2Client,EC2AsyncClient>>(){
+  }
+).to(new TypeLiteral<RestContextImpl<EC2Client,EC2AsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+}

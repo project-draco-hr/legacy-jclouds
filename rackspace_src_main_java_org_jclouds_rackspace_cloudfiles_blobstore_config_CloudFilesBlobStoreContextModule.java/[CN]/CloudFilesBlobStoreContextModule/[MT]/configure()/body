@@ -1,6 +1,10 @@
 {
-  install(new RackspaceLocationsModule());
   install(new BlobStoreMapModule());
+  bind(new TypeLiteral<Supplier<Set<? extends Location>>>(){
+  }
+).annotatedWith(Memoized.class).to(new TypeLiteral<RackspaceLocationsSupplier>(){
+  }
+);
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
   bind(AsyncBlobStore.class).to(CloudFilesAsyncBlobStore.class).in(Scopes.SINGLETON);
   bind(BlobStore.class).to(CloudFilesBlobStore.class).in(Scopes.SINGLETON);

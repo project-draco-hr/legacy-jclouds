@@ -1,10 +1,6 @@
 {
   super.configure();
-  bind(RebootNodeStrategy.class).to(VCloudExpressRebootNodeStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(VCloudExpressGetNodeMetadataStrategy.class);
-  bind(new TypeLiteral<Function<VCloudExpressVApp,NodeMetadata>>(){
-  }
-).to(VCloudExpressVAppToNodeMetadata.class);
+  bindVAppConverter();
   bind(new TypeLiteral<ComputeServiceContext>(){
   }
 ).to(new TypeLiteral<ComputeServiceContextImpl<VCloudExpressClient,VCloudExpressClient>>(){
@@ -20,7 +16,4 @@
 ).to(new TypeLiteral<ImagesInVCloudExpressOrg>(){
   }
 );
-  bind(AddNodeWithTagStrategy.class).to(VCloudExpressAddNodeWithTagStrategy.class);
-  bind(ListNodesStrategy.class).to(VCloudExpressListNodesStrategy.class);
-  bind(DestroyNodeStrategy.class).to(VCloudExpressDestroyNodeStrategy.class);
 }
