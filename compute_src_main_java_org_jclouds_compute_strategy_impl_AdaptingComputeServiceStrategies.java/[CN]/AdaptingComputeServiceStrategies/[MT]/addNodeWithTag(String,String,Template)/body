@@ -2,7 +2,7 @@
   checkState(tag != null,"tag (that which groups identical nodes together) must be specified");
   checkState(name != null && name.indexOf(tag) != -1,"name should have %s encoded into it",tag);
   logger.debug(">> instantiating node location(%s) name(%s) image(%s) hardware(%s)",template.getLocation().getId(),name,template.getImage().getProviderId(),template.getHardware().getProviderId());
-  N from=client.createNodeAndStoreCredentials(tag,name,template,credentialStore);
+  N from=client.runNodeWithTagAndNameAndStoreCredentials(tag,name,template,credentialStore);
   NodeMetadata node=nodeMetadataAdapter.apply(from);
   logger.debug("<< instantiated node(%s)",node.getId());
   return node;
