@@ -1,0 +1,15 @@
+{
+  try {
+    return find(map.entrySet(),new Predicate<Entry<String,URI>>(){
+      @Override public boolean apply(      Entry<String,URI> input){
+        return input.getValue().equals(uri);
+      }
+    }
+).getKey();
+  }
+ catch (  NoSuchElementException e) {
+    String region=get(map.keySet(),0);
+    logFactory.getLogger("jclouds.compute").warn("failed to find region for current endpoint %s in %s; choosing first: %s",uri,map,region);
+    return region;
+  }
+}
