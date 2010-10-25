@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<Domain,Hardware,Image,Datacenter>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<Domain,Domain,Image,Datacenter>>(){
   }
 ).to(LibvirtComputeServiceAdapter.class);
   bind(new TypeLiteral<Supplier<Location>>(){
@@ -12,9 +12,9 @@
   bind(new TypeLiteral<Function<Image,org.jclouds.compute.domain.Image>>(){
   }
 ).to(LibvirtImageToImage.class);
-  bind(new TypeLiteral<Function<Hardware,org.jclouds.compute.domain.Hardware>>(){
+  bind(new TypeLiteral<Function<Domain,Hardware>>(){
   }
-).to(LibvirtHardwareToHardware.class);
+).to(DomainToHardware.class);
   bind(new TypeLiteral<Function<Datacenter,Location>>(){
   }
 ).to(DatacenterToLocation.class);

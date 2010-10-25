@@ -1,0 +1,10 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<Domain,Domain,Image,Datacenter>("libvirt",endpoint,apiversion,identity,credential,new LibvirtComputeServiceContextModule(),ImmutableSet.<Module>of()));
+    context.getComputeService().listNodes();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

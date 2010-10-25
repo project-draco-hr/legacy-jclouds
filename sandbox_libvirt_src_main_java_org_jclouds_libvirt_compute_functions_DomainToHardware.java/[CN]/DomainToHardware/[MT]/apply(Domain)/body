@@ -1,0 +1,18 @@
+{
+  HardwareBuilder builder=new HardwareBuilder();
+  try {
+    builder.id(from.getUUIDString());
+    builder.providerId(from.getID() + "");
+    builder.name(from.getName());
+    List<Processor> processors=Lists.newArrayList();
+    for (int i=0; i < from.getInfo().nrVirtCpu; i++) {
+      processors.add(new Processor(i + 1,1));
+    }
+    builder.processors(processors);
+    builder.ram((int)from.getInfo().maxMem);
+  }
+ catch (  LibvirtException e) {
+    e.printStackTrace();
+  }
+  return builder.build();
+}
