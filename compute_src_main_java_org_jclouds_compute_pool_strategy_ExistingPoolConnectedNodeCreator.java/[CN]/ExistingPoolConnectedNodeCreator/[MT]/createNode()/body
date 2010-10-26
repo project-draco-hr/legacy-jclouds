@@ -1,0 +1,24 @@
+{
+synchronized (this) {
+    if (foundNodes == null) {
+      foundNodes=getComputeContext().getComputeService().listNodesDetailsMatching(new Predicate<ComputeMetadata>(){
+        public boolean apply(        ComputeMetadata input){
+          if (input instanceof NodeMetadata) {
+            NodeMetadata nodeMetadata=(NodeMetadata)input;
+            if (tag.equals(nodeMetadata.getTag()) && nodeMetadata.getState() == NodeState.RUNNING) {
+              return true;
+            }
+          }
+          return false;
+        }
+      }
+).iterator();
+    }
+    if (foundNodes.hasNext()) {
+      return (NodeMetadata)foundNodes.next();
+    }
+ else {
+      throw new RuntimeException("Requested more nodes in pool then found in cloud");
+    }
+  }
+}

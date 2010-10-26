@@ -1,0 +1,15 @@
+{
+  while (pool.size() > 0) {
+    removeObject(pool.poll());
+  }
+  executor.shutdown();
+  try {
+    int maxShutdownTimeoutInMinutes=5;
+    if (!executor.awaitTermination(maxShutdownTimeoutInMinutes,TimeUnit.MINUTES)) {
+      throw new RuntimeException("Not all object were destroyed, timeout accured: " + maxShutdownTimeoutInMinutes + " min");
+    }
+  }
+ catch (  InterruptedException e) {
+    throw new RuntimeException(e);
+  }
+}
