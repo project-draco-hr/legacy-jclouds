@@ -2,9 +2,16 @@
   ComputeServiceContext context=null;
   try {
     context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<Domain,Domain,Image,Datacenter>("libvirt",endpoint,apiversion,identity,credential,new LibvirtComputeServiceContextModule(),ImmutableSet.<Module>of()));
-    context.getComputeService().listNodes();
+    System.out.println("images " + context.getComputeService().listImages());
+    System.out.println("hardware profiles " + context.getComputeService().listHardwareProfiles());
+    Template defaultTemplate=context.getComputeService().templateBuilder().build();
+    context.getComputeService().runNodesWithTag("test",1);
+    System.out.println(context.getComputeService().listNodes());
   }
-  finally {
+ catch (  RunNodesException e) {
+    e.printStackTrace();
+  }
+ finally {
     if (context != null)     context.close();
   }
 }
