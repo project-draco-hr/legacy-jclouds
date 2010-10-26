@@ -1,5 +1,5 @@
 {
-  Set<Hardware> sizes=newHashSet();
+  Set<Hardware> sizes=newLinkedHashSet();
   for (  String ccAmi : ccAmis) {
     final String region=ccAmi.split("/")[0];
     Location location=find(locations.get(),new Predicate<Location>(){
@@ -8,8 +8,8 @@
       }
     }
 );
-    sizes.add(new EC2Hardware(location,InstanceType.CC1_4XLARGE,ImmutableList.of(new Processor(4.0,4.0),new Processor(4.0,4.0)),23 * 1024,ImmutableList.of(new VolumeImpl(10.0f,"/dev/sda1",true,false),new VolumeImpl(840.0f,"/dev/sdb",false,false),new VolumeImpl(840.0f,"/dev/sdc",false,false)),ccAmis));
+    sizes.add(cc1_4xlarge().location(location).supportsImageIds(ccAmi).build());
   }
-  sizes.addAll(ImmutableSet.<Hardware>of(EC2Hardware.T1_MICRO,EC2Hardware.C1_MEDIUM,EC2Hardware.C1_XLARGE,EC2Hardware.M1_LARGE,"nova".equals(providerName) ? EC2Hardware.M1_SMALL_NOVA : EC2Hardware.M1_SMALL,EC2Hardware.M1_XLARGE,EC2Hardware.M2_XLARGE,EC2Hardware.M2_2XLARGE,EC2Hardware.M2_4XLARGE));
+  sizes.addAll(ImmutableSet.<Hardware>of(t1_micro().build(),c1_medium().build(),c1_xlarge().build(),m1_large().build(),"nova".equals(providerName) ? m1_small().supportsImage(any()).build() : m1_small().build(),m1_xlarge().build(),m2_xlarge().build(),m2_2xlarge().build(),m2_4xlarge().build()));
   return sizes;
 }

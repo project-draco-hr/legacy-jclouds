@@ -1,0 +1,10 @@
+{
+  Injector injector=Guice.createInjector(new SaxParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(String.class).annotatedWith(Region.class).toInstance("us-east-1");
+    }
+  }
+);
+  ParseSax<Set<Reservation<? extends RunningInstance>>> parser=(ParseSax<Set<Reservation<? extends RunningInstance>>>)injector.getInstance(ParseSax.Factory.class).create(injector.getInstance(DescribeInstancesResponseHandler.class));
+  return parser;
+}

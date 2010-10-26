@@ -1,5 +1,5 @@
 {
-  String region=EC2Utils.findRegionInArgsOrNull(getRequest());
+  String region=getRequest() != null ? EC2Utils.findRegionInArgsOrNull(getRequest()) : null;
   if (region == null)   region=defaultRegion;
   Reservation<? extends RunningInstance> info=new Reservation<RunningInstance>(region,groupIds,instances,ownerId,requesterId,reservationId);
   this.groupIds=Sets.newLinkedHashSet();

@@ -1,0 +1,17 @@
+{
+  OsFamily osFamily=null;
+  String osName=from.getOs().getName();
+  String osArch=from.getArchitecture().getDescription();
+  String osVersion=null;
+  String osDescription=from.getOs().getDescription();
+  boolean is64Bit=(from.getOs().getName().indexOf("64") != -1 || from.getDescription().indexOf("64") != -1);
+  String matchedOs=GoGridUtils.parseStringByPatternAndGetNthMatchGroup(osName,GOGRID_OS_NAME_PATTERN,1);
+  try {
+    osFamily=OsFamily.fromValue(matchedOs.toLowerCase());
+  }
+ catch (  IllegalArgumentException e) {
+    logger.debug("<< didn't match os(%s)",matchedOs);
+  }
+  OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
+  return os;
+}

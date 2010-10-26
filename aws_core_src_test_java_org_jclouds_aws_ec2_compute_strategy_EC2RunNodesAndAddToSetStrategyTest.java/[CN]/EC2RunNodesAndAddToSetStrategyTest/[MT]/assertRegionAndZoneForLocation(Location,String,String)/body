@@ -15,6 +15,10 @@
   expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
   expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn((Reservation)reservation);
   expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
+  Credentials creds=new Credentials("foo","bar");
+  expect(strategy.instanceToCredentials.apply(instance)).andReturn(creds);
+  expect(instance.getRegion()).andReturn(region);
+  expect(strategy.credentialStore.put(region + "/" + instanceCreatedId,creds)).andReturn(null);
   expect(strategy.instancePresent.apply(instance)).andReturn(true);
   expect(input.template.getOptions()).andReturn(input.options).atLeastOnce();
   expect(input.options.isMonitoringEnabled()).andReturn(false);

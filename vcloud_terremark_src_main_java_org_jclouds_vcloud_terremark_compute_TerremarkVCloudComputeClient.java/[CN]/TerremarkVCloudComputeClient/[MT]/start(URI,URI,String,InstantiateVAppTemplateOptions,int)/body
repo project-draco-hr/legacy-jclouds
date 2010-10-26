@@ -9,11 +9,11 @@
     password=passwordGenerator.get();
     TerremarkInstantiateVAppTemplateOptions.class.cast(options).getProperties().put("password",password);
   }
-  Map<String,String> response=super.start(VDC,templateId,name,options,portsToOpen);
+  Credentials defaultCredentials=credentialsProvider.execute(template);
+  VCloudExpressVApp vAppResponse=super.start(VDC,templateId,name,options,portsToOpen);
   if (password != null) {
-    response=new LinkedHashMap<String,String>(response);
-    response.put("password",password);
+    credentialStore.put(vAppResponse.getHref().toASCIIString(),new Credentials(defaultCredentials.identity,password));
   }
-  if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(URI.create(response.get("id")),portsToOpen);
-  return response;
+  if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(vAppResponse.getHref(),portsToOpen);
+  return vAppResponse;
 }

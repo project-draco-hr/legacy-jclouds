@@ -1,19 +1,4 @@
 {
-  InputStream is=getClass().getResourceAsStream("/ec2/describe_images_cc.xml");
-  Set<Image> result=parseImages(is);
-  ImageParser parser=new ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation),"ec2");
-  org.jclouds.compute.domain.Image image=parser.apply(Iterables.get(result,0));
-  assertEquals(image.getOperatingSystem().is64Bit(),true);
-  assertEquals(image.getDescription(),"EC2 CentOS 5.4 HVM AMI");
-  assertEquals(image.getId(),"us-east-1/ami-7ea24a17");
-  assertEquals(image.getProviderId(),"ami-7ea24a17");
-  assertEquals(image.getLocation(),defaultLocation);
-  assertEquals(image.getName(),null);
-  assertEquals(image.getOperatingSystem().getName(),null);
-  assertEquals(image.getOperatingSystem().getVersion(),"5.4");
-  assertEquals(image.getOperatingSystem().getArch(),"hvm");
-  assertEquals(image.getOperatingSystem().getDescription(),"amazon/EC2 CentOS 5.4 HVM AMI");
-  assertEquals(image.getOperatingSystem().getFamily(),OsFamily.CENTOS);
-  assertEquals(image.getUserMetadata(),ImmutableMap.<String,String>of("owner","206029621532","rootDeviceType","ebs"));
-  assertEquals(image.getVersion(),null);
+  Set<org.jclouds.compute.domain.Image> result=convertImages("/ec2/describe_images_cc.xml");
+  assertEquals(Iterables.get(result,0),new ImageBuilder().operatingSystem(new OperatingSystemBuilder().family(OsFamily.CENTOS).arch("hvm").version("5.4").description("amazon/EC2 CentOS 5.4 HVM AMI").is64Bit(true).build()).description("EC2 CentOS 5.4 HVM AMI").defaultCredentials(new Credentials("root",null)).id("us-east-1/ami-7ea24a17").providerId("ami-7ea24a17").location(defaultLocation).userMetadata(ImmutableMap.of("owner","206029621532","rootDeviceType","ebs")).build());
 }

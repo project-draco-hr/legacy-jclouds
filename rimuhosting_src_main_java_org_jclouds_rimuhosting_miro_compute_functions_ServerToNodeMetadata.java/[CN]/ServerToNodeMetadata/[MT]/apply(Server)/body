@@ -1,14 +1,15 @@
 {
-  Location location=new LocationImpl(LocationScope.ZONE,from.getLocation().getId(),from.getLocation().getName(),null);
-  String tag=parseTagFromName(from.getName());
-  Credentials creds=null;
-  Image image=null;
-  try {
-    image=Iterables.find(images.get(),new FindImageForServer(location,from));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching image for server %s in location %s",from,location);
-  }
-  NodeState state=runningStateToNodeState.get(from.getState());
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",location,null,ImmutableMap.<String,String>of(),tag,null,from.getImageId(),image != null ? image.getOperatingSystem() : null,state,getPublicAddresses.apply(from),ImmutableList.<String>of(),creds);
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getId() + "");
+  builder.name(from.getName());
+  LocationImpl location=new LocationImpl(LocationScope.ZONE,from.getLocation().getId(),from.getLocation().getName(),null);
+  builder.location(location);
+  builder.tag(parseTagFromName(from.getName()));
+  builder.imageId(from.getImageId() + "");
+  builder.operatingSystem(parseOperatingSystem(from,location));
+  builder.hardware(null);
+  builder.state(runningStateToNodeState.get(from.getState()));
+  builder.publicAddresses(getPublicAddresses.apply(from));
+  builder.credentials(credentialStore.get(from.getId() + ""));
+  return builder.build();
 }

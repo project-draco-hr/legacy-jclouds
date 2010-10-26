@@ -1,21 +1,15 @@
 {
-  String tag=parseTagFromName(from.getName());
-  Set<String> ipSet=ImmutableSet.of(from.getIp().getIp());
-  NodeState state=serverStateToNodeState.get(from.getState());
-  Credentials creds=client.getServerServices().getServerCredentialsList().get(from.getName());
-  Image image=null;
-  try {
-    image=Iterables.find(images.get(),new FindImageForServer(from));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching image for server %s",from);
-  }
-  Hardware hardware=null;
-  try {
-    hardware=Iterables.find(hardwares.get(),new FindHardwareForServer(from));
-  }
- catch (  NoSuchElementException e) {
-    logger.warn("could not find a matching hardware for server %s",from);
-  }
-  return new NodeMetadataImpl(from.getId() + "",from.getName(),from.getId() + "",locations.get().get(from.getDatacenter().getId() + ""),null,ImmutableMap.<String,String>of(),tag,hardware,from.getImage().getId() + "",image != null ? image.getOperatingSystem() : null,state,ipSet,ImmutableList.<String>of(),creds);
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getId() + "");
+  builder.name(from.getName());
+  builder.location(locations.get().get(from.getDatacenter().getId() + ""));
+  builder.tag(parseTagFromName(from.getName()));
+  builder.hardware(parseHardware(from));
+  builder.imageId(from.getImage().getId() + "");
+  Image image=parseImage(from);
+  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
+  builder.state(serverStateToNodeState.get(from.getState()));
+  builder.publicAddresses(ImmutableSet.of(from.getIp().getIp()));
+  builder.credentials(client.getServerServices().getServerCredentialsList().get(from.getName()));
+  return builder.build();
 }

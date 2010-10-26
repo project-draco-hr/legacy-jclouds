@@ -1,0 +1,10 @@
+{
+  Injector injector=Guice.createInjector(new SaxParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(String.class).annotatedWith(Region.class).toInstance("us-east-1");
+    }
+  }
+);
+  ParseSax<Set<Image>> parser=(ParseSax<Set<Image>>)injector.getInstance(ParseSax.Factory.class).create(injector.getInstance(DescribeImagesResponseHandler.class));
+  return parser;
+}

@@ -1,0 +1,10 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<Server,Hardware,Image,Datacenter>("servermanager",endpoint,apiversion,identity,credential,ServerManagerComputeServiceContextBuilder.createContextModule(),ImmutableSet.<Module>of()));
+    context.getComputeService().listNodes();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

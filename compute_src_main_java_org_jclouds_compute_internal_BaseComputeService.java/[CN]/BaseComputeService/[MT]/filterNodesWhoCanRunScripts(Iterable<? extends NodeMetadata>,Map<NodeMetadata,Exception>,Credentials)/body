@@ -1,10 +1,10 @@
 {
-  nodes=Iterables.filter(Iterables.transform(nodes,new Function<NodeMetadata,NodeMetadata>(){
+  nodes=filter(transform(nodes,new Function<NodeMetadata,NodeMetadata>(){
     @Override public NodeMetadata apply(    NodeMetadata node){
       try {
         checkArgument(node.getPublicAddresses().size() > 0,"no public ip addresses on node: " + node);
         if (overridingCredentials != null) {
-          node=installNewCredentials(node,overridingCredentials);
+          node=NodeMetadataBuilder.fromNodeMetadata(node).credentials(overridingCredentials).build();
         }
  else {
           checkNotNull(node.getCredentials(),"If the default credentials need to be used, they can't be null");
@@ -19,6 +19,6 @@
       }
     }
   }
-),Predicates.notNull());
+),notNull());
   return nodes;
 }

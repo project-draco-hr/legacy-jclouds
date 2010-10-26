@@ -1,0 +1,20 @@
+{
+  OsFamily osFamily=null;
+  String osName=null;
+  String osArch=null;
+  String osVersion=null;
+  String osDescription=from.getId();
+  boolean is64Bit=from.getId().indexOf("64") != -1;
+  osDescription=from.getId();
+  Matcher matcher=RIMU_PATTERN.matcher(from.getId());
+  if (matcher.find()) {
+    try {
+      osFamily=OsFamily.fromValue(matcher.group(1).toLowerCase());
+    }
+ catch (    IllegalArgumentException e) {
+      logger.debug("<< didn't match os(%s)",matcher.group(2));
+    }
+  }
+  OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
+  return os;
+}

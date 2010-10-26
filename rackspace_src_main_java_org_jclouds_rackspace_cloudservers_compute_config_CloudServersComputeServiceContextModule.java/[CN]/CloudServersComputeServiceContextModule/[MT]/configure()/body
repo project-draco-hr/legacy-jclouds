@@ -1,23 +1,6 @@
 {
-  install(new ComputeServiceTimeoutsModule());
-  install(new RackspaceLocationsModule());
-  bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
-  }
-).to(ServerToNodeMetadata.class);
-  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
-  bind(new TypeLiteral<ComputeServiceContext>(){
-  }
-).to(new TypeLiteral<ComputeServiceContextImpl<CloudServersClient,CloudServersAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<RestContext<CloudServersClient,CloudServersAsyncClient>>(){
-  }
-).to(new TypeLiteral<RestContextImpl<CloudServersClient,CloudServersAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(AddNodeWithTagStrategy.class).to(CloudServersAddNodeWithTagStrategy.class);
-  bind(ListNodesStrategy.class).to(CloudServersListNodesStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(CloudServersGetNodeMetadataStrategy.class);
-  bind(RebootNodeStrategy.class).to(CloudServersRebootNodeStrategy.class);
-  bind(DestroyNodeStrategy.class).to(CloudServersDestroyNodeStrategy.class);
+  install(new CloudServersComputeServiceDependenciesModule());
+  install(new CloudServersBindComputeStrategiesByClass());
+  install(new CloudServersBindComputeSuppliersByClass());
+  super.configure();
 }

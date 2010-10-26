@@ -1,25 +1,6 @@
 {
-  install(new ComputeServiceTimeoutsModule());
-  bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
-  }
-).to(ServerToNodeMetadata.class);
-  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
-  bind(new TypeLiteral<ComputeServiceContext>(){
-  }
-).to(new TypeLiteral<ComputeServiceContextImpl<RimuHostingClient,RimuHostingAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<RestContext<RimuHostingClient,RimuHostingAsyncClient>>(){
-  }
-).to(new TypeLiteral<RestContextImpl<RimuHostingClient,RimuHostingAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<Function<Server,Iterable<String>>>(){
-  }
-).to(ServerToPublicAddresses.class);
-  bind(AddNodeWithTagStrategy.class).to(RimuHostingAddNodeWithTagStrategy.class);
-  bind(ListNodesStrategy.class).to(RimuHostingListNodesStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(RimuHostingGetNodeMetadataStrategy.class);
-  bind(RebootNodeStrategy.class).to(RimuHostingRebootNodeStrategy.class);
-  bind(DestroyNodeStrategy.class).to(RimuHostingDestroyNodeStrategy.class);
+  install(new RimuHostingComputeServiceDependenciesModule());
+  install(new RimuHostingBindComputeStrategiesByClass());
+  install(new RimuHostingBindComputeSuppliersByClass());
+  super.configure();
 }

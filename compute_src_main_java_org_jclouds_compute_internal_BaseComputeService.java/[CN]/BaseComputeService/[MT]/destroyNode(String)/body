@@ -5,7 +5,7 @@
   RetryablePredicate<String> tester=new RetryablePredicate<String>(new Predicate<String>(){
     @Override public boolean apply(    String input){
       try {
-        NodeMetadata md=destroyNodeStrategy.execute(id);
+        NodeMetadata md=destroyNodeStrategy.destroyNode(id);
         if (md != null)         node.set(md);
         return true;
       }
@@ -17,5 +17,6 @@
   }
 ,timeouts.nodeRunning,1000,TimeUnit.MILLISECONDS);
   boolean successful=tester.apply(id) && (node.get() == null || nodeTerminated.apply(node.get()));
+  if (successful)   credentialStore.remove("node/" + id);
   logger.debug("<< destroyed node(%s) success(%s)",id,successful);
 }
