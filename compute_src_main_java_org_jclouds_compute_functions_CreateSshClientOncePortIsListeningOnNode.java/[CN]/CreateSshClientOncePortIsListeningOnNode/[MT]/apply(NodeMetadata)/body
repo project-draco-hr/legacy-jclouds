@@ -1,0 +1,7 @@
+{
+  checkState(sshFactory != null,"ssh requested, but no SshModule configured");
+  checkNotNull(node.getCredentials(),"credentials for node " + node.getName());
+  checkNotNull(node.getCredentials().credential,"credentials.credential for node " + node.getName());
+  IPSocket socket=ComputeServiceUtils.findReachableSocketOnNode(socketTester,node,node.getLoginPort());
+  return sshFactory.create(socket,node.getCredentials());
+}

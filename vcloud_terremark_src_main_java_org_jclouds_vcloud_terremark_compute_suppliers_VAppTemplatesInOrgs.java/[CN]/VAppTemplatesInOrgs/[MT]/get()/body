@@ -1,4 +1,11 @@
 {
   logger.debug(">> providing vAppTemplates");
-  return newLinkedHashSet(Iterables.concat(Iterables.transform(organizatonsForLocations.apply(locations.get()),imagesInOrg)));
+  return newLinkedHashSet(transform(concat(transform(organizatonsForLocations.apply(locations.get()),imagesInOrg)),new Function<Image,Image>(){
+    @Override public Image apply(    Image from){
+      ImageBuilder builder=ImageBuilder.fromImage(from);
+      if (from.getDefaultCredentials() != null)       builder.adminPassword(from.getDefaultCredentials().credential);
+      return builder.build();
+    }
+  }
+));
 }

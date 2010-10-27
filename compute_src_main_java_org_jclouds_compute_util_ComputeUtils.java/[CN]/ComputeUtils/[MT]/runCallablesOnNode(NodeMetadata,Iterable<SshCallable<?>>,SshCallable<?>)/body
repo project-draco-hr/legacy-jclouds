@@ -1,9 +1,5 @@
 {
-  checkState(this.sshFactory != null,"runScript requested, but no SshModule configured");
-  checkNodeHasPublicIps(node);
-  checkNotNull(node.getCredentials(),"credentials for node " + node.getName());
-  checkNotNull(node.getCredentials().credential,"credentials.credential for node " + node.getName());
-  SshClient ssh=createSshClientOncePortIsListeningOnNode(node);
+  SshClient ssh=sshFactory.apply(node);
   try {
     ssh.connect();
     return runTasksUsingSshClient(parallel,last,ssh);

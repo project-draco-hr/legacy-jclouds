@@ -8,6 +8,7 @@
   expect(nodeMetadata.getTag()).andReturn(orgTag.getName()).atLeastOnce();
   expect(nodeMetadata.getState()).andReturn(NodeState.TERMINATED).atLeastOnce();
   strategy.deleteKeyPair.execute(orgTag);
+  expectCleanupCredentialStore(strategy,nodeMetadata);
   replay(nodeMetadata);
   replayStrategy(strategy);
   strategy.execute(deadOnes);

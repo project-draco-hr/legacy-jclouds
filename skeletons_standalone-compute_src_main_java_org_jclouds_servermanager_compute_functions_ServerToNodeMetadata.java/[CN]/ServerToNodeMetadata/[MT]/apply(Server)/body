@@ -1,0 +1,16 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.id + "");
+  builder.name(from.name);
+  builder.location(findLocationForServer.apply(from));
+  builder.tag(parseTagFromName(from.name));
+  builder.imageId(from.imageId + "");
+  Image image=findImageForServer.apply(from);
+  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
+  builder.hardware(findHardwareForServer.apply(from));
+  builder.state(serverStatusToNodeState.get(from.status));
+  builder.publicAddresses(ImmutableSet.<String>of(from.publicAddress));
+  builder.privateAddresses(ImmutableSet.<String>of(from.privateAddress));
+  builder.credentials(credentialStore.get(from.id + ""));
+  return builder.build();
+}
