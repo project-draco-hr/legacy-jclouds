@@ -1,5 +1,11 @@
 {
   TerremarkInstantiateVAppTemplateOptions options=getOptions.apply(template);
   VCloudExpressVApp vApp=computeClient.start(URI.create(template.getLocation().getId()),URI.create(template.getImage().getId()),name,options,template.getOptions().getInboundPorts());
-  return vAppToNodeMetadata.apply(vApp);
+  NodeMetadata node=vAppToNodeMetadata.apply(vApp);
+  NodeMetadataBuilder builder=NodeMetadataBuilder.fromNodeMetadata(node);
+  if (template.getImage().getAdminPassword() != null) {
+    builder.adminPassword(template.getImage().getAdminPassword());
+    credentialStore.put(node.getId() + "/adminPassword",new Credentials("root",template.getImage().getAdminPassword()));
+  }
+  return builder.build();
 }
