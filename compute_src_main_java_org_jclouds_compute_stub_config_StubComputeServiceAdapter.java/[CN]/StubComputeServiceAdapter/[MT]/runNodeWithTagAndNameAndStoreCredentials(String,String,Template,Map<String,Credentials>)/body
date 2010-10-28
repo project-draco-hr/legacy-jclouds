@@ -12,8 +12,8 @@
   builder.privateAddresses(ImmutableSet.<String>of(privateIpPrefix + id));
   builder.credentials(new Credentials("root",passwordPrefix + id));
   NodeMetadata node=builder.build();
+  credentialStore.put("node#" + node.getId(),node.getCredentials());
   nodes.put(node.getId(),node);
-  credentialStore.put(node.getId(),node.getCredentials());
   StubComputeServiceDependenciesModule.setState(node,NodeState.RUNNING,100);
   return node;
 }
