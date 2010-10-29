@@ -1,12 +1,38 @@
 {
-  String xmlDesc="<domain type='kvm'>" + "<name>test</name>" + "<uuid>abcf2039-a9f1-a659-7f91-e0f82f59d52e</uuid>"+ "<memory>524288</memory>"+ "<currentMemory>524288</currentMemory>"+ "<vcpu>1</vcpu>"+ "<os><type arch='i686' machine='pc-0.12'>hvm</type><boot dev='hd'/></os>"+ "<features><acpi/>              <apic/>              <pae/>            </features>"+ "<clock offset='utc'/>"+ "<on_poweroff>destroy</on_poweroff>"+ "<on_reboot>restart</on_reboot>"+ "<on_crash>restart</on_crash>"+ "<devices><emulator>/usr/bin/kvm</emulator><disk type='file' device='disk'><driver name='qemu' type='raw'/><source file='/var/lib/libvirt/images/test.img'/>                <target dev='vda' bus='virtio'/>              </disk> <disk type='block' device='cdrom'>                <driver name='qemu' type='raw'/>                <target dev='hdc' bus='ide'/><readonly/></disk>               <interface type='network'>                <mac address='52:54:00:05:cf:92'/>                <source network='default'/>                <model type='virtio'/>              </interface>              <console type='pty'>                <target port='0'/>              </console>              <console type='pty'>                <target port='0'/>              </console>              <input type='mouse' bus='ps2'/>              <graphics type='vnc' port='-1' autoport='yes'/>              <video>                <model type='cirrus' vram='9216' heads='1'/>              </video> </devices>"+ "</domain>";
-  Domain domain=null;
+  String[] domains;
   try {
-    client.domainDefineXML(xmlDesc);
-    domain=client.domainCreateXML(xmlDesc,1);
+    domains=client.listDefinedDomains();
+    Domain domain=null;
+    String xmlDesc="";
+    for (    String domainName : domains) {
+      domain=client.domainLookupByName(domainName);
+      if (domainName.equals("ttylinux")) {
+        domain=client.domainLookupByName(domainName);
+        xmlDesc=domain.getXMLDesc(0);
+        System.out.println("domain: " + domain.getUUIDString());
+        XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(xmlDesc)));
+        Document doc=builder.getDocument();
+        XPathExpression expr=null;
+        NodeList nodes=null;
+        String xpathString="//devices/disk[@device='disk']/source/@file";
+        expr=XPathFactory.newInstance().newXPath().compile(xpathString);
+        nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
+        String diskFileName=nodes.item(0).getNodeValue();
+        System.out.println("\n *** diskFileName " + diskFileName);
+        StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
+        System.out.println(storageVol.getXMLDesc(0));
+        String poolName="default";
+        StoragePool storagePool=client.storagePoolLookupByName(poolName);
+        StorageVol clonedVol=cloneVolume(storagePool,storageVol);
+        domain=client.domainDefineXML(generateClonedDomainXML(xmlDesc));
+      }
+    }
+    return domain;
   }
  catch (  LibvirtException e) {
-    e.printStackTrace();
+    return propogate(e);
   }
-  return domain;
+catch (  Exception e) {
+    return propogate(e);
+  }
 }
