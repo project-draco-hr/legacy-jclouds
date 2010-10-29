@@ -1,0 +1,12 @@
+{
+  ComputeServiceContext newContext=null;
+  try {
+    newContext=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),setupProperties());
+    Template defaultTemplate=newContext.getComputeService().templateBuilder().build();
+    Template template=newContext.getComputeService().templateBuilder().imageId(defaultTemplate.getImage().getId()).build();
+    assertEquals(template,defaultTemplate);
+  }
+  finally {
+    if (newContext != null)     newContext.close();
+  }
+}
