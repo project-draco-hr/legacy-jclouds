@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkECloudAsyncClient.class.getMethod("findNetworkInOrgVDCNamed",String.class,String.class,String.class);
+  HttpRequest request=processor.createRequest(method,"org","vdc","network");
+  assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/vdcItem/2 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.network+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TerremarkOrgNetworkFromTerremarkVCloudExpressNetworkHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

@@ -1,0 +1,8 @@
+{
+  NodeMetadata node=nodes.get(id);
+  if (node == null)   throw new ResourceNotFoundException("node not found: " + id);
+  if (node.getState() == NodeState.SUSPENDED)   return;
+  if (node.getState() != NodeState.RUNNING)   throw new IllegalStateException("to suspend a node, it must be in running state, not: " + node.getState());
+  StubComputeServiceDependenciesModule.setState(node,NodeState.PENDING,0);
+  StubComputeServiceDependenciesModule.setState(node,NodeState.SUSPENDED,50);
+}
