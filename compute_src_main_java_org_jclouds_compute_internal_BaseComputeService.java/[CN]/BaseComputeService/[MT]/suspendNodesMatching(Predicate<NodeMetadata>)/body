@@ -1,0 +1,11 @@
+{
+  logger.debug(">> suspending nodes matching(%s)",filter);
+  transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<Void>>(){
+    @Override public Future<Void> apply(    NodeMetadata from){
+      suspendNode(from.getId());
+      return immediateFuture(null);
+    }
+  }
+,executor,null,logger,"suspending nodes");
+  logger.debug("<< suspended");
+}

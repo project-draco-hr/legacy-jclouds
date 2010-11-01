@@ -1,0 +1,17 @@
+{
+  ParseAzureStorageErrorFromXmlContent function=Guice.createInjector(new SaxParserModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(SharedKeyLiteAuthentication.class).toInstance(createMock(SharedKeyLiteAuthentication.class));
+    }
+  }
+).getInstance(ParseAzureStorageErrorFromXmlContent.class);
+  HttpCommand command=createMock(HttpCommand.class);
+  HttpRequest request=new HttpRequest(method,uri);
+  HttpResponse response=new HttpResponse(statusCode,message,Payloads.newInputStreamPayload(Utils.toInputStream(content)));
+  response.getPayload().getContentMetadata().setContentType(contentType);
+  expect(command.getRequest()).andReturn(request).atLeastOnce();
+  command.setException(classEq(expected));
+  replay(command);
+  function.handleError(command,response);
+  verify(command);
+}

@@ -1,0 +1,8 @@
+{
+  logger.trace("looking for state on node %s",checkNotNull(node,"node"));
+  node=refresh(node);
+  if (node == null)   return false;
+  logger.trace("%s: looking for node state %s: currently: %s",node.getId(),intended,node.getState());
+  if (node.getState() == NodeState.ERROR)   throw new IllegalStateException("node " + node.getId() + " in location "+ node.getLocation()+ " is in error state");
+  return node.getState() == intended;
+}

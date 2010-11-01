@@ -1,6 +1,6 @@
 {
   OperatingSystem defaultOperatingSystem=computeContext.getComputeService().templateBuilder().build().getImage().getOperatingSystem();
-  uploadBlob(tag,"openjdk/install",buildScript(defaultOperatingSystem));
+  uploadBlob(tag,"openjdk/install",buildScript(defaultOperatingSystem).render(OsFamily.UNIX));
   HttpRequest signedRequestOfInstallScript=blobContext.getSigner().signGetBlob(tag,"openjdk/install");
   Statement installOpenJDK=execHttpResponse(signedRequestOfInstallScript);
   String mavenVersion="3.0-beta-3";

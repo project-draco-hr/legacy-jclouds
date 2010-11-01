@@ -1,0 +1,11 @@
+{
+  logger.debug(">> resumeing nodes matching(%s)",filter);
+  transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<Void>>(){
+    @Override public Future<Void> apply(    NodeMetadata from){
+      resumeNode(from.getId());
+      return immediateFuture(null);
+    }
+  }
+,executor,null,logger,"resumeing nodes");
+  logger.debug("<< resumeed");
+}

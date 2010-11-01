@@ -1,0 +1,16 @@
+{
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.METHOD,"xml");
+  outputProperties.put(javax.xml.transform.OutputKeys.INDENT,"yes");
+  outputProperties.put("{http://xml.apache.org/xslt}indent-amount","2");
+  XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(fromXML)));
+  String cloneAppend="-clone";
+  builder.xpathFind("//domain/name").t(cloneAppend);
+  Element oldChild=builder.xpathFind("//domain/uuid").getElement();
+  Node newNode=oldChild.cloneNode(true);
+  newNode.getFirstChild().setNodeValue(UUID.randomUUID().toString());
+  builder.getDocument().getDocumentElement().replaceChild(newNode,oldChild);
+  builder.xpathFind("//domain/devices/disk/source").a("file","/var/lib/libvirt/images/ttylinux.img-clone");
+  builder.xpathFind("//domain/devices/interface/mac").a("address","52:54:00:5c:dd:eb");
+  return builder.asString(outputProperties);
+}
