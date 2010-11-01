@@ -1,5 +1,16 @@
 {
-  if (request.getHeader(CONTENT_LENGTH) == null) {
+  Multimap<String,String> realHeaders=LinkedHashMultimap.create();
+  Enumeration headers=request.getHeaderNames();
+  while (headers.hasMoreElements()) {
+    String header=headers.nextElement().toString();
+    Enumeration values=request.getHeaders(header);
+    while (values.hasMoreElements()) {
+      realHeaders.put(header,values.nextElement().toString());
+    }
+  }
+  if (realHeaders.get(CONTENT_LENGTH) == null) {
+    response.getWriter().println("no content length!");
+    response.getWriter().println(realHeaders.toString());
     response.sendError(500);
     ((Request)request).setHandled(true);
     return true;

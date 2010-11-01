@@ -1,4 +1,8 @@
 {
+  for (  NodeMetadata node : deadOnes) {
+    credentialStore.remove("node#" + node.getId());
+    credentialStore.remove("node#" + node.getId() + "#adminPassword");
+  }
   Iterable<OrgAndName> orgTags=filter(transform(deadOnes,nodeToOrgAndName),notNull());
   for (  OrgAndName orgTag : orgTags) {
     Iterable<? extends NodeMetadata> nodesInOrg=listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg().toASCIIString()));

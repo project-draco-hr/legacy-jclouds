@@ -12,7 +12,7 @@
   Credentials defaultCredentials=credentialsProvider.execute(template);
   VCloudExpressVApp vAppResponse=super.start(VDC,templateId,name,options,portsToOpen);
   if (password != null) {
-    credentialStore.put(vAppResponse.getHref().toASCIIString(),new Credentials(defaultCredentials.identity,password));
+    credentialStore.put("node#" + vAppResponse.getHref().toASCIIString(),new Credentials(defaultCredentials.identity,password));
   }
   if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(vAppResponse.getHref(),portsToOpen);
   return vAppResponse;

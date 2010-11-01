@@ -1,0 +1,16 @@
+{
+  checkNodeHasIps(node);
+  IPSocket socket=null;
+  try {
+    socket=find(transform(concat(node.getPublicAddresses(),node.getPrivateAddresses()),new Function<String,IPSocket>(){
+      @Override public IPSocket apply(      String from){
+        return new IPSocket(from,port);
+      }
+    }
+),socketTester);
+  }
+ catch (  NoSuchElementException e) {
+    throw new RuntimeException(String.format("could not connect to any ip address port %d on node %s",port,node));
+  }
+  return socket;
+}

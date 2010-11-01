@@ -3,6 +3,11 @@
   if (credentialsMap.containsKey(orgAndName)) {
     Credentials creds=credentialsMap.get(orgAndName);
     node=NodeMetadataBuilder.fromNodeMetadata(node).credentials(creds).build();
+    credentialStore.put("node#" + node.getId(),creds);
+  }
+  String adminPasswordKey="node#" + node.getId() + "#adminPassword";
+  if (credentialStore.containsKey(adminPasswordKey)) {
+    node=NodeMetadataBuilder.fromNodeMetadata(node).adminPassword(credentialStore.get(adminPasswordKey).credential).build();
   }
   return node;
 }
