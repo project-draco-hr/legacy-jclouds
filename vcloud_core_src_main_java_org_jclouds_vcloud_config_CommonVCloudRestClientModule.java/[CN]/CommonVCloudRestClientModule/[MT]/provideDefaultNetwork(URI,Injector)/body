@@ -1,7 +1,7 @@
 {
   if (authException.get() != null)   throw authException.get();
   try {
-    org.jclouds.vcloud.domain.VDC vDC=client.getVDC(defaultVDC);
+    org.jclouds.vcloud.domain.VDC vDC=injector.getInstance(CommonVCloudClient.class).getVDC(defaultVDC);
     Map<String,ReferenceType> networks=vDC.getAvailableNetworks();
     checkState(networks.size() > 0,"No networks present in vDC: " + vDC.getName());
     if (networks.size() == 1)     return Iterables.getLast(networks.values()).getHref();
@@ -12,7 +12,7 @@
       return network.getHref();
     }
  catch (    ConfigurationException e) {
-      return null;
+      return findDefaultNetworkForVDC(vDC,networks,injector);
     }
   }
  catch (  AuthorizationException e) {

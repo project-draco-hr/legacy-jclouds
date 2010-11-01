@@ -1,0 +1,15 @@
+{
+  logger.warn("default network for vdc %s not set",vDC.getName());
+  try {
+    return Iterables.find(networks.values(),new Predicate<ReferenceType>(){
+      @Override public boolean apply(      ReferenceType input){
+        OrgNetwork network=injector.getInstance(TerremarkECloudClient.class).getNetwork(input.getHref());
+        return network.getDescription() != null && network.getDescription().toLowerCase().contains("dmz");
+      }
+    }
+).getHref();
+  }
+ catch (  NoSuchElementException e) {
+    throw new ResourceNotFoundException("no dmz networks in vdc " + vDC.getName() + ": "+ networks);
+  }
+}
