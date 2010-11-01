@@ -20,6 +20,8 @@
     System.out.println(clonedVol.getXMLDesc(0));
     String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0));
     domain=client.domainDefineXML(xmlFinal);
+    domain.create();
+    credentialStore.put(domain.getUUIDString() + "",new Credentials("identity","credential"));
     return domain;
   }
  catch (  LibvirtException e) {
