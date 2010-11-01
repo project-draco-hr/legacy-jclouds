@@ -1,5 +1,14 @@
 {
-  List<Image> images=Lists.newArrayList();
-  images.add(new Image(1,"ubuntu"));
-  return images;
+  int i=1;
+  try {
+    String[] domains=client.listDefinedDomains();
+    List<Image> images=Lists.newArrayList();
+    for (    String domainName : domains) {
+      images.add(new Image(i++,domainName));
+    }
+    return images;
+  }
+ catch (  Exception e) {
+    return propogate(e);
+  }
 }
