@@ -2,9 +2,14 @@
   ComputeServiceContext context=null;
   try {
     context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<Domain,Domain,Image,Datacenter>("libvirt",endpoint,apiversion,identity,credential,new LibvirtComputeServiceContextModule(),ImmutableSet.<Module>of()));
-    context.getComputeService().runNodesWithTag("ttylinux",1);
+    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("ttylinux",1);
+    for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
+      context.getComputeService().suspendNode(nodeMetadata.getId());
+      Thread.sleep(2000);
+      context.getComputeService().resumeNode(nodeMetadata.getId());
+    }
   }
- catch (  RunNodesException e) {
+ catch (  Exception e) {
     e.printStackTrace();
   }
  finally {

@@ -10,7 +10,9 @@
   Node newNode=oldChild.cloneNode(true);
   newNode.getFirstChild().setNodeValue(UUID.randomUUID().toString());
   builder.getDocument().getDocumentElement().replaceChild(newNode,oldChild);
-  builder.xpathFind("//domain/devices/disk/source").a("file","/var/lib/libvirt/images/ttylinux.img-clone");
+  String fromVolPath=builder.xpathFind("//domain/devices/disk/source").getElement().getAttribute("file");
+  builder.xpathFind("//domain/devices/disk/source").a("file",fromVolPath + cloneAppend);
+  String fromMACaddress=builder.xpathFind("//domain/devices/interface/mac").getElement().getAttribute("address");
   builder.xpathFind("//domain/devices/interface/mac").a("address","52:54:00:5c:dd:eb");
   return builder.asString(outputProperties);
 }

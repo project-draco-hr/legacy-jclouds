@@ -1,10 +1,8 @@
 {
   try {
-    String xmlDesc="";
     Domain domain=null;
     String domainName=tag;
     domain=client.domainLookupByName(domainName);
-    System.out.println("domain name " + domain.getName());
     XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(domain.getXMLDesc(0))));
     Document doc=builder.getDocument();
     XPathExpression expr=null;
@@ -17,7 +15,6 @@
     String poolName="default";
     StoragePool storagePool=client.storagePoolLookupByName(poolName);
     StorageVol clonedVol=cloneVolume(storagePool,storageVol);
-    System.out.println(clonedVol.getXMLDesc(0));
     String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0));
     domain=client.domainDefineXML(xmlFinal);
     domain.create();
