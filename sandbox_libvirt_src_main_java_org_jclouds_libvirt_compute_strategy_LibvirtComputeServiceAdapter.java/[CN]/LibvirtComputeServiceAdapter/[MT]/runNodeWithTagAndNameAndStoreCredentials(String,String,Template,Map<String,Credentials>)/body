@@ -12,14 +12,14 @@
     nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
     String diskFileName=nodes.item(0).getNodeValue();
     StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
-    String poolName="default";
+    String poolName=storageVol.storagePoolLookupByVolume().getName();
     StoragePool storagePool=client.storagePoolLookupByName(poolName);
     StorageVol clonedVol=cloneVolume(storagePool,storageVol);
-    String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0));
-    domain=client.domainDefineXML(xmlFinal);
-    domain.create();
+    String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0),clonedVol);
+    Domain newDomain=client.domainDefineXML(xmlFinal);
+    newDomain.create();
     credentialStore.put(domain.getUUIDString() + "",new Credentials("identity","credential"));
-    return domain;
+    return newDomain;
   }
  catch (  LibvirtException e) {
     return propogate(e);
