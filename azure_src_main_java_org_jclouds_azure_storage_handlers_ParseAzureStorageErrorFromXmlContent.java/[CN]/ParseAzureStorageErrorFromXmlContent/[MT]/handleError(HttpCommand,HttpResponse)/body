@@ -4,11 +4,20 @@
   try {
     if (response.getPayload() != null) {
       String contentType=response.getPayload().getContentMetadata().getContentType();
-      if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1)) {
-        AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,response.getPayload().getInput());
-        if (error != null) {
-          message=error.getMessage();
-          exception=new AzureStorageResponseException(command,response,error);
+      if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1) && !new Long(0).equals(response.getPayload().getContentMetadata().getContentLength())) {
+        try {
+          AzureStorageError error=utils.parseAzureStorageErrorFromContent(command,response,response.getPayload().getInput());
+          if (error != null) {
+            message=error.getMessage();
+            exception=new AzureStorageResponseException(command,response,error);
+          }
+        }
+ catch (        RuntimeException e) {
+          try {
+            message=Utils.toStringAndClose(response.getPayload().getInput());
+          }
+ catch (          IOException e1) {
+          }
         }
       }
  else {

@@ -2,18 +2,26 @@
   OsFamily osFamily=null;
   String osName=from.getOs().getName();
   String osArch=from.getArchitecture().getDescription();
-  String osVersion=parseVersion(osName);
+  String osVersion=null;
   String osDescription=from.getOs().getDescription();
   boolean is64Bit=(from.getOs().getName().indexOf("64") != -1 || from.getDescription().indexOf("64") != -1);
-  Matcher matcher=GOGRID_OS_PATTERN.matcher(from.getName());
-  if (matcher.find()) {
-    try {
-      osFamily=OsFamily.fromValue(matcher.group(1).toLowerCase());
-    }
- catch (    IllegalArgumentException e) {
-      logger.debug("<< didn't match os(%s)",from.getName());
+  if (osName.startsWith("Windows")) {
+    osFamily=OsFamily.WINDOWS;
+  }
+ else {
+    Matcher matcher=GOGRID_OS_PATTERN.matcher(from.getName());
+    if (matcher.find()) {
+      try {
+        osFamily=OsFamily.fromValue(matcher.group(1).toLowerCase());
+      }
+ catch (      IllegalArgumentException e) {
+        logger.debug("<< didn't match os(%s)",from.getName());
+      }
     }
   }
-  OperatingSystem os=new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
-  return os;
+  Matcher matcher=GOGRID_VERSION_PATTERN.matcher(osName);
+  if (matcher.find()) {
+    osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(1),osVersionMap);
+  }
+  return new OperatingSystem(osFamily,osName,osVersion,osArch,osDescription,is64Bit);
 }

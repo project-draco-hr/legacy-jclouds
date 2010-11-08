@@ -1,0 +1,10 @@
+{
+  if (request.getPayload() != null && ("application/x-www-form-urlencoded".equals(request.getPayload().getContentMetadata().getContentType()) || request.getPayload() instanceof StringPayload) && request.getPayload().getContentMetadata().getContentLength() != null && request.getPayload().getContentMetadata().getContentLength() < 1024) {
+    try {
+      return String.format(" [%s] ",request.getPayload() instanceof StringPayload ? request.getPayload().getRawContent() : Utils.toStringAndClose(request.getPayload().getInput()));
+    }
+ catch (    IOException e) {
+    }
+  }
+  return "";
+}

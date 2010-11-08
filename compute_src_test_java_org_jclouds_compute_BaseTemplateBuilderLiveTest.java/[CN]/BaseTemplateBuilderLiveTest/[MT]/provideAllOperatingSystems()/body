@@ -1,0 +1,13 @@
+{
+  Map<OsFamily,Map<String,String>> map=new BaseComputeServiceContextModule(){
+  }
+.provideOsVersionMap(new ComputeServiceConstants.ReferenceData(),Guice.createInjector(new GsonModule()).getInstance(Json.class));
+  Set<OsFamilyVersion64Bit> supportedOperatingSystems=Sets.newHashSet();
+  for (  Entry<OsFamily,Map<String,String>> osVersions : map.entrySet()) {
+    for (    String version : Sets.newHashSet(osVersions.getValue().values())) {
+      supportedOperatingSystems.add(new OsFamilyVersion64Bit(osVersions.getKey(),version,false));
+      supportedOperatingSystems.add(new OsFamilyVersion64Bit(osVersions.getKey(),version,true));
+    }
+  }
+  return supportedOperatingSystems;
+}
