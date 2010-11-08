@@ -1,15 +1,12 @@
 {
   try {
-    Domain domain=null;
     String domainName=tag;
-    domain=client.domainLookupByName(domainName);
+    Domain domain=client.domainLookupByName(domainName);
     XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(domain.getXMLDesc(0))));
     Document doc=builder.getDocument();
-    XPathExpression expr=null;
-    NodeList nodes=null;
     String xpathString="//devices/disk[@device='disk']/source/@file";
-    expr=XPathFactory.newInstance().newXPath().compile(xpathString);
-    nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
+    XPathExpression expr=XPathFactory.newInstance().newXPath().compile(xpathString);
+    NodeList nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
     String diskFileName=nodes.item(0).getNodeValue();
     StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
     String poolName=storageVol.storagePoolLookupByVolume().getName();
