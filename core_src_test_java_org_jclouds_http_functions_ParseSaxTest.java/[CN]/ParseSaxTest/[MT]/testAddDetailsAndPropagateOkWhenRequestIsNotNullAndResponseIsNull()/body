@@ -1,0 +1,13 @@
+{
+  ParseSax<String> parser=createParser();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://foohost"));
+  Exception input=new Exception("foo");
+  try {
+    parser.setContext(request);
+    parser.addDetailsAndPropagate(null,input);
+  }
+ catch (  RuntimeException e) {
+    assertEquals(e.getMessage(),"request: GET http://foohost HTTP/1.1; cause: java.lang.Exception: foo");
+    assertEquals(e.getCause(),input);
+  }
+}

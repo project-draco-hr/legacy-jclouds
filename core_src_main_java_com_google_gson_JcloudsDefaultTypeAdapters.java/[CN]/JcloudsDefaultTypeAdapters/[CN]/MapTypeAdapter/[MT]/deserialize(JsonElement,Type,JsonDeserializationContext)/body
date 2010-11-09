@@ -1,0 +1,10 @@
+{
+  Map<Object,Object> map=constructMapType(typeOfT,context);
+  TypeInfoMap mapTypeInfo=new TypeInfoMap(typeOfT);
+  for (  Map.Entry<String,JsonElement> entry : json.getAsJsonObject().entrySet()) {
+    Object key=context.deserialize(new JsonPrimitive(entry.getKey()),mapTypeInfo.getKeyType());
+    Object value=context.deserialize(entry.getValue(),mapTypeInfo.getValueType());
+    map.put(key,value);
+  }
+  return map;
+}

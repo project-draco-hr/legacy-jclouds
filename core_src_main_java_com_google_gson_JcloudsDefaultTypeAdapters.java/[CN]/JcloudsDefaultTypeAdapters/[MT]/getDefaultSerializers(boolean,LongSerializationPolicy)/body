@@ -1,0 +1,14 @@
+{
+  ParameterizedTypeHandlerMap<JsonSerializer<?>> serializers=new ParameterizedTypeHandlerMap<JsonSerializer<?>>();
+  JcloudsDefaultTypeAdapters.DoubleSerializer doubleSerializer=new JcloudsDefaultTypeAdapters.DoubleSerializer(serializeSpecialFloatingPointValues);
+  serializers.registerIfAbsent(Double.class,doubleSerializer);
+  serializers.registerIfAbsent(double.class,doubleSerializer);
+  JcloudsDefaultTypeAdapters.FloatSerializer floatSerializer=new JcloudsDefaultTypeAdapters.FloatSerializer(serializeSpecialFloatingPointValues);
+  serializers.registerIfAbsent(Float.class,floatSerializer);
+  serializers.registerIfAbsent(float.class,floatSerializer);
+  JcloudsDefaultTypeAdapters.LongSerializer longSerializer=new JcloudsDefaultTypeAdapters.LongSerializer(longSerializationPolicy);
+  serializers.registerIfAbsent(Long.class,longSerializer);
+  serializers.registerIfAbsent(long.class,longSerializer);
+  serializers.registerIfAbsent(DEFAULT_SERIALIZERS);
+  return serializers;
+}
