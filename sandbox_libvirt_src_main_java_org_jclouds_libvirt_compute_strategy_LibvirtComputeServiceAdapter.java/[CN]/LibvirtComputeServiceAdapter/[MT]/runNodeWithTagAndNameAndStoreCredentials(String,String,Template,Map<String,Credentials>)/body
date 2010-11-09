@@ -11,7 +11,19 @@
     StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
     String poolName=storageVol.storagePoolLookupByVolume().getName();
     StoragePool storagePool=client.storagePoolLookupByName(poolName);
-    StorageVol clonedVol=cloneVolume(storagePool,storageVol);
+    StorageVol clonedVol=null;
+    boolean cloned=false;
+    int retry=0;
+    while (!cloned && retry < 10) {
+      try {
+        clonedVol=cloneVolume(storagePool,storageVol);
+        cloned=true;
+      }
+ catch (      LibvirtException e) {
+        retry++;
+        Thread.sleep(1000);
+      }
+    }
     String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0),clonedVol);
     Domain newDomain=client.domainDefineXML(xmlFinal);
     newDomain.create();
