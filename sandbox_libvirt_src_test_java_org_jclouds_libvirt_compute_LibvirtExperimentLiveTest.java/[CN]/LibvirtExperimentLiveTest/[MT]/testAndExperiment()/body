@@ -1,7 +1,7 @@
 {
   ComputeServiceContext context=null;
   try {
-    context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<Domain,Domain,Image,Datacenter>("libvirt",endpoint,apiversion,identity,credential,new LibvirtComputeServiceContextModule(),ImmutableSet.<Module>of()));
+    context=new ComputeServiceContextFactory().createContext(new LibvirtComputeServiceContextSpec("test:///default","identity","credential"));
     Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("tty",1);
     for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
       context.getComputeService().destroyNode(nodeMetadata.getId());
