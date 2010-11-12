@@ -1,3 +1,22 @@
 {
-  return "c7ff2039-a9f1-a659-7f91-e0f82f59d52e";
+  Collection<File> xmlDomains=FileUtils.listFiles(new File(domainDir),new WildcardFileFilter("*.xml"),null);
+  String uuid="";
+  try {
+    String fromXML=Files.toString(Iterables.get(xmlDomains,0),Charsets.UTF_8);
+    XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(fromXML)));
+    uuid=builder.xpathFind("/domain/uuid").getElement().getTextContent();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+catch (  ParserConfigurationException e) {
+    e.printStackTrace();
+  }
+catch (  SAXException e) {
+    e.printStackTrace();
+  }
+catch (  XPathExpressionException e) {
+    e.printStackTrace();
+  }
+  return uuid;
 }
