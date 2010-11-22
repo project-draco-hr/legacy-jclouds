@@ -1,0 +1,18 @@
+{
+  if (osVersionMap.containsKey(family)) {
+    if (osVersionMap.get(family).containsKey(in))     return osVersionMap.get(family).get(in);
+    CONTAINS_SUBSTRING contains=new CONTAINS_SUBSTRING(in.replace('-','.'));
+    try {
+      String key=Iterables.find(osVersionMap.get(family).keySet(),contains);
+      return osVersionMap.get(family).get(key);
+    }
+ catch (    NoSuchElementException e) {
+      try {
+        return Iterables.find(osVersionMap.get(family).values(),contains);
+      }
+ catch (      NoSuchElementException e1) {
+      }
+    }
+  }
+  return "";
+}

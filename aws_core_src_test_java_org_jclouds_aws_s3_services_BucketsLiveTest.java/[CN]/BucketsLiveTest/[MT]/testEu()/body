@@ -1,7 +1,7 @@
 {
   final String bucketName=getScratchContainerName();
   try {
-    getApi().putBucketInRegion(Region.EU_WEST_1,bucketName + "eu",withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
+    getApi().putBucketInRegion(Region.EU,bucketName + "eu",withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
     assertConsistencyAware(new Runnable(){
       public void run(){
         try {
@@ -14,7 +14,7 @@
       }
     }
 );
-    assertEquals(Region.EU_WEST_1,getApi().getBucketLocation(bucketName + "eu"));
+    assertEquals(Region.EU,getApi().getBucketLocation(bucketName + "eu"));
   }
   finally {
     destroyContainer(bucketName + "eu");

@@ -1,0 +1,13 @@
+{
+  Preconditions.checkArgument(typeAdapter instanceof JsonSerializer<?> || typeAdapter instanceof JsonDeserializer<?> || typeAdapter instanceof InstanceCreator<?>);
+  if (typeAdapter instanceof InstanceCreator<?>) {
+    registerInstanceCreatorForTypeHierarchy(baseType,(InstanceCreator<?>)typeAdapter);
+  }
+  if (typeAdapter instanceof JsonSerializer<?>) {
+    registerSerializerForTypeHierarchy(baseType,(JsonSerializer<?>)typeAdapter);
+  }
+  if (typeAdapter instanceof JsonDeserializer<?>) {
+    registerDeserializerForTypeHierarchy(baseType,(JsonDeserializer<?>)typeAdapter);
+  }
+  return this;
+}

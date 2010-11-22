@@ -1,0 +1,14 @@
+{
+  ParseSax<String> parser=createParser();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://foohost"));
+  HttpResponse response=new HttpResponse(304,"Not Modified",null);
+  Exception input=new Exception("foo");
+  try {
+    parser.setContext(request);
+    parser.addDetailsAndPropagate(response,input);
+  }
+ catch (  RuntimeException e) {
+    assertEquals(e.getMessage(),"request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; cause: java.lang.Exception: foo");
+    assertEquals(e.getCause(),input);
+  }
+}

@@ -6,6 +6,9 @@
   if (options.getPublicKey() != null)   bootstrap.add(new AuthorizeRSAPublicKey(options.getPublicKey()));
   if (options.getRunScript() != null)   bootstrap.add(options.getRunScript());
   if (options.getPrivateKey() != null)   bootstrap.add(new InstallRSAPrivateKey(options.getPrivateKey()));
-  if (bootstrap.size() >= 1)   runScriptOnNode(node,bootstrap.size() == 1 ? bootstrap.get(0) : new StatementList(bootstrap),options);
+  if (bootstrap.size() >= 1) {
+    if (options.getTaskName() == null && !(options.getRunScript() instanceof InitBuilder))     options.nameTask("bootstrap");
+    runScriptOnNode(node,bootstrap.size() == 1 ? bootstrap.get(0) : new StatementList(bootstrap),options);
+  }
   return node;
 }

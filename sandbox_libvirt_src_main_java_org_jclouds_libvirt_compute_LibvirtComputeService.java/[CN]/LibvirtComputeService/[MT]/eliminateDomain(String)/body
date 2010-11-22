@@ -1,0 +1,12 @@
+{
+  try {
+    XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(client.domainLookupByUUIDString(id).getXMLDesc(0))));
+    String diskFileName=builder.xpathFind("//devices/disk[@device='disk']/source").getElement().getAttribute("file");
+    StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
+    storageVol.delete(0);
+    client.domainLookupByUUIDString(id).undefine();
+  }
+ catch (  Exception e) {
+    propogate(e);
+  }
+}

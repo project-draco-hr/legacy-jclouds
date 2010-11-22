@@ -1,28 +1,34 @@
 {
   try {
-    String xmlDesc="";
-    Domain domain=null;
     String domainName=tag;
-    domain=client.domainLookupByName(domainName);
-    System.out.println("domain name " + domain.getName());
+    Domain domain=client.domainLookupByName(domainName);
     XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(domain.getXMLDesc(0))));
     Document doc=builder.getDocument();
-    XPathExpression expr=null;
-    NodeList nodes=null;
     String xpathString="//devices/disk[@device='disk']/source/@file";
-    expr=XPathFactory.newInstance().newXPath().compile(xpathString);
-    nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
+    XPathExpression expr=XPathFactory.newInstance().newXPath().compile(xpathString);
+    NodeList nodes=(NodeList)expr.evaluate(doc,XPathConstants.NODESET);
     String diskFileName=nodes.item(0).getNodeValue();
     StorageVol storageVol=client.storageVolLookupByPath(diskFileName);
-    String poolName="default";
+    String poolName=storageVol.storagePoolLookupByVolume().getName();
     StoragePool storagePool=client.storagePoolLookupByName(poolName);
-    StorageVol clonedVol=cloneVolume(storagePool,storageVol);
-    System.out.println(clonedVol.getXMLDesc(0));
-    String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0));
-    domain=client.domainDefineXML(xmlFinal);
-    domain.create();
+    StorageVol clonedVol=null;
+    boolean cloned=false;
+    int retry=0;
+    while (!cloned && retry < 10) {
+      try {
+        clonedVol=cloneVolume(storagePool,storageVol);
+        cloned=true;
+      }
+ catch (      LibvirtException e) {
+        retry++;
+        Thread.sleep(1000);
+      }
+    }
+    String xmlFinal=generateClonedDomainXML(domain.getXMLDesc(0),clonedVol);
+    Domain newDomain=client.domainDefineXML(xmlFinal);
+    newDomain.create();
     credentialStore.put(domain.getUUIDString() + "",new Credentials("identity","credential"));
-    return domain;
+    return newDomain;
   }
  catch (  LibvirtException e) {
     return propogate(e);

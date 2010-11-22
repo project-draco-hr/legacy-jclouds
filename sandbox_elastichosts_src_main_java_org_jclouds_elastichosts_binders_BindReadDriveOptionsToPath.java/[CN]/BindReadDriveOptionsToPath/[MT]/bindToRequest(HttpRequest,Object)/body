@@ -1,0 +1,10 @@
+{
+  checkArgument(payload instanceof ReadDriveOptions,"this binder is only valid for ReadDriveOptions!");
+  ReadDriveOptions options=ReadDriveOptions.class.cast(payload);
+  if (options.getOffset() != null || options.getSize() != null) {
+    UriBuilder builder=uriBuilderProvider.get().uri(request.getEndpoint());
+    if (options.getOffset() != null)     builder.path("/" + options.getOffset());
+    if (options.getSize() != null)     builder.path("/" + options.getSize());
+    request.setEndpoint(builder.build());
+  }
+}

@@ -11,7 +11,7 @@
   OsFamily osFamily=parseOsFamilyOrNull(provider,from.getImageLocation());
   String osName=null;
   String osArch=from.getVirtualizationType();
-  String osVersion=parseVersionOrReturnEmptyString(osFamily,from.getImageLocation());
+  String osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,from.getImageLocation(),osVersionMap);
   String osDescription=from.getImageLocation();
   boolean is64Bit=from.getArchitecture() == Architecture.X86_64;
   try {
@@ -22,11 +22,11 @@
       builder.version(osVersion);
     }
  else     if (matcher.pattern() == NEBULA_PATTERN) {
-      osVersion=parseVersionOrReturnEmptyString(osFamily,matcher.group(2));
+      osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(2),osVersionMap);
     }
  else {
       osFamily=OsFamily.fromValue(matcher.group(1));
-      osVersion=parseVersionOrReturnEmptyString(osFamily,matcher.group(2));
+      osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(2),osVersionMap);
       builder.version(matcher.group(3).replace(".manifest.xml",""));
     }
   }

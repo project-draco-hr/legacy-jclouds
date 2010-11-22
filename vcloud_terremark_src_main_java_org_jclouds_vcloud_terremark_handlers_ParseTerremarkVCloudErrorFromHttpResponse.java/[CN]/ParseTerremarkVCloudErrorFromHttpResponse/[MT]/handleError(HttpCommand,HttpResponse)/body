@@ -2,13 +2,14 @@
   Exception exception=new HttpResponseException(command,response);
   try {
     String content=parseErrorFromContentOrNull(command,response);
-    if (response.getMessage() != null && ((response.getMessage().indexOf("because there is a pending task running") != -1) || (response.getMessage().indexOf("because it is already powered off") != -1) || (response.getMessage().indexOf("already exists") != -1)|| (response.getMessage().indexOf("same name exists") != -1)))     exception=new IllegalStateException(response.getMessage(),exception);
+    if (content != null)     exception=new HttpResponseException(command,response,content);
+    if (response.getMessage() != null && ((response.getMessage().indexOf("because there is a pending task running") != -1) || (response.getMessage().indexOf("because it is already powered off") != -1) || (response.getMessage().indexOf("exists") != -1)))     exception=new IllegalStateException(response.getMessage(),exception);
  else switch (response.getStatusCode()) {
 case 400:
       exception=new IllegalArgumentException(response.getMessage(),exception);
     break;
 case 401:
-  exception=new AuthorizationException(command.getRequest(),content);
+  exception=new AuthorizationException(exception.getMessage(),exception);
 break;
 case 403:
 case 404:

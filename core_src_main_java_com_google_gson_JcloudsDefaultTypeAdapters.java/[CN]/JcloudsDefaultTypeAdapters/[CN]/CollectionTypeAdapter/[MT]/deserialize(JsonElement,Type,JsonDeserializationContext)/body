@@ -1,0 +1,17 @@
+{
+  if (json.isJsonNull()) {
+    return null;
+  }
+  Collection collection=constructCollectionType(typeOfT,context);
+  Type childType=new TypeInfoCollection(typeOfT).getElementType();
+  for (  JsonElement childElement : json.getAsJsonArray()) {
+    if (childElement == null || childElement.isJsonNull()) {
+      collection.add(null);
+    }
+ else {
+      Object value=context.deserialize(childElement,childType);
+      collection.add(value);
+    }
+  }
+  return collection;
+}

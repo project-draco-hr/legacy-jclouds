@@ -16,6 +16,7 @@
  else {
         try {
           message=Utils.toStringAndClose(response.getPayload().getInput());
+          exception=new HttpResponseException(command,response,message);
         }
  catch (        IOException e) {
         }
@@ -26,12 +27,12 @@ switch (response.getStatusCode()) {
 case 400:
       if (error != null && error.getCode() != null && (error.getCode().endsWith(".NotFound") || error.getCode().endsWith(".Unknown")))       exception=new ResourceNotFoundException(message,exception);
  else       if ((error != null && error.getCode() != null && (error.getCode().equals("IncorrectState") || error.getCode().endsWith(".Duplicate"))) || (message != null && message.indexOf("already exists") != -1))       exception=new IllegalStateException(message,exception);
- else       if (error != null && error.getCode() != null && error.getCode().equals("AuthFailure"))       exception=new AuthorizationException(command.getRequest(),message);
+ else       if (error != null && error.getCode() != null && error.getCode().equals("AuthFailure"))       exception=new AuthorizationException(exception.getMessage(),exception);
  else       if (message != null && message.indexOf("Failed to bind the following fields") != -1)       exception=new IllegalArgumentException(message,exception);
     break;
 case 401:
 case 403:
-  exception=new AuthorizationException(command.getRequest(),message);
+  exception=new AuthorizationException(exception.getMessage(),exception);
 break;
 case 404:
 if (!command.getRequest().getMethod().equals("DELETE")) {
@@ -41,6 +42,8 @@ if (key == null || key.equals("/")) exception=new ContainerNotFoundException(con
  else exception=new KeyNotFoundException(container,key,message);
 }
 break;
+case 409:
+exception=new IllegalStateException(message,exception);
 }
 }
   finally {

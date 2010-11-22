@@ -1,0 +1,17 @@
+{
+  Properties outputProperties=generateOutputXMLProperties();
+  XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(fromXML)));
+  String nodeNamingConvention="%s-%s";
+  String tag="-clone";
+  String suffix=String.format(nodeNamingConvention,tag,Integer.toHexString(new SecureRandom().nextInt(4095)));
+  builder.xpathFind("//domain/name").t(suffix);
+  Element oldChild=builder.xpathFind("//domain/uuid").getElement();
+  Node newNode=oldChild.cloneNode(true);
+  newNode.getFirstChild().setNodeValue(UUID.randomUUID().toString());
+  builder.getDocument().getDocumentElement().replaceChild(newNode,oldChild);
+  builder.xpathFind("//domain/devices/disk/source").a("file",clonedVol.getPath());
+  String fromMACaddress=builder.xpathFind("//domain/devices/interface/mac").getElement().getAttribute("address");
+  String lastMACoctet=Integer.toHexString(new SecureRandom().nextInt(255));
+  builder.xpathFind("//domain/devices/interface/mac").a("address",fromMACaddress.substring(0,fromMACaddress.lastIndexOf(":") + 1) + lastMACoctet);
+  return builder.asString(outputProperties);
+}

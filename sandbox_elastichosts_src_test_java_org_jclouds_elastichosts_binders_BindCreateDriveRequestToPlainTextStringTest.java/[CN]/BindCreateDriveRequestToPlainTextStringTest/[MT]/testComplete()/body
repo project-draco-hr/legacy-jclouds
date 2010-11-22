@@ -1,0 +1,7 @@
+{
+  CreateDriveRequest input=new CreateDriveRequest.Builder().name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System").size(8589934592l).claimType(ClaimType.SHARED).readers(ImmutableSet.of("ffffffff-ffff-ffff-ffff-ffffffffffff")).tags(ImmutableSet.of("tag1","tag2")).userMetadata(ImmutableMap.of("foo","bar","baz","raz")).encryptionCipher("aes-xts-plain").avoid(ImmutableSet.of("avoid1")).build();
+  HttpRequest request=new HttpRequest("POST",URI.create("https://host/drives/create"));
+  FN.bindToRequest(request,input);
+  assertEquals(request.getPayload().getContentMetadata().getContentType(),MediaType.TEXT_PLAIN);
+  assertEquals(request.getPayload().getRawContent(),Utils.toStringAndClose(BindCreateDriveRequestToPlainTextStringTest.class.getResourceAsStream("/create_drive.txt")));
+}

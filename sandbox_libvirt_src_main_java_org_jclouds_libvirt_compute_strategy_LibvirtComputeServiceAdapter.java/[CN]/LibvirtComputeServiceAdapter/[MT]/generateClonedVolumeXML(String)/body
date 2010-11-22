@@ -1,12 +1,11 @@
 {
-  Properties outputProperties=new Properties();
-  outputProperties.put(javax.xml.transform.OutputKeys.METHOD,"xml");
-  outputProperties.put(javax.xml.transform.OutputKeys.INDENT,"yes");
-  outputProperties.put("{http://xml.apache.org/xslt}indent-amount","2");
+  Properties outputProperties=generateOutputXMLProperties();
   XMLBuilder builder=XMLBuilder.parse(new InputSource(new StringReader(fromXML)));
-  String cloneAppend="-clone";
-  builder.xpathFind("//volume/name").t(cloneAppend);
-  builder.xpathFind("//volume/key").t(cloneAppend);
-  builder.xpathFind("//volume/target/path").t(cloneAppend);
+  String nodeNamingConvention="%s-%s";
+  String tag="-clone";
+  String suffix=String.format(nodeNamingConvention,tag,Integer.toHexString(new SecureRandom().nextInt(4095)));
+  builder.xpathFind("//volume/name").t(suffix);
+  builder.xpathFind("//volume/key").t(suffix);
+  builder.xpathFind("//volume/target/path").t(suffix);
   return builder.asString(outputProperties);
 }
