@@ -1,0 +1,16 @@
+{
+  String tag=PREFIX + "recreate";
+  context.getComputeService().destroyNodesMatching(NodePredicates.withTag(tag));
+  try {
+    context.getComputeService().runNodesWithTag(tag,1);
+    context.getComputeService().destroyNodesMatching(NodePredicates.withTag(tag));
+    context.getComputeService().runNodesWithTag(tag,1);
+  }
+ catch (  RunNodesException e) {
+    System.err.println(e.getNodeErrors().keySet());
+    Throwables.propagate(e);
+  }
+ finally {
+    context.getComputeService().destroyNodesMatching(NodePredicates.withTag(tag));
+  }
+}
