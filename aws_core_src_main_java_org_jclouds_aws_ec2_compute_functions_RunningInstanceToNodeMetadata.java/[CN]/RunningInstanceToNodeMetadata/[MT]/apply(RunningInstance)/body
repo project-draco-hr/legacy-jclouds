@@ -13,7 +13,12 @@
   Location location=getLocationForAvailabilityZoneOrRegion(instance);
   builder.location(location);
   builder.imageId(instance.getRegion() + "/" + instance.getImageId());
-  Image image=instanceToImage.get(new RegionAndName(instance.getRegion(),instance.getImageId()));
-  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
+  RegionAndName regionAndName=new RegionAndName(instance.getRegion(),instance.getImageId());
+  try {
+    Image image=instanceToImage.get(regionAndName);
+    if (image != null)     builder.operatingSystem(image.getOperatingSystem());
+  }
+ catch (  NullPointerException e) {
+  }
   return builder.build();
 }
