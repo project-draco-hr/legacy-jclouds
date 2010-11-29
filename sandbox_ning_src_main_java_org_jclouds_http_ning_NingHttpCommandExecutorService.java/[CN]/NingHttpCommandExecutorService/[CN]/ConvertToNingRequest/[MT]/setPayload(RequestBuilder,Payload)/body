@@ -1,3 +1,8 @@
 {
-  requestBuilder.setBody(new PayloadEntityWriter(payload));
+  if (payload instanceof FilePayload) {
+    requestBuilder.setBody(((FilePayload)payload).getRawContent());
+  }
+ else {
+    requestBuilder.setBody(payload.getInput());
+  }
 }
