@@ -1,6 +1,8 @@
 {
   String lastModified=from.getFirstHeaderOrNull(HttpHeaders.LAST_MODIFIED);
-  if (lastModified == null)   throw new HttpException(HttpHeaders.LAST_MODIFIED + " header not present in response: " + from.getStatusLine());
+  if (lastModified == null) {
+    if ((lastModified=from.getFirstHeaderOrNull("Last-modified")) == null)     throw new HttpException(HttpHeaders.LAST_MODIFIED + " header not present in response: " + from.getStatusLine());
+  }
   if (apiVersion.indexOf("Walrus-1.6") != -1) {
     metadata.setLastModified(dateParser.iso8601DateParse(lastModified.replace("+0000","Z")));
   }
