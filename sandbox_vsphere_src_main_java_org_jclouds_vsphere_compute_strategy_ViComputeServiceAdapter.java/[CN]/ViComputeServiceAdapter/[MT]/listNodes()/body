@@ -1,0 +1,20 @@
+{
+  try {
+    ManagedEntity[] vmEntities=new InventoryNavigator(client.getRootFolder()).searchManagedEntities("VirtualMachine");
+    List<VirtualMachine> vms=Lists.newArrayList();
+    for (    ManagedEntity entity : vmEntities) {
+      System.out.println(entity.getName());
+      vms.add((VirtualMachine)entity);
+    }
+    return vms;
+  }
+ catch (  InvalidProperty e) {
+    return propogate(e);
+  }
+catch (  RuntimeFault e) {
+    return propogate(e);
+  }
+catch (  RemoteException e) {
+    return propogate(e);
+  }
+}

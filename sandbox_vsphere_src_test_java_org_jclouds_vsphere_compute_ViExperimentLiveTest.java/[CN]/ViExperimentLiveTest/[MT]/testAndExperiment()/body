@@ -1,0 +1,17 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory().createContext(new ViComputeServiceContextSpec(endpoint,identity,credential));
+    context.getComputeService().listNodes();
+    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("tty",1);
+    for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
+      context.getComputeService().destroyNode(nodeMetadata.getId());
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+ finally {
+    if (context != null)     context.close();
+  }
+}

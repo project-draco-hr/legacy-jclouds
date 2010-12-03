@@ -1,0 +1,20 @@
+{
+  ManagedEntity[] datacenterEntities;
+  try {
+    datacenterEntities=new InventoryNavigator(client.getRootFolder()).searchManagedEntities("Datacenter");
+    List<Datacenter> datacenters=Lists.newArrayList();
+    for (int i=0; i < datacenterEntities.length; i++) {
+      datacenters.add(new Datacenter(i,datacenterEntities[i].getName()));
+    }
+    return datacenters;
+  }
+ catch (  InvalidProperty e) {
+    return propogate(e);
+  }
+catch (  RuntimeFault e) {
+    return propogate(e);
+  }
+catch (  RemoteException e) {
+    return propogate(e);
+  }
+}

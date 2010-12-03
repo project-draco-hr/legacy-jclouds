@@ -1,0 +1,18 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  try {
+    builder.id(from.getMOR().get_value() + "");
+    builder.providerId(from.getConfig().getLocationId() + "");
+    builder.name(from.getName());
+    builder.location(findLocationForDomain.apply(from));
+    builder.tag(parseTagFromName(from.getName()));
+    builder.operatingSystem(new OperatingSystemBuilder().description(from.getConfig().getGuestFullName()).build());
+    builder.hardware(findHardwareForDomain.apply(from));
+    builder.state(domainStateToNodeState.get(from.getRuntime().getPowerState()));
+    builder.credentials(credentialStore.get("node#" + from.getMOR().get_value()));
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+  return builder.build();
+}

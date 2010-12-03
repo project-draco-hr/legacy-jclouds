@@ -1,0 +1,18 @@
+{
+  HardwareBuilder builder=new HardwareBuilder();
+  builder.id(from.getMOR().get_value() + "");
+  builder.providerId(from.getMOR().get_value() + "");
+  builder.name(from.getName());
+  List<Processor> processors=Lists.newArrayList();
+  for (int i=0; i < from.getConfig().getHardware().getNumCPU(); i++) {
+    processors.add(new Processor(i + 1,1));
+  }
+  builder.processors(processors);
+  builder.ram((int)from.getConfig().getHardware().getMemoryMB());
+  List<Volume> volumes=Lists.newArrayList();
+  builder.volumes((List<Volume>)volumes);
+  Float size=new Float(21345);
+  String id="dglffdbdflmb";
+  volumes.add(new VolumeImpl(id,Volume.Type.LOCAL,size,null,true,false));
+  return builder.build();
+}
