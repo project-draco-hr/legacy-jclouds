@@ -1,0 +1,11 @@
+{
+  final Set<Hardware> hardware=Sets.newHashSet();
+  logger.debug(">> providing hardware");
+  for (  org.jclouds.ibmdev.domain.Image image : sync.listImages()) {
+    for (    InstanceType instanceType : image.getSupportedInstanceTypes()) {
+      hardware.add(new HardwareBuilder().id(image.getId() + "/" + instanceType.getId()).providerId(image.getId()).name(instanceType.getLabel()).location(locations.get().get(image.getLocation())).uri(image.getManifest()).processors(ImmutableList.of(new Processor((instanceType.getPrice().getRate() * 100),1.0))).ram((int)instanceType.getPrice().getRate() * 1024).volumes(ImmutableList.<Volume>of(new VolumeImpl((float)(instanceType.getPrice().getRate() * 100d),true,true))).build());
+    }
+  }
+  logger.debug("<< hardware(%d)",hardware.size());
+  return hardware;
+}

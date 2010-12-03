@@ -1,7 +1,9 @@
 {
   final Set<Image> images=Sets.newHashSet();
   logger.debug(">> providing images");
-  for (  org.jclouds.ibmdev.domain.Image image : sync.listImages())   images.add(new IBMImage(image,locations.get().get(image.getLocation())));
+  for (  org.jclouds.ibmdev.domain.Image image : sync.listImages()) {
+    images.add(new ImageBuilder().ids(image.getId()).name(image.getName()).location(locations.get().get(image.getLocation())).operatingSystem(new OperatingSystemBuilder().family((image.getPlatform().indexOf("Red Hat") != -1) ? OsFamily.RHEL : OsFamily.SUSE).arch(image.getPlatform()).is64Bit(image.getPlatform().indexOf("32") == -1).build()).description(image.getDescription()).version(image.getCreatedTime().getTime() + "").defaultCredentials(new Credentials("idcuser",null)).build());
+  }
   logger.debug("<< images(%d)",images.size());
   return images;
 }

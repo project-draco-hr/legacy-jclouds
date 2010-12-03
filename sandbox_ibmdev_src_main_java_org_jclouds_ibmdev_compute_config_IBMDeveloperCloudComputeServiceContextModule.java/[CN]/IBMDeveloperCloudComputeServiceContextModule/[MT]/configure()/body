@@ -1,22 +1,6 @@
 {
-  install(new ComputeServiceTimeoutsModule());
-  bind(new TypeLiteral<Function<Instance,NodeMetadata>>(){
-  }
-).to(InstanceToNodeMetadata.class);
-  bind(new TypeLiteral<ComputeServiceContext>(){
-  }
-).to(new TypeLiteral<ComputeServiceContextImpl<IBMDeveloperCloudClient,IBMDeveloperCloudAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<RestContext<IBMDeveloperCloudClient,IBMDeveloperCloudAsyncClient>>(){
-  }
-).to(new TypeLiteral<RestContextImpl<IBMDeveloperCloudClient,IBMDeveloperCloudAsyncClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(AddNodeWithTagStrategy.class).to(IBMDeveloperCloudAddNodeWithTagStrategy.class);
-  bind(ListNodesStrategy.class).to(IBMDeveloperCloudListNodesStrategy.class);
-  bind(GetNodeMetadataStrategy.class).to(IBMDeveloperCloudGetNodeMetadataStrategy.class);
-  bind(RebootNodeStrategy.class).to(IBMDeveloperCloudRebootNodeStrategy.class);
-  bind(DestroyNodeStrategy.class).to(IBMDeveloperCloudDestroyNodeStrategy.class);
-  bind(LoadBalancerService.class).toProvider(Providers.<LoadBalancerService>of(null));
+  install(new IBMDeveloperCloudComputeServiceDependenciesModule());
+  install(new IBMDeveloperCloudBindComputeStrategiesByClass());
+  install(new IBMDeveloperCloudBindComputeSuppliersByClass());
+  super.configure();
 }
