@@ -74,7 +74,7 @@ catch (  UriBuilderException e) {
     payload=Payloads.newUrlEncodedFormPayload(formParams,skips);
   }
  else   if (headers.containsKey(CONTENT_TYPE)) {
-    payload=Payloads.newByteArrayPayload(new byte[]{});
+    if (payload == null)     payload=Payloads.newByteArrayPayload(new byte[]{});
     payload.getContentMetadata().setContentType(Iterables.get(headers.get(CONTENT_TYPE),0));
   }
   if (payload != null) {
