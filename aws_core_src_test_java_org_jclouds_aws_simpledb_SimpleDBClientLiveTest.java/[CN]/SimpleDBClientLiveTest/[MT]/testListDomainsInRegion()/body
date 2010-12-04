@@ -1,0 +1,10 @@
+{
+  for (  String region : Lists.newArrayList(null,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1,Region.AP_SOUTHEAST_1)) {
+    SortedSet<String> allResults=Sets.newTreeSet(client.listDomainsInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      String domain=allResults.last();
+      assertDomainInList(region,domain);
+    }
+  }
+}
