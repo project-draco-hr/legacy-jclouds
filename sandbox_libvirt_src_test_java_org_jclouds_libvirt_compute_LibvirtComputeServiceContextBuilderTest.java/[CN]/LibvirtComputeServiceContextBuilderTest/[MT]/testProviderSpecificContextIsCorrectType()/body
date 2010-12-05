@@ -1,0 +1,10 @@
+{
+  Properties restProperties=new Properties();
+  restProperties.setProperty("libvirt.contextbuilder",LibvirtComputeServiceContextBuilder.class.getName());
+  restProperties.setProperty("libvirt.propertiesbuilder",LibvirtPropertiesBuilder.class.getName());
+  restProperties.setProperty("libvirt.endpoint","test:///default");
+  ComputeServiceContext context=new ComputeServiceContextFactory(restProperties).createContext("libvirt","identity","credential");
+  RestContext<Connect,Connect> providerContext=context.getProviderSpecificContext();
+  assertEquals(providerContext.getApi().getClass(),Connect.class);
+  context.close();
+}
