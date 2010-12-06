@@ -1,0 +1,9 @@
+{
+  Map<String,Object> map=ImmutableMap.<String,Object>of("map",ImmutableMap.of(true,"value"));
+  assertEquals(json.toJson(map),"{\"map\":{\"true\":\"value\"}}");
+  Map<String,Object> map2=json.fromJson(json.toJson(map),new TypeLiteral<Map<String,Object>>(){
+  }
+.getType());
+  assertEquals(map2,ImmutableMap.<String,Object>of("map",ImmutableMap.of("true","value")));
+  assertEquals(json.toJson(map2),json.toJson(map));
+}
