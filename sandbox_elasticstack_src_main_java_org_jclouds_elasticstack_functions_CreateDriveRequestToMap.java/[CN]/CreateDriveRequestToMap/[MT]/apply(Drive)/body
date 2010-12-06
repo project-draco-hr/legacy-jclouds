@@ -1,0 +1,10 @@
+{
+  ImmutableMap.Builder<String,String> builder=ImmutableMap.builder();
+  builder.putAll(baseDriveToMap.apply(from));
+  if (from instanceof CreateDriveRequest) {
+    CreateDriveRequest create=CreateDriveRequest.class.cast(from);
+    if (create.getAvoid().size() != 0)     builder.put("avoid",Joiner.on(' ').join(create.getAvoid()));
+    if (create.getEncryptionCipher() != null)     builder.put("encryption:cipher",create.getEncryptionCipher());
+  }
+  return builder.build();
+}
