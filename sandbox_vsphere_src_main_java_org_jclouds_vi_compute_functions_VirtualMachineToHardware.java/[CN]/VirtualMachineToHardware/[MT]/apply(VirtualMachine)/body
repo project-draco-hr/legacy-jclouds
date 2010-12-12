@@ -10,9 +10,19 @@
   builder.processors(processors);
   builder.ram((int)from.getConfig().getHardware().getMemoryMB());
   List<Volume> volumes=Lists.newArrayList();
+  VirtualDevice[] devices=from.getConfig().getHardware().getDevice();
+  for (  VirtualDevice virtualDevice : devices) {
+    if (virtualDevice.getDeviceInfo().getLabel().contains("Hard disk")) {
+      if (virtualDevice instanceof VirtualDisk) {
+        VirtualDisk disk=(VirtualDisk)virtualDevice;
+        VirtualDeviceBackingInfo backingInfo=disk.getBacking();
+        if (backingInfo instanceof VirtualDiskFlatVer2BackingInfo) {
+          VirtualDiskFlatVer2BackingInfo diskFlatVer2BackingInfo=(VirtualDiskFlatVer2BackingInfo)backingInfo;
+          volumes.add(new VolumeImpl(diskFlatVer2BackingInfo.getUuid(),Volume.Type.LOCAL,new Float(disk.getCapacityInKB() + ""),diskFlatVer2BackingInfo.getFileName(),true,false));
+        }
+      }
+    }
+  }
   builder.volumes((List<Volume>)volumes);
-  Float size=new Float(21345);
-  String id="dglffdbdflmb";
-  volumes.add(new VolumeImpl(id,Volume.Type.LOCAL,size,null,true,false));
   return builder.build();
 }
