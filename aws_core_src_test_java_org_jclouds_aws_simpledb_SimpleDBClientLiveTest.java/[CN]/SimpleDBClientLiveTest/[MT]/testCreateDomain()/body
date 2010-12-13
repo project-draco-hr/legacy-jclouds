@@ -1,0 +1,17 @@
+{
+  String domainName=PREFIX + "1";
+  for (  final String region : Lists.newArrayList(null,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1,Region.AP_SOUTHEAST_1)) {
+    try {
+      SortedSet<String> result=Sets.newTreeSet(client.listDomainsInRegion(region));
+      if (result.size() >= 1) {
+        client.deleteDomainInRegion(region,result.last());
+        domainName+=1;
+      }
+    }
+ catch (    Exception e) {
+    }
+    client.createDomainInRegion(region,domainName);
+    assertDomainInList(region,domainName);
+    domains.add(domainName);
+  }
+}

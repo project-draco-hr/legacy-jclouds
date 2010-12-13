@@ -1,0 +1,23 @@
+{
+  boolean isEmpty=true;
+  try {
+    reader.peek();
+    isEmpty=false;
+    return parseRecursive(reader);
+  }
+ catch (  EOFException e) {
+    if (isEmpty) {
+      return JsonNull.createJsonNull();
+    }
+    throw new JsonIOException(e);
+  }
+catch (  MalformedJsonException e) {
+    throw new JsonSyntaxException(e);
+  }
+catch (  IOException e) {
+    throw new JsonIOException(e);
+  }
+catch (  NumberFormatException e) {
+    throw new JsonSyntaxException(e);
+  }
+}

@@ -1,8 +1,11 @@
 {
+  Domain d=null;
   try {
-    return client.domainLookupByUUIDString(id);
+    d=client.domainLookupByUUIDString(id);
   }
  catch (  LibvirtException e) {
-    return propogate(e);
+    if (e.getMessage().indexOf("Domain not found: no domain with matching uuid") != -1)     return null;
+    propogate(e);
   }
+  return d;
 }

@@ -1,0 +1,16 @@
+{
+  Map<Object,Object> map=constructMapType(typeOfT,context);
+  TypeInfoMap mapTypeInfo=new TypeInfoMap(typeOfT);
+  for (  Map.Entry<String,JsonElement> entry : json.getAsJsonObject().entrySet()) {
+    Object key=context.deserialize(new JsonPrimitive(entry.getKey()),mapTypeInfo.getKeyType());
+    Object value=null;
+    if (mapTypeInfo.getValueType() == Object.class) {
+      value=ParseObjectFromElement.SINGLETON.apply(entry.getValue());
+    }
+    if (value == null) {
+      value=context.deserialize(entry.getValue(),mapTypeInfo.getValueType());
+    }
+    map.put(key,value);
+  }
+  return map;
+}

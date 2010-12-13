@@ -1,6 +1,8 @@
 {
-  JcloudsGsonBuilder builder=new JcloudsGsonBuilder();
-  builder.registerTypeAdapter(JsonBall.class,jsonObjectAdapter);
+  GsonBuilder builder=new GsonBuilder();
+  JcloudsGsonPackageAccessor.registerTypeHierarchyAdapter(builder,Enum.class,new EnumTypeAdapterThatReturnsFromValue());
+  JcloudsGsonPackageAccessor.registerTypeHierarchyAdapter(builder,Map.class,new MapTypeAdapter());
+  builder.registerTypeAdapter(JsonBall.class,jsonAdapter);
   builder.registerTypeAdapter(Date.class,adapter);
   builder.registerTypeAdapter(new TypeToken<List<Byte>>(){
   }
@@ -9,10 +11,5 @@
   for (  Map.Entry<Type,Object> binding : bindings.getBindings().entrySet()) {
     builder.registerTypeAdapter(binding.getKey(),binding.getValue());
   }
-  JcloudsCompactFormatter formatter=new JcloudsCompactFormatter();
-  Gson gson=builder.create();
-  Field statFinField=Gson.class.getDeclaredField("formatter");
-  statFinField.setAccessible(true);
-  statFinField.set(gson,formatter);
-  return gson;
+  return builder.create();
 }
