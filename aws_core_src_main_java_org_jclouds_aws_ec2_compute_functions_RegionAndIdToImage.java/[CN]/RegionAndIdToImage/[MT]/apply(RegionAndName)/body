@@ -3,8 +3,16 @@
     org.jclouds.aws.ec2.domain.Image image=Iterables.getOnlyElement(sync.getAMIServices().describeImagesInRegion(key.getRegion(),imageIds(key.getName())));
     return parser.apply(image);
   }
- catch (  Exception e) {
-    logger.warn(e,"could not find image %s/%s: %s",key.getRegion(),key.getName(),e.getMessage());
+ catch (  NoSuchElementException e) {
+    logger.debug(message(key,e));
+    return null;
+  }
+catch (  ResourceNotFoundException e) {
+    logger.debug(message(key,e));
+    return null;
+  }
+catch (  Exception e) {
+    logger.warn(e,message(key,e));
     return null;
   }
 }
