@@ -1,0 +1,8 @@
+{
+  prepareDrive();
+  Server serverRequest=new Server.Builder().name(prefix).cpu(1000).mem(512).persistent(true).devices(ImmutableMap.of("ide:0:0",new IDEDevice.Builder(0,0).uuid(drive.getUuid()).build())).bootDeviceIds(ImmutableSet.of("ide:0:0")).nics(ImmutableSet.of(new NIC.Builder().model(Model.E1000).build())).vnc(new VNC(null,VNC_PASSWORD,false)).build();
+  server=client.createAndStartServer(serverRequest);
+  checkCreatedServer();
+  Server newInfo=client.getServerInfo(server.getUuid());
+  checkServerMatchesGet(newInfo);
+}
