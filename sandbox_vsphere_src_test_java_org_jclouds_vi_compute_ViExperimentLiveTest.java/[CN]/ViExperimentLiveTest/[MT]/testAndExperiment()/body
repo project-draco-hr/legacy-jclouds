@@ -2,16 +2,10 @@
   ComputeServiceContext context=null;
   try {
     context=new ComputeServiceContextFactory().createContext(new ViComputeServiceContextSpec(endpoint,identity,credential));
-    context.getComputeService().listNodes();
-    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("tty",1);
-    for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
-      context.getComputeService().destroyNode(nodeMetadata.getId());
-    }
+    NodeMetadata node=context.getComputeService().getNodeMetadata("provaVM");
+    System.out.println(node);
   }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
- finally {
+  finally {
     if (context != null)     context.close();
   }
 }

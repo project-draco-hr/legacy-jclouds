@@ -1,3 +1,14 @@
 {
-  return null;
+  List<Image> images=Lists.newArrayList();
+  try {
+    ManagedEntity[] entities=new InventoryNavigator(client.getRootFolder()).searchManagedEntities("VirtualMachine");
+    for (    ManagedEntity entity : entities) {
+      VirtualMachine vm=(VirtualMachine)entity;
+      images.add(new Image(vm.getConfig().getGuestId(),vm.getConfig().getGuestFullName()));
+    }
+    return images;
+  }
+ catch (  Exception e) {
+    return propogate(e);
+  }
 }
