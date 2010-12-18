@@ -1,0 +1,26 @@
+{
+  if (qName.equals("Attribute")) {
+    inside=false;
+    System.out.println("AttributeName: " + attributeName);
+    System.out.println("AttributeValue: " + attributeValue);
+  }
+ else   if (qName.equals("Name")) {
+    if (inside)     attributeName=currentText.toString().trim();
+ else     itemName=currentText.toString().trim();
+  }
+ else   if (qName.equals("Value")) {
+    attributeValue=currentText.toString().trim();
+    attributes.put(attributeName,new AttributePair(attributeName,attributeValue,false));
+  }
+ else   if (qName.equals("Item")) {
+    System.out.println("ItemName: " + itemName);
+    Item item=new Item(attributes);
+    items.put(itemName,item);
+    attributes=LinkedHashMultimap.create();
+    this.attributeName=null;
+    this.attributeValue=null;
+    this.itemName=null;
+    inside=false;
+  }
+  currentText=new StringBuilder();
+}
