@@ -5,7 +5,7 @@
     message=message != null ? message : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
 switch (response.getStatusCode()) {
 case 400:
-      if (message != null && message.indexOf("could not be found") != -1)       exception=new ResourceNotFoundException(message,exception);
+      if ((command.getRequest().getEndpoint().getPath().endsWith("/info")) || (message != null && message.indexOf("could not be found") != -1))       exception=new ResourceNotFoundException(message,exception);
  else       exception=new IllegalArgumentException(message,exception);
     break;
 case 401:

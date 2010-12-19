@@ -1,0 +1,31 @@
+{
+  super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<ServerInfo,Hardware,Image,Location>>(){
+  }
+).to(ElasticStackComputeServiceAdapter.class);
+  bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(DefaultLocationSupplier.class);
+  bind(new TypeLiteral<Function<ServerInfo,NodeMetadata>>(){
+  }
+).to(ServerInfoToNodeMetadata.class);
+  bind(new TypeLiteral<Function<Image,Image>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<Hardware,Hardware>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<Location,Location>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<Device,Volume>>(){
+  }
+).to(DeviceToVolume.class);
+  bind(new TypeLiteral<Function<Server,String>>(){
+  }
+).to(GetImageIdFromServer.class);
+  bind(new TypeLiteral<Function<String,Image>>(){
+  }
+).to(FindImageForId.class);
+}
