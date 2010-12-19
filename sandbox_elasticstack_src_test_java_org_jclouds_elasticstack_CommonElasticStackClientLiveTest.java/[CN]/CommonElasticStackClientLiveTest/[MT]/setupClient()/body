@@ -3,5 +3,6 @@
   Properties overrides=setupProperties();
   context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
   client=context.getApi();
-  driveNotClaimed=new RetryablePredicate<DriveInfo>(Predicates.not(new DriveClaimed(client)),30,1,TimeUnit.SECONDS);
+  driveNotClaimed=new RetryablePredicate<DriveInfo>(Predicates.not(new DriveClaimed(client)),120,1,TimeUnit.SECONDS);
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),120,1,TimeUnit.SECONDS);
 }

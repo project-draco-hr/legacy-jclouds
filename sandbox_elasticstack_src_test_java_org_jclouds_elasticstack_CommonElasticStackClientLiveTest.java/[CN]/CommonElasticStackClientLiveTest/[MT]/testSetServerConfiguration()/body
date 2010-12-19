@@ -1,0 +1,10 @@
+{
+  client.stopServer(server.getUuid());
+  assertEquals(client.getServerInfo(server.getUuid()).getStatus(),ServerStatus.STOPPED);
+  ServerInfo server2=client.setServerConfiguration(server.getUuid(),Server.Builder.fromServer(server).name("rediculous").tags(ImmutableSet.of("networking","security","gateway")).userMetadata(ImmutableMap.of("foo","bar")).build());
+  assertNotNull(server2.getUuid(),server.getUuid());
+  assertEquals(server2.getName(),"rediculous");
+  assertEquals(server2.getTags(),ImmutableSet.of("networking","security","gateway"));
+  assertEquals(server2.getUserMetadata(),ImmutableMap.of("foo","bar"));
+  server=server2;
+}
