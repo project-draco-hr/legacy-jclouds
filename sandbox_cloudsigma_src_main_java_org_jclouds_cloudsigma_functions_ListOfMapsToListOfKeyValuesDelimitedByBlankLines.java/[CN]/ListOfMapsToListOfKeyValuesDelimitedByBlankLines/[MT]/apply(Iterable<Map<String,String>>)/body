@@ -1,0 +1,13 @@
+{
+  return Joiner.on("\n\n").join(Iterables.transform(from,new Function<Map<String,String>,String>(){
+    @Override public String apply(    Map<String,String> from){
+      return Joiner.on('\n').withKeyValueSeparator(" ").join(Maps.transformValues(from,new Function<String,String>(){
+        @Override public String apply(        String from){
+          return from.replace("\n","\\n");
+        }
+      }
+));
+    }
+  }
+));
+}

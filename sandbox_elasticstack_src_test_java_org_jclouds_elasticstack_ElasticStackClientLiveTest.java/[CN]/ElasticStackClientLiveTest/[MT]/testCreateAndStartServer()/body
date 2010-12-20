@@ -1,0 +1,12 @@
+{
+  Logger.getAnonymousLogger().info("preparing drive");
+  prepareDrive();
+  Server serverRequest=Servers.small(prefix,drive.getUuid(),vncPassword).build();
+  Logger.getAnonymousLogger().info("starting server");
+  server=client.createServer(serverRequest);
+  client.startServer(server.getUuid());
+  server=client.getServerInfo(server.getUuid());
+  checkStartedServer();
+  Server newInfo=client.getServerInfo(server.getUuid());
+  checkServerMatchesGet(newInfo);
+}
