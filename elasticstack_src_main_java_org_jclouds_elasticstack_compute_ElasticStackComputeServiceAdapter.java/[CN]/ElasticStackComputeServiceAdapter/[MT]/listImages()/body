@@ -1,19 +1,11 @@
 {
-  return filter(transform(preinstalledImages,new Function<WellKnownImage,Image>(){
-    @Override public Image apply(    WellKnownImage input){
-      DriveInfo drive=null;
-      try {
-        drive=client.getDriveInfo(input.getUuid());
-      }
- catch (      Exception e) {
-        logger.warn(e,"could not find image: %s",input);
-      }
-      if (drive == null) {
-        logger.warn("could not find image: %s",input);
-        return null;
-      }
-      return new ImageBuilder().ids(drive.getUuid()).userMetadata(ImmutableMap.<String,String>builder().putAll(drive.getUserMetadata()).put("size",input.getSize() + "").build()).defaultCredentials(new Credentials("toor",null)).location(locationSupplier.get()).name(input.getDescription()).description(drive.getName()).operatingSystem(new OperatingSystemBuilder().family(input.getOsFamily()).version(input.getOsVersion()).name(input.getDescription()).description(drive.getName()).is64Bit(true).build()).version("").build();
+  Iterable<DriveInfo> drives=transformParallel(preinstalledImages.keySet(),new Function<String,Future<DriveInfo>>(){
+    @Override public Future<DriveInfo> apply(    String input){
+      return aclient.getDriveInfo(input);
     }
   }
-),notNull());
+,executor,null,logger,"drives");
+  Iterable<DriveInfo> returnVal=filter(drives,notNull());
+  for (  DriveInfo drive : returnVal)   cache.put(drive.getUuid(),drive);
+  return returnVal;
 }

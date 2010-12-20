@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<ServerInfo,Hardware,Image,Location>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<ServerInfo,Hardware,DriveInfo,Location>>(){
   }
 ).to(ElasticStackComputeServiceAdapter.class);
   bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
@@ -28,4 +28,7 @@
   bind(new TypeLiteral<Function<String,Image>>(){
   }
 ).to(FindImageForId.class);
+  bind(new TypeLiteral<Function<DriveInfo,Image>>(){
+  }
+).to(WellKnownImageToImage.class);
 }
