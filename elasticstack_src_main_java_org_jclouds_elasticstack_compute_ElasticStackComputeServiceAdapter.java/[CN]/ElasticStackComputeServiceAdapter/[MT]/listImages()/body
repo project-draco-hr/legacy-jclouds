@@ -1,0 +1,11 @@
+{
+  Iterable<DriveInfo> drives=transformParallel(preinstalledImages.keySet(),new Function<String,Future<DriveInfo>>(){
+    @Override public Future<DriveInfo> apply(    String input){
+      return aclient.getDriveInfo(input);
+    }
+  }
+,executor,null,logger,"drives");
+  Iterable<DriveInfo> returnVal=filter(drives,notNull());
+  for (  DriveInfo drive : returnVal)   cache.put(drive.getUuid(),drive);
+  return returnVal;
+}

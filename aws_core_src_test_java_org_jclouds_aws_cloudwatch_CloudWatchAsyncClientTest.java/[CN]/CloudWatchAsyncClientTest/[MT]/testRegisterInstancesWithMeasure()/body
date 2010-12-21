@@ -4,7 +4,12 @@
   HttpRequest request=processor.createRequest(method,(String)null,"CPUUtilization",date,date,60,"Average");
   assertRequestLineEquals(request,"POST https://monitoring.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: monitoring.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2009-05-15&Action=GetMetricStatistics&Statistics.member.1=Average&StartTime=1970-01-01T02%3A46%3A40Z&MeasureName=CPUUtilization&EndTime=1970-01-01T02%3A46%3A40Z&Period=60","application/x-www-form-urlencoded",false);
+  try {
+    assertPayloadEquals(request,"Version=2009-05-15&Action=GetMetricStatistics&Statistics.member.1=Average&StartTime=1970-01-01T02%3A46%3A40Z&MeasureName=CPUUtilization&EndTime=1970-01-01T02%3A46%3A40Z&Period=60","application/x-www-form-urlencoded",false);
+  }
+ catch (  AssertionError e) {
+    assertPayloadEquals(request,"Version=2009-05-15&Action=GetMetricStatistics&Statistics.member.1=Average&StartTime=1970-01-01T02%3A46%3A40Z&MeasureName=CPUUtilization&Period=60&EndTime=1970-01-01T02%3A46%3A40Z","application/x-www-form-urlencoded",false);
+  }
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,GetMetricStatisticsResponseHandler.class);
   assertExceptionParserClassEquals(method,null);

@@ -1,0 +1,34 @@
+{
+  super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<ServerInfo,Hardware,DriveInfo,Location>>(){
+  }
+).to(CloudSigmaComputeServiceAdapter.class);
+  bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(DefaultLocationSupplier.class);
+  bind(new TypeLiteral<Function<ServerInfo,NodeMetadata>>(){
+  }
+).to(ServerInfoToNodeMetadata.class);
+  bind(new TypeLiteral<Function<Hardware,Hardware>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<DriveInfo,Image>>(){
+  }
+).to(PreinstalledDiskToImage.class);
+  bind(new TypeLiteral<Function<Location,Location>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<Device,Volume>>(){
+  }
+).to(DeviceToVolume.class);
+  bind(new TypeLiteral<Function<Server,String>>(){
+  }
+).to(GetImageIdFromServer.class);
+  bind(new TypeLiteral<Function<String,Image>>(){
+  }
+).to(FindImageForId.class);
+  bind(new TypeLiteral<Function<String,OsFamilyVersion64Bit>>(){
+  }
+).to(ParseOsFamilyVersion64BitFromImageName.class);
+}

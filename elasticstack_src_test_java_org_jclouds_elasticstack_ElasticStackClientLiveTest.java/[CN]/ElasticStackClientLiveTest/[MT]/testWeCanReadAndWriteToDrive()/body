@@ -1,0 +1,5 @@
+{
+  drive2=client.createDrive(new CreateDriveRequest.Builder().name(prefix + "2").size(1 * 1024 * 1024l).build());
+  client.writeDrive(drive2.getUuid(),Payloads.newStringPayload("foo"));
+  assertEquals(Utils.toStringAndClose(client.readDrive(drive2.getUuid(),0,3).getInput()),"foo");
+}

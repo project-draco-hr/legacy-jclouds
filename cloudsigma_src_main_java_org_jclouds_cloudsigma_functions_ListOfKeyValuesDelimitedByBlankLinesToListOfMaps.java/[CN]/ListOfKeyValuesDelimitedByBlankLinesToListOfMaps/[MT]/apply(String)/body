@@ -1,0 +1,18 @@
+{
+  List<Map<String,String>> maps=Lists.newArrayList();
+  for (  String listOfKeyValues : Splitter.on("\n\n").split(from)) {
+    if (!"".equals(listOfKeyValues)) {
+      Map<String,String> map=Maps.newLinkedHashMap();
+      for (      String keyValueLine : Splitter.on('\n').split(listOfKeyValues)) {
+        if (!"".equals(keyValueLine)) {
+          int firstIndex=keyValueLine.indexOf(' ');
+          String key=keyValueLine.substring(0,firstIndex);
+          String value=keyValueLine.substring(firstIndex + 1).replace("\\n","\n");
+          map.put(key,value);
+        }
+      }
+      if (map.size() != 0)       maps.add(map);
+    }
+  }
+  return maps;
+}

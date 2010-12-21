@@ -1,0 +1,12 @@
+{
+  System.out.println(new Gson().toJson(server));
+  assertNotNull(server.getUuid());
+  assertNotNull(server.getUser());
+  assertEquals(server.getName(),prefix);
+  assertEquals(server.isPersistent(),true);
+  assertEquals(server.getDevices(),ImmutableMap.of("ide:0:0",new IDEDevice.Builder(0,0).uuid(drive.getUuid()).build()));
+  assertEquals(server.getBootDeviceIds(),ImmutableSet.of("ide:0:0"));
+  assertEquals(server.getNics().get(0).getDhcp(),server.getVnc().getIp());
+  assertEquals(server.getNics().get(0).getModel(),Model.E1000);
+  assertEquals(server.getStatus(),ServerStatus.ACTIVE);
+}

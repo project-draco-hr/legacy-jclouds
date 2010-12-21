@@ -1,0 +1,15 @@
+{
+  ImmutableList.Builder<NIC> nics=ImmutableList.builder();
+  NIC:   for (  int id : new int[]{0,1}) {
+    String key=String.format("nic:%d",id);
+    if (!from.containsKey(key + ":model"))     break NIC;
+    NIC.Builder nicBuilder=new NIC.Builder();
+    nicBuilder.dhcp(from.get(key + ":dhcp"));
+    nicBuilder.model(Model.fromValue(from.get(key + ":model")));
+    nicBuilder.vlan(from.get(key + ":vlan"));
+    nicBuilder.mac(from.get(key + ":mac"));
+    if (from.containsKey(key + ":block"))     nicBuilder.block(Splitter.on(' ').split(from.get(key + ":block")));
+    nics.add(nicBuilder.build());
+  }
+  return nics.build();
+}

@@ -1,0 +1,28 @@
+{
+  checkNotNull(from,"server");
+  ImmutableMap.Builder<String,String> builder=ImmutableMap.builder();
+  builder.put("name",from.getName());
+  builder.put("cpu",from.getCpu() + "");
+  if (from.getSmp() != null)   builder.put("smp",from.getSmp() + "");
+ else   builder.put("smp","auto");
+  builder.put("mem",from.getMem() + "");
+  builder.put("persistent",from.isPersistent() + "");
+  if (from.getBootDeviceIds().size() != 0)   builder.put("boot",Joiner.on(' ').join(from.getBootDeviceIds()));
+  for (  Entry<String,? extends Device> entry : from.getDevices().entrySet()) {
+    builder.put(entry.getKey(),entry.getValue().getDriveUuid());
+    builder.put(entry.getKey() + ":media",entry.getValue().getMediaType().toString());
+  }
+  int nicId=0;
+  for (  NIC nic : from.getNics()) {
+    builder.put("nic:" + nicId + ":model",nic.getModel().toString());
+    if (nic.getDhcp() != null)     builder.put("nic:" + nicId + ":dhcp",nic.getDhcp());
+    if (nic.getVlan() != null)     builder.put("nic:" + nicId + ":vlan",nic.getVlan());
+    if (nic.getMac() != null)     builder.put("nic:" + nicId + ":mac",nic.getMac());
+    nicId++;
+  }
+  builder.put("vnc:ip",from.getVnc().getIp() == null ? "auto" : from.getVnc().getIp());
+  if (from.getVnc().getPassword() != null)   builder.put("vnc:password",from.getVnc().getPassword());
+  if (from.getVnc().isTls())   builder.put("vnc:tls","on");
+  if (from.getUse().size() != 0)   builder.put("use",Joiner.on(' ').join(from.getUse()));
+  return builder.build();
+}
