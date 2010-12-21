@@ -1,6 +1,9 @@
 {
   String identity=checkNotNull(System.getProperty("jclouds.test.identity"),"jclouds.test.identity");
   String credential=checkNotNull(System.getProperty("jclouds.test.credential"),"jclouds.test.credential");
-  context=createContext(contextSpec("boxdotnet","https://www.box.net/api/1.0/rest","1.0",identity,credential,BoxDotNetClient.class,BoxDotNetAsyncClient.class));
+  Properties restProperties=new Properties();
+  restProperties.setProperty("boxdotnet.contextbuilder","org.jclouds.boxdotnet.BoxDotNetContextBuilder");
+  restProperties.setProperty("boxdotnet.propertiesbuilder","org.jclouds.boxdotnet.BoxDotNetPropertiesBuilder");
+  context=new RestContextFactory(restProperties).createContext("boxdotnet",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule()));
   connection=context.getApi();
 }
