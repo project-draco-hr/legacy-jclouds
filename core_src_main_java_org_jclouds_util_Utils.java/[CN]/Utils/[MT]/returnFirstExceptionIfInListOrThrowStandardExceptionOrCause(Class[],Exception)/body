@@ -1,11 +1,12 @@
 {
   for (  Class type : exceptionTypes) {
-    Throwable throwable=Utils.getFirstThrowableOfType(exception,type);
+    Throwable throwable=getFirstThrowableOfType(exception,type);
     if (throwable != null) {
       return (Exception)throwable;
     }
   }
   Throwables.propagateIfInstanceOf(exception,IllegalStateException.class);
+  Throwables.propagateIfInstanceOf(exception,IllegalArgumentException.class);
   Throwables.propagateIfInstanceOf(exception,AuthorizationException.class);
   Throwables.propagateIfInstanceOf(exception,ResourceNotFoundException.class);
   Throwables.propagateIfInstanceOf(exception,HttpResponseException.class);
