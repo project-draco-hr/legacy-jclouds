@@ -1,0 +1,11 @@
+{
+  Method method=DeltacloudAsyncClient.class.getMethod("performAction",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://delta/instance1/reboot"));
+  assertRequestLineEquals(request,"POST https://delta/instance1/reboot HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
+  checkFilters(request);
+}

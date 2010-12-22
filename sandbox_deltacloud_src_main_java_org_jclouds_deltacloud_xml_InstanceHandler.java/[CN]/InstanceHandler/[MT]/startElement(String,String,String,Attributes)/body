@@ -1,0 +1,31 @@
+{
+  Map<String,String> attributes=Utils.cleanseAttributes(attrs);
+  if (qName.equals("public_addresses")) {
+    inPublicAddresses=true;
+  }
+ else   if (qName.equals("private_addresses")) {
+    inPrivateAddresses=true;
+  }
+ else   if (qName.equals("instance")) {
+    String href=attributes.get("href");
+    if (href != null) {
+      this.href=URI.create(href);
+    }
+    this.id=attributes.get("id");
+  }
+ else   if (qName.equals("link")) {
+    String rel=attributes.get("rel");
+    if (rel != null) {
+      InstanceAction action=InstanceAction.fromValue(rel);
+      if (action != InstanceAction.UNRECOGNIZED) {
+        actions.put(action,URI.create(attributes.get("href")));
+      }
+    }
+  }
+ else   if (attributes.containsKey("href")) {
+    URI href=URI.create(attributes.get("href"));
+    if (qName.equals("image"))     this.image=href;
+ else     if (qName.equals("hardware_profile"))     this.hardwareProfile=href;
+ else     if (qName.equals("realm"))     this.realm=href;
+  }
+}

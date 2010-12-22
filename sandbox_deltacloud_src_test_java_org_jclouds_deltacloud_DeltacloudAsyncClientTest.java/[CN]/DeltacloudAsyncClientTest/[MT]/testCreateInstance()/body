@@ -4,8 +4,8 @@
   assertRequestLineEquals(httpRequest,"POST http://localhost:3001/api/instances HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/xml\n");
   assertPayloadEquals(httpRequest,"image_id=imageId-1","application/x-www-form-urlencoded",false);
-  assertResponseParserClassEquals(method,httpRequest,ReturnStringIf2xx.class);
-  assertSaxResponseParserClassEquals(method,null);
+  assertResponseParserClassEquals(method,httpRequest,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,InstanceHandler.class);
   assertExceptionParserClassEquals(method,null);
   checkFilters(httpRequest);
 }

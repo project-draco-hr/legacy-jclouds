@@ -1,0 +1,10 @@
+{
+  try {
+    client.deleteResource(instance.getHref());
+  }
+ catch (  IllegalArgumentException e) {
+    client.performAction(refreshInstanceAndGetAction(InstanceAction.STOP));
+    client.deleteResource(instance.getHref());
+    assertEquals(client.getInstance(instance.getHref()),null);
+  }
+}
