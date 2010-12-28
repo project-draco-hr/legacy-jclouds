@@ -2,10 +2,14 @@
   ComputeServiceContext context=null;
   try {
     context=new ComputeServiceContextFactory().createContext(new ViComputeServiceContextSpec(endpoint,identity,credential));
-    NodeMetadata node=context.getComputeService().getNodeMetadata("provaVM");
-    System.out.println(node);
+    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("MyWinServer",1);
+    for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
+    }
   }
-  finally {
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+ finally {
     if (context != null)     context.close();
   }
 }
