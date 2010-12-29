@@ -1,0 +1,9 @@
+{
+  for (  Transition transition : states.get(currentState)) {
+    if (currentState.ordinal() >= transition.getTo().ordinal())     continue;
+    if (transition.getTo() == InstanceState.FINISH)     return ImmutableSet.<Transition>of(transition);
+    Iterable<Transition> transitions=findChainToFinish(transition.getTo(),states);
+    if (Iterables.size(transitions) > 0)     return Iterables.concat(ImmutableSet.of(transition),transitions);
+  }
+  return ImmutableSet.<Transition>of();
+}
