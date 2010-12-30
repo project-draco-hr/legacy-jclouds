@@ -1,5 +1,5 @@
 {
-  Map<String,String> attributes=Utils.cleanseAttributes(attrs);
+  Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
   if (qName.equals("public_addresses")) {
     inPublicAddresses=true;
   }
@@ -14,12 +14,15 @@
     this.id=attributes.get("id");
   }
  else   if (qName.equals("link")) {
-    String rel=attributes.get("rel");
-    if (rel != null) {
-      InstanceAction action=InstanceAction.fromValue(rel);
+    try {
+      InstanceAction action=InstanceAction.fromValue(attributes.get("rel"));
       if (action != InstanceAction.UNRECOGNIZED) {
-        actions.put(action,URI.create(attributes.get("href")));
+        HttpRequest request=new HttpRequest(attributes.get("method").toUpperCase(),URI.create(attributes.get("href")));
+        actions.put(action,request);
       }
+    }
+ catch (    RuntimeException e) {
+      if (logger.isDebugEnabled())       logger.warn(e,"error parsing into action: %s, %s",qName,attributes);
     }
   }
  else   if (attributes.containsKey("href")) {
