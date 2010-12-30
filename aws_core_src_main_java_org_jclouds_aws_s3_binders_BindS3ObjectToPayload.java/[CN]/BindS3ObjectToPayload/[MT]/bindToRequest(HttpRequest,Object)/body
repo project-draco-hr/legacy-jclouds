@@ -1,9 +1,0 @@
-{
-  S3Object s3Object=(S3Object)payload;
-  checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() != null,"contentLength must be set, streaming not supported");
-  checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
-  blobBinder.bindToRequest(request,object2Blob.apply(s3Object));
-  if (s3Object.getMetadata().getCacheControl() != null) {
-    request.getHeaders().put(HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl());
-  }
-}

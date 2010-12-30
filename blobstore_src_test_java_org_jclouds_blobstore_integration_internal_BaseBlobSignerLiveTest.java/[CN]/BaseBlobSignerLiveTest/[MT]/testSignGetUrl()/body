@@ -9,7 +9,7 @@
     context.getBlobStore().putBlob(container,blob);
     HttpRequest request=context.getSigner().signGetBlob(container,name);
     assertEquals(request.getFilters().size(),0);
-    assertEquals(Utils.toStringAndClose(context.utils().http().invoke(request)),text);
+    assertEquals(Strings2.toStringAndClose(context.utils().http().invoke(request).getPayload().getInput()),text);
   }
   finally {
     returnContainer(container);

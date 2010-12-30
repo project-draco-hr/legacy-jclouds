@@ -1,10 +1,11 @@
 {
   Method method=TestPost.class.getMethod("postWithPath",String.class,MapBinder.class);
   HttpRequest request=factory(TestPost.class).createRequest(method,"data",new org.jclouds.rest.MapBinder(){
-    public void bindToRequest(    HttpRequest request,    Map<String,String> postParams){
+    @Override public <R extends HttpRequest>R bindToRequest(    R request,    Map<String,String> postParams){
       request.setPayload(postParams.get("fooble"));
+      return request;
     }
-    public void bindToRequest(    HttpRequest request,    Object toBind){
+    @Override public <R extends HttpRequest>R bindToRequest(    R request,    Object toBind){
       throw new RuntimeException("this shouldn't be used in POST");
     }
   }

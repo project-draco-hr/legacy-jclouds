@@ -1,0 +1,15 @@
+{
+  checkNotNull(request,"request");
+  if (request.getArgs().size() >= 2 && request.getArgs().get(0) instanceof String && request.getArgs().get(1) instanceof String) {
+    return request.getArgs().get(1).toString();
+  }
+ else   if (request.getArgs().size() >= 1 && request.getArgs().get(0) instanceof String) {
+    Matcher matcher=keyFromContainer.matcher(request.getArgs().get(0).toString());
+    if (matcher.find())     return matcher.group(1);
+  }
+  String objectKey=request.getEndpoint().getPath();
+  if (objectKey.startsWith("/")) {
+    objectKey=objectKey.substring(1);
+  }
+  return objectKey;
+}

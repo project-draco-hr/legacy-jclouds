@@ -1,9 +1,8 @@
 {
-  Map<String,String> metaMap=Maps.newHashMap();
-  String[] metas=meta.split(", ");
-  for (  String entry : metas) {
+  Builder<String,String> metaMap=ImmutableMap.<String,String>builder();
+  for (  String entry : Splitter.on(", ").split(meta)) {
     String[] entrySplit=entry.split("=");
     metaMap.put(entrySplit[0],entrySplit[1]);
   }
-  return metaMap;
+  return metaMap.build();
 }

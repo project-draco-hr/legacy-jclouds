@@ -1,6 +1,6 @@
 {
   Method method=GridJobAsyncClient.class.getMethod("getJobsForObjectName",String.class);
-  GeneratedHttpRequest<GridJobAsyncClient> httpRequest=processor.createRequest(method,"MyServer");
+  HttpRequest httpRequest=processor.createRequest(method,"MyServer");
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/job/list?v=1.5&" + "object=MyServer HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
@@ -8,7 +8,7 @@
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
   checkFilters(httpRequest);
-  Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/job/list?v=1.5&" + "object=MyServer&sig=3f446f171455fbb5574aecff4997b273&api_key=foo " + "HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

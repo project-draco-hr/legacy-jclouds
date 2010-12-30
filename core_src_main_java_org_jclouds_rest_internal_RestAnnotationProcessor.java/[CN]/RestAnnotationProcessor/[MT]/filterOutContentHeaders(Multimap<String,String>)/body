@@ -1,0 +1,9 @@
+{
+  ImmutableMultimap.Builder<String,String> headersBuilder=ImmutableMultimap.builder();
+  for (  String header : Iterables.filter(headers.keySet(),Predicates.notNull())) {
+    if (!ContentMetadata.HTTP_HEADERS.contains(header)) {
+      headersBuilder.putAll(header,headers.get(header));
+    }
+  }
+  return headersBuilder.build();
+}

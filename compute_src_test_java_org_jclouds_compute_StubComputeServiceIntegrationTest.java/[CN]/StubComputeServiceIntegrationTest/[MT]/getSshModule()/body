@@ -13,7 +13,7 @@
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","romeo"))).andThrow(new SshException("Auth fail"));
       client2.connect();
       try {
-        runScript(client2,"runScriptWithCreds",Utils.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/runscript.sh")),2);
+        runScript(client2,"runScriptWithCreds",Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/runscript.sh")),2);
       }
  catch (      IOException e) {
         Throwables.propagate(e);
@@ -45,7 +45,7 @@
     private void runScriptAndService(    SshClient client,    int nodeId){
       client.connect();
       try {
-        runScript(client,"jboss",Utils.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_jboss.sh")),nodeId);
+        runScript(client,"jboss",Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_jboss.sh")),nodeId);
       }
  catch (      IOException e) {
         Throwables.propagate(e);
@@ -55,7 +55,7 @@
     private void runScriptAndInstallSsh(    SshClient client,    String scriptName,    int nodeId){
       client.connect();
       try {
-        runScript(client,scriptName,Utils.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_java.sh")),nodeId);
+        runScript(client,scriptName,Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_java.sh")),nodeId);
       }
  catch (      IOException e) {
         Throwables.propagate(e);

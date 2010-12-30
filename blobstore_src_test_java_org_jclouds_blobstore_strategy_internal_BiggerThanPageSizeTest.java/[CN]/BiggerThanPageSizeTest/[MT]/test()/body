@@ -1,0 +1,11 @@
+{
+  blobstore.createContainerInLocation(null,"goodies");
+  for (int i=0; i < 1001; i++) {
+    Blob blob=blobstore.newBlob(i + "");
+    blob.setPayload(i + "");
+    blobstore.putBlob("goodies",blob);
+  }
+  assertEquals(blobstore.countBlobs("goodies"),1001);
+  blobstore.clearContainer("goodies");
+  assertEquals(blobstore.countBlobs("goodies"),0);
+}

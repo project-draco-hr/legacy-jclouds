@@ -1,11 +1,11 @@
 {
   HttpResponse response=null;
   for (; ; ) {
-    HttpRequest request=command.getRequest();
+    HttpRequest request=command.getCurrentRequest();
     Q nativeRequest=null;
     try {
       for (      HttpRequestFilter filter : request.getFilters()) {
-        filter.filter(request);
+        request=filter.filter(request);
       }
       checkRequestHasContentLengthOrChunkedEncoding(request,"After filtering, the request has niether chunked encoding nor content length: " + request);
       logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
@@ -26,12 +26,12 @@
       }
     }
  catch (    Exception e) {
-      IOException ioe=getFirstThrowableOfType(e,IOException.class);
+      IOException ioe=Throwables2.getFirstThrowableOfType(e,IOException.class);
       if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
         continue;
       }
  else {
-        command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,null,e));
+        command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),command,null,e));
         break;
       }
     }

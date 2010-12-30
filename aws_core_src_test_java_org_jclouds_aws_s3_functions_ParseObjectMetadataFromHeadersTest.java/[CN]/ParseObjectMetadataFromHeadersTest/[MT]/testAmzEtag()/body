@@ -1,10 +1,8 @@
 {
-  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""));
+  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""),ImmutableMultimap.of(HttpHeaders.CACHE_CONTROL,"cacheControl","x-amz-meta-object-eTag","\"abcd\""));
   http.getPayload().getContentMetadata().setContentLength(1025l);
   http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
   http.getPayload().getContentMetadata().setContentEncoding("encoding");
-  http.getHeaders().put(HttpHeaders.CACHE_CONTROL,"cacheControl");
-  http.getHeaders().put("x-amz-meta-object-eTag","\"abcd\"");
   ParseObjectMetadataFromHeaders parser=new ParseObjectMetadataFromHeaders(blobParser(http,null),blobToObjectMetadata,"x-amz-meta-");
   MutableObjectMetadata response=parser.apply(http);
   assertEquals(response,expects);

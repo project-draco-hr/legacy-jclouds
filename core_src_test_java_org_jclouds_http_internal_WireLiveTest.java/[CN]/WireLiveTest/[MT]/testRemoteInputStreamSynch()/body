@@ -1,10 +1,14 @@
 {
-  URL url=new URL(checkNotNull(sysHttpStreamUrl,"sysHttpStreamUrl"));
-  URLConnection connection=url.openConnection();
-  HttpWire wire=setUpSynch();
-  final InputStream in=wire.input(connection.getInputStream());
-  byte[] compare=CryptoStreams.md5(InputSuppliers.of(in));
-  Thread.sleep(100);
-  assertEquals(CryptoStreams.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
-  assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
+  try {
+    URL url=new URL(checkNotNull(sysHttpStreamUrl,"sysHttpStreamUrl"));
+    URLConnection connection=url.openConnection();
+    HttpWire wire=setUpSynch();
+    final InputStream in=wire.input(connection.getInputStream());
+    byte[] compare=CryptoStreams.md5(InputSuppliers.of(in));
+    Thread.sleep(100);
+    assertEquals(CryptoStreams.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
+    assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
+  }
+ catch (  UnknownHostException e) {
+  }
 }

@@ -34,9 +34,7 @@
  finally {
       closeQuietly(input);
     }
-    LinkedHashMultimap<String,String> map=LinkedHashMultimap.create();
-    HttpUtils.addContentHeadersFromMetadata(request.getPayload().getContentMetadata(),map);
-    for (    Entry<String,String> header : map.entries()) {
+    for (    Entry<String,String> header : HttpUtils.getContentHeadersFromMetadata(request.getPayload().getContentMetadata()).entries()) {
       gaeRequest.setHeader(new HTTPHeader(header.getKey(),header.getValue()));
     }
   }

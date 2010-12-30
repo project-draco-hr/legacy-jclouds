@@ -1,13 +1,13 @@
 {
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   if (from.getUrl() != null) {
-    to.setId(Utils.replaceAll(from.getUrl().getPath(),OBJECTS_PATTERN,""));
+    to.setId(Strings2.replaceAll(from.getUrl().getPath(),OBJECTS_PATTERN,""));
   }
   to.setUri(from.getUrl());
   to.setName(from.getName());
-  if (from.getMimeType() != null)   to.setContentType(from.getMimeType());
+  if (from.getMimeType() != null)   to.getContentMetadata().setContentType(from.getMimeType());
   if (from.getModified() != null)   to.setLastModified(from.getModified());
-  if (from.getBytes() != null)   to.setSize(from.getBytes());
+  if (from.getBytes() != null)   to.getContentMetadata().setContentLength(from.getBytes());
   to.setType(StorageType.BLOB);
   return to;
 }

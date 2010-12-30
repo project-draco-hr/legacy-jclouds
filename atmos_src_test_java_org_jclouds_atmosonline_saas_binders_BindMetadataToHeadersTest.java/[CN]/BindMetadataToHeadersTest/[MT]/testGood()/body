@@ -1,0 +1,10 @@
+{
+  AtmosObject object=injector.getInstance(AtmosObject.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  object.setPayload(payload);
+  object.getUserMetadata().getListableMetadata().put("apple","bear");
+  object.getUserMetadata().getListableMetadata().put("sushi","king");
+  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  request=binder.bindToRequest(request,object);
+  assertEquals(request.getFirstHeaderOrNull("x-emc-listable-meta"),"apple=bear,sushi=king");
+}

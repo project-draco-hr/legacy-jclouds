@@ -10,6 +10,9 @@
  else     if (method.getReturnType().equals(InputStream.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureInputStreamLiteral)) {
       return Key.get(ReturnInputStream.class);
     }
+ else     if (method.getReturnType().equals(HttpResponse.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureHttpResponseLiteral)) {
+      return Key.get((Class)IdentityFunction.class);
+    }
  else     if (getAcceptHeadersOrNull(method).contains(MediaType.APPLICATION_JSON)) {
       Type returnVal;
       if (method.getReturnType().getTypeParameters().length == 0) {

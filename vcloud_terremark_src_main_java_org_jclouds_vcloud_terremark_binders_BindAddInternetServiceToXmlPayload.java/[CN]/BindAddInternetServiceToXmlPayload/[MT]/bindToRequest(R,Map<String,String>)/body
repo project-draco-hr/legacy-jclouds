@@ -1,0 +1,10 @@
+{
+  String name=checkNotNull(postParams.get("name"),"name parameter not present");
+  String protocol=checkNotNull(postParams.get("protocol"),"protocol parameter not present");
+  String port=checkNotNull(postParams.get("port"),"port parameter not present");
+  String enabled=checkNotNull(postParams.get("enabled"),"enabled parameter not present");
+  String description=postParams.get("description");
+  String payload=Strings2.replaceTokens(xmlTemplate,ImmutableMap.of("name",name,"protocol",protocol,"port",port,"enabled",enabled,"ns",ns));
+  payload=Strings2.replaceAll(payload,Patterns.TOKEN_TO_PATTERN.get("description"),description == null ? "" : String.format("\n    <Description>%s</Description>",description));
+  return stringBinder.bindToRequest(request,payload);
+}

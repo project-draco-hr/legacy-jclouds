@@ -4,7 +4,7 @@
     command.incrementFailureCount();
     if (response.getPayload() != null) {
       closeClientButKeepContentStream(response);
-      AWSError error=utils.parseAWSErrorFromContent(command.getRequest(),response);
+      AWSError error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
       if (error != null && ("RequestTimeout".equals(error.getCode()) || "OperationAborted".equals(error.getCode()) || "SignatureDoesNotMatch".equals(error.getCode()))) {
         return true;
       }
