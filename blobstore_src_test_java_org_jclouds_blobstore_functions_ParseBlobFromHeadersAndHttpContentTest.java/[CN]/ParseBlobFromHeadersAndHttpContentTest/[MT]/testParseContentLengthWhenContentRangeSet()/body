@@ -1,10 +1,9 @@
 {
   ParseSystemAndUserMetadataFromHeaders metadataParser=createMock(ParseSystemAndUserMetadataFromHeaders.class);
   ParseBlobFromHeadersAndHttpContent callable=new ParseBlobFromHeadersAndHttpContent(metadataParser,blobProvider);
-  HttpResponse response=new HttpResponse(200,"ok",Payloads.newStringPayload(""));
+  HttpResponse response=new HttpResponse(200,"ok",Payloads.newStringPayload(""),ImmutableMultimap.of("Content-Range","0-10485759/20232760"));
   response.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
   response.getPayload().getContentMetadata().setContentLength(10485760l);
-  response.getHeaders().put("Content-Range","0-10485759/20232760");
   MutableBlobMetadata meta=blobMetadataProvider.get();
   expect(metadataParser.apply(response)).andReturn(meta);
   replay(metadataParser);

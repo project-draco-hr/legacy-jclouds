@@ -1,0 +1,6 @@
+{
+  PCSFile blob=(PCSFile)input;
+  String file=String.format("<file><name>%s</name><mime_type>%s</mime_type><public>false</public></file>",new File(blob.getMetadata().getName()).getName(),blob.getMetadata().getMimeType());
+  request.setPayload(file);
+  return ModifyRequest.replaceHeaders(request,ImmutableMultimap.<String,String>of(HttpHeaders.CONTENT_LENGTH,file.getBytes().length + "",HttpHeaders.CONTENT_TYPE,"application/vnd.csp.file-info+xml"));
+}

@@ -1,3 +1,13 @@
 {
-  this.metadataPrefix=metadataPrefix;
+  checkNotNull(metadataPrefix,PROPERTY_USER_METADATA_PREFIX);
+  FN=new Function<String,String>(){
+    @Override public String apply(    String arg0){
+      String inLowercase=arg0.toLowerCase();
+      return (inLowercase.startsWith(metadataPrefix)) ? inLowercase : metadataPrefix + inLowercase;
+    }
+    @Override public String toString(){
+      return "prefix: " + metadataPrefix;
+    }
+  }
+;
 }

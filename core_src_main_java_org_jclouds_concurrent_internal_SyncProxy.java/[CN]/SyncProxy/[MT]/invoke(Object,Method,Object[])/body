@@ -22,13 +22,13 @@
       return ((ListenableFuture<?>)methodMap.get(method).invoke(delegate,args)).get(timeoutMap.get(method),TimeUnit.NANOSECONDS);
     }
  catch (    ProvisionException e) {
-      throw throwTypedExceptionOrCause(method.getExceptionTypes(),e);
+      throw Throwables2.returnFirstExceptionIfInListOrThrowStandardExceptionOrCause(method.getExceptionTypes(),e);
     }
 catch (    ExecutionException e) {
-      throw throwTypedExceptionOrCause(method.getExceptionTypes(),e);
+      throw Throwables2.returnFirstExceptionIfInListOrThrowStandardExceptionOrCause(method.getExceptionTypes(),e);
     }
 catch (    Exception e) {
-      throw throwTypedExceptionOrCause(method.getExceptionTypes(),e);
+      throw Throwables2.returnFirstExceptionIfInListOrThrowStandardExceptionOrCause(method.getExceptionTypes(),e);
     }
   }
 }

@@ -1,0 +1,11 @@
+{
+  Method method=SymphonyVPDCAsyncClient.class.getMethod("findVAppTemplateInOrgCatalogNamed",String.class,String.class,String.class);
+  HttpRequest request=processor.createRequest(method,"org","catalog","template");
+  assertRequestLineEquals(request,"GET https://api.sandbox.symphonyVPDC.savvis.net/rest/api/v0.8/vAppTemplate/2 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vAppTemplate+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,VCloudExpressVAppTemplateHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

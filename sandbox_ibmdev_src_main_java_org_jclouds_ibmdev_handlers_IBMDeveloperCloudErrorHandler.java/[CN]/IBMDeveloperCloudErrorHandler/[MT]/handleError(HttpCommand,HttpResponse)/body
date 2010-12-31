@@ -3,7 +3,7 @@
   try {
     String message=parseMessage(response);
     exception=message != null ? new HttpResponseException(command,response,message) : exception;
-    message=message != null ? message : String.format("%s -> %s",command.getRequest().getRequestLine(),response.getStatusLine());
+    message=message != null ? message : String.format("%s -> %s",command.getCurrentRequest().getRequestLine(),response.getStatusLine());
 switch (response.getStatusCode()) {
 case 401:
       exception=new AuthorizationException(exception.getMessage(),exception);
@@ -13,7 +13,7 @@ case 403:
   exception=new AuthorizationException(message,exception);
 break;
 case 404:
-if (!command.getRequest().getMethod().equals("DELETE")) {
+if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
 exception=new ResourceNotFoundException(message,exception);
 }
 break;

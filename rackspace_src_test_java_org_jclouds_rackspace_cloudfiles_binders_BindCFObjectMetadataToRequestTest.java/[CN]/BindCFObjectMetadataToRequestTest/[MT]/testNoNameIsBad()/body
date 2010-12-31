@@ -1,0 +1,9 @@
+{
+  CFObject object=injector.getInstance(CFObject.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(5368709120000l);
+  object.setPayload(payload);
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindCFObjectMetadataToRequest binder=injector.getInstance(BindCFObjectMetadataToRequest.class);
+  binder.bindToRequest(request,object);
+}

@@ -1,0 +1,16 @@
+{
+  for (  Class type : exceptionTypes) {
+    Throwable throwable=getFirstThrowableOfType(exception,type);
+    if (throwable != null) {
+      return (Exception)throwable;
+    }
+  }
+  for (  Class<Exception> propagatableExceptionType : new Class[]{IllegalStateException.class,UnsupportedOperationException.class,IllegalArgumentException.class,AuthorizationException.class,ResourceNotFoundException.class,HttpResponseException.class}) {
+    Throwable throwable=getFirstThrowableOfType(exception,propagatableExceptionType);
+    if (throwable != null) {
+      throw (Exception)throwable;
+    }
+  }
+  Throwables.throwCause(exception,true);
+  return exception;
+}

@@ -8,5 +8,6 @@
  else {
     path="/" + sessionToken + request.getEndpoint().getPath().substring(prefixIndex);
   }
-  changePathTo(request,path,builder.get());
+  URI newEndpoint=builder.get().uri(request.getEndpoint()).replacePath(path).build();
+  return request.toBuilder().endpoint(newEndpoint).build();
 }

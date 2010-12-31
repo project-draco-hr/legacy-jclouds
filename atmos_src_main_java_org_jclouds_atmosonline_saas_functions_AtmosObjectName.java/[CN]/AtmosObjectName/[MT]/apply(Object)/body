@@ -1,4 +1,5 @@
 {
-  AtmosObject from=(AtmosObject)in;
-  return from.getContentMetadata().getName() != null ? from.getContentMetadata().getName() : from.getSystemMetadata().getObjectName();
+  checkArgument(checkNotNull(input,"input") instanceof AtmosObject,"this function is only valid for AtmosObjects!");
+  AtmosObject object=AtmosObject.class.cast(input);
+  return checkNotNull(object.getContentMetadata().getName() != null ? object.getContentMetadata().getName() : object.getSystemMetadata().getObjectName(),"objectName");
 }

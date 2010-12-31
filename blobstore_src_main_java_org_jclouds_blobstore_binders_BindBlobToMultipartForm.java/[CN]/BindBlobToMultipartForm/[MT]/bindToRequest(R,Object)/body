@@ -1,0 +1,8 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Blob,"this binder is only valid for Blobs!");
+  checkNotNull(request,"request");
+  Blob blob=Blob.class.cast(input);
+  Part part=Part.create(blob.getMetadata().getName(),blob.getPayload(),new PartOptions().contentType(blob.getMetadata().getContentMetadata().getContentType()));
+  request.setPayload(new MultipartForm(part));
+  return request;
+}

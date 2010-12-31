@@ -1,0 +1,39 @@
+{
+  OUTER:   for (  Entry<Integer,Set<Annotation>> entry : filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
+    public boolean apply(    Set<Annotation> input){
+      return input.size() >= 1;
+    }
+  }
+).entrySet()) {
+    boolean shouldBreak=false;
+    BinderParam payloadAnnotation=(BinderParam)entry.getValue().iterator().next();
+    Binder binder=injector.getInstance(payloadAnnotation.value());
+    if (request.getArgs().size() >= entry.getKey() + 1 && request.getArgs().get(entry.getKey()) != null) {
+      Object input;
+      Class<?> parameterType=request.getJavaMethod().getParameterTypes()[entry.getKey()];
+      Class<? extends Object> argType=request.getArgs().get(entry.getKey()).getClass();
+      if (!argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+        int arrayLength=request.getArgs().size() - request.getJavaMethod().getParameterTypes().length + 1;
+        if (arrayLength == 0)         break OUTER;
+        input=(Object[])Array.newInstance(request.getArgs().get(entry.getKey()).getClass(),arrayLength);
+        System.arraycopy(request.getArgs().toArray(),entry.getKey(),input,0,arrayLength);
+        shouldBreak=true;
+      }
+ else       if (argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
+        input=request.getArgs().get(entry.getKey());
+      }
+ else {
+        input=request.getArgs().get(entry.getKey());
+        if (input.getClass().isArray()) {
+          Object[] payloadArray=(Object[])input;
+          input=payloadArray.length > 0 ? payloadArray[0] : null;
+        }
+      }
+      if (input != null) {
+        request=binder.bindToRequest(request,input);
+      }
+      if (shouldBreak)       break OUTER;
+    }
+  }
+  return request;
+}

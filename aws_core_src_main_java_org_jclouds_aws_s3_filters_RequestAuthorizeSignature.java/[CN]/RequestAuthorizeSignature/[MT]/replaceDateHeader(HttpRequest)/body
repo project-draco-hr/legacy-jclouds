@@ -1,3 +1,7 @@
 {
-  request.getHeaders().replaceValues(HttpHeaders.DATE,Collections.singletonList(timeStampProvider.get()));
+  Builder<String,String> builder=ImmutableMap.builder();
+  String date=timeStampProvider.get();
+  builder.put(HttpHeaders.DATE,date);
+  request=ModifyRequest.replaceHeaders(request,Multimaps.forMap(builder.build()));
+  return request;
 }

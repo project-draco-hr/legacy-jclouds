@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,"bucket",new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL))));
   assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/?logging HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(request,Utils.toStringAndClose(getClass().getResourceAsStream("/s3/bucket_logging.xml")),"text/xml",false);
+  assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/s3/bucket_logging.xml")),"text/xml",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

@@ -1,0 +1,6 @@
+{
+  PCSFile file=(PCSFile)input;
+  checkNotNull(file.getPayload().getContentMetadata().getContentLength(),"contentLength");
+  checkArgument(file.getPayload().getContentMetadata().getContentLength() <= 2l * 1024 * 1024* 1024,"maximum size for POST request is 2GB");
+  return blobBinder.bindToRequest(request,file2Blob.apply(file));
+}

@@ -1,0 +1,28 @@
+{
+  boolean chunked=any(headers.entries(),new Predicate<Entry<String,String>>(){
+    @Override public boolean apply(    Entry<String,String> input){
+      return "Transfer-Encoding".equalsIgnoreCase(input.getKey()) && "chunked".equalsIgnoreCase(input.getValue());
+    }
+  }
+);
+  for (  Entry<String,String> header : headers.entries()) {
+    if (!chunked && CONTENT_LENGTH.equalsIgnoreCase(header.getKey())) {
+      setContentLength(new Long(header.getValue()));
+    }
+ else     if ("Content-MD5".equalsIgnoreCase(header.getKey())) {
+      setContentMD5(CryptoStreams.base64(header.getValue()));
+    }
+ else     if (CONTENT_TYPE.equalsIgnoreCase(header.getKey())) {
+      setContentType(header.getValue());
+    }
+ else     if ("Content-Disposition".equalsIgnoreCase(header.getKey())) {
+      setContentDisposition(header.getValue());
+    }
+ else     if ("Content-Encoding".equalsIgnoreCase(header.getKey())) {
+      setContentEncoding(header.getValue());
+    }
+ else     if ("Content-Language".equalsIgnoreCase(header.getKey())) {
+      setContentLanguage(header.getValue());
+    }
+  }
+}

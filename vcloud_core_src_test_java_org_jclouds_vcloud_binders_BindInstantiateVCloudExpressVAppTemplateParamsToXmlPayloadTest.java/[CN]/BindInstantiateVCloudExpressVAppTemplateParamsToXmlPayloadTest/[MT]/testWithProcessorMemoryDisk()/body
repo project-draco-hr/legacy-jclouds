@@ -1,10 +1,10 @@
 {
   InstantiateVAppTemplateOptions options=new InstantiateVAppTemplateOptions();
   options.processorCount(1).memory(512).disk(1024);
-  String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/express/newvapp-hostingcpumemdisk.xml"));
+  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/express/newvapp-hostingcpumemdisk.xml"));
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getArgs()).andReturn(new Object[]{options}).atLeastOnce();
+  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(options)).atLeastOnce();
   request.setPayload(expected);
   replay(request);
   BindInstantiateVCloudExpressVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindInstantiateVCloudExpressVAppTemplateParamsToXmlPayload.class);

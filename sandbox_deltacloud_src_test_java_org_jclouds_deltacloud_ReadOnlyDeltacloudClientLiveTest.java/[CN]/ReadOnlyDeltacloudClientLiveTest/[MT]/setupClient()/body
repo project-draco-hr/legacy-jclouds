@@ -1,0 +1,7 @@
+{
+  setupCredentials();
+  Properties overrides=setupProperties();
+  context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+  client=context.getApi();
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
+}

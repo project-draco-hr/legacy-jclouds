@@ -1,0 +1,36 @@
+{
+  if (qName.endsWith("public_addresses")) {
+    inPublicAddresses=false;
+  }
+ else   if (qName.endsWith("private_addresses")) {
+    inPrivateAddresses=false;
+  }
+  if (qName.equalsIgnoreCase("owner_id")) {
+    this.ownerId=currentText.toString().trim();
+  }
+ else   if (qName.equalsIgnoreCase("name")) {
+    this.name=currentText.toString().trim();
+  }
+ else   if (qName.equalsIgnoreCase("state")) {
+    this.state=InstanceState.fromValue(currentText.toString().trim());
+  }
+ else   if (qName.equalsIgnoreCase("address")) {
+    if (inPublicAddresses)     this.publicAddresses.add(currentText.toString().trim());
+ else     if (inPrivateAddresses)     this.privateAddresses.add(currentText.toString().trim());
+  }
+ else   if (qName.equalsIgnoreCase("instance")) {
+    this.instance=new Instance(href,id,ownerId,name,image,hardwareProfile,realm,state,actions,publicAddresses,privateAddresses);
+    this.href=null;
+    this.id=null;
+    this.ownerId=null;
+    this.name=null;
+    this.image=null;
+    this.hardwareProfile=null;
+    this.realm=null;
+    this.state=null;
+    this.actions=Maps.newLinkedHashMap();
+    this.publicAddresses=Sets.newLinkedHashSet();
+    this.privateAddresses=Sets.newLinkedHashSet();
+  }
+  currentText=new StringBuilder();
+}

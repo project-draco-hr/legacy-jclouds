@@ -1,6 +1,7 @@
 {
-  replaceDateHeader(request);
-  String toSign=createStringToSign(request);
-  calculateAndReplaceAuthHeader(request,toSign);
+  request=replaceDateHeader(request);
+  String signature=calculateSignature(createStringToSign(request));
+  request=replaceAuthorizationHeader(request,signature);
   utils.logRequest(signatureLog,request,"<<");
+  return request;
 }

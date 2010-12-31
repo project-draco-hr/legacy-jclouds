@@ -1,0 +1,15 @@
+{
+  AccessControlList from=(AccessControlList)payload;
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  try {
+    String stringPayload=generateBuilder(from).asString(outputProperties);
+    request.setPayload(stringPayload);
+    request.getPayload().getContentMetadata().setContentType(MediaType.TEXT_XML);
+  }
+ catch (  Exception e) {
+    Throwables.propagateIfPossible(e);
+    throw new RuntimeException("error transforming acl: " + from,e);
+  }
+  return request;
+}

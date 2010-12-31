@@ -1,0 +1,20 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest<?> gRequest=(GeneratedHttpRequest<?>)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  VCloudExpressVApp vApp=checkNotNull(findVAppInArgsOrNull(gRequest),"vApp");
+  checkArgument(vApp.getStatus() == Status.OFF,"vApp must be off!");
+  VAppConfiguration configuration=checkNotNull(findConfigInArgsOrNull(gRequest),"config");
+  try {
+    return stringBinder.bindToRequest(request,generateXml(vApp,configuration));
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  FactoryConfigurationError e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException e) {
+    throw new RuntimeException(e);
+  }
+}
