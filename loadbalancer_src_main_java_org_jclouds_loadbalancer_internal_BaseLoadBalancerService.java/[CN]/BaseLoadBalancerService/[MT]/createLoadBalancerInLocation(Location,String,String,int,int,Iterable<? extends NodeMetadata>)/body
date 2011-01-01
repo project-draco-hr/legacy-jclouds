@@ -1,0 +1,9 @@
+{
+  checkNotNull(loadBalancerName,"loadBalancerName");
+  checkNotNull(protocol,"protocol");
+  checkArgument(protocol.toUpperCase().equals("HTTP") || protocol.toUpperCase().equals("TCP"),"Acceptable values for protocol are HTTP or TCP");
+  logger.debug(">> creating load balancer (%s)",loadBalancerName);
+  LoadBalancerMetadata lb=loadBalancerStrategy.execute(location,loadBalancerName,protocol,loadBalancerPort,instancePort,nodes);
+  logger.debug("<< created load balancer (%s)",loadBalancerName,lb);
+  return lb;
+}

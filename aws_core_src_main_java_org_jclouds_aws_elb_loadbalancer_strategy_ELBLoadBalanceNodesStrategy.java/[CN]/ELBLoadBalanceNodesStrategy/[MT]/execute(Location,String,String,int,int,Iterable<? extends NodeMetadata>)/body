@@ -1,0 +1,23 @@
+{
+  String region=getRegionFromLocation.apply(location);
+  String dnsName=new String();
+  dnsName=elbClient.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,EC2Utils.getAvailabilityZonesForRegion(region));
+  List<String> instanceIds=Lists.newArrayList(Iterables.transform(nodes,new Function<NodeMetadata,String>(){
+    @Override public String apply(    NodeMetadata from){
+      return from.getProviderId();
+    }
+  }
+));
+  String[] instanceIdArray=instanceIds.toArray(new String[]{});
+  Set<String> registeredInstanceIds=elbClient.registerInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
+  boolean changed=registeredInstanceIds.removeAll(instanceIds);
+  if (changed) {
+    List<String> list=new ArrayList<String>(registeredInstanceIds);
+    instanceIdArray=new String[list.size()];
+    for (int i=0; i < list.size(); i++) {
+      instanceIdArray[i]=list.get(i);
+    }
+    if (instanceIdArray.length > 0)     elbClient.deregisterInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
+  }
+  return new LoadBalancerMetadataImpl(LoadBalancerType.LB,dnsName,name,dnsName,location,null,ImmutableMap.<String,String>of(),ImmutableSet.of(dnsName));
+}
