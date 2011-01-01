@@ -1,0 +1,18 @@
+{
+  String accesskeyid=args[0];
+  String secretkey=args[1];
+  Properties properties=new Properties();
+  properties.setProperty("simpledb.identity",accesskeyid);
+  properties.setProperty("simpledb.credential",secretkey);
+  RestContext<SimpleDBClient,SimpleDBAsyncClient> context=new RestContextFactory().createContext("simpledb","AKIAJODKICBEKG7MM4XA","FfqiNSiC88B6tJPDIOKUWUJGY68BQaQpkNz6Fsgq",new Properties());
+  AttributePair p=new AttributePair("AccessNumber","1213123",true);
+  Multimap<String,AttributePair> m=LinkedHashMultimap.create();
+  m.put("AccessNumber",p);
+  Item attributes=new Item(m);
+  context.getApi().putAttributes(Region.EU_WEST_1,"tse","AccessNumber",attributes);
+  Map<String,Item> results=context.getApi().select(Region.EU_WEST_1,"select * from tse");
+  System.out.println(results);
+  ListDomainsOptions[] list=new ListDomainsOptions[100];
+  System.out.println(list[0]);
+  context.close();
+}

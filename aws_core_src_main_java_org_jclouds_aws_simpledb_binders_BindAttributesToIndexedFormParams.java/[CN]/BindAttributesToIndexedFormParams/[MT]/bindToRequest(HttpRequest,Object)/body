@@ -1,0 +1,19 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Item,"this binder is only valid for AttributeMap");
+  Item attributeMap=(Item)input;
+  int amazonOneBasedIndex=1;
+  for (  String itemName : attributeMap.getAttributes().keySet()) {
+    Collection<AttributePair> c=attributeMap.getAttributes().get(itemName);
+    Iterator<AttributePair> it=c.iterator();
+    while (it.hasNext()) {
+      AttributePair attr=it.next();
+      String value=attr.getValue();
+      if (value != null) {
+        addFormParamTo(request,format(attributeName,amazonOneBasedIndex),attr.getKey());
+        addFormParamTo(request,format(attributeValue,amazonOneBasedIndex),value);
+        addFormParamTo(request,format(attributeReplace,amazonOneBasedIndex),String.valueOf(attr.isReplace()));
+      }
+      amazonOneBasedIndex++;
+    }
+  }
+}
