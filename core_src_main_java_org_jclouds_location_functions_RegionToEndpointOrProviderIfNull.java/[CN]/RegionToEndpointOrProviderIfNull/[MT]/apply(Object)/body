@@ -1,5 +1,5 @@
 {
   checkState(from == null || from.equals(defaultProvider) || regionToEndpoint != null,"requested location " + from + ", but only the default location "+ defaultProvider+ " is configured");
-  checkArgument(from == null || from.equals(defaultProvider) || regionToEndpoint.containsKey(from),"requested location " + from + ", which is not in the configured locations: "+ regionToEndpoint.keySet());
+  checkArgument(from == null || from.equals(defaultProvider) || (regionToEndpoint != null && regionToEndpoint.containsKey(from)),"requested location %s, which is not in the configured locations: %s",from,regionToEndpoint);
   return from == null || from.equals(defaultProvider) ? defaultUri : regionToEndpoint.get(from);
 }
