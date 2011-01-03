@@ -1,10 +1,10 @@
 {
-  HTTPRequest nativeRequest=filterLogAndConvertRe(command.getRequest());
+  HTTPRequest nativeRequest=filterLogAndConvertRe(command.getCurrentRequest());
   ListenableFuture<HttpResponse> response=Futures.compose(urlFetchService.fetchAsync(nativeRequest),convertToJcloudsResponse,service);
   return Futures.compose(response,new Function<HttpResponse,HttpResponse>(){
     @Override public HttpResponse apply(    HttpResponse response){
       try {
-        logger.debug("Receiving response %s: %s",command.getRequest().hashCode(),response.getStatusLine());
+        logger.debug("Receiving response %s: %s",command.getCurrentRequest().hashCode(),response.getStatusLine());
         utils.logResponse(headerLog,response,"<<");
         if (response.getPayload() != null && wire.enabled())         wire.input(response);
         int statusCode=response.getStatusCode();
@@ -15,7 +15,7 @@
         return response;
       }
  catch (      Exception e) {
-        IOException ioe=getFirstThrowableOfType(e,IOException.class);
+        IOException ioe=Throwables2.getFirstThrowableOfType(e,IOException.class);
         if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
           try {
             return submit(command).get();
@@ -26,7 +26,7 @@
           }
         }
  else {
-          command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getRequest().getRequestLine(),command,null,e));
+          command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),command,null,e));
           return response;
         }
       }

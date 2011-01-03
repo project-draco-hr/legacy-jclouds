@@ -1,15 +1,12 @@
 {
   ParseObjectInfoFromHeaders parser=i.getInstance(ParseObjectInfoFromHeaders.class);
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
-  expect(request.getArgs()).andReturn(new String[]{"container","key"}).atLeastOnce();
+  expect(request.getArgs()).andReturn(ImmutableList.<Object>of("container","key")).atLeastOnce();
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/test")).atLeastOnce();
   replay(request);
   parser.setContext(request);
-  HttpResponse response=new HttpResponse(200,"ok",Payloads.newStringPayload(""));
+  HttpResponse response=new HttpResponse(200,"ok",Payloads.newStringPayload(""),ImmutableMultimap.<String,String>of("Last-Modified","Fri, 12 Jun 2007 13:40:18 GMT","Content-Length","0","Etag","feb1"));
   response.getPayload().getContentMetadata().setContentType("text/plain");
-  response.getHeaders().put("Last-Modified","Fri, 12 Jun 2007 13:40:18 GMT");
-  response.getHeaders().put("Content-Length","0");
-  response.getHeaders().put("Etag","feb1");
   MutableObjectInfoWithMetadata md=parser.apply(response);
   assertNotNull(md.getHash());
 }

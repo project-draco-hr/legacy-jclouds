@@ -1,0 +1,13 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof S3Object,"this binder is only valid for S3Object!");
+  checkNotNull(request,"request");
+  S3Object s3Object=S3Object.class.cast(input);
+  checkArgument(s3Object.getMetadata().getKey() != null,"s3Object.getMetadata().getKey() must be set!");
+  checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() != null,"contentLength must be set, streaming not supported");
+  checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
+  request=blobBinder.bindToRequest(request,object2Blob.apply(s3Object));
+  if (s3Object.getMetadata().getCacheControl() != null) {
+    request=ModifyRequest.replaceHeader(request,HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl());
+  }
+  return request;
+}

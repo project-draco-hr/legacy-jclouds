@@ -1,0 +1,20 @@
+{
+  input=input == null ? defaultRegion : input;
+  checkArgument(input instanceof String,"this binder is only valid for Region!");
+  String constraint=(String)input;
+  String value=null;
+  if (defaultRegion.equals(constraint)) {
+    return request;
+  }
+ else   if (regions.contains(constraint)) {
+    value=constraint;
+  }
+ else {
+    logger.warn("region %s not in %s ",constraint,regions);
+    value=constraint;
+  }
+  String payload=String.format("<CreateBucketConfiguration><LocationConstraint>%s</LocationConstraint></CreateBucketConfiguration>",value);
+  request=super.bindToRequest(request,payload);
+  request.getPayload().getContentMetadata().setContentType(MediaType.TEXT_XML);
+  return request;
+}

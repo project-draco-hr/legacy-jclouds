@@ -1,8 +1,5 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_list_instances.xml");
-  Set<? extends Instance> expects=ImmutableSet.of(new Instance(URI.create("http://fancycloudprovider.com/api/instances/inst1"),"inst1","larry","Production JBoss Instance",URI.create("http://fancycloudprovider.com/api/images/img3"),URI.create("http://fancycloudprovider.com/api/hardware_profiles/m1-small"),URI.create("http://fancycloudprovider.com/api/realms/us"),InstanceState.RUNNING,ImmutableMap.of(InstanceAction.REBOOT,URI.create("http://fancycloudprovider.com/api/instances/inst1/reboot"),InstanceAction.STOP,URI.create("http://fancycloudprovider.com/api/instances/inst1/stop")),ImmutableSet.of("inst1.larry.fancycloudprovider.com"),ImmutableSet.of("inst1.larry.internal")));
-  System.out.println(factory);
-  System.out.println(injector);
-  setUpInjector();
+  Set<? extends Instance> expects=ImmutableSet.of(new Instance(URI.create("http://fancycloudprovider.com/api/instances/inst1"),"inst1","larry","Production JBoss Instance",URI.create("http://fancycloudprovider.com/api/images/img3"),URI.create("http://fancycloudprovider.com/api/hardware_profiles/m1-small"),URI.create("http://fancycloudprovider.com/api/realms/us"),InstanceState.RUNNING,ImmutableMap.of(InstanceAction.REBOOT,new HttpRequest("POST",URI.create("http://fancycloudprovider.com/api/instances/inst1/reboot")),InstanceAction.STOP,new HttpRequest("POST",URI.create("http://fancycloudprovider.com/api/instances/inst1/stop"))),ImmutableSet.of("inst1.larry.fancycloudprovider.com"),ImmutableSet.of("inst1.larry.internal")));
   assertEquals(factory.create(injector.getInstance(InstancesHandler.class)).parse(is),expects);
 }

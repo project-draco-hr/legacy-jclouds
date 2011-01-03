@@ -1,0 +1,19 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof AzureBlob,"this binder is only valid for AzureBlobs!");
+  checkNotNull(request,"request");
+  AzureBlob blob=AzureBlob.class.cast(input);
+  checkArgument(blob.getPayload().getContentMetadata().getContentLength() != null && blob.getPayload().getContentMetadata().getContentLength() >= 0,"size must be set");
+  Builder<String,String> headers=ImmutableMap.<String,String>builder();
+  headers.put("x-ms-blob-type",blob.getProperties().getType().toString());
+switch (blob.getProperties().getType()) {
+case PAGE_BLOB:
+    headers.put(HttpHeaders.CONTENT_LENGTH,"0");
+  headers.put("x-ms-blob-content-length",blob.getPayload().getContentMetadata().getContentLength().toString());
+break;
+case BLOCK_BLOB:
+checkArgument(checkNotNull(blob.getPayload().getContentMetadata().getContentLength(),"blob.getContentLength()") <= 64l * 1024 * 1024,"maximum size for put Blob is 64MB");
+break;
+}
+request=ModifyRequest.putHeaders(request,Multimaps.forMap(headers.build()));
+return blobBinder.bindToRequest(request,azureBlob2Blob.apply(blob));
+}

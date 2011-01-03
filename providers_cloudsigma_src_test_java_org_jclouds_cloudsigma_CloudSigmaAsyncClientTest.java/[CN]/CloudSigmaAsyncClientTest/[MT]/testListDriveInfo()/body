@@ -1,0 +1,11 @@
+{
+  Method method=CloudSigmaAsyncClient.class.getMethod("listDriveInfo");
+  HttpRequest httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"GET https://api.cloudsigma.com/drives/info HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ListOfKeyValuesDelimitedByBlankLinesToDriveInfoSet.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}

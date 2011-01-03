@@ -1,0 +1,15 @@
+{
+  Method method=GridServerAsyncClient.class.getMethod("deleteByName",String.class);
+  HttpRequest httpRequest=processor.createRequest(method,"PowerServer");
+  assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/delete?v=1.5&" + "name=PowerServer " + "HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseServerFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/delete?v=1.5&" + "name=PowerServer&" + "sig=3f446f171455fbb5574aecff4997b273&api_key=foo "+ "HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"");
+  assertPayloadEquals(httpRequest,null,null,false);
+}

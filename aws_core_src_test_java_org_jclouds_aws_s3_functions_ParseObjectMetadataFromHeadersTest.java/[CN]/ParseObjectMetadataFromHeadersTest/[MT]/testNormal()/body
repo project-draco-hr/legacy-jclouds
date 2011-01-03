@@ -1,7 +1,6 @@
 {
-  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""));
+  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""),ImmutableMultimap.of(HttpHeaders.CACHE_CONTROL,"cacheControl"));
   http.getPayload().getContentMetadata().setContentLength(1025l);
-  http.getHeaders().put(HttpHeaders.CACHE_CONTROL,"cacheControl");
   http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
   http.getPayload().getContentMetadata().setContentEncoding("encoding");
   ParseObjectMetadataFromHeaders parser=new ParseObjectMetadataFromHeaders(blobParser(http,"\"abcd\""),blobToObjectMetadata,"x-amz-meta-");

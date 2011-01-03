@@ -10,11 +10,10 @@
     logger.warn(e,"couldn't receive payload for request: %s",nativeRequest.getRequestLine());
     throw e;
   }
-  HttpResponse response=new HttpResponse(apacheResponse.getStatusLine().getStatusCode(),apacheResponse.getStatusLine().getReasonPhrase(),payload);
   Multimap<String,String> headers=LinkedHashMultimap.create();
   for (  Header header : apacheResponse.getAllHeaders()) {
     headers.put(header.getName(),header.getValue());
   }
-  utils.setPayloadPropertiesFromHeaders(headers,response);
-  return response;
+  if (payload != null)   payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+  return new HttpResponse(apacheResponse.getStatusLine().getStatusCode(),apacheResponse.getStatusLine().getReasonPhrase(),payload,RestAnnotationProcessor.filterOutContentHeaders(headers));
 }

@@ -1,7 +1,8 @@
 {
-  String objectKey=getKeyFor(request,from);
+  checkNotNull(from,"request");
+  checkState(key != null,"key must be initialized by now");
   MutableBlobMetadata to=metadataFactory.get();
-  to.setName(objectKey);
+  to.setName(key);
   HttpUtils.copy(from.getPayload().getContentMetadata(),to.getContentMetadata());
   addETagTo(from,to);
   parseLastModifiedOrThrowException(from,to);

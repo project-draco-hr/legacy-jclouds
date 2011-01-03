@@ -1,0 +1,20 @@
+{
+  Builder<String,String> headers=ImmutableMap.<String,String>builder();
+  if (md.getMetadata().size() > 0) {
+    String header=Joiner.on(',').withKeyValueSeparator("=").join(md.getMetadata());
+    headers.put("x-emc-meta",header);
+  }
+  if (md.getListableMetadata().size() > 0) {
+    String header=Joiner.on(',').withKeyValueSeparator("=").join(md.getListableMetadata());
+    headers.put("x-emc-listable-meta",header);
+  }
+  if (md.getTags().size() > 0) {
+    String header=Joiner.on(',').join(md.getTags());
+    headers.put("x-emc-tags",header);
+  }
+  if (md.getListableTags().size() > 0) {
+    String header=Joiner.on(',').join(md.getListableTags());
+    headers.put("x-emc-listable-tags",header);
+  }
+  return headers.build();
+}

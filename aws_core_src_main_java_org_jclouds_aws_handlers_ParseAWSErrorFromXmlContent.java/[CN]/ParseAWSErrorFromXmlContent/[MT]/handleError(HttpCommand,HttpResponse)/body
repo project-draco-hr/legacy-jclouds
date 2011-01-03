@@ -1,5 +1,5 @@
 {
-  HttpRequest request=command.getRequest();
+  HttpRequest request=command.getCurrentRequest();
   Exception exception=new HttpResponseException(command,response);
   try {
     AWSError error=null;
@@ -14,7 +14,7 @@
       }
  else {
         try {
-          message=Utils.toStringAndClose(response.getPayload().getInput());
+          message=Strings2.toStringAndClose(response.getPayload().getInput());
           exception=new HttpResponseException(command,response,message);
         }
  catch (        IOException e) {
@@ -25,17 +25,17 @@
 switch (response.getStatusCode()) {
 case 400:
       if (error != null && error.getCode() != null && (error.getCode().equals("UnsupportedOperation")))       exception=new UnsupportedOperationException(message,exception);
-    if (error != null && error.getCode() != null && (error.getCode().endsWith(".NotFound") || error.getCode().endsWith(".Unknown")))     exception=new ResourceNotFoundException(message,exception);
+    if (error != null && error.getCode() != null && (error.getCode().endsWith("NotFound") || error.getCode().endsWith(".Unknown")))     exception=new ResourceNotFoundException(message,exception);
  else     if ((error != null && error.getCode() != null && (error.getCode().equals("IncorrectState") || error.getCode().endsWith(".Duplicate"))) || (message != null && (message.indexOf("already exists") != -1)))     exception=new IllegalStateException(message,exception);
- else     if (error != null && error.getCode() != null && error.getCode().equals("AuthFailure"))     exception=new AuthorizationException(exception.getMessage(),exception);
+ else     if (error != null && error.getCode() != null && error.getCode().equals("AuthFailure"))     exception=new AuthorizationException(message,exception);
  else     if (message != null && message.indexOf("Failed to bind the following fields") != -1)     exception=new IllegalArgumentException(message,exception);
   break;
 case 401:
 case 403:
-exception=new AuthorizationException(exception.getMessage(),exception);
+exception=new AuthorizationException(message,exception);
 break;
 case 404:
-if (!command.getRequest().getMethod().equals("DELETE")) {
+if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
 String container=request.getEndpoint().getHost();
 String key=request.getEndpoint().getPath();
 if (key == null || key.equals("/")) exception=new ContainerNotFoundException(container,message);

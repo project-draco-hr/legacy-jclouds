@@ -1,0 +1,29 @@
+{
+  checkNotNull(location,"location");
+  String region=getRegionFromLocationOrNull(location);
+  List<String> availabilityZones=Lists.newArrayList(Iterables.transform(nodes,new Function<NodeMetadata,String>(){
+    @Override public String apply(    NodeMetadata from){
+      return from.getLocation().getId();
+    }
+  }
+));
+  client.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,availabilityZones.toArray(new String[]{}));
+  List<String> instanceIds=Lists.newArrayList(Iterables.transform(nodes,new Function<NodeMetadata,String>(){
+    @Override public String apply(    NodeMetadata from){
+      return from.getProviderId();
+    }
+  }
+));
+  String[] instanceIdArray=instanceIds.toArray(new String[]{});
+  Set<String> registeredInstanceIds=client.registerInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
+  boolean changed=registeredInstanceIds.removeAll(instanceIds);
+  if (changed) {
+    List<String> list=new ArrayList<String>(registeredInstanceIds);
+    instanceIdArray=new String[list.size()];
+    for (int i=0; i < list.size(); i++) {
+      instanceIdArray[i]=list.get(i);
+    }
+    if (instanceIdArray.length > 0)     client.deregisterInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
+  }
+  return converter.apply(Iterables.getOnlyElement(client.describeLoadBalancersInRegion(region,name)));
+}

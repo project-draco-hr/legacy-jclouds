@@ -1,0 +1,11 @@
+{
+  String[] parts=parseHandle(id);
+  String region=parts[0];
+  String instanceId=parts[1];
+  try {
+    return converter.apply(getOnlyElement(client.describeLoadBalancersInRegion(region,region,instanceId)));
+  }
+ catch (  NoSuchElementException e) {
+    return null;
+  }
+}

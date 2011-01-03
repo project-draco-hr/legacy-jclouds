@@ -1,3 +1,13 @@
 {
-  return null;
+  List<VirtualMachine> hardwareProfiles=Lists.newArrayList();
+  try {
+    ManagedEntity[] entities=new InventoryNavigator(client.getRootFolder()).searchManagedEntities("VirtualMachine");
+    for (    ManagedEntity entity : entities) {
+      hardwareProfiles.add((VirtualMachine)entity);
+    }
+    return hardwareProfiles;
+  }
+ catch (  Exception e) {
+    return propogate(e);
+  }
 }

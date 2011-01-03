@@ -1,0 +1,10 @@
+{
+  S3Object object=injector.getInstance(S3Object.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(null);
+  object.setPayload(payload);
+  object.getMetadata().setKey("foo");
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindS3ObjectMetadataToRequest binder=injector.getInstance(BindS3ObjectMetadataToRequest.class);
+  binder.bindToRequest(request,object);
+}

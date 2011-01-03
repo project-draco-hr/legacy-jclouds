@@ -1,6 +1,11 @@
 {
-  String name=blob.getMetadata().getName();
+  checkNotNull(asyncBlobStore,"asyncBlobStore");
+  checkNotNull(container,"container");
+  String name=blobName.apply(blob);
   if (name.indexOf('/') > 0) {
-    asyncBlobStore.createDirectory(container,parseDirectoryFromPath(name));
+    return asyncBlobStore.createDirectory(container,parseDirectoryFromPath(name));
+  }
+ else {
+    return Futures.immediateFuture(null);
   }
 }

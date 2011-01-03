@@ -3,7 +3,7 @@
   BindBlobToMultipartForm binder=new BindBlobToMultipartForm();
   HttpRequest request=new HttpRequest("GET",URI.create("http://localhost:8001"));
   binder.bindToRequest(request,TEST_BLOB);
-  assertEquals(toStringAndClose(request.getPayload().getInput()),EXPECTS);
+  assertEquals(Strings2.toStringAndClose(request.getPayload().getInput()),EXPECTS);
   assertEquals(request.getPayload().getContentMetadata().getContentLength(),new Long(113));
   assertEquals(request.getPayload().getContentMetadata().getContentType(),"multipart/form-data; boundary=" + BOUNDARY);
 }

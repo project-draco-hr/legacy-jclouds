@@ -1,0 +1,8 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof AtmosObject,"this binder is only valid for AtmosObject!");
+  checkNotNull(request,"request");
+  AtmosObject object=AtmosObject.class.cast(input);
+  checkNotNull(object.getPayload(),"object payload");
+  checkArgument(object.getPayload().getContentMetadata().getContentLength() != null,"contentLength must be set, streaming not supported");
+  return metaBinder.bindToRequest(request,object.getUserMetadata());
+}

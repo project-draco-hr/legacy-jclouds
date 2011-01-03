@@ -1,0 +1,16 @@
+{
+  Multimap<String,String> map=LinkedListMultimap.create();
+  if (in == null) {
+  }
+ else   if (in.indexOf('&') == -1) {
+    if (in.contains("="))     parseKeyValueFromStringToMap(in,map);
+ else     map.put(in,null);
+  }
+ else {
+    String[] parts=Strings2.urlDecode(in).split("&");
+    for (    String part : parts) {
+      parseKeyValueFromStringToMap(part,map);
+    }
+  }
+  return map;
+}

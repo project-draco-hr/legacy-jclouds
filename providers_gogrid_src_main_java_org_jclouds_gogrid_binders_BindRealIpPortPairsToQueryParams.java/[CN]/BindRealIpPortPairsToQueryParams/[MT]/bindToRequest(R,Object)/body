@@ -1,0 +1,14 @@
+{
+  checkArgument(checkNotNull(input,"input is null") instanceof List,"this binder is only valid for a List argument");
+  List<IpPortPair> ipPortPairs=(List<IpPortPair>)input;
+  int i=0;
+  for (  IpPortPair ipPortPair : ipPortPairs) {
+    checkNotNull(ipPortPair.getIp(),"There must be an IP address defined");
+    checkNotNull(ipPortPair.getIp().getIp(),"There must be an IP address defined in Ip object");
+    checkState(ipPortPair.getPort() > 0,"The port number must be a positive integer");
+    request=ModifyRequest.addQueryParam(request,REAL_IP_LIST_KEY + i + ".ip",ipPortPair.getIp().getIp(),builder.get());
+    request=ModifyRequest.addQueryParam(request,REAL_IP_LIST_KEY + i + ".port",String.valueOf(ipPortPair.getPort()),builder.get());
+    i++;
+  }
+  return request;
+}

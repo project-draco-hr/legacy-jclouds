@@ -1,0 +1,18 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof BlockDeviceMapping,"this binder is only valid for BlockDeviceMapping");
+  BlockDeviceMapping blockDeviceMapping=(BlockDeviceMapping)input;
+  Builder<String,String> builder=ImmutableMultimap.<String,String>builder();
+  int amazonOneBasedIndex=1;
+  for (  String ebsBlockDeviceName : blockDeviceMapping.getEbsBlockDevices().keySet()) {
+    for (    RunningInstance.EbsBlockDevice ebsBlockDevice : blockDeviceMapping.getEbsBlockDevices().get(ebsBlockDeviceName)) {
+      builder.put(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDevice.getVolumeId());
+      if (ebsBlockDeviceName != null) {
+        builder.put(format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDeviceName);
+      }
+      builder.put(format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDevice.isDeleteOnTermination()));
+      amazonOneBasedIndex++;
+    }
+  }
+  ImmutableMultimap<String,String> forms=builder.build();
+  return forms.size() == 0 ? request : ModifyRequest.putFormParams(request,forms);
+}

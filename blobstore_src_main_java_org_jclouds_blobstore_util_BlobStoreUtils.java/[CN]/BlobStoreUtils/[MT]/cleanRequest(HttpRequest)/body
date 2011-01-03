@@ -1,0 +1,7 @@
+{
+  checkNotNull(returnVal,"http request");
+  for (  HttpRequestFilter filter : returnVal.getFilters())   returnVal=filter.filter(returnVal);
+  HttpRequest toReturn=new HttpRequest(returnVal.getMethod(),returnVal.getEndpoint(),ImmutableMultimap.copyOf(returnVal.getHeaders()));
+  if (returnVal.getPayload() != null)   toReturn.setPayload(returnVal.getPayload());
+  return toReturn;
+}

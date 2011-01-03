@@ -2,10 +2,7 @@
   ParseAuthenticationResponseFromHeaders parser=i.getInstance(ParseAuthenticationResponseFromHeaders.class);
   HttpRequest request=new HttpRequest("GET",URI.create("http://realhost:11000/v1.0"));
   parser.setContext(request);
-  HttpResponse response=new HttpResponse(204,"No Content",null);
-  response.getHeaders().put("X-Auth-Token","token");
-  response.getHeaders().put("X-Storage-Token","token");
-  response.getHeaders().put("X-Storage-Url","http://127.0.0.1:8080/v1/token");
+  HttpResponse response=new HttpResponse(204,"No Content",null,ImmutableMultimap.<String,String>of("X-Auth-Token","token","X-Storage-Token","token","X-Storage-Url","http://127.0.0.1:8080/v1/token"));
   AuthenticationResponse md=parser.apply(response);
   assertEquals(md,new ParseAuthenticationResponseFromHeaders.AuthenticationResponseImpl("token",null,null,URI.create("http://realhost:8080/v1/token")));
 }

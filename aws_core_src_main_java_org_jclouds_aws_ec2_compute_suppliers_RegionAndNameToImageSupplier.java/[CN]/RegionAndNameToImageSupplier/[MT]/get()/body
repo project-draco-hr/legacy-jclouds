@@ -4,7 +4,7 @@
   }
  else {
     logger.debug(">> providing images");
-    Iterable<Entry<String,DescribeImagesOptions>> queries=concat(getDescribeQueriesForOwnersInRegions(regionMap,amiOwners).entrySet(),ccAmisToDescribeQueries(ccAmis).entrySet());
+    Iterable<Entry<String,DescribeImagesOptions>> queries=concat(getDescribeQueriesForOwnersInRegions(regions,amiOwners).entrySet(),ccAmisToDescribeQueries(ccAmis).entrySet());
     Iterable<? extends Image> parsedImages=filter(transform(describer.apply(queries),parser),Predicates.notNull());
     images.putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
       @Override public RegionAndName apply(      Image from){

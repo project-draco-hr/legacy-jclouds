@@ -1,0 +1,10 @@
+{
+  AzureBlob blob=injector.getInstance(AzureBlob.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(64 * 1024 * 1024l + 1);
+  blob.setPayload(payload);
+  blob.getProperties().setName("foo");
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindAzureBlobMetadataToRequest binder=injector.getInstance(BindAzureBlobMetadataToRequest.class);
+  binder.bindToRequest(request,blob);
+}

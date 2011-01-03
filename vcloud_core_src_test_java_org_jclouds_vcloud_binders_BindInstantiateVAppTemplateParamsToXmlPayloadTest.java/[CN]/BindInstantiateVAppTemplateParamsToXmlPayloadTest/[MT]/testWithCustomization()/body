@@ -3,10 +3,10 @@
   VAppTemplate template=createMock(VAppTemplate.class);
   VCloudNetworkSection net=createMock(VCloudNetworkSection.class);
   InstantiateVAppTemplateOptions options=customizeOnInstantiate(true);
-  String expected=Utils.toStringAndClose(getClass().getResourceAsStream("/instantiationparams-customization.xml"));
+  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/instantiationparams-customization.xml"));
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getArgs()).andReturn(new Object[]{options}).atLeastOnce();
+  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(options)).atLeastOnce();
   request.setPayload(expected);
   expect(template.getNetworkSection()).andReturn(net).atLeastOnce();
   expect(net.getNetworks()).andReturn(ImmutableSet.<org.jclouds.vcloud.domain.ovf.network.Network>of(new org.jclouds.vcloud.domain.ovf.network.Network("vAppNet-vApp Internal",null)));

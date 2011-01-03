@@ -1,0 +1,12 @@
+{
+  blobstore.createContainerInLocation(null,"poo");
+  for (int i=0; i < 1001; i++) {
+    Blob blob=blobstore.newBlob(i + "");
+    blob.setPayload(i + "");
+    blobstore.putBlob("poo",blob);
+  }
+  ListContainerAndRecurseThroughFolders lister=new ListContainerAndRecurseThroughFolders(new ConcatenateContainerLists(blobstore));
+  assertEquals(lister.execute("poo",ListContainerOptions.NONE).size(),1001);
+  blobstore.clearContainer("poo");
+  assertEquals(lister.execute("poo",ListContainerOptions.NONE).size(),0);
+}
