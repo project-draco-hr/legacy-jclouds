@@ -1,0 +1,11 @@
+{
+  Set<? extends Location> locations=locationsSupplier.get();
+  if (locationsSupplier.get().size() == 1)   return getOnlyElement(locationsSupplier.get());
+  try {
+    Location toReturn=Iterables.find(locations,matcher);
+    return toReturn.getScope() == LocationScope.REGION ? toReturn : toReturn.getParent();
+  }
+ catch (  NoSuchElementException e) {
+    throw new IllegalStateException(String.format("region %s not found in %s",matcher,locations));
+  }
+}

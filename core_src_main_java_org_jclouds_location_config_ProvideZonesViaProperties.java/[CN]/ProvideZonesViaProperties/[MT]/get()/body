@@ -1,0 +1,14 @@
+{
+  try {
+    Builder<String,String> zones=ImmutableMap.<String,String>builder();
+    for (    String region : regions) {
+      for (      String zone : Splitter.on(',').split(injector.getInstance(Key.get(String.class,Names.named(PROPERTY_REGION + "." + region+ ".zones"))))) {
+        zones.put(zone,region);
+      }
+    }
+    return zones.build();
+  }
+ catch (  ConfigurationException e) {
+    return ImmutableMap.<String,String>of();
+  }
+}

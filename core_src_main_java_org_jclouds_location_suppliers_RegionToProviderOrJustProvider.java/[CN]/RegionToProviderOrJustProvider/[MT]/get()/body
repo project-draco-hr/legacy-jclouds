@@ -1,0 +1,10 @@
+{
+  final Location provider=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
+  if (regions.size() == 0)   return ImmutableSet.of(provider);
+  return ImmutableSet.<Location>copyOf(Iterables.transform(regions,new Function<String,Location>(){
+    @Override public Location apply(    String input){
+      return new LocationImpl(LocationScope.REGION,input,input,provider);
+    }
+  }
+));
+}
