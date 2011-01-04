@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/bucket_logging.xml");
+  BucketLogging expected=new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL)));
+  BucketLoggingHandler handler=injector.getInstance(BucketLoggingHandler.class);
+  BucketLogging result=factory.create(handler).parse(is);
+  assertEquals(result.getTargetBucket(),expected.getTargetBucket());
+  assertEquals(result.getTargetGrants(),expected.getTargetGrants());
+  assertEquals(result.getTargetPrefix(),expected.getTargetPrefix());
+}
