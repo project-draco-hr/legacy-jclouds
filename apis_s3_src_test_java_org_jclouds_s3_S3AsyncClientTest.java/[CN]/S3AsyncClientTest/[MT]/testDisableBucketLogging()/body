@@ -1,9 +1,9 @@
 {
   Method method=S3AsyncClient.class.getMethod("disableBucketLogging",String.class);
   HttpRequest request=processor.createRequest(method,"bucket");
-  assertRequestLineEquals(request,"PUT https://bucket.s3.amazonaws.com/?logging HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
-  assertPayloadEquals(request,"<BucketLoggingStatus xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>","text/xml",false);
+  assertRequestLineEquals(request,"PUT https://bucket." + url + "/?logging HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
+  assertPayloadEquals(request,"<BucketLoggingStatus xmlns=\"http://" + url + "/doc/2006-03-01/\"/>","text/xml",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
