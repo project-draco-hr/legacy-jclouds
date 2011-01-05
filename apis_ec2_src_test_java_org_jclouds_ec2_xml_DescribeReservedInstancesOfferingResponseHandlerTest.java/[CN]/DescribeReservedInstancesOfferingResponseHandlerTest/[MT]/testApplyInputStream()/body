@@ -1,0 +1,8 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_reserved_instances_offerings.xml");
+  ReservedInstancesOffering expected=new ReservedInstancesOffering("us-east-1","us-east-1a",12,0.0f,"m1.small","m1.small offering in us-east-1a","4b2293b4-5813-4cc8-9ce3-1957fc1dcfc8",0.0f);
+  DescribeReservedInstancesOfferingResponseHandler handler=injector.getInstance(DescribeReservedInstancesOfferingResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  ReservedInstancesOffering result=Iterables.getOnlyElement(factory.create(handler).parse(is));
+  assertEquals(result,expected);
+}

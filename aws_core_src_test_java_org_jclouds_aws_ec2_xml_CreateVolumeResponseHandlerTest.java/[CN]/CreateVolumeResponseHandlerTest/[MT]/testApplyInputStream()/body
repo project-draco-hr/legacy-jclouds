@@ -1,9 +1,0 @@
-{
-  DateService dateService=injector.getInstance(DateService.class);
-  InputStream is=getClass().getResourceAsStream("/ec2/created_volume.xml");
-  Volume expected=new Volume(Region.US_EAST_1,"vol-2a21e543",1,null,AvailabilityZone.US_EAST_1A,Volume.Status.CREATING,dateService.iso8601DateParse("2009-12-28T05:42:53.000Z"),Sets.<Attachment>newLinkedHashSet());
-  CreateVolumeResponseHandler handler=injector.getInstance(CreateVolumeResponseHandler.class);
-  addDefaultRegionToHandler(handler);
-  Volume result=factory.create(handler).parse(is);
-  assertEquals(result,expected);
-}

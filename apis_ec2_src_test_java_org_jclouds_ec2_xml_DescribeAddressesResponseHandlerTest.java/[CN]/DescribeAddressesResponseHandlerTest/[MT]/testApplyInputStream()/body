@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_addresses.xml");
+  DescribeAddressesResponseHandler handler=injector.getInstance(DescribeAddressesResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  Set<PublicIpInstanceIdPair> result=factory.create(handler).parse(is);
+  assertEquals(result,ImmutableList.of(new PublicIpInstanceIdPair(defaultRegion,"67.202.55.255","i-f15ebb98"),new PublicIpInstanceIdPair(defaultRegion,"67.202.55.233",null)));
+}
