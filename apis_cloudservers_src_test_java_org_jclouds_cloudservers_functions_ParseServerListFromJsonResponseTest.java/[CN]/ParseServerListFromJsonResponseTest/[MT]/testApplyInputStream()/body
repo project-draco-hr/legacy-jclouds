@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_list_servers.json");
+  List<Server> expects=ImmutableList.of(new Server(1234,"sample-server"),new Server(5678,"sample-server2"));
+  UnwrapOnlyJsonValue<List<Server>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Server>>>(){
+  }
+));
+  List<Server> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  assertEquals(response,expects);
+}

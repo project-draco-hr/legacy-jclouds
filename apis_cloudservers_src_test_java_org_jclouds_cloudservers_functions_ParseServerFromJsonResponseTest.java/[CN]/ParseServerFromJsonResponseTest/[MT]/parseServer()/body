@@ -1,0 +1,9 @@
+{
+  Injector i=Guice.createInjector(new RackspaceParserModule(),new GsonModule());
+  InputStream is=ParseServerFromJsonResponseTest.class.getResourceAsStream("/test_get_server_detail.json");
+  UnwrapOnlyJsonValue<Server> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<Server>>(){
+  }
+));
+  Server response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  return response;
+}

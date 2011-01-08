@@ -1,0 +1,9 @@
+{
+  Injector i=Guice.createInjector(new RackspaceParserModule(),new GsonModule());
+  InputStream is=ParseImageFromJsonResponseTest.class.getResourceAsStream("/test_get_image_details.json");
+  UnwrapOnlyJsonValue<Image> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<Image>>(){
+  }
+));
+  Image response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  return response;
+}
