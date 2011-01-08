@@ -2,7 +2,7 @@
   install(new BlobStoreMapModule());
   bind(new TypeLiteral<Supplier<Set<? extends Location>>>(){
   }
-).annotatedWith(Memoized.class).to(new TypeLiteral<RackspaceLocationsSupplier>(){
+).annotatedWith(Memoized.class).to(new TypeLiteral<SupplyPredefinedRegions>(){
   }
 );
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
@@ -12,4 +12,7 @@
   }
 ).in(Scopes.SINGLETON);
   bind(BlobRequestSigner.class).to(CloudFilesBlobRequestSigner.class);
+  bind(new TypeLiteral<Set<String>>(){
+  }
+).annotatedWith(Region.class).toProvider(ProvideRegionsViaProperties.class).in(Scopes.SINGLETON);
 }

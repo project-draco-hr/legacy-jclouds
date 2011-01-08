@@ -1,13 +1,3 @@
 {
-  try {
-    String regionString=injector.getInstance(Key.get(String.class,Names.named(PROPERTY_REGIONS)));
-    Builder<String,URI> regions=ImmutableMap.<String,URI>builder();
-    for (    String region : Splitter.on(',').split(regionString)) {
-      regions.put(region,URI.create(injector.getInstance(Key.get(String.class,Names.named(PROPERTY_REGION + "." + region+ ".endpoint")))));
-    }
-    return regions.build();
-  }
- catch (  ConfigurationException e) {
-    return ImmutableMap.of(injector.getInstance(Key.get(String.class,Provider.class)),injector.getInstance(Key.get(URI.class,Provider.class)));
-  }
+  return regions;
 }
