@@ -1,0 +1,10 @@
+{
+  SwiftObject object=injector.getInstance(SwiftObject.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(5 * 1024 * 1024* 1024l);
+  object.setPayload(payload);
+  object.getInfo().setName("foo");
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindSwiftObjectMetadataToRequest binder=injector.getInstance(BindSwiftObjectMetadataToRequest.class);
+  assertEquals(binder.bindToRequest(request,object),HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build());
+}
