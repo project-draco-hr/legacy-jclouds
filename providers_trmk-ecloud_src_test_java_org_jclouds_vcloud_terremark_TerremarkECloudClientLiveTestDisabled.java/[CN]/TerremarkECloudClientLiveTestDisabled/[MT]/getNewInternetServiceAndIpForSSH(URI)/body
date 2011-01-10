@@ -1,0 +1,7 @@
+{
+  PublicIpAddress ip=TerremarkECloudClient.class.cast(tmClient).activatePublicIpInVDC(tmClient.findVDCInOrgNamed(null,null).getHref());
+  InternetService is=tmClient.addInternetServiceToExistingIp(ip.getId(),"SSH",Protocol.TCP,22);
+  Map<InternetService,PublicIpAddress> result=ImmutableMap.<InternetService,PublicIpAddress>of(is,ip);
+  Entry<InternetService,PublicIpAddress> entry=Iterables.getOnlyElement(result.entrySet());
+  return entry;
+}

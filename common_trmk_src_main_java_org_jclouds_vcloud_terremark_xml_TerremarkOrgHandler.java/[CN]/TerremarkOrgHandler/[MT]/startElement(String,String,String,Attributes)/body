@@ -1,0 +1,12 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  super.startElement(uri,localName,qName,attrs);
+  if (qName.equals("Link")) {
+    if (attributes.containsKey("type")) {
+      String type=attributes.get("type");
+      if (type != null && type.endsWith("keysList+xml")) {
+        keysList=newReferenceType(attributes);
+      }
+    }
+  }
+}
