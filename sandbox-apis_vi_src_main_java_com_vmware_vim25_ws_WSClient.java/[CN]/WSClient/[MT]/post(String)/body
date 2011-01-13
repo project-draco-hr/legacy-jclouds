@@ -1,0 +1,32 @@
+{
+  HttpURLConnection postCon=(HttpURLConnection)baseUrl.openConnection();
+  if (connectTimeout > 0)   postCon.setConnectTimeout(connectTimeout);
+  if (readTimeout > 0)   postCon.setReadTimeout(readTimeout);
+  try {
+    postCon.setRequestMethod("POST");
+  }
+ catch (  ProtocolException e) {
+    e.printStackTrace();
+  }
+  postCon.setDoOutput(true);
+  postCon.setDoInput(true);
+  postCon.setRequestProperty(SOAP_ACTION_HEADER,soapAction);
+  if (cookie != null) {
+    postCon.setRequestProperty("Cookie",cookie);
+  }
+  OutputStream os=postCon.getOutputStream();
+  OutputStreamWriter out=new OutputStreamWriter(os);
+  out.write(soapMsg);
+  out.close();
+  InputStream is;
+  try {
+    is=postCon.getInputStream();
+  }
+ catch (  IOException ioe) {
+    is=postCon.getErrorStream();
+  }
+  if (cookie == null) {
+    cookie=postCon.getHeaderField("Set-Cookie");
+  }
+  return is;
+}

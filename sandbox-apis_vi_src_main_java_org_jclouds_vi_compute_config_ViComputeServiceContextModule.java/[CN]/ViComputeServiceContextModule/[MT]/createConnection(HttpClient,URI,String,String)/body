@@ -1,0 +1,14 @@
+{
+  ServiceInstance foo=new ServiceInstance(endpoint.toURL(),identity,credential,true);
+  Field serverConnectionField=ServiceInstance.class.getDeclaredField("serverConnection");
+  serverConnectionField.setAccessible(true);
+  ServerConnection connection=(ServerConnection)serverConnectionField.get(foo);
+  Field vimServiceField=ServerConnection.class.getDeclaredField("vimService");
+  vimServiceField.setAccessible(true);
+  VimPortType vim=(VimPortType)vimServiceField.get(connection);
+  Field wscField=VimPortType.class.getDeclaredField("wsc");
+  wscField.setAccessible(true);
+  WSClient oldClient=(WSClient)wscField.get(vim);
+  wscField.set(vim,new JcloudsWSClient(client,oldClient.getBaseUrl().toURI(),oldClient.getCookie(),oldClient.getVimNameSpace()));
+  return foo;
+}
