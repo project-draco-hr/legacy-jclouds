@@ -1,0 +1,14 @@
+{
+  int i=1;
+  for (  BlockDeviceMapping mapping : mappings) {
+    checkNotNull(mapping.getDeviceName(),"deviceName");
+    formParameters.put(String.format("BlockDeviceMapping.%d.DeviceName",i),mapping.getDeviceName());
+    if (mapping.getVirtualName() != null)     formParameters.put(String.format("BlockDeviceMapping.%d.VirtualName",i),mapping.getVirtualName());
+    if (mapping.getEbsSnapshotId() != null)     formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.SnapshotId",i),mapping.getEbsSnapshotId());
+    if (mapping.getEbsVolumeSize() != null)     formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.VolumeSize",i),String.valueOf(mapping.getEbsVolumeSize()));
+    if (mapping.getEbsNoDevice() != null)     formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.NoDevice",i),String.valueOf(mapping.getEbsNoDevice()));
+    if (mapping.getEbsDeleteOnTermination() != null)     formParameters.put(String.format("BlockDeviceMapping.%d.Ebs.DeleteOnTermination",i),String.valueOf(mapping.getEbsDeleteOnTermination()));
+    i++;
+  }
+  return this;
+}
