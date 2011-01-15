@@ -1,8 +1,10 @@
 {
   checkNotNull(deviceName,"deviceName cannot be null");
   Preconditions2.checkNotEmpty(deviceName,"deviceName must be non-empty");
+  Set<BlockDeviceMapping> mappings=new HashSet<BlockDeviceMapping>();
+  mappings.addAll(blockDeviceMappings);
   BlockDeviceMapping mapping=new BlockDeviceMapping(deviceName,virtualName,ebsSnapShotId,ebsVolumeSize,ebsNoDevice,ebsNoDeviceebsDeleteOnTermination);
-  if (blockDeviceMappings == null)   blockDeviceMappings=new HashSet<BlockDeviceMapping>();
-  blockDeviceMappings.add(mapping);
+  mappings.add(mapping);
+  blockDeviceMappings=ImmutableSet.copyOf(mappings);
   return this;
 }
