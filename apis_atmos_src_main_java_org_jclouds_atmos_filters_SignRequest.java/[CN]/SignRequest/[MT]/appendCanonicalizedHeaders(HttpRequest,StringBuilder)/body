@@ -1,0 +1,16 @@
+{
+  Set<String> headers=new TreeSet<String>(request.getHeaders().keySet());
+  for (  String header : headers) {
+    if (header.startsWith("x-emc-") && !header.equals(AtmosHeaders.SIGNATURE)) {
+      toSign.append(header.toLowerCase()).append(":");
+      for (      String value : request.getHeaders().get(header)) {
+        value=Strings2.replaceAll(value,TWO_SPACE_PATTERN," ");
+        value=Strings2.replaceAll(value,NEWLINE_PATTERN,"");
+        toSign.append(value).append(' ');
+      }
+      toSign.deleteCharAt(toSign.lastIndexOf(" "));
+      toSign.append("\n");
+    }
+  }
+  if (toSign.charAt(toSign.length() - 1) == '\n')   toSign.deleteCharAt(toSign.length() - 1);
+}
