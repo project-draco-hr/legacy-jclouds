@@ -1,0 +1,12 @@
+{
+  if (username == null) {
+    throw new NullPointerException("username cannot be null.");
+  }
+  setMOR(SERVICE_INSTANCE_MOR);
+  VimPortType vimService=new VimPortType(wsc);
+  serviceContent=vimService.retrieveServiceContent(SERVICE_INSTANCE_MOR);
+  vimService.getWsc().setSoapActionOnApiVersion(serviceContent.getAbout().getApiVersion());
+  setServerConnection(new ServerConnection(wsc.getBaseUrl(),vimService,this));
+  password=password.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&apos;");
+  UserSession userSession=getSessionManager().login(username,password,null);
+}
