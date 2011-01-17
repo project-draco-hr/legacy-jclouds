@@ -1,0 +1,41 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  String message=null;
+  AzureStorageError error=null;
+  try {
+    if (response.getPayload() != null) {
+      String contentType=response.getPayload().getContentMetadata().getContentType();
+      if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1) && !new Long(0).equals(response.getPayload().getContentMetadata().getContentLength())) {
+        try {
+          error=utils.parseAzureStorageErrorFromContent(command,response,response.getPayload().getInput());
+          if (error != null) {
+            message=error.getMessage();
+            exception=new AzureStorageResponseException(command,response,error);
+          }
+        }
+ catch (        RuntimeException e) {
+          try {
+            message=Strings2.toStringAndClose(response.getPayload().getInput());
+            exception=new HttpResponseException(command,response,message);
+          }
+ catch (          IOException e1) {
+          }
+        }
+      }
+ else {
+        try {
+          message=Strings2.toStringAndClose(response.getPayload().getInput());
+          exception=new HttpResponseException(command,response,message);
+        }
+ catch (        IOException e) {
+        }
+      }
+    }
+    message=message != null ? message : String.format("%s -> %s",command.getCurrentRequest().getRequestLine(),response.getStatusLine());
+    exception=refineException(command,response,exception,error,message);
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}
