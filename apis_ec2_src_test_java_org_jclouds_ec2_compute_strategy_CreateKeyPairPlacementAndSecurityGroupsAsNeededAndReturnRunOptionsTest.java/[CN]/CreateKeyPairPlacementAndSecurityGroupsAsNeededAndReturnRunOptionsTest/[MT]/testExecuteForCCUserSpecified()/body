@@ -10,6 +10,7 @@
   Template template=createMock(Template.class);
   expect(template.getHardware()).andReturn(size).atLeastOnce();
   expect(template.getOptions()).andReturn(options).atLeastOnce();
+  expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping>of()).atLeastOnce();
   expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options)).andReturn(systemGeneratedKeyPairName);
   expect(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,options)).andReturn(generatedGroup);
   expect(strategy.getSecurityGroupsForTagAndOptions(region,tag,options)).andReturn(generatedGroups);

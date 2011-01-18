@@ -1,6 +1,6 @@
 {
-  Iterable<Volume> ebsVolumes=Iterables.transform(instance.getEbsBlockDevices().entrySet(),new Function<Entry<String,EbsBlockDevice>,Volume>(){
-    @Override public Volume apply(    Entry<String,EbsBlockDevice> from){
+  Iterable<Volume> ebsVolumes=Iterables.transform(instance.getEbsBlockDevices().entrySet(),new Function<Entry<String,BlockDevice>,Volume>(){
+    @Override public Volume apply(    Entry<String,BlockDevice> from){
       return new VolumeImpl(from.getValue().getVolumeId(),Volume.Type.SAN,null,from.getKey(),instance.getRootDeviceName() != null && instance.getRootDeviceName().equals(from.getKey()),true);
     }
   }
