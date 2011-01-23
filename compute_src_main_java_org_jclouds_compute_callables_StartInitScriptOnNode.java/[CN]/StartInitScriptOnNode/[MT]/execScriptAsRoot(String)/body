@@ -1,0 +1,13 @@
+{
+  String command;
+  if (node.getCredentials().identity.equals("root")) {
+    command="./" + name + " "+ action;
+  }
+ else   if (node.getAdminPassword() != null) {
+    command=String.format("echo '%s'|sudo -S ./%s %s",node.getAdminPassword(),name,action);
+  }
+ else {
+    command="sudo ./" + name + " "+ action;
+  }
+  return command;
+}

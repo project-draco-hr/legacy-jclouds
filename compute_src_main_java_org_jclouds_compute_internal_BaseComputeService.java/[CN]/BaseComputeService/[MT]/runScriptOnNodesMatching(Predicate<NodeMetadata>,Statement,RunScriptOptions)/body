@@ -1,0 +1,18 @@
+{
+  checkNotNull(filter,"Filter must be provided");
+  checkNotNull(runScript,"runScript");
+  checkNotNull(options,"options");
+  Iterable<? extends NodeMetadata> nodes=filter(detailsOnAllNodes(),filter);
+  Map<NodeMetadata,ExecResponse> goodNodes=newLinkedHashMap();
+  Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
+  Map<NodeMetadata,Future<Void>> responses=newLinkedHashMap();
+  nodes=filterNodesWhoCanRunScripts(nodes,badNodes,options.getOverrideCredentials());
+  for (  NodeMetadata node : nodes) {
+    responses.put(node,executor.submit(statementRunner.create(node,runScript,options,goodNodes,badNodes)));
+  }
+  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"running script on nodes");
+  if (exceptions.size() > 0 || badNodes.size() > 0) {
+    throw new RunScriptOnNodesException(runScript,options,goodNodes,exceptions,badNodes);
+  }
+  return goodNodes;
+}

@@ -9,7 +9,7 @@
   Reservation<? extends RunningInstance> reservation=new Reservation<RunningInstance>(region,ImmutableSet.<String>of(),ImmutableSet.<RunningInstance>of(instance),"ownerId","requesterId","reservationId");
   NodeMetadata nodeMetadata=createMock(NodeMetadata.class);
   expect(strategy.client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
-  expect(strategy.createKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.execute(region,input.tag,input.template)).andReturn(ec2Options);
+  expect(strategy.createKeyPairAndSecurityGroupsAsNeededAndReturncustomize.execute(region,input.tag,input.template)).andReturn(ec2Options);
   expect(input.template.getLocation()).andReturn(input.location).atLeastOnce();
   expect(input.template.getImage()).andReturn(input.image).atLeastOnce();
   expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
@@ -23,14 +23,14 @@
   expect(input.template.getOptions()).andReturn(input.options).atLeastOnce();
   expect(input.options.isMonitoringEnabled()).andReturn(false);
   expect(strategy.runningInstanceToNodeMetadata.apply(instance)).andReturn(nodeMetadata);
-  expect(strategy.utils.runOptionsOnNodesAndAddToGoodSetOrPutExceptionIntoBadMap(eq(input.options),containsNodeMetadata(nodeMetadata),eq(input.nodes),eq(input.badNodes))).andReturn(null);
+  expect(strategy.utils.customizeNodesAndAddToGoodMapOrPutExceptionIntoBadMap(eq(input.options),containsNodeMetadata(nodeMetadata),eq(input.nodes),eq(input.badNodes),eq(input.customization))).andReturn(null);
   replay(instanceClient);
   replay(ec2Options);
   replay(instance);
   replay(nodeMetadata);
   input.replayMe();
   replayStrategy(strategy);
-  strategy.execute(input.tag,input.count,input.template,input.nodes,input.badNodes);
+  strategy.execute(input.tag,input.count,input.template,input.nodes,input.badNodes,input.customization);
   verify(instanceClient);
   verify(ec2Options);
   verify(instance);

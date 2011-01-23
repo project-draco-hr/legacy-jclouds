@@ -1,0 +1,11 @@
+{
+  this.sshFactory=checkNotNull(sshFactory,"sshFactory");
+  this.node=checkNotNull(node,"node");
+  if (name == null) {
+    if (checkNotNull(script,"script") instanceof InitBuilder)     name=InitBuilder.class.cast(script).getInstanceName();
+ else     name="jclouds-script-" + System.currentTimeMillis();
+  }
+  this.init=checkNotNull(script,"script") instanceof InitBuilder ? InitBuilder.class.cast(script) : createInitScript(checkNotNull(name,"name"),script);
+  this.name=checkNotNull(name,"name");
+  this.runAsRoot=runAsRoot;
+}

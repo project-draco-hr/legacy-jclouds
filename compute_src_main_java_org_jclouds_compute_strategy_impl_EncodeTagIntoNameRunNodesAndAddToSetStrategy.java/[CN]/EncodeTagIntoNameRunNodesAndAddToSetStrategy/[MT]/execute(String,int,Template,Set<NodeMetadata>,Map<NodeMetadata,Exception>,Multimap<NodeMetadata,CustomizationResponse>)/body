@@ -1,0 +1,7 @@
+{
+  Map<String,Future<Void>> responses=newLinkedHashMap();
+  for (  String name : getNextNames(tag,template,count)) {
+    responses.put(name,compose(executor.submit(new AddNode(name,tag,template)),customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(template.getOptions(),goodNodes,badNodes,customizationResponses),executor));
+  }
+  return responses;
+}
