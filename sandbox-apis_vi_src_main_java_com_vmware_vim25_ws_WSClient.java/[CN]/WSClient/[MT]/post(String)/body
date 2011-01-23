@@ -16,6 +16,15 @@
   }
   OutputStream os=postCon.getOutputStream();
   OutputStreamWriter out=new OutputStreamWriter(os);
+  try {
+    System.out.printf("%s %s HTTP/1.1%n","POST",baseUrl.toURI().toASCIIString());
+    for (    Entry<String,List<String>> i : postCon.getRequestProperties().entrySet()) {
+      for (      String v : i.getValue())       System.out.printf("%s: %s%n",i.getKey(),v);
+    }
+    System.out.println(soapMsg);
+  }
+ catch (  URISyntaxException e1) {
+  }
   out.write(soapMsg);
   out.close();
   InputStream is;
@@ -25,6 +34,13 @@
  catch (  IOException ioe) {
     is=postCon.getErrorStream();
   }
+  System.out.printf("HTTP/1.1 %d %s",postCon.getResponseCode(),postCon.getResponseMessage());
+  for (  Entry<String,List<String>> i : postCon.getHeaderFields().entrySet()) {
+    for (    String v : i.getValue())     System.out.printf("%s: %s%n",i.getKey(),v);
+  }
+  String response=Strings2.toStringAndClose(is);
+  System.out.println(response);
+  is=new ByteArrayInputStream(response.getBytes());
   if (cookie == null) {
     cookie=postCon.getHeaderField("Set-Cookie");
   }
