@@ -27,13 +27,17 @@
     }
  catch (    Exception e) {
       IOException ioe=Throwables2.getFirstThrowableOfType(e,IOException.class);
-      if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
-        continue;
+      if (ioe != null) {
+        if (ioe instanceof SSLException) {
+          command.setException(new AuthorizationException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),e));
+          break;
+        }
+ else         if (ioRetryHandler.shouldRetryRequest(command,ioe)) {
+          continue;
+        }
       }
- else {
-        command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),command,null,e));
-        break;
-      }
+      command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),command,null,e));
+      break;
     }
  finally {
       cleanup(nativeRequest);

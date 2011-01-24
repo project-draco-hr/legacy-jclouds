@@ -17,5 +17,11 @@
     if (entry.getKey().startsWith("user:"))     metadata.put(entry.getKey().substring(entry.getKey().indexOf(':') + 1),entry.getValue());
   }
   builder.userMetadata(metadata);
-  return builder.build();
+  try {
+    return builder.build();
+  }
+ catch (  NullPointerException e) {
+    logger.trace("entry missing data: %s; %s",e.getMessage(),from);
+    return null;
+  }
 }

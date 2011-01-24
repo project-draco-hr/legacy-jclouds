@@ -28,5 +28,11 @@
   if (from.containsKey("autoexpanding"))   builder.autoexpanding(new Boolean(from.get("autoexpanding")));
   if (from.containsKey("free"))   builder.free(new Boolean(from.get("free")));
   if (from.containsKey("type"))   builder.type(DriveType.fromValue(from.get("type")));
-  return builder.build();
+  try {
+    return builder.build();
+  }
+ catch (  NullPointerException e) {
+    logger.trace("entry missing data: %s; %s",e.getMessage(),from);
+    return null;
+  }
 }
