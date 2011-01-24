@@ -4,7 +4,11 @@
   builder.uri(from.getHref());
   builder.name(from.getName());
   builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
-  builder.tag(parseTagFromName(from.getName()));
+  String tag=parseTagFromName(from.getName());
+  builder.tag(tag);
+  if (logger.isTraceEnabled()) {
+    if (tag.startsWith("NOTAG#"))     logger.warn("failed to parse tag from name %s",from);
+  }
   builder.operatingSystem(toComputeOs(from,null));
   builder.hardware(hardwareForVApp.apply(from));
   builder.state(vAppStatusToNodeState.get(from.getStatus()));

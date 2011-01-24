@@ -10,9 +10,11 @@
         throw new IllegalStateException(String.format("node didn't achieve the state running on node %s within %d seconds, final state: %s",node.getId(),timeouts.nodeRunning / 1000,node.getState()));
       }
       if (statement != null) {
-        StartInitScriptOnNode scriptInstructions=scriptInvokerForNodeAndStatement.create(node,statement,options);
-        ExecResponse exec=scriptInstructions.call();
-        customizationResponses.put(node,exec);
+        RunScriptOnNode runner=initScriptRunnerFactory.create(node,statement,options,badNodes).call();
+        if (runner != null) {
+          ExecResponse exec=runner.call();
+          customizationResponses.put(node,exec);
+        }
       }
       if (options.getPort() > 0) {
         findReachableSocketOnNode(socketTester.seconds(options.getSeconds()),node,options.getPort());

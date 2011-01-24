@@ -1,11 +1,11 @@
 {
   logger.debug(">> rebooting nodes matching(%s)",filter);
-  transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<Void>>(){
+  transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),new Function<NodeMetadata,Future<Void>>(){
     @Override public Future<Void> apply(    NodeMetadata from){
       rebootNode(from.getId());
       return immediateFuture(null);
     }
   }
-,executor,null,logger,"rebooting nodes");
+,executor,null,logger,"rebootNodesMatching(" + filter + ")");
   logger.debug("<< rebooted");
 }

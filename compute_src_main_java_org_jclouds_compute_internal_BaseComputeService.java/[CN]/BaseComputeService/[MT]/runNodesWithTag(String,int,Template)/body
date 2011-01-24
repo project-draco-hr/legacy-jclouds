@@ -6,7 +6,7 @@
   Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
   Map<?,Future<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,goodNodes,badNodes,customizationResponses);
-  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"resuming nodes");
+  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"runNodesWithTag(" + tag + ")");
   for (  NodeMetadata node : concat(goodNodes,badNodes.keySet()))   if (node.getCredentials() != null)   credentialStore.put("node#" + node.getId(),node.getCredentials());
   if (executionExceptions.size() > 0 || badNodes.size() > 0) {
     throw new RunNodesException(tag,count,template,goodNodes,executionExceptions,badNodes);

@@ -6,14 +6,14 @@
   bind(new TypeLiteral<Function<TemplateOptions,Statement>>(){
   }
 ).to(TemplateOptionsToStatement.class);
-  install(new FactoryModuleBuilder().implement(StartInitScriptOnNode.class,Names.named("blocking"),StartInitScriptOnNodeAndBlockUntilComplete.class).implement(StartInitScriptOnNode.class,Names.named("nonblocking"),StartInitScriptOnNode.class).build(StartInitScriptOnNode.Factory.class));
+  install(new FactoryModuleBuilder().implement(RunScriptOnNode.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNode.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));
+  bind(RunScriptOnNode.Factory.class).to(RunScriptOnNodeFactoryImpl.class);
   install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<Void>>(){
   }
 ,CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.class).implement(new TypeLiteral<Function<NodeMetadata,Void>>(){
   }
 ,CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.class).build(CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory.class));
-  install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<Void>>(){
+  install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<RunScriptOnNode>>(){
   }
-,RunStatementOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap.class).build(RunStatementOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory.class));
-  requestStaticInjection(ComputeServiceUtils.class);
+,InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
 }
