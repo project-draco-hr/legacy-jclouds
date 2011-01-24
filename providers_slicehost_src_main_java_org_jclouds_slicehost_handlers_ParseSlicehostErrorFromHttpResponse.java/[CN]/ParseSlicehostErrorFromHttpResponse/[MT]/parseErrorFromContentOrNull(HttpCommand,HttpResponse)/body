@@ -1,6 +1,19 @@
 {
-  if (response.getPayload() != null && response.getPayload().getContentMetadata().getContentLength() != 1) {
-    return errorParser.parse(response.getPayload());
+  if (response.getPayload() != null) {
+    String contentType=response.getPayload().getContentMetadata().getContentType();
+    if (response.getPayload().getContentMetadata().getContentLength() != 1) {
+      response.getPayload().release();
+    }
+ else     if (contentType != null && contentType.indexOf("xml") != -1) {
+      return errorParser.parse(response.getPayload());
+    }
+ else {
+      try {
+        return Strings2.toStringAndClose(response.getPayload().getInput());
+      }
+ catch (      IOException e) {
+      }
+    }
   }
   return null;
 }
