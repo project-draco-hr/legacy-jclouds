@@ -3,11 +3,12 @@
   try {
     Properties contextProperties=new Properties();
     contextProperties.setProperty("byon.endpoint",endpoint);
-    context=new ComputeServiceContextFactory().createContext("byon",identity,credential,ImmutableSet.<Module>of(),contextProperties);
+    context=new ComputeServiceContextFactory().createContext("byon",identity,credential,ImmutableSet.<Module>of(new JschSshClientModule()),contextProperties);
     assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
     @SuppressWarnings("unchecked") Supplier<Map<String,Node>> supplier=(Supplier<Map<String,Node>>)context.getProviderSpecificContext().getApi();
     assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());
     context.getComputeService().listNodes();
+    System.out.println(context.getComputeService().runScriptOnNodesMatching(Predicates.<NodeMetadata>alwaysTrue(),"echo hello"));
   }
   finally {
     if (context != null)     context.close();

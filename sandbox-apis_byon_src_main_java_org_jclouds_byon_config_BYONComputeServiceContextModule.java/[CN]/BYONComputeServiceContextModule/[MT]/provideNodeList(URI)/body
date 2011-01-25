@@ -1,7 +1,29 @@
 {
   return new Supplier<Map<String,Node>>(){
     @Override public Map<String,Node> get(){
-      return ImmutableMap.<String,Node>of();
+      Constructor constructor=new Constructor(Config.class);
+      TypeDescription nodeDesc=new TypeDescription(Node.class);
+      nodeDesc.putListPropertyType("tags",String.class);
+      constructor.addTypeDescription(nodeDesc);
+      TypeDescription configDesc=new TypeDescription(Config.class);
+      configDesc.putMapPropertyType("nodes",String.class,Node.class);
+      constructor.addTypeDescription(configDesc);
+      Yaml yaml=new Yaml(new Loader(constructor));
+      Config config;
+      try {
+        URL url=uri.toURL();
+        InputStream input=url.openStream();
+        config=(Config)yaml.load(input);
+      }
+ catch (      MalformedURLException e) {
+        logger.error(e,"URI is not a URL: %s",uri);
+        return ImmutableMap.<String,Node>of();
+      }
+catch (      IOException e) {
+        logger.error(e,"URI could not be read: %s",uri);
+        return ImmutableMap.<String,Node>of();
+      }
+      return config.nodes;
     }
   }
 ;
