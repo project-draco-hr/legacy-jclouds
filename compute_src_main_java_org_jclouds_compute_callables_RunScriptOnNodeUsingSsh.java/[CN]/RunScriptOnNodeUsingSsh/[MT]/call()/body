@@ -1,0 +1,15 @@
+{
+  checkState(ssh != null,"please call init() before invoking call");
+  try {
+    ssh.connect();
+    ExecResponse returnVal;
+    String command=(runAsRoot) ? execAsRoot(statement.render(OsFamily.UNIX)) : execScriptAsDefaultUser(statement.render(OsFamily.UNIX));
+    returnVal=runCommand(command);
+    if (logger.isTraceEnabled())     logger.trace("<< %s[%s]",statement,returnVal);
+ else     logger.debug("<< %s(%d)",statement,returnVal.getExitCode());
+    return returnVal;
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+}

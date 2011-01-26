@@ -2,5 +2,5 @@
   checkNotNull(node,"node");
   checkNotNull(runScript,"runScript");
   checkNotNull(options,"options");
-  return options.shouldBlockOnComplete() ? factory.blockOnComplete(node,runScript,options) : factory.dontBlockOnComplete(node,runScript,options);
+  return !options.shouldWrapInInitScript() ? factory.exec(node,runScript,options) : (options.shouldBlockOnComplete() ? factory.backgroundAndBlockOnComplete(node,runScript,options) : factory.background(node,runScript,options));
 }

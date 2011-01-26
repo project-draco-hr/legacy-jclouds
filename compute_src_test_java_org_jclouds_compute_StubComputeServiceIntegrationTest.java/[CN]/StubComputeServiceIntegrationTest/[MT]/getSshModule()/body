@@ -9,8 +9,11 @@
       SshClient client5=createMock(SshClient.class);
       expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("root","password1"))).andReturn(client1);
       runScriptAndService(client1,1);
-      expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(2);
+      expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(3);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","romeo"))).andThrow(new SshException("Auth fail"));
+      client2.connect();
+      expect(client2.exec("echo hello\n")).andReturn(new ExecResponse("hello\n","",0));
+      client2.disconnect();
       client2.connect();
       try {
         runScript(client2,"runScriptWithCreds",Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/runscript.sh")),2);
