@@ -1,0 +1,5 @@
+{
+  RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.<Hardware>of(),ImmutableSet.of(provider),ImmutableSet.<Image>of(),ImmutableMap.<String,Credentials>of());
+  RunningInstance server=firstInstanceFromResource("/describe_instances_nova.xml");
+  assertEquals(parser.apply(server),new NodeMetadataBuilder().state(NodeState.TERMINATED).privateAddresses(ImmutableSet.of("10.128.207.5")).tag("NOTAG#i-9slweygo").imageId("us-east-1/ami-25CB1213").id("us-east-1/i-9slweygo").providerId("i-9slweygo").location(provider).build());
+}

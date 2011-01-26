@@ -1,8 +1,6 @@
 {
-  NodeMetadata node=getNode(id);
+  NodeMetadata node=getNode(checkNotNull(id,"id"));
   if (node == null || node.getState() == NodeState.TERMINATED || node.getState() == NodeState.RUNNING)   return node;
-  logger.debug(">> resuming node(%s)",id);
   client.resumeNode(id);
-  logger.debug("<< resumed node(%s)",id);
   return node;
 }

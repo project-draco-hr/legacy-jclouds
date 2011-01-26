@@ -1,0 +1,23 @@
+{
+  RunInstancesOptions instanceOptions=asType(template.getHardware().getId());
+  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
+  String placementGroupName=template.getHardware().getId().startsWith("cc") ? createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,template.getOptions()) : null;
+  String subnetId=EC2TemplateOptions.class.cast(template.getOptions()).getSubnetId();
+  if (subnetId != null) {
+    instanceOptions.withSubnetId(subnetId);
+  }
+ else {
+    Set<String> groups=getSecurityGroupsForTagAndOptions(region,tag,template.getOptions());
+    instanceOptions.withSecurityGroups(groups);
+  }
+  if (keyPairName != null)   instanceOptions.withKeyName(keyPairName);
+  if (placementGroupName != null)   instanceOptions.inPlacementGroup(placementGroupName);
+  byte[] userData=EC2TemplateOptions.class.cast(template.getOptions()).getUserData();
+  if (userData != null)   instanceOptions.withUserData(userData);
+  Set<BlockDeviceMapping> blockDeviceMappings=EC2TemplateOptions.class.cast(template.getOptions()).getBlockDeviceMappings();
+  if (blockDeviceMappings != null && blockDeviceMappings.size() > 0) {
+    checkState("ebs".equals(template.getImage().getUserMetadata().get("rootDeviceType")),"BlockDeviceMapping only available on ebs boot");
+    instanceOptions.withBlockDeviceMappings(blockDeviceMappings);
+  }
+  return instanceOptions;
+}

@@ -1,0 +1,17 @@
+{
+  checkState(runScriptOnNode != null,"runScriptOnNode must be set");
+  checkState(!tainted,"this object is not designed to be reused: %s",toString());
+  tainted=true;
+  try {
+    ExecResponse exec=runScriptOnNode.call();
+    logger.trace("<< script output for node(%s): %s",runScriptOnNode.getNode().getId(),exec);
+    logger.debug("<< options applied node(%s)",runScriptOnNode.getNode().getId());
+    goodNodes.put(runScriptOnNode.getNode(),exec);
+    return exec;
+  }
+ catch (  Exception e) {
+    logger.error(e,"<< problem applying options to node(%s): ",runScriptOnNode.getNode().getId(),getRootCause(e).getMessage());
+    badNodes.put(runScriptOnNode.getNode(),e);
+  }
+  return null;
+}

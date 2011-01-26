@@ -1,8 +1,6 @@
 {
-  NodeMetadata node=getNode(id);
+  NodeMetadata node=getNode(checkNotNull(id,"id"));
   if (node == null || node.getState() == NodeState.TERMINATED)   return node;
-  logger.debug(">> rebooting node(%s)",id);
   client.rebootNode(id);
-  logger.debug("<< rebooted node(%s)",id);
   return node;
 }

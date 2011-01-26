@@ -1,0 +1,18 @@
+{
+  install(new BlobStoreMapModule());
+  bind(new TypeLiteral<Supplier<Set<? extends Location>>>(){
+  }
+).annotatedWith(Memoized.class).to(new TypeLiteral<SupplyPredefinedRegions>(){
+  }
+);
+  bind(new TypeLiteral<Set<String>>(){
+  }
+).annotatedWith(Region.class).toProvider(ProvideRegionsViaProperties.class).in(Scopes.SINGLETON);
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+  bind(AsyncBlobStore.class).to(SwiftAsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(SwiftBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<CommonSwiftClient,CommonSwiftAsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(BlobRequestSigner.class).to(SwiftBlobRequestSigner.class);
+}

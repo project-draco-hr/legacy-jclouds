@@ -1,0 +1,8 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_securitygroups.xml");
+  Set<SecurityGroup> expected=ImmutableSet.of(new SecurityGroup(defaultRegion,"WebServers","UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM","Web Servers",ImmutableSet.of(new IpPermission(80,80,ImmutableSet.<UserIdGroupPair>of(),IpProtocol.TCP,ImmutableSet.of("0.0.0.0/0")))),new SecurityGroup(defaultRegion,"RangedPortsBySource","UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM","Group A",ImmutableSet.of(new IpPermission(6000,7000,ImmutableSet.<UserIdGroupPair>of(),IpProtocol.TCP,ImmutableSet.<String>of()))));
+  DescribeSecurityGroupsResponseHandler handler=injector.getInstance(DescribeSecurityGroupsResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  Set<SecurityGroup> result=factory.create(handler).parse(is);
+  assertEquals(result,expected);
+}

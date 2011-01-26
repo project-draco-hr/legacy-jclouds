@@ -1,0 +1,11 @@
+{
+  Method method=AtmosAsyncClient.class.getMethod("updateFile",String.class,AtmosObject.class);
+  HttpRequest request=processor.createRequest(method,"dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB));
+  assertRequestLineEquals(request,"PUT https://accesspoint.atmosonline.com/rest/namespace/dir/hello HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
+  assertPayloadEquals(request,"hello","text/plain",false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ThrowKeyNotFoundOn404.class);
+  checkFilters(request);
+}

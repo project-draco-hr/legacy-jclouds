@@ -1,0 +1,31 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  try {
+    AWSError error=null;
+    String message=null;
+    if (response.getPayload() != null) {
+      String contentType=response.getPayload().getContentMetadata().getContentType();
+      if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1)) {
+        error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
+        if (error != null) {
+          message=error.getMessage();
+        }
+        exception=new HttpResponseException(command,response,message);
+      }
+ else {
+        try {
+          message=Strings2.toStringAndClose(response.getPayload().getInput());
+          exception=new HttpResponseException(command,response,message);
+        }
+ catch (        IOException e) {
+        }
+      }
+    }
+    message=message != null ? message : String.format("%s -> %s",command.getCurrentRequest().getRequestLine(),response.getStatusLine());
+    exception=refineException(command,response,exception,error,message);
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}

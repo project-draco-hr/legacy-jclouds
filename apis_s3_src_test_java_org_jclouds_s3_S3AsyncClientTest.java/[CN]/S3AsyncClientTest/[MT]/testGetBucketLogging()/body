@@ -1,0 +1,11 @@
+{
+  Method method=S3AsyncClient.class.getMethod("getBucketLogging",String.class);
+  HttpRequest request=processor.createRequest(method,"bucket");
+  assertRequestLineEquals(request,"GET https://bucket." + url + "/?logging HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,BucketLoggingHandler.class);
+  assertExceptionParserClassEquals(method,ThrowContainerNotFoundOn404.class);
+  checkFilters(request);
+}

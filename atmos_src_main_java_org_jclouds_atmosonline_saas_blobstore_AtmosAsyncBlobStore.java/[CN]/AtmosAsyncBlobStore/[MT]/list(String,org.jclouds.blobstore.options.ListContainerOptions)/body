@@ -1,7 +1,0 @@
-{
-  container=AtmosStorageUtils.adjustContainerIfDirOptionPresent(container,options);
-  ListOptions nativeOptions=container2ContainerListOptions.apply(options);
-  ListenableFuture<BoundedSet<? extends DirectoryEntry>> returnVal=async.listDirectory(container,nativeOptions);
-  ListenableFuture<PageSet<? extends StorageMetadata>> list=Futures.compose(returnVal,container2ResourceList,service);
-  return (ListenableFuture<PageSet<? extends StorageMetadata>>)(options.isDetailed() ? Futures.compose(list,fetchBlobMetadataProvider.get().setContainerName(container),service) : list);
-}

@@ -1,0 +1,28 @@
+{
+  if (qName.equals("instanceId")) {
+    this.instanceId=currentOrNull();
+  }
+ else   if (qName.equals("shutdownState") || qName.equals("currentState")) {
+    inCurrentState=false;
+  }
+ else   if (qName.equals("previousState")) {
+    inPreviousState=false;
+  }
+ else   if (qName.equals("name")) {
+    if (inCurrentState) {
+      shutdownState=InstanceState.fromValue(currentOrNull());
+    }
+ else     if (inPreviousState) {
+      previousState=InstanceState.fromValue(currentOrNull());
+    }
+  }
+ else   if (qName.equals("item")) {
+    String region=AWSUtils.findRegionInArgsOrNull(getRequest());
+    if (region == null)     region=defaultRegion;
+    instances.add(new InstanceStateChange(region,instanceId,shutdownState,previousState));
+    this.instanceId=null;
+    this.shutdownState=null;
+    this.previousState=null;
+  }
+  currentText=new StringBuilder();
+}

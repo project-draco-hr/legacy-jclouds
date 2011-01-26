@@ -1,0 +1,7 @@
+{
+  Map<NodeMetadata,Future<Void>> responses=newLinkedHashMap();
+  for (  NodeMetadata node : runningNodes) {
+    responses.put(node,executor.submit(customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(options,node,goodNodes,badNodes,customizationResponses)));
+  }
+  return responses;
+}

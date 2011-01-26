@@ -1,0 +1,11 @@
+{
+  Method method=S3AsyncClient.class.getMethod("getBucketACL",String.class);
+  HttpRequest request=processor.createRequest(method,"bucket");
+  assertRequestLineEquals(request,"GET https://bucket." + url + "/?acl HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,AccessControlListHandler.class);
+  assertExceptionParserClassEquals(method,ThrowContainerNotFoundOn404.class);
+  checkFilters(request);
+}

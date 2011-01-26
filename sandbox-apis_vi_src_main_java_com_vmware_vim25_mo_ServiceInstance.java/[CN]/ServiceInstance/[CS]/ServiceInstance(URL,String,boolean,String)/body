@@ -1,0 +1,14 @@
+{
+  if (url == null || sessionStr == null) {
+    throw new NullPointerException("None of url, session string can be null.");
+  }
+  setMOR(SERVICE_INSTANCE_MOR);
+  VimPortType vimService=new VimPortType(url.toString(),ignoreCert);
+  WSClient wsc=vimService.getWsc();
+  wsc.setCookie(sessionStr);
+  wsc.setVimNameSpace(namespace);
+  serviceContent=vimService.retrieveServiceContent(SERVICE_INSTANCE_MOR);
+  setServerConnection(new ServerConnection(url,vimService,this));
+  UserSession userSession=(UserSession)getSessionManager().getCurrentProperty("currentSession");
+  getServerConnection().setUserSession(userSession);
+}

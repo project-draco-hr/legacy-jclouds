@@ -1,0 +1,11 @@
+{
+  Method method=S3AsyncClient.class.getMethod("deleteObject",String.class,String.class);
+  HttpRequest request=processor.createRequest(method,"bucket","object");
+  assertRequestLineEquals(request,"DELETE https://bucket." + url + "/object HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnVoidOnNotFoundOr404.class);
+  checkFilters(request);
+}

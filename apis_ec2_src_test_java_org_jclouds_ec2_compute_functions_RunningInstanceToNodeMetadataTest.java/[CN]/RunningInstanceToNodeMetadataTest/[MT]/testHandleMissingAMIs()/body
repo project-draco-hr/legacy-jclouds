@@ -1,0 +1,12 @@
+{
+  Function<RegionAndName,Image> nullReturningFunction=new Function<RegionAndName,Image>(){
+    @Override public Image apply(    @Nullable RegionAndName from){
+      return null;
+    }
+  }
+;
+  Map<RegionAndName,Image> instanceToImage=new MapMaker().makeComputingMap(nullReturningFunction);
+  RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.of(m1_small().build()),ImmutableSet.of(provider),ImmutableMap.<String,Credentials>of(),EC2ComputeServiceDependenciesModule.instanceToNodeState,instanceToImage);
+  RunningInstance server=firstInstanceFromResource("/describe_instances_nova.xml");
+  assertEquals(parser.apply(server),new NodeMetadataBuilder().state(NodeState.TERMINATED).privateAddresses(ImmutableSet.of("10.128.207.5")).tag("NOTAG#i-9slweygo").imageId("us-east-1/ami-25CB1213").id("us-east-1/i-9slweygo").providerId("i-9slweygo").hardware(m1_small().build()).location(provider).build());
+}

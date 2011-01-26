@@ -1,0 +1,13 @@
+{
+  Set<? extends NodeMetadata> deadOnes=super.destroyNodesMatching(filter);
+  Map<String,String> regionTags=Maps.newHashMap();
+  for (  NodeMetadata nodeMetadata : deadOnes) {
+    if (nodeMetadata.getTag() != null)     regionTags.put(AWSUtils.parseHandle(nodeMetadata.getId())[0],nodeMetadata.getTag());
+  }
+  for (  Entry<String,String> regionTag : regionTags.entrySet()) {
+    deleteKeyPair(regionTag.getKey(),regionTag.getValue());
+    deleteSecurityGroup(regionTag.getKey(),regionTag.getValue());
+    deletePlacementGroup(regionTag.getKey(),regionTag.getValue());
+  }
+  return deadOnes;
+}

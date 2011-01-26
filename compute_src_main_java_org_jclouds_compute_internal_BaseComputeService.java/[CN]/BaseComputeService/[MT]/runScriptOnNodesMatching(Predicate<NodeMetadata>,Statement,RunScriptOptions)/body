@@ -1,0 +1,20 @@
+{
+  checkNotNull(filter,"filter");
+  checkNotNull(runScript,"runScript");
+  checkNotNull(options,"options");
+  Map<NodeMetadata,ExecResponse> goodNodes=newLinkedHashMap();
+  Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
+  Map<NodeMetadata,Future<ExecResponse>> responses=newLinkedHashMap();
+  Map<?,Exception> exceptions=ImmutableMap.<Object,Exception>of();
+  Iterable<? extends RunScriptOnNode> scriptRunners=transformNodesIntoInitializedScriptRunners(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),runScript,options,badNodes);
+  if (Iterables.size(scriptRunners) > 0) {
+    for (    RunScriptOnNode runner : scriptRunners) {
+      responses.put(runner.getNode(),executor.submit(new RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap(runner,goodNodes,badNodes)));
+    }
+    exceptions=awaitCompletion(responses,executor,null,logger,"runScriptOnNodesMatching(" + filter + ")");
+  }
+  if (exceptions.size() > 0 || badNodes.size() > 0) {
+    throw new RunScriptOnNodesException(runScript,options,goodNodes,exceptions,badNodes);
+  }
+  return goodNodes;
+}

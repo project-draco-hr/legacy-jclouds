@@ -3,4 +3,17 @@
   bind(new TypeLiteral<Function<NodeMetadata,SshClient>>(){
   }
 ).to(CreateSshClientOncePortIsListeningOnNode.class);
+  bind(new TypeLiteral<Function<TemplateOptions,Statement>>(){
+  }
+).to(TemplateOptionsToStatement.class);
+  install(new FactoryModuleBuilder().implement(RunScriptOnNode.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNode.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));
+  bind(RunScriptOnNode.Factory.class).to(RunScriptOnNodeFactoryImpl.class);
+  install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<Void>>(){
+  }
+,CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.class).implement(new TypeLiteral<Function<NodeMetadata,Void>>(){
+  }
+,CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.class).build(CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory.class));
+  install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<RunScriptOnNode>>(){
+  }
+,InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
 }

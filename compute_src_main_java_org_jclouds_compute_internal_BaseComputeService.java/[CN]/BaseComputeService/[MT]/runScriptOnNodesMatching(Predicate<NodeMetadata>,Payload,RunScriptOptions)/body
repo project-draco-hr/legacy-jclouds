@@ -1,31 +1,9 @@
 {
-  checkNotNull(filter,"Filter must be provided");
-  checkNotNull(runScript,"runScript");
-  checkNotNull(options,"options");
-  if (options.getTaskName() == null)   options.nameTask("jclouds-script-" + System.currentTimeMillis());
-  Iterable<? extends NodeMetadata> nodes=filter(detailsOnAllNodes(),filter);
-  final Map<NodeMetadata,ExecResponse> execs=newHashMap();
-  final Map<NodeMetadata,Future<Void>> responses=newHashMap();
-  final Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
-  nodes=filterNodesWhoCanRunScripts(nodes,badNodes,options.getOverrideCredentials());
-  for (  final NodeMetadata node : nodes) {
-    responses.put(node,executor.submit(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        try {
-          ExecResponse response=utils.runScriptOnNode(node,Statements.exec(Strings2.toStringAndClose(runScript.getInput())),options);
-          if (response != null)           execs.put(node,response);
-        }
- catch (        Exception e) {
-          badNodes.put(node,e);
-        }
-        return null;
-      }
-    }
-));
+  try {
+    return runScriptOnNodesMatching(filter,Statements.exec(Strings2.toStringAndClose(checkNotNull(runScript,"runScript").getInput())),options);
   }
-  Map<?,Exception> exceptions=awaitCompletion(responses,executor,null,logger,"running script on nodes");
-  if (exceptions.size() > 0 || badNodes.size() > 0) {
-    throw new RunScriptOnNodesException(runScript,options,execs,exceptions,badNodes);
+ catch (  IOException e) {
+    Throwables.propagate(e);
+    return null;
   }
-  return execs;
 }

@@ -1,0 +1,15 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    Properties contextProperties=new Properties();
+    contextProperties.setProperty("byon.endpoint",endpoint);
+    context=new ComputeServiceContextFactory().createContext("byon",identity,credential,ImmutableSet.<Module>of(),contextProperties);
+    assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
+    @SuppressWarnings("unchecked") Supplier<Map<String,Node>> supplier=(Supplier<Map<String,Node>>)context.getProviderSpecificContext().getApi();
+    assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());
+    context.getComputeService().listNodes();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

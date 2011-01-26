@@ -1,0 +1,11 @@
+{
+  Method method=S3AsyncClient.class.getMethod("listOwnedBuckets");
+  HttpRequest request=processor.createRequest(method);
+  assertRequestLineEquals(request,"GET https://" + url + "/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: " + url + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,ListAllMyBucketsHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

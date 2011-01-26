@@ -1,8 +1,0 @@
-{
-  checkNotNull(from,"http response");
-  Map<String,String> meta=Maps.filterKeys(getMetaMap(checkNotNull(from.getFirstHeaderOrNull(AtmosStorageHeaders.META),AtmosStorageHeaders.META)),filter);
-  Map<String,String> listableMeta=(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_META) != null) ? getMetaMap(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_META)) : ImmutableMap.<String,String>of();
-  Iterable<String> tags=(from.getFirstHeaderOrNull(AtmosStorageHeaders.TAGS) != null) ? Splitter.on(", ").split(from.getFirstHeaderOrNull(AtmosStorageHeaders.TAGS)) : ImmutableSet.<String>of();
-  Iterable<String> listableTags=(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_TAGS) != null) ? Splitter.on(", ").split(from.getFirstHeaderOrNull(AtmosStorageHeaders.LISTABLE_TAGS)) : ImmutableSet.<String>of();
-  return new UserMetadata(meta,listableMeta,tags,listableTags);
-}

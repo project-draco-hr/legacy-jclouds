@@ -1,14 +1,15 @@
 {
-  checkArgument(tag.indexOf('-') == -1,"tag cannot contain hyphens");
+  checkNotNull(tag,"tag cannot be null");
   checkNotNull(template.getLocation(),"location");
   logger.debug(">> running %d node%s tag(%s) location(%s) image(%s) hardwareProfile(%s) options(%s)",count,count > 1 ? "s" : "",tag,template.getLocation().getId(),template.getImage().getId(),template.getHardware().getId(),template.getOptions());
-  Set<NodeMetadata> nodes=newHashSet();
+  Set<NodeMetadata> goodNodes=newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
-  Map<?,Future<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,nodes,badNodes);
-  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"resumeing nodes");
-  for (  NodeMetadata node : concat(nodes,badNodes.keySet()))   if (node.getCredentials() != null)   credentialStore.put("node#" + node.getId(),node.getCredentials());
+  Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
+  Map<?,Future<Void>> responses=runNodesAndAddToSetStrategy.execute(tag,count,template,goodNodes,badNodes,customizationResponses);
+  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"runNodesWithTag(" + tag + ")");
+  for (  NodeMetadata node : concat(goodNodes,badNodes.keySet()))   if (node.getCredentials() != null)   credentialStore.put("node#" + node.getId(),node.getCredentials());
   if (executionExceptions.size() > 0 || badNodes.size() > 0) {
-    throw new RunNodesException(tag,count,template,nodes,executionExceptions,badNodes);
+    throw new RunNodesException(tag,count,template,goodNodes,executionExceptions,badNodes);
   }
-  return nodes;
+  return goodNodes;
 }
