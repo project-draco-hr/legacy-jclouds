@@ -3,10 +3,18 @@ switch (response.getStatusCode()) {
 case 404:
     if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
       exception=new ResourceNotFoundException(message,exception);
-      String container=command.getCurrentRequest().getEndpoint().getHost();
-      String key=command.getCurrentRequest().getEndpoint().getPath();
-      if (key == null || key.equals("/"))       exception=new ContainerNotFoundException(container,message);
- else       exception=new KeyNotFoundException(container,key,message);
+      List<String> parts=Lists.newArrayList(Splitter.on('/').split(command.getCurrentRequest().getEndpoint().getPath()));
+      parts.remove("");
+      if (parts.size() > 0) {
+        String container=parts.remove(0);
+        String query=command.getCurrentRequest().getEndpoint().getQuery();
+        if (query != null && query.indexOf("container") != -1) {
+          exception=new ContainerNotFoundException(container,message);
+        }
+ else {
+          exception=new KeyNotFoundException(container,Joiner.on('/').join(parts),message);
+        }
+      }
     }
   return exception;
 default :

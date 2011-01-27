@@ -1,0 +1,18 @@
+{
+  if (from.size() == 0)   return null;
+  if (from.size() == 0)   return null;
+  ProfileInfo.Builder builder=new ProfileInfo.Builder();
+  builder.uuid(from.get("uuid"));
+  builder.email(from.get("email"));
+  builder.firstName(from.get("first_name"));
+  builder.lastName(from.get("last_name"));
+  builder.nickName(from.get("nick_name"));
+  builder.type(ProfileType.fromValue(from.get("type")));
+  try {
+    return builder.build();
+  }
+ catch (  NullPointerException e) {
+    logger.trace("entry missing data: %s; %s",e.getMessage(),from);
+    return null;
+  }
+}

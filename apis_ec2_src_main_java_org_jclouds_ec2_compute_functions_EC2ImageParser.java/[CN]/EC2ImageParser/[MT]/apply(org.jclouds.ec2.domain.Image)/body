@@ -1,0 +1,34 @@
+{
+  if (from.getImageType() != ImageType.MACHINE) {
+    logger.trace("skipping as not a machine image(%s)",from.getId());
+    return null;
+  }
+  ImageBuilder builder=new ImageBuilder();
+  builder.providerId(from.getId());
+  builder.id(from.getRegion() + "/" + from.getId());
+  builder.description(from.getDescription() != null ? from.getDescription() : from.getImageLocation());
+  builder.userMetadata(ImmutableMap.<String,String>of("owner",from.getImageOwnerId(),"rootDeviceType",from.getRootDeviceType().toString()));
+  OperatingSystemBuilder osBuilder=new OperatingSystemBuilder();
+  osBuilder.is64Bit(from.getArchitecture() == Architecture.X86_64);
+  OsFamily family=parseOsFamilyOrUnrecognized(provider,from.getImageLocation());
+  osBuilder.family(family);
+  osBuilder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(family,from.getImageLocation(),osVersionMap));
+  osBuilder.description(from.getImageLocation());
+  osBuilder.arch(from.getVirtualizationType());
+  reviseParsedImage.reviseParsedImage(from,builder,family,osBuilder);
+  builder.defaultCredentials(credentialProvider.execute(from));
+  try {
+    builder.location(Iterables.find(locations.get(),new Predicate<Location>(){
+      @Override public boolean apply(      Location input){
+        return input.getId().equals(from.getRegion());
+      }
+    }
+));
+  }
+ catch (  NoSuchElementException e) {
+    System.err.printf("unknown region %s for image %s; not in %s",from.getRegion(),from.getId(),locations);
+    builder.location(new LocationImpl(LocationScope.REGION,from.getRegion(),from.getRegion(),defaultLocation.get().getParent()));
+  }
+  builder.operatingSystem(osBuilder.build());
+  return builder.build();
+}

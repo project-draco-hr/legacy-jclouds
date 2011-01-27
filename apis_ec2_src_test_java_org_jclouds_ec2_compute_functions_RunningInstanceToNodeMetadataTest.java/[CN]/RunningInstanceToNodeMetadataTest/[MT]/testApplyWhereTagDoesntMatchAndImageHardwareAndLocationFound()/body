@@ -1,5 +1,5 @@
 {
-  RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.of(m1_small().build()),ImmutableSet.of(provider),ImageParserTest.convertImages("/nova_images.xml"),ImmutableMap.<String,Credentials>of());
+  RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.of(m1_small().build()),ImmutableSet.of(provider),EC2ImageParserTest.convertImages("/amzn_images.xml"),ImmutableMap.<String,Credentials>of());
   RunningInstance server=firstInstanceFromResource("/describe_instances_nova.xml");
-  assertEquals(parser.apply(server),new NodeMetadataBuilder().state(NodeState.TERMINATED).privateAddresses(ImmutableSet.of("10.128.207.5")).tag("NOTAG#i-9slweygo").imageId("us-east-1/ami-25CB1213").hardware(m1_small().build()).operatingSystem(new OperatingSystemBuilder().family(OsFamily.UBUNTU).version("9.10").arch("paravirtual").description("nebula/ubuntu-karmic").is64Bit(true).build()).id("us-east-1/i-9slweygo").providerId("i-9slweygo").location(provider).build());
+  assertEquals(parser.apply(server),new NodeMetadataBuilder().state(NodeState.TERMINATED).privateAddresses(ImmutableSet.of("10.128.207.5")).tag("NOTAG#i-9slweygo").imageId("us-east-1/ami-82e4b5c7").hardware(m1_small().build()).operatingSystem(new OperatingSystemBuilder().family(OsFamily.UNRECOGNIZED).version("").arch("paravirtual").description("137112412989/amzn-ami-0.9.7-beta.i386-ebs").is64Bit(false).build()).id("us-east-1/i-9slweygo").providerId("i-9slweygo").location(provider).build());
 }
