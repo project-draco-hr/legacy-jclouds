@@ -4,12 +4,25 @@
   builder.name(from.getName());
   builder.location(location.get());
   builder.tag(from.getGroup());
-  builder.operatingSystem(new OperatingSystemBuilder().arch(from.getOsArch()).family(OsFamily.fromValue(from.getOsFamily())).name(from.getOsName()).version(from.getOsVersion()).description(from.getDescription()).build());
+  builder.operatingSystem(new OperatingSystemBuilder().arch(from.getOsArch()).family(OsFamily.fromValue(from.getOsFamily())).name(from.getOsName()).description(from.getOsName()).version(from.getOsVersion()).build());
   builder.state(NodeState.RUNNING);
   builder.publicAddresses(ImmutableSet.<String>of(from.getHostname()));
-  Credentials creds=new Credentials(from.getUsername(),new String(CryptoStreams.base64(from.getCredential()),Charsets.UTF_8));
-  builder.credentials(creds);
+  if (from.getUsername() != null) {
+    Credentials creds=null;
+    if (from.getCredentialUrl() != null) {
+      try {
+        creds=new Credentials(from.getUsername(),Strings2.toStringAndClose(slurp.apply(from.getCredentialUrl())));
+      }
+ catch (      IOException e) {
+        logger.error(e,"URI could not be read: %s",from.getCredentialUrl());
+      }
+    }
+ else     if (from.getCredential() != null) {
+      creds=new Credentials(from.getUsername(),new String(CryptoStreams.base64(from.getCredential()),Charsets.UTF_8));
+    }
+    if (creds != null)     builder.credentials(creds);
+    credentialStore.put("node#" + from.getId(),creds);
+  }
   if (from.getSudoPassword() != null)   builder.adminPassword(new String(CryptoStreams.base64(from.getSudoPassword()),Charsets.UTF_8));
-  credentialStore.put("node#" + from.getId(),creds);
   return builder.build();
 }

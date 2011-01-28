@@ -3,8 +3,7 @@
   StringBuilder nodes=new StringBuilder();
   nodes.append("nodes:\n");
   nodes.append("    - id: mymachine\n");
-  nodes.append("      name: mymachine\n");
-  nodes.append("      description: my local machine\n");
+  nodes.append("      name: my local machine\n");
   nodes.append("      hostname: localhost\n");
   nodes.append("      os_arch: ").append(System.getProperty("os.arch")).append("\n");
   nodes.append("      os_family: ").append(OsFamily.UNIX).append("\n");
@@ -14,7 +13,7 @@
   nodes.append("      tags:\n");
   nodes.append("          - local\n");
   nodes.append("      username: ").append(System.getProperty("user.name")).append("\n");
-  nodes.append("      credential: ").append(base64(ComputeTestUtils.setupKeyPair().get("private").getBytes())).append("\n");
+  nodes.append("      credential_url: file://").append(System.getProperty("user.home")).append("/.ssh/id_rsa").append("\n");
   contextProperties.setProperty("byon.nodes",nodes.toString());
   context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new JschSshClientModule(),new Log4JLoggingModule()),contextProperties);
 }
