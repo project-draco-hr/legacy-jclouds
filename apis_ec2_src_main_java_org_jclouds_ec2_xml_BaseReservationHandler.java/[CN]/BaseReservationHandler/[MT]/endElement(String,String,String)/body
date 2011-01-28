@@ -1,5 +1,12 @@
 {
-  if (qName.equals("groupId")) {
+  if (qName.equals("item")) {
+    inItem();
+    itemDepth--;
+  }
+ else   if (qName.equals("instancesSet")) {
+    inInstancesSet=false;
+  }
+ else   if (qName.equals("groupId")) {
     groupIds.add(currentOrNull());
   }
  else   if (qName.equals("ownerId")) {
@@ -12,105 +19,66 @@
     reservationId=currentOrNull();
   }
  else   if (qName.equals("amiLaunchIndex")) {
-    amiLaunchIndex=currentOrNull();
+    builder.amiLaunchIndex(currentOrNull());
   }
  else   if (qName.equals("dnsName")) {
-    dnsName=currentOrNull();
-    if ("0.0.0.0".equals(dnsName))     dnsName=null;
+    String dnsName=currentOrNull();
+    if (!"0.0.0.0".equals(dnsName))     builder.dnsName(dnsName);
   }
  else   if (qName.equals("imageId")) {
-    imageId=currentOrNull();
+    builder.imageId(currentOrNull());
   }
  else   if (qName.equals("instanceId")) {
-    instanceId=currentOrNull();
+    builder.instanceId(currentOrNull());
   }
  else   if (qName.equals("name")) {
-    String state=currentOrNull();
-    if (state != null) {
-      if ("shutdown".equalsIgnoreCase(state))       instanceState=InstanceState.TERMINATED;
- else       instanceState=InstanceState.fromValue(state);
-    }
+    builder.instanceState(InstanceState.fromValue(currentOrNull()));
   }
  else   if (qName.equals("instanceType")) {
-    instanceType=currentOrNull();
+    builder.instanceType(currentOrNull());
   }
  else   if (qName.equals("ipAddress")) {
-    ipAddress=currentOrNull();
+    builder.ipAddress(currentOrNull());
   }
  else   if (qName.equals("kernelId")) {
-    kernelId=currentOrNull();
+    builder.kernelId(currentOrNull());
   }
  else   if (qName.equals("keyName")) {
-    keyName=currentOrNull();
+    builder.keyName(currentOrNull());
   }
  else   if (qName.equals("launchTime")) {
-    try {
-      launchTime=dateService.iso8601DateParse(currentOrNull());
-    }
- catch (    RuntimeException e) {
-      launchTime=dateService.iso8601SecondsDateParse(currentOrNull());
-    }
-  }
- else   if (qName.equals("state") && inMonitoring) {
-    monitoringState=MonitoringState.fromValue(currentOrNull());
+    builder.launchTime(parseDate());
   }
  else   if (qName.equals("availabilityZone")) {
-    availabilityZone=currentOrNull();
-  }
- else   if (qName.equals("groupName")) {
-    placementGroup=currentOrNull();
+    builder.availabilityZone(currentOrNull());
   }
  else   if (qName.equals("virtualizationType")) {
-    virtualizationType=currentOrNull();
+    builder.virtualizationType(currentOrNull());
   }
  else   if (qName.equals("platform")) {
-    platform=currentOrNull();
+    builder.platform(currentOrNull());
   }
  else   if (qName.equals("privateDnsName")) {
-    privateDnsName=currentOrNull();
-    if ("0.0.0.0".equals(privateDnsName))     privateDnsName=null;
+    String privateDnsName=currentOrNull();
+    if (!"0.0.0.0".equals(privateDnsName))     builder.privateDnsName(privateDnsName);
   }
  else   if (qName.equals("privateIpAddress")) {
-    privateIpAddress=currentOrNull();
+    builder.privateIpAddress(currentOrNull());
   }
  else   if (qName.equals("ramdiskId")) {
-    ramdiskId=currentOrNull();
+    builder.ramdiskId(currentOrNull());
   }
  else   if (qName.equals("reason")) {
-    reason=currentOrNull();
+    builder.reason(currentOrNull());
   }
- else   if (qName.equals("subnetId")) {
-    subnetId=currentOrNull();
+ else   if (qName.equals("rootDeviceType")) {
+    builder.rootDeviceType(RootDeviceType.fromValue(currentOrNull()));
   }
- else   if (qName.equals("spotInstanceRequestId")) {
-    spotInstanceRequestId=currentOrNull();
-  }
- else   if (qName.equals("vpcId")) {
-    vpcId=currentOrNull();
-  }
- else   if (qName.equals("productCode")) {
-    productCodes.add(currentOrNull());
-  }
- else   if (qName.equals("productCodesSet")) {
-    inProductCodes=false;
-  }
- else   if (qName.equals("instancesSet")) {
-    inInstances=false;
-  }
- else   if (qName.equals("groupSet")) {
-    inGroups=false;
-  }
- else   if (qName.equals("monitoring")) {
-    inMonitoring=false;
-  }
- else   if (qName.equals("blockDeviceMapping")) {
-    inBlockDeviceMapping=false;
+ else   if (qName.equals("rootDeviceName")) {
+    builder.rootDeviceName(currentOrNull());
   }
  else   if (qName.equals("deviceName")) {
     deviceName=currentOrNull();
-  }
- else   if (qName.equals("rootDeviceType")) {
-    rootDeviceType=RootDeviceType.fromValue(currentOrNull());
   }
  else   if (qName.equals("volumeId")) {
     volumeId=currentOrNull();
@@ -124,11 +92,13 @@
  else   if (qName.equals("deleteOnTermination")) {
     deleteOnTermination=Boolean.parseBoolean(currentText.toString().trim());
   }
- else   if (qName.equals("rootDeviceName")) {
-    rootDeviceName=currentOrNull();
-  }
- else   if (qName.equals("item")) {
-    inItem();
+ else   if (qName.equals("ebs")) {
+    builder.device(deviceName,new BlockDevice(volumeId,attachmentStatus,attachTime,deleteOnTermination));
+    this.deviceName=null;
+    this.volumeId=null;
+    this.attachmentStatus=null;
+    this.attachTime=null;
+    this.deleteOnTermination=true;
   }
   currentText=new StringBuilder();
 }

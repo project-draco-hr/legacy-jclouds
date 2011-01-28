@@ -1,0 +1,10 @@
+{
+  AWSRunInstancesOptions options=new AWSRunInstancesOptions();
+  BlockDeviceMapping mapping=new BlockDeviceMapping("/dev/sda1",null,null,120,null,true);
+  Set<BlockDeviceMapping> mappings=new HashSet<BlockDeviceMapping>();
+  mappings.add(mapping);
+  options.withBlockDeviceMappings(mappings);
+  assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.DeviceName"),Collections.singletonList("/dev/sda1"));
+  assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.VolumeSize"),Collections.singletonList("120"));
+  assertEquals(options.buildFormParameters().get("BlockDeviceMapping.1.Ebs.DeleteOnTermination"),Collections.singletonList("true"));
+}

@@ -1,0 +1,11 @@
+{
+  Method method=AWSAMIAsyncClient.class.getMethod("createImageInRegion",String.class,String.class,String.class,Array.newInstance(CreateImageOptions.class,0).getClass());
+  HttpRequest request=processor.createRequest(method,null,"name","instanceId");
+  assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2010-06-15&Action=CreateImage&InstanceId=instanceId&Name=name","application/x-www-form-urlencoded",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,ImageIdHandler.class);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

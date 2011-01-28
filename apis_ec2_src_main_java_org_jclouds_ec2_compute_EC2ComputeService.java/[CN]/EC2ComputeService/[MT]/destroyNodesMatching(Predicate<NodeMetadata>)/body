@@ -5,9 +5,7 @@
     if (nodeMetadata.getTag() != null)     regionTags.put(AWSUtils.parseHandle(nodeMetadata.getId())[0],nodeMetadata.getTag());
   }
   for (  Entry<String,String> regionTag : regionTags.entrySet()) {
-    deleteKeyPair(regionTag.getKey(),regionTag.getValue());
-    deleteSecurityGroup(regionTag.getKey(),regionTag.getValue());
-    deletePlacementGroup(regionTag.getKey(),regionTag.getValue());
+    cleanUpIncidentalResources(regionTag);
   }
   return deadOnes;
 }

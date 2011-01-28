@@ -1,7 +1,7 @@
 {
-  Iterable<Set<? extends Reservation<? extends RunningInstance>>> reservations=transformParallel(regions,new Function<String,Future<Set<? extends Reservation<? extends RunningInstance>>>>(){
-    @Override public Future<Set<? extends Reservation<? extends RunningInstance>>> apply(    String from){
-      return client.getInstanceServices().describeInstancesInRegion(from);
+  Iterable<? extends Set<? extends Reservation<? extends RunningInstance>>> reservations=transformParallel(regions,new Function<String,Future<Set<? extends Reservation<? extends RunningInstance>>>>(){
+    @SuppressWarnings("unchecked") @Override public Future<Set<? extends Reservation<? extends RunningInstance>>> apply(    String from){
+      return (Future<Set<? extends Reservation<? extends RunningInstance>>>)client.getInstanceServices().describeInstancesInRegion(from);
     }
   }
 ,executor,null,logger,"reservations");
