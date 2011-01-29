@@ -18,11 +18,11 @@
       }
     }
  else     if (from.getCredential() != null) {
-      creds=new Credentials(from.getUsername(),new String(CryptoStreams.base64(from.getCredential()),Charsets.UTF_8));
+      creds=new Credentials(from.getUsername(),from.getCredential());
     }
     if (creds != null)     builder.credentials(creds);
     credentialStore.put("node#" + from.getId(),creds);
   }
-  if (from.getSudoPassword() != null)   builder.adminPassword(new String(CryptoStreams.base64(from.getSudoPassword()),Charsets.UTF_8));
+  if (from.getSudoPassword() != null)   builder.adminPassword(from.getSudoPassword());
   return builder.build();
 }
