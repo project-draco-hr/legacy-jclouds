@@ -4,6 +4,7 @@
     String content=parseErrorFromContentOrNull(command,response);
     if (content != null)     exception=new HttpResponseException(command,response,content);
     if (response.getMessage() != null && ((response.getMessage().indexOf("because there is a pending task running") != -1) || (response.getMessage().indexOf("because it is already powered off") != -1) || (response.getMessage().indexOf("exists") != -1)))     exception=new IllegalStateException(response.getMessage(),exception);
+ else     if (response.getMessage() != null && ((response.getMessage().indexOf("There are no additional Public IPs available") != -1)))     exception=new InsufficientResourcesException(response.getMessage(),exception);
  else switch (response.getStatusCode()) {
 case 400:
       exception=new IllegalArgumentException(response.getMessage(),exception);

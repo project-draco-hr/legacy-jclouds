@@ -5,21 +5,16 @@
   try {
     ip=client.activatePublicIpInVDC(vApp.getVDC().getHref());
   }
- catch (  HttpResponseException e) {
-    if (e.getResponse().getStatusCode() == 500) {
-      logger.warn(">> no more ip addresses available, looking for one to re-use");
-      for (      PublicIpAddress existingIp : client.getPublicIpsAssociatedWithVDC(vApp.getVDC().getHref())) {
-        Set<InternetService> services=client.getInternetServicesOnPublicIp(existingIp.getId());
-        if (services.size() == 0) {
-          ip=existingIp;
-          break;
-        }
+ catch (  InsufficientResourcesException e) {
+    logger.warn(">> no more ip addresses available, looking for one to re-use");
+    for (    PublicIpAddress existingIp : client.getPublicIpsAssociatedWithVDC(vApp.getVDC().getHref())) {
+      Set<InternetService> services=client.getInternetServicesOnPublicIp(existingIp.getId());
+      if (services.size() == 0) {
+        ip=existingIp;
+        break;
       }
-      if (ip == null)       throw e;
     }
- else {
-      throw e;
-    }
+    if (ip == null)     throw e;
   }
   is=client.addInternetServiceToExistingIp(ip.getId(),vApp.getName() + "-" + port,protocol,port,withDescription(String.format("port %d access to serverId: %s name: %s",port,vApp.getName(),vApp.getName())));
   Map<InternetService,PublicIpAddress> result=ImmutableMap.<InternetService,PublicIpAddress>of(is,ip);
