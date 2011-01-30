@@ -6,7 +6,7 @@
     validateContent(containerName,sourceKey);
     getApi().copyObject(containerName,sourceKey,destinationContainer,destinationKey,overrideAcl(CannedAccessPolicy.PUBLIC_READ));
     validateContent(destinationContainer,destinationKey);
-    URL url=new URL(String.format("http://%1$s.s3.amazonaws.com/%2$s",destinationContainer,destinationKey));
+    URL url=getObjectURL(destinationContainer,destinationKey);
     Strings2.toStringAndClose(url.openStream());
   }
   finally {
