@@ -5,7 +5,7 @@
   builder.name(from.getName());
   builder.location(findLocationForResource.apply(checkNotNull(parent,"parent")));
   builder.description(from.getDescription() != null ? from.getDescription() : from.getName());
-  builder.operatingSystem(parseOs(from));
+  builder.operatingSystem(osParser.apply(from.getName()));
   builder.defaultCredentials(credentialsProvider.execute(from));
   return builder.build();
 }

@@ -1,0 +1,12 @@
+{
+  OperatingSystemBuilder builder=new OperatingSystemBuilder();
+  OsFamily osFamily=parseOsFamilyOrUnrecognized(checkNotNull(from,"vapp template name"));
+  builder.family(osFamily);
+  builder.description(from);
+  builder.is64Bit(from.indexOf("64") != -1);
+  Matcher matcher=OS_PATTERN.matcher(from);
+  if (matcher.find()) {
+    builder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(3),osVersionMap));
+  }
+  return builder.build();
+}

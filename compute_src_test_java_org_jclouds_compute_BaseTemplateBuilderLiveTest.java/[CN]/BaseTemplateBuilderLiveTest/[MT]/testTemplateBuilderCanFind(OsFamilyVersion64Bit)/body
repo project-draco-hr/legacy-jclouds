@@ -1,6 +1,8 @@
 {
-  Template template=context.getComputeService().templateBuilder().osFamily(matrix.family).osVersionMatches("^" + matrix.version + "$").os64Bit(matrix.is64Bit).build();
-  assertEquals(template.getImage().getOperatingSystem().getVersion(),matrix.version);
+  TemplateBuilder builder=context.getComputeService().templateBuilder().osFamily(matrix.family).os64Bit(matrix.is64Bit);
+  if (!matrix.version.equals(""))   builder.osVersionMatches("^" + matrix.version + "$");
+  Template template=builder.build();
+  if (!matrix.version.equals(""))   assertEquals(template.getImage().getOperatingSystem().getVersion(),matrix.version);
   assertEquals(template.getImage().getOperatingSystem().is64Bit(),matrix.is64Bit);
   assertEquals(template.getImage().getOperatingSystem().getFamily(),matrix.family);
 }
