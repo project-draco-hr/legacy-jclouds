@@ -1,0 +1,20 @@
+{
+  checkNotNull(from,"vapp template name");
+  OperatingSystemBuilder builder=new OperatingSystemBuilder();
+  builder.description(from);
+  if (from.equals("-Windows 2003 Std. R2 SQL 2005 Std. (x64)"))   System.out.print(';');
+  builder.is64Bit(from.indexOf("64") != -1);
+  from=from.replace("Red Hat Enterprise Linux","RHEL").replace("Sun Solaris","SOLARIS").replace(" Server","").replace("Std. ","");
+  Matcher matcher=OS_PATTERN.matcher(from);
+  if (matcher.find()) {
+    OsFamily osFamily=parseOsFamilyOrUnrecognized(matcher.group(1));
+    builder.family(osFamily);
+    String version=(matcher.group(3) != null) ? matcher.group(2) + matcher.group(3) : matcher.group(2);
+    builder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,version,osVersionMap));
+  }
+ else {
+    OsFamily osFamily=parseOsFamilyOrUnrecognized(from);
+    builder.family(osFamily);
+  }
+  return builder.build();
+}
