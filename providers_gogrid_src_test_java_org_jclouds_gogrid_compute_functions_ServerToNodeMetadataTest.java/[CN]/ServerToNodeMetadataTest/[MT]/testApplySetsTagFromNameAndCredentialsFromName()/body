@@ -12,7 +12,7 @@
   expect(server.getName()).andReturn("tag-ff").atLeastOnce();
   expect(server.getState()).andReturn(ServerState.ON).atLeastOnce();
   expect(serverStateToNodeState.get(ServerState.ON)).andReturn(NodeState.RUNNING);
-  LocationImpl location=new LocationImpl(LocationScope.ZONE,"1","US-West-1",null);
+  Location location=new LocationBuilder().scope(LocationScope.ZONE).id("1").description("US-West-1").build();
   Map<String,? extends Location> locations=ImmutableMap.<String,Location>of("1",location);
   Map<String,Credentials> credentialsMap=createMock(Map.class);
   expect(client.getServerCredentialsList()).andReturn(credentialsMap);

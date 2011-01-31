@@ -1,10 +1,6 @@
 {
   install(new BlobStoreMapModule());
-  bind(new TypeLiteral<Supplier<Location>>(){
-  }
-).to(new TypeLiteral<OnlyLocationOrFirstZoneOrRegionMatchingRegionId>(){
-  }
-);
+  install(new RegionsLocationModule());
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
   bind(AsyncBlobStore.class).to(S3AsyncBlobStore.class).in(Scopes.SINGLETON);
   bind(BlobStore.class).to(S3BlobStore.class).in(Scopes.SINGLETON);

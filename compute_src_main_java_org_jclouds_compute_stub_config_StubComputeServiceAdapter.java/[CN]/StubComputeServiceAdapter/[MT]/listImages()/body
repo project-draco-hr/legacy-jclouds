@@ -1,13 +1,11 @@
 {
-  Location zone=location.get().getParent();
-  String parentId=zone.getId();
   Credentials defaultCredentials=new Credentials("root",null);
   Set<Image> images=Sets.newLinkedHashSet();
   int id=1;
   for (  boolean is64Bit : new boolean[]{true,false})   for (  Entry<OsFamily,Map<String,String>> osVersions : this.osToVersionMap.entrySet()) {
-    for (    String version : Sets.newHashSet(osVersions.getValue().values())) {
+    for (    String version : Sets.newLinkedHashSet(osVersions.getValue().values())) {
       String desc=String.format("stub %s %s",osVersions.getKey(),is64Bit);
-      images.add(new ImageBuilder().providerId(id + "").name(osVersions.getKey().name()).id(parentId + "/" + id++).location(zone).operatingSystem(new OperatingSystem(osVersions.getKey(),desc,version,null,desc,is64Bit)).description(desc).defaultCredentials(defaultCredentials).build());
+      images.add(new ImageBuilder().ids(id++ + "").name(osVersions.getKey().name()).location(location.get()).operatingSystem(new OperatingSystem(osVersions.getKey(),desc,version,null,desc,is64Bit)).description(desc).defaultCredentials(defaultCredentials).build());
     }
   }
   return images;

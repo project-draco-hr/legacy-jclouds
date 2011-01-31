@@ -1,0 +1,16 @@
+{
+  Builder<String,Set<String>> codes=ImmutableMap.<String,Set<String>>builder();
+  for (  String key : ImmutableSet.of(PROPERTY_REGION,PROPERTY_ZONE))   try {
+    String regionString=injector.getInstance(Key.get(String.class,named(key + "s")));
+    for (    String region : Splitter.on(',').split(regionString)) {
+      try {
+        codes.put(region,ImmutableSet.copyOf(Splitter.on(',').split(injector.getInstance(Key.get(String.class,named(key + "." + region+ "."+ ISO3166_CODES))))));
+      }
+ catch (      ConfigurationException e) {
+      }
+    }
+  }
+ catch (  ConfigurationException e) {
+  }
+  return codes.build();
+}

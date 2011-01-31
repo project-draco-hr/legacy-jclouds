@@ -1,7 +1,11 @@
 {
   Set<? extends Location> locations=locationsSupplier.get();
   if (locationsSupplier.get().size() == 1)   return getOnlyElement(locationsSupplier.get());
+  IsRegionAndIdEqualsOrIsZoneParentIdEquals matcher=null;
   try {
+    String region=injector.getInstance(Key.get(String.class,Region.class));
+    if (region == null)     return Iterables.get(locationsSupplier.get(),0);
+    matcher=injector.getInstance(IsRegionAndIdEqualsOrIsZoneParentIdEquals.class);
     Location toReturn=Iterables.find(locations,matcher);
     return toReturn.getScope() == LocationScope.REGION ? toReturn : toReturn.getParent();
   }
