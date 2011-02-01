@@ -3,10 +3,10 @@
     credentialStore.remove("node#" + node.getId());
     credentialStore.remove("node#" + node.getId() + "#adminPassword");
   }
-  Iterable<OrgAndName> orgTags=filter(transform(deadOnes,nodeToOrgAndName),notNull());
-  for (  OrgAndName orgTag : orgTags) {
-    Iterable<? extends NodeMetadata> nodesInOrg=listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg().toASCIIString()));
-    Iterable<? extends NodeMetadata> nodesWithTag=filter(nodesInOrg,withTag(orgTag.getName()));
-    if (size(nodesWithTag) == 0 || all(nodesWithTag,TERMINATED))     deleteKeyPair.execute(orgTag);
+  Iterable<OrgAndName> orgGroups=filter(transform(deadOnes,nodeToOrgAndName),notNull());
+  for (  OrgAndName orgGroup : orgGroups) {
+    Iterable<? extends NodeMetadata> nodesInOrg=listNodes.listDetailsOnNodesMatching(parentLocationId(orgGroup.getOrg().toASCIIString()));
+    Iterable<? extends NodeMetadata> nodesInGroup=filter(nodesInOrg,inGroup(orgGroup.getName()));
+    if (size(nodesInGroup) == 0 || all(nodesInGroup,TERMINATED))     deleteKeyPair.execute(orgGroup);
   }
 }

@@ -1,15 +1,15 @@
 {
-  Preconditions2.checkNotEmpty(tag,"tag");
-  String group=String.format("jclouds#%s#%s",tag,region);
-  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,group).size() > 0) {
-    logger.debug(">> deleting securityGroup(%s)",group);
+  Preconditions2.checkNotEmpty(group,"group");
+  String groupName=String.format("jclouds#%s#%s",group,region);
+  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,groupName).size() > 0) {
+    logger.debug(">> deleting securityGroup(%s)",groupName);
     try {
-      ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,group);
-      securityGroupMap.remove(new RegionNameAndIngressRules(region,group,null,false));
-      logger.debug("<< deleted securityGroup(%s)",group);
+      ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,groupName);
+      securityGroupMap.remove(new RegionNameAndIngressRules(region,groupName,null,false));
+      logger.debug("<< deleted securityGroup(%s)",groupName);
     }
  catch (    IllegalStateException e) {
-      logger.debug("<< inUse securityGroup(%s)",group);
+      logger.debug("<< inUse securityGroup(%s)",groupName);
     }
   }
 }
