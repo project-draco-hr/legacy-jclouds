@@ -1,0 +1,17 @@
+{
+  if (from.size() == 0)   return null;
+  if (from.size() == 0)   return null;
+  StaticIPInfo.Builder builder=new StaticIPInfo.Builder();
+  builder.ip(from.get("resource"));
+  builder.user(from.get("user"));
+  builder.netmask(from.get("netmask"));
+  builder.nameservers(Splitter.on(' ').split(from.get("nameserver")));
+  builder.gateway(from.get("gateway"));
+  try {
+    return builder.build();
+  }
+ catch (  NullPointerException e) {
+    logger.trace("entry missing data: %s; %s",e.getMessage(),from);
+    return null;
+  }
+}

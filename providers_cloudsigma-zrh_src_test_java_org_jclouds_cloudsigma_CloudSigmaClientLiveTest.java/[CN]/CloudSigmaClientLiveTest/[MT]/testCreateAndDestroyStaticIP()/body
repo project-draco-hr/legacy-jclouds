@@ -1,0 +1,19 @@
+{
+  StaticIPInfo ip=client.createStaticIP();
+  String id=ip.getAddress();
+  try {
+    ip=client.getStaticIPInfo(ip.getAddress());
+    assertNotNull(ip);
+    Logger.getAnonymousLogger().info("preparing drive");
+    prepareDrive();
+    Server serverRequest=Servers.smallWithStaticIP(prefix,drive.getUuid(),vncPassword,ip.getAddress()).build();
+    Logger.getAnonymousLogger().info("starting server");
+    server=client.createServer(serverRequest);
+    assertEquals(server.getNics().get(0).getDhcp(),ip.getAddress());
+  }
+  finally {
+    client.destroyServer(server.getUuid());
+    client.destroyDrive(drive.getUuid());
+    client.destroyStaticIP(id);
+  }
+}

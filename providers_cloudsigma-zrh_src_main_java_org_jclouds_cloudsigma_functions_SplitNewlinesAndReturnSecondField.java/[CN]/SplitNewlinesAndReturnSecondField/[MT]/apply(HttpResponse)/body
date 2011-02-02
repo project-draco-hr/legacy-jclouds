@@ -1,0 +1,12 @@
+{
+  return ImmutableSet.copyOf(Iterables.filter(Iterables.transform(super.apply(response),new Function<String,String>(){
+    @Override public String apply(    String arg0){
+      if (arg0 == null)       return null;
+      Iterable<String> parts=Splitter.on(' ').split(arg0);
+      if (Iterables.size(parts) == 2)       return Iterables.get(parts,1);
+ else       if (Iterables.size(parts) == 1)       return Iterables.get(parts,0);
+      return null;
+    }
+  }
+),Predicates.notNull()));
+}
