@@ -27,8 +27,15 @@
         returnVal=method.getGenericReturnType();
       }
       ParameterizedType parserType;
-      if (method.isAnnotationPresent(Unwrap.class))       parserType=Types.newParameterizedType(UnwrapOnlyJsonValue.class,returnVal);
- else       parserType=Types.newParameterizedType(ParseJson.class,returnVal);
+      if (method.isAnnotationPresent(Unwrap.class)) {
+        int nestingLevel=method.getAnnotation(Unwrap.class).depth();
+        if (nestingLevel == 1)         parserType=Types.newParameterizedType(UnwrapOnlyJsonValue.class,returnVal);
+ else         if (nestingLevel == 2)         parserType=Types.newParameterizedType(UnwrapOnlyNestedJsonValue.class,returnVal);
+ else         throw new IllegalStateException("nesting level " + nestingLevel + " not yet supported for @Unwrap");
+      }
+ else {
+        parserType=Types.newParameterizedType(ParseJson.class,returnVal);
+      }
       return (Key<? extends Function<HttpResponse,?>>)Key.get(parserType);
     }
  else     if (method.getReturnType().equals(String.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureStringLiteral)) {
