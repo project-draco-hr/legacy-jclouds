@@ -1,0 +1,8 @@
+{
+  utils.logRequest(signatureLog,request,">>");
+  Builder<String,String> builder=ImmutableMultimap.<String,String>builder();
+  for (  String key : ImmutableSortedSet.copyOf(decodedParams.keySet()))   builder.put(key.toLowerCase(),Iterables.getOnlyElement(decodedParams.get(key)).toLowerCase());
+  String stringToSign=ModifyRequest.makeQueryLine(builder.build(),null);
+  if (signatureWire.enabled())   signatureWire.output(stringToSign);
+  return stringToSign;
+}
