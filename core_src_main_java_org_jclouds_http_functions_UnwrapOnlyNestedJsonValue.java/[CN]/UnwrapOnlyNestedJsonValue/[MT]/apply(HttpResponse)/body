@@ -2,6 +2,11 @@
   Map<String,Map<String,T>> map=json.apply(arg0);
   if (map == null || map.size() == 0)   return null;
   Map<String,T> map1=Iterables.getOnlyElement(map.values());
-  if (map1 == null || map1.size() == 0)   return null;
+  if (map1 == null || map1.size() == 0) {
+    if (type.getRawType().isAssignableFrom(Set.class))     return (T)ImmutableSet.of();
+ else     if (type.getRawType().isAssignableFrom(List.class))     return (T)ImmutableList.of();
+ else     if (type.getRawType().isAssignableFrom(Map.class))     return (T)ImmutableMap.of();
+    return null;
+  }
   return Iterables.getOnlyElement(map1.values());
 }

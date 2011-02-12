@@ -4,4 +4,5 @@
   assertResponseParserClassEquals(method,request,UnwrapOnlyNestedJsonValueInSet.class);
   Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
   assertEquals(parser.apply(new HttpResponse(200,"ok",newStringPayload("{\"runit\":{\"runit\":[]}}"))),null);
+  assertEquals(parser.apply(new HttpResponse(200,"ok",newStringPayload("{\"runit\":{}}"))),null);
 }
