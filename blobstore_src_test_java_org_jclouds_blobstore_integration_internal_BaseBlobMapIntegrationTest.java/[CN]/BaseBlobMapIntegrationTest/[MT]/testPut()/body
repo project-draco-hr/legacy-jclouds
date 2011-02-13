@@ -2,9 +2,7 @@
   String bucketName=getContainerName();
   try {
     Map<String,Blob> map=createMap(context,bucketName);
-    Blob blob=context.getBlobStore().newBlob("one");
-    blob.setPayload(Strings2.toInputStream("apple"));
-    Payloads.calculateMD5(blob);
+    Blob blob=context.getBlobStore().blobBuilder("one").payload(Strings2.toInputStream("apple")).calculateMD5().build();
     Blob old=map.put(blob.getMetadata().getName(),blob);
     getOneReturnsAppleAndOldValueIsNull(map,old);
     blob.setPayload(Strings2.toInputStream("bear"));

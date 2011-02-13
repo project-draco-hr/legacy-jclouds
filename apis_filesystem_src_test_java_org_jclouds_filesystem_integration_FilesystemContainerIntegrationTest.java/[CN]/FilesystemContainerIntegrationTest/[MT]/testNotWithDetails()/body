@@ -1,9 +1,6 @@
 {
   String key="hello";
-  Blob object=context.getBlobStore().newBlob(key);
-  object.setPayload(TEST_STRING);
-  object.getMetadata().getContentMetadata().setContentType(MediaType.TEXT_PLAIN);
-  object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
+  Blob object=context.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).build();
   String containerName=getContainerName();
   try {
     addBlobToContainer(containerName,object);
