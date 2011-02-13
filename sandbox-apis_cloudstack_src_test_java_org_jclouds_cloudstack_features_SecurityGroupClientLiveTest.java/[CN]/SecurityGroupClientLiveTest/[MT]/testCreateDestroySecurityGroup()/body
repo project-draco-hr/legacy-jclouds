@@ -1,0 +1,14 @@
+{
+  SecurityGroup group=null;
+  try {
+    group=client.getSecurityGroupClient().createSecurityGroup(prefix);
+    assertEquals(group.getName(),prefix);
+    checkGroup(group);
+  }
+  finally {
+    if (group != null) {
+      client.getSecurityGroupClient().deleteSecurityGroup(group.getId());
+      assertEquals(client.getSecurityGroupClient().getSecurityGroup(group.getId()),null);
+    }
+  }
+}
