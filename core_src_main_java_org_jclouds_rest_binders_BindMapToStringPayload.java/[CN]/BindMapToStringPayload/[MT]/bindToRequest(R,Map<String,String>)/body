@@ -1,0 +1,7 @@
+{
+  GeneratedHttpRequest<?> r=GeneratedHttpRequest.class.cast(request);
+  UriBuilder builder=uriBuilders.get();
+  builder.path(r.getJavaMethod().getAnnotation(Payload.class).value());
+  URI fake=builder.buildFromMap(postParams);
+  return (R)request.toBuilder().payload(Payloads.newStringPayload(fake.getPath())).build();
+}
