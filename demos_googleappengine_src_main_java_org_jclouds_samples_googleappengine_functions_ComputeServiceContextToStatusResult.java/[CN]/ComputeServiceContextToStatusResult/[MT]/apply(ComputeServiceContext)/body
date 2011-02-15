@@ -1,0 +1,15 @@
+{
+  String host=in.getProviderSpecificContext().getEndpoint().getHost();
+  String status;
+  String name="not found";
+  try {
+    long start=System.currentTimeMillis();
+    name=String.format("%d nodes",in.getComputeService().listNodes().size());
+    status=((System.currentTimeMillis() - start) + "ms");
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error listing context %s",in);
+    status=(e.getMessage());
+  }
+  return new StatusResult(in.getProviderSpecificContext().getId(),host,name,status);
+}
