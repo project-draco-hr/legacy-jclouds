@@ -1,15 +1,12 @@
 {
   String key="hello";
-  Blob object=context.getBlobStore().newBlob(key);
-  object.setPayload(TEST_STRING);
-  object.getMetadata().getContentMetadata().setContentType(MediaType.TEXT_PLAIN);
-  object.getMetadata().getUserMetadata().put("Adrian","powderpuff");
+  Blob blob=context.getBlobStore().blobBuilder("hello").userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).build();
   String containerName=getContainerName();
   try {
-    addBlobToContainer(containerName,object);
+    addBlobToContainer(containerName,blob);
     validateContent(containerName,key);
     PageSet<? extends StorageMetadata> container=context.getBlobStore().list(containerName,maxResults(1));
-    BlobMetadata metadata=(BlobMetadata)Iterables.getOnlyElement(container);
+    BlobMetadata metadata=(BlobMetadata)getOnlyElement(container);
     assertEquals(metadata.getUserMetadata().size(),0);
   }
   finally {

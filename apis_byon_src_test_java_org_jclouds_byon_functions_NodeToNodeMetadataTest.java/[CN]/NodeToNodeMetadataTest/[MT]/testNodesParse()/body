@@ -1,0 +1,6 @@
+{
+  Map<String,Credentials> credentialStore=Maps.newLinkedHashMap();
+  NodeToNodeMetadata parser=new NodeToNodeMetadata(Suppliers.ofInstance(expectedLocationFromResource("location")),new SupplyFromProviderURIOrNodesProperty(URI.create("test")),credentialStore);
+  assertEquals(parser.apply(NodesFromYamlTest.TEST1),expectedNodeMetadataFromResource("location"));
+  assertEquals(credentialStore,ImmutableMap.of("node#cluster-1",new Credentials("myUser",NodesFromYamlTest.key)));
+}

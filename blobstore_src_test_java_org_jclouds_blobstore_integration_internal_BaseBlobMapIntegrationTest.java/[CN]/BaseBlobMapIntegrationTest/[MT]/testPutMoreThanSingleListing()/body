@@ -2,21 +2,19 @@
   if (maxResultsForTestListings() == 0)   return;
   String bucketName=getContainerName();
   try {
-    Map<String,Blob> map=createMap(context,bucketName);
-    Set<String> keySet=Sets.newHashSet();
+    BlobMap map=createMap(context,bucketName);
+    Builder<String> keySet=ImmutableSet.<String>builder();
     for (int i=0; i < maxResultsForTestListings() + 1; i++) {
       keySet.add(i + "");
     }
-    Map<String,Blob> newMap=new HashMap<String,Blob>();
-    for (    String key : keySet) {
-      Blob blob=context.getBlobStore().newBlob(key);
-      blob.setPayload(key);
-      newMap.put(key,blob);
+    Map<String,Blob> newMap=Maps.newLinkedHashMap();
+    for (    String key : keySet.build()) {
+      newMap.put(key,map.blobBuilder().payload(key).build());
     }
     map.putAll(newMap);
     newMap.clear();
     assertConsistencyAwareMapSize(map,maxResultsForTestListings() + 1);
-    assertConsistencyAwareKeySetEquals(map,keySet);
+    assertConsistencyAwareKeySetEquals(map,keySet.build());
     map.clear();
     assertConsistencyAwareMapSize(map,0);
   }

@@ -1,0 +1,11 @@
+{
+  S3Object object=injector.getInstance(S3Object.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(5 * 1024 * 1024* 1024l);
+  object.setPayload(payload);
+  object.getMetadata().setKey("foo");
+  object.getMetadata().getUserMetadata().putAll(ImmutableMap.of("foo","bar"));
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindGoogleStorageObjectMetadataToRequest binder=injector.getInstance(BindGoogleStorageObjectMetadataToRequest.class);
+  assertEquals(binder.bindToRequest(request,object),HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).headers(ImmutableMultimap.of("x-amz-meta-foo","bar")).build());
+}

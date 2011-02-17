@@ -9,14 +9,14 @@
   Set<? extends org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
   Server server=createMock(Server.class);
   expect(server.getId()).andReturn(1000l).atLeastOnce();
-  expect(server.getName()).andReturn("tag-ff").atLeastOnce();
+  expect(server.getName()).andReturn("group-ff").atLeastOnce();
   expect(server.getState()).andReturn(ServerState.ON).atLeastOnce();
   expect(serverStateToNodeState.get(ServerState.ON)).andReturn(NodeState.RUNNING);
-  LocationImpl location=new LocationImpl(LocationScope.ZONE,"1","US-West-1",null);
+  Location location=new LocationBuilder().scope(LocationScope.ZONE).id("1").description("US-West-1").build();
   Map<String,? extends Location> locations=ImmutableMap.<String,Location>of("1",location);
   Map<String,Credentials> credentialsMap=createMock(Map.class);
   expect(client.getServerCredentialsList()).andReturn(credentialsMap);
-  expect(credentialsMap.get("tag-ff")).andReturn(new Credentials("user","pass"));
+  expect(credentialsMap.get("group-ff")).andReturn(new Credentials("user","pass"));
   expect(server.getIp()).andReturn(new Ip("127.0.0.1"));
   ServerImage image=createMock(ServerImage.class);
   expect(server.getImage()).andReturn(image).atLeastOnce();
@@ -37,7 +37,7 @@
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImageId(),"2000");
-  assertEquals(metadata.getTag(),"tag");
+  assertEquals(metadata.getGroup(),"group");
   assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
   verify(caller);
   verify(client);

@@ -1,0 +1,19 @@
+{
+  Constructor constructor=new Constructor(Config.class);
+  TypeDescription nodeDesc=new TypeDescription(Node.class);
+  nodeDesc.putListPropertyType("tags",String.class);
+  constructor.addTypeDescription(nodeDesc);
+  TypeDescription configDesc=new TypeDescription(Config.class);
+  configDesc.putListPropertyType("nodes",Node.class);
+  constructor.addTypeDescription(configDesc);
+  Yaml yaml=new Yaml(new Loader(constructor));
+  Config config=(Config)yaml.load(source);
+  checkState(config != null,"missing config: class");
+  checkState(config.nodes != null,"missing nodes: collection");
+  return Maps.uniqueIndex(config.nodes,new Function<Node,String>(){
+    public String apply(    Node node){
+      return node.getId();
+    }
+  }
+);
+}

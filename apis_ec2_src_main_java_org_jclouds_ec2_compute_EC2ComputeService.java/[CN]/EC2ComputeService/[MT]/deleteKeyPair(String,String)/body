@@ -1,6 +1,6 @@
 {
   for (  KeyPair keyPair : ec2Client.getKeyPairServices().describeKeyPairsInRegion(region)) {
-    if (keyPair.getKeyName().matches(String.format("jclouds#%s#%s#%s",tag,region,"[0-9a-f]+"))) {
+    if (keyPair.getKeyName().matches(String.format("jclouds#%s#%s#%s",group,region,"[0-9a-f]+"))) {
       logger.debug(">> deleting keyPair(%s)",keyPair.getKeyName());
       ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,keyPair.getKeyName());
       credentialsMap.remove(new RegionAndName(region,keyPair.getKeyName()));

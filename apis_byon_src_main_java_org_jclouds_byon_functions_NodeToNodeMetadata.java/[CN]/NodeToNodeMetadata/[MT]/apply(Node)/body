@@ -1,0 +1,28 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getId());
+  builder.name(from.getName());
+  builder.location(location.get());
+  builder.group(from.getGroup());
+  builder.operatingSystem(new OperatingSystemBuilder().arch(from.getOsArch()).family(OsFamily.fromValue(from.getOsFamily())).description(from.getOsDescription()).version(from.getOsVersion()).build());
+  builder.state(NodeState.RUNNING);
+  builder.publicAddresses(ImmutableSet.<String>of(from.getHostname()));
+  if (from.getUsername() != null) {
+    Credentials creds=null;
+    if (from.getCredentialUrl() != null) {
+      try {
+        creds=new Credentials(from.getUsername(),Strings2.toStringAndClose(slurp.apply(from.getCredentialUrl())));
+      }
+ catch (      IOException e) {
+        logger.error(e,"URI could not be read: %s",from.getCredentialUrl());
+      }
+    }
+ else     if (from.getCredential() != null) {
+      creds=new Credentials(from.getUsername(),from.getCredential());
+    }
+    if (creds != null)     builder.credentials(creds);
+    credentialStore.put("node#" + from.getId(),creds);
+  }
+  if (from.getSudoPassword() != null)   builder.adminPassword(from.getSudoPassword());
+  return builder.build();
+}

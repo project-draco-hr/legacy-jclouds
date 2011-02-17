@@ -1,0 +1,11 @@
+{
+  Builder<Location> locations=ImmutableSet.builder();
+  Location provider=Iterables.getOnlyElement(super.get());
+  if (regions.size() == 0)   return locations.add(provider);
+ else   for (  String region : regions) {
+    LocationBuilder builder=new LocationBuilder().scope(LocationScope.REGION).id(region).description(region).parent(provider);
+    if (isoCodesById.containsKey(region))     builder.iso3166Codes(isoCodesById.get(region));
+    locations.add(builder.build());
+  }
+  return locations;
+}

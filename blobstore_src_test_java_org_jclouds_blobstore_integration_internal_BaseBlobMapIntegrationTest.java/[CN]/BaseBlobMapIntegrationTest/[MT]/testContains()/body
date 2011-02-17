@@ -3,9 +3,7 @@
   try {
     Map<String,Blob> map=createMap(context,bucketName);
     putStringWithMD5(map,"one","apple");
-    Blob blob=context.getBlobStore().newBlob("one");
-    blob.setPayload("apple");
-    Payloads.calculateMD5(blob);
+    Blob blob=context.getBlobStore().blobBuilder("one").payload("apple").calculateMD5().build();
     assertConsistencyAwareContainsValue(map,blob);
   }
   finally {

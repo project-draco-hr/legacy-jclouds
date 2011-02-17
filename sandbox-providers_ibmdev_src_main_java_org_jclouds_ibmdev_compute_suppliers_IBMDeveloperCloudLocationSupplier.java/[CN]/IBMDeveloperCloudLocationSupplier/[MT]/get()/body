@@ -1,8 +1,12 @@
 {
-  final Set<Location> assignableLocations=Sets.newHashSet();
-  logger.debug(">> providing locations");
-  Location parent=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
-  for (  org.jclouds.ibmdev.domain.Location location : sync.listLocations())   assignableLocations.add(new LocationImpl(LocationScope.ZONE,location.getId(),location.getName(),parent));
-  logger.debug("<< locations(%d)",assignableLocations.size());
-  return assignableLocations;
+  Builder<Location> locations=ImmutableSet.builder();
+  Set<? extends org.jclouds.ibmdev.domain.Location> list=sync.listLocations();
+  Location provider=Iterables.getOnlyElement(super.get());
+  if (list.size() == 0)   locations.add(provider);
+ else   for (  org.jclouds.ibmdev.domain.Location from : list) {
+    LocationBuilder builder=new LocationBuilder().scope(LocationScope.ZONE).id(from.getId() + "").description(from.getName()).parent(provider);
+    if (isoCodesById.containsKey(from.getId() + ""))     builder.iso3166Codes(isoCodesById.get(from.getId() + ""));
+    locations.add(builder.build());
+  }
+  return locations.build();
 }

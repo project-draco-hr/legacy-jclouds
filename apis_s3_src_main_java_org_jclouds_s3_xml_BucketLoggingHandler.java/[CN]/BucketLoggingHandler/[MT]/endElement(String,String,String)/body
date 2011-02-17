@@ -13,11 +13,11 @@
       currentGrantee=new CanonicalUserGrantee(currentId,currentDisplayName);
     }
  else     if ("Group".equals(currentGranteeType)) {
-      currentGrantee=new GroupGrantee(GroupGranteeURI.fromURI(currentId));
+      currentGrantee=new GroupGrantee(URI.create(currentId));
     }
   }
  else   if (qName.equals("Grant")) {
-    targetGrants.add(new Grant(currentGrantee,Permission.valueOf(currentPermission)));
+    targetGrants.add(new Grant(currentGrantee,currentPermission));
   }
  else   if (qName.equals("ID") || qName.equals("EmailAddress") || qName.equals("URI")) {
     currentId=currentText.toString().trim();

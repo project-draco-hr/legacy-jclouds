@@ -1,0 +1,32 @@
+{
+  String region=Region.AP_SOUTHEAST_1;
+  String tag="tag";
+  Hardware size=EC2HardwareBuilder.m1_small().build();
+  String systemGeneratedKeyPairName="systemGeneratedKeyPair";
+  String generatedGroup="group";
+  Set<String> generatedGroups=ImmutableSet.of(generatedGroup);
+  CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=createMock(CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,new Method[]{CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("getOptionsProvider"),CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("createNewKeyPairUnlessUserSpecifiedOtherwise",String.class,String.class,TemplateOptions.class),CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("createNewPlacementGroupUnlessUserSpecifiedOtherwise",String.class,String.class,TemplateOptions.class),CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod("getSecurityGroupsForTagAndOptions",String.class,String.class,TemplateOptions.class)});
+  AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
+  Template template=createMock(Template.class);
+  expect(strategy.getOptionsProvider()).andReturn(OPTIONS_PROVIDER);
+  expect(template.getHardware()).andReturn(size).atLeastOnce();
+  expect(template.getOptions()).andReturn(options).atLeastOnce();
+  expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping>of()).atLeastOnce();
+  expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options)).andReturn(systemGeneratedKeyPairName);
+  expect(strategy.getSecurityGroupsForTagAndOptions(region,tag,options)).andReturn(generatedGroups);
+  expect(options.getSubnetId()).andReturn(null);
+  expect(options.getUserData()).andReturn("hello".getBytes());
+  expect(options.isMonitoringEnabled()).andReturn(false);
+  replay(options);
+  replay(template);
+  replay(strategy);
+  RunInstancesOptions customize=strategy.execute(region,tag,template);
+  assertEquals(customize.buildQueryParameters(),ImmutableMultimap.<String,String>of());
+  assertEquals(customize.buildFormParameters().entries(),ImmutableMultimap.<String,String>of("InstanceType",size.getProviderId(),"SecurityGroup.1","group","KeyName",systemGeneratedKeyPairName,"UserData",Base64.encodeBytes("hello".getBytes())).entries());
+  assertEquals(customize.buildMatrixParameters(),ImmutableMultimap.<String,String>of());
+  assertEquals(customize.buildRequestHeaders(),ImmutableMultimap.<String,String>of());
+  assertEquals(customize.buildStringPayload(),null);
+  verify(options);
+  verify(template);
+  verify(strategy);
+}

@@ -1,0 +1,15 @@
+{
+  VLANInfo vlan=client.createVLAN(prefix);
+  String id=vlan.getUuid();
+  try {
+    vlan=client.getVLANInfo(vlan.getUuid());
+    assertEquals(vlan.getName(),prefix);
+    vlan=client.renameVLAN(vlan.getUuid(),prefix + "2");
+    assertEquals(vlan.getName(),prefix);
+    vlan=client.getVLANInfo(vlan.getUuid());
+    assertEquals(vlan.getName(),prefix);
+  }
+  finally {
+    client.destroyVLAN(id);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  Method method=CloudSigmaAsyncClient.class.getMethod("createVLAN",String.class);
+  HttpRequest httpRequest=processor.createRequest(method,"poohbear");
+  assertRequestLineEquals(httpRequest,"POST https://api.cloudsigma.com/resources/vlan/create HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
+  assertPayloadEquals(httpRequest,"name poohbear\n","text/plain",false);
+  assertResponseParserClassEquals(method,httpRequest,KeyValuesDelimitedByBlankLinesToVLANInfo.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

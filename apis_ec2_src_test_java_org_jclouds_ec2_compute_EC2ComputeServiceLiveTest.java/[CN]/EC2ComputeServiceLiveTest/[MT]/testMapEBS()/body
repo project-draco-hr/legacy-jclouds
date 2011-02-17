@@ -1,0 +1,34 @@
+{
+  InstanceClient instanceClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getInstanceServices();
+  ElasticBlockStoreClient ebsClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getElasticBlockStoreServices();
+  String group=this.group + "e";
+  int volumeSize=8;
+  Location zone=Iterables.find(context.getComputeService().listAssignableLocations(),new Predicate<Location>(){
+    @Override public boolean apply(    Location arg0){
+      return arg0.getScope() == LocationScope.ZONE;
+    }
+  }
+);
+  Volume volume=ebsClient.createVolumeInAvailabilityZone(zone.getId(),4);
+  Snapshot snapshot=ebsClient.createSnapshotInRegion(volume.getRegion(),volume.getId());
+  ebsClient.deleteVolumeInRegion(volume.getRegion(),volume.getId());
+  Template template=context.getComputeService().templateBuilder().locationId(volume.getRegion()).hardwareId(InstanceType.M1_SMALL).imageDescriptionMatches(".*ebs.*").build();
+  template.getOptions().as(EC2TemplateOptions.class).mapEphemeralDeviceToDeviceName("/dev/sdm","ephemeral0").mapNewVolumeToDeviceName("/dev/sdn",volumeSize,true).mapEBSSnapshotToDeviceName("/dev/sdo",snapshot.getId(),volumeSize,true);
+  try {
+    NodeMetadata node=Iterables.getOnlyElement(client.createNodesInGroup(group,1,template));
+    Map<String,BlockDevice> devices=instanceClient.getBlockDeviceMappingForInstanceInRegion(node.getLocation().getParent().getId(),node.getProviderId());
+    BlockDevice device=devices.get("/dev/sdn");
+    assertTrue(device.isDeleteOnTermination());
+    volume=Iterables.getOnlyElement(ebsClient.describeVolumesInRegion(node.getLocation().getParent().getId(),device.getVolumeId()));
+    assertEquals(volumeSize,volume.getSize());
+    device=devices.get("/dev/sdo");
+    assertTrue(device.isDeleteOnTermination());
+    volume=Iterables.getOnlyElement(ebsClient.describeVolumesInRegion(node.getLocation().getParent().getId(),device.getVolumeId()));
+    assertEquals(volumeSize,volume.getSize());
+    assertEquals(snapshot.getId(),volume.getSnapshotId());
+  }
+  finally {
+    client.destroyNodesMatching(NodePredicates.inGroup(group));
+    ebsClient.deleteSnapshotInRegion(snapshot.getRegion(),snapshot.getId());
+  }
+}

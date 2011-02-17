@@ -1,3 +1,5 @@
 {
-  context.getComputeService().templateBuilder().osFamily(matrix.family).osVersionMatches("^" + matrix.version + "$").os64Bit(matrix.is64Bit).build();
+  TemplateBuilder builder=context.getComputeService().templateBuilder().osFamily(matrix.family).os64Bit(matrix.is64Bit);
+  if (!matrix.version.equals(""))   builder.osVersionMatches("^" + matrix.version + "$");
+  builder.build();
 }

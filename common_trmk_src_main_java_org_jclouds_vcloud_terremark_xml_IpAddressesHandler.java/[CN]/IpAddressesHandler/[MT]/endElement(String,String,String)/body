@@ -1,12 +1,15 @@
 {
-  if (qName.equals("Name")) {
-    address=currentOrNull();
-  }
- else   if (qName.equals("Status")) {
-    status=IpAddress.Status.fromValue(currentOrNull());
-  }
- else   if (!skip && qName.equals("Server")) {
-    server=currentOrNull();
+  String current=currentOrNull();
+  if (current != null) {
+    if (qName.equals("Name")) {
+      address=current;
+    }
+ else     if (qName.equals("Status")) {
+      status=IpAddress.Status.fromValue(current);
+    }
+ else     if (!skip && qName.equals("Server")) {
+      server=current;
+    }
   }
  else   if (qName.equals("IpAddress")) {
     addresses.add(new IpAddress(address,status,server));

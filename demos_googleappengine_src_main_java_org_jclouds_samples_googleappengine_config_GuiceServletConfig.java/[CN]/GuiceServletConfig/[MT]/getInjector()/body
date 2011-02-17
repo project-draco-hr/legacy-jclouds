@@ -1,10 +1,10 @@
 {
   return Guice.createInjector(new ServletModule(){
     @Override protected void configureServlets(){
-      bind(new TypeLiteral<Map<String,BlobStoreContext>>(){
+      bind(new TypeLiteral<Iterable<BlobStoreContext>>(){
       }
 ).toInstance(GuiceServletConfig.this.blobsStoreContexts);
-      bind(new TypeLiteral<Map<String,ComputeServiceContext>>(){
+      bind(new TypeLiteral<Iterable<ComputeServiceContext>>(){
       }
 ).toInstance(GuiceServletConfig.this.computeServiceContexts);
       serve("*.check").with(GetAllStatusController.class);

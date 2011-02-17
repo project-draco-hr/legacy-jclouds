@@ -1,0 +1,11 @@
+{
+  Method method=CloudSigmaAsyncClient.class.getMethod("renameVLAN",String.class,String.class);
+  HttpRequest httpRequest=processor.createRequest(method,"100","poohbear");
+  assertRequestLineEquals(httpRequest,"POST https://api.cloudsigma.com/resources/vlan/100/set HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
+  assertPayloadEquals(httpRequest,"name poohbear\n","text/plain",false);
+  assertResponseParserClassEquals(method,httpRequest,KeyValuesDelimitedByBlankLinesToVLANInfo.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
+  checkFilters(httpRequest);
+}

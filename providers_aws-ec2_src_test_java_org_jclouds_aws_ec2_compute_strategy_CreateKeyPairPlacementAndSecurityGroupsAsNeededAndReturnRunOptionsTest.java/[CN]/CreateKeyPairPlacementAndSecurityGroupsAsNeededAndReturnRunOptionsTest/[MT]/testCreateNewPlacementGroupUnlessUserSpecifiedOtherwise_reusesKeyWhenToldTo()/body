@@ -1,0 +1,16 @@
+{
+  String region=Region.AP_SOUTHEAST_1;
+  String tag="tag";
+  String userSuppliedPlacementGroup="myPlacementGroup";
+  CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
+  AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
+  PlacementGroup placementGroup=createMock(PlacementGroup.class);
+  expect(options.getPlacementGroup()).andReturn(userSuppliedPlacementGroup);
+  replay(options);
+  replay(placementGroup);
+  replayStrategy(strategy);
+  assertEquals(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,options),userSuppliedPlacementGroup);
+  verify(options);
+  verify(placementGroup);
+  verifyStrategy(strategy);
+}

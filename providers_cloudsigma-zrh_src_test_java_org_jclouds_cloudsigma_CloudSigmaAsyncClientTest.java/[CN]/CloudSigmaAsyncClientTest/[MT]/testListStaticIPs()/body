@@ -1,0 +1,16 @@
+{
+  Method method=CloudSigmaAsyncClient.class.getMethod("listStaticIPs");
+  HttpRequest httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"GET https://api.cloudsigma.com/resources/ip/list HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  assertRequestLineEquals(httpRequest,"GET https://api.cloudsigma.com/resources/ip/list HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\nAuthorization: Basic Zm9vOmJhcg==\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,SplitNewlinesAndReturnSecondField.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}

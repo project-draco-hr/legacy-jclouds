@@ -2,16 +2,13 @@
   String bucketName=getContainerName();
   try {
     Map<String,Blob> map=createMap(context,bucketName);
-    Map<String,Blob> newMap=new HashMap<String,Blob>();
+    ImmutableMap.Builder<String,Blob> newMap=ImmutableMap.<String,Blob>builder();
     for (    String key : fiveInputs.keySet()) {
-      Blob blob=context.getBlobStore().newBlob(key);
-      blob.setPayload(fiveInputs.get(key));
-      blob.getPayload().getContentMetadata().setContentLength((long)fiveBytes.get(key).length);
-      newMap.put(key,blob);
+      newMap.put(key,context.getBlobStore().blobBuilder(key).payload(fiveInputs.get(key)).contentLength((long)fiveBytes.get(key).length).build());
     }
-    map.putAll(newMap);
+    map.putAll(newMap.build());
     assertConsistencyAwareMapSize(map,5);
-    assertConsistencyAwareKeySetEquals(map,new HashSet<String>(fiveInputs.keySet()));
+    assertConsistencyAwareKeySetEquals(map,ImmutableSet.copyOf(fiveInputs.keySet()));
     fourLeftRemovingOne(map);
   }
   finally {

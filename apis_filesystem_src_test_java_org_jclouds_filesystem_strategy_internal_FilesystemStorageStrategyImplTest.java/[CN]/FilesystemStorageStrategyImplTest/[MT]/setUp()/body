@@ -1,7 +1,7 @@
 {
-  storageStrategy=new FilesystemStorageStrategyImpl(new Blob.Factory(){
-    @Override public Blob create(    MutableBlobMetadata metadata){
-      return new BlobImpl(metadata != null ? metadata : new MutableBlobMetadataImpl());
+  storageStrategy=new FilesystemStorageStrategyImpl(new Provider<BlobBuilder>(){
+    @Override public BlobBuilder get(){
+      return new BlobBuilderImpl();
     }
   }
 ,TestUtils.TARGET_BASE_DIR,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl());

@@ -1,19 +1,19 @@
 {
   try {
-    client.destroyNodesMatching(withTag(tag));
+    client.destroyNodesMatching(withTag(group));
   }
  catch (  NoSuchElementException e) {
   }
   refreshTemplate();
   try {
-    nodes=newTreeSet(client.runNodesWithTag(tag,2,template));
+    nodes=newTreeSet(client.runNodesWithTag(group,2,template));
   }
  catch (  RunNodesException e) {
     nodes=newTreeSet(concat(e.getSuccessfulNodes(),e.getNodeErrors().keySet()));
     throw e;
   }
   assertEquals(nodes.size(),2);
-  checkNodes(nodes,tag);
+  checkNodes(nodes,group);
   NodeMetadata node1=nodes.first();
   NodeMetadata node2=nodes.last();
   assertLocationSameOrChild(node1.getLocation(),template.getLocation());

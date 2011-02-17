@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<Domain,Domain,Image,Datacenter>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<Domain,Domain,Image,Location>>(){
   }
 ).to(LibvirtComputeServiceAdapter.class);
   bind(new TypeLiteral<Supplier<Location>>(){
@@ -15,7 +15,7 @@
   bind(new TypeLiteral<Function<Domain,Hardware>>(){
   }
 ).to(DomainToHardware.class);
-  bind(new TypeLiteral<Function<Datacenter,Location>>(){
+  bind(new TypeLiteral<Function<Location,Location>>(){
   }
-).to(DatacenterToLocation.class);
+).to((Class)IdentityFunction.class);
 }

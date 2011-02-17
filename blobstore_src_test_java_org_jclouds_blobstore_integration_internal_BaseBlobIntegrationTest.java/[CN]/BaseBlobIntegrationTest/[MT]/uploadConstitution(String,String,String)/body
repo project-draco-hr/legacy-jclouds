@@ -1,9 +1,3 @@
 {
-  Blob sourceObject=context.getBlobStore().newBlob(key);
-  sourceObject.setPayload(oneHundredOneConstitutions.getInput());
-  sourceObject.getMetadata().getContentMetadata().setContentType("text/plain");
-  sourceObject.getMetadata().getContentMetadata().setContentMD5(oneHundredOneConstitutionsMD5);
-  sourceObject.getMetadata().getContentMetadata().setContentLength(oneHundredOneConstitutionsLength);
-  sourceObject.getMetadata().getContentMetadata().setContentDisposition(contentDisposition);
-  context.getBlobStore().putBlob(containerName,sourceObject);
+  context.getBlobStore().putBlob(containerName,context.getBlobStore().blobBuilder(key).payload(oneHundredOneConstitutions.getInput()).contentType("text/plain").contentMD5(oneHundredOneConstitutionsMD5).contentLength(oneHundredOneConstitutionsLength).contentDisposition(contentDisposition).build());
 }

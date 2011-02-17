@@ -1,0 +1,11 @@
+{
+  Method method=CloudSigmaAsyncClient.class.getMethod("createStaticIP");
+  HttpRequest httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"POST https://api.cloudsigma.com/resources/ip/create HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,KeyValuesDelimitedByBlankLinesToStaticIPInfo.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

@@ -1,0 +1,11 @@
+{
+  try {
+    if (input.getScheme() != null && input.getScheme().equals("classpath"))     return getClass().getResourceAsStream(input.getPath());
+    return input.toURL().openStream();
+  }
+ catch (  IOException e) {
+    logger.error(e,"URI could not be read: %s",url);
+    Throwables.propagate(e);
+    return null;
+  }
+}

@@ -25,9 +25,11 @@
       }
     }
   }
-  MapBinder annotation=method.getAnnotation(MapBinder.class);
-  if (annotation != null) {
-    return injector.getInstance(annotation.value());
+  if (method.isAnnotationPresent(MapBinder.class)) {
+    return injector.getInstance(method.getAnnotation(MapBinder.class).value());
+  }
+ else   if (method.isAnnotationPresent(org.jclouds.rest.annotations.Payload.class)) {
+    return injector.getInstance(BindMapToStringPayload.class);
   }
   return null;
 }

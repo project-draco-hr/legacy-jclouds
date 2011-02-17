@@ -1,2 +1,18 @@
 {
+  String key="hello";
+  S3Object object=getApi().newS3Object();
+  object.getMetadata().setKey(key);
+  object.setPayload(TEST_STRING);
+  object.getMetadata().setCacheControl("no-cache");
+  object.getMetadata().getContentMetadata().setContentDisposition("attachment; filename=hello.txt");
+  String containerName=getContainerName();
+  try {
+    getApi().putObject(containerName,object);
+    S3Object newObject=validateObject(containerName,key);
+    assertCacheControl(newObject,"no-cache");
+    assertEquals(newObject.getMetadata().getContentMetadata().getContentDisposition(),"attachment; filename=hello.txt");
+  }
+  finally {
+    returnContainer(containerName);
+  }
 }

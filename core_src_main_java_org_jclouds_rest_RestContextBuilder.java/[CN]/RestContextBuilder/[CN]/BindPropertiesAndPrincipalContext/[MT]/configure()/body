@@ -2,9 +2,15 @@
   Properties toBind=new Properties();
   toBind.putAll(checkNotNull(properties,"properties"));
   toBind.putAll(System.getProperties());
-  Names.bindProperties(binder(),toBind);
+  bindProperties(binder(),toBind);
   bind(String.class).annotatedWith(Provider.class).toInstance(checkNotNull(toBind.getProperty(PROPERTY_PROVIDER),PROPERTY_PROVIDER));
   bind(URI.class).annotatedWith(Provider.class).toInstance(URI.create(checkNotNull(toBind.getProperty(PROPERTY_ENDPOINT),PROPERTY_ENDPOINT)));
+  bind(new TypeLiteral<Set<String>>(){
+  }
+).annotatedWith(Iso3166.class).toInstance(ImmutableSet.copyOf(filter(on(',').split(checkNotNull(toBind.getProperty(PROPERTY_ISO3166_CODES),PROPERTY_ISO3166_CODES)),not(equalTo("")))));
+  bind(new TypeLiteral<Map<String,Set<String>>>(){
+  }
+).annotatedWith(Iso3166.class).toProvider(ProvideIso3166CodesByLocationIdViaProperties.class);
   if (toBind.containsKey(PROPERTY_API))   bind(String.class).annotatedWith(Api.class).toInstance(toBind.getProperty(PROPERTY_API));
   if (toBind.containsKey(PROPERTY_API_VERSION))   bind(String.class).annotatedWith(ApiVersion.class).toInstance(toBind.getProperty(PROPERTY_API_VERSION));
   if (toBind.containsKey(PROPERTY_IDENTITY))   bind(String.class).annotatedWith(Identity.class).toInstance(checkNotNull(toBind.getProperty(PROPERTY_IDENTITY),PROPERTY_IDENTITY));

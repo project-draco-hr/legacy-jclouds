@@ -1,0 +1,16 @@
+{
+  String keyAsText=template.getOptions().getPublicKey();
+  if (keyAsText != null) {
+    template.getOptions().dontAuthorizePublicKey();
+    try {
+      client.addPublicKey(group,keyAsText);
+    }
+ catch (    IllegalStateException e) {
+      client.updatePublicKey(group,keyAsText);
+    }
+  }
+ else {
+    credentialsMap.put(group,client.generateKeyPair(group).getKeyMaterial());
+  }
+  return super.execute(group,count,template,goodNodes,badNodes,customizationResponses);
+}

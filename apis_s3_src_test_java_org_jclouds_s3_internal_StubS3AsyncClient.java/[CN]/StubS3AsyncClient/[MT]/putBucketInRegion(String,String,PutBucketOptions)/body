@@ -2,5 +2,5 @@
   region=region == null ? Region.US_STANDARD : region;
   final PutBucketOptions options=(optionsList.length == 0) ? new PutBucketOptions() : optionsList[0];
   keyToAcl.put(name,options.getAcl());
-  return blobStore.createContainerInLocation(new LocationImpl(LocationScope.REGION,region,region,null),name);
+  return blobStore.createContainerInLocation(new LocationBuilder().scope(LocationScope.REGION).id(region).description(region).build(),name);
 }

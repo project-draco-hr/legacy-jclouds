@@ -1,0 +1,16 @@
+{
+  Method method=ZoneAsyncClient.class.getMethod("listZones",ListZonesOptions[].class);
+  HttpRequest httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listZones HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listZones&apiKey=apiKey&signature=hNz838u4Z1ofz9vRaqYo9GDv1Io%3D HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,UnwrapOnlyNestedJsonValue.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

@@ -1,8 +1,17 @@
 {
   return new Predicate<OsFamilyVersion64Bit>(){
     @Override public boolean apply(    OsFamilyVersion64Bit input){
-      return input.family == OsFamily.RHEL || (input.family == OsFamily.CENTOS && !input.version.matches("5.[42]")) || (input.family == OsFamily.WINDOWS && !input.version.matches("200[38]"));
-    }
-  }
+switch (input.family) {
+case UBUNTU:
+        return false;
+case CENTOS:
+      return !(input.version.matches("5.[42]") || input.version.equals(""));
+case WINDOWS:
+    return !(input.version.matches("200[38]") || input.version.equals(""));
+default :
+  return true;
+}
+}
+}
 ;
 }

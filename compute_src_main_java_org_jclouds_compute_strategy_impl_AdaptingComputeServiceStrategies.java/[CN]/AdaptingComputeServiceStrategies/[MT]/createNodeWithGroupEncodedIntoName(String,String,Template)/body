@@ -1,0 +1,8 @@
+{
+  checkState(group != null,"group (that which groups identical nodes together) must be specified");
+  checkState(name != null && name.indexOf(group) != -1,"name should have %s encoded into it",group);
+  checkState(template != null,"template must be specified");
+  N from=client.createNodeWithGroupEncodedIntoNameThenStoreCredentials(group,name,template,credentialStore);
+  NodeMetadata node=nodeMetadataAdapter.apply(from);
+  return node;
+}

@@ -2,7 +2,7 @@
   ComputeServiceContext context=null;
   try {
     context=new ComputeServiceContextFactory().createContext(new LibvirtComputeServiceContextSpec("qemu:///system","identity","credential"));
-    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().runNodesWithTag("tty",1);
+    Set<? extends NodeMetadata> nodeMetadataSet=context.getComputeService().createNodesInGroup("tty",1);
     for (    NodeMetadata nodeMetadata : nodeMetadataSet) {
       context.getComputeService().destroyNode(nodeMetadata.getId());
     }

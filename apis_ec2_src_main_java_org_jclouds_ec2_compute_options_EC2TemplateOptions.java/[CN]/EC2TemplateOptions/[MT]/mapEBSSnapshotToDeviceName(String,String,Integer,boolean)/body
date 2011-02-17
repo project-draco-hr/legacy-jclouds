@@ -1,0 +1,12 @@
+{
+  checkNotNull(deviceName,"deviceName cannot be null");
+  Preconditions2.checkNotEmpty(deviceName,"deviceName must be non-empty");
+  checkNotNull(snapshotId,"snapshotId cannot be null");
+  Preconditions2.checkNotEmpty(snapshotId,"snapshotId must be non-empty");
+  com.google.common.collect.ImmutableSet.Builder<BlockDeviceMapping> mappings=ImmutableSet.<BlockDeviceMapping>builder();
+  mappings.addAll(blockDeviceMappings);
+  MapEBSSnapshotToDevice mapping=new MapEBSSnapshotToDevice(deviceName,snapshotId,sizeInGib,deleteOnTermination);
+  mappings.add(mapping);
+  blockDeviceMappings=mappings.build();
+  return this;
+}

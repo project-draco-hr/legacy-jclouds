@@ -1,9 +1,7 @@
 {
   blobstore.createContainerInLocation(null,"goodies");
   for (int i=0; i < 1001; i++) {
-    Blob blob=blobstore.newBlob(i + "");
-    blob.setPayload(i + "");
-    blobstore.putBlob("goodies",blob);
+    blobstore.putBlob("goodies",blobstore.blobBuilder(i + "").payload(i + "").build());
   }
   assertEquals(blobstore.countBlobs("goodies"),1001);
   blobstore.clearContainer("goodies");

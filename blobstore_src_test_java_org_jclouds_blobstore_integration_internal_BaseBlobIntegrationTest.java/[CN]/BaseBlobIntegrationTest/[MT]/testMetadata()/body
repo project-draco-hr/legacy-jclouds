@@ -1,10 +1,6 @@
 {
   String key="hello";
-  Blob blob=context.getBlobStore().newBlob(key);
-  blob.setPayload(TEST_STRING);
-  blob.getMetadata().getContentMetadata().setContentType(MediaType.TEXT_PLAIN);
-  blob.getMetadata().getUserMetadata().put("Adrian","powderpuff");
-  Payloads.calculateMD5(blob,context.utils().crypto().md5());
+  Blob blob=context.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).calculateMD5().build();
   String containerName=getContainerName();
   try {
     assertNull(context.getBlobStore().blobMetadata(containerName,"powderpuff"));

@@ -2,6 +2,7 @@
   Properties props=new Properties();
   props.setProperty("test.endpoint","http://localhost");
   props.setProperty("test.apiversion","1");
+  props.setProperty("test.iso3166-codes","US");
   props.setProperty("jclouds.identity","foo");
   props.setProperty("jclouds.credential","bar");
   props.setProperty("test.propertiesbuilder",PropertiesBuilder.class.getName());
@@ -10,6 +11,7 @@
   new RestContextFactory(){
     @SuppressWarnings("hiding") @Override public <S,A>RestContextSpec<S,A> createContextSpec(    String providerName,    String identity,    String credential,    Iterable<? extends Module> wiring,    Properties _overrides){
       RestContextSpec<S,A> spec=super.createContextSpec(providerName,identity,credential,wiring,_overrides);
+      assertEquals(spec.iso3166Codes,"US");
       assertEquals(spec.identity,"foo");
       assertEquals(spec.credential,"bar");
       assertEquals(Iterables.size(spec.modules),2);

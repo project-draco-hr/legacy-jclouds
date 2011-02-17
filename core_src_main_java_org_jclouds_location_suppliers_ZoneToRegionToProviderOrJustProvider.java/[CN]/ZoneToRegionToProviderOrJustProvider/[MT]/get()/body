@@ -1,18 +1,18 @@
 {
-  Location provider=new LocationImpl(LocationScope.PROVIDER,providerName,providerName,null);
-  if (zoneToRegion.size() == 0)   return ImmutableSet.of(provider);
-  Set<Location> providers=newLinkedHashSet();
-  for (  String region : newLinkedHashSet(zoneToRegion.values())) {
-    providers.add(new LocationImpl(LocationScope.REGION,region,region,provider));
-  }
-  ImmutableMap<String,Location> idToLocation=uniqueIndex(providers,new Function<Location,String>(){
+  Builder<Location> locations=buildJustProviderOrRegions();
+  ImmutableMap<String,Location> idToLocation=uniqueIndex(locations.build(),new Function<Location,String>(){
     @Override public String apply(    Location from){
       return from.getId();
     }
   }
 );
+  if (zoneToRegion.size() == 1)   return locations.build();
   for (  String zone : zoneToRegion.keySet()) {
-    providers.add(new LocationImpl(LocationScope.ZONE,zone,zone,idToLocation.get(zoneToRegion.get(zone))));
+    Location parent=idToLocation.get(zoneToRegion.get(zone));
+    LocationBuilder builder=new LocationBuilder().scope(LocationScope.ZONE).id(zone).description(zone).parent(parent);
+    if (isoCodesById.containsKey(zone))     builder.iso3166Codes(isoCodesById.get(zone));
+ else     if (parent.getScope() == LocationScope.REGION)     builder.iso3166Codes(parent.getIso3166Codes());
+    locations.add(builder.build());
   }
-  return providers;
+  return locations.build();
 }

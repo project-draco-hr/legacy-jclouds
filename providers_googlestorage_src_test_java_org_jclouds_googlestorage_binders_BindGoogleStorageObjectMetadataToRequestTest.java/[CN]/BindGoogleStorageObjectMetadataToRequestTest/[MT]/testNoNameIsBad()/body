@@ -1,0 +1,9 @@
+{
+  S3Object object=injector.getInstance(S3Object.Factory.class).create(null);
+  Payload payload=Payloads.newStringPayload("");
+  payload.getContentMetadata().setContentLength(5368709120000l);
+  object.setPayload(payload);
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  BindGoogleStorageObjectMetadataToRequest binder=injector.getInstance(BindGoogleStorageObjectMetadataToRequest.class);
+  binder.bindToRequest(request,object);
+}
