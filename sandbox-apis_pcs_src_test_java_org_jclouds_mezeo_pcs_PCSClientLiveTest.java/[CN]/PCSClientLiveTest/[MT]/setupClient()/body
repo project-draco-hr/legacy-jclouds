@@ -1,0 +1,13 @@
+{
+  setupCredentials();
+  Properties overrides=setupProperties();
+  context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+  connection=context.getApi();
+  ContainerList response=connection.list();
+  for (  ResourceInfo resource : response) {
+    if (resource.getType() == StorageType.FOLDER && resource.getName().startsWith(containerPrefix)) {
+      System.err.printf("*** deleting container %s...%n",resource.getName());
+      connection.deleteContainer(resource.getUrl());
+    }
+  }
+}

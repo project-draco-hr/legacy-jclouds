@@ -1,6 +1,12 @@
 {
   Payload oldContent=request.getPayload();
-  Payload wiredPayload=Payloads.newPayload(output(oldContent.getRawContent()));
+  Payload wiredPayload;
+  try {
+    wiredPayload=newPayload(output(oldContent.getRawContent()));
+  }
+ catch (  UnsupportedOperationException e) {
+    wiredPayload=newPayload(output(oldContent.getInput()));
+  }
   copyPayloadMetadata(oldContent,wiredPayload);
   request.setPayload(wiredPayload);
 }
