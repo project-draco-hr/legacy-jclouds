@@ -1,10 +1,8 @@
 {
-  Map<String,String> copy=Maps.newHashMap();
+  ImmutableMap.Builder<String,String> copy=ImmutableMap.<String,String>builder();
   copy.putAll(postParams);
-  copy.put("description",description);
+  if (description != null)   copy.put("description",description);
   copy.put("enabled",enabled);
-  if (monitorEnabled != null) {
-    copy.put("monitor",monitorEnabled.toString());
-  }
-  return super.bindToRequest(request,copy);
+  if (monitorEnabled != null)   copy.put("monitor",monitorEnabled.toString());
+  return super.bindToRequest(request,copy.build());
 }

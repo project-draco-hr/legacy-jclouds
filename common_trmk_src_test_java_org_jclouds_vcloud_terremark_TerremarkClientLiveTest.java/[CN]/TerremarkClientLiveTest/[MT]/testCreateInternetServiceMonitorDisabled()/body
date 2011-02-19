@@ -2,6 +2,6 @@
   VDC vdc=tmClient.findVDCInOrgNamed(null,null);
   Set<PublicIpAddress> publicIpAddresses=tmClient.getPublicIpsAssociatedWithVDC(vdc.getHref());
   PublicIpAddress publicIp=publicIpAddresses.iterator().next();
-  System.out.println("PublicIP: " + publicIp.getAddress());
-  tmClient.addInternetServiceToExistingIp(publicIp.getId(),PREFIX + "-no-monitoring",Protocol.TCP,1234,AddInternetServiceOptions.Builder.monitorDisabled());
+  InternetService service=tmClient.addInternetServiceToExistingIp(publicIp.getId(),PREFIX + "-no-monitoring",Protocol.TCP,1234,AddInternetServiceOptions.Builder.monitorDisabled());
+  tmClient.deleteInternetService(service.getId());
 }
