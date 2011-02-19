@@ -1,0 +1,8 @@
+{
+  Zone expects=Zone.builder().id(1).name("San Jose 1").networkType(NetworkType.ADVANCED).build();
+  UnwrapOnlyNestedJsonValue<Set<Zone>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyNestedJsonValue<Set<Zone>>>(){
+  }
+));
+  Set<Zone> response=parser.apply(new HttpResponse(200,"ok",Payloads.newStringPayload("{ \"listzonesresponse\" : { \"zone\" : [  {\"id\":1,\"name\":\"San Jose 1\",\"networktype\":\"Advanced\"} ] } }")));
+  assertEquals(Iterables.getOnlyElement(response),expects);
+}
