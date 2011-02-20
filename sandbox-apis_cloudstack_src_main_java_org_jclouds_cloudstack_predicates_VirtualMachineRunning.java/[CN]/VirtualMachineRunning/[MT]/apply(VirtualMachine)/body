@@ -1,0 +1,8 @@
+{
+  logger.trace("looking for state on virtualMachine %s",checkNotNull(virtualMachine,"virtualMachine"));
+  virtualMachine=refresh(virtualMachine);
+  if (virtualMachine == null)   return false;
+  logger.trace("%s: looking for virtualMachine state %s: currently: %s",virtualMachine.getId(),State.RUNNING,virtualMachine.getState());
+  if (virtualMachine.getState() == State.ERROR)   throw new IllegalStateException("virtualMachine in error state: " + virtualMachine);
+  return virtualMachine.getState() == State.RUNNING;
+}
