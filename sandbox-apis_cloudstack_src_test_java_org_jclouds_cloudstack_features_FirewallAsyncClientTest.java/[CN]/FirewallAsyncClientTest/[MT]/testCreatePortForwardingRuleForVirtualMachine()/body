@@ -1,0 +1,11 @@
+{
+  Method method=FirewallAsyncClient.class.getMethod("createPortForwardingRuleForVirtualMachine",long.class,long.class,String.class,int.class,int.class);
+  HttpRequest httpRequest=processor.createRequest(method,6,7,"tcp",22,22);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=createPortForwardingRule&virtualmachineid=6&protocol=tcp&ipaddressid=7&privateport=22&publicport=22 HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,UnwrapOnlyJsonValue.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
+  checkFilters(httpRequest);
+}
