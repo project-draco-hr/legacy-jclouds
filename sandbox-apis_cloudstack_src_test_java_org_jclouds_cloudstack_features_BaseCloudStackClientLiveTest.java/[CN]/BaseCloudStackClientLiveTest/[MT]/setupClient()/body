@@ -3,6 +3,7 @@
   Properties overrides=setupProperties();
   context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
   client=context.getApi();
+  sshFactory=Guice.createInjector(new JschSshClientModule()).getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
   jobComplete=new RetryablePredicate<Long>(new JobComplete(client),600,5,TimeUnit.SECONDS);
   virtualMachineRunning=new RetryablePredicate<VirtualMachine>(new VirtualMachineRunning(client),600,5,TimeUnit.SECONDS);
