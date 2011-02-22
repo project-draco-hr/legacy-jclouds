@@ -1,0 +1,12 @@
+{
+  checkNotNull(o,"input cannot be null");
+  if (o.getClass().isArray()) {
+    Builder<Object> builder=ImmutableList.builder();
+    for (int i=0; i < Array.getLength(o); i++)     builder.add(Array.get(o,i));
+    o=builder.build();
+  }
+  checkArgument(o instanceof Iterable<?>,"you must pass an iterable or array");
+  Iterable<?> toJoin=(Iterable<?>)o;
+  checkArgument(Iterables.size(toJoin) > 0,"you must pass an iterable or array with elements");
+  return Joiner.on(',').join(toJoin);
+}
