@@ -1,5 +1,6 @@
 {
   super.setupClient();
+  loadBalancerRuleActive=new RetryablePredicate<LoadBalancerRule>(new LoadBalancerRuleActive(client),600,5,TimeUnit.SECONDS);
   prefix+="rule";
   ip=AddressClientLiveTest.createPublicIPAddress(client,jobComplete);
   vm=VirtualMachineClientLiveTest.createVirtualMachine(client,jobComplete,virtualMachineRunning);
