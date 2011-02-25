@@ -9,8 +9,11 @@
         error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
         if (error != null) {
           message=error.getMessage();
+          exception=new AWSResponseException(command,response,error);
         }
-        exception=new HttpResponseException(command,response,message);
+ else {
+          exception=new HttpResponseException(command,response,message);
+        }
       }
  else {
         try {
