@@ -69,14 +69,15 @@
  else {
       Long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
       connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,length.toString());
+      checkArgument(length < Integer.MAX_VALUE,"JDK 1.6 does not support >2GB chunks. Use chunked encoding, if possible.");
       connection.setFixedLengthStreamingMode(length.intValue());
     }
+    CountingOutputStream out=new CountingOutputStream(connection.getOutputStream());
     try {
-      request.getPayload().writeTo(connection.getOutputStream());
+      request.getPayload().writeTo(out);
     }
  catch (    IOException e) {
-      e.printStackTrace();
-      throw e;
+      throw new RuntimeException(String.format("error after writing %d/%s bytes to %s",out.getCount(),md.getContentLength(),request.getRequestLine()),e);
     }
   }
  else {
