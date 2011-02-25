@@ -9,7 +9,7 @@
  else {
     request=ModifyRequest.replaceHeader(request,"Transfer-Encoding","chunked");
   }
-  request=blobBinder.bindToRequest(request,object2Blob.apply(s3Object));
+  request=metadataPrefixer.bindToRequest(request,s3Object.getMetadata().getUserMetadata());
   if (s3Object.getMetadata().getCacheControl() != null) {
     request=ModifyRequest.replaceHeader(request,HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl());
   }

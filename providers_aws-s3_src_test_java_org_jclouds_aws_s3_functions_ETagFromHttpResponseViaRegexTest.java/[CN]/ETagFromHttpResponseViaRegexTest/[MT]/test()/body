@@ -1,0 +1,5 @@
+{
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(Payloads.newInputStreamPayload(getClass().getResourceAsStream("/complete-multipart-upload.xml"))).build();
+  ETagFromHttpResponseViaRegex parser=new ETagFromHttpResponseViaRegex(new ReturnStringIf2xx());
+  assertEquals(parser.apply(response),"\"3858f62230ac3c915f300c664312c11f-9\"");
+}

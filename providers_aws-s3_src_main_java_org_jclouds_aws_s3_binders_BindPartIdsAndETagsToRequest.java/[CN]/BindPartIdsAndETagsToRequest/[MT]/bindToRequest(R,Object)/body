@@ -1,0 +1,19 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Map,"this binder is only valid for Map!");
+  checkNotNull(request,"request");
+  Map<Integer,String> map=(Map<Integer,String>)input;
+  checkArgument(map.size() != 0,"Please send parts");
+  StringBuilder content=new StringBuilder();
+  content.append("<CompleteMultipartUpload>");
+  for (  Entry<Integer,String> entry : map.entrySet()) {
+    content.append("<Part>");
+    content.append("<PartNumber>").append(entry.getKey()).append("</PartNumber>");
+    content.append("<ETag>").append(entry.getValue()).append("</ETag>");
+    content.append("</Part>");
+  }
+  content.append("</CompleteMultipartUpload>");
+  Payload payload=Payloads.newStringPayload(content.toString());
+  payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
+  request.setPayload(payload);
+  return request;
+}
