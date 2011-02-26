@@ -1,0 +1,24 @@
+{
+  checkNotNull(response,"response");
+  AsyncJob<Map<String,JsonBall>> toParse=parser.apply(response);
+  checkNotNull(toParse,"parsed result from %s",response);
+  AsyncJob<?> result=toParse;
+  if (toParse.getResult() != null) {
+    if (toParse.getResult().size() == 1) {
+      Entry<String,JsonBall> entry=Iterables.get(toParse.getResult().entrySet(),0);
+      @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
+      if (typeMap.containsKey(entry.getKey())) {
+        builder.result(json.fromJson(entry.getValue().toString(),typeMap.get(entry.getKey())));
+      }
+ else {
+        logger.warn("type key % not configured.  please override default for Map<String, Class<?>> bound to name jclouds.cloudstack.jobresult-type-map",entry.getKey());
+        builder.result(entry.getValue().toString());
+      }
+      result=builder.build();
+    }
+ else     if (toParse.getResult().size() > 1) {
+      logger.warn("unexpected size of async job result; expecting a map with a single element",toParse.getResult());
+    }
+  }
+  return result;
+}
