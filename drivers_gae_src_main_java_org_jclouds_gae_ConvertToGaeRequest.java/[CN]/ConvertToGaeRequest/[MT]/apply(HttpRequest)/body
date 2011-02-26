@@ -27,6 +27,9 @@
         HttpUtils.copy(oldPayload.getContentMetadata(),request.getPayload().getContentMetadata());
       }
       gaeRequest.setPayload(array);
+      if (array.length > 0) {
+        gaeRequest.setHeader(new HTTPHeader("Expect","100-continue"));
+      }
     }
  catch (    IOException e) {
       Throwables.propagate(e);

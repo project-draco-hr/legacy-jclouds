@@ -1,10 +1,14 @@
 {
   utils.logRequest(signatureLog,request,">>");
+  SortedSetMultimap<String,String> canonicalizedHeaders=TreeMultimap.create();
   StringBuilder buffer=new StringBuilder();
   appendMethod(request,buffer);
   appendPayloadMetadata(request,buffer);
-  appendHttpHeaders(request,buffer);
-  appendAmzHeaders(request,buffer);
+  appendHttpHeaders(request,canonicalizedHeaders);
+  if (canonicalizedHeaders.containsKey(S3Headers.ALTERNATE_DATE)) {
+    canonicalizedHeaders.put("date","");
+  }
+  appendAmzHeaders(canonicalizedHeaders,buffer);
   if (isVhostStyle)   appendBucketName(request,buffer);
   appendUriPath(request,buffer);
   if (signatureWire.enabled())   signatureWire.output(buffer.toString());

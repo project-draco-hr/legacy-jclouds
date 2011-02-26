@@ -1,0 +1,10 @@
+{
+  Multimap<String,String> headers=request.getHeaders();
+  for (  Entry<String,String> header : headers.entries()) {
+    if (header.getKey() == null)     continue;
+    String key=header.getKey().toString().toLowerCase(Locale.getDefault());
+    if (key.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE) || key.equalsIgnoreCase("Content-MD5") || key.equalsIgnoreCase(HttpHeaders.DATE)|| key.startsWith(AMAZON_PREFIX)) {
+      canonicalizedHeaders.put(key,header.getValue());
+    }
+  }
+}

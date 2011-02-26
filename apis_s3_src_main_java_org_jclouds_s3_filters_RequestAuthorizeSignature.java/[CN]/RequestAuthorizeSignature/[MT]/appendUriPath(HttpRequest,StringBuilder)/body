@@ -1,16 +1,22 @@
 {
   toSign.append(request.getEndpoint().getRawPath());
   if (request.getEndpoint().getQuery() != null) {
-    StringBuilder paramsToSign=new StringBuilder("?");
+    SortedSetMultimap<String,String> sortedParams=TreeMultimap.create();
     String[] params=request.getEndpoint().getQuery().split("&");
     for (    String param : params) {
       String[] paramNameAndValue=param.split("=");
-      if (SPECIAL_QUERIES.contains(paramNameAndValue[0])) {
-        paramsToSign.append(paramNameAndValue[0]);
-      }
+      sortedParams.put(paramNameAndValue[0],paramNameAndValue.length == 2 ? paramNameAndValue[1] : null);
     }
-    if (paramsToSign.length() > 1) {
-      toSign.append(paramsToSign);
+    char separator='?';
+    for (    Entry<String,String> param : sortedParams.entries()) {
+      String paramName=param.getKey();
+      if (SIGNED_PARAMETERS.contains(paramName) == false)       continue;
+      toSign.append(separator).append(paramName);
+      String paramValue=param.getValue();
+      if (paramValue != null) {
+        toSign.append("=").append(paramValue);
+      }
+      separator='&';
     }
   }
 }

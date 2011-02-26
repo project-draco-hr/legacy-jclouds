@@ -1,6 +1,8 @@
 {
   HttpRequest request=putObject();
+  SortedSetMultimap<String,String> canonicalizedHeaders=TreeMultimap.create();
+  filter.appendHttpHeaders(request,canonicalizedHeaders);
   StringBuilder builder=new StringBuilder();
-  filter.appendAmzHeaders(request,builder);
-  assertEquals(builder.toString(),"x-amz-meta-x-amz-adrian:foo\n");
+  filter.appendAmzHeaders(canonicalizedHeaders,builder);
+  assertEquals(builder.toString(),"x-amz-meta-x-amz-adrian: foo\n");
 }
