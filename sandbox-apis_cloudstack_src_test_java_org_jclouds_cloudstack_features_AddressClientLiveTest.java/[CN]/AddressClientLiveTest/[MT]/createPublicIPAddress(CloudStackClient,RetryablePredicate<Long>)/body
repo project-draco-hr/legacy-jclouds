@@ -1,2 +1,17 @@
 {
+  Network network=find(client.getNetworkClient().listNetworks(),new Predicate<Network>(){
+    @Override public boolean apply(    Network arg0){
+      return Iterables.any(arg0.getServices(),new Predicate<NetworkService>(){
+        @Override public boolean apply(        NetworkService input){
+          return input.getName().equals("Firewall") && "true".equals(input.getCapabilities().get("StaticNat"));
+        }
+      }
+);
+    }
+    @Override public String toString(){
+      return "networkType(ADVANCED)";
+    }
+  }
+);
+  return createPublicIPAddressInNetwork(network,client,jobComplete);
 }

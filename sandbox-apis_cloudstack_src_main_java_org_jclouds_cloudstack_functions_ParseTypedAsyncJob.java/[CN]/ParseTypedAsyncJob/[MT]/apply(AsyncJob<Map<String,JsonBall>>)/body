@@ -1,0 +1,32 @@
+{
+  AsyncJob<?> result=toParse;
+  if (toParse.getResult() != null) {
+    if (toParse.getResult().size() == 1) {
+      @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
+      if (toParse.getResult().containsKey("success")) {
+        builder.result(null);
+      }
+ else {
+        Entry<String,JsonBall> entry=Iterables.get(toParse.getResult().entrySet(),0);
+        if (typeMap.containsKey(entry.getKey())) {
+          builder.result(json.fromJson(entry.getValue().toString(),typeMap.get(entry.getKey())));
+        }
+ else {
+          logger.warn("type key %s not configured.  please override default for Map<String, Class<?>> bound to name jclouds.cloudstack.jobresult-type-map",entry.getKey());
+          builder.result(entry.getValue().toString());
+        }
+      }
+      result=builder.build();
+    }
+ else     if (toParse.getResult().containsKey("errorcode")) {
+      @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
+      builder.result(null);
+      builder.error(new AsyncJobError(Integer.parseInt(toParse.getResult().get("errorcode").toString()),toParse.getResult().containsKey("errortext") ? toParse.getResult().get("errortext").toString().replace("\"","") : null));
+      result=builder.build();
+    }
+ else     if (toParse.getResult().size() > 1) {
+      logger.warn("unexpected size of async job result; expecting a map with a single element",toParse.getResult());
+    }
+  }
+  return result;
+}

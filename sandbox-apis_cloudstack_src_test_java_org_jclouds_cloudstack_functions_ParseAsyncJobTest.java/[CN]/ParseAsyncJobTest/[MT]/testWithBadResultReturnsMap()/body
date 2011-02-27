@@ -1,7 +1,0 @@
-{
-  String input="{ \"queryasyncjobresultresponse\" : {\"jobid\":860,\"jobstatus\":0,\"jobprocstatus\":0,\"jobresultcode\":0,\"jobresult\":{\"foo\":{\"bar\":1},\"foo2\":{\"bar2\":2}}}}";
-  AsyncJob<?> expects=AsyncJob.builder().id(860).status(0).progress(0).resultCode(0).result(ImmutableMap.of("foo",new JsonBall("{\"bar\":1}"),"foo2",new JsonBall("{\"bar2\":2}"))).build();
-  ParseAsyncJob parser=i.getInstance(ParseAsyncJob.class);
-  @SuppressWarnings("unchecked") AsyncJob<PublicIPAddress> response=(AsyncJob<PublicIPAddress>)parser.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(input)));
-  assertEquals(response,expects);
-}

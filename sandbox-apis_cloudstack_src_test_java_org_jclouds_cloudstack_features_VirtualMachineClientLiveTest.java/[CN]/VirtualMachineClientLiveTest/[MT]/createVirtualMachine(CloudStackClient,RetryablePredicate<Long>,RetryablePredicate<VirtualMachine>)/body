@@ -1,2 +1,14 @@
 {
+  Set<Network> networks=client.getNetworkClient().listNetworks();
+  if (networks.size() > 0) {
+    return createVirtualMachineInNetwork(Iterables.get(networks,0),client,jobComplete,virtualMachineRunning);
+  }
+ else {
+    return createVirtualMachineWithSecurityGroup(find(client.getSecurityGroupClient().listSecurityGroups(),new Predicate<SecurityGroup>(){
+      @Override public boolean apply(      SecurityGroup arg0){
+        return arg0.getName().equals("default");
+      }
+    }
+),client,jobComplete,virtualMachineRunning);
+  }
 }
