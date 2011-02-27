@@ -1,9 +1,9 @@
 {
   checkNotNull(from,"request");
-  checkState(key != null,"key must be initialized by now");
+  checkState(name != null,"name must be initialized by now");
   MutableBlobMetadata to=metadataFactory.get();
-  to.setName(key);
-  HttpUtils.copy(from.getPayload().getContentMetadata(),to.getContentMetadata());
+  to.setName(name);
+  if (from.getPayload() != null)   HttpUtils.copy(from.getPayload().getContentMetadata(),to.getContentMetadata());
   addETagTo(from,to);
   parseLastModifiedOrThrowException(from,to);
   addUserMetadataTo(from,to);
