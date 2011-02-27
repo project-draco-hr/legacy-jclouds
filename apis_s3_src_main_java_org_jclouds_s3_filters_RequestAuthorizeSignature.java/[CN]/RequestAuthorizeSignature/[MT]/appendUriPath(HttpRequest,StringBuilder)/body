@@ -1,18 +1,12 @@
 {
   toSign.append(request.getEndpoint().getRawPath());
   if (request.getEndpoint().getQuery() != null) {
-    SortedSetMultimap<String,String> sortedParams=TreeMultimap.create();
-    String[] params=request.getEndpoint().getQuery().split("&");
-    for (    String param : params) {
-      String[] paramNameAndValue=param.split("=");
-      sortedParams.put(paramNameAndValue[0],paramNameAndValue.length == 2 ? paramNameAndValue[1] : null);
-    }
+    Multimap<String,String> params=parseQueryToMap(request.getEndpoint().getQuery());
     char separator='?';
-    for (    Entry<String,String> param : sortedParams.entries()) {
-      String paramName=param.getKey();
+    for (    String paramName : Ordering.natural().sortedCopy(params.keySet())) {
       if (SIGNED_PARAMETERS.contains(paramName) == false)       continue;
       toSign.append(separator).append(paramName);
-      String paramValue=param.getValue();
+      String paramValue=get(params.get(paramName),0);
       if (paramValue != null) {
         toSign.append("=").append(paramValue);
       }

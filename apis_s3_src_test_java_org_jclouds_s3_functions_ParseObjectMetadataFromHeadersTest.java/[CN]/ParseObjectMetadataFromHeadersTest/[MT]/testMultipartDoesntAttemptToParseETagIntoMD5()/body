@@ -1,0 +1,21 @@
+{
+  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""),ImmutableMultimap.of(S3Headers.USER_METADATA_PREFIX + "foo","bar",HttpHeaders.LAST_MODIFIED,lastModified,HttpHeaders.ETAG,"\"abcd-1\"",HttpHeaders.CACHE_CONTROL,"cacheControl"));
+  http.getPayload().getContentMetadata().setContentLength(1025l);
+  http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
+  http.getPayload().getContentMetadata().setContentEncoding("encoding");
+  http.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+  MutableObjectMetadata response=parser.apply(http);
+  MutableObjectMetadataImpl expects=new MutableObjectMetadataImpl();
+  expects.setCacheControl("cacheControl");
+  expects.getContentMetadata().setContentDisposition("contentDisposition");
+  expects.getContentMetadata().setContentEncoding("encoding");
+  expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+  expects.getContentMetadata().setContentLength(1025l);
+  expects.setETag("\"abcd-1\"");
+  expects.setKey("key");
+  expects.setLastModified(now);
+  expects.setOwner(null);
+  expects.setStorageClass(StorageClass.STANDARD);
+  expects.setUserMetadata(userMetadata);
+  assertEquals(response,expects);
+}

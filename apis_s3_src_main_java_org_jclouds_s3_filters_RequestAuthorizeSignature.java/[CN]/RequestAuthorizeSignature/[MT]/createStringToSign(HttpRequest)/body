@@ -5,8 +5,8 @@
   appendMethod(request,buffer);
   appendPayloadMetadata(request,buffer);
   appendHttpHeaders(request,canonicalizedHeaders);
-  if (canonicalizedHeaders.containsKey(S3Headers.ALTERNATE_DATE)) {
-    canonicalizedHeaders.put("date","");
+  if (canonicalizedHeaders.containsKey("x-" + headerTag + "-date")) {
+    canonicalizedHeaders.removeAll("date");
   }
   appendAmzHeaders(canonicalizedHeaders,buffer);
   if (isVhostStyle)   appendBucketName(request,buffer);

@@ -1,16 +1,10 @@
 {
-  blobToObjectMetadata=new BlobToObjectMetadata();
-  expects=new MutableObjectMetadataImpl();
-  expects.setCacheControl("cacheControl");
-  expects.getContentMetadata().setContentDisposition("contentDisposition");
-  expects.getContentMetadata().setContentEncoding("encoding");
-  expects.getContentMetadata().setContentMD5(CryptoStreams.hex("abcd"));
-  expects.getContentMetadata().setContentType("type");
-  expects.getContentMetadata().setContentLength(1025l);
-  expects.setETag("\"abcd\"");
-  expects.setKey("key");
-  expects.setLastModified(now);
-  expects.setOwner(null);
-  expects.setStorageClass(StorageClass.STANDARD);
-  expects.setUserMetadata(userMetadata);
+  parser=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(RequestSigner.class).toInstance(createMock(RequestSigner.class));
+      bindConstant().annotatedWith(Names.named(PROPERTY_HEADER_TAG)).to(S3Headers.DEFAULT_AMAZON_HEADERTAG);
+      bindConstant().annotatedWith(Names.named(PROPERTY_USER_METADATA_PREFIX)).to(S3Headers.USER_METADATA_PREFIX);
+    }
+  }
+).getInstance(ParseObjectMetadataFromHeaders.class).setKey("key");
 }

@@ -3,10 +3,14 @@
   MutableObjectMetadata to=blobToObjectMetadata.apply(base);
   addETagTo(from,to);
   if (to.getContentMetadata().getContentMD5() == null && to.getETag() != null) {
-    byte[] md5=CryptoStreams.hex(to.getETag().replaceAll("\"",""));
-    from.getPayload().getContentMetadata().setContentMD5(md5);
-    to.getContentMetadata().setContentMD5(md5);
+    Matcher md5Matcher=MD5_FROM_ETAG.matcher(to.getETag());
+    if (md5Matcher.find()) {
+      byte[] md5=CryptoStreams.hex(md5Matcher.group(1));
+      if (from.getPayload() != null)       from.getPayload().getContentMetadata().setContentMD5(md5);
+      to.getContentMetadata().setContentMD5(md5);
+    }
   }
+  to.getUserMetadata().remove("object-etag");
   to.setCacheControl(from.getFirstHeaderOrNull(HttpHeaders.CACHE_CONTROL));
   return to;
 }
