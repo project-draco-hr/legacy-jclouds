@@ -1,17 +1,2 @@
 {
-  String containerName=getContainerName();
-  try {
-    String key="constitution.txt";
-    String uploadId=getApi().initiateMultipartUpload(containerName,ObjectMetadataBuilder.create().key(key).build());
-    byte[] buffer=ByteStreams.toByteArray(oneHundredOneConstitutions.getInput());
-    Payload part1=Payloads.newByteArrayPayload(buffer);
-    part1.getContentMetadata().setContentLength((long)buffer.length);
-    part1.getContentMetadata().setContentMD5(oneHundredOneConstitutionsMD5);
-    String eTagOf1=getApi().uploadPart(containerName,key,1,uploadId,part1);
-    String eTag=getApi().completeMultipartUpload(containerName,key,uploadId,ImmutableMap.of(1,eTagOf1));
-    assertTrue(true);
-  }
-  finally {
-    returnContainer(containerName);
-  }
 }

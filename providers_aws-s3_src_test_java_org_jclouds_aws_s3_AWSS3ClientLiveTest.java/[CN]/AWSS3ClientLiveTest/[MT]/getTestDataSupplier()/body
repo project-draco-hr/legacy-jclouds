@@ -1,9 +1,9 @@
 {
-  byte[] oneConstitution=ByteStreams.toByteArray(new GZIPInputStream(BaseJettyTest.class.getResourceAsStream("/const.txt.gz")));
-  InputSupplier<ByteArrayInputStream> constitutionSupplier=ByteStreams.newInputStreamSupplier(oneConstitution);
-  InputSupplier<InputStream> temp=ByteStreams.join(constitutionSupplier);
+  byte[] oneConstitution=toByteArray(new GZIPInputStream(BaseJettyTest.class.getResourceAsStream("/const.txt.gz")));
+  InputSupplier<ByteArrayInputStream> constitutionSupplier=newInputStreamSupplier(oneConstitution);
+  InputSupplier<InputStream> temp=join(constitutionSupplier);
   for (oneHundredOneConstitutionsLength=oneConstitution.length; oneHundredOneConstitutionsLength < 5 * 1024 * 1024; oneHundredOneConstitutionsLength+=oneConstitution.length) {
-    temp=ByteStreams.join(temp,constitutionSupplier);
+    temp=join(temp,constitutionSupplier);
   }
   return temp;
 }
