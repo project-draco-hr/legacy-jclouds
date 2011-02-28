@@ -1,7 +1,7 @@
 {
   super.setupClient();
   prefix+="rule";
-  ip=AddressClientLiveTest.createPublicIPAddress(client,jobComplete);
-  vm=VirtualMachineClientLiveTest.createVirtualMachine(client,jobComplete,virtualMachineRunning);
+  network=find(client.getNetworkClient().listNetworks(),NetworkPredicates.supportsPortForwarding());
+  vm=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,client,jobComplete,virtualMachineRunning);
   if (vm.getPassword() != null)   password=vm.getPassword();
 }
