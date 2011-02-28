@@ -1,0 +1,11 @@
+{
+  long delayMs=(long)(period * Math.pow(failureCount,pow));
+  delayMs=delayMs > maxPeriod ? maxPeriod : delayMs;
+  logger.debug("Retry %d/%d: delaying for %d ms: %s",failureCount,max,delayMs,commandDescription);
+  try {
+    Thread.sleep(delayMs);
+  }
+ catch (  InterruptedException e) {
+    Throwables.propagate(e);
+  }
+}

@@ -1,10 +1,3 @@
 {
-  long delayMs=(long)(period * Math.pow(failureCount,pow));
-  logger.debug("Retry %d/%d: delaying for %d ms: %s",failureCount,retryCountLimit,delayMs,commandDescription);
-  try {
-    Thread.sleep(delayMs);
-  }
- catch (  InterruptedException e) {
-    Throwables.propagate(e);
-  }
+  imposeBackoffExponentialDelay(period,period * 10l,pow,failureCount,max,commandDescription);
 }
