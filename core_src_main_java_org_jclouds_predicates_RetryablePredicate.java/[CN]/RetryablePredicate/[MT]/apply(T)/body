@@ -13,5 +13,10 @@
  catch (  InterruptedException e) {
     logger.warn(e,"predicate %s on %s interrupted, returning false",input,predicate);
   }
+catch (  RuntimeException e) {
+    ExecutionException exec=Throwables2.getFirstThrowableOfType(e,ExecutionException.class);
+    if (exec != null)     logger.warn(exec,"predicate %s on %s error, returning false",input,predicate);
+ else     throw e;
+  }
   return false;
 }
