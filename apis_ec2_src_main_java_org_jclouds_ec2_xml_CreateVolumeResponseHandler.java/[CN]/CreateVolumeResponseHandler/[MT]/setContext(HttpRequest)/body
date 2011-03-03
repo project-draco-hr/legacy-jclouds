@@ -2,7 +2,7 @@
   super.setContext(request);
   region=AWSUtils.findRegionInArgsOrNull(getRequest());
   if (region == null) {
-    String zone=EC2Utils.findAvailabilityZoneInArgsOrNull(getRequest());
+    String zone=findAvailabilityZoneInArgsOrNull(getRequest(),availabilityZoneToRegion.keySet());
     if (zone != null) {
       region=checkNotNull(availabilityZoneToRegion.get(zone),String.format("zone %s not in %s",zone,availabilityZoneToRegion));
     }

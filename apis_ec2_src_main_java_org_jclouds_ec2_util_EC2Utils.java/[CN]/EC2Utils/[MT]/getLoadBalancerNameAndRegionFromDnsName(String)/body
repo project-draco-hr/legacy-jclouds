@@ -1,8 +1,0 @@
-{
-  Matcher matcher=ELB_PATTERN.matcher(checkNotNull(dnsName,"dnsName"));
-  checkArgument(matcher.find(),"dnsName syntax is " + ELB_PATTERN + " didn't match: "+ dnsName);
-  String loadBalancerName=matcher.group(1);
-  String regionName=matcher.group(2);
-  checkArgument((AWSUtils.isRegion(regionName)),String.format("Region (%s)  parsed from (%s) is not a valid region",regionName,dnsName));
-  return ImmutableMap.<String,String>of(regionName,loadBalancerName);
-}
