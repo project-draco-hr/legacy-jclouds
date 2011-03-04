@@ -1,0 +1,16 @@
+{
+  InputStream is=getClass().getResourceAsStream("/savvis/vdc.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  SymphonyVPDCVDC result=(SymphonyVPDCVDC)factory.create(injector.getInstance(SymphonyVPDCVDCHandler.class)).parse(is);
+  assertEquals(result.getName(),"demo_vpdcname");
+  assertEquals(result.getHref(),null);
+  assertEquals(result.getDescription(),"ServiceProfileName = Balanced; ServiceLocation = North America; Email = jim@company.com;");
+  assertEquals(result.getOfferingTag(),"Deployed");
+  assertEquals(result.getStorageCapacity(),null);
+  assertEquals(result.getCpuCapacity(),null);
+  assertEquals(result.getMemoryCapacity(),null);
+  assertEquals(result.getVmQuota(),0);
+  assertEquals(result.getResourceEntities(),ImmutableMap.<String,ReferenceType>of("DemoHost-1",new ReferenceTypeImpl("DemoHost-1",VCloudMediaType.VAPP_XML,URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736/vApp/1001")),"DemoHost-2",new ReferenceTypeImpl("DemoHost-2",VCloudMediaType.VAPP_XML,URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736/vApp/1002")),"DemoHost-3",new ReferenceTypeImpl("DemoHost-3",VCloudMediaType.VAPP_XML,URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736/vApp/1003")),"CustomerTemplateName",new ReferenceTypeImpl("CustomerTemplateName",VCloudMediaType.VAPPTEMPLATE_XML,URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736/vAppTemplate/1234")),"firewall",new ReferenceTypeImpl("firewall","api.sandbox.symphonyVPDC.savvis.net+xml",URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736/FirewallService"))));
+  assertEquals(result.getAvailableNetworks(),ImmutableMap.of());
+}
