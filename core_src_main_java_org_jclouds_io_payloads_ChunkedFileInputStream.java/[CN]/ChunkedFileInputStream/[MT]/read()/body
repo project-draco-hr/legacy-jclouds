@@ -1,0 +1,14 @@
+{
+  try {
+    ChannelBuffer chunk=getChunk();
+    if (chunk == null)     return -1;
+    if (chunk.readableBytes() < 1)     return -1;
+    int readIndex=chunk.readerIndex();
+    byte abyte=chunk.getByte(readIndex);
+    chunk.readerIndex(readIndex + 1);
+    return (int)abyte;
+  }
+ catch (  Exception e) {
+    throw new IOException(e);
+  }
+}
