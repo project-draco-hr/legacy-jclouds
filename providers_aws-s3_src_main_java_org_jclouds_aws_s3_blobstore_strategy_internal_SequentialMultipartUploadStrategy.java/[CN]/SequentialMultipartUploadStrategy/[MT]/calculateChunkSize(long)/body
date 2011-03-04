@@ -1,0 +1,30 @@
+{
+  long unitPartSize=DEFAULT_PART_SIZE;
+  long parts=length / unitPartSize;
+  long partSize=unitPartSize;
+  int magnitude=(int)(parts / MAGNITUDE_BASE);
+  if (magnitude > 0) {
+    partSize=magnitude * unitPartSize;
+    if (partSize > MAX_PART_SIZE) {
+      partSize=MAX_PART_SIZE;
+      unitPartSize=MAX_PART_SIZE;
+    }
+    parts=length / partSize;
+  }
+  if (parts > MAX_NUMBER_OF_PARTS) {
+    unitPartSize=MIN_PART_SIZE;
+    parts=length / unitPartSize;
+  }
+  if (parts > MAX_NUMBER_OF_PARTS) {
+    parts=MAX_NUMBER_OF_PARTS - 1;
+  }
+  long remainder=length % unitPartSize;
+  if (remainder == 0 && parts > 0) {
+    parts-=1;
+  }
+  this.chunkSize=partSize;
+  this.parts=parts;
+  this.remaining=length - partSize * parts;
+  System.out.println(" " + length + " bytes partitioned in "+ parts+ " parts of part size: "+ chunkSize+ ", remaining: "+ remaining+ (remaining > MAX_PART_SIZE ? " overflow!" : ""));
+  return this.chunkSize;
+}
