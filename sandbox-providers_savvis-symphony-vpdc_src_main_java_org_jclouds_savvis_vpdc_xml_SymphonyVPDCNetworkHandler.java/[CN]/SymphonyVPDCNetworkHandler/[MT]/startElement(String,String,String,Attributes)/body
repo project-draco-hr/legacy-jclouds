@@ -1,0 +1,14 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (qName.endsWith("Network")) {
+    network=newReferenceType(attributes);
+  }
+ else   if (qName.endsWith("Link")) {
+    if ("IP Addresses".equals(attributes.get("name"))) {
+      ips=newReferenceType(attributes);
+    }
+ else     if ("down".equals(attributes.get("rel"))) {
+      extension=newReferenceType(attributes);
+    }
+  }
+}

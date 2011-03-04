@@ -1,13 +1,13 @@
 {
   Method method=AWSInstanceAsyncClient.class.getMethod("runInstancesInRegion",String.class,String.class,String.class,int.class,int.class,Array.newInstance(RunInstancesOptions.class,0).getClass());
-  HttpRequest request=processor.createRequest(method,Region.EU_WEST_1,AvailabilityZone.EU_WEST_1A,"ami-voo",1,5,new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring().withSecurityGroups("group1","group2"));
-  assertRequestLineEquals(request,"POST https://ec2.eu-west-1.amazonaws.com/ HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,"Host: ec2.eu-west-1.amazonaws.com\n");
+  HttpRequest request=processor.createRequest(method,"us-east-1","us-east-1a","ami-voo",1,5,new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring().withSecurityGroups("group1","group2"));
+  assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
   try {
-    assertPayloadEquals(request,"Version=2010-06-15&Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=eu-west-1a","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Version=2010-06-15&Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a","application/x-www-form-urlencoded",false);
   }
  catch (  AssertionError e) {
-    assertPayloadEquals(request,"Version=2010-06-15&Action=RunInstances&ImageId=ami-voo&MaxCount=5&MinCount=1&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=eu-west-1a","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Version=2010-06-15&Action=RunInstances&ImageId=ami-voo&MaxCount=5&MinCount=1&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a","application/x-www-form-urlencoded",false);
   }
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,AWSRunInstancesResponseHandler.class);
