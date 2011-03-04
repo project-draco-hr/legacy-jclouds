@@ -4,8 +4,12 @@
     VDC response=connection.getVDC(vdc.getHref());
     for (    ReferenceType resource : response.getAvailableNetworks().values()) {
       if (resource.getType().equals(VCloudMediaType.NETWORK_XML)) {
-        OrgNetwork item=connection.getNetwork(resource.getHref());
-        assertNotNull(item);
+        try {
+          OrgNetwork item=connection.getNetwork(resource.getHref());
+          assertNotNull(item);
+        }
+ catch (        AuthorizationException e) {
+        }
       }
     }
   }
