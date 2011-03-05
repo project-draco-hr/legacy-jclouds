@@ -1,0 +1,14 @@
+{
+  AtomicReference<AuthorizationException> authException=new AtomicReference<AuthorizationException>();
+  try {
+    new SetAndThrowAuthorizationExceptionSupplier<String>(new Supplier<String>(){
+      @Override public String get(){
+        throw new RuntimeException(new IllegalArgumentException("foo"));
+      }
+    }
+,authException).get();
+  }
+  finally {
+    assertEquals(authException.get().getClass(),RuntimeException.class);
+  }
+}
