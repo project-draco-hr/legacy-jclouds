@@ -8,8 +8,9 @@
   builder.operatingSystem(toComputeOs(from,null));
   builder.hardware(hardwareForVApp.apply(from));
   builder.state(vAppStatusToNodeState.get(from.getStatus()));
-  builder.publicAddresses(getPublicIpsFromVApp(from));
-  builder.privateAddresses(getPrivateIpsFromVApp(from));
+  Set<String> addresses=getIpsFromVApp(from);
+  builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
   builder.credentials(getCredentialsFrom(from));
   Credentials fromApi=getCredentialsFrom(from);
   if (fromApi != null && !credentialStore.containsKey("node#" + from.getHref().toASCIIString()))   credentialStore.put("node#" + from.getHref().toASCIIString(),fromApi);

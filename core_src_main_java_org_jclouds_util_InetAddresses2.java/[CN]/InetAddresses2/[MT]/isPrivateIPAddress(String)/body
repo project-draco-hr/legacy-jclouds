@@ -1,11 +1,3 @@
 {
-  if (InetAddresses.isInetAddress(checkNotNull(in,"input address"))) {
-    if (in.indexOf("10.") == 0)     return true;
-    if (in.indexOf("172.") == 0) {
-      int second=Integer.parseInt(Iterables.get(Splitter.on('.').split(in),1));
-      if (second >= 16 && second <= 31)       return true;
-    }
-    if (in.indexOf("192.168.") == 0)     return true;
-  }
-  return false;
+  return IsPrivateIPAddress.INSTANCE.apply(in);
 }
