@@ -1,9 +1,11 @@
 {
   InstantiateVAppTemplateOptions options=processorCount((int)getCores(template.getHardware())).memory(template.getHardware().getRam()).disk((long)((template.getHardware().getVolumes().get(0).getSize()) * 1024 * 1024l));
   String customizationScript=null;
+  IpAddressAllocationMode ipAddressAllocationMode=null;
   if (template.getOptions() instanceof VCloudTemplateOptions) {
     customizationScript=VCloudTemplateOptions.class.cast(template.getOptions()).getCustomizationScript();
-    if (customizationScript != null) {
+    ipAddressAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();
+    if (customizationScript != null || ipAddressAllocationMode != null) {
       options.customizeOnInstantiate(false);
       options.deploy(false);
       options.powerOn(false);
@@ -16,7 +18,7 @@
   VApp vAppResponse=client.instantiateVAppTemplateInVDC(VDC,templateId,name,options);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
   Task task=vAppResponse.getTasks().get(0);
-  if (customizationScript == null) {
+  if (customizationScript == null && ipAddressAllocationMode == null) {
     return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,task);
   }
  else {
@@ -24,12 +26,8 @@
       throw new RuntimeException(String.format("failed to %s %s: %s","instantiate",vAppResponse.getName(),task));
     }
     Vm vm=Iterables.get(client.getVApp(vAppResponse.getHref()).getChildren(),0);
-    GuestCustomizationSection guestConfiguration=vm.getGuestCustomizationSection();
-    guestConfiguration.setCustomizationScript(customizationScript);
-    task=client.updateGuestCustomizationOfVm(vm.getHref(),guestConfiguration);
-    if (!successTester.apply(task.getHref())) {
-      throw new RuntimeException(String.format("failed to %s %s: %s","updateGuestCustomizationOfVm",vm.getName(),task));
-    }
+    if (customizationScript != null)     updateVmWithCustomizationScript(vm,customizationScript);
+    if (ipAddressAllocationMode != null)     updateVmWithIpAddressAllocationMode(vm,ipAddressAllocationMode);
     task=client.deployAndPowerOnVAppOrVm(vAppResponse.getHref());
     return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,task);
   }

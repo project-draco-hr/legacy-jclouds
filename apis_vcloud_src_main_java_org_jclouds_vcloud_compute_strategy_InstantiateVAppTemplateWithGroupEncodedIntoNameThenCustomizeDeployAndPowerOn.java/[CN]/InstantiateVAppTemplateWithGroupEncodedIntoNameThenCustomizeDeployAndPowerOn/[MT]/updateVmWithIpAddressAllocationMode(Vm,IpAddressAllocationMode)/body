@@ -1,0 +1,15 @@
+{
+  Task task;
+  NetworkConnectionSection net=vm.getNetworkConnectionSection();
+  Builder builder=net.toBuilder();
+  builder.connections(Iterables.transform(net.getConnections(),new Function<NetworkConnection,NetworkConnection>(){
+    @Override public NetworkConnection apply(    NetworkConnection arg0){
+      return arg0.toBuilder().connected(true).ipAddressAllocationMode(ipAddressAllocationMode).build();
+    }
+  }
+));
+  task=client.updateNetworkConnectionOfVm(vm.getHref(),builder.build());
+  if (!successTester.apply(task.getHref())) {
+    throw new RuntimeException(String.format("failed to %s %s: %s","updateNetworkConnectionOfVm",vm.getName(),task));
+  }
+}
