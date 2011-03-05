@@ -14,7 +14,7 @@
   assertEquals(result.isAdminPasswordAuto(),new Boolean(true));
   assertEquals(result.getAdminPassword(),null);
   assertEquals(result.isResetPasswordRequired(),new Boolean(false));
-  assertEquals(result.getCustomizationScript(),"#!/bin/bash if [[ $1 == \"postcustomization\" ]]; then echo \"post customization\" touch /root/.postcustomization ping www.redhat.com -c 1 sleep 30 # register with RHN /usr/sbin/rhnreg_ks --profilename vic_`hostname`_`dmidecode -s system-uuid` --activationkey=XXXXXXXXXXXX --force echo \"rhn registered\" # make hostname fully qualified to speed up sendmail start perl -i -pe \"s/`hostname`/`hostname`.victory.blk/g\" /etc/sysconfig/network rm /etc/ssh/*_key* service sshd restart echo \"completed\" fi");
+  assertEquals(result.getCustomizationScript(),"cat > /root/foo.txt<<EOF\nI '\"love\"' {asc|!}*&\nEOF\n");
   assertEquals(result.getComputerName(),"RHEL5");
   assertEquals(result.getEdit(),new ReferenceTypeImpl(null,VCloudMediaType.GUESTCUSTOMIZATIONSECTION_XML,URI.create("https://vcenterprise.bluelock.com/api/v1.0/vApp/vm-2087535248/guestCustomizationSection/")));
 }
