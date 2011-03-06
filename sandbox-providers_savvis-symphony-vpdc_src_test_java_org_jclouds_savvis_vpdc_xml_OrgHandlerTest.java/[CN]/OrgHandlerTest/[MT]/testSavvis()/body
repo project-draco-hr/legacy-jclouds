@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/savvis/org.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  Org result=(Org)factory.create(injector.getInstance(OrgHandler.class)).parse(is);
+  assertEquals(result,new OrgImpl("100000.0",null,null,"100000.0","SAVVISStation Integration Testing",ImmutableMap.<String,ReferenceType>of(),ImmutableMap.<String,ReferenceType>of("demo_vpdcname",new ReferenceTypeImpl("demo_vpdcname","application/vnd.vmware.vcloud.vdc+xml",URI.create("https://api.sandbox.symphonyvpdc.savvis.net/rest/api/v0.8/org/100000.0/vdc/2736"))),ImmutableMap.<String,ReferenceType>of(),null,ImmutableSet.<Task>of()));
+}

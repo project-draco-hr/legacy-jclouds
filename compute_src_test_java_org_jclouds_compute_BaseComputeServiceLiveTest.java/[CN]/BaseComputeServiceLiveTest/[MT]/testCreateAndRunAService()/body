@@ -1,17 +1,17 @@
 {
-  String tag=this.group + "s";
+  String group=this.group + "s";
   try {
-    client.destroyNodesMatching(withTag(tag));
+    client.destroyNodesMatching(inGroup(group));
   }
  catch (  Exception e) {
   }
   template=client.templateBuilder().options(blockOnComplete(false).blockOnPort(8080,600).inboundPorts(22,8080)).build();
   template.getOptions().runScript(RunScriptData.createScriptInstallAndStartJBoss(keyPair.get("public"),template.getImage().getOperatingSystem()));
   try {
-    NodeMetadata node=getOnlyElement(client.runNodesWithTag(tag,1,template));
+    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,template));
     checkHttpGet(node);
   }
   finally {
-    client.destroyNodesMatching(withTag(tag));
+    client.destroyNodesMatching(inGroup(group));
   }
 }

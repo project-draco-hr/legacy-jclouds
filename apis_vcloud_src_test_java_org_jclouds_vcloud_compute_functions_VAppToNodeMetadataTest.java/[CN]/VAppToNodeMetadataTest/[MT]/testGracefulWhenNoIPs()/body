@@ -1,0 +1,12 @@
+{
+  Location location=new LocationBuilder().id("https://1.1.1.1/api/v1.0/vdc/1").description("description").scope(LocationScope.PROVIDER).build();
+  Injector injector=createInjectorWithLocation(location);
+  InputStream is=getClass().getResourceAsStream("/vapp-none.xml");
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  VApp result=factory.create(injector.getInstance(VAppHandler.class)).parse(is);
+  VAppToNodeMetadata converter=injector.getInstance(VAppToNodeMetadata.class);
+  NodeMetadata node=converter.apply(result);
+  assertEquals(node.getLocation(),location);
+  assertEquals(node.getPrivateAddresses(),ImmutableSet.of());
+  assertEquals(node.getPublicAddresses(),ImmutableSet.of());
+}
