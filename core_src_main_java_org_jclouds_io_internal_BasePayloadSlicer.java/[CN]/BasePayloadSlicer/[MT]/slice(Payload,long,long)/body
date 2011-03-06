@@ -1,0 +1,19 @@
+{
+  checkNotNull(input);
+  checkArgument(offset >= 0,"offset is negative");
+  checkArgument(length >= 0,"length is negative");
+  Payload returnVal;
+  if (input.getRawContent() instanceof File) {
+    returnVal=doSlice((File)input.getRawContent(),offset,length);
+  }
+ else   if (input.getRawContent() instanceof String) {
+    returnVal=doSlice((byte[])input.getRawContent(),offset,length);
+  }
+ else   if (input.getRawContent() instanceof byte[]) {
+    returnVal=doSlice((byte[])input.getRawContent(),offset,length);
+  }
+ else {
+    returnVal=doSlice(input.getInput(),offset,length);
+  }
+  return copyMetadataAndSetLength(input,returnVal,length);
+}
