@@ -1,0 +1,18 @@
+{
+  try {
+    ChannelBuffer chunk=getChunk();
+    if (chunk == null)     return -1;
+    int readable=chunk.readableBytes();
+    if (readable < 1)     return -1;
+    if (readable > len) {
+      readable=len;
+    }
+    int readIndex=chunk.readerIndex();
+    chunk.getBytes(readIndex,b,off,readable);
+    chunk.readerIndex(readIndex + readable);
+    return readable;
+  }
+ catch (  Exception e) {
+    throw new IOException(e);
+  }
+}

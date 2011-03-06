@@ -1,0 +1,12 @@
+{
+  install(new BlobStoreMapModule());
+  install(new RegionsLocationModule());
+  bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
+  bind(AsyncBlobStore.class).to(AWSS3AsyncBlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStore.class).to(AWSS3BlobStore.class).in(Scopes.SINGLETON);
+  bind(BlobStoreContext.class).to(new TypeLiteral<BlobStoreContextImpl<AWSS3Client,AWSS3AsyncClient>>(){
+  }
+).in(Scopes.SINGLETON);
+  bind(BlobRequestSigner.class).to(S3BlobRequestSigner.class);
+  bindBucketLocationStrategy();
+}
