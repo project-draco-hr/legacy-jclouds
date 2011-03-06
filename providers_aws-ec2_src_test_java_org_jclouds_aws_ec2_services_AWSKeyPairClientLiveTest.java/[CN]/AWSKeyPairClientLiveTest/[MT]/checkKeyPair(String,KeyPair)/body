@@ -1,0 +1,11 @@
+{
+  assertNotNull(keyPair);
+  assertNotNull(keyPair.getKeyFingerprint());
+  assertEquals(keyPair.getKeyName(),keyName);
+  Set<KeyPair> twoResults=Sets.newLinkedHashSet(client.describeKeyPairsInRegion(null,keyName));
+  assertNotNull(twoResults);
+  assertEquals(twoResults.size(),1);
+  KeyPair listPair=twoResults.iterator().next();
+  assertEquals(listPair.getKeyName(),keyPair.getKeyName());
+  assertEquals(listPair.getKeyFingerprint(),keyPair.getKeyFingerprint());
+}
