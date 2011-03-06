@@ -1,9 +1,9 @@
 {
   String region=Region.AP_SOUTHEAST_1;
-  String tag="tag";
+  String group="group";
   String userSuppliedPlacementGroup=null;
   boolean shouldAutomaticallyCreatePlacementGroup=true;
-  String generatedMarkerGroup="jclouds#tag#" + Region.AP_SOUTHEAST_1;
+  String generatedMarkerGroup="jclouds#group#" + Region.AP_SOUTHEAST_1;
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   expect(options.getPlacementGroup()).andReturn(userSuppliedPlacementGroup);
@@ -13,7 +13,7 @@
   expect(strategy.placementGroupMap.put(new RegionAndName(region,generatedMarkerGroup),generatedMarkerGroup)).andReturn(null);
   replay(options);
   replayStrategy(strategy);
-  assertEquals(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,tag,options),generatedMarkerGroup);
+  assertEquals(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,group,options),generatedMarkerGroup);
   verify(options);
   verifyStrategy(strategy);
 }

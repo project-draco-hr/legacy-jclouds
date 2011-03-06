@@ -1,6 +1,6 @@
 {
   String region=Region.AP_SOUTHEAST_1;
-  String tag="tag";
+  String group="group";
   Hardware size=EC2HardwareBuilder.m1_small().build();
   String systemGeneratedKeyPairName="systemGeneratedKeyPair";
   String generatedGroup="group";
@@ -12,15 +12,15 @@
   expect(template.getHardware()).andReturn(size).atLeastOnce();
   expect(template.getOptions()).andReturn(options).atLeastOnce();
   expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping>of()).atLeastOnce();
-  expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options)).andReturn(systemGeneratedKeyPairName);
-  expect(strategy.getSecurityGroupsForTagAndOptions(region,tag,options)).andReturn(generatedGroups);
+  expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options)).andReturn(systemGeneratedKeyPairName);
+  expect(strategy.getSecurityGroupsForTagAndOptions(region,group,options)).andReturn(generatedGroups);
   expect(options.getSubnetId()).andReturn(null);
   expect(options.getUserData()).andReturn("hello".getBytes());
   expect(options.isMonitoringEnabled()).andReturn(false);
   replay(options);
   replay(template);
   replay(strategy);
-  RunInstancesOptions customize=strategy.execute(region,tag,template);
+  RunInstancesOptions customize=strategy.execute(region,group,template);
   assertEquals(customize.buildQueryParameters(),ImmutableMultimap.<String,String>of());
   assertEquals(customize.buildFormParameters().entries(),ImmutableMultimap.<String,String>of("InstanceType",size.getProviderId(),"SecurityGroup.1","group","KeyName",systemGeneratedKeyPairName,"UserData",Base64.encodeBytes("hello".getBytes())).entries());
   assertEquals(customize.buildMatrixParameters(),ImmutableMultimap.<String,String>of());

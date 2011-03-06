@@ -1,7 +1,7 @@
 {
-  Set<String> groups=Sets.newLinkedHashSet();
-  if (tag != null) {
-    String markerGroup=String.format("jclouds#%s#%s",tag,region);
+  Builder<String> groups=ImmutableSet.<String>builder();
+  if (group != null) {
+    String markerGroup=String.format("jclouds#%s#%s",group,region);
     groups.add(markerGroup);
     RegionNameAndIngressRules regionNameAndIngessRulesForMarkerGroup;
     if (options instanceof EC2TemplateOptions && EC2TemplateOptions.class.cast(options).getGroupIds().size() > 0) {
@@ -15,5 +15,5 @@
       securityGroupMap.put(regionNameAndIngessRulesForMarkerGroup,createSecurityGroupIfNeeded.apply(regionNameAndIngessRulesForMarkerGroup));
     }
   }
-  return groups;
+  return groups.build();
 }

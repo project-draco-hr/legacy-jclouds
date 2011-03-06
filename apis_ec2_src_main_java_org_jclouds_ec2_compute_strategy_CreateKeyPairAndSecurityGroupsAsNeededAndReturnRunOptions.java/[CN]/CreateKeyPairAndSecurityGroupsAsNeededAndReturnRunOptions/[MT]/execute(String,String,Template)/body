@@ -1,7 +1,7 @@
 {
   RunInstancesOptions instanceOptions=getOptionsProvider().get().asType(template.getHardware().getId());
-  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,template.getOptions());
-  addSecurityGroups(region,tag,template,instanceOptions);
+  String keyPairName=createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,template.getOptions());
+  addSecurityGroups(region,group,template,instanceOptions);
   if (template.getOptions() instanceof EC2TemplateOptions) {
     if (keyPairName != null)     instanceOptions.withKeyName(keyPairName);
     byte[] userData=EC2TemplateOptions.class.cast(template.getOptions()).getUserData();

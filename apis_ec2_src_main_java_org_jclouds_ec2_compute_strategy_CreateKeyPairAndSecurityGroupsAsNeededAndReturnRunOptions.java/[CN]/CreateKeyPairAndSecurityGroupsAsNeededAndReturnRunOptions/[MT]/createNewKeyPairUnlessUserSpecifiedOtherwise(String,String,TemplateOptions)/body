@@ -6,10 +6,7 @@
     if (keyPairName == null)     shouldAutomaticallyCreateKeyPair=EC2TemplateOptions.class.cast(options).shouldAutomaticallyCreateKeyPair();
   }
   if (keyPairName == null && shouldAutomaticallyCreateKeyPair) {
-    RegionAndName regionAndName=new RegionAndName(region,tag);
-    KeyPair keyPair=createUniqueKeyPair.apply(regionAndName);
-    credentialsMap.put(new RegionAndName(region,keyPair.getKeyName()),keyPair);
-    keyPairName=keyPair.getKeyName();
+    keyPairName=createOrImportKeyPair(region,group,options);
   }
   return keyPairName;
 }

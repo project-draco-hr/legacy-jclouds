@@ -1,11 +1,11 @@
 {
   Set<? extends NodeMetadata> deadOnes=super.destroyNodesMatching(filter);
-  Map<String,String> regionTags=Maps.newHashMap();
+  Builder<String,String> regionGroups=ImmutableMap.<String,String>builder();
   for (  NodeMetadata nodeMetadata : deadOnes) {
-    if (nodeMetadata.getGroup() != null)     regionTags.put(AWSUtils.parseHandle(nodeMetadata.getId())[0],nodeMetadata.getGroup());
+    if (nodeMetadata.getGroup() != null)     regionGroups.put(AWSUtils.parseHandle(nodeMetadata.getId())[0],nodeMetadata.getGroup());
   }
-  for (  Entry<String,String> regionTag : regionTags.entrySet()) {
-    cleanUpIncidentalResources(regionTag);
+  for (  Entry<String,String> regionGroup : regionGroups.build().entrySet()) {
+    cleanUpIncidentalResources(regionGroup);
   }
   return deadOnes;
 }

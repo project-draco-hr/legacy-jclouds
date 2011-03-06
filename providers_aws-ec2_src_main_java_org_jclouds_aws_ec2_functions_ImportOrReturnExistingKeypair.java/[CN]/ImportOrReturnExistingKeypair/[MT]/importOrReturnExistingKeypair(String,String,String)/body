@@ -1,0 +1,16 @@
+{
+  checkNotNull(region,"region");
+  checkNotNull(group,"group");
+  checkNotNull(publicKeyMaterial,"publicKeyMaterial");
+  logger.debug(">> importing keyPair region(%s) group(%s)",region,group);
+  KeyPair keyPair=null;
+  while (keyPair == null)   try {
+    keyPair=ec2Client.getKeyPairServices().importKeyPairInRegion(region,"jclouds#" + group,publicKeyMaterial);
+    logger.debug("<< imported keyPair(%s)",keyPair.getKeyName());
+  }
+ catch (  IllegalStateException e) {
+    keyPair=Iterables.getFirst(ec2Client.getKeyPairServices().describeKeyPairsInRegion(region,"jclouds#" + group),null);
+    if (keyPair != null)     logger.debug("<< retrieved existing keyPair(%s)",keyPair.getKeyName());
+  }
+  return keyPair;
+}

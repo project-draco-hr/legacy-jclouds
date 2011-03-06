@@ -1,11 +1,11 @@
 {
   checkNotNull(region,"region");
-  checkNotNull(tag,"tag");
-  logger.debug(">> creating keyPair region(%s) tag(%s)",region,tag);
+  checkNotNull(group,"group");
+  logger.debug(">> creating keyPair region(%s) group(%s)",region,group);
   KeyPair keyPair=null;
   while (keyPair == null) {
     try {
-      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(region,tag));
+      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(region,group));
       logger.debug("<< created keyPair(%s)",keyPair.getKeyName());
     }
  catch (    IllegalStateException e) {

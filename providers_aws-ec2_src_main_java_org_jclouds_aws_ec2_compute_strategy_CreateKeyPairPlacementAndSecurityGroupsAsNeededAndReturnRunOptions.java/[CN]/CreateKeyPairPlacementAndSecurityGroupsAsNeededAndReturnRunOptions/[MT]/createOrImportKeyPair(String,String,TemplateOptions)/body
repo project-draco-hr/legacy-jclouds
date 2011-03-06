@@ -1,0 +1,18 @@
+{
+  RegionAndName key=new RegionAndName(region,"jclouds#" + group);
+  KeyPair pair=credentialsMap.get(key);
+  if (pair != null)   return pair.getKeyName();
+  if (and(hasPublicKeyMaterial,or(doesntNeedSshAfterImportingPublicKey,hasLoginCredential)).apply(options)) {
+    pair=importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,options.getPublicKey()));
+    options.dontAuthorizePublicKey();
+    if (hasLoginCredential.apply(options))     pair=pair.toBuilder().keyMaterial(options.getOverridingCredentials().credential).build();
+    credentialsMap.put(key,pair);
+  }
+ else {
+    if (hasPublicKeyMaterial.apply(options)) {
+      logger.warn("to avoid creating extra keys in aws-ec2, use templateOption overrideLoginCredentialWith(id_rsa)");
+    }
+    return createUniqueKeyPairAndPutIntoMap(region,group);
+  }
+  return pair.getKeyName();
+}

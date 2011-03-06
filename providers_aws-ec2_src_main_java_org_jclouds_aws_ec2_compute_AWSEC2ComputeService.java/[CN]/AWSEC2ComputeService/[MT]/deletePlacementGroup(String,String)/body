@@ -1,17 +1,17 @@
 {
-  Preconditions2.checkNotEmpty(tag,"tag");
-  String group=String.format("jclouds#%s#%s",tag,region);
+  Preconditions2.checkNotEmpty(group,"group");
+  String placementGroup=String.format("jclouds#%s#%s",group,region);
   try {
-    if (ec2Client.getPlacementGroupServices().describePlacementGroupsInRegion(region,group).size() > 0) {
-      logger.debug(">> deleting placementGroup(%s)",group);
+    if (ec2Client.getPlacementGroupServices().describePlacementGroupsInRegion(region,placementGroup).size() > 0) {
+      logger.debug(">> deleting placementGroup(%s)",placementGroup);
       try {
-        ec2Client.getPlacementGroupServices().deletePlacementGroupInRegion(region,group);
-        checkState(placementGroupDeleted.apply(new PlacementGroup(region,group,"cluster",State.PENDING)),String.format("placementGroup region(%s) name(%s) failed to delete",region,group));
-        placementGroupMap.remove(new RegionAndName(region,group));
-        logger.debug("<< deleted placementGroup(%s)",group);
+        ec2Client.getPlacementGroupServices().deletePlacementGroupInRegion(region,placementGroup);
+        checkState(placementGroupDeleted.apply(new PlacementGroup(region,placementGroup,"cluster",State.PENDING)),String.format("placementGroup region(%s) name(%s) failed to delete",region,placementGroup));
+        placementGroupMap.remove(new RegionAndName(region,placementGroup));
+        logger.debug("<< deleted placementGroup(%s)",placementGroup);
       }
  catch (      IllegalStateException e) {
-        logger.debug("<< inUse placementGroup(%s)",group);
+        logger.debug("<< inUse placementGroup(%s)",placementGroup);
       }
     }
   }

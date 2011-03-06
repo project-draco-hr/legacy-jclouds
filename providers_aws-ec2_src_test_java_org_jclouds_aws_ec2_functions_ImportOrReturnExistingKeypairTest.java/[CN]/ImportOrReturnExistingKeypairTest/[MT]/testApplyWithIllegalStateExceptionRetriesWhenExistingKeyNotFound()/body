@@ -1,0 +1,16 @@
+{
+  AWSEC2Client client=createMock(AWSEC2Client.class);
+  AWSKeyPairClient keyClient=createMock(AWSKeyPairClient.class);
+  KeyPair pair=createMock(KeyPair.class);
+  expect(client.getKeyPairServices()).andReturn(keyClient).atLeastOnce();
+  expect(keyClient.importKeyPairInRegion("region","jclouds#group","ssh-rsa")).andThrow(new IllegalStateException());
+  expect(keyClient.describeKeyPairsInRegion("region","jclouds#group")).andReturn(ImmutableSet.<KeyPair>of());
+  expect(keyClient.importKeyPairInRegion("region","jclouds#group","ssh-rsa")).andThrow(new IllegalStateException());
+  expect(keyClient.describeKeyPairsInRegion("region","jclouds#group")).andReturn(ImmutableSet.<KeyPair>of(pair));
+  replay(client);
+  replay(keyClient);
+  ImportOrReturnExistingKeypair parser=new ImportOrReturnExistingKeypair(client);
+  assertEquals(parser.importOrReturnExistingKeypair("region","group","ssh-rsa"),pair);
+  verify(client);
+  verify(keyClient);
+}

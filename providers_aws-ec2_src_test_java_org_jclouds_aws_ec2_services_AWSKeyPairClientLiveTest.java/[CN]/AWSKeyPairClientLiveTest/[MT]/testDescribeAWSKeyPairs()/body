@@ -1,10 +1,10 @@
 {
   for (  String region : Region.DEFAULT_REGIONS) {
-    SortedSet<KeyPair> allResults=Sets.newTreeSet(client.describeKeyPairsInRegion(region));
+    SortedSet<KeyPair> allResults=newTreeSet(client.describeKeyPairsInRegion(region));
     assertNotNull(allResults);
     if (allResults.size() >= 1) {
       KeyPair pair=allResults.last();
-      SortedSet<KeyPair> result=Sets.newTreeSet(client.describeKeyPairsInRegion(region,pair.getKeyName()));
+      SortedSet<KeyPair> result=newTreeSet(client.describeKeyPairsInRegion(region,pair.getKeyName()));
       assertNotNull(result);
       KeyPair compare=result.last();
       assertEquals(compare,pair);
