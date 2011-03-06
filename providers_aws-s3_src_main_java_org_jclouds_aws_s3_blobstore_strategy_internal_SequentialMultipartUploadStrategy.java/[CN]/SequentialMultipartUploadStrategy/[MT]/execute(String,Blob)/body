@@ -1,29 +1,22 @@
 {
-  Payload payload=blob.getPayload();
-  if (payload instanceof FilePayload) {
-    String key=blob.getMetadata().getName();
-    File file=FilePayload.class.cast(payload).getRawContent();
-    calculateChunkSize(file.length());
-    long parts=getParts();
-    if (parts > 0) {
-      AWSS3Client client=(AWSS3Client)ablobstore.getContext().getProviderSpecificContext().getApi();
-      String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
-      Map<Integer,String> etags=Maps.newHashMap();
-      int part;
-      while ((part=getNextPart()) <= getParts()) {
-        String eTag=prepareUploadPart(client,container,key,uploadId,part,file,getNextChunkOffset(),chunkSize);
-        etags.put(new Integer(part),eTag);
-      }
-      long remaining=getRemaining();
-      if (remaining > 0) {
-        String eTag=prepareUploadPart(client,container,key,uploadId,part,file,getNextChunkOffset(),remaining);
-        etags.put(new Integer(part),eTag);
-      }
-      return client.completeMultipartUpload(container,key,uploadId,etags);
+  String key=blob.getMetadata().getName();
+  calculateChunkSize(blob.getPayload().getContentMetadata().getContentLength());
+  long parts=getParts();
+  if (parts > 0) {
+    AWSS3Client client=(AWSS3Client)ablobstore.getContext().getProviderSpecificContext().getApi();
+    String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
+    Map<Integer,String> etags=Maps.newHashMap();
+    int part;
+    while ((part=getNextPart()) <= getParts()) {
+      String eTag=prepareUploadPart(client,container,key,uploadId,part,slicer.slice(blob.getPayload(),getNextChunkOffset(),chunkSize));
+      etags.put(new Integer(part),eTag);
     }
- else {
-      return ablobstore.putBlob(container,blob);
+    long remaining=getRemaining();
+    if (remaining > 0) {
+      String eTag=prepareUploadPart(client,container,key,uploadId,part,slicer.slice(blob.getPayload(),getNextChunkOffset(),remaining));
+      etags.put(new Integer(part),eTag);
     }
+    return client.completeMultipartUpload(container,key,uploadId,etags);
   }
  else {
     return ablobstore.putBlob(container,blob);
