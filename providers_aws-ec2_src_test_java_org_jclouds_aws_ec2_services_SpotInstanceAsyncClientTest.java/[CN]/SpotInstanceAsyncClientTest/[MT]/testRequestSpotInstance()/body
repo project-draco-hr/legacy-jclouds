@@ -1,11 +1,11 @@
 {
-  Method method=SpotInstanceAsyncClient.class.getMethod("requestSpotInstancesInRegion",String.class,float.class,String.class,String.class);
+  Method method=SpotInstanceAsyncClient.class.getMethod("requestSpotInstanceInRegion",String.class,float.class,String.class,String.class);
   HttpRequest request=processor.createRequest(method,null,0.01f,"m1.small","ami-voo");
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
   assertPayloadEquals(request,"Version=2010-11-15&Action=RequestSpotInstances&LaunchSpecification.ImageId=m1.small&SpotPrice=0.01&LaunchSpecification.InstanceType=ami-voo","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
-  assertSaxResponseParserClassEquals(method,SpotInstanceRequestsResponseHandler.class);
+  assertSaxResponseParserClassEquals(method,SpotInstanceHandler.class);
   assertExceptionParserClassEquals(method,null);
   checkFilters(request);
 }
