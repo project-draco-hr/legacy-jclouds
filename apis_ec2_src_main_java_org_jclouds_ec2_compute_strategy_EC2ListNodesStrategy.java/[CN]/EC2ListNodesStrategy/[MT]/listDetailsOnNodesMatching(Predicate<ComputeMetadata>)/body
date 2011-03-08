@@ -1,11 +1,5 @@
 {
-  Iterable<? extends Set<? extends Reservation<? extends RunningInstance>>> reservations=transformParallel(regions,new Function<String,Future<Set<? extends Reservation<? extends RunningInstance>>>>(){
-    @SuppressWarnings("unchecked") @Override public Future<Set<? extends Reservation<? extends RunningInstance>>> apply(    String from){
-      return (Future<Set<? extends Reservation<? extends RunningInstance>>>)client.getInstanceServices().describeInstancesInRegion(from);
-    }
-  }
-,executor,null,logger,"reservations");
-  Iterable<? extends RunningInstance> instances=concat(concat(reservations));
-  Iterable<? extends NodeMetadata> nodes=filter(transform(instances,runningInstanceToNodeMetadata),filter);
-  return newLinkedHashSet(nodes);
+  Iterable<? extends RunningInstance> instances=pollRunningInstances();
+  Iterable<? extends NodeMetadata> nodes=filter(transform(filter(instances,notNull()),runningInstanceToNodeMetadata),and(notNull(),filter));
+  return ImmutableSet.copyOf(nodes);
 }

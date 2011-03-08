@@ -1,11 +1,11 @@
 {
+  if (instance == null || instance.getId() == null)   return null;
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
-  String providerId=checkNotNull(instance,"instance").getId();
-  builder.providerId(providerId);
-  builder.id(instance.getRegion() + "/" + providerId);
+  builder.providerId(instance.getId());
+  builder.id(instance.getRegion() + "/" + instance.getId());
   String group=getGroupForInstance(instance);
   builder.group(group);
-  builder.credentials(credentialStore.get("node#" + instance.getRegion() + "/"+ providerId));
+  addCredentialsForInstance(builder,instance);
   builder.state(instanceToNodeState.get(instance.getInstanceState()));
   builder.publicAddresses(NullSafeCollections.nullSafeSet(instance.getIpAddress()));
   builder.privateAddresses(NullSafeCollections.nullSafeSet(instance.getPrivateIpAddress()));

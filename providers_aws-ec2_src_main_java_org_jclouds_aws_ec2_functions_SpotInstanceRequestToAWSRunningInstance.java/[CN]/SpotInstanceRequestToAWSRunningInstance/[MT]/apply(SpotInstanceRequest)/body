@@ -1,0 +1,19 @@
+{
+  if (request == null)   return null;
+  if (request.getState() != SpotInstanceRequest.State.OPEN)   return null;
+  AWSRunningInstance.Builder builder=AWSRunningInstance.builder();
+  builder.spotInstanceRequestId(request.getId());
+  builder.instanceId(request.getId());
+  builder.instanceState(InstanceState.PENDING);
+  builder.region(request.getRegion());
+  LaunchSpecification spec=request.getLaunchSpecification();
+  builder.availabilityZone(spec.getAvailabilityZone());
+  builder.groupIds(spec.getGroupIds());
+  builder.imageId(spec.getImageId());
+  builder.instanceType(spec.getInstanceType());
+  builder.kernelId(spec.getKernelId());
+  builder.keyName(spec.getKeyName());
+  builder.ramdiskId(spec.getRamdiskId());
+  builder.monitoringState(Boolean.TRUE.equals(spec.isMonitoringEnabled()) ? MonitoringState.PENDING : MonitoringState.DISABLED);
+  return builder.build();
+}
