@@ -1,8 +1,16 @@
 {
+  String spotId=id;
   if (id.indexOf("sir-") != 0) {
+    try {
+      spotId=getOnlyElement(Iterables.concat(client.getInstanceServices().describeInstancesInRegion(region,id))).getSpotInstanceRequestId();
+      credentialStore.remove("node#" + region + "/"+ spotId);
+    }
+ catch (    NoSuchElementException e) {
+    }
     super.destroyInstanceInRegion(region,id);
   }
  else {
-    client.getSpotInstanceServices().cancelSpotInstanceRequestsInRegion(region,id);
+    client.getSpotInstanceServices().cancelSpotInstanceRequestsInRegion(region,spotId);
+    credentialStore.remove("node#" + region + "/"+ id);
   }
 }
