@@ -1,0 +1,60 @@
+{
+  if (qName.equals("blockDeviceMapping")) {
+    inBlockDeviceMapping=false;
+  }
+ else   if (qName.equals("item") && inBlockDeviceMapping) {
+    try {
+      builder.blockDeviceMapping(blockDeviceMappingBuilder.build());
+    }
+  finally {
+      blockDeviceMappingBuilder.clear();
+    }
+  }
+ else   if (qName.equals("deviceName")) {
+    blockDeviceMappingBuilder.deviceName(currentOrNull());
+  }
+ else   if (qName.equals("virtualName")) {
+    blockDeviceMappingBuilder.virtualName(currentOrNull());
+  }
+ else   if (qName.equals("snapshotId")) {
+    blockDeviceMappingBuilder.snapshotId(currentOrNull());
+  }
+ else   if (qName.equals("volumeSize")) {
+    String volumeSize=currentOrNull();
+    if (volumeSize != null)     blockDeviceMappingBuilder.sizeInGib(Integer.parseInt(volumeSize));
+  }
+ else   if (qName.equals("noDevice")) {
+    String noDevice=currentOrNull();
+    if (noDevice != null)     blockDeviceMappingBuilder.noDevice(Boolean.parseBoolean(noDevice));
+  }
+ else   if (qName.equals("deleteOnTermination")) {
+    String deleteOnTermination=currentOrNull();
+    if (deleteOnTermination != null)     blockDeviceMappingBuilder.deleteOnTermination(Boolean.parseBoolean(deleteOnTermination));
+  }
+ else   if (qName.equals("groupId")) {
+    builder.groupId(currentOrNull());
+  }
+ else   if (qName.equals("imageId")) {
+    builder.imageId(currentOrNull());
+  }
+ else   if (qName.equals("instanceType")) {
+    builder.instanceType(currentOrNull());
+  }
+ else   if (qName.equals("kernelId")) {
+    builder.kernelId(currentOrNull());
+  }
+ else   if (qName.equals("keyName")) {
+    builder.keyName(currentOrNull());
+  }
+ else   if (qName.equals("availabilityZone")) {
+    builder.availabilityZone(currentOrNull());
+  }
+ else   if (qName.equals("ramdiskId")) {
+    builder.ramdiskId(currentOrNull());
+  }
+ else   if (qName.equals("enabled")) {
+    String monitoringEnabled=currentOrNull();
+    if (monitoringEnabled != null)     builder.monitoringEnabled(new Boolean(monitoringEnabled));
+  }
+  currentText=new StringBuilder();
+}

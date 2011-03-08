@@ -1,7 +1,8 @@
 {
   String launchGroup=PREFIX + "1";
-  for (  SpotInstanceRequest request : ImmutableSet.<SpotInstanceRequest>of())   if (request.getLaunchGroup().equals(launchGroup))   client.getSpotInstanceServices().cancelSpotInstanceRequestsInRegion(null,request.getId());
-  String string=client.getSpotInstanceServices().requestSpotInstancesInRegion(null,null,"TODO",1,0.01f,RequestSpotInstancesOptions.Builder.launchSpecification(AWSRunInstancesOptions.Builder.asType("m1.small")).launchGroup(PREFIX));
-  assertNotNull(string);
-  verifySpotInstance(request);
+  for (  SpotInstanceRequest request : client.getSpotInstanceServices().describeSpotInstanceRequestsInRegion("us-west-1"))   if (launchGroup.equals(request.getLaunchGroup()))   client.getSpotInstanceServices().cancelSpotInstanceRequestsInRegion("us-west-1",request.getId());
+  start=System.currentTimeMillis();
+  requests=client.getSpotInstanceServices().requestSpotInstancesInRegion("us-west-1",0.03f,1,LaunchSpecification.builder().instanceType(InstanceType.T1_MICRO).imageId("ami-595a0a1c").build(),launchGroup(launchGroup).availabilityZoneGroup(launchGroup).validFrom(new Date()).validUntil(new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(SPOT_DELAY_SECONDS))));
+  assertNotNull(requests);
+  for (  SpotInstanceRequest request : requests)   verifySpotInstance(request);
 }

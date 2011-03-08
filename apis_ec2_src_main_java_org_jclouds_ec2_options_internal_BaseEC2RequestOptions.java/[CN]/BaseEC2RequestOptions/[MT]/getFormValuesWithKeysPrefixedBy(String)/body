@@ -1,12 +1,12 @@
 {
-  Set<String> values=Sets.newLinkedHashSet();
+  Builder<String> values=ImmutableSet.<String>builder();
   for (  String key : Iterables.filter(formParameters.keySet(),new Predicate<String>(){
     public boolean apply(    String input){
       return input.startsWith(prefix);
     }
   }
 )) {
-    values.add(formParameters.get(key).iterator().next());
+    values.add(Iterables.get(formParameters.get(key),0));
   }
-  return values;
+  return values.build();
 }

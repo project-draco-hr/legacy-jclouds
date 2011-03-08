@@ -1,12 +1,47 @@
 {
-  if (qName.equals("availabilityZoneGroup")) {
-    this.availabilityZoneGroup=currentText.toString().trim();
+  if (qName.equals("launchSpecification")) {
+    inLaunchSpecification=false;
+    builder.launchSpecification(launchSpecificationHandler.getResult());
   }
- else   if (qName.equals("createTime")) {
-    createTime=this.dateService.iso8601DateParse(currentText.toString().trim());
+  if (inLaunchSpecification) {
+    launchSpecificationHandler.endElement(uri,name,qName);
+  }
+ else   if (qName.equals("spotInstanceRequestId")) {
+    builder.id(currentOrNull());
+  }
+ else   if (qName.equals("instanceId")) {
+    builder.instanceId(currentOrNull());
+  }
+ else   if (qName.equals("availabilityZoneGroup")) {
+    builder.availabilityZoneGroup(currentOrNull());
+  }
+ else   if (qName.equals("launchGroup")) {
+    builder.launchGroup(currentOrNull());
+  }
+ else   if (qName.equals("code")) {
+    builder.faultCode(currentOrNull());
+  }
+ else   if (qName.equals("message")) {
+    builder.faultMessage(currentOrNull());
+  }
+ else   if (qName.equals("spotPrice")) {
+    String price=currentOrNull();
+    if (price != null)     builder.spotPrice(Float.parseFloat(price));
   }
  else   if (qName.equals("type")) {
-    type=SpotInstanceRequest.Type.fromValue(currentText.toString().trim());
+    String type=currentOrNull();
+    if (type != null)     builder.type(SpotInstanceRequest.Type.fromValue(type));
+  }
+ else   if (qName.equals("state")) {
+    String state=currentOrNull();
+    if (state != null)     builder.state(SpotInstanceRequest.State.fromValue(state));
+  }
+ else   if (qName.equals("createTime")) {
+    String createTime=currentOrNull();
+    if (createTime != null)     builder.createTime(dateService.iso8601DateParse(createTime));
+  }
+ else   if (qName.equals("productDescription")) {
+    builder.productDescription(currentOrNull());
   }
   currentText=new StringBuilder();
 }

@@ -1,0 +1,13 @@
+{
+  for (  String region : Region.DEFAULT_REGIONS) {
+    SortedSet<SpotInstanceRequest> allResults=ImmutableSortedSet.copyOf(client.getSpotInstanceServices().describeSpotInstanceRequestsInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      SpotInstanceRequest request=allResults.last();
+      SortedSet<SpotInstanceRequest> result=ImmutableSortedSet.copyOf(client.getSpotInstanceServices().describeSpotInstanceRequestsInRegion(region,request.getId()));
+      assertNotNull(result);
+      SpotInstanceRequest compare=result.last();
+      assertEquals(compare,request);
+    }
+  }
+}
