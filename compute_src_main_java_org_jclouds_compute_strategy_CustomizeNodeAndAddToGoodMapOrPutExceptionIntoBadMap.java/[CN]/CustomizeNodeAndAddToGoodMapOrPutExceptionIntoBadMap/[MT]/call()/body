@@ -7,7 +7,9 @@
         node=getNode.getNode(node.getId());
       }
  else {
-        throw new IllegalStateException(String.format("node didn't achieve the state running on node %s within %d seconds, final state: %s",node.getId(),timeouts.nodeRunning / 1000,node.getState()));
+        NodeMetadata nodeForState=getNode.getNode(node.getId());
+        NodeState state=nodeForState == null ? NodeState.TERMINATED : nodeForState.getState();
+        throw new IllegalStateException(String.format("node didn't achieve the state running on node %s within %d seconds, final state: %s",node.getId(),timeouts.nodeRunning / 1000,state));
       }
       if (statement != null) {
         RunScriptOnNode runner=initScriptRunnerFactory.create(node,statement,options,badNodes).call();
