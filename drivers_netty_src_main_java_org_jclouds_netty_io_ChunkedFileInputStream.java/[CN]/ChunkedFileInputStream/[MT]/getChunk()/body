@@ -1,0 +1,20 @@
+{
+  if (ex != null) {
+    throw ex;
+  }
+  if (chunk == null) {
+    chunk=ChannelBuffer.class.cast(chunks.nextChunk());
+  }
+  if (chunk != null) {
+    if (chunk.readableBytes() < 1 && chunks.hasNextChunk()) {
+      chunk=ChannelBuffer.class.cast(chunks.nextChunk());
+      if (chunk.readableBytes() < 1) {
+        return null;
+      }
+    }
+  }
+ else {
+    return null;
+  }
+  return chunk;
+}
