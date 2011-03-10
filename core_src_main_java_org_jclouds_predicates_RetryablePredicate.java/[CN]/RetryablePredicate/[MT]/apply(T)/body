@@ -14,8 +14,18 @@
     logger.warn(e,"predicate %s on %s interrupted, returning false",input,predicate);
   }
 catch (  RuntimeException e) {
-    ExecutionException exec=Throwables2.getFirstThrowableOfType(e,ExecutionException.class);
-    if (exec != null)     logger.warn(exec,"predicate %s on %s error, returning false",input,predicate);
+    if (getFirstThrowableOfType(e,ExecutionException.class) != null) {
+      logger.warn(e,"predicate %s on %s errored [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,IllegalStateException.class) != null) {
+      logger.warn(e,"predicate %s on %s illegal state [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,TimeoutException.class) != null) {
+      logger.warn(e,"predicate %s on %s timed out [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
  else     throw e;
   }
   return false;

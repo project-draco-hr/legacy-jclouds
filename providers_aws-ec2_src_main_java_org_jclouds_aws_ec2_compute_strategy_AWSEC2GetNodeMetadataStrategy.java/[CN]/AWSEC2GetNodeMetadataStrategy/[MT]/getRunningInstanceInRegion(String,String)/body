@@ -1,0 +1,6 @@
+{
+  if (id.indexOf("sir-") != 0)   return super.getRunningInstanceInRegion(region,id);
+  SpotInstanceRequest spot=getOnlyElement(client.getSpotInstanceServices().describeSpotInstanceRequestsInRegion(region,id));
+  if (spot.getState() == SpotInstanceRequest.State.ACTIVE)   return super.getRunningInstanceInRegion(region,spot.getInstanceId());
+ else   return spotConverter.apply(spot);
+}

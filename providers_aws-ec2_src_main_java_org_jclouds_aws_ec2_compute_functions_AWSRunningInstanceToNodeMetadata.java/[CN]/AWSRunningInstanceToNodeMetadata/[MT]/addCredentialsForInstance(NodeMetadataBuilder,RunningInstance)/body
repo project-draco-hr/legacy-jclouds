@@ -1,0 +1,9 @@
+{
+  Credentials creds=credentialStore.get("node#" + instance.getRegion() + "/"+ instance.getId());
+  String spotRequestId=AWSRunningInstance.class.cast(instance).getSpotInstanceRequestId();
+  if (creds == null && spotRequestId != null) {
+    creds=credentialStore.get("node#" + instance.getRegion() + "/"+ spotRequestId);
+    if (creds != null)     credentialStore.put("node#" + instance.getRegion() + "/"+ instance.getId(),creds);
+  }
+  if (creds != null)   builder.credentials(creds);
+}

@@ -1,0 +1,16 @@
+{
+  logger.trace("looking for state on spot %s",spot);
+  try {
+    spot=refresh(spot);
+    logger.trace("%s: looking for spot state %s: currently: %s",spot.getId(),SpotInstanceRequest.State.ACTIVE,spot.getState());
+    if (spot.getState() == SpotInstanceRequest.State.CANCELLED || spot.getState() == SpotInstanceRequest.State.CLOSED)     throw new IllegalStateException(String.format("spot request %s %s",spot.getId(),spot.getState()));
+    if (spot.getFaultCode() != null)     throw new IllegalStateException(String.format("spot request %s fault code(%s) message(%s)",spot.getId(),spot.getFaultCode(),spot.getFaultMessage()));
+    return spot.getState() == SpotInstanceRequest.State.ACTIVE;
+  }
+ catch (  ResourceNotFoundException e) {
+    return false;
+  }
+catch (  NoSuchElementException e) {
+    return false;
+  }
+}

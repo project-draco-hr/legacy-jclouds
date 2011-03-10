@@ -3,9 +3,6 @@
   AsyncJob<?> job=refresh(jobId);
   if (job == null)   return false;
   logger.trace("%s: looking for job status %s: currently: %s",job.getId(),1,job.getStatus());
-  if (job.getError() != null)   Throwables.propagate(new ExecutionException(String.format("job %s failed with exception %s",job.getId(),job.getError().toString())){
-    private static final long serialVersionUID=4371112085613620239L;
-  }
-);
+  if (job.getError() != null)   throw new IllegalStateException(String.format("job %s failed with exception %s",job.getId(),job.getError().toString()));
   return job.getStatus() > 0;
 }
