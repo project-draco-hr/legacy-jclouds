@@ -5,7 +5,7 @@
   if (parts > 0) {
     AWSS3Client client=(AWSS3Client)ablobstore.getContext().getProviderSpecificContext().getApi();
     String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
-    Map<Integer,String> etags=Maps.newHashMap();
+    SortedMap<Integer,String> etags=Maps.newTreeMap();
     int part;
     while ((part=getNextPart()) <= getParts()) {
       String eTag=prepareUploadPart(client,container,key,uploadId,part,slicer.slice(blob.getPayload(),getNextChunkOffset(),chunkSize));
