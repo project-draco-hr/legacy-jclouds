@@ -2,7 +2,12 @@
   super.setupClient();
   loadBalancerRuleActive=new RetryablePredicate<LoadBalancerRule>(new LoadBalancerRuleActive(client),60,1,1,TimeUnit.SECONDS);
   prefix+="rule";
-  network=find(client.getNetworkClient().listNetworks(),NetworkPredicates.hasLoadBalancerService());
-  vm=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,client,jobComplete,virtualMachineRunning);
-  if (vm.getPassword() != null)   password=vm.getPassword();
+  try {
+    network=find(client.getNetworkClient().listNetworks(),NetworkPredicates.hasLoadBalancerService());
+    vm=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,client,jobComplete,virtualMachineRunning);
+    if (vm.getPassword() != null)     password=vm.getPassword();
+  }
+ catch (  NoSuchElementException e) {
+    networksDisabled=true;
+  }
 }

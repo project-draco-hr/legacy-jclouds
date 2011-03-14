@@ -1,0 +1,8 @@
+{
+  checkNotNull(client,"client");
+  Builder<Long,Set<String>> builder=ImmutableMap.<Long,Set<String>>builder();
+  for (  Zone zone : client.getZoneClient().listZones()) {
+    builder.put(zone.getId(),client.getHypervisorClient().listHypervisorsInZone(zone.getId()));
+  }
+  return builder.build();
+}

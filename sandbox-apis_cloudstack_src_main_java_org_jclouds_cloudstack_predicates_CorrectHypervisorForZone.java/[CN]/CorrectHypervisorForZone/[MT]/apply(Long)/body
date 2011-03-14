@@ -1,0 +1,19 @@
+{
+  final Set<String> acceptableHypervisorsInZone;
+  try {
+    acceptableHypervisorsInZone=this.hypervisorsSupplier.get().get(zoneId);
+  }
+ catch (  NullPointerException e) {
+    throw new IllegalArgumentException("unknown zone: " + zoneId);
+  }
+  if (acceptableHypervisorsInZone.size() == 0)   return Predicates.alwaysFalse();
+  return new Predicate<Template>(){
+    @Override public boolean apply(    Template input){
+      return Predicates.in(acceptableHypervisorsInZone).apply(input.getHypervisor());
+    }
+    @Override public String toString(){
+      return "hypervisorsInZone(" + zoneId + ", "+ acceptableHypervisorsInZone+ ")";
+    }
+  }
+;
+}

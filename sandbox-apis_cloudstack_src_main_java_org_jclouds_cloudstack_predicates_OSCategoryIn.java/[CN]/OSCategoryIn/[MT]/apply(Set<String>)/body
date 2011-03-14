@@ -1,0 +1,23 @@
+{
+  final Map<Long,String> categories=categoriesSupplier.get();
+  final Set<Long> acceptableOSTypeIds=Maps.filterValues(Maps.transformValues(Maps.uniqueIndex(osTypesSupplier.get(),new Function<OSType,Long>(){
+    @Override public Long apply(    OSType input){
+      return input.getId();
+    }
+  }
+),new Function<OSType,String>(){
+    @Override public String apply(    OSType input){
+      return categories.get(input.getOSCategoryId());
+    }
+  }
+),Predicates.in(acceptableCategories)).keySet();
+  return new Predicate<Template>(){
+    @Override public boolean apply(    Template input){
+      return Predicates.in(acceptableOSTypeIds).apply(input.getOSTypeId());
+    }
+    @Override public String toString(){
+      return "OSCategoryIn(" + acceptableCategories + ")";
+    }
+  }
+;
+}

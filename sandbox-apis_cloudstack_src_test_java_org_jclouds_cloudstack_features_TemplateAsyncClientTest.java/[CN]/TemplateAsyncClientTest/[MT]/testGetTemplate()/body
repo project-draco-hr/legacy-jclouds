@@ -1,7 +1,7 @@
 {
-  Method method=TemplateAsyncClient.class.getMethod("getTemplate",long.class);
-  HttpRequest httpRequest=processor.createRequest(method,5);
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listTemplates&templatefilter=executable&id=5 HTTP/1.1");
+  Method method=TemplateAsyncClient.class.getMethod("getTemplateInZone",long.class,long.class);
+  HttpRequest httpRequest=processor.createRequest(method,1,5);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listTemplates&templatefilter=executable&zoneid=1&id=5 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,UnwrapOnlyNestedJsonValueInSet.class);
