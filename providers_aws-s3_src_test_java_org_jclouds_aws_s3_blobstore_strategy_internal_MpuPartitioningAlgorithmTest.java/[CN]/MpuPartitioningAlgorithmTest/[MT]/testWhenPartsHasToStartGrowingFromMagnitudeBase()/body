@@ -1,0 +1,21 @@
+{
+  AWSS3BlobStore ablobStore=createMock(AWSS3BlobStore.class);
+  PayloadSlicer slicer=createMock(PayloadSlicer.class);
+  replay(ablobStore);
+  replay(slicer);
+  SequentialMultipartUploadStrategy strategy=new SequentialMultipartUploadStrategy(ablobStore,slicer);
+  long length=MultipartUploadStrategy.MAX_PART_SIZE * SequentialMultipartUploadStrategy.MAGNITUDE_BASE;
+  long chunkSize=strategy.calculateChunkSize(length);
+  assertEquals(chunkSize,MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(strategy.getParts(),SequentialMultipartUploadStrategy.MAGNITUDE_BASE - 1);
+  assertEquals(strategy.getRemaining(),MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
+  length+=1;
+  chunkSize=strategy.calculateChunkSize(length);
+  assertEquals(chunkSize,MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(strategy.getParts(),SequentialMultipartUploadStrategy.MAGNITUDE_BASE);
+  assertEquals(strategy.getRemaining(),1);
+  assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
+  verify(ablobStore);
+  verify(slicer);
+}
