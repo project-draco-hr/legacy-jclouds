@@ -1,0 +1,26 @@
+{
+  Org org=client.getOrg(null);
+  for (  Resource vdc : org.getVDCs()) {
+    VDC VDC=client.getVDCInOrg(null,vdc.getId());
+    for (    Resource vApp : Iterables.filter(VDC.getResourceEntities(),new Predicate<Resource>(){
+      @Override public boolean apply(      Resource arg0){
+        return VCloudMediaType.VAPP_XML.equals(arg0.getType());
+      }
+    }
+)) {
+      VApp response=client.getVAppInOrgAndVDC(org.getId(),vdc.getId(),vApp.getId());
+      assertNotNull(response);
+      assertNotNull(response.getId());
+      assertNotNull(response.getHref());
+      assertNotNull(response.getName());
+      assertEquals(response.getType(),"application/vnd.vmware.vcloud.vApp+xml");
+      assertNotNull(response.getIpAddress());
+      assertNotNull(response.getStatus());
+      assertNotNull(response.getOsDescripton());
+      assertNotNull(response.getOsType());
+      assertNotNull(response.getNetworkSection());
+      assertNotNull(response.getResourceAllocations());
+      assertEquals(client.getVAppInOrgAndVDC(null,vdc.getId(),response.getId()).toString(),response.toString());
+    }
+  }
+}

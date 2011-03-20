@@ -1,0 +1,7 @@
+{
+  logger.trace("looking for status on task %s",taskId);
+  Task task=client.getBrowsingClient().getTask(taskId);
+  logger.trace("%s: looking for status %s: currently: %s",task,Task.Status.SUCCESS,task.getStatus());
+  if (task.getStatus() == Task.Status.ERROR || task.getStatus() == Task.Status.NONE)   throw new RuntimeException("error on task: " + task.getHref() + " error: "+ task.getError());
+  return task.getStatus() == Task.Status.SUCCESS;
+}

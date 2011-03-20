@@ -1,0 +1,11 @@
+{
+  String uri=attributes.get("href");
+  String type=attributes.get("type");
+  String id=null;
+  URI href=null;
+  if (uri != null) {
+    href=URI.create(uri);
+    id=uri.substring(uri.lastIndexOf('/') + 1);
+  }
+  return (attributes.containsKey("rel")) ? new Link(id,attributes.get("name"),type != null ? type : defaultType,href,attributes.get("rel")) : new Resource(id,attributes.get("name"),type != null ? type : defaultType,href);
+}

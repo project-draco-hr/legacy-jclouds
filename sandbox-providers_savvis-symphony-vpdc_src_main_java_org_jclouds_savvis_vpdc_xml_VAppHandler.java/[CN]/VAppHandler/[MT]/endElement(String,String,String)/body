@@ -1,0 +1,24 @@
+{
+  if (qName.endsWith("OperatingSystemSection")) {
+    inOs=false;
+  }
+ else   if (inOs && qName.endsWith("Description")) {
+    builder.osDescripton(Utils.currentOrNull(currentText));
+  }
+ else   if (qName.endsWith("IpAddress")) {
+    builder.ipAddress(Utils.currentOrNull(currentText));
+  }
+ else   if (qName.endsWith("NetworkSection")) {
+    networkSectionHandler.endElement(uri,localName,qName);
+    builder.networkSection(networkSectionHandler.getResult());
+  }
+ else   if (qName.endsWith("Item")) {
+    allocationHandler.endElement(uri,localName,qName);
+    builder.resourceAllocation(allocationHandler.getResult());
+  }
+ else {
+    networkSectionHandler.endElement(uri,localName,qName);
+    allocationHandler.endElement(uri,localName,qName);
+  }
+  currentText=new StringBuilder();
+}

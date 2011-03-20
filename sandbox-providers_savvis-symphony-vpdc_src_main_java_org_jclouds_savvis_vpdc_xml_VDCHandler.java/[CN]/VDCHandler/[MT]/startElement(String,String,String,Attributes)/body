@@ -1,0 +1,14 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (qName.endsWith("Vdc")) {
+    if (!attributes.containsKey("href") && getRequest() != null)     attributes=ImmutableMap.<String,String>builder().putAll(attributes).put("href",getRequest().getEndpoint().toASCIIString()).build();
+    Resource vDC=newResource(attributes);
+    builder.name(vDC.getName()).type(vDC.getType()).id(vDC.getId()).href(vDC.getHref());
+  }
+ else   if (qName.endsWith("Network")) {
+    builder.availableNetwork(newResource(attributes));
+  }
+ else   if (qName.endsWith("ResourceEntity")) {
+    builder.resourceEntity(newResource(attributes));
+  }
+}
