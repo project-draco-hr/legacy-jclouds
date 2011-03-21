@@ -1,9 +1,9 @@
 {
-  for (  ResourceAllocation disk : filter(vApp.getResourceAllocations(),resourceType(ResourceType.DISK_DRIVE))) {
+  for (  ResourceAllocationSettingData disk : filter(vApp.getResourceAllocations(),CIMPredicates.resourceTypeIn(ResourceType.DISK_DRIVE))) {
     if (!configuration.getDisksToDelete().contains(disk.getAddressOnParent()))     addDiskWithQuantity(sectionBuilder,disk);
   }
   for (  Long quantity : configuration.getDisks()) {
-    ResourceAllocation disk=new ResourceAllocation(9,"n/a",null,ResourceType.DISK_DRIVE,null,"1048576",null,-1,null,null,quantity,null);
+    ResourceAllocationSettingData disk=ResourceAllocationSettingData.builder().instanceID("9").elementName("n/a").resourceType(ResourceType.DISK_DRIVE).virtualQuantity(quantity).build();
     addDiskWithQuantity(sectionBuilder,disk);
   }
 }

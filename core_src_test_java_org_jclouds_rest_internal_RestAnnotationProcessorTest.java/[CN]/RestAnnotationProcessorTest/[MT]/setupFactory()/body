@@ -1,6 +1,9 @@
 {
   RestContextSpec<String,Integer> contextSpec=contextSpec("test","http://localhost:9999","1","","userfoo",null,String.class,Integer.class,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
     @Override protected void configure(){
+      bind(new TypeLiteral<Set<String>>(){
+      }
+).toInstance(ImmutableSet.of("foo"));
       bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:1111"));
     }
   }

@@ -28,7 +28,10 @@
  else     if (method.isAnnotationPresent(Delegate.class)) {
       logger.trace("skipping delegate method %s",method);
     }
- else     if (!method.getName().startsWith("new")) {
+ else     if (method.isAnnotationPresent(Provides.class)) {
+      logger.trace("skipping provider method %s",method);
+    }
+ else {
       logger.trace("Method is not annotated as either http or constant: %s",method);
     }
   }

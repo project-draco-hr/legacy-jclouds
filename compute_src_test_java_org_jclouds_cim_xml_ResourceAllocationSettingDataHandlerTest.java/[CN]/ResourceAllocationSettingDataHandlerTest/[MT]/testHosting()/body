@@ -1,0 +1,6 @@
+{
+  InputStream is=getClass().getResourceAsStream("/resourceallocation-hosting.xml");
+  ResourceAllocationSettingData result=factory.create(injector.getInstance(ResourceAllocationSettingDataHandler.class)).parse(is);
+  ResourceAllocationSettingData expects=ResourceAllocationSettingData.builder().elementName("1 virtual CPU(s)").allocationUnits("hertz * 10^6").instanceID("1").resourceType(ResourceAllocationSettingData.ResourceType.PROCESSOR).virtualQuantity(1l).description("Number of Virtual CPUs").virtualQuantityUnits("count").build();
+  assertEquals(result.toString(),expects.toString());
+}
