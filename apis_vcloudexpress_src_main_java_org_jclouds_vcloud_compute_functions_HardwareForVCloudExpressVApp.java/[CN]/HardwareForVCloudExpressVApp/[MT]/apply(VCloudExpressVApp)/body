@@ -1,16 +1,10 @@
 {
   checkNotNull(from,"VApp");
-  Location location=findLocationForResource.apply(checkNotNull(from,"from").getVDC());
   try {
-    int ram=(int)find(from.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
-    List<Processor> processors=Lists.newArrayList(transform(filter(from.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
-      @Override public Processor apply(      ResourceAllocation arg0){
-        return new Processor(arg0.getVirtualQuantity(),1);
-      }
-    }
-));
-    List<Volume> volumes=Lists.newArrayList(resourceAllocationsToVolumes.apply(from.getResourceAllocations()));
-    return new HardwareBuilder().ids(from.getHref().toASCIIString()).name(from.getName()).location(location).processors(processors).ram(ram).volumes(volumes).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString())).build();
+    HardwareBuilder builder=rasdToHardwareBuilder.apply(from.getResourceAllocations());
+    builder.location(findLocationForResource.apply(checkNotNull(from,"from").getVDC()));
+    builder.ids(from.getHref().toASCIIString()).name(from.getName()).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString()));
+    return builder.build();
   }
  catch (  NoSuchElementException e) {
     logger.debug("incomplete data to form vApp %s",from.getHref());

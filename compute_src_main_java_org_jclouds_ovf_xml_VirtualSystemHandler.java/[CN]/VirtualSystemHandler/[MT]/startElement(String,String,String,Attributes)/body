@@ -1,0 +1,28 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+    inHardware=true;
+  }
+ else   if (equalsOrSuffix(qName,"OperatingSystemSection")) {
+    inOs=true;
+  }
+ else   if (equalsOrSuffix(qName,"NetworkConnectionSection")) {
+    inNetwork=true;
+  }
+ else   if (equalsOrSuffix(qName,"GuestCustomizationSection")) {
+    inGuest=true;
+  }
+  if (inHardware) {
+    hardwareHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inOs) {
+    osHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inNetwork) {
+  }
+ else   if (inGuest) {
+  }
+ else   if (equalsOrSuffix(qName,"VirtualSystem")) {
+    id=attributes.get("id");
+  }
+}

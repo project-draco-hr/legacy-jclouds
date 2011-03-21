@@ -9,7 +9,6 @@
     logger.warn("cannot parse hardware as no ovf envelope found for %s",from);
     return null;
   }
-  Location location=findLocationForResource.apply(checkNotNull(parent,"parent"));
   if (ovf.getVirtualSystem().getHardware().size() == 0) {
     logger.warn("cannot parse hardware for %s as no hardware sections exist in ovf %s",ovf);
     return null;
@@ -18,13 +17,8 @@
     logger.warn("multiple hardware choices found. using first",ovf);
   }
   VirtualHardwareSection hardware=Iterables.get(ovf.getVirtualSystem().getHardware(),0);
-  int ram=(int)find(hardware.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
-  List<Processor> processors=Lists.newArrayList(transform(filter(hardware.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
-    @Override public Processor apply(    ResourceAllocation arg0){
-      return new Processor(arg0.getVirtualQuantity(),1);
-    }
-  }
-));
-  List<Volume> volumes=Lists.newArrayList(resourceAllocationsToVolumes.apply(hardware.getResourceAllocations()));
-  return new HardwareBuilder().ids(from.getHref().toASCIIString()).uri(from.getHref()).name(from.getName()).location(location).processors(processors).ram(ram).volumes(volumes).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString())).build();
+  HardwareBuilder builder=rasdToHardwareBuilder.apply(hardware.getResourceAllocations());
+  builder.location(findLocationForResource.apply(checkNotNull(parent,"parent")));
+  builder.ids(from.getHref().toASCIIString()).name(from.getName()).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString()));
+  return builder.build();
 }

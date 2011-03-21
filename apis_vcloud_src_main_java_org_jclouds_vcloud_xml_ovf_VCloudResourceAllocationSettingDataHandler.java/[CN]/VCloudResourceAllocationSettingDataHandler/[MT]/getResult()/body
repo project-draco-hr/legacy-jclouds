@@ -1,0 +1,26 @@
+{
+  try {
+    ResourceAllocationSettingData from=super.getResult();
+    if (edit != null) {
+      return EditableResourceAllocationSettingData.builder().fromResourceAllocationSettingData(from).edit(edit).build();
+    }
+ else     if (busSubType != null) {
+      return VCloudHardDisk.builder().fromResourceAllocationSettingData(from).capacity(capacity).busType(busType).busSubType(busSubType).build();
+    }
+ else     if (ipAddress != null) {
+      return VCloudNetworkAdapter.builder().fromResourceAllocationSettingData(from).ipAddress(ipAddress).primaryNetworkConnection(primaryNetworkConnection).ipAddressingMode(ipAddressingMode).build();
+    }
+ else {
+      return from;
+    }
+  }
+  finally {
+    ipAddress=null;
+    primaryNetworkConnection=false;
+    ipAddressingMode=null;
+    capacity=-1;
+    busType=-1;
+    busSubType=null;
+    edit=null;
+  }
+}

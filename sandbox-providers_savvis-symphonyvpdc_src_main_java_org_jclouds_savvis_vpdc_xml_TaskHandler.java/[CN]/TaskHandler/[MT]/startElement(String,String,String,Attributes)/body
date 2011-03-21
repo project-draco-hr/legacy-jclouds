@@ -1,0 +1,21 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (qName.endsWith("Task")) {
+    Resource task=newResource(attributes);
+    builder.id(task.getId());
+    builder.type(task.getType());
+    builder.href(task.getHref());
+    if (attributes.containsKey("startTime"))     builder.startTime(parseDate(attributes.get("startTime")));
+    if (attributes.containsKey("endTime"))     builder.endTime(parseDate(attributes.get("endTime")));
+    builder.status(Task.Status.fromValue(attributes.get("status")));
+  }
+ else   if (qName.endsWith("Owner")) {
+    builder.owner(Utils.newResource(attributes));
+  }
+ else   if (qName.endsWith("Result")) {
+    builder.result(Utils.newResource(attributes));
+  }
+ else   if (qName.endsWith("Error")) {
+    builder.error(new TaskError(attributes.get("message"),Integer.parseInt(attributes.get("majorErrorCode")),Integer.parseInt(attributes.get("minorErrorCode")),attributes.get("vendorSpecificErrorCode")));
+  }
+}

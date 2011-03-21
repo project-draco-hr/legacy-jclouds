@@ -2,15 +2,9 @@
   checkNotNull(from,"VApp");
   Vm vm=from.getChildren().size() == 0 ? null : Iterables.get(from.getChildren(),0);
   if (vm == null)   return null;
-  Location location=findLocationForResource.apply(checkNotNull(from,"from").getVDC());
   VirtualHardwareSection hardware=vm.getVirtualHardwareSection();
-  int ram=(int)find(hardware.getResourceAllocations(),resourceType(ResourceType.MEMORY)).getVirtualQuantity();
-  List<Processor> processors=Lists.newArrayList(transform(filter(hardware.getResourceAllocations(),resourceType(ResourceType.PROCESSOR)),new Function<ResourceAllocation,Processor>(){
-    @Override public Processor apply(    ResourceAllocation arg0){
-      return new Processor(arg0.getVirtualQuantity(),1);
-    }
-  }
-));
-  List<Volume> volumes=Lists.newArrayList(resourceAllocationsToVolumes.apply(hardware.getResourceAllocations()));
-  return new HardwareBuilder().ids(from.getHref().toASCIIString()).uri(from.getHref()).name(from.getName()).location(location).processors(processors).ram(ram).volumes(volumes).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString())).build();
+  HardwareBuilder builder=rasdToHardwareBuilder.apply(hardware.getResourceAllocations());
+  builder.location(findLocationForResource.apply(checkNotNull(from,"from").getVDC()));
+  builder.ids(from.getHref().toASCIIString()).name(from.getName()).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString()));
+  return builder.build();
 }

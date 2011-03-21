@@ -1,6 +1,12 @@
 {
   InputStream is=getClass().getResourceAsStream("/vm-rhel-off-static.xml");
-  Injector injector=Guice.createInjector(new SaxParserModule());
+  Injector injector=Guice.createInjector(new SaxParserModule(){
+    @Override protected void configure(){
+      super.configure();
+      bind(ResourceAllocationSettingDataHandler.class).to(VCloudResourceAllocationSettingDataHandler.class);
+    }
+  }
+);
   Factory factory=injector.getInstance(ParseSax.Factory.class);
   Vm result=factory.create(injector.getInstance(VmHandler.class)).parse(is);
   checkVm(result);
