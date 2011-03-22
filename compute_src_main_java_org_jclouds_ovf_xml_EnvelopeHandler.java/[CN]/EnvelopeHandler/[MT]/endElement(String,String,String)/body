@@ -1,23 +1,26 @@
 {
-  if (equalsOrSuffix(qName,"DiskSection")) {
-    inDisk=false;
-    builder.diskSection(diskHandler.getResult());
-  }
- else   if (equalsOrSuffix(qName,"NetworkSection")) {
-    inNetwork=false;
-    builder.networkSection(networkHandler.getResult());
-  }
- else   if (equalsOrSuffix(qName,"VirtualSystem")) {
-    inVirtualSystem=false;
-    builder.virtualSystem(virtualSystemHandler.getResult());
-  }
- else   if (extensionHandlers.containsKey(qName)) {
-    builder.additionalSection(extensionHandler.getResult());
-    inExtensionSection=false;
-  }
- else   if (qName.endsWith("Section")) {
-    builder.additionalSection(defaultSectionHandler.getResult());
-    inSection=false;
+  depth--;
+  if (depth == 1) {
+    if (equalsOrSuffix(qName,"DiskSection")) {
+      inDisk=false;
+      builder.diskSection(diskHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"NetworkSection")) {
+      inNetwork=false;
+      builder.networkSection(networkHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"VirtualSystem")) {
+      inVirtualSystem=false;
+      builder.virtualSystem(virtualSystemHandler.getResult());
+    }
+ else     if (extensionHandlers.containsKey(qName)) {
+      builder.additionalSection(qName,extensionHandler.getResult());
+      inExtensionSection=false;
+    }
+ else     if (qName.endsWith("Section")) {
+      builder.additionalSection(qName,defaultSectionHandler.getResult());
+      inSection=false;
+    }
   }
   if (inDisk) {
     diskHandler.endElement(uri,localName,qName);
@@ -33,8 +36,5 @@
   }
  else   if (inSection) {
     defaultSectionHandler.endElement(uri,localName,qName);
-  }
- else {
-    currentText=new StringBuilder();
   }
 }
