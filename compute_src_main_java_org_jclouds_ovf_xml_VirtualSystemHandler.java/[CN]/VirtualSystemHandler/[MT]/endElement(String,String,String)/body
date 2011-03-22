@@ -1,17 +1,22 @@
 {
-  if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
-    inHardware=false;
-    hardware.add(hardwareHandler.getResult());
-  }
- else   if (equalsOrSuffix(qName,"OperatingSystemSection")) {
-    inOs=false;
-    operatingSystem=osHandler.getResult();
-  }
- else   if (equalsOrSuffix(qName,"NetworkConnectionSection")) {
-    inNetwork=false;
-  }
- else   if (equalsOrSuffix(qName,"GuestCustomizationSection")) {
-    inNetwork=false;
+  depth--;
+  if (depth == 1) {
+    if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+      inHardware=false;
+      builder.hardwareSection(hardwareHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"OperatingSystemSection")) {
+      inOs=false;
+      builder.operatingSystemSection(osHandler.getResult());
+    }
+ else     if (extensionHandlers.containsKey(qName)) {
+      builder.additionalSection(qName,extensionHandler.getResult());
+      inExtensionSection=false;
+    }
+ else     if (qName.endsWith("Section")) {
+      builder.additionalSection(qName,defaultSectionHandler.getResult());
+      inSection=false;
+    }
   }
   if (inHardware) {
     hardwareHandler.endElement(uri,localName,qName);
@@ -19,15 +24,19 @@
  else   if (inOs) {
     osHandler.endElement(uri,localName,qName);
   }
- else   if (inNetwork) {
+ else   if (inExtensionSection) {
+    extensionHandler.endElement(uri,localName,qName);
   }
- else   if (inGuest) {
+ else   if (inSection) {
+    defaultSectionHandler.endElement(uri,localName,qName);
   }
- else   if (equalsOrSuffix(qName,"Info")) {
-    info=currentText.toString().trim();
+ else {
+    if (equalsOrSuffix(qName,"Info")) {
+      builder.info(currentOrNull(currentText));
+    }
+ else     if (equalsOrSuffix(qName,"Name")) {
+      builder.name(currentOrNull(currentText));
+    }
+    super.endElement(uri,localName,qName);
   }
- else   if (equalsOrSuffix(qName,"Name")) {
-    name=currentText.toString().trim();
-  }
-  currentText=new StringBuilder();
 }

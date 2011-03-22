@@ -1,16 +1,20 @@
 {
   Map<String,String> attributes=cleanseAttributes(attrs);
-  if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
-    inHardware=true;
-  }
- else   if (equalsOrSuffix(qName,"OperatingSystemSection")) {
-    inOs=true;
-  }
- else   if (equalsOrSuffix(qName,"NetworkConnectionSection")) {
-    inNetwork=true;
-  }
- else   if (equalsOrSuffix(qName,"GuestCustomizationSection")) {
-    inGuest=true;
+  depth++;
+  if (depth == 2) {
+    if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+      inHardware=true;
+    }
+ else     if (equalsOrSuffix(qName,"OperatingSystemSection")) {
+      inOs=true;
+    }
+ else     if (extensionHandlers.containsKey(qName)) {
+      inExtensionSection=true;
+      extensionHandler=extensionHandlers.get(qName).get();
+    }
+ else     if (qName.endsWith("Section")) {
+      inSection=true;
+    }
   }
   if (inHardware) {
     hardwareHandler.startElement(uri,localName,qName,attrs);
@@ -18,11 +22,13 @@
  else   if (inOs) {
     osHandler.startElement(uri,localName,qName,attrs);
   }
- else   if (inNetwork) {
+ else   if (inExtensionSection) {
+    extensionHandler.startElement(uri,localName,qName,attrs);
   }
- else   if (inGuest) {
+ else   if (inSection) {
+    defaultSectionHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (equalsOrSuffix(qName,"VirtualSystem")) {
-    id=attributes.get("id");
+    builder.id(attributes.get("id"));
   }
 }

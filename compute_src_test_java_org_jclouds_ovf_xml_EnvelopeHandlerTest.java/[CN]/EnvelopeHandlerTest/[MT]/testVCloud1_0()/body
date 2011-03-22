@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/ovf.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  Envelope result=factory.create(injector.getInstance(EnvelopeHandler.class)).parse(is);
+  checkOvfEnvelope(result);
+}
