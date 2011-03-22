@@ -9,7 +9,13 @@
     return this.hashCode();
   }
  else   if (method.isAnnotationPresent(Provides.class)) {
-    return injector.getInstance(Key.get(method.getGenericReturnType()));
+    try {
+      Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
+      return injector.getInstance(Key.get(method.getGenericReturnType(),qualifier));
+    }
+ catch (    NoSuchElementException e) {
+      return injector.getInstance(Key.get(method.getGenericReturnType()));
+    }
   }
  else   if (method.isAnnotationPresent(Delegate.class)) {
     return delegateMap.get(new ClassMethodArgs(method.getReturnType(),method,args));
