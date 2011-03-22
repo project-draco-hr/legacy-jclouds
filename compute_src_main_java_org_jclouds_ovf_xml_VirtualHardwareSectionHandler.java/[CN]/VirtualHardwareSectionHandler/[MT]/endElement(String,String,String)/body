@@ -1,11 +1,11 @@
 {
-  if (qName.endsWith("System")) {
+  if (equalsOrSuffix(qName,"System")) {
     inSystem=false;
-    system=systemHandler.getResult();
+    builder.system(systemHandler.getResult());
   }
- else   if (qName.endsWith("Item")) {
+ else   if (equalsOrSuffix(qName,"Item")) {
     inItem=false;
-    allocations.add(allocationHandler.getResult());
+    builder.resourceAllocation(allocationHandler.getResult());
   }
   if (inSystem) {
     systemHandler.endElement(uri,localName,qName);
@@ -13,8 +13,8 @@
  else   if (inItem) {
     allocationHandler.endElement(uri,localName,qName);
   }
- else   if (qName.endsWith("Info")) {
-    this.info=currentText.toString().trim();
+ else {
+    if (equalsOrSuffix(qName,"Info"))     builder.info(currentOrNull(currentText));
+    super.endElement(uri,localName,qName);
   }
-  currentText=new StringBuilder();
 }

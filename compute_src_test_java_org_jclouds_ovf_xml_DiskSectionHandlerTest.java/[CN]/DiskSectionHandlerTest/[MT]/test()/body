@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/disksection.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  DiskSection result=factory.create(injector.getInstance(DiskSectionHandler.class)).parse(is);
+  assertEquals(result.toString(),DiskSection.builder().info("Describes the set of virtual disks").disk(Disk.builder().id("vmdisk1").fileRef("file1").capacity(8589934592l).populatedSize(3549324972l).format(URI.create("http://www.vmware.com/interfaces/specifications/vmdk.html#sparse")).build()).disk(Disk.builder().id("vmdisk2").capacity(536870912l).build()).disk(Disk.builder().id("vmdisk3").capacityAllocationUnits("byte * 2^30").build()).build().toString());
+}

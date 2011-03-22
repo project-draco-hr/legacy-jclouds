@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/networksection.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  NetworkSection result=factory.create(injector.getInstance(NetworkSectionHandler.class)).parse(is);
+  assertEquals(result.toString(),NetworkSection.builder().info("List of logical networks used in the package").network(Network.builder().name("red").description("The network the Red service is available on").build()).network(Network.builder().name("blue").description("The network the Blue service is available on").build()).build().toString());
+}

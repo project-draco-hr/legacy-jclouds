@@ -1,0 +1,12 @@
+{
+  Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
+  if (equalsOrSuffix(qName,"Disk")) {
+    diskBuilder.id(attributes.get("diskId"));
+    diskBuilder.capacity(attemptToParse(attributes.get("capacity"),"capacity",attributes.get("diskId")));
+    diskBuilder.parentRef(attributes.get("parentRef"));
+    diskBuilder.fileRef(attributes.get("fileRef"));
+    if (attributes.containsKey("format"))     diskBuilder.format(URI.create(attributes.get("format")));
+    diskBuilder.populatedSize(attemptToParse(attributes.get("populatedSize"),"populatedSize",attributes.get("diskId")));
+    diskBuilder.capacityAllocationUnits(attributes.get("capacityAllocationUnits"));
+  }
+}
