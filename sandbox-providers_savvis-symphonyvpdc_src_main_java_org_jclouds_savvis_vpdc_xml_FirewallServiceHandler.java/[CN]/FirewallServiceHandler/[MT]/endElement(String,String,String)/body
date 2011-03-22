@@ -1,0 +1,21 @@
+{
+  if (qName.endsWith("FirewallService")) {
+    inFirewallService=false;
+  }
+ else   if (qName.endsWith("FirewallRule")) {
+    builder.firewallRule(firewallRuleHandler.getResult());
+    inFirewallRule=false;
+  }
+ else   if (qName.endsWith("isEnabled")) {
+    if (inFirewallService) {
+      String current=currentOrNull(currentText);
+      if (current != null) {
+        builder.isEnabled(Boolean.parseBoolean(current));
+      }
+    }
+  }
+  if (inFirewallRule) {
+    firewallRuleHandler.endElement(uri,localName,qName);
+  }
+  currentText=new StringBuilder();
+}

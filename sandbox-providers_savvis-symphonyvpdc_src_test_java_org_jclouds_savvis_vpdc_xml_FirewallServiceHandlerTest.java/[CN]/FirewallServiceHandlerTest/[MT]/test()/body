@@ -1,0 +1,8 @@
+{
+  InputStream is=getClass().getResourceAsStream("/firewallService.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  FirewallService result=factory.create(injector.getInstance(FirewallServiceHandler.class)).parse(is);
+  assertEquals(result.isEnabled(),false);
+  assertEquals(result.getFirewallRules(),ImmutableSet.<FirewallRule>of(new FirewallRule(null,null,null,null,"SERVER_TIER_FIREWALL",true,"internet","VM Tier01","22","allow","Server Tier Firewall Rule",false,"Tcp"),new FirewallRule(null,null,null,null,"SERVER_TIER_FIREWALL",true,"VM Tier03","VM Tier03",null,"allow","Server Tier Firewall Rule",false,"Icmp-ping")));
+}
