@@ -1,0 +1,20 @@
+{
+  if (equalsOrSuffix(qName,"Info")) {
+    builder.info(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"Label")) {
+    configBuilder.label(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"Description")) {
+    configBuilder.description(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"Configuration")) {
+    try {
+      builder.configuration(configBuilder.build());
+    }
+  finally {
+      configBuilder=Configuration.builder();
+    }
+  }
+  super.endElement(uri,localName,qName);
+}

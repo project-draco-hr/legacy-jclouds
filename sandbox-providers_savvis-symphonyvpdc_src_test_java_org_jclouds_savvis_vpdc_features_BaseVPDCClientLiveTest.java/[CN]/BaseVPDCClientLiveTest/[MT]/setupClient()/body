@@ -1,5 +1,8 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+  injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
+  context=injector.getInstance(Key.get(new TypeLiteral<RestContext<VPDCClient,VPDCAsyncClient>>(){
+  }
+));
 }

@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/operatingsystemsection.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  OperatingSystemSection result=factory.create(injector.getInstance(OperatingSystemSectionHandler.class)).parse(is);
+  assertEquals(result.toString(),OperatingSystemSection.builder().info("Specifies the operating system installed").description("Microsoft Windows Server 2008").id(76).build().toString());
+}

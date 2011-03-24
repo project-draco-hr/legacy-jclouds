@@ -4,7 +4,7 @@
     for (    Resource vdc : org.getVDCs()) {
       VDC VDC=client.getVDCInOrg(org.getId(),vdc.getId());
       for (      Resource vApp : VDC.getAvailableNetworks()) {
-        Network response=client.getNetworkInOrgAndVDC(org.getId(),vdc.getId(),vApp.getId());
+        Network response=client.getNetworkInVDC(org.getId(),vdc.getId(),vApp.getId());
         assertNotNull(response);
         assertNotNull(response.getId());
         assertNotNull(response.getHref());
@@ -13,7 +13,7 @@
         assertNotNull(response.getNetmask());
         assertNotNull(response.getGateway());
         assertNotNull(response.getInternalToExternalNATRules());
-        assertEquals(client.getNetworkInOrgAndVDC(org.getId(),vdc.getId(),response.getId()).toString(),response.toString());
+        assertEquals(client.getNetworkInVDC(org.getId(),vdc.getId(),response.getId()).toString(),response.toString());
       }
     }
   }

@@ -1,8 +1,12 @@
 {
-  if (qName.endsWith("System")) {
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+    if (attributes.containsKey("transport"))     builder.transports(Splitter.on(' ').split(attributes.get("transport")));
+  }
+ else   if (equalsOrSuffix(qName,"System")) {
     inSystem=true;
   }
- else   if (!inSystem && qName.endsWith("Item")) {
+ else   if (!inSystem && equalsOrSuffix(qName,"Item")) {
     inItem=true;
   }
   if (inSystem) {
