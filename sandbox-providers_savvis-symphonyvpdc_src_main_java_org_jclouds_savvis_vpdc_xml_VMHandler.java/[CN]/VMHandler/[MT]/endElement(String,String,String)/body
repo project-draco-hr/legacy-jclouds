@@ -1,18 +1,18 @@
 {
-  if (qName.endsWith("OperatingSystemSection")) {
+  if (equalsOrSuffix(qName,"OperatingSystemSection")) {
     inOs=false;
   }
- else   if (inOs && qName.endsWith("Description")) {
+ else   if (inOs && equalsOrSuffix(qName,"Description")) {
     builder.osDescripton(Utils.currentOrNull(currentText));
   }
- else   if (qName.endsWith("IpAddress")) {
+ else   if (equalsOrSuffix(qName,"IpAddress")) {
     builder.ipAddress(Utils.currentOrNull(currentText));
   }
- else   if (qName.endsWith("NetworkSection")) {
+ else   if (equalsOrSuffix(qName,"NetworkSection")) {
     networkSectionHandler.endElement(uri,localName,qName);
     builder.networkSection(networkSectionHandler.getResult());
   }
- else   if (qName.endsWith("Item")) {
+ else   if (equalsOrSuffix(qName,"Item")) {
     allocationHandler.endElement(uri,localName,qName);
     builder.resourceAllocation(allocationHandler.getResult());
   }
