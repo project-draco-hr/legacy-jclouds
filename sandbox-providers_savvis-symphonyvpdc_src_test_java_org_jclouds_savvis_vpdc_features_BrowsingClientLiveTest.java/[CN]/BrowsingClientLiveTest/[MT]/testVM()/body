@@ -1,0 +1,28 @@
+{
+  for (  Resource org1 : context.getApi().listOrgs()) {
+    Org org=client.getOrg(org1.getId());
+    for (    Resource vdc : org.getVDCs()) {
+      VDC VDC=client.getVDCInOrg(org.getId(),vdc.getId());
+      for (      Resource vApp : Iterables.filter(VDC.getResourceEntities(),new Predicate<Resource>(){
+        @Override public boolean apply(        Resource arg0){
+          return VCloudMediaType.VAPP_XML.equals(arg0.getType());
+        }
+      }
+)) {
+        VM response=client.getVMInVDC(org.getId(),vdc.getId(),vApp.getId());
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertNotNull(response.getHref());
+        assertNotNull(response.getName());
+        assertEquals(response.getType(),"application/vnd.vmware.vcloud.vApp+xml");
+        assertNotNull(response.getIpAddress());
+        assertNotNull(response.getStatus());
+        assertNotNull(response.getOsDescripton());
+        assertNotNull(response.getOsType());
+        assertNotNull(response.getNetworkSection());
+        assertNotNull(response.getResourceAllocations());
+        assertEquals(client.getVMInVDC(org.getId(),vdc.getId(),response.getId(),withPowerState()).toString().replaceFirst("status=[A-Z]+",""),response.toString().replaceFirst("status=[A-Z]+",""));
+      }
+    }
+  }
+}
