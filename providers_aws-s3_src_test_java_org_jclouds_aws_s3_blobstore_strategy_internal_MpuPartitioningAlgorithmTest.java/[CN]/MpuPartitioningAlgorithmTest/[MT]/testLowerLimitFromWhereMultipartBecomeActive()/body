@@ -1,27 +1,21 @@
 {
-  AWSS3BlobStore ablobStore=createMock(AWSS3BlobStore.class);
-  PayloadSlicer slicer=createMock(PayloadSlicer.class);
-  replay(ablobStore);
-  replay(slicer);
-  SequentialMultipartUploadStrategy strategy=new SequentialMultipartUploadStrategy(ablobStore,slicer);
+  MultipartUploadSlicingAlgorithm strategy=new MultipartUploadSlicingAlgorithm();
   long length=MultipartUploadStrategy.MIN_PART_SIZE;
   long chunkSize=strategy.calculateChunkSize(length);
-  assertEquals(chunkSize,SequentialMultipartUploadStrategy.DEFAULT_PART_SIZE);
+  assertEquals(chunkSize,MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE);
   assertEquals(strategy.getParts(),0);
   assertEquals(strategy.getRemaining(),length);
   assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
-  length=SequentialMultipartUploadStrategy.DEFAULT_PART_SIZE;
+  length=MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE;
   chunkSize=strategy.calculateChunkSize(length);
-  assertEquals(chunkSize,SequentialMultipartUploadStrategy.DEFAULT_PART_SIZE);
+  assertEquals(chunkSize,MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE);
   assertEquals(strategy.getParts(),0);
   assertEquals(strategy.getRemaining(),length);
   assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
-  length=SequentialMultipartUploadStrategy.DEFAULT_PART_SIZE + 1;
+  length=MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1;
   chunkSize=strategy.calculateChunkSize(length);
-  assertEquals(chunkSize,SequentialMultipartUploadStrategy.DEFAULT_PART_SIZE);
+  assertEquals(chunkSize,MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE);
   assertEquals(strategy.getParts(),1);
   assertEquals(strategy.getRemaining(),1);
   assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
-  verify(ablobStore);
-  verify(slicer);
 }

@@ -1,21 +1,22 @@
 {
   String key=blob.getMetadata().getName();
-  calculateChunkSize(blob.getPayload().getContentMetadata().getContentLength());
-  long parts=getParts();
+  Payload payload=blob.getPayload();
+  MultipartUploadSlicingAlgorithm algorithm=new MultipartUploadSlicingAlgorithm();
+  algorithm.calculateChunkSize(payload.getContentMetadata().getContentLength());
+  int parts=algorithm.getParts();
+  long chunkSize=algorithm.getChunkSize();
   if (parts > 0) {
     AWSS3Client client=(AWSS3Client)ablobstore.getContext().getProviderSpecificContext().getApi();
     String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
     try {
       SortedMap<Integer,String> etags=Maps.newTreeMap();
       int part;
-      while ((part=getNextPart()) <= getParts()) {
-        String eTag=prepareUploadPart(client,container,key,uploadId,part,slicer.slice(blob.getPayload(),getNextChunkOffset(),chunkSize));
-        etags.put(new Integer(part),eTag);
+      while ((part=algorithm.getNextPart()) <= parts) {
+        prepareUploadPart(container,key,uploadId,part,payload,algorithm.getNextChunkOffset(),chunkSize,etags);
       }
-      long remaining=getRemaining();
+      long remaining=algorithm.getRemaining();
       if (remaining > 0) {
-        String eTag=prepareUploadPart(client,container,key,uploadId,part,slicer.slice(blob.getPayload(),getNextChunkOffset(),remaining));
-        etags.put(new Integer(part),eTag);
+        prepareUploadPart(container,key,uploadId,part,payload,algorithm.getNextChunkOffset(),remaining,etags);
       }
       return client.completeMultipartUpload(container,key,uploadId,etags);
     }

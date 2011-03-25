@@ -1,10 +1,4 @@
 {
-  AWSS3BlobStore ablobStore=createMock(AWSS3BlobStore.class);
-  PayloadSlicer slicer=createMock(PayloadSlicer.class);
-  replay(ablobStore);
-  replay(slicer);
-  SequentialMultipartUploadStrategy strategy=new SequentialMultipartUploadStrategy(ablobStore,slicer);
-  foreach(1L,strategy.defaultPartSize * strategy.magnitudeBase,MultipartUploadStrategy.MAX_PART_SIZE * strategy.magnitudeBase,MultipartUploadStrategy.MAX_PART_SIZE * MultipartUploadStrategy.MAX_NUMBER_OF_PARTS,strategy);
-  verify(ablobStore);
-  verify(slicer);
+  MultipartUploadSlicingAlgorithm algorithm=new MultipartUploadSlicingAlgorithm();
+  foreach(1L,algorithm.defaultPartSize * algorithm.magnitudeBase,MultipartUploadStrategy.MAX_PART_SIZE * algorithm.magnitudeBase,MultipartUploadStrategy.MAX_PART_SIZE * MultipartUploadStrategy.MAX_NUMBER_OF_PARTS,algorithm);
 }
