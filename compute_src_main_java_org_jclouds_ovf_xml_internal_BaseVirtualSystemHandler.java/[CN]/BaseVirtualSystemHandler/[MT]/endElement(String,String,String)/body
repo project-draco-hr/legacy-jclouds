@@ -1,0 +1,51 @@
+{
+  depth--;
+  if (depth == 1) {
+    if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+      inHardware=false;
+      builder.virtualHardwareSection(hardwareHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"OperatingSystemSection")) {
+      inOs=false;
+      builder.operatingSystemSection(osHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"ProductSection")) {
+      inProduct=false;
+      builder.productSection(productHandler.getResult());
+    }
+ else     if (extensionHandlers.containsKey(qName)) {
+      addAdditionalSection(qName,extensionHandler.getResult());
+      inSection=false;
+      inExtensionSection=false;
+    }
+ else     if (qName.endsWith("Section")) {
+      addAdditionalSection(qName,inExtensionSection ? extensionHandler.getResult() : defaultSectionHandler.getResult());
+      inSection=false;
+      inExtensionSection=false;
+    }
+  }
+  if (inHardware) {
+    hardwareHandler.endElement(uri,localName,qName);
+  }
+ else   if (inOs) {
+    osHandler.endElement(uri,localName,qName);
+  }
+ else   if (inProduct) {
+    productHandler.endElement(uri,localName,qName);
+  }
+ else   if (inExtensionSection) {
+    extensionHandler.endElement(uri,localName,qName);
+  }
+ else   if (inSection) {
+    defaultSectionHandler.endElement(uri,localName,qName);
+  }
+ else {
+    if (equalsOrSuffix(qName,"Info")) {
+      builder.info(currentOrNull(currentText));
+    }
+ else     if (equalsOrSuffix(qName,"Name")) {
+      builder.name(currentOrNull(currentText));
+    }
+    super.endElement(uri,localName,qName);
+  }
+}

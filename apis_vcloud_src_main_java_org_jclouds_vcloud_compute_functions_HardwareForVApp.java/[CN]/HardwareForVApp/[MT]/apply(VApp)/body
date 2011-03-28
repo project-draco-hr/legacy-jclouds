@@ -3,7 +3,7 @@
   Vm vm=from.getChildren().size() == 0 ? null : Iterables.get(from.getChildren(),0);
   if (vm == null)   return null;
   VirtualHardwareSection hardware=vm.getVirtualHardwareSection();
-  HardwareBuilder builder=rasdToHardwareBuilder.apply(hardware.getResourceAllocations());
+  HardwareBuilder builder=rasdToHardwareBuilder.apply(hardware.getItems());
   builder.location(findLocationForResource.apply(checkNotNull(from,"from").getVDC()));
   builder.ids(from.getHref().toASCIIString()).name(from.getName()).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString()));
   return builder.build();

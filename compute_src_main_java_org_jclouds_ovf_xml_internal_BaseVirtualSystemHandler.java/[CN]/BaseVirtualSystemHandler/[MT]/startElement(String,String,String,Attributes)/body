@@ -1,0 +1,44 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  depth++;
+  if (depth == 2) {
+    if (equalsOrSuffix(qName,"VirtualHardwareSection")) {
+      inHardware=true;
+    }
+ else     if (equalsOrSuffix(qName,"OperatingSystemSection")) {
+      inOs=true;
+    }
+ else     if (equalsOrSuffix(qName,"ProductSection")) {
+      inProduct=true;
+    }
+ else     if (extensionHandlers.containsKey(qName)) {
+      inExtensionSection=true;
+      extensionHandler=extensionHandlers.get(qName).get();
+    }
+ else     if (attributes.containsKey("type") && extensionHandlers.containsKey(attributes.get("type"))) {
+      inExtensionSection=true;
+      extensionHandler=extensionHandlers.get(attributes.get("type")).get();
+    }
+ else     if (qName.endsWith("Section")) {
+      inSection=true;
+    }
+  }
+  if (inHardware) {
+    hardwareHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inOs) {
+    osHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inProduct) {
+    productHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inExtensionSection) {
+    extensionHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inSection) {
+    defaultSectionHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (equalsOrSuffix(qName,"VirtualSystem")) {
+    builder.id(attributes.get("id"));
+  }
+}

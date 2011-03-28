@@ -1,0 +1,18 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.name(from.getName());
+  builder.location(findLocationForVM.apply(from));
+  builder.group(parseGroupFromName(from.getName()));
+  try {
+    builder.operatingSystem(CIMOperatingSystem.toComputeOs(from.getOperatingSystemSection()));
+  }
+ catch (  NullPointerException e) {
+  }
+  builder.state(VAPPSTATUS_TO_NODESTATE.get(from.getStatus()));
+  Set<String> addresses=Utils.getIpsFromVM(from);
+  builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
+  builder.credentials(credentialStore.get(from.getHref().toASCIIString()));
+  return builder.build();
+}

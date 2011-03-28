@@ -1,0 +1,37 @@
+{
+  Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
+  depth++;
+  if (depth == 2) {
+    if (equalsOrSuffix(qName,"DiskSection")) {
+      inDisk=true;
+    }
+ else     if (equalsOrSuffix(qName,"NetworkSection")) {
+      inNetwork=true;
+    }
+ else     if (equalsOrSuffix(qName,"VirtualSystem")) {
+      inVirtualSystem=true;
+    }
+ else     if (extensionHandlers.containsKey(qName) || attributes.containsKey("type") && extensionHandlers.containsKey(attributes.get("type"))) {
+      inExtensionSection=true;
+      extensionHandler=extensionHandlers.get(qName).get();
+    }
+ else     if (qName.endsWith("Section")) {
+      inSection=true;
+    }
+  }
+  if (inDisk) {
+    diskHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inNetwork) {
+    networkHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inVirtualSystem) {
+    virtualSystemHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inExtensionSection) {
+    extensionHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inSection) {
+    defaultSectionHandler.startElement(uri,localName,qName,attrs);
+  }
+}
