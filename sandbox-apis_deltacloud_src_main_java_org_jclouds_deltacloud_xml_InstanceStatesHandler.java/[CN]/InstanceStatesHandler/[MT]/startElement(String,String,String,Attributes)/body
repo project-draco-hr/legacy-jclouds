@@ -1,10 +1,10 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
   if (qName.equals("state")) {
-    state=InstanceState.valueOf(attributes.get("name").toUpperCase());
+    state=instanceStateWarningOnUnrecognized(attributes.get("name"));
   }
  else   if (qName.equals("transition")) {
-    if (attributes.containsKey("auto"))     states.put(state,new TransitionAutomatically(InstanceState.valueOf(attributes.get("to").toUpperCase())));
- else     states.put(state,new TransitionOnAction(InstanceAction.fromValue(attributes.get("action")),InstanceState.valueOf(attributes.get("to").toUpperCase())));
+    if (attributes.containsKey("auto"))     states.put(state,new TransitionAutomatically(instanceStateWarningOnUnrecognized(attributes.get("to"))));
+ else     states.put(state,new TransitionOnAction(instanceActionWarningOnUnrecognized(attributes.get("action")),instanceStateWarningOnUnrecognized(attributes.get("to"))));
   }
 }
