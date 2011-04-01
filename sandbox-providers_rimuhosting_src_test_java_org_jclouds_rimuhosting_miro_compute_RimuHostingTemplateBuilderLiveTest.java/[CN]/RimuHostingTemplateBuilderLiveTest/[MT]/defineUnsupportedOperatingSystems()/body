@@ -1,8 +1,15 @@
 {
   return new Predicate<OsFamilyVersion64Bit>(){
     @Override public boolean apply(    OsFamilyVersion64Bit input){
-      return input.family != OsFamily.UBUNTU || Float.parseFloat(input.version) > 10.04 || (!(input.is64Bit) && Float.parseFloat(input.version) < 8.10);
-    }
-  }
+switch (input.family) {
+case UBUNTU:
+        return !(input.version.equals("") || input.version.startsWith("10."));
+case CENTOS:
+      return !input.version.equals("");
+default :
+    return true;
+}
+}
+}
 ;
 }
