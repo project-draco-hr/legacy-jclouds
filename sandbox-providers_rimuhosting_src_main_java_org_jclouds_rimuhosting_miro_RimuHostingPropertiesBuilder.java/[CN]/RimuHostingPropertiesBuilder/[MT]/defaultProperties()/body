@@ -9,5 +9,9 @@
   properties.setProperty(PROPERTY_API_VERSION,"TODO");
   properties.setProperty(PROPERTY_ENDPOINT,"https://api.rimuhosting.com/r");
   properties.setProperty(PROPERTY_RIMUHOSTING_DEFAULT_DC,"DCDALLAS");
+  Timeout timeout=RimuHostingClient.class.getAnnotation(Timeout.class);
+  long timeoutMillis=timeout.timeUnit().toMillis(timeout.duration());
+  properties.setProperty(PROPERTY_SO_TIMEOUT,timeoutMillis + "");
+  properties.setProperty(PROPERTY_CONNECTION_TIMEOUT,timeoutMillis + "");
   return properties;
 }
