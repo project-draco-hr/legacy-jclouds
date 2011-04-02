@@ -1,6 +1,11 @@
 {
   Logger.getAnonymousLogger().info("starting instance");
-  instance=client.createInstance(Iterables.get(client.listImages(),0).getId(),CreateInstanceOptions.Builder.named(prefix));
+  instance=client.createInstance(Iterables.find(client.listImages(),new Predicate<Image>(){
+    @Override public boolean apply(    Image input){
+      return input.getDescription().toLowerCase().indexOf("fedora") != -1;
+    }
+  }
+).getId(),CreateInstanceOptions.Builder.named(prefix));
   instance=client.getInstance(instance.getHref());
   checkStartedInstance();
   Instance newInfo=client.getInstance(instance.getHref());

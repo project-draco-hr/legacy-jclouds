@@ -6,20 +6,40 @@
     inPrivateAddresses=false;
   }
   if (qName.equalsIgnoreCase("owner_id")) {
-    this.ownerId=currentText.toString().trim();
+    this.ownerId=currentOrNull(currentText);
   }
  else   if (qName.equalsIgnoreCase("name")) {
-    this.name=currentText.toString().trim();
+    this.name=currentOrNull(currentText);
+  }
+ else   if (qName.equalsIgnoreCase("keyname")) {
+    this.keyName=currentOrNull(currentText);
+  }
+ else   if (qName.equalsIgnoreCase("username")) {
+    this.credentialsBuilder.identity(currentOrNull(currentText));
+  }
+ else   if (qName.equalsIgnoreCase("password")) {
+    this.credentialsBuilder.credential(currentOrNull(currentText));
+  }
+ else   if (qName.equalsIgnoreCase("authentication")) {
+    if (keyName != null) {
+      this.authentication=new KeyAuthentication(keyName);
+    }
+ else {
+      Credentials creds=credentialsBuilder.build();
+      if (creds.identity != null)       this.authentication=new PasswordAuthentication(creds);
+    }
+    this.keyName=null;
+    this.credentialsBuilder=new Credentials.Builder<Credentials>();
   }
  else   if (qName.equalsIgnoreCase("state")) {
-    this.state=InstanceState.fromValue(currentText.toString().trim());
+    this.state=Instance.State.fromValue(currentOrNull(currentText));
   }
  else   if (qName.equalsIgnoreCase("address")) {
-    if (inPublicAddresses)     this.publicAddresses.add(currentText.toString().trim());
- else     if (inPrivateAddresses)     this.privateAddresses.add(currentText.toString().trim());
+    if (inPublicAddresses)     this.publicAddresses.add(currentOrNull(currentText));
+ else     if (inPrivateAddresses)     this.privateAddresses.add(currentOrNull(currentText));
   }
  else   if (qName.equalsIgnoreCase("instance")) {
-    this.instance=new Instance(href,id,ownerId,name,image,hardwareProfile,realm,state,actions,publicAddresses,privateAddresses);
+    this.instance=new Instance(href,id,ownerId,name,image,hardwareProfile,realm,state,actions,authentication,publicAddresses,privateAddresses);
     this.href=null;
     this.id=null;
     this.ownerId=null;
@@ -28,6 +48,7 @@
     this.hardwareProfile=null;
     this.realm=null;
     this.state=null;
+    this.authentication=null;
     this.actions=Maps.newLinkedHashMap();
     this.publicAddresses=Sets.newLinkedHashSet();
     this.privateAddresses=Sets.newLinkedHashSet();
