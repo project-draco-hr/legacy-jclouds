@@ -6,7 +6,8 @@
     }
   }
 ).getId(),CreateInstanceOptions.Builder.named(prefix));
-  instance=client.getInstance(instance.getHref());
+  if (instance.getAuthentication() != null && instance.getAuthentication() instanceof PasswordAuthentication)   creds=PasswordAuthentication.class.cast(instance.getAuthentication()).getLoginCredentials();
+  refreshInstance();
   checkStartedInstance();
   Instance newInfo=client.getInstance(instance.getHref());
   checkInstanceMatchesGet(newInfo);
