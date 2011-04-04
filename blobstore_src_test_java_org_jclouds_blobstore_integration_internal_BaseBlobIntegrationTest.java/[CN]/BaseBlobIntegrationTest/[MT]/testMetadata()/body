@@ -1,20 +1,21 @@
 {
-  String key="hello";
-  Blob blob=context.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).calculateMD5().build();
-  String containerName=getContainerName();
+  String name="hello";
+  Blob blob=context.getBlobStore().blobBuilder(name).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).calculateMD5().build();
+  String container=getContainerName();
   try {
-    assertNull(context.getBlobStore().blobMetadata(containerName,"powderpuff"));
-    addBlobToContainer(containerName,blob);
-    Blob newObject=validateContent(containerName,key);
+    assertNull(context.getBlobStore().blobMetadata(container,"powderpuff"));
+    addBlobToContainer(container,blob);
+    Blob newObject=validateContent(container,name);
     BlobMetadata metadata=newObject.getMetadata();
     validateMetadata(metadata);
-    validateMetadata(context.getBlobStore().blobMetadata(containerName,key));
+    validateMetadata(metadata,container,name);
+    validateMetadata(context.getBlobStore().blobMetadata(container,name));
     blob.getMetadata().getUserMetadata().put("Adrian","wonderpuff");
     blob.getMetadata().getUserMetadata().put("Adrian","powderpuff");
-    addBlobToContainer(containerName,blob);
-    validateMetadata(context.getBlobStore().blobMetadata(containerName,key));
+    addBlobToContainer(container,blob);
+    validateMetadata(context.getBlobStore().blobMetadata(container,name));
   }
   finally {
-    returnContainer(containerName);
+    returnContainer(container);
   }
 }

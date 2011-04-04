@@ -1,8 +1,8 @@
 {
   Method method=AzureBlobAsyncClient.class.getMethod("createContainer",String.class,CreateContainerOptions[].class);
-  HttpRequest request=processor.createRequest(method,"container",withPublicAcl().withMetadata(ImmutableMultimap.of("foo","bar")));
+  HttpRequest request=processor.createRequest(method,"container",withPublicAccess(PublicAccess.BLOB).withMetadata(ImmutableMultimap.of("foo","bar")));
   assertRequestLineEquals(request,"PUT https://identity.blob.core.windows.net/container?restype=container HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,"x-ms-meta-foo: bar\nx-ms-prop-publicaccess: true\nx-ms-version: 2009-09-19\n");
+  assertNonPayloadHeadersEqual(request,"x-ms-blob-public-access: blob\nx-ms-meta-foo: bar\nx-ms-version: 2009-09-19\n");
   assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ReturnTrueIf2xx.class);
   assertSaxResponseParserClassEquals(method,null);

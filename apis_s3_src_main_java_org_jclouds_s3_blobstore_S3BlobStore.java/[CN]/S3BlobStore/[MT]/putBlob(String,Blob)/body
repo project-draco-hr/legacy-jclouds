@@ -1,3 +1,6 @@
 {
-  return sync.putObject(container,blob2Object.apply(blob));
+  PutObjectOptions options=new PutObjectOptions();
+  AccessControlList acl=bucketAcls.get(container);
+  if (acl != null && acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ))   options.withAcl(CannedAccessPolicy.PUBLIC_READ);
+  return sync.putObject(container,blob2Object.apply(blob),options);
 }

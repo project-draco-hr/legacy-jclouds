@@ -2,8 +2,10 @@
   if (from == null)   return null;
   MutableObjectMetadata to=new MutableObjectMetadataImpl();
   HttpUtils.copy(from.getContentMetadata(),to.getContentMetadata());
+  to.setUri(from.getUri());
   to.setETag(from.getETag());
   to.setKey(from.getName());
+  to.setBucket(bucket);
   to.setLastModified(from.getLastModified());
   if (from.getUserMetadata() != null) {
     for (    Entry<String,String> entry : from.getUserMetadata().entrySet())     to.getUserMetadata().put(entry.getKey().toLowerCase(),entry.getValue());

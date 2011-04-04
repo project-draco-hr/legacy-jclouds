@@ -53,7 +53,10 @@
         return immediateFailedFuture(new IllegalArgumentException("first and last were null!"));
       }
     }
+    ContentMetadata cmd=returnVal.getPayload().getContentMetadata();
     returnVal.setPayload(out.toByteArray());
+    HttpUtils.copy(cmd,returnVal.getPayload().getContentMetadata());
+    returnVal.getPayload().getContentMetadata().setContentLength(new Long(out.toByteArray().length));
   }
   checkNotNull(returnVal.getPayload(),"payload " + returnVal);
   return immediateFuture(returnVal);

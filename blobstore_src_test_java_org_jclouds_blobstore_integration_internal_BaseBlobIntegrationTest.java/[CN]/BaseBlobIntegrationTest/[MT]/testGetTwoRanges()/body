@@ -1,12 +1,13 @@
 {
-  String containerName=getContainerName();
+  String container=getContainerName();
   try {
-    String key="apples";
-    addObjectAndValidateContent(containerName,key);
-    Blob blob=context.getBlobStore().getBlob(containerName,key,range(0,5).range(6,TEST_STRING.length()));
+    String name="apples";
+    addObjectAndValidateContent(container,name);
+    Blob blob=context.getBlobStore().getBlob(container,name,range(0,5).range(6,TEST_STRING.length()));
+    validateMetadata(blob.getMetadata(),container,name);
     assertEquals(getContentAsStringOrNullAndClose(blob),TEST_STRING);
   }
   finally {
-    returnContainer(containerName);
+    returnContainer(container);
   }
 }

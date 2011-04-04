@@ -6,6 +6,14 @@
   to.setETag(from.getETag());
   to.setLastModified(from.getLastModified());
   to.setName(from.getName());
+  to.setContainer(from.getContainer());
+  to.setUri(from.getUrl());
+  try {
+    PublicAccess containerAcl=containerAcls.get(from.getContainer());
+    if (containerAcl != null && containerAcl != PublicAccess.PRIVATE)     to.setPublicUri(from.getUrl());
+  }
+ catch (  NullPointerException e) {
+  }
   String directoryName=ifDirectoryReturnName.execute(to);
   if (directoryName != null) {
     to.setName(directoryName);

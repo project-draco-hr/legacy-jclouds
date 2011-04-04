@@ -1,19 +1,19 @@
 {
-  String containerName=getContainerName();
+  String container=getContainerName();
   try {
-    String key="apples";
-    String goodETag=addObjectAndValidateContent(containerName,key);
-    context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch("powerfrisbee"));
-    validateContent(containerName,key);
+    String name="apples";
+    String goodETag=addObjectAndValidateContent(container,name);
+    context.getBlobStore().getBlob(container,name,ifETagDoesntMatch("powerfrisbee"));
+    validateContent(container,name);
     try {
-      context.getBlobStore().getBlob(containerName,key,ifETagDoesntMatch(goodETag));
-      validateContent(containerName,key);
+      context.getBlobStore().getBlob(container,name,ifETagDoesntMatch(goodETag));
+      validateContent(container,name);
     }
  catch (    HttpResponseException ex) {
       assertEquals(ex.getResponse().getStatusCode(),304);
     }
   }
   finally {
-    returnContainer(containerName);
+    returnContainer(container);
   }
 }

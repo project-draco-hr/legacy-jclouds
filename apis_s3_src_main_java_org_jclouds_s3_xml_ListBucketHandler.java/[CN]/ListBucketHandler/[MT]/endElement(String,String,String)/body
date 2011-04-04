@@ -1,53 +1,60 @@
 {
   if (qName.equals("ID")) {
-    currentOwner=new CanonicalUser(currentText.toString().trim());
+    currentOwner=new CanonicalUser(currentOrNull(currentText));
   }
  else   if (qName.equals("DisplayName")) {
-    currentOwner.setDisplayName(currentText.toString().trim());
+    currentOwner.setDisplayName(currentOrNull(currentText));
   }
  else   if (qName.equals("Key")) {
-    currentKey=currentText.toString().trim();
+    currentKey=currentOrNull(currentText);
+    builder.key(currentKey);
+    builder.uri(uriBuilders.get().uri(getRequest().getEndpoint()).path(currentKey).replaceQuery("").build());
   }
  else   if (qName.equals("LastModified")) {
-    currentLastModified=dateParser.iso8601DateParse(currentText.toString().trim());
+    builder.lastModified(dateParser.iso8601DateParse(currentOrNull(currentText)));
   }
  else   if (qName.equals("ETag")) {
-    currentETag=currentText.toString().trim();
-    currentMD5=CryptoStreams.hex(Strings2.replaceAll(currentETag,'"',""));
+    String currentETag=currentOrNull(currentText);
+    builder.eTag(currentETag);
+    builder.contentMD5(CryptoStreams.hex(Strings2.replaceAll(currentETag,'"',"")));
   }
  else   if (qName.equals("Size")) {
-    currentSize=new Long(currentText.toString().trim());
+    builder.contentLength(new Long(currentOrNull(currentText)));
   }
  else   if (qName.equals("Owner")) {
+    builder.owner(currentOwner);
+    currentOwner=null;
   }
  else   if (qName.equals("StorageClass")) {
-    currentStorageClass=ObjectMetadata.StorageClass.valueOf(currentText.toString().trim());
+    builder.storageClass(ObjectMetadata.StorageClass.valueOf(currentOrNull(currentText)));
   }
  else   if (qName.equals("Contents")) {
-    contents.add(new BucketListObjectMetadata(currentKey,currentLastModified,currentETag,currentMD5,currentSize,currentOwner,currentStorageClass));
+    contents.add(builder.build());
+    builder=new ObjectMetadataBuilder().bucket(bucketName);
   }
  else   if (qName.equals("Name")) {
-    this.bucketName=currentText.toString().trim();
+    this.bucketName=currentOrNull(currentText);
+    builder.bucket(bucketName);
   }
  else   if (qName.equals("Prefix")) {
-    String prefix=currentText.toString().trim();
+    String prefix=currentOrNull(currentText);
     if (inCommonPrefixes)     commonPrefixes.add(prefix);
  else     this.prefix=prefix;
   }
  else   if (qName.equals("Delimiter")) {
-    if (!currentText.toString().equals(""))     this.delimiter=currentText.toString().trim();
+    this.delimiter=currentOrNull(currentText);
   }
  else   if (qName.equals("Marker")) {
-    if (!currentText.toString().equals(""))     this.marker=currentText.toString().trim();
+    this.marker=currentOrNull(currentText);
   }
  else   if (qName.equals("NextMarker")) {
-    if (!currentText.toString().equals(""))     this.nextMarker=currentText.toString().trim();
+    this.nextMarker=currentOrNull(currentText);
   }
  else   if (qName.equals("MaxKeys")) {
-    this.maxResults=Integer.parseInt(currentText.toString().trim());
+    this.maxResults=Integer.parseInt(currentOrNull(currentText));
   }
  else   if (qName.equals("IsTruncated")) {
-    this.isTruncated=Boolean.parseBoolean(currentText.toString().trim());
+    this.isTruncated=Boolean.parseBoolean(currentOrNull(currentText));
   }
   currentText=new StringBuilder();
 }

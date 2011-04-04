@@ -1,0 +1,11 @@
+{
+  return new MapMaker().expireAfterWrite(30,TimeUnit.SECONDS).makeComputingMap(new Function<String,AccessControlList>(){
+    public AccessControlList apply(    String bucketName){
+      return client.getBucketACL(bucketName);
+    }
+    @Override public String toString(){
+      return "getBucketAcl()";
+    }
+  }
+);
+}

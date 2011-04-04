@@ -2,6 +2,8 @@
   BlobMetadata base=blobMetadataParser.apply(from);
   MutableObjectInfoWithMetadata to=blobToObjectInfo.apply(base);
   to.setBytes(attemptToParseSizeAndRangeFromHeaders(from));
+  to.setContainer(container);
+  to.setUri(base.getUri());
   String eTagHeader=from.getFirstHeaderOrNull("Etag");
   if (eTagHeader != null) {
     to.setHash(CryptoStreams.hex(eTagHeader));

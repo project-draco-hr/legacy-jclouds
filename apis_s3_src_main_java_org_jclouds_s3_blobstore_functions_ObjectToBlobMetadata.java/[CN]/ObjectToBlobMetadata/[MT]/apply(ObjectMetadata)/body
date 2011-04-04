@@ -2,6 +2,14 @@
   if (from == null)   return null;
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   HttpUtils.copy(from.getContentMetadata(),to.getContentMetadata());
+  try {
+    AccessControlList bucketAcl=bucketAcls.get(from.getBucket());
+    if (bucketAcl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ))     to.setPublicUri(from.getUri());
+  }
+ catch (  NullPointerException e) {
+  }
+  to.setUri(from.getUri());
+  to.setContainer(from.getBucket());
   to.setETag(from.getETag());
   to.setName(from.getKey());
   to.setLastModified(from.getLastModified());
