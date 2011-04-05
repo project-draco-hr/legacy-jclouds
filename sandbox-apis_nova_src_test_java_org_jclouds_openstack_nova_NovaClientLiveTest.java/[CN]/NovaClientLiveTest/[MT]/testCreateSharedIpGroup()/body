@@ -1,0 +1,16 @@
+{
+  SharedIpGroup sharedIpGroup=null;
+  while (sharedIpGroup == null) {
+    String sharedIpGroupName=serverPrefix + "createSharedIpGroup" + new SecureRandom().nextInt();
+    try {
+      sharedIpGroup=client.createSharedIpGroup(sharedIpGroupName,withServer(serverId));
+    }
+ catch (    UndeclaredThrowableException e) {
+      HttpResponseException htpe=(HttpResponseException)e.getCause().getCause();
+      if (htpe.getResponse().getStatusCode() == 400)       continue;
+      throw e;
+    }
+  }
+  assertNotNull(sharedIpGroup.getName());
+  sharedIpGroupId=sharedIpGroup.getId();
+}

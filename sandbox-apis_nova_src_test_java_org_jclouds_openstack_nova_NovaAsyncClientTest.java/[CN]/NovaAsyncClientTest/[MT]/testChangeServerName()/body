@@ -1,0 +1,11 @@
+{
+  Method method=NovaAsyncClient.class.getMethod("renameServer",int.class,String.class);
+  HttpRequest request=processor.createRequest(method,2,"foo");
+  assertRequestLineEquals(request,"PUT http://serverManagementUrl/servers/2 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"server\":{\"name\":\"foo\"}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

@@ -1,0 +1,22 @@
+{
+  int imageId=14362;
+  int flavorId=1;
+  Server server=null;
+  while (server == null) {
+    String serverName=serverPrefix + "createserver" + new SecureRandom().nextInt();
+    try {
+      server=client.createServer(serverName,imageId,flavorId,withFile("/etc/jclouds.txt","rackspace".getBytes()).withMetadata(metadata));
+    }
+ catch (    UndeclaredThrowableException e) {
+      HttpResponseException htpe=(HttpResponseException)e.getCause().getCause();
+      if (htpe.getResponse().getStatusCode() == 400)       continue;
+      throw e;
+    }
+  }
+  assertNotNull(server.getAdminPass());
+  serverId=server.getId();
+  adminPass=server.getAdminPass();
+  ip=server.getAddresses().getPublicAddresses().iterator().next();
+  assertEquals(server.getStatus(),ServerStatus.BUILD);
+  blockUntilServerActive(serverId);
+}
