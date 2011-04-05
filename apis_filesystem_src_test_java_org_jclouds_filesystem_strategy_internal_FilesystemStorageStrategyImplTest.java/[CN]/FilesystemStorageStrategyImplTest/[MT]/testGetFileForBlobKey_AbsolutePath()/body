@@ -3,7 +3,12 @@
   String absoluteContainerPath=absoluteBasePath + CONTAINER_NAME + FS;
   FilesystemStorageStrategy storageStrategyAbsolute=new FilesystemStorageStrategyImpl(new Provider<BlobBuilder>(){
     @Override public BlobBuilder get(){
-      return new BlobBuilderImpl();
+      try {
+        return new BlobBuilderImpl(new JCECrypto());
+      }
+ catch (      Exception e) {
+        return null;
+      }
     }
   }
 ,absoluteBasePath,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl());

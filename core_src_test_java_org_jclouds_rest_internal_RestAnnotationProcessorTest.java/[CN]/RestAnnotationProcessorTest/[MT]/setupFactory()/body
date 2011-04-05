@@ -9,6 +9,9 @@
 ).annotatedWith(Names.named("bar")).toInstance(ImmutableSet.of("bar"));
       bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:1111"));
     }
+    @SuppressWarnings("unused") @Provides @Named("exception") Set<String> exception(){
+      throw new AuthorizationException();
+    }
   }
 ));
   injector=createContextBuilder(contextSpec).buildInjector();
