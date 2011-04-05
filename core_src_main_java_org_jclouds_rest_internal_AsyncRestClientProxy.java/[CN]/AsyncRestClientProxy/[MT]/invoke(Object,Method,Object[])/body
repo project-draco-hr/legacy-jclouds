@@ -10,11 +10,18 @@
   }
  else   if (method.isAnnotationPresent(Provides.class)) {
     try {
-      Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
-      return injector.getInstance(Key.get(method.getGenericReturnType(),qualifier));
+      try {
+        Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
+        return injector.getInstance(Key.get(method.getGenericReturnType(),qualifier));
+      }
+ catch (      NoSuchElementException e) {
+        return injector.getInstance(Key.get(method.getGenericReturnType()));
+      }
     }
- catch (    NoSuchElementException e) {
-      return injector.getInstance(Key.get(method.getGenericReturnType()));
+ catch (    ProvisionException e) {
+      AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
+      if (aex != null)       throw aex;
+      throw e;
     }
   }
  else   if (method.isAnnotationPresent(Delegate.class)) {
