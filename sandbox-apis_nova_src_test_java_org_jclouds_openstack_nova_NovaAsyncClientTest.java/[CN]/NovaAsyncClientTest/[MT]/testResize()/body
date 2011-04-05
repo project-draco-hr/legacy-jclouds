@@ -1,0 +1,11 @@
+{
+  Method method=NovaAsyncClient.class.getMethod("resizeServer",int.class,int.class);
+  HttpRequest request=processor.createRequest(method,2,3);
+  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/2/action?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,"{\"resize\":{\"flavorId\":3}}",MediaType.APPLICATION_JSON,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

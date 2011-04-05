@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/test_list_images.json");
+  List<Image> expects=ImmutableList.of(new Image(2,"CentOS 5.2"),new Image(743,"My Server Backup"));
+  UnwrapOnlyJsonValue<List<Image>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Image>>>(){
+  }
+));
+  List<Image> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  assertEquals(response,expects);
+}
