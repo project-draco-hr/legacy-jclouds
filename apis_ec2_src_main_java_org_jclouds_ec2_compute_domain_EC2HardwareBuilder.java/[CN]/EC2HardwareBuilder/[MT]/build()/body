@@ -1,0 +1,11 @@
+{
+  boolean reset=false;
+  if (this.supportsImage == null)   reset=true;
+  try {
+    supportsImage=Predicates.<Image>and(rootDeviceType,virtualizationType,imageIds,is64Bit);
+    return super.build();
+  }
+  finally {
+    if (reset)     this.supportsImage=null;
+  }
+}
