@@ -1,0 +1,19 @@
+{
+  Properties overrides=new Properties();
+  try {
+    overrides.load(this.getClass().getResourceAsStream("/test.properties"));
+  }
+ catch (  IOException e) {
+    throw new RuntimeException("Can't load properties");
+  }
+  overridePropertyFromSystemProperty(overrides,"test." + provider + ".endpoint");
+  overridePropertyFromSystemProperty(overrides,"test." + provider + ".apiversion");
+  overridePropertyFromSystemProperty(overrides,"test." + provider + ".identity");
+  overridePropertyFromSystemProperty(overrides,"test." + provider + ".credential");
+  overridePropertyFromSystemProperty(overrides,"test.ssh.keyfile.public");
+  overridePropertyFromSystemProperty(overrides,"test.ssh.keyfile.private");
+  overridePropertyFromSystemProperty(overrides,"test.initializer");
+  overrides.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS,"true");
+  overrides.setProperty(Constants.PROPERTY_RELAX_HOSTNAME,"true");
+  return overrides;
+}

@@ -1,0 +1,11 @@
+{
+  initializeContextAndClient(overrides);
+  refreshTemplate();
+  TreeSet<NodeMetadata> nodes=newTreeSet(client.createNodesInGroup(group,1,template));
+  checkNodes(nodes,group);
+  NodeMetadata node=nodes.first();
+  this.nodes.add(node);
+  assertEquals(nodes.size(),1);
+  assertLocationSameOrChild(node.getLocation(),template.getLocation());
+  checkOsMatchesTemplate(node);
+}

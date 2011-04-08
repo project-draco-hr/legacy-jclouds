@@ -1,7 +1,10 @@
 {
-  setupCredentials();
   Properties overrides=setupProperties();
-  Injector injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
+  setupCredentials(overrides);
+  updateProperties(overrides);
+  String identity="admin";
+  String credential="d744752f-20d3-4d75-979f-f62f16033b07";
+  Injector injector=new RestContextFactory().createContextBuilder(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
   client=injector.getInstance(NovaClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
