@@ -1,7 +1,7 @@
 {
   Method method=NovaAsyncClient.class.getMethod("replaceBackupSchedule",int.class,BackupSchedule.class);
   HttpRequest request=processor.createRequest(method,2,new BackupSchedule(WeeklyBackup.MONDAY,DailyBackup.H_0800_1000,true));
-  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/2/backup_schedule HTTP/1.1");
+  assertRequestLineEquals(request,"POST http://endpoint/vapiversion/servers/2/backup_schedule HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"{\"backupSchedule\":{\"daily\":\"H_0800_1000\",\"enabled\":true,\"weekly\":\"MONDAY\"}}",MediaType.APPLICATION_JSON,false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
