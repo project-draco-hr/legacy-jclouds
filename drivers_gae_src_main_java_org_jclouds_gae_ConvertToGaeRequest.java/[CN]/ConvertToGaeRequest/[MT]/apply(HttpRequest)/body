@@ -8,10 +8,12 @@
   }
   FetchOptions options=disallowTruncate();
   options.doNotFollowRedirects();
+  if (utils.relaxHostname() || utils.trustAllCerts())   options.doNotFollowRedirects();
+  options.setDeadline(10.0);
   HTTPRequest gaeRequest=new HTTPRequest(url,HTTPMethod.valueOf(request.getMethod().toString()),options);
   for (  String header : request.getHeaders().keySet()) {
     for (    String value : request.getHeaders().get(header)) {
-      if (!"Transfer-Encoding".equals(header))       gaeRequest.addHeader(new HTTPHeader(header,value));
+      if (!prohibitedHeaders.contains(header))       gaeRequest.addHeader(new HTTPHeader(header,value));
     }
   }
   gaeRequest.addHeader(new HTTPHeader(HttpHeaders.USER_AGENT,USER_AGENT));
@@ -35,14 +37,11 @@
       Throwables.propagate(e);
     }
  finally {
-      closeQuietly(input);
+      Closeables.closeQuietly(input);
     }
     for (    Entry<String,String> header : HttpUtils.getContentHeadersFromMetadata(request.getPayload().getContentMetadata()).entries()) {
-      gaeRequest.setHeader(new HTTPHeader(header.getKey(),header.getValue()));
+      if (!prohibitedHeaders.contains(header.getKey()))       gaeRequest.setHeader(new HTTPHeader(header.getKey(),header.getValue()));
     }
-  }
- else {
-    gaeRequest.setHeader(new HTTPHeader(HttpHeaders.CONTENT_LENGTH,"0"));
   }
   return gaeRequest;
 }
