@@ -1,12 +1,20 @@
 {
   String identity="admin";
   String credential="d744752f-20d3-4d75-979f-f62f16033b07";
-  String endpoint="http://172.18.34.40:8774";
+  String endpoint="http://dragon004.hw.griddynamics.net:8774";
   ComputeServiceContextFactory contextFactory=new ComputeServiceContextFactory();
   Properties overrides=new Properties();
   overrides.setProperty(PROPERTY_ENDPOINT,endpoint);
-  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,Collections.singleton(new JschSshClientModule()),overrides);
+  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,Arrays.asList(new JschSshClientModule(),new Log4JLoggingModule()),overrides);
   ComputeService cs=context.getComputeService();
   System.out.println(cs.listImages());
+  System.out.println(cs.listHardwareProfiles());
   TemplateOptions options=new TemplateOptions();
+  Template template=cs.templateBuilder().imageId("13").options(options).build();
+  try {
+    cs.runNodesWithTag("test",1,template);
+  }
+ catch (  RunNodesException e) {
+    e.printStackTrace();
+  }
 }
