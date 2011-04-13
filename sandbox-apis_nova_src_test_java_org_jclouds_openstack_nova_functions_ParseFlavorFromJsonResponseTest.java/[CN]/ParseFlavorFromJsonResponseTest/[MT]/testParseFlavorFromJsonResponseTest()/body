@@ -2,5 +2,9 @@
   Flavor response=parseFlavor();
   String json=new Gson().toJson(response);
   String expectedJson=Strings2.toStringAndClose(ParseFlavorFromJsonResponseTest.class.getResourceAsStream("/test_get_flavor_details.json")).replace("\n","").replace("\t","").replace("\r","").replace(" ","");
+  assertEquals(response.getId(),1);
+  assertEquals(response.getName(),"256 MB Server");
+  assertEquals(response.getDisk().intValue(),10);
+  assertEquals(response.getRam().intValue(),256);
   assertEquals(json,expectedJson);
 }
