@@ -1,6 +1,11 @@
 {
   Properties overrides=new Properties();
-  overrides.load(this.getClass().getResourceAsStream("/test.properties"));
+  try {
+    overrides.load(this.getClass().getResourceAsStream("/test.properties"));
+  }
+ catch (  IOException e) {
+    throw new RuntimeException("Can't load properties");
+  }
   overridePropertyFromSystemProperty(overrides,"test." + provider + ".endpoint");
   overridePropertyFromSystemProperty(overrides,"test." + provider + ".apiversion");
   overridePropertyFromSystemProperty(overrides,"test." + provider + ".identity");

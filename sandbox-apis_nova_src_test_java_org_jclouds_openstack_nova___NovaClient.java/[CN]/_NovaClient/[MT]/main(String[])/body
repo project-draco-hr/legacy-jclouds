@@ -5,12 +5,14 @@
   ComputeServiceContextFactory contextFactory=new ComputeServiceContextFactory();
   Properties overrides=new Properties();
   overrides.setProperty(PROPERTY_ENDPOINT,endpoint);
-  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,Arrays.asList(new JschSshClientModule(),new Log4JLoggingModule()),overrides);
+  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,Arrays.asList(new JschSshClientModule(),new SLF4JLoggingModule()),overrides);
   ComputeService cs=context.getComputeService();
   System.out.println(cs.listImages());
   System.out.println(cs.listHardwareProfiles());
+  System.out.println(cs.listAssignableLocations());
+  System.out.println(cs.listNodes());
   TemplateOptions options=new TemplateOptions();
-  Template template=cs.templateBuilder().imageId("3").options(options).build();
+  Template template=cs.templateBuilder().imageId("13").options(options).build();
   try {
     Set<? extends NodeMetadata> metedata=cs.runNodesWithTag("test",1,template);
     System.out.println(metedata);
@@ -18,4 +20,5 @@
  catch (  RunNodesException e) {
     e.printStackTrace();
   }
+  context.close();
 }
