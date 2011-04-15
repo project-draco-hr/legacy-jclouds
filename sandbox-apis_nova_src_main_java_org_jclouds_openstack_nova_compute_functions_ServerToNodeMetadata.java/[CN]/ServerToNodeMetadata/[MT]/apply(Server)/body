@@ -9,8 +9,8 @@
   builder.operatingSystem(parseOperatingSystem(from));
   builder.hardware(parseHardware(from));
   builder.state(serverToNodeState.get(from.getStatus()));
-  builder.publicAddresses(from.getAddresses().getPublicAddresses());
-  builder.privateAddresses(from.getAddresses().getPrivateAddresses());
+  builder.publicAddresses(Iterables.transform(from.getAddresses().getPublicAddresses(),Address.newAddress2StringFunction()));
+  builder.privateAddresses(Iterables.transform(from.getAddresses().getPrivateAddresses(),Address.newAddress2StringFunction()));
   builder.credentials(credentialStore.get("node#" + from.getId()));
   builder.uri(from.getURI());
   return builder.build();
