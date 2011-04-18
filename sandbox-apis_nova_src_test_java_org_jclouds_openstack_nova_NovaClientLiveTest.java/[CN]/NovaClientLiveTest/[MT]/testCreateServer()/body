@@ -1,6 +1,6 @@
 {
-  String imageRef=client.getImage(13).getURI().toASCIIString();
-  String flavorRef=client.getFlavor(1).getURI().toASCIIString();
+  String imageRef="3";
+  String flavorRef="1";
   String serverName=serverPrefix + "createserver" + new SecureRandom().nextInt();
   Server server=client.createServer(serverName,imageRef,flavorRef,withFile("/etc/jclouds.txt","rackspace".getBytes()).withMetadata(metadata));
   assertNotNull(server.getAdminPass());
@@ -8,5 +8,5 @@
   serverId=server.getId();
   adminPass=server.getAdminPass();
   blockUntilServerActive(serverId);
-  ip=client.getServer(serverId).getAddresses().getPublicAddresses().iterator().next();
+  client.getServer(serverId).getAddresses().getPublicAddresses().iterator().next().getAddress();
 }

@@ -5,7 +5,7 @@
   ComputeServiceContextFactory contextFactory=new ComputeServiceContextFactory();
   Properties overrides=new Properties();
   overrides.setProperty(PROPERTY_ENDPOINT,endpoint);
-  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,Arrays.asList(new JschSshClientModule(),new SLF4JLoggingModule()),overrides);
+  ComputeServiceContext context=contextFactory.createContext("nova",identity,credential,ImmutableSet.of(new JschSshClientModule(),new SLF4JLoggingModule()),overrides);
   ComputeService cs=context.getComputeService();
   System.out.println(cs.listImages());
   System.out.println(cs.listHardwareProfiles());

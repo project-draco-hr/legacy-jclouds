@@ -2,10 +2,5 @@
   ServerRequest server=new ServerRequest(checkNotNull(postParams.get("name"),"name parameter not present"),checkNotNull(postParams.get("imageRef"),"imageRef parameter not present"),checkNotNull(postParams.get("flavorRef"),"flavorRef parameter not present"));
   if (metadata.size() > 0)   server.metadata=metadata;
   if (files.size() > 0)   server.personality=files;
-  if (publicIp != null) {
-    server.addresses=new Addresses();
-    server.addresses.getPublicAddresses().add(publicIp);
-    server.addresses.setPrivateAddresses(null);
-  }
   return bindToRequest(request,ImmutableMap.of("server",server));
 }
