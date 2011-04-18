@@ -1,0 +1,11 @@
+{
+  Properties overrides=setupProperties();
+  setupCredentials(overrides);
+  updateProperties(overrides);
+  Injector injector=new RestContextFactory().createContextBuilder(provider,identity,credential,ImmutableSet.<Module>of(new SLF4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
+  client=injector.getInstance(NovaClient.class);
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,120,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+}

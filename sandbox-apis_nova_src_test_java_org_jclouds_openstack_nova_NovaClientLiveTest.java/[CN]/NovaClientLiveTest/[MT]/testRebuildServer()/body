@@ -1,5 +1,6 @@
 {
-  client.rebuildServer(serverId,new RebuildServerOptions().withImage(imageId));
+  if (serverId <= 0)   testCreateServer();
+  client.rebuildServer(serverId,new RebuildServerOptions().withImage(String.valueOf(createdImageId)));
   blockUntilServerActive(serverId);
-  assertEquals(imageId,client.getServer(serverId).getImageRef());
+  assertEquals(createdImageId,client.getServer(serverId).getImageRef());
 }
