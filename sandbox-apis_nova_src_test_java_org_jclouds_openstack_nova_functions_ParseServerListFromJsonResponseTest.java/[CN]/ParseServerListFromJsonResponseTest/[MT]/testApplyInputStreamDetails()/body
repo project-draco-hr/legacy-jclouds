@@ -18,15 +18,16 @@
   assertEquals(response.get(0).getMetadata(),ImmutableMap.of("Server Label","Web Head 1","Image Version","2.1"));
   assertEquals(response.get(1).getId(),5678);
   assertEquals(response.get(1).getName(),"sample-server2");
-  assertEquals(response.get(0).getImageRef(),"https://servers.api.rackspacecloud.com/v1.1/32278/images/1234");
-  assertEquals(response.get(0).getFlavorRef(),"https://servers.api.rackspacecloud.com/v1.1/32278/flavors/1");
+  assertEquals(response.get(1).getImageRef(),"https://servers.api.rackspacecloud.com/v1.1/32278/images/1");
+  assertEquals(response.get(1).getFlavorRef(),"https://servers.api.rackspacecloud.com/v1.1/32278/flavors/1");
+  assertEquals(response.get(1).getAffinityId(),"b414fa41cb37b97dcb58d6c76112af1258e9eae2");
   assertEquals(response.get(1).getHostId(),"9e107d9d372bb6826bd81d3542a419d6");
   assertEquals(response.get(1).getStatus(),ServerStatus.ACTIVE);
   assertEquals(response.get(1).getProgress(),null);
-  List<Address> publicAddresses2=ImmutableList.copyOf(Iterables.transform(ImmutableList.of("67.23.10.133","::babe:67.23.10.133"),Address.newString2AddressFunction()));
-  List<Address> privateAddresses2=ImmutableList.copyOf(Iterables.transform(ImmutableList.of("10.176.42.17","::babe:10.176.42.17"),Address.newString2AddressFunction()));
+  List<Address> publicAddresses2=ImmutableList.of(new Address("67.23.10.133",4),new Address("::babe:67.23.10.133",6));
+  List<Address> privateAddresses2=ImmutableList.of(new Address("10.176.42.17",4),new Address("::babe:10.176.42.17",6));
   Addresses addresses2=new Addresses(new HashSet<Address>(publicAddresses2),new HashSet<Address>(privateAddresses2));
   assertEquals(response.get(1).getAddresses(),addresses2);
   assertEquals(response.get(1).getMetadata(),ImmutableMap.of("Server Label","DB 1"));
-  assertEquals(response.get(1).getURI(),new URI("http://servers.api.openstack.org/v1.1/1234/servers/5678"));
+  assertEquals(response.get(1).getURI(),"http://servers.api.openstack.org/1234/servers/56789");
 }
