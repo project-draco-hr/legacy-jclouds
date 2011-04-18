@@ -5,8 +5,11 @@
   builder.location(new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId()).description(from.getHostId()).parent(location.get()).build());
   builder.userMetadata(from.getMetadata());
   builder.group(parseGroupFromName(from.getName()));
-  builder.imageId(from.getImageRef() + "");
-  builder.operatingSystem(parseOperatingSystem(from));
+  Image image=parseImage(from);
+  if (image != null) {
+    builder.imageId(image.getId());
+    builder.operatingSystem(image.getOperatingSystem());
+  }
   builder.hardware(parseHardware(from));
   builder.state(serverToNodeState.get(from.getStatus()));
   builder.publicAddresses(Iterables.transform(from.getAddresses().getPublicAddresses(),Address.newAddress2StringFunction()));
