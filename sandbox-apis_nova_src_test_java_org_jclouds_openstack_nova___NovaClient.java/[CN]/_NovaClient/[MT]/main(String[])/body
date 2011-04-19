@@ -11,5 +11,16 @@
   System.out.println(cs.listHardwareProfiles());
   System.out.println(cs.listAssignableLocations());
   System.out.println(cs.listNodes());
+  if (false) {
+    TemplateOptions options=new TemplateOptions().blockUntilRunning(false);
+    Template template=cs.templateBuilder().imageId("95").hardwareId("2").options(options).build();
+    try {
+      Set<? extends NodeMetadata> metedata=cs.createNodesInGroup("test",1,template);
+      System.out.println(metedata);
+    }
+ catch (    RunNodesException e) {
+      e.printStackTrace();
+    }
+  }
   context.close();
 }
