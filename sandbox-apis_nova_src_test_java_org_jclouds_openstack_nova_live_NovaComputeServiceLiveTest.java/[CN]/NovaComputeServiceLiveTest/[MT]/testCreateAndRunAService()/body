@@ -1,0 +1,17 @@
+{
+  String group=this.group + "s";
+  try {
+    computeService.destroyNodesMatching(inGroup(group));
+  }
+ catch (  Exception e) {
+  }
+  template=getDefaultTemplateBuilder().options(blockOnComplete(false).inboundPorts(22,8080)).build();
+  template.getOptions().runScript(RunScriptData.createScriptInstallAndStartJBoss(keyPair.get("public"),template.getImage().getOperatingSystem()));
+  try {
+    NodeMetadata node=getOnlyElement(computeService.createNodesInGroup(group,1,template));
+    checkHttpGet(node);
+  }
+  finally {
+    computeService.destroyNodesMatching(inGroup(group));
+  }
+}
