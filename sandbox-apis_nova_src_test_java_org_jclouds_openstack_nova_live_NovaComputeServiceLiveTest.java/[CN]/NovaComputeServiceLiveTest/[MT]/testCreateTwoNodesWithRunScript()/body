@@ -4,9 +4,8 @@
   }
  catch (  NoSuchElementException e) {
   }
-  refreshTemplate();
   try {
-    nodes=newTreeSet(computeService.createNodesInGroup(group,2,template));
+    nodes=newTreeSet(computeService.createNodesInGroup(group,2,getDefaultTemplateBuilder().build()));
   }
  catch (  RunNodesException e) {
     nodes=newTreeSet(concat(e.getSuccessfulNodes(),e.getNodeErrors().keySet()));
@@ -16,8 +15,8 @@
   checkNodes(nodes,group);
   NodeMetadata node1=nodes.first();
   NodeMetadata node2=nodes.last();
-  assertLocationSameOrChild(node1.getLocation(),template.getLocation());
-  assertLocationSameOrChild(node2.getLocation(),template.getLocation());
+  assertLocationSameOrChild(node1.getLocation(),getDefaultTemplateBuilder().build().getLocation());
+  assertLocationSameOrChild(node2.getLocation(),getDefaultTemplateBuilder().build().getLocation());
   checkImageIdMatchesTemplate(node1);
   checkImageIdMatchesTemplate(node2);
   checkOsMatchesTemplate(node1);

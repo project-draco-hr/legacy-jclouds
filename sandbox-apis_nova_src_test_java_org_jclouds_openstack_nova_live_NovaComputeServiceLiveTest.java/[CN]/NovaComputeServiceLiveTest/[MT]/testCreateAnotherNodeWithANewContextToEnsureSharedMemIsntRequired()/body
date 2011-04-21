@@ -1,11 +1,11 @@
 {
+  testCreateTwoNodesWithRunScript();
   initializeContextAndClient(overrides);
-  refreshTemplate();
-  TreeSet<NodeMetadata> nodes=newTreeSet(computeService.createNodesInGroup(group,1,template));
+  TreeSet<NodeMetadata> nodes=newTreeSet(computeService.createNodesInGroup(group,1,getDefaultTemplateBuilder().build()));
   checkNodes(nodes,group);
   NodeMetadata node=nodes.first();
   this.nodes.add(node);
   assertEquals(nodes.size(),1);
-  assertLocationSameOrChild(node.getLocation(),template.getLocation());
+  assertLocationSameOrChild(node.getLocation(),getDefaultTemplateBuilder().build().getLocation());
   checkOsMatchesTemplate(node);
 }

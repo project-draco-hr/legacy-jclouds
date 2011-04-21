@@ -1,7 +1,10 @@
 {
+  Properties properties=new Properties();
+  properties.putAll(overrides);
+  properties.remove(provider + ".identity");
   ComputeServiceContext context=null;
   try {
-    context=new ComputeServiceContextFactory(setupRestProperties()).createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new SLF4JLoggingModule()),overrides);
+    context=new ComputeServiceContextFactory(setupRestProperties()).createContext(provider,"MOMMA","MIA",ImmutableSet.<Module>of(new SLF4JLoggingModule()),properties);
     context.getComputeService().listNodes();
   }
   finally {
