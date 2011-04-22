@@ -1,6 +1,7 @@
 {
   computeService.destroyNodesMatching(inGroup(group));
   SortedSet<NodeMetadata> nodes=newTreeSet(computeService.createNodesInGroup(group,2,getDefaultTemplateBuilder().build()));
+  awaitForPublicAddressAssigned(nodes.iterator().next().getId());
   assertEquals(nodes.size(),2);
   checkNodes(nodes,group);
   NodeMetadata node1=nodes.first();
