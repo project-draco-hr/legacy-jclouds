@@ -1,16 +1,6 @@
 {
-  try {
-    computeService.destroyNodesMatching(inGroup(group));
-  }
- catch (  NoSuchElementException e) {
-  }
-  try {
-    nodes=newTreeSet(computeService.createNodesInGroup(group,2,getDefaultTemplateBuilder().build()));
-  }
- catch (  RunNodesException e) {
-    nodes=newTreeSet(concat(e.getSuccessfulNodes(),e.getNodeErrors().keySet()));
-    throw e;
-  }
+  computeService.destroyNodesMatching(inGroup(group));
+  SortedSet<NodeMetadata> nodes=newTreeSet(computeService.createNodesInGroup(group,2,getDefaultTemplateBuilder().build()));
   assertEquals(nodes.size(),2);
   checkNodes(nodes,group);
   NodeMetadata node1=nodes.first();
@@ -19,6 +9,4 @@
   assertLocationSameOrChild(node2.getLocation(),getDefaultTemplateBuilder().build().getLocation());
   checkImageIdMatchesTemplate(node1);
   checkImageIdMatchesTemplate(node2);
-  checkOsMatchesTemplate(node1);
-  checkOsMatchesTemplate(node2);
 }

@@ -1,8 +1,7 @@
 {
-  if (!isServerExist(serverId))   testCreateServer();
-  Image image=client.createImageFromServer("hoofie",serverId);
+  Server server=getDefaultServerImmediately();
+  Image image=getDefaultImageImmediately(server);
+  blockUntilImageActive(image.getId());
   assertEquals("hoofie",image.getName());
-  assertEquals(serverId,image.getServerRef());
-  createdImageId=image.getId();
-  blockUntilImageActive(createdImageId);
+  assertEquals(image.getServerRef(),"");
 }
