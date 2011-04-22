@@ -1,2 +1,10 @@
 {
+  Server server=getDefaultServerImmediately();
+  assertNotNull(server.getAdminPass());
+  assertEquals(server.getStatus(),ServerStatus.BUILD);
+  int serverId=server.getId();
+  String adminPass=server.getAdminPass();
+  blockUntilServerActive(serverId);
+  blockUntilPublicAddress(serverId);
+  client.getServer(serverId).getAddresses().getPublicAddresses().iterator().next().getAddress();
 }
