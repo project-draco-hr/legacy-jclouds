@@ -1,8 +1,8 @@
 {
-  Method method=S3AsyncClient.class.getMethod("getBucketLocation",String.class);
+  Method method=AWSS3AsyncClient.class.getMethod("getBucketLocation",String.class);
   HttpRequest request=processor.createRequest(method,"eubucket");
-  assertRequestLineEquals(request,"GET https://eubucket.bucket/?location HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
+  assertRequestLineEquals(request,"GET https://eubucket.s3-eu-west-1.amazonaws.com/?location HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: eubucket.s3-eu-west-1.amazonaws.com\n");
   assertPayloadEquals(request,null,null,false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,LocationConstraintHandler.class);
