@@ -3,6 +3,9 @@
   Properties overrides=setupProperties();
   context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
   client=context.getApi();
+  Iterable<User> users=Iterables.concat(client.getAccountClient().listAccounts());
+  User currentUser=Iterables.find(users,UserPredicates.apiKeyEquals(identity));
+  if (currentUser.getAccountType() != Account.Type.USER)   throw new IllegalArgumentException(String.format("invalid account type: %s, please specify an apiKey of a USER, for example: %s",currentUser.getAccountType(),Iterables.filter(users,UserPredicates.isUserAccount())));
   injector=Guice.createInjector(new JschSshClientModule(),new Log4JLoggingModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
