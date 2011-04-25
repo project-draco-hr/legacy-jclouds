@@ -1,5 +1,7 @@
 {
   if (!securityGroupsSupported)   return;
+  for (  VirtualMachine vm : client.getVirtualMachineClient().listVirtualMachines(ListVirtualMachinesOptions.Builder.zoneId(zone.getId()))) {
+  }
   vm=VirtualMachineClientLiveTest.createVirtualMachineWithSecurityGroupInZone(zone.getId(),group.getId(),client,jobComplete,virtualMachineRunning);
   if (vm.getPassword() != null)   password=vm.getPassword();
   checkSSH(new IPSocket(vm.getIPAddress(),22));
