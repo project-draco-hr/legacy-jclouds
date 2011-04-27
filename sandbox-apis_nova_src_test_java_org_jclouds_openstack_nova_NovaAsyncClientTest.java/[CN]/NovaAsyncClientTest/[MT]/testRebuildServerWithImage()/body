@@ -1,9 +1,9 @@
 {
   Method method=NovaAsyncClient.class.getMethod("rebuildServer",int.class,rebuildServerOptionsVarargsClass);
-  HttpRequest request=processor.createRequest(method,3,withImage(2));
-  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/3/action?format=json HTTP/1.1");
+  HttpRequest request=processor.createRequest(method,3,withImage("2"));
+  assertRequestLineEquals(request,"POST http://endpoint/vapiversion/servers/3/action?format=json HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
-  assertPayloadEquals(request,"{\"rebuild\":{\"imageId\":2}}",MediaType.APPLICATION_JSON,false);
+  assertPayloadEquals(request,"{\"rebuild\":{\"imageRef\":\"2\"}}",MediaType.APPLICATION_JSON,false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);

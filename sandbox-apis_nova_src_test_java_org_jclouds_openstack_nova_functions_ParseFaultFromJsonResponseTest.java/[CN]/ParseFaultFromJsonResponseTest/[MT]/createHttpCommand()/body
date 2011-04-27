@@ -1,0 +1,37 @@
+{
+  return new HttpCommand(){
+    private Exception exception;
+    @Override public int incrementRedirectCount(){
+      return 0;
+    }
+    @Override public int getRedirectCount(){
+      return 0;
+    }
+    @Override public boolean isReplayable(){
+      return false;
+    }
+    @Override public int incrementFailureCount(){
+      return 0;
+    }
+    @Override public int getFailureCount(){
+      return 0;
+    }
+    @Override public HttpRequest getCurrentRequest(){
+      try {
+        return new HttpRequest("method",new URI("http://endpoint"));
+      }
+ catch (      URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    @Override public void setCurrentRequest(    HttpRequest request){
+    }
+    @Override public void setException(    Exception exception){
+      this.exception=exception;
+    }
+    @Override public Exception getException(){
+      return exception;
+    }
+  }
+;
+}

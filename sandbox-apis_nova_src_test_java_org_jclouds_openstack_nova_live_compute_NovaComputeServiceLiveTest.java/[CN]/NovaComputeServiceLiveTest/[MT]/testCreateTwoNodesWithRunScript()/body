@@ -1,0 +1,13 @@
+{
+  computeService.destroyNodesMatching(inGroup(group));
+  Template template=getDefaultTemplateBuilder().options(TemplateOptions.Builder.blockUntilRunning(true)).build();
+  SortedSet<NodeMetadata> nodes=newTreeSet(computeService.createNodesInGroup(group,2,template));
+  assertEquals(nodes.size(),2);
+  checkNodes(nodes,group);
+  NodeMetadata node1=nodes.first();
+  NodeMetadata node2=nodes.last();
+  assertLocationSameOrChild(node1.getLocation(),template.getLocation());
+  assertLocationSameOrChild(node2.getLocation(),template.getLocation());
+  assertEquals(node1.getImageId(),template.getImage().getId());
+  assertEquals(node2.getImageId(),template.getImage().getId());
+}

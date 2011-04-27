@@ -1,8 +1,8 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_list_addresses_public.json");
-  UnwrapOnlyJsonValue<List<String>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<String>>>(){
+  UnwrapOnlyJsonValue<List<Address>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Address>>>(){
   }
 ));
-  List<String> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
-  assertEquals(response,ImmutableList.of("67.23.10.132","67.23.10.131"));
+  List<Address> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  assertEquals(response,ImmutableList.of(Address.valueOf("67.23.10.132"),Address.valueOf("::babe:67.23.10.132"),Address.valueOf("67.23.10.131"),Address.valueOf("::babe:4317:0A83")));
 }

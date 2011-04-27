@@ -1,7 +1,7 @@
 {
   Method method=NovaAsyncClient.class.getMethod("rebootServer",int.class,RebootType.class);
   HttpRequest request=processor.createRequest(method,2,RebootType.HARD);
-  assertRequestLineEquals(request,"POST http://serverManagementUrl/servers/2/action?format=json HTTP/1.1");
+  assertRequestLineEquals(request,"POST http://endpoint/vapiversion/servers/2/action?format=json HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"{\"reboot\":{\"type\":\"HARD\"}}",MediaType.APPLICATION_JSON,false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);

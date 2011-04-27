@@ -1,0 +1,12 @@
+{
+  NodeMetadata node=getDefaultNodeImmediately(group);
+  String address=awaitForPublicAddressAssigned(node.getId());
+  awaitForSshPort(address,new Credentials("root",keyPair.get("private")));
+  OperatingSystem os=node.getOperatingSystem();
+  try {
+    @SuppressWarnings("unused") Map<? extends NodeMetadata,ExecResponse> responses=runJavaInstallationScriptWithCreds(group,os,new Credentials("root","romeo"));
+  }
+ catch (  RunScriptOnNodesException e) {
+    throw e.getNodeErrors().values().iterator().next().getCause();
+  }
+}
