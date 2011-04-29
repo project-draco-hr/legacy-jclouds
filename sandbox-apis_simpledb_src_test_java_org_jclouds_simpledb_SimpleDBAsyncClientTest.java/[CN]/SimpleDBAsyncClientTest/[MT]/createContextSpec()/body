@@ -1,3 +1,6 @@
 {
-  return new RestContextFactory().createContextSpec(provider,"identity","credential",new Properties());
+  Properties restProperties=new Properties();
+  restProperties.setProperty(provider + ".contextbuilder",SimpleDBContextBuilder.class.getName());
+  restProperties.setProperty(provider + ".propertiesbuilder",SimpleDBPropertiesBuilder.class.getName());
+  return new RestContextFactory(restProperties).createContextSpec(provider,"foo","bar",getProperties());
 }
