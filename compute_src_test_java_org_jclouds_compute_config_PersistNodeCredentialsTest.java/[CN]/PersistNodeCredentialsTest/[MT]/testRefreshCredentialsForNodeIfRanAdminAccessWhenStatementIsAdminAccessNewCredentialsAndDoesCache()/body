@@ -1,0 +1,14 @@
+{
+  @SuppressWarnings("unchecked") Map<String,Credentials> credstore=createMock(Map.class);
+  AdminAccess statement=createMock(AdminAccess.class);
+  Credentials credentials=createMock(Credentials.class);
+  expect(statement.getAdminCredentials()).andReturn(credentials).atLeastOnce();
+  expect(credstore.put("node#id",credentials)).andReturn(null);
+  replay(statement);
+  replay(credstore);
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).build();
+  RefreshCredentialsForNodeIfRanAdminAccess fn=new PersistNodeCredentialsModule.RefreshCredentialsForNodeIfRanAdminAccess(credstore,statement);
+  assertEquals(fn.apply(node).getCredentials(),credentials);
+  verify(statement);
+  verify(credstore);
+}

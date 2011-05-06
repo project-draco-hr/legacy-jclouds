@@ -1,0 +1,13 @@
+{
+  if (input instanceof StatementList) {
+    Builder<Statement> statements=ImmutableList.<Statement>builder();
+    for (    Statement statement : StatementList.class.cast(input).getStatements())     statements.add(apply(statement));
+    return new StatementList(statements.build());
+  }
+ else   if (input instanceof AdminAccess) {
+    return AdminAccess.class.cast(input).apply(adminAccessConfiguration);
+  }
+ else {
+    return input;
+  }
+}
