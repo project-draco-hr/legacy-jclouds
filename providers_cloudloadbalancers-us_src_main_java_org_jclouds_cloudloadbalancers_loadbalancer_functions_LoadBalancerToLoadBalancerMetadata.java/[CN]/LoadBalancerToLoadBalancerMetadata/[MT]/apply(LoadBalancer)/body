@@ -1,0 +1,10 @@
+{
+  Location location=locationMap.get().get(input.getRegion());
+  String id=input.getRegion() + "/" + input.getId();
+  return new LoadBalancerMetadataImpl(LoadBalancerType.LB,input.getName(),input.getName(),id,location,null,ImmutableMap.<String,String>of(),Iterables.transform(input.getVirtualIPs(),new Function<VirtualIP,String>(){
+    @Override public String apply(    VirtualIP arg0){
+      return arg0.getAddress();
+    }
+  }
+));
+}
