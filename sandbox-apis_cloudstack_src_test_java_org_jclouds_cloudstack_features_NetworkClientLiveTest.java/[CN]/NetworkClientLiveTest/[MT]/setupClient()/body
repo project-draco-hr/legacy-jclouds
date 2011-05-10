@@ -1,0 +1,15 @@
+{
+  super.setupClient();
+  try {
+    zone=find(client.getZoneClient().listZones(),ZonePredicates.supportsAdvancedNetworks());
+    offering=Iterables.find(client.getOfferingClient().listNetworkOfferings(),new Predicate<NetworkOffering>(){
+      @Override public boolean apply(      NetworkOffering arg0){
+        return "Optional".equals(arg0.getAvailability());
+      }
+    }
+);
+    networksSupported=true;
+  }
+ catch (  NoSuchElementException e) {
+  }
+}
