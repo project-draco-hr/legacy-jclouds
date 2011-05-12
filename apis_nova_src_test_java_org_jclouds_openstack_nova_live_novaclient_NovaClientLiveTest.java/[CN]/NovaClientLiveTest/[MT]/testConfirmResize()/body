@@ -1,0 +1,9 @@
+{
+  Server server=getDefaultServerImmediately();
+  int serverId=server.getId();
+  client.resizeServer(serverId,2);
+  blockUntilServerVerifyResize(serverId);
+  client.confirmResizeServer(serverId);
+  blockUntilServerActive(serverId);
+  assertEquals(2,client.getServer(serverId).getFlavorRef());
+}

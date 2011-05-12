@@ -1,0 +1,15 @@
+{
+  checkNotNull(family,"family");
+  if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
+  try {
+    String shadowPasswordEntry=cryptFunction.apply(password);
+    String shadowFile="/etc/shadow";
+    Statement replaceEntryInTempFile=exec(format("awk -v user=^%1$s: -v password='%2$s' 'BEGIN { FS=OFS=\":\" } $0 ~ user { $2 = password } 1' %3$s >%3$s.%1$s",login,shadowPasswordEntry,shadowFile));
+    Statement replaceShadowFile=exec(format("test -f %2$s.%1$s && mv %2$s.%1$s %2$s",login,shadowFile));
+    return new StatementList(ImmutableList.of(replaceEntryInTempFile,replaceShadowFile)).render(family);
+  }
+ catch (  Exception e) {
+    propagate(e);
+    return null;
+  }
+}

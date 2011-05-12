@@ -1,0 +1,34 @@
+{
+  checkNotNull(family,"family");
+  if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
+  String homeDir=defaultHome + "{fs}" + login;
+  ImmutableList.Builder<Statement> statements=ImmutableList.<Statement>builder();
+  statements.add(Statements.exec("{md} " + homeDir));
+  ImmutableMap.Builder<String,String> userAddOptions=ImmutableMap.<String,String>builder();
+  userAddOptions.put("-s",shell);
+  if (groups.size() > 0) {
+    for (    String group : groups)     statements.add(Statements.exec("groupadd -f " + group));
+    List<String> groups=Lists.newArrayList(this.groups);
+    String primaryGroup=groups.remove(0);
+    userAddOptions.put("-g",primaryGroup);
+    if (groups.size() > 0)     userAddOptions.put("-G",Joiner.on(',').join(groups));
+  }
+  userAddOptions.put("-d",homeDir);
+  if (password != null) {
+    try {
+      userAddOptions.put("-p","'" + cryptFunction.apply(password) + "'");
+    }
+ catch (    Exception e) {
+      Throwables.propagate(e);
+    }
+  }
+  String options=Joiner.on(' ').withKeyValueSeparator(" ").join(userAddOptions.build());
+  statements.add(Statements.exec(String.format("useradd %s %s",options,login)));
+  if (authorizeRSAPublicKeys.size() > 0 || installRSAPrivateKey != null) {
+    String sshDir=homeDir + "{fs}.ssh";
+    if (authorizeRSAPublicKeys.size() > 0)     statements.add(new AuthorizeRSAPublicKeys(sshDir,authorizeRSAPublicKeys));
+    if (installRSAPrivateKey != null)     statements.add(new InstallRSAPrivateKey(sshDir,installRSAPrivateKey));
+  }
+  statements.add(Statements.exec(String.format("chown -R %s %s",login,homeDir)));
+  return new StatementList(statements.build()).render(family);
+}

@@ -1,5 +1,5 @@
 {
-  String cookieHeader=checkNotNull(from.getFirstHeaderOrNull(HttpHeaders.SET_COOKIE),HttpHeaders.SET_COOKIE);
+  String cookieHeader=checkNotNull(from.getFirstHeaderOrNull("x-vcloud-authorization"),"x-vcloud-authorization");
   final Matcher matcher=pattern.matcher(cookieHeader);
   boolean matchFound=matcher.find();
   try {
@@ -7,7 +7,7 @@
       final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
       return new VCloudSession(){
         @VCloudToken public String getVCloudToken(){
-          return matcher.group(1);
+          return matcher.group(2);
         }
         @Org public Map<String,ReferenceType> getOrgs(){
           return org;
@@ -19,5 +19,5 @@
   finally {
     releasePayload(from);
   }
-  throw new HttpResponseException("not found ",null,from);
+  throw new HttpResponseException("x-vcloud-authorization not found ",null,from);
 }

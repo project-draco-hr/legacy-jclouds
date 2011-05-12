@@ -1,0 +1,7 @@
+{
+  Server server=getDefaultServerImmediately();
+  Image image=getDefaultImageImmediately(server);
+  client.rebuildServer(server.getId(),new RebuildServerOptions().withImage(String.valueOf(image.getId())));
+  blockUntilServerActive(server.getId());
+  assertEquals(image.getURI(),client.getServer(server.getId()).getImageRef());
+}

@@ -1,0 +1,8 @@
+{
+  return transform(concat(transformParallel(regions,new Function<String,Future<Set<LoadBalancer>>>(){
+    @Override public ListenableFuture<Set<LoadBalancer>> apply(    String from){
+      return aclient.getLoadBalancerClient(from).listLoadBalancers();
+    }
+  }
+,executor,null,logger,"loadbalancers")),converter);
+}

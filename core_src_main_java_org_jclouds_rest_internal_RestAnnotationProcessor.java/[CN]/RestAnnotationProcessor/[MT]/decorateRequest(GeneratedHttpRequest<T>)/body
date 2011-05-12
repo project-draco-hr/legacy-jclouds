@@ -1,13 +1,10 @@
 {
-  OUTER:   for (  Entry<Integer,Set<Annotation>> entry : filterValues(methodToIndexOfParamToDecoratorParamAnnotation.get(request.getJavaMethod()),new Predicate<Set<Annotation>>(){
-    public boolean apply(    Set<Annotation> input){
-      return input.size() >= 1;
-    }
-  }
-).entrySet()) {
+  OUTER:   for (  Entry<Integer,Set<Annotation>> entry : concat(filterValues(methodToIndexOfParamToBinderParamAnnotation.get(request.getJavaMethod()),notEmpty).entrySet(),filterValues(methodToIndexOfParamToWrapWithAnnotation.get(request.getJavaMethod()),notEmpty).entrySet())) {
     boolean shouldBreak=false;
-    BinderParam payloadAnnotation=(BinderParam)entry.getValue().iterator().next();
-    Binder binder=injector.getInstance(payloadAnnotation.value());
+    Annotation annotation=Iterables.get(entry.getValue(),0);
+    Binder binder;
+    if (annotation instanceof BinderParam)     binder=injector.getInstance(BinderParam.class.cast(annotation).value());
+ else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(WrapWith.class.cast(annotation).value());
     if (request.getArgs().size() >= entry.getKey() + 1 && request.getArgs().get(entry.getKey()) != null) {
       Object input;
       Class<?> parameterType=request.getJavaMethod().getParameterTypes()[entry.getKey()];

@@ -1,0 +1,14 @@
+{
+  Injector i=Guice.createInjector(new GsonModule(){
+    @Override protected void configure(){
+      super.configure();
+      bind(DateAdapter.class).to(Iso8601DateAdapter.class);
+    }
+  }
+);
+  InputStream is=ParseServerFromJsonResponseTest.class.getResourceAsStream("/test_get_server_detail.json");
+  UnwrapOnlyJsonValue<Server> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<Server>>(){
+  }
+));
+  return (Server)parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+}

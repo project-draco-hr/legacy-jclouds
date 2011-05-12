@@ -1,0 +1,12 @@
+{
+  PersistNodeCredentials persistNodeCredentials=Guice.createInjector(new PersistNodeCredentialsModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(new TypeLiteral<Map<String,Credentials>>(){
+      }
+).toInstance(ImmutableMap.<String,Credentials>of());
+    }
+  }
+).getInstance(PersistNodeCredentials.class);
+  assertEquals(persistNodeCredentials.always(null).getClass(),PersistNodeCredentialsModule.RefreshCredentialsForNode.class);
+  assertEquals(persistNodeCredentials.ifAdminAccess(null).getClass(),PersistNodeCredentialsModule.RefreshCredentialsForNodeIfRanAdminAccess.class);
+}
