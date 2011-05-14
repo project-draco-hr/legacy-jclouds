@@ -1,0 +1,6 @@
+{
+  IBMSmartCloudTemplateOptions templateOptions=template.getOptions().as(IBMSmartCloudTemplateOptions.class);
+  CreateInstanceOptions options=authorizePublicKey(templateOptions.getKeyPair()).isMiniEphemeral(IBMSmartCloudTemplateOptions.class.cast(template.getOptions()).isMiniEphemeral());
+  Instance instance=client.createInstanceInLocation(template.getLocation().getId(),name,template.getImage().getProviderId(),template.getHardware().getProviderId(),options);
+  return instanceToNodeMetadata.apply(instance);
+}

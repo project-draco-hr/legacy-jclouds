@@ -1,0 +1,11 @@
+{
+  Instance instance=client.getInstance(id);
+  if (instance != null && instance.getStatus() != Instance.Status.DEPROVISIONING && instance.getStatus() != Instance.Status.DEPROVISION_PENDING) {
+    int timeout=(instance.getStatus() == Instance.Status.NEW || instance.getStatus() == Instance.Status.PROVISIONING) ? 600 : 30;
+    logger.debug(">> awaiting up to %s seconds for instance %s to be ready for delete",timeout,id);
+    boolean ready=new RetryablePredicate<Instance>(new InstanceActiveOrFailed(client),timeout,2,TimeUnit.SECONDS).apply(instance);
+    logger.debug(">> instance state is %sready, deleting",ready ? "" : "not ",id);
+    client.deleteInstance(instance.getId());
+  }
+  return instance != null ? getNode.getNode(id) : null;
+}

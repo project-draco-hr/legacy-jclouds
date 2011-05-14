@@ -1,0 +1,9 @@
+{
+  killInstance(GROUP);
+  instance=connection.createInstanceInLocation(location.getId(),GROUP,image.getId(),instanceType.getId(),authorizePublicKey(key.getName()).isMiniEphemeral(true));
+  assertBeginState(instance,GROUP);
+  assertIpHostNullAndStatusNEW(instance);
+  blockUntilRunning(instance);
+  instance=assertRunning(instance,GROUP);
+  sshAndDf(new IPSocket(instance.getPrimaryIP().getIP(),22),new Credentials("idcuser",key.getKeyMaterial()));
+}
