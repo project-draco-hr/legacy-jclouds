@@ -2,7 +2,8 @@
   JsonObject map=new JsonObject();
   Type childGenericType=null;
   if (typeOfSrc instanceof ParameterizedType) {
-    childGenericType=new TypeInfoMap(typeOfSrc).getValueType();
+    Class<?> rawTypeOfSrc=$Gson$Types.getRawType(typeOfSrc);
+    childGenericType=$Gson$Types.getMapKeyAndValueTypes(typeOfSrc,rawTypeOfSrc)[1];
   }
   for (  Map.Entry entry : (Set<Map.Entry>)src.entrySet()) {
     Object value=entry.getValue();
@@ -12,7 +13,7 @@
     }
  else {
       Type childType=(childGenericType == null) ? value.getClass() : childGenericType;
-      valueElement=context.serialize(value,childType);
+      valueElement=serialize(context,value,childType);
     }
     map.add(String.valueOf(entry.getKey()),valueElement);
   }
