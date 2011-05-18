@@ -1,11 +1,13 @@
 {
   for (  Object arg : gRequest.getArgs()) {
     if (arg instanceof VMSpec) {
-      return (VMSpec)arg;
+      List<VMSpec> vmSpecs=new ArrayList<VMSpec>();
+      vmSpecs.add((VMSpec)arg);
+      return vmSpecs;
     }
- else     if (arg instanceof VMSpec[]) {
-      VMSpec[] configuration=(VMSpec[])arg;
-      return (configuration.length > 0) ? configuration[0] : null;
+ else     if (arg instanceof ArrayList) {
+      List<VMSpec> configurations=(List<VMSpec>)arg;
+      return (configurations.size() > 0) ? configurations : null;
     }
   }
   return null;
