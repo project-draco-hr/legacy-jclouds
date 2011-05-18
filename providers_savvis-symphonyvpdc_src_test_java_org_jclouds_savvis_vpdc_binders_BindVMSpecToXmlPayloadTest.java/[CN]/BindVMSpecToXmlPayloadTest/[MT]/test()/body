@@ -7,7 +7,10 @@
     }
   }
 );
-  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/vm-default.xml"));
-  VMSpec spec=VMSpec.builder().operatingSystem(os).build();
-  assertEquals(new BindVMSpecToXmlPayload().generateXml(spec,"DemoHost-1","VM Tier01"),expected);
+  Network network=Network.builder().name("VM Tier01").build();
+  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/vm-multiple-default.xml"));
+  VMSpec spec=VMSpec.builder().name("Test VM").operatingSystem(os).network(network).build();
+  List<VMSpec> specs=new ArrayList<VMSpec>();
+  specs.add(spec);
+  assertEquals(new BindVMSpecToXmlPayload().generateXml(specs),expected);
 }
