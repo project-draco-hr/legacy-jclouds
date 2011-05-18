@@ -1,5 +1,5 @@
 {
-  Method method=VMAsyncClient.class.getMethod("addMultipleVMsIntoVDC",URI.class,List.class);
+  Method method=VMAsyncClient.class.getMethod("addMultipleVMsIntoVDC",String.class,String.class,Iterable.class);
   CIMOperatingSystem os=Iterables.find(injector.getInstance(Key.get(new TypeLiteral<Set<CIMOperatingSystem>>(){
   }
 )),new Predicate<CIMOperatingSystem>(){
@@ -8,11 +8,8 @@
     }
   }
 );
-  Network network=Network.builder().name("VM Tier01").build();
-  List<VMSpec> vmSpecs=new ArrayList<VMSpec>();
-  vmSpecs.add(VMSpec.builder().name("Test VM").operatingSystem(os).network(network).build());
-  HttpRequest request=processor.createRequest(method,URI.create("https://api.symphonyvpdc.savvis.net/rest/api/v0.8/org/11/vdc/22"),vmSpecs);
-  assertRequestLineEquals(request,"GET https://api.symphonyvpdc.savvis.net/rest/api/v0.8/org/11/vdc/22/vApp/ HTTP/1.1");
+  HttpRequest request=processor.createRequest(method,"11","22",ImmutableSet.of(VMSpec.builder().operatingSystem(os).name("Test VM").networkTierName("VM Tier01").build()));
+  assertRequestLineEquals(request,"GET https://api.symphonyvpdc.savvis.net/vpdc/v1.0/org/11/vdc/22/vApp/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/vm-multiple-default.xml")),"application/xml",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);

@@ -1,0 +1,13 @@
+{
+  Set<? extends Location> response=connection.listLocations();
+  assertNotNull(response);
+  if (response.size() > 0) {
+    location=Iterables.find(response,new Predicate<Location>(){
+      @Override public boolean apply(      Location arg0){
+        return "101".equals(arg0.getId());
+      }
+    }
+);
+    assertEquals(connection.getLocation(location.getId()).getId(),location.getId());
+  }
+}

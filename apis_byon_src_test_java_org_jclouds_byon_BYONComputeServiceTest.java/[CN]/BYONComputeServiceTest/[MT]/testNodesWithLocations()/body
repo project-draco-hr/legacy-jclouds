@@ -1,0 +1,21 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    String endpoint="file://" + getClass().getResource("/test_location.yaml").getPath();
+    Properties props=new Properties();
+    props.setProperty("byon.endpoint",endpoint);
+    context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new JschSshClientModule()),props);
+    assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
+    @SuppressWarnings("unchecked") Supplier<Map<String,Node>> supplier=(Supplier<Map<String,Node>>)context.getProviderSpecificContext().getApi();
+    assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());
+    assertEquals(supplier.get(),ImmutableMap.<String,Node>of(NodesFromYamlTest.TEST2.getId(),NodesFromYamlTest.TEST2,NodesFromYamlTest.TEST3.getId(),NodesFromYamlTest.TEST3));
+    Location providerLocation=expectedProviderLocationFromResource(endpoint);
+    Location virginia=zoneCalled("virginia",providerLocation);
+    Location maryland=zoneCalled("maryland",providerLocation);
+    assertEquals(context.getComputeService().listNodes(),ImmutableSet.of(expectedNodeMetadataFromResource(1,endpoint,virginia),expectedNodeMetadataFromResource(2,endpoint,maryland)));
+    assertEquals(context.getComputeService().listAssignableLocations(),ImmutableSet.of(virginia,maryland));
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}
