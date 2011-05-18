@@ -1,14 +1,8 @@
 {
   for (  Object arg : gRequest.getArgs()) {
     if (arg instanceof VMSpec) {
-      List<VMSpec> vmSpecs=new ArrayList<VMSpec>();
-      vmSpecs.add((VMSpec)arg);
-      return vmSpecs;
-    }
- else     if (arg instanceof ArrayList) {
-      List<VMSpec> configurations=(List<VMSpec>)arg;
-      return (configurations.size() > 0) ? configurations : null;
+      return VMSpec.class.cast(arg);
     }
   }
-  return null;
+  throw new IllegalArgumentException("Iterbable<VMSpec> must be included in the argument list");
 }
