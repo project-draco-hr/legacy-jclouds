@@ -1,11 +1,17 @@
 {
-  if (qName.endsWith("Children")) {
-    inChildren=false;
-    this.children.add(vmHandler.getResult());
-  }
- else   if (qName.endsWith("Tasks")) {
-    inTasks=false;
-    this.tasks.add(taskHandler.getResult());
+  depth--;
+  if (depth == 1) {
+    if (equalsOrSuffix(qName,"Children")) {
+      inChildren=false;
+      this.children.add(vmHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"Tasks")) {
+      inTasks=false;
+      this.tasks.add(taskHandler.getResult());
+    }
+ else     if (equalsOrSuffix(qName,"Description")) {
+      description=SaxUtils.currentOrNull(currentText);
+    }
   }
   if (inChildren) {
     vmHandler.endElement(uri,name,qName);
@@ -13,11 +19,8 @@
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);
   }
- else   if (qName.equals("Description")) {
-    description=currentOrNull();
-  }
- else   if (qName.equals("ovfDescriptorUploaded")) {
-    ovfDescriptorUploaded=Boolean.parseBoolean(currentOrNull());
+ else   if (equalsOrSuffix(qName,"ovfDescriptorUploaded")) {
+    ovfDescriptorUploaded=Boolean.parseBoolean(SaxUtils.currentOrNull(currentText));
   }
   currentText=new StringBuilder();
 }

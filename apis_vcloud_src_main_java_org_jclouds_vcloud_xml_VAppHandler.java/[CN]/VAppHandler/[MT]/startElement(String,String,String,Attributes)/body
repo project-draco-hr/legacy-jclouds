@@ -1,10 +1,13 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
-  if (qName.endsWith("Children")) {
-    inChildren=true;
-  }
- else   if (qName.endsWith("Tasks")) {
-    inTasks=true;
+  depth++;
+  if (depth == 2) {
+    if (equalsOrSuffix(qName,"Children")) {
+      inChildren=true;
+    }
+ else     if (equalsOrSuffix(qName,"Tasks")) {
+      inTasks=true;
+    }
   }
   if (inChildren) {
     vmHandler.startElement(uri,localName,qName,attrs);
@@ -12,11 +15,11 @@
  else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attrs);
   }
- else   if (qName.equals("VApp")) {
+ else   if (equalsOrSuffix(qName,"VApp")) {
     template=newReferenceType(attributes);
     if (attributes.containsKey("status"))     this.status=Status.fromValue(Integer.parseInt(attributes.get("status")));
   }
- else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+ else   if (equalsOrSuffix(qName,"Link") && "up".equals(attributes.get("rel"))) {
     vdc=newReferenceType(attributes);
   }
 }
