@@ -1,5 +1,7 @@
 {
-  String cookieHeader=checkNotNull(from.getFirstHeaderOrNull("x-vcloud-authorization"),"x-vcloud-authorization");
+  String cookieHeader=from.getFirstHeaderOrNull("x-vcloud-authorization");
+  if (cookieHeader == null)   cookieHeader=from.getFirstHeaderOrNull(HttpHeaders.SET_COOKIE);
+  checkNotNull(cookieHeader,"Header %s or %s must be present","x-vcloud-authorization",HttpHeaders.SET_COOKIE);
   final Matcher matcher=pattern.matcher(cookieHeader);
   boolean matchFound=matcher.find();
   try {
