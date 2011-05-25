@@ -1,34 +1,36 @@
 {
-  InstantiateVAppTemplateOptions options=processorCount((int)getCores(template.getHardware())).memory(template.getHardware().getRam()).disk((long)((template.getHardware().getVolumes().get(0).getSize()) * 1024 * 1024l));
-  String customizationScript=null;
-  IpAddressAllocationMode ipAddressAllocationMode=null;
-  if (template.getOptions() instanceof VCloudTemplateOptions) {
-    customizationScript=VCloudTemplateOptions.class.cast(template.getOptions()).getCustomizationScript();
-    ipAddressAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();
-    if (customizationScript != null || ipAddressAllocationMode != null) {
-      options.customizeOnInstantiate(false);
-      options.deploy(false);
-      options.powerOn(false);
-    }
-  }
+  InstantiateVAppTemplateOptions options=new InstantiateVAppTemplateOptions();
+  String customizationScript=VCloudTemplateOptions.class.cast(template.getOptions()).getCustomizationScript();
+  IpAddressAllocationMode ipAddressAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();
+  options.customizeOnInstantiate(false);
+  options.deploy(false);
+  options.powerOn(false);
   if (!template.getOptions().shouldBlockUntilRunning())   options.block(false);
   URI VDC=URI.create(template.getLocation().getId());
   URI templateId=URI.create(template.getImage().getId());
   logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
   VApp vAppResponse=client.instantiateVAppTemplateInVDC(VDC,templateId,name,options);
+  waitForTask(vAppResponse.getTasks().get(0),vAppResponse);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
-  Task task=vAppResponse.getTasks().get(0);
-  if (customizationScript == null && ipAddressAllocationMode == null) {
-    return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,task);
+  Vm vm=Iterables.get(client.getVApp(vAppResponse.getHref()).getChildren(),0);
+  if (customizationScript != null) {
+    logger.trace(">> updating customization vm(%s) ",vm.getName());
+    waitForTask(updateVmWithCustomizationScript(vm,customizationScript),vAppResponse);
+    logger.trace("<< updated customization vm(%s) ",vm.getName());
   }
- else {
-    if (!successTester.apply(task.getHref())) {
-      throw new RuntimeException(String.format("failed to %s %s: %s","instantiate",vAppResponse.getName(),task));
-    }
-    Vm vm=Iterables.get(client.getVApp(vAppResponse.getHref()).getChildren(),0);
-    if (customizationScript != null)     updateVmWithCustomizationScript(vm,customizationScript);
-    if (ipAddressAllocationMode != null)     updateVmWithIpAddressAllocationMode(vm,ipAddressAllocationMode);
-    task=client.deployAndPowerOnVAppOrVm(vAppResponse.getHref());
-    return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,task);
+  if (ipAddressAllocationMode != null) {
+    logger.trace(">> updating ipAddressAllocationMode(%s) vm(%s) ",ipAddressAllocationMode,vm.getName());
+    waitForTask(updateVmWithIpAddressAllocationMode(vm,ipAddressAllocationMode),vAppResponse);
+    logger.trace("<< updated ipAddressAllocationMode vm(%s) ",vm.getName());
   }
+  int cpuCount=new Double(getCores(template.getHardware())).intValue();
+  logger.trace(">> updating cpuCount(%d) vm(%s) ",cpuCount,vm.getName());
+  waitForTask(updateCPUCountOfVm(vm,cpuCount),vAppResponse);
+  logger.trace("<< updated cpuCount vm(%s) ",vm.getName());
+  int memoryMB=template.getHardware().getRam();
+  logger.trace(">> updating memoryMB(%d) vm(%s) ",memoryMB,vm.getName());
+  waitForTask(updateMemoryMBOfVm(vm,memoryMB),vAppResponse);
+  logger.trace("<< updated memoryMB vm(%s) ",vm.getName());
+  logger.trace(">> deploying and powering on vApp(%s) ",vAppResponse.getName());
+  return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.deployAndPowerOnVAppOrVm(vAppResponse.getHref()));
 }

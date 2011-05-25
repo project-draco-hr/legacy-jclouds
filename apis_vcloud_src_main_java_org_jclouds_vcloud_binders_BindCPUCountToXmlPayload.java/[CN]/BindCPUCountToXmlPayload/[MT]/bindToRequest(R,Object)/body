@@ -1,0 +1,22 @@
+{
+  checkArgument(checkNotNull(payload,"cpuCount") instanceof Integer,"this binder is only valid for Integers!");
+  Integer cpuCount=Integer.class.cast(payload);
+  XMLBuilder cpuItem;
+  try {
+    cpuItem=XMLBuilder.create("Item").a("xmlns",ns).a("xmlns:rasd",RESOURCE_ALLOCATION_NS);
+    cpuItem.e("rasd:AllocationUnits").t("hertz * 10^6");
+    cpuItem.e("rasd:Description").t("Number of Virtual CPUs");
+    cpuItem.e("rasd:ElementName").t(cpuCount.toString() + " virtual CPU(s)");
+    cpuItem.e("rasd:InstanceID").t("4");
+    cpuItem.e("rasd:ResourceType").t(ResourceType.PROCESSOR.value());
+    cpuItem.e("rasd:VirtualQuantity").t(cpuCount.toString());
+    cpuItem.e("rasd:Weight").t("0");
+    Properties outputProperties=new Properties();
+    outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+    request=super.bindToRequest(request,cpuItem.asString(outputProperties));
+  }
+ catch (  Exception e) {
+    Throwables.propagate(e);
+  }
+  return request;
+}
