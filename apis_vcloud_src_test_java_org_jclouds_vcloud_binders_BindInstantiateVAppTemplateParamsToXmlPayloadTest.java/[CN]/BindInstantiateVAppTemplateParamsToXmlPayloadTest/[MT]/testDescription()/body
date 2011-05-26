@@ -2,10 +2,10 @@
   URI templateUri=URI.create("https://vcenterprise.bluelock.com/api/v1.0/vAppTemplate/3");
   VAppTemplate template=createMock(VAppTemplate.class);
   VCloudNetworkSection net=createMock(VCloudNetworkSection.class);
-  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/instantiationparams.xml"));
+  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/instantiationparams-description.xml"));
   GeneratedHttpRequest<?> request=createMock(GeneratedHttpRequest.class);
   expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(new InstantiateVAppTemplateOptions())).atLeastOnce();
+  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(new InstantiateVAppTemplateOptions().description("my foo"))).atLeastOnce();
   request.setPayload(expected);
   expect(template.getNetworkSection()).andReturn(net).atLeastOnce();
   expect(net.getNetworks()).andReturn(ImmutableSet.<org.jclouds.ovf.Network>of(new org.jclouds.ovf.Network("vAppNet-vApp Internal",null)));
