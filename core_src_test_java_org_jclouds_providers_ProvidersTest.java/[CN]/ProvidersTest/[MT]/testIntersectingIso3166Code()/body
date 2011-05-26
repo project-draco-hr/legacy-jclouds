@@ -1,0 +1,20 @@
+{
+  @SuppressWarnings("serial") Map<ProviderMetadata,Integer> expectedResults=new HashMap<ProviderMetadata,Integer>(){
+{
+      put(testBlobstoreProvider,1);
+      put(testComputeProvider,1);
+      put(testYetAnotherComputeProvider,0);
+    }
+  }
+;
+  for (  Map.Entry<ProviderMetadata,Integer> result : expectedResults.entrySet()) {
+    Iterable<ProviderMetadata> providersMetadata=Providers.collocatedWith(result.getKey());
+    int providersFound=0;
+    for (    ProviderMetadata providerMetadata : providersMetadata) {
+      if (providerMetadata != null) {
+        providersFound++;
+      }
+    }
+    assertEquals(providersFound,result.getValue().intValue());
+  }
+}

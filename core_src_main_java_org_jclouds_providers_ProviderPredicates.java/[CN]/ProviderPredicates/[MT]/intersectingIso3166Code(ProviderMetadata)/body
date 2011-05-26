@@ -1,0 +1,23 @@
+{
+  Preconditions.checkNotNull(refProviderMetadata,"refProviderMetadata must not be null");
+  return new Predicate<ProviderMetadata>(){
+    /** 
+ * {@inheritDoc}
+ */
+    @Override public boolean apply(    ProviderMetadata providerMetadata){
+      for (      String refIso3166Code : refProviderMetadata.getIso3166Codes()) {
+        if (providerContainsIso3166Code(providerMetadata,refIso3166Code) && !refProviderMetadata.equals(providerMetadata)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    /** 
+ * {@inheritDoc}
+ */
+    @Override public String toString(){
+      return "intersectingIso3166Code(" + refProviderMetadata + ")";
+    }
+  }
+;
+}
