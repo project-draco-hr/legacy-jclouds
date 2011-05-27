@@ -1,0 +1,24 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest<?>,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest<?> gRequest=(GeneratedHttpRequest<?>)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  String name=checkNotNull(postParams.get("name"),"name");
+  String description=checkNotNull(postParams.get("description"),"description");
+  URI entity=URI.create(checkNotNull(postParams.get("entity"),"entity"));
+  Map<String,String> properties=findMapInArgsOrNull(gRequest);
+  if (properties == null) {
+    properties=ImmutableMap.of();
+  }
+  try {
+    return stringBinder.bindToRequest(request,generateXml(name,description,entity,properties));
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  FactoryConfigurationError e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException e) {
+    throw new RuntimeException(e);
+  }
+}
