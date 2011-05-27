@@ -1,9 +1,9 @@
 {
-  HashSet<String> methods=new HashSet<String>();
+  Builder<String> methodsBuilder=ImmutableSet.<String>builder();
   for (  Annotation annotation : method.getAnnotations()) {
     HttpMethod http=annotation.annotationType().getAnnotation(HttpMethod.class);
-    if (http != null)     methods.add(http.value());
+    if (http != null)     methodsBuilder.add(http.value());
   }
-  if (methods.size() == 0)   return null;
-  return methods;
+  Set<String> methods=methodsBuilder.build();
+  return (methods.size() == 0) ? null : methods;
 }

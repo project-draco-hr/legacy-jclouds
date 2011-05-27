@@ -1,0 +1,9 @@
+{
+  IBMSmartCloudTemplateOptions options=template.getOptions().as(IBMSmartCloudTemplateOptions.class);
+  if (options.shouldAutomaticallyCreateKeyPair() && options.getKeyPair() == null) {
+    Key key=createNewKey(group);
+    options.keyPair(key.getName());
+    credentialsMap.put(key.getName(),key.getKeyMaterial());
+  }
+  return super.execute(group,count,template,goodNodes,badNodes,customizationResponses);
+}

@@ -1,0 +1,11 @@
+{
+  XMLBuilder rootBuilder=buildRoot(templateName);
+  rootBuilder.e("Description").t(description);
+  rootBuilder.e("Entity").a("href",entity.toASCIIString());
+  for (  Entry<String,String> entry : properties.entrySet()) {
+    rootBuilder.e("Property").a("key",entry.getKey()).t(entry.getValue());
+  }
+  Properties outputProperties=new Properties();
+  outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+  return rootBuilder.asString(outputProperties);
+}

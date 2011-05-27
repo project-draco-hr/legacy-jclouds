@@ -1,0 +1,15 @@
+{
+  String name=GROUP + "1";
+  killInstance(name);
+  instance2=connection.createInstanceInLocation(location.getId(),name,image.getId(),instanceType.getId(),secondaryIP(ip.getId()).isMiniEphemeral(true).authorizePublicKey(key.getName()).mountVolume(volume.getId(),"/mnt"));
+  assertBeginState(instance2,name);
+  assertIpHostAndStatusNEW(instance2);
+  blockUntilRunning(instance2);
+  instance2=assertRunning(instance2,name);
+  volume=connection.getVolume(volume.getId());
+  assertEquals(volume.getInstanceId(),instance2.getId());
+  refreshIpAndReturnAllAddresses();
+  assertEquals(ip.getInstanceId(),instance2.getId());
+  assertEquals(ip.getIP(),instance2.getPrimaryIP().getIP());
+  sshAndDf(new IPSocket(instance2.getPrimaryIP().getIP(),22),new Credentials("idcuser",keyPair.get("private")));
+}

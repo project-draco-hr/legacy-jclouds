@@ -1,6 +1,26 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
+      bind(AdminAccess.Configuration.class).toInstance(new Configuration(){
+        @Override public Supplier<String> defaultAdminUsername(){
+          return Suppliers.ofInstance("defaultAdminUsername");
+        }
+        @Override public Supplier<Map<String,String>> defaultAdminSshKeys(){
+          return Suppliers.<Map<String,String>>ofInstance(ImmutableMap.of("public","publicKey","private","privateKey"));
+        }
+        @Override public Function<String,String> cryptFunction(){
+          return new Function<String,String>(){
+            @Override public String apply(            String input){
+              return String.format("crypt(%s)",input);
+            }
+          }
+;
+        }
+        public Supplier<String> passwordGenerator(){
+          return Suppliers.ofInstance("randompassword");
+        }
+      }
+);
       SshClient.Factory factory=createMock(SshClient.Factory.class);
       SshClient client1=createMock(SshClient.class);
       SshClient client2=createMock(SshClient.class);
@@ -9,8 +29,11 @@
       SshClient client5=createMock(SshClient.class);
       expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("root","password1"))).andReturn(client1);
       runScriptAndService(client1,1);
-      expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(3);
+      expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(4);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","romeo"))).andThrow(new SshException("Auth fail"));
+      client2.connect();
+      expect(client2.exec("echo hello\n")).andReturn(new ExecResponse("hello\n","",0));
+      client2.disconnect();
       client2.connect();
       expect(client2.exec("echo hello\n")).andReturn(new ExecResponse("hello\n","",0));
       client2.disconnect();
@@ -28,11 +51,11 @@
       runScriptAndInstallSsh(client3,"bootstrap",3);
       runScriptAndInstallSsh(client4,"bootstrap",4);
       runScriptAndInstallSsh(client5,"bootstrap",5);
-      expect(factory.create(eq(new IPSocket("144.175.1.1",22)),eq(new Credentials("root",keyPair.get("private"))))).andReturn(client1);
-      expect(factory.create(eq(new IPSocket("144.175.1.2",22)),eq(new Credentials("root",keyPair.get("private"))))).andReturn(client2);
-      expect(factory.create(eq(new IPSocket("144.175.1.3",22)),eq(new Credentials("root",keyPair.get("private"))))).andReturn(client3);
-      expect(factory.create(eq(new IPSocket("144.175.1.4",22)),eq(new Credentials("root",keyPair.get("private"))))).andReturn(client4);
-      expect(factory.create(eq(new IPSocket("144.175.1.5",22)),eq(new Credentials("root",keyPair.get("private"))))).andReturn(client5);
+      expect(factory.create(eq(new IPSocket("144.175.1.1",22)),eq(new Credentials("defaultAdminUsername","privateKey")))).andReturn(client1);
+      expect(factory.create(eq(new IPSocket("144.175.1.2",22)),eq(new Credentials("defaultAdminUsername","privateKey")))).andReturn(client2);
+      expect(factory.create(eq(new IPSocket("144.175.1.3",22)),eq(new Credentials("defaultAdminUsername","privateKey")))).andReturn(client3);
+      expect(factory.create(eq(new IPSocket("144.175.1.4",22)),eq(new Credentials("defaultAdminUsername","privateKey")))).andReturn(client4);
+      expect(factory.create(eq(new IPSocket("144.175.1.5",22)),eq(new Credentials("defaultAdminUsername","privateKey")))).andReturn(client5);
       helloAndJava(client2);
       helloAndJava(client3);
       helloAndJava(client4);

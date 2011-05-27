@@ -1,0 +1,20 @@
+{
+  final Set<Image> images=Sets.newHashSet();
+  logger.debug(">> providing images");
+  for (  org.jclouds.ibm.smartcloud.domain.Image image : sync.listImages()) {
+    OperatingSystem.Builder osBuilder=OperatingSystem.builder();
+    Iterable<String> osVersion=Splitter.on('/').split(checkNotNull(image.getPlatform(),"platform"));
+    osBuilder.version(Iterables.get(osVersion,1));
+    osBuilder.name(image.getPlatform());
+    osBuilder.description(image.getPlatform());
+    if ("Red Hat Enterprise Linux".equals(Iterables.get(osVersion,0)))     osBuilder.family(OsFamily.RHEL);
+ else     if ("SUSE Linux Enterprise Server".equals(Iterables.get(osVersion,0)))     osBuilder.family(OsFamily.SUSE);
+ else     if ("Windows".equals(Iterables.get(osVersion,0)))     osBuilder.family(OsFamily.WINDOWS);
+ else     osBuilder.family(OsFamily.UNRECOGNIZED);
+    osBuilder.arch(image.getArchitecture().toString());
+    osBuilder.is64Bit(image.getArchitecture() == Architecture.X86_64);
+    images.add(new ImageBuilder().ids(image.getId()).name(image.getName()).location(locations.get().get(image.getLocation())).operatingSystem(osBuilder.build()).description(image.getName()).version(image.getCreatedTime().getTime() + "").defaultCredentials(new Credentials("idcuser",null)).build());
+  }
+  logger.debug("<< images(%d)",images.size());
+  return images;
+}

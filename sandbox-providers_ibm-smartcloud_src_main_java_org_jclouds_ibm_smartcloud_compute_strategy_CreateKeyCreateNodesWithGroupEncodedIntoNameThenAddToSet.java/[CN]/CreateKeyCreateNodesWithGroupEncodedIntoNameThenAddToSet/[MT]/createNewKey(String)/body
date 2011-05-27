@@ -1,0 +1,14 @@
+{
+  checkNotNull(group,"group");
+  logger.debug(">> creating key group(%s)",group);
+  Key key=null;
+  while (key == null) {
+    try {
+      key=client.generateKeyPair(getNextName(group));
+      logger.debug("<< created key(%s)",key.getName());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  return key;
+}

@@ -1,0 +1,29 @@
+{
+  bind(new TypeLiteral<Function<YamlNode,InputStream>>(){
+  }
+).toInstance(org.jclouds.byon.domain.YamlNode.yamlNodeToInputStream);
+  bind(new TypeLiteral<Function<InputStream,YamlNode>>(){
+  }
+).toInstance(org.jclouds.byon.domain.YamlNode.inputStreamToYamlNode);
+  bind(new TypeLiteral<Function<Node,YamlNode>>(){
+  }
+).toInstance(org.jclouds.byon.domain.YamlNode.nodeToYamlNode);
+  bind(new TypeLiteral<Function<YamlNode,Node>>(){
+  }
+).toInstance(org.jclouds.byon.domain.YamlNode.toNode);
+  if (backing != null) {
+    bind(new TypeLiteral<Map<String,InputStream>>(){
+    }
+).toInstance(backing);
+  }
+ else {
+    bind(new TypeLiteral<Map<String,InputSupplier<InputStream>>>(){
+    }
+).toInstance(BACKING);
+    bind(new TypeLiteral<Map<String,InputStream>>(){
+    }
+).to(new TypeLiteral<CopyInputStreamInputSupplierMap>(){
+    }
+);
+  }
+}

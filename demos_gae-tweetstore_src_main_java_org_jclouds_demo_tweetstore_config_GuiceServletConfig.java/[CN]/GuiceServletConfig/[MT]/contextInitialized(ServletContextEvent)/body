@@ -4,7 +4,8 @@
   Module googleModule=new GoogleAppEngineConfigurationModule();
   Set<Module> modules=ImmutableSet.<Module>of(googleModule);
   try {
-    twitterClient=new TwitterFactory().getInstance(props.getProperty("twitter.identity"),props.getProperty("twitter.credential"));
+    Configuration twitterConf=new ConfigurationBuilder().setUser(props.getProperty("twitter.identity")).setPassword(props.getProperty("twitter.credential")).build();
+    twitterClient=new TwitterFactory(twitterConf).getInstance();
   }
  catch (  IllegalArgumentException e) {
     throw new IllegalArgumentException("properties for twitter not configured properly in " + props.toString(),e);
@@ -16,7 +17,7 @@
   }
   Queue queue=QueueFactory.getQueue("twitter");
   for (  String name : providerTypeToBlobStoreMap.keySet()) {
-    queue.add(url("/store/do").header("context",name).method(Method.GET));
+    queue.add(withUrl("/store/do").header("context",name).method(Method.GET));
   }
   super.contextInitialized(servletContextEvent);
 }

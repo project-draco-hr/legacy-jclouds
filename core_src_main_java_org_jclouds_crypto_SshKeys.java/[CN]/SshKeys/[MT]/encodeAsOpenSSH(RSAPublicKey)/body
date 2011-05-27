@@ -1,0 +1,13 @@
+{
+  ByteArrayDataOutput out=ByteStreams.newDataOutput();
+  out.write(sshrsa);
+  BigInteger e=key.getPublicExponent();
+  byte[] data=e.toByteArray();
+  encodeUint32(data.length,out);
+  out.write(data);
+  BigInteger m=key.getModulus();
+  data=m.toByteArray();
+  encodeUint32(data.length,out);
+  out.write(data);
+  return "ssh-rsa " + CryptoStreams.base64(out.toByteArray());
+}

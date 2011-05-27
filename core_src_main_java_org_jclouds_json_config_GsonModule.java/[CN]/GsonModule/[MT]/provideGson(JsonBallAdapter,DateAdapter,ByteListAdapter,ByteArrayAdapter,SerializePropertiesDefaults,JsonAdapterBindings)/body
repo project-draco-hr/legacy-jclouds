@@ -1,0 +1,17 @@
+{
+  GsonBuilder builder=new GsonBuilder();
+  Logger.getLogger("com.google.gson.ParameterizedTypeHandlerMap").setLevel(Level.OFF);
+  builder.registerTypeHierarchyAdapter(Enum.class,new EnumTypeAdapterThatReturnsFromValue());
+  builder.registerTypeHierarchyAdapter(Map.class,new ObjectMapTypeAdapter());
+  builder.registerTypeAdapter(JsonBall.class,jsonAdapter);
+  builder.registerTypeAdapter(Date.class,adapter);
+  builder.registerTypeAdapter(Properties.class,propertiesAdapter);
+  builder.registerTypeAdapter(new TypeToken<List<Byte>>(){
+  }
+.getType(),byteListAdapter);
+  builder.registerTypeAdapter(byte[].class,byteArrayAdapter);
+  for (  Map.Entry<Type,Object> binding : bindings.getBindings().entrySet()) {
+    builder.registerTypeAdapter(binding.getKey(),binding.getValue());
+  }
+  return builder.create();
+}

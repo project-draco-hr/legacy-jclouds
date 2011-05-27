@@ -1,9 +1,5 @@
 {
-  Task task;
   GuestCustomizationSection guestConfiguration=vm.getGuestCustomizationSection();
   guestConfiguration.setCustomizationScript(customizationScript);
-  task=client.updateGuestCustomizationOfVm(vm.getHref(),guestConfiguration);
-  if (!successTester.apply(task.getHref())) {
-    throw new RuntimeException(String.format("failed to %s %s: %s","updateGuestCustomizationOfVm",vm.getName(),task));
-  }
+  return client.updateGuestCustomizationOfVm(vm.getHref(),guestConfiguration);
 }
