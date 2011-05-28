@@ -3,6 +3,11 @@
     @Override protected void configure(){
       Properties props=new Properties();
       Names.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(props).build(),"properties"));
+      bind(new TypeLiteral<Function<ReferenceType,Location>>(){
+      }
+).to(new TypeLiteral<FindLocationForResource>(){
+      }
+);
       bind(new TypeLiteral<Function<VApp,Hardware>>(){
       }
 ).to(new TypeLiteral<HardwareForVApp>(){
