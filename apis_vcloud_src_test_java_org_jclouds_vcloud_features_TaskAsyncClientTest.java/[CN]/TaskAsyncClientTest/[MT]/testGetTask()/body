@@ -1,0 +1,11 @@
+{
+  Method method=TaskAsyncClient.class.getMethod("getTask",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcenterprise.bluelock.com/api/v1.0/task/1"));
+  assertRequestLineEquals(request,"GET https://vcenterprise.bluelock.com/api/v1.0/task/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TaskHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

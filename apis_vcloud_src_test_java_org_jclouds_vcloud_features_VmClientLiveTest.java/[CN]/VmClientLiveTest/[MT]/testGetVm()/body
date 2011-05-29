@@ -1,0 +1,19 @@
+{
+  Org org=getVCloudApi().getOrgClient().findOrgNamed(null);
+  for (  ReferenceType vdc : org.getVDCs().values()) {
+    VDC response=getVCloudApi().getVDCClient().getVDC(vdc.getHref());
+    for (    ReferenceType item : response.getResourceEntities().values()) {
+      if (item.getType().equals(VCloudMediaType.VAPP_XML)) {
+        try {
+          VApp app=getVCloudApi().getVAppClient().getVApp(item.getHref());
+          assertNotNull(app);
+          for (          Vm vm : app.getChildren()) {
+            assertEquals(getVCloudApi().getVmClient().getVm(vm.getHref()).getHref(),vm.getHref());
+          }
+        }
+ catch (        RuntimeException e) {
+        }
+      }
+    }
+  }
+}

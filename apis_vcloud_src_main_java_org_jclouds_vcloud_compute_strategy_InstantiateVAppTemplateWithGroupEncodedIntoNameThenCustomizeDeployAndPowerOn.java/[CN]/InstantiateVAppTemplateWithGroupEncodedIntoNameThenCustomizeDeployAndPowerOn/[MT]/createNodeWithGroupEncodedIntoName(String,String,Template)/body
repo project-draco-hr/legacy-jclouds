@@ -10,10 +10,10 @@
   URI VDC=URI.create(template.getLocation().getId());
   URI templateId=URI.create(template.getImage().getId());
   logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
-  VApp vAppResponse=client.instantiateVAppTemplateInVDC(VDC,templateId,name,options);
+  VApp vAppResponse=client.getVAppTemplateClient().createVAppInVDCByInstantiatingTemplate(name,VDC,templateId,options);
   waitForTask(vAppResponse.getTasks().get(0),vAppResponse);
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
-  Vm vm=Iterables.get(client.getVApp(vAppResponse.getHref()).getChildren(),0);
+  Vm vm=Iterables.get(client.getVAppClient().getVApp(vAppResponse.getHref()).getChildren(),0);
   if (customizationScript != null) {
     logger.trace(">> updating customization vm(%s) ",vm.getName());
     waitForTask(updateVmWithCustomizationScript(vm,customizationScript),vAppResponse);
@@ -33,5 +33,5 @@
   waitForTask(updateMemoryMBOfVm(vm,memoryMB),vAppResponse);
   logger.trace("<< updated memoryMB vm(%s) ",vm.getName());
   logger.trace(">> deploying and powering on vApp(%s) ",vAppResponse.getName());
-  return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.deployAndPowerOnVAppOrVm(vAppResponse.getHref()));
+  return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.getVAppClient().deployAndPowerOnVApp(vAppResponse.getHref()));
 }

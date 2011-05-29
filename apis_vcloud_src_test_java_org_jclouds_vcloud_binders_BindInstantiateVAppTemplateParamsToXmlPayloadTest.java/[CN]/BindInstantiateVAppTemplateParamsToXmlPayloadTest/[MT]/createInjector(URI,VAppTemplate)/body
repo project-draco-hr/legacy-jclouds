@@ -1,7 +1,10 @@
 {
   final VCloudClient client=createMock(VCloudClient.class);
-  expect(client.getVAppTemplate(vAppTemplate)).andReturn(value).anyTimes();
+  final VAppTemplateClient tclient=createMock(VAppTemplateClient.class);
+  expect(client.getVAppTemplateClient()).andReturn(tclient).anyTimes();
+  expect(tclient.getVAppTemplate(vAppTemplate)).andReturn(value).anyTimes();
   replay(client);
+  replay(tclient);
   return Guice.createInjector(new AbstractModule(){
     @Override protected void configure(){
       Properties props=new Properties();
