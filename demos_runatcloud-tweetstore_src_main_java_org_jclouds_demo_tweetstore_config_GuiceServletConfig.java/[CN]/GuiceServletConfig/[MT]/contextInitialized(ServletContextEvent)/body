@@ -1,0 +1,23 @@
+{
+  BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
+  Properties props=loadJCloudsProperties(servletContextEvent);
+  Set<Module> modules=ImmutableSet.<Module>of();
+  try {
+    Configuration twitterConf=new ConfigurationBuilder().setUser(props.getProperty("twitter.identity")).setPassword(props.getProperty("twitter.credential")).build();
+    twitterClient=new TwitterFactory(twitterConf).getInstance();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("properties for twitter not configured properly in " + props.toString(),e);
+  }
+  container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
+  providerTypeToBlobStoreMap=Maps.newHashMap();
+  for (  String hint : Splitter.on(',').split(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS))) {
+    providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
+  }
+  queue=TaskQueue.builder().name("twitter").period(MINUTES).build();
+  Factory taskFactory=HttpRequestTask.factory(props,"twitter");
+  for (  String name : providerTypeToBlobStoreMap.keySet()) {
+    queue.add(taskFactory.create(HttpRequest.builder().endpoint(URI.create("http://localhost:8080" + servletContextEvent.getServletContext().getContextPath() + "/store/do")).headers(ImmutableMultimap.of("context",name,"X-RUN@cloud-QueueName","twitter")).method("GET").build()));
+  }
+  super.contextInitialized(servletContextEvent);
+}

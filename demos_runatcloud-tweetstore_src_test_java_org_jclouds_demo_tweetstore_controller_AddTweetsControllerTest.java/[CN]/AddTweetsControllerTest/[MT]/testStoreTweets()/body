@@ -1,0 +1,9 @@
+{
+  String container="container";
+  Map<String,BlobStoreContext> contexts=createServices(container);
+  ServiceToStoredTweetStatuses function=new ServiceToStoredTweetStatuses(contexts,container);
+  AddTweetsController controller=new AddTweetsController(contexts,function);
+  List<StoredTweetStatus> list=controller.apply(ImmutableSet.of("1","2"));
+  assertEquals(list.size(),2);
+  assertEquals(list,ImmutableList.of(new StoredTweetStatus("1","localhost",container,"1","frank","I love beans!",null),new StoredTweetStatus("2","localhost",container,"1","frank","I love beans!",null)));
+}

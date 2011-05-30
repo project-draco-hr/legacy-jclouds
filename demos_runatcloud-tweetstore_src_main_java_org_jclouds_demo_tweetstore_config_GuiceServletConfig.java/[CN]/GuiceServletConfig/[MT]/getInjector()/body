@@ -1,0 +1,14 @@
+{
+  return Guice.createInjector(new ServletModule(){
+    @Override protected void configureServlets(){
+      bind(new TypeLiteral<Map<String,BlobStoreContext>>(){
+      }
+).toInstance(providerTypeToBlobStoreMap);
+      bind(Twitter.class).toInstance(twitterClient);
+      bindConstant().annotatedWith(Names.named(PROPERTY_TWEETSTORE_CONTAINER)).to(container);
+      serve("/store/*").with(StoreTweetsController.class);
+      serve("/tweets/*").with(AddTweetsController.class);
+    }
+  }
+);
+}
