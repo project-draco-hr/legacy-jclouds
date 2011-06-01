@@ -1,0 +1,23 @@
+{
+  executor=acquire(execConnection);
+  executor.setCommand(command);
+  ByteArrayOutputStream error=new ByteArrayOutputStream();
+  executor.setErrStream(error);
+  try {
+    executor.connect();
+    String outputString=Strings2.toStringAndClose(executor.getInputStream());
+    String errorString=error.toString();
+    int errorStatus=executor.getExitStatus();
+    int i=0;
+    String message=String.format("bad status -1 %s",toString());
+    while ((errorStatus=executor.getExitStatus()) == -1 && i < JschSshClient.this.sshRetries) {
+      logger.warn("<< " + message);
+      backoffForAttempt(++i,message);
+    }
+    if (errorStatus == -1)     throw new SshException(message);
+    return new ExecResponse(outputString,errorString,errorStatus);
+  }
+  finally {
+    if (executor != null)     executor.disconnect();
+  }
+}

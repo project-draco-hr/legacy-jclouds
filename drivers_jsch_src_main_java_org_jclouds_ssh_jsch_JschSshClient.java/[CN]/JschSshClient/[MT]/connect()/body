@@ -1,22 +1,3 @@
 {
-  disconnect();
-  Exception e=null;
-  RETRY_LOOP:   for (int i=0; i < sshRetries; i++) {
-    try {
-      newSession();
-      e=null;
-      break RETRY_LOOP;
-    }
- catch (    Exception from) {
-      e=from;
-      disconnect();
-      if (i == sshRetries)       throw propagate(from);
-      if (shouldRetry(from)) {
-        backoffForAttempt(i + 1,String.format("%s@%s:%d: connection error: %s",username,host,port,from.getMessage()));
-        continue;
-      }
-      throw propagate(from);
-    }
-  }
-  if (e != null)   throw propagate(e);
+  acquire(sessionConnection);
 }
