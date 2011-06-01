@@ -1,11 +1,11 @@
 {
   if (vApp.getStatus().compareTo(Status.OFF) > 0) {
     logger.debug(">> powering off vApp(%s), current status: %s",vApp.getName(),vApp.getStatus());
-    Task task=client.powerOffVAppOrVm(vApp.getHref());
+    Task task=client.getVAppClient().powerOffVApp(vApp.getHref());
     if (!successTester.apply(task.getHref())) {
       throw new RuntimeException(String.format("failed to %s %s: %s","powerOff",vApp.getName(),task));
     }
-    vApp=client.getVApp(vApp.getHref());
+    vApp=client.getVAppClient().getVApp(vApp.getHref());
     logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
   }
   return vApp;

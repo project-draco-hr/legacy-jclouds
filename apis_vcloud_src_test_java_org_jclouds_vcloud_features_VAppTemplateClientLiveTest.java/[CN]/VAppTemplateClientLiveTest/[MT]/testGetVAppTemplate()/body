@@ -1,0 +1,18 @@
+{
+  Org org=getVCloudApi().getOrgClient().findOrgNamed(null);
+  for (  ReferenceType cat : org.getCatalogs().values()) {
+    Catalog response=getVCloudApi().getCatalogClient().getCatalog(cat.getHref());
+    for (    ReferenceType resource : response.values()) {
+      if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
+        CatalogItem item=getVCloudApi().getCatalogClient().getCatalogItem(resource.getHref());
+        if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
+          try {
+            assertNotNull(getVCloudApi().getVAppTemplateClient().getVAppTemplate(item.getEntity().getHref()));
+          }
+ catch (          AuthorizationException e) {
+          }
+        }
+      }
+    }
+  }
+}
