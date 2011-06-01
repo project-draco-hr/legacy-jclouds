@@ -3,16 +3,16 @@
   ElasticBlockStoreClient ebsClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getElasticBlockStoreServices();
   String group=this.group + "e";
   int volumeSize=8;
+  final Template template=context.getComputeService().templateBuilder().hardwareId(InstanceType.M1_SMALL).osFamily(OsFamily.UBUNTU).osVersionMatches("10.04").imageDescriptionMatches(".*ebs.*").build();
   Location zone=Iterables.find(context.getComputeService().listAssignableLocations(),new Predicate<Location>(){
     @Override public boolean apply(    Location arg0){
-      return arg0.getScope() == LocationScope.ZONE;
+      return arg0.getScope() == LocationScope.ZONE && arg0.getParent().getId().equals(template.getLocation().getId());
     }
   }
 );
   Volume volume=ebsClient.createVolumeInAvailabilityZone(zone.getId(),4);
   Snapshot snapshot=ebsClient.createSnapshotInRegion(volume.getRegion(),volume.getId());
   ebsClient.deleteVolumeInRegion(volume.getRegion(),volume.getId());
-  Template template=context.getComputeService().templateBuilder().locationId(volume.getRegion()).hardwareId(InstanceType.M1_SMALL).imageDescriptionMatches(".*ebs.*").build();
   template.getOptions().as(EC2TemplateOptions.class).mapEphemeralDeviceToDeviceName("/dev/sdm","ephemeral0").mapNewVolumeToDeviceName("/dev/sdn",volumeSize,true).mapEBSSnapshotToDeviceName("/dev/sdo",snapshot.getId(),volumeSize,true);
   try {
     NodeMetadata node=Iterables.getOnlyElement(client.createNodesInGroup(group,1,template));
