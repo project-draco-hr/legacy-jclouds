@@ -1,25 +1,18 @@
 {
-  String cookieHeader=from.getFirstHeaderOrNull("x-vcloud-authorization");
-  if (cookieHeader == null)   cookieHeader=from.getFirstHeaderOrNull(HttpHeaders.SET_COOKIE);
-  checkNotNull(cookieHeader,"Header %s or %s must be present","x-vcloud-authorization",HttpHeaders.SET_COOKIE);
-  final Matcher matcher=pattern.matcher(cookieHeader);
-  boolean matchFound=matcher.find();
   try {
-    if (matchFound) {
-      final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
-      return new VCloudSession(){
-        @VCloudToken public String getVCloudToken(){
-          return matcher.group(2);
-        }
-        @Org public Map<String,ReferenceType> getOrgs(){
-          return org;
-        }
+    final String token=parseTokenFromHeaders(from);
+    final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
+    return new VCloudSession(){
+      @VCloudToken public String getVCloudToken(){
+        return token;
       }
-;
+      @Org public Map<String,ReferenceType> getOrgs(){
+        return org;
+      }
     }
+;
   }
   finally {
     releasePayload(from);
   }
-  throw new HttpResponseException("x-vcloud-authorization not found ",null,from);
 }

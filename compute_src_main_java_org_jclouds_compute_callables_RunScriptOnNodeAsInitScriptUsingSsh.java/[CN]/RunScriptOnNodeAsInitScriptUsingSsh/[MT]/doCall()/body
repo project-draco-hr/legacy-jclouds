@@ -1,5 +1,11 @@
 {
-  ssh.put(name,init.render(OsFamily.UNIX));
+  if (pushInitViaSftp) {
+    ssh.put(name,init.render(OsFamily.UNIX));
+  }
+ else {
+    ssh.exec("rm " + name);
+    ssh.exec(Statements.appendFile(name,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.MARKER + "_" + name).render(OsFamily.UNIX));
+  }
   ssh.exec("chmod 755 " + name);
   runAction("init");
   return runAction("start");

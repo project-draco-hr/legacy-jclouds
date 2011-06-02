@@ -2,9 +2,9 @@
   URI vappId=URI.create(checkNotNull(id,"node.id"));
   VApp vApp=client.getVAppClient().getVApp(vappId);
   if (vApp == null)   return null;
-  vApp=powerOffVAppIfDeployed(vApp);
+  waitForPendingTasksToComplete(vApp);
   vApp=undeployVAppIfDeployed(vApp);
-  deleteVApp(vappId);
+  deleteVApp(vApp);
   try {
     return getNode.getNode(id);
   }
