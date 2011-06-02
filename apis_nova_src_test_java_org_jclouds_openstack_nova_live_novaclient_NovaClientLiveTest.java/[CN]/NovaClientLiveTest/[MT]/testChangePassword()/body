@@ -1,6 +1,8 @@
 {
   int serverId=getDefaultServerImmediately().getId();
   blockUntilServerActive(serverId);
+  blockUntilPublicAddress(serverId);
+  awaitForSshPort(Iterables.get(client.getServer(serverId).getAddresses().getPublicAddresses(),0).getAddress(),new Credentials("root",keyPair.get("private")));
   client.changeAdminPass(serverId,"elmo");
   assertPassword(client.getServer(serverId),"elmo");
 }
