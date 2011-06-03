@@ -1,14 +1,2 @@
 {
-  final String containerName=getScratchContainerName();
-  try {
-    context.getBlobStore().createContainerInLocation(null,containerName,publicRead());
-    assertConsistencyAwareContainerSize(containerName,0);
-    context.getBlobStore().putBlob(containerName,context.getBlobStore().blobBuilder("hello").payload(TEST_STRING).build());
-    assertConsistencyAwareContainerSize(containerName,1);
-    BlobMetadata metadata=context.getBlobStore().blobMetadata(containerName,"hello");
-    assertEquals(Strings2.toStringAndClose(metadata.getPublicUri().toURL().openStream()),TEST_STRING);
-  }
-  finally {
-    recycleContainer(containerName);
-  }
 }
