@@ -1,28 +1,32 @@
 {
   String group1Name=PREFIX + "ingress1";
   String group2Name=PREFIX + "ingress2";
+  cleanupAndSleep(group2Name);
+  cleanupAndSleep(group1Name);
   try {
+    client.createSecurityGroupInRegion(null,group1Name,group1Name);
+    client.createSecurityGroupInRegion(null,group2Name,group2Name);
+    ensureGroupsExist(group1Name,group2Name);
+    client.authorizeSecurityGroupIngressInRegion(null,group1Name,IpProtocol.TCP,80,80,"0.0.0.0/0");
+    assertEventually(new GroupHasPermission(client,group1Name,new TCPPort80AllIPs()));
+    Set<SecurityGroup> oneResult=client.describeSecurityGroupsInRegion(null,group1Name);
+    assertNotNull(oneResult);
+    assertEquals(oneResult.size(),1);
+    SecurityGroup group=oneResult.iterator().next();
+    assertEquals(group.getName(),group1Name);
+    final UserIdGroupPair to=new UserIdGroupPair(group.getOwnerId(),group1Name);
+    client.authorizeSecurityGroupIngressInRegion(null,group2Name,to);
+    assertEventually(new GroupHasPermission(client,group2Name,new Predicate<IpPermission>(){
+      @Override public boolean apply(      IpPermission arg0){
+        return arg0.getGroups().equals(ImmutableSet.of(to));
+      }
+    }
+));
+    client.revokeSecurityGroupIngressInRegion(null,group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
+    assertEventually(new GroupHasNoPermissions(client,group2Name));
+  }
+  finally {
+    client.deleteSecurityGroupInRegion(null,group2Name);
     client.deleteSecurityGroupInRegion(null,group1Name);
   }
- catch (  Exception e) {
-  }
-  try {
-    client.deleteSecurityGroupInRegion(null,group2Name);
-  }
- catch (  Exception e) {
-  }
-  client.createSecurityGroupInRegion(null,group1Name,group1Name);
-  client.createSecurityGroupInRegion(null,group2Name,group2Name);
-  ensureGroupsExist(group1Name,group2Name);
-  client.authorizeSecurityGroupIngressInRegion(null,group1Name,IpProtocol.TCP,80,80,"0.0.0.0/0");
-  assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newLinkedHashSet(),IpProtocol.TCP,ImmutableSet.of("0.0.0.0/0"))));
-  Set<SecurityGroup> oneResult=client.describeSecurityGroupsInRegion(null,group1Name);
-  assertNotNull(oneResult);
-  assertEquals(oneResult.size(),1);
-  SecurityGroup group=oneResult.iterator().next();
-  assertEquals(group.getName(),group1Name);
-  client.authorizeSecurityGroupIngressInRegion(null,group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
-  assertEventually(new GroupHasPermission(client,group2Name,new IpPermission(80,80,Sets.<UserIdGroupPair>newLinkedHashSet(),IpProtocol.TCP,ImmutableSet.of("0.0.0.0/0"))));
-  client.revokeSecurityGroupIngressInRegion(null,group2Name,new UserIdGroupPair(group.getOwnerId(),group1Name));
-  assertEventually(new GroupHasNoPermissions(client,group2Name));
 }
