@@ -17,7 +17,7 @@
   queue=TaskQueue.builder().name("twitter").period(MINUTES).build();
   Factory taskFactory=HttpRequestTask.factory(props,"twitter");
   for (  String name : providerTypeToBlobStoreMap.keySet()) {
-    queue.add(taskFactory.create(HttpRequest.builder().endpoint(URI.create("http://localhost:8080" + servletContextEvent.getServletContext().getContextPath() + "/store/do")).headers(ImmutableMultimap.of("context",name,"X-RUN@cloud-QueueName","twitter")).method("GET").build()));
+    queue.add(taskFactory.create(HttpRequest.builder().endpoint(withUrl(servletContextEvent.getServletContext(),"/store/do")).headers(ImmutableMultimap.of("context",name)).method("GET").build()));
   }
   super.contextInitialized(servletContextEvent);
 }
