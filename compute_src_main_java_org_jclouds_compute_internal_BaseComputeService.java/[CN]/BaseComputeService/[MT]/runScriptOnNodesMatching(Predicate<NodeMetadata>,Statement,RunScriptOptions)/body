@@ -6,7 +6,7 @@
   Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
   Map<NodeMetadata,Future<ExecResponse>> responses=newLinkedHashMap();
   Map<?,Exception> exceptions=ImmutableMap.<Object,Exception>of();
-  runScript=initAdminAccess.apply(runScript);
+  initAdminAccess.visit(runScript);
   Iterable<? extends RunScriptOnNode> scriptRunners=transformNodesIntoInitializedScriptRunners(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),runScript,options,badNodes);
   if (Iterables.size(scriptRunners) > 0) {
     for (    RunScriptOnNode runner : scriptRunners) {

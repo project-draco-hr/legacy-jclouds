@@ -1,0 +1,14 @@
+{
+  AdminAccess.Configuration configuration=createMock(AdminAccess.Configuration.class);
+  AdminAccess statement=createMock(AdminAccess.class);
+  Credentials creds=createMock(Credentials.class);
+  expect(statement.getAdminCredentials()).andReturn(creds);
+  replay(configuration);
+  replay(statement);
+  replay(creds);
+  InitBuilder testInitBuilder=new InitBuilder("mkebsboot","/mnt/tmp","/mnt/tmp",ImmutableMap.of("tmpDir","/mnt/tmp"),ImmutableList.<Statement>of(statement));
+  assertEquals(CredentialsFromAdminAccess.INSTANCE.apply(testInitBuilder),creds);
+  verify(configuration);
+  verify(statement);
+  verify(creds);
+}
