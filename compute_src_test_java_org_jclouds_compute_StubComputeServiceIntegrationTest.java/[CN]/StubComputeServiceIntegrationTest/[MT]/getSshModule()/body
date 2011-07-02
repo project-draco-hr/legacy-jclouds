@@ -23,12 +23,14 @@
 );
       SshClient.Factory factory=createMock(SshClient.Factory.class);
       SshClient client1=createMock(SshClient.class);
+      SshClient client1New=createMock(SshClient.class);
       SshClient client2=createMock(SshClient.class);
       SshClient client3=createMock(SshClient.class);
       SshClient client4=createMock(SshClient.class);
       SshClient client5=createMock(SshClient.class);
       expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("root","password1"))).andReturn(client1);
-      runScriptAndService(client1,1);
+      expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("defaultAdminUsername","privateKey"))).andReturn(client1New);
+      runScriptAndService(client1,client1New);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(4);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","romeo"))).andThrow(new SshException("Auth fail"));
       client2.connect();
@@ -62,21 +64,38 @@
       helloAndJava(client5);
       replay(factory);
       replay(client1);
+      replay(client1New);
       replay(client2);
       replay(client3);
       replay(client4);
       replay(client5);
       bind(SshClient.Factory.class).toInstance(factory);
     }
-    private void runScriptAndService(    SshClient client,    int nodeId){
+    private void runScriptAndService(    SshClient client,    SshClient clientNew){
       client.connect();
       try {
-        runScript(client,"jboss",Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_jboss.sh")),nodeId);
+        String scriptName="jboss";
+        client.put("/tmp/init-" + scriptName,Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/initscript_with_jboss.sh")));
+        expect(client.exec("chmod 755 /tmp/init-" + scriptName)).andReturn(EXEC_GOOD);
+        expect(client.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
+        expect(client.getUsername()).andReturn("root").atLeastOnce();
+        expect(client.getHostAddress()).andReturn(clientNew + "").atLeastOnce();
+        expect(client.exec("./" + scriptName + " init")).andReturn(EXEC_GOOD);
+        client.disconnect();
+        clientNew.connect();
+        expect(clientNew.getUsername()).andReturn("defaultAdminUsername").atLeastOnce();
+        expect(clientNew.getHostAddress()).andReturn(clientNew + "").atLeastOnce();
+        expect(clientNew.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("sudo ./" + scriptName + " start")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("sudo ./" + scriptName + " status")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("sudo ./" + scriptName + " status")).andReturn(EXEC_BAD);
+        expect(clientNew.exec("sudo ./" + scriptName + " tail")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("sudo ./" + scriptName + " tailerr")).andReturn(EXEC_GOOD);
       }
  catch (      IOException e) {
         Throwables.propagate(e);
       }
-      client.disconnect();
+      clientNew.disconnect();
     }
     private void runScriptAndInstallSsh(    SshClient client,    String scriptName,    int nodeId){
       client.connect();
@@ -89,8 +108,9 @@
       client.disconnect();
     }
     private void runScript(    SshClient client,    String scriptName,    String script,    int nodeId){
-      client.put(scriptName,script);
-      expect(client.exec("chmod 755 " + scriptName + "")).andReturn(EXEC_GOOD);
+      client.put("/tmp/init-" + scriptName,script);
+      expect(client.exec("chmod 755 /tmp/init-" + scriptName)).andReturn(EXEC_GOOD);
+      expect(client.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
       expect(client.getUsername()).andReturn("root").atLeastOnce();
       expect(client.getHostAddress()).andReturn(nodeId + "").atLeastOnce();
       expect(client.exec("./" + scriptName + " init")).andReturn(EXEC_GOOD);
