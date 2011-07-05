@@ -1,11 +1,21 @@
 {
   initializeContextAndClient();
-  refreshTemplate();
-  TreeSet<NodeMetadata> nodes=newTreeSet(client.createNodesInGroup(group,1,template));
-  checkNodes(nodes,group);
-  NodeMetadata node=nodes.first();
-  this.nodes.add(node);
+  Location existingLocation=Iterables.get(this.nodes,0).getLocation();
+  boolean existingLocationIsAssignable=Iterables.any(client.listAssignableLocations(),Predicates.equalTo(existingLocation));
+  if (existingLocationIsAssignable) {
+    getAnonymousLogger().info("creating another node based on existing nodes' location: " + existingLocation);
+    template=addRunScriptToTemplate(client.templateBuilder().fromTemplate(template).locationId(existingLocation.getId()).build());
+  }
+ else {
+    refreshTemplate();
+    getAnonymousLogger().info(format("%s is not assignable; using template's location %s as  ",existingLocation,template.getLocation()));
+  }
+  Set<? extends NodeMetadata> nodes=client.createNodesInGroup(group,1,template);
   assertEquals(nodes.size(),1);
-  assertLocationSameOrChild(node.getLocation(),template.getLocation());
+  checkNodes(nodes,group);
+  NodeMetadata node=Iterables.getOnlyElement(nodes);
+  if (existingLocationIsAssignable)   assertEquals(node.getLocation(),existingLocation);
+ else   this.assertLocationSameOrChild(node.getLocation(),template.getLocation());
   checkOsMatchesTemplate(node);
+  this.nodes.add(node);
 }
