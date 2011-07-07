@@ -1,15 +1,40 @@
 {
   String group=this.group + "s";
+  final String configuration=Strings2.toStringAndClose(RunScriptData.class.getResourceAsStream("/standalone-basic.xml"));
   try {
     client.destroyNodesMatching(inGroup(group));
   }
  catch (  Exception e) {
   }
-  template=client.templateBuilder().options(blockOnComplete(false).blockOnPort(8080,600).inboundPorts(22,8080)).build();
-  template.getOptions().runScript(RunScriptData.createScriptInstallAndStartJBoss(template.getImage().getOperatingSystem()));
   try {
-    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,template));
-    checkHttpGet(node);
+    long startSeconds=currentTimeMillis();
+    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300)));
+    final String nodeId=node.getId();
+    long createSeconds=(currentTimeMillis() - startSeconds) / 1000;
+    getAnonymousLogger().info(format("<< available node(%s) os(%s) in %ss",node.getId(),node.getOperatingSystem(),createSeconds));
+    startSeconds=currentTimeMillis();
+    client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
+    long configureSeconds=(currentTimeMillis() - startSeconds) / 1000;
+    getAnonymousLogger().info(format("<< configured node(%s) in %ss",nodeId,configureSeconds));
+    trackAvailabilityOfJBossProcessOnNode(new Supplier<ExecResponse>(){
+      @Override public ExecResponse get(){
+        return client.runScriptOnNode(nodeId,startJBoss(configuration),runAsRoot(false).blockOnComplete(false).nameTask("jboss"));
+      }
+      @Override public String toString(){
+        return "initial start of jboss";
+      }
+    }
+,node);
+    client.runScriptOnNode(nodeId,"./jboss stop",runAsRoot(false).wrapInInitScript(false));
+    trackAvailabilityOfJBossProcessOnNode(new Supplier<ExecResponse>(){
+      @Override public ExecResponse get(){
+        return client.runScriptOnNode(nodeId,"./jboss start",runAsRoot(false).wrapInInitScript(false));
+      }
+      @Override public String toString(){
+        return "warm start of jboss";
+      }
+    }
+,node);
   }
   finally {
     client.destroyNodesMatching(inGroup(group));
