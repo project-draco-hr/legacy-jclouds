@@ -1,0 +1,34 @@
+{
+  Future<Iterable<Image>> normalImages=images(regions,amiQuery,PROPERTY_EC2_AMI_QUERY);
+  ImmutableSet<Image> clusterImages;
+  try {
+    clusterImages=ImmutableSet.copyOf(images(clusterRegions,ccAmiQuery,PROPERTY_EC2_CC_AMI_QUERY).get());
+  }
+ catch (  Exception e) {
+    logger.warn(e,"Error parsing images in query %s",ccAmiQuery);
+    Throwables.propagate(e);
+    return null;
+  }
+  Iterables.addAll(clusterComputeIds,transform(clusterImages,new Function<Image,String>(){
+    @Override public String apply(    Image arg0){
+      return arg0.getId();
+    }
+  }
+));
+  Iterable<? extends Image> parsedImages;
+  try {
+    parsedImages=ImmutableSet.copyOf(concat(clusterImages,normalImages.get()));
+  }
+ catch (  Exception e) {
+    logger.warn(e,"Error parsing images in query %s",amiQuery);
+    Throwables.propagate(e);
+    return null;
+  }
+  images.putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+    @Override public RegionAndName apply(    Image from){
+      return new RegionAndName(from.getLocation().getId(),from.getProviderId());
+    }
+  }
+));
+  return images;
+}

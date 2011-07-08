@@ -1,0 +1,9 @@
+{
+  if (query.equals("")) {
+    logger.debug(">> no %s specified, skipping image parsing",tag);
+    return Futures.<Iterable<Image>>immediateFuture(ImmutableSet.<Image>of());
+  }
+ else {
+    return executor.submit(factory.parseImagesFromRegionsUsingFilter(regions,QueryStringToMultimap.INSTANCE.apply(query)));
+  }
+}

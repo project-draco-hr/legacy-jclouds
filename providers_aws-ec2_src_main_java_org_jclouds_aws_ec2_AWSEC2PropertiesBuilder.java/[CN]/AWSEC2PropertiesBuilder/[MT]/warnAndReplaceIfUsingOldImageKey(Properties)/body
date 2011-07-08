@@ -1,0 +1,10 @@
+{
+  if (props.containsKey(PROPERTY_EC2_AMI_OWNERS)) {
+    StringBuilder query=new StringBuilder();
+    String owners=properties.remove(PROPERTY_EC2_AMI_OWNERS).toString();
+    if (!"*".equals(owners) && !"".equals(owners))     query.append("owner-id=").append(owners).append(';');
+    if (!"".equals(owners))     query.append("state=available;image-type=machine");
+    props.setProperty(PROPERTY_EC2_AMI_QUERY,query.toString());
+    Logger.getAnonymousLogger().warning(String.format("Property %s is deprecated, please use new syntax: %s=%s",PROPERTY_EC2_AMI_OWNERS,PROPERTY_EC2_AMI_QUERY,query.toString()));
+  }
+}
