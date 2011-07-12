@@ -9,7 +9,7 @@
         return locationPredicate.apply(input);
       }
       @Override public String toString(){
-        return "location(" + location + ")";
+        return locationPredicate.toString();
       }
     }
 );
@@ -20,12 +20,12 @@
     if (osVersion != null)     osPredicates.add(osVersionPredicate);
     if (os64Bit != null)     osPredicates.add(os64BitPredicate);
     if (osArch != null)     osPredicates.add(osArchPredicate);
-    predicates.add(new Predicate<Image>(){
+    if (osPredicates.size() > 0)     predicates.add(new Predicate<Image>(){
       @Override public boolean apply(      Image input){
-        return Predicates.and(osPredicates).apply(input.getOperatingSystem());
+        return and(osPredicates).apply(input.getOperatingSystem());
       }
       @Override public String toString(){
-        return Predicates.and(osPredicates).toString();
+        return and(osPredicates).toString();
       }
     }
 );
