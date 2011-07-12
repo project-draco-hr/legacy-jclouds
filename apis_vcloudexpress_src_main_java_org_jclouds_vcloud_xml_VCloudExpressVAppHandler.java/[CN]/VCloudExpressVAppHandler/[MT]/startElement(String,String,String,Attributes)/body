@@ -10,8 +10,13 @@
     if (attributes.containsKey("size"))     size=new Long(attributes.get("size"));
   }
  else   if (qName.equals("Link")) {
-    if (attributes.containsKey("type") && attributes.get("type").equals(VCloudExpressMediaType.VDC_XML)) {
-      vDC=newReferenceType(attributes);
+    if (attributes.containsKey("type")) {
+      if (attributes.get("type").equals(VCloudExpressMediaType.VDC_XML)) {
+        vDC=newReferenceType(attributes);
+      }
+ else {
+        extendedInfo.add(newReferenceType(attributes));
+      }
     }
   }
  else   if (qName.equals("OperatingSystemSection")) {
