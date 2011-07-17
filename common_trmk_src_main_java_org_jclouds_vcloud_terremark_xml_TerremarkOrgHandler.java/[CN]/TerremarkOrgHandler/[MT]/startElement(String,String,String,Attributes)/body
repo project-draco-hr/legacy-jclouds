@@ -1,12 +1,29 @@
 {
-  Map<String,String> attributes=cleanseAttributes(attrs);
-  super.startElement(uri,localName,qName,attrs);
-  if (qName.equals("Link")) {
-    if (attributes.containsKey("type")) {
-      String type=attributes.get("type");
-      if (type != null && type.endsWith("keysList+xml")) {
+  Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
+  if (qName.endsWith("Org")) {
+    org=newReferenceType(attributes);
+  }
+ else   if (qName.endsWith("Link")) {
+    String type=attributes.get("type");
+    if (type != null) {
+      if (type.indexOf("vdc+xml") != -1) {
+        putReferenceType(vdcs,attributes);
+      }
+ else       if (type.indexOf("catalog+xml") != -1) {
+        putReferenceType(catalogs,attributes);
+      }
+ else       if (type.indexOf("tasksList+xml") != -1) {
+        putReferenceType(tasksLists,attributes);
+      }
+ else       if (type.indexOf("network+xml") != -1) {
+        putReferenceType(networks,attributes);
+      }
+ else       if (type != null && type.endsWith("keysList+xml")) {
         keysList=newReferenceType(attributes);
       }
     }
+  }
+ else {
+    taskHandler.startElement(uri,localName,qName,attrs);
   }
 }
