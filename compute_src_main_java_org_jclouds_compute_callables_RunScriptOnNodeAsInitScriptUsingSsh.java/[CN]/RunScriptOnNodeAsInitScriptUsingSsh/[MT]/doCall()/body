@@ -1,8 +1,9 @@
 {
-  if (pushInitViaSftp) {
+  try {
     ssh.put(initFile,init.render(OsFamily.UNIX));
   }
- else {
+ catch (  SshException e) {
+    logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
     ssh.exec("rm " + initFile);
     ssh.exec(Statements.appendFile(initFile,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.MARKER + "_" + init.getInstanceName()).render(OsFamily.UNIX));
   }
