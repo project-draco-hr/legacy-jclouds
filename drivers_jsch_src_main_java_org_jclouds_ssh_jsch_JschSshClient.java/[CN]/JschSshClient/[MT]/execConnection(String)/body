@@ -1,0 +1,29 @@
+{
+  checkNotNull(command,"command");
+  return new Connection<ChannelExec>(){
+    private ChannelExec executor=null;
+    @Override public void clear(){
+      if (executor != null)       executor.disconnect();
+    }
+    @Override public ChannelExec create() throws Exception {
+      checkConnected();
+      String channel="exec";
+      executor=(ChannelExec)session.openChannel(channel);
+      executor.setPty(true);
+      executor.setCommand(command);
+      ByteArrayOutputStream error=new ByteArrayOutputStream();
+      executor.setErrStream(error);
+      try {
+        executor.connect();
+      }
+ catch (      JSchException e) {
+        throwChannelNotOpenExceptionOrPropagate("exec",e);
+      }
+      return executor;
+    }
+    @Override public String toString(){
+      return "ChannelExec(" + JschSshClient.this.toString() + ")";
+    }
+  }
+;
+}

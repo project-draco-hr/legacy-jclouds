@@ -1,5 +1,6 @@
 {
   final String rootMessage=getRootCause(from).getMessage();
+  if (rootMessage == null)   return false;
   return any(getCausalChain(from),retryPredicate) || Iterables.any(Splitter.on(",").split(retryableMessages),new Predicate<String>(){
     @Override public boolean apply(    String input){
       return rootMessage.indexOf(input) != -1;

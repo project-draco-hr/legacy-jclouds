@@ -1,12 +1,8 @@
 {
-  executor=acquire(execConnection);
-  executor.setCommand(command);
-  ByteArrayOutputStream error=new ByteArrayOutputStream();
-  executor.setErrStream(error);
+  executor=acquire(execConnection(command));
   try {
-    executor.connect();
     String outputString=Strings2.toStringAndClose(executor.getInputStream());
-    String errorString=error.toString();
+    String errorString=executor.getErrStream().toString();
     int errorStatus=executor.getExitStatus();
     int i=0;
     String message=String.format("bad status -1 %s",toString());
