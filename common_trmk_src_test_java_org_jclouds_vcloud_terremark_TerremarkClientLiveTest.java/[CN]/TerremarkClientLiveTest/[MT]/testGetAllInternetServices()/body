@@ -1,5 +1,9 @@
 {
-  for (  InternetService service : tmClient.getAllInternetServicesInVDC(tmClient.findVDCInOrgNamed(null,null).getHref())) {
-    assertNotNull(tmClient.getNodes(service.getId()));
+  for (  Org org : orgs) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      for (      InternetService service : tmClient.getAllInternetServicesInVDC(vdc.getHref())) {
+        assertNotNull(tmClient.getNodes(service.getId()));
+      }
+    }
   }
 }

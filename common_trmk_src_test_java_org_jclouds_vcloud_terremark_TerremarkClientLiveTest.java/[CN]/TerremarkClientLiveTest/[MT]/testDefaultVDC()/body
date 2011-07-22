@@ -1,8 +1,12 @@
 {
   super.testDefaultVDC();
-  TerremarkVDC response=(TerremarkVDC)tmClient.findVDCInOrgNamed(null,null);
-  assertNotNull(response);
-  assertNotNull(response.getCatalog());
-  assertNotNull(response.getInternetServices());
-  assertNotNull(response.getPublicIps());
+  for (  Org org : orgs) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      TerremarkVDC response=(TerremarkVDC)tmClient.getVDC(vdc.getHref());
+      assertNotNull(response);
+      assertNotNull(response.getCatalog());
+      assertNotNull(response.getInternetServices());
+      assertNotNull(response.getPublicIps());
+    }
+  }
 }

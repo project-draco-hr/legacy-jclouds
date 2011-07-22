@@ -1,14 +1,18 @@
 {
-  Org org=connection.findOrgNamed(null);
-  for (  ReferenceType vdc : org.getVDCs().values()) {
-    VDC response=connection.getVDC(vdc.getHref());
-    for (    ReferenceType resource : response.getAvailableNetworks().values()) {
-      if (resource.getType().equals(VCloudMediaType.NETWORK_XML)) {
-        try {
-          OrgNetwork item=connection.getNetwork(resource.getHref());
-          assertNotNull(item);
-        }
- catch (        AuthorizationException e) {
+  for (  Org org : orgs) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      VDC response=connection.getVDC(vdc.getHref());
+      for (      ReferenceType resource : response.getAvailableNetworks().values()) {
+        if (resource.getType().equals(VCloudMediaType.NETWORK_XML)) {
+          try {
+            OrgNetwork net=connection.getNetwork(resource.getHref());
+            assertNotNull(net);
+            assertNotNull(net.getName());
+            assertNotNull(net.getHref());
+            assertEquals(connection.findNetworkInOrgVDCNamed(org.getName(),response.getName(),net.getName()),net);
+          }
+ catch (          AuthorizationException e) {
+          }
         }
       }
     }

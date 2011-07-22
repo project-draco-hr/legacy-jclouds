@@ -1,7 +1,7 @@
 {
   try {
     final String token=parseTokenFromHeaders(from);
-    final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(from.getPayload().getInput());
+    final Map<String,ReferenceType> org=factory.create(orgHandlerProvider.get()).parse(checkNotNull(from.getPayload().getInput(),"no payload in http response to login request %s",from));
     return new VCloudSession(){
       @VCloudToken public String getVCloudToken(){
         return token;

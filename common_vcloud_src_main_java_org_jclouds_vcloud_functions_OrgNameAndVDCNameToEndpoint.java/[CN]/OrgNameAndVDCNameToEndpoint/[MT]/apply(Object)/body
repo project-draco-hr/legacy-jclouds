@@ -2,8 +2,8 @@
   Iterable<Object> orgVdc=(Iterable<Object>)checkNotNull(from,"args");
   Object org=Iterables.get(orgVdc,0);
   Object vdc=Iterables.get(orgVdc,1);
-  if (org == null && vdc == null)   return defaultUri;
- else   if (org == null)   org=defaultOrg;
+  if (org == null && vdc == null)   return defaultVDC.getHref();
+ else   if (org == null)   org=defaultOrg.getName();
   try {
     Map<String,ReferenceType> vdcs=checkNotNull(orgNameToVDCEndpoint.get().get(org)).getVDCs();
     return vdc == null ? Iterables.getLast(vdcs.values()).getHref() : vdcs.get(vdc).getHref();
