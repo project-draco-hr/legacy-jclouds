@@ -1,0 +1,20 @@
+{
+  Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
+  if (qName.endsWith("Vdc")) {
+    vDC=newReferenceType(attributes);
+    String status=attributes.get("status");
+    if (status != null)     this.status=VDCStatus.fromValue(Integer.parseInt(status));
+  }
+ else   if (qName.endsWith("Network")) {
+    putReferenceType(availableNetworks,attributes);
+  }
+ else   if (qName.endsWith("ResourceEntity")) {
+    putReferenceType(resourceEntities,attributes);
+  }
+ else   if (qName.endsWith("Link") && "up".equals(attributes.get("rel"))) {
+    org=newReferenceType(attributes);
+  }
+ else {
+    taskHandler.startElement(uri,localName,qName,attrs);
+  }
+}

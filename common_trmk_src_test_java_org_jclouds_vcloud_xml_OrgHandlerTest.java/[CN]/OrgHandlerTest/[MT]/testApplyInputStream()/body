@@ -1,0 +1,14 @@
+{
+  InputStream is=getClass().getResourceAsStream("/org-1.0.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  Org result=(Org)factory.create(injector.getInstance(OrgHandler.class)).parse(is);
+  assertEquals(result.getName(),"ExampleOrg");
+  assertEquals(result.getFullName(),"ExampleOrg");
+  assertEquals(result.getDescription(),"Example Corp's Primary Organization.");
+  assertEquals(result.getHref(),URI.create("http://vcloud.example.com/api/v1.0/org/5"));
+  assertEquals(result.getCatalogs(),ImmutableMap.of("Main Catalog",new ReferenceTypeImpl("Main Catalog",CATALOG_XML,URI.create("http://vcloud.example.com/api/v1.0/catalog/32")),"Shared Catalog",new ReferenceTypeImpl("Shared Catalog",CATALOG_XML,URI.create("http://vcloud.example.com/api/v1.0/catalog/37"))));
+  assertEquals(result.getVDCs(),ImmutableMap.of("ExampleVdc01",new ReferenceTypeImpl("ExampleVdc01",VCloudMediaType.VDC_XML,URI.create("http://vcloud.example.com/api/v1.0/vdc/5"))));
+  assertEquals(result.getNetworks(),ImmutableMap.of("TestNetwork",new ReferenceTypeImpl("TestNetwork",VCloudMediaType.NETWORK_XML,URI.create("http://vcloud.example.com/api/v1.0/network/14")),"ProductionNetwork",new ReferenceTypeImpl("ProductionNetwork",VCloudMediaType.NETWORK_XML,URI.create("http://vcloud.example.com/api/v1.0/network/54"))));
+  assertEquals(result.getTasksList(),new ReferenceTypeImpl(null,TASKSLIST_XML,URI.create("http://vcloud.example.com/api/v1.0/tasksList/5")));
+}

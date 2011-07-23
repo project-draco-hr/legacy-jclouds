@@ -1,0 +1,12 @@
+{
+  InputStream is=getClass().getResourceAsStream("/org.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  Org result=(Org)factory.create(injector.getInstance(OrgHandler.class)).parse(is);
+  assertEquals(result.getName(),"adrian@jclouds.org");
+  assertEquals(result.getFullName(),"adrian@jclouds.org");
+  assertEquals(result.getHref(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/org/48"));
+  assertEquals(result.getCatalogs(),ImmutableMap.of("Miami Environment 1 Catalog",new ReferenceTypeImpl("Miami Environment 1 Catalog",CATALOG_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32/catalog"))));
+  assertEquals(result.getVDCs(),ImmutableMap.of("Miami Environment 1",new ReferenceTypeImpl("Miami Environment 1",VCloudMediaType.VDC_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32"))));
+  assertEquals(result.getTasksList(),new ReferenceTypeImpl("Miami Environment 1 Tasks List",TASKSLIST_XML,URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/tasksList/32")));
+}
