@@ -1,0 +1,14 @@
+{
+  TasksList list=client.findTasksListInOrgNamed(null,null);
+  try {
+    Task lastTask=getLast(filter(list.getTasks(),new Predicate<Task>(){
+      public boolean apply(      Task input){
+        return input.getStatus() == TaskStatus.QUEUED || input.getStatus() == TaskStatus.RUNNING;
+      }
+    }
+));
+    if (!taskTester.apply(lastTask.getHref()))     throw new RuntimeException(String.format("failed to %s %s: %s","powerOff",vApp.getName(),lastTask));
+  }
+ catch (  NoSuchElementException ex) {
+  }
+}

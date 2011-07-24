@@ -1,56 +1,6 @@
 {
-  taskHandler.endElement(uri,name,qName);
-  if (qName.endsWith("Task")) {
-    this.tasks.add(taskHandler.getResult());
-  }
- else   if (qName.endsWith("Description")) {
-    description=currentOrNull();
-  }
- else   if (qName.endsWith("AllocationModel")) {
-    allocationModel=AllocationModel.fromValue(currentOrNull());
-  }
- else   if (qName.endsWith("Units")) {
-    units=currentOrNull();
-  }
- else   if (qName.endsWith("Allocated")) {
-    allocated=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("Used")) {
-    used=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("Limit")) {
-    limit=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("Overhead")) {
-    overhead=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("StorageCapacity")) {
-    storageCapacity=new Capacity(units,allocated,limit,used,overhead);
-    resetCapacity();
-  }
- else   if (qName.endsWith("Cpu")) {
-    cpuCapacity=new Capacity(units,allocated,limit,used,overhead);
-    resetCapacity();
-  }
- else   if (qName.endsWith("Memory")) {
-    memoryCapacity=new Capacity(units,allocated,limit,used,overhead);
-    resetCapacity();
-  }
- else   if (qName.endsWith("DeployedVmsQuota")) {
-    vmQuota=(int)limit;
-    if (vmQuota == -1)     vmQuota=0;
-  }
- else   if (qName.endsWith("VmQuota")) {
-    vmQuota=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("NicQuota")) {
-    nicQuota=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("NetworkQuota")) {
-    networkQuota=Integer.parseInt(currentOrNull());
-  }
- else   if (qName.endsWith("IsEnabled")) {
-    isEnabled=Boolean.parseBoolean(currentOrNull());
+  if (equalsOrSuffix(qName,"Description")) {
+    description=currentOrNull(currentText);
   }
   currentText=new StringBuilder();
 }
