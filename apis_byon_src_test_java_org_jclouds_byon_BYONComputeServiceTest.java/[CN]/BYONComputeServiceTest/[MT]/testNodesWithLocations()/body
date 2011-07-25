@@ -4,7 +4,7 @@
     String endpoint="file://" + getClass().getResource("/test_location.yaml").getPath();
     Properties props=new Properties();
     props.setProperty("byon.endpoint",endpoint);
-    context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new JschSshClientModule()),props);
+    context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule()),props);
     assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
     @SuppressWarnings("unchecked") Supplier<Map<String,Node>> supplier=(Supplier<Map<String,Node>>)context.getProviderSpecificContext().getApi();
     assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());

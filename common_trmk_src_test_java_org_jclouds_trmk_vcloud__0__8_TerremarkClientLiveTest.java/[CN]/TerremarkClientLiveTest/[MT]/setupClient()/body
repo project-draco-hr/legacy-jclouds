@@ -1,7 +1,7 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides).buildInjector();
+  injector=new RestContextFactory().createContextBuilder(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides).buildInjector();
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
   successTester=new RetryablePredicate<URI>(injector.getInstance(TaskSuccess.class),650,10,TimeUnit.SECONDS);

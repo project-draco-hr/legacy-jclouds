@@ -1,0 +1,6 @@
+{
+  message+=": " + e.getMessage();
+  logger.error(e,"<< " + message);
+  if (e instanceof UserAuthException)   throw new AuthorizationException("(" + toString() + ") "+ message,e);
+  throw e instanceof SshException ? SshException.class.cast(e) : new SshException("(" + toString() + ") "+ message,e);
+}
