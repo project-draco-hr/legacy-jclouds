@@ -1,10 +1,7 @@
 {
-  IPSocket socket=new IPSocket("127.0.0.1",22);
-  socketTester.apply(socket);
-  SshClient client=sshFactory.create(socket,new Credentials(hostUsername,hostPassword));
+  SshClient client=setupSshClient();
   try {
-    client.connect();
-    ExecResponse response=client.exec("start " + command);
+    ExecResponse response=client.exec(command);
     System.out.println(response.getOutput());
   }
  catch (  Exception e) {
