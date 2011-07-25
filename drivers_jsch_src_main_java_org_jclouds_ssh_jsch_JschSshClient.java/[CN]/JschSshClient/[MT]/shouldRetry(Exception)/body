@@ -1,3 +1,6 @@
 {
-  return any(getCausalChain(from),retryPredicate) || any(Splitter.on(",").split(retryableMessages),causalChainHasMessageContaining(from));
+  Predicate<Throwable> predicate=retryAuth ? Predicates.<Throwable>or(retryPredicate,instanceOf(AuthorizationException.class)) : retryPredicate;
+  if (any(getCausalChain(from),predicate))   return true;
+  if (!retryableMessages.equals(""))   return any(Splitter.on(",").split(retryableMessages),causalChainHasMessageContaining(from));
+  return false;
 }

@@ -1,6 +1,6 @@
 {
-  executor=acquire(execConnection(command));
   try {
+    executor=acquire(execConnection(command));
     String outputString=Strings2.toStringAndClose(executor.getInputStream());
     int errorStatus=executor.getExitStatus();
     int i=0;
@@ -14,6 +14,6 @@
     return new ExecResponse(outputString,errorString,errorStatus);
   }
   finally {
-    if (executor != null)     executor.disconnect();
+    clear();
   }
 }
