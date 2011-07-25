@@ -3,7 +3,8 @@
     ssh.put(initFile,init.render(OsFamily.UNIX));
   }
  catch (  SshException e) {
-    logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+    if (logger.isTraceEnabled())     logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+ else     logger.warn("<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
     ssh.disconnect();
     ssh.connect();
     ssh.exec("rm " + initFile);
