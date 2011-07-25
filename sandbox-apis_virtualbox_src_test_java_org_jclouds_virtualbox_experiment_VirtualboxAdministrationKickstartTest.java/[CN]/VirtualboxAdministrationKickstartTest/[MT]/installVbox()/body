@@ -1,0 +1,15 @@
+{
+  IPSocket socket=new IPSocket("127.0.0.1",22);
+  socketTester.apply(socket);
+  SshClient client=sshFactory.create(socket,new Credentials(hostUsername,hostPassword));
+  try {
+    client.connect();
+    client.exec("echo " + hostPassword + " | "+ installVboxOse);
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+ finally {
+    if (client != null)     client.disconnect();
+  }
+}

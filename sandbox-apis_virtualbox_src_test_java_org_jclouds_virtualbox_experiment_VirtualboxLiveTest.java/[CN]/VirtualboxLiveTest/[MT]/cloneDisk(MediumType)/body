@@ -1,0 +1,17 @@
+{
+  String clonedDisk=System.getProperty("test." + provider + ".clonedDisk");
+  String instanceClonedDisk=clonedDisk.split("\\.")[0] + "." + clonedDisk.split("\\.")[1];
+  clonedDiskPath=workingDir + File.separator + instanceClonedDisk;
+  IMedium clonedHd=manager.getVBox().openMedium(originalDiskPath,DeviceType.HardDisk,AccessMode.ReadOnly);
+  System.out.println("cloned HD state: " + clonedHd.getState());
+  while (clonedHd.getState().equals(MediumState.NOT_CREATED)) {
+    try {
+      Thread.sleep(1500);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+  clonedHd.setType(mediumType);
+  return clonedHd;
+}

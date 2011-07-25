@@ -1,0 +1,18 @@
+{
+  IMedium hd=manager.getVBox().openMedium(originalDisk,DeviceType.HardDisk,AccessMode.ReadOnly);
+  IMedium clonedHd=null;
+  if (!new File(clonedDisk).exists()) {
+    clonedHd=manager.getVBox().createHardDisk(diskFormat,clonedDisk);
+    IProgress cloning=hd.cloneTo(clonedHd,new Long(MediumVariant.VMDK_SPLIT_2_G.ordinal()),null);
+    cloning.waitForCompletion(-1);
+  }
+ else   clonedHd=manager.getVBox().openMedium(clonedDisk,DeviceType.HardDisk,AccessMode.ReadOnly);
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  machine.lockMachine(session,LockType.Write);
+  IMachine mutable=session.getMachine();
+  mutable.attachDevice(controller,0,0,DeviceType.HardDisk,clonedHd);
+  mutable.saveSettings();
+  session.unlockMachine();
+  assertEquals(hd.getId().equals(""),false);
+}

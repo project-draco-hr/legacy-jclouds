@@ -1,0 +1,10 @@
+{
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  machine.lockMachine(session,LockType.Write);
+  IMachine mutable=session.getMachine();
+  mutable.addStorageController(controllerSATA,StorageBus.SATA);
+  mutable.saveSettings();
+  session.unlockMachine();
+  assertEquals(manager.getVBox().findMachine(vmName).getStorageControllers().size(),2);
+}

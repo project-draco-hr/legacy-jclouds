@@ -1,0 +1,44 @@
+{
+  admin_pwd=System.getProperty("test." + provider + ".admin_pwd","password");
+  osUsername=System.getProperty("test." + provider + ".osusername","toor");
+  osPassword=System.getProperty("test." + provider + ".ospassword","password");
+  controllerIDE=System.getProperty("test." + provider + ".controllerIde","IDE Controller");
+  controllerSATA=System.getProperty("test." + provider + ".controllerSata","SATA Controller");
+  diskFormat=System.getProperty("test." + provider + ".diskformat","");
+  settingsFile=null;
+  osTypeId=System.getProperty("test." + provider + ".osTypeId","");
+  vmId=System.getProperty("test." + provider + ".vmId",null);
+  forceOverwrite=true;
+  vmName=System.getProperty("test." + provider + ".vmname","jclouds-virtualbox-kickstart-admin");
+  workingDir=System.getProperty("user.home") + File.separator + System.getProperty("test." + provider + ".workingDir","jclouds-virtualbox-test");
+  if (new File(workingDir).mkdir())   ;
+  vdiName=System.getProperty("test." + provider + ".vdiName","centos-5.2-x86.7z");
+  gaIsoName=System.getProperty("test." + provider + ".gaIsoName","VBoxGuestAdditions_4.0.2-update-69551.iso");
+  gaIsoUrl=System.getProperty("test." + provider + ".gaIsoUrl","http://download.virtualbox.org/virtualbox/4.0.2/VBoxGuestAdditions_4.0.2-update-69551.iso");
+  distroIsoName=System.getProperty("test." + provider + ".distroIsoName","ubuntu-11.04-server-i386.iso");
+  distroIsoUrl=System.getProperty("test." + provider + ".distroIsoUrl","http://releases.ubuntu.com/11.04/ubuntu-11.04-server-i386.iso");
+  originalDisk=workingDir + File.separator + "VDI"+ File.separator+ System.getProperty("test." + provider + ".originalDisk","centos-5.2-x86.vdi");
+  clonedDisk=workingDir + File.separator + System.getProperty("test." + provider + ".clonedDisk","template.vdi");
+  guestAdditionsDvd=workingDir + File.separator + System.getProperty("test." + provider + ".guestAdditionsDvd","VBoxGuestAdditions_4.0.2-update-69551.iso");
+  distroDvd=workingDir + File.separator + System.getProperty("test." + provider + ".distroDvd",distroIsoName);
+  preseedUrl=System.getProperty("test." + provider + ".preseedurl","http://dl.dropbox.com/u/693111/preseed.cfg");
+  keyboardSequence=System.getProperty("test." + provider + ".keyboardSequence","<Esc> <Esc> <Enter> " + "/install/vmlinuz noapic preseed/url=" + preseedUrl + " "+ "debian-installer=en_US auto locale=en_US kbd-chooser/method=us "+ "hostname="+ vmName+ " "+ "fb=false debconf/frontend=noninteractive "+ "keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false "+ "initrd=/install/initrd.gz -- <Enter>");
+  vboxwebsrvStartCommand=System.getProperty("test." + provider + ".vboxwebsrvStartCommand","/usr/bin/vboxwebsrv.exe");
+  vboxManageCommand=System.getProperty("test." + provider + ".vboxmanage","VBoxManage");
+  if (!new File(distroDvd).exists()) {
+    try {
+      downloadFile(distroIsoUrl,workingDir,distroIsoName,null);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+  if (!new File(guestAdditionsDvd).exists()) {
+    try {
+      downloadFile(gaIsoUrl,workingDir,gaIsoName,null);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+}

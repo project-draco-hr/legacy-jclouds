@@ -1,0 +1,32 @@
+{
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  machine.lockMachine(session,LockType.Write);
+  IMachine mutable=session.getMachine();
+  String hostInterface=null;
+  String command=vboxManageCommand + " list bridgedifs";
+  try {
+    Process child=Runtime.getRuntime().exec(command);
+    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(child.getInputStream()));
+    String line="";
+    boolean found=false;
+    while ((line=bufferedReader.readLine()) != null && !found) {
+      if (line.split(":")[0].contains("Name")) {
+        hostInterface=line.split(":")[1];
+      }
+      if (line.split(":")[0].contains("Status") && line.split(":")[1].contains("Up")) {
+        System.out.println("bridge: " + hostInterface.trim());
+        found=true;
+      }
+    }
+    mutable.getNetworkAdapter(new Long(0)).attachToNAT();
+    mutable.getNetworkAdapter(new Long(0)).setNATNetwork("");
+    machine.getNetworkAdapter(new Long(0)).getNatDriver().addRedirect("guestssh",NATProtocol.TCP,"127.0.0.1",2222,"",22);
+    mutable.getNetworkAdapter(new Long(0)).setEnabled(true);
+    mutable.saveSettings();
+    session.unlockMachine();
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+}

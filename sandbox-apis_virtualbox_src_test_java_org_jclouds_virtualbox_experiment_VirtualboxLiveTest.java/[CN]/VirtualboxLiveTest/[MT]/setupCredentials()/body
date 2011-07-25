@@ -1,0 +1,10 @@
+{
+  identity=System.getProperty("test." + provider + ".identity","administrator");
+  credential=System.getProperty("test." + provider + ".credential","12345");
+  endpoint=System.getProperty("test." + provider + ".endpoint","http://localhost:18083/");
+  apiversion=System.getProperty("test." + provider + ".apiversion");
+  injector=Guice.createInjector(new JschSshClientModule(),new Log4JLoggingModule());
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketTester);
+}

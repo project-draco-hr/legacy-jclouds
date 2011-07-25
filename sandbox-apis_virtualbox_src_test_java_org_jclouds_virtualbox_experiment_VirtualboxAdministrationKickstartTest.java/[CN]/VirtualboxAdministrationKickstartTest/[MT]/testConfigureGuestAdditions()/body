@@ -1,0 +1,27 @@
+{
+  IPSocket socket=new IPSocket("127.0.0.1",2222);
+  socketTester.apply(socket);
+  SshClient client=sshFactory.create(socket,new Credentials(osUsername,osPassword));
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("echo " + osPassword + " | "+ "sudo -S m-a prepare -i");
+    System.out.println(exec);
+  }
+  finally {
+    if (client != null) {
+      client.disconnect();
+    }
+  }
+  socketTester.apply(socket);
+  client=sshFactory.create(socket,new Credentials(osUsername,osPassword));
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("echo " + osPassword + " | "+ "sudo -S  mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt");
+    System.out.println(exec);
+    exec=client.exec("echo " + osPassword + " | "+ "sudo -S  sh /mnt/VBoxLinuxAdditions.run");
+    System.out.println(exec);
+  }
+  finally {
+    if (client != null)     client.disconnect();
+  }
+}

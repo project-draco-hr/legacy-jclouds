@@ -1,0 +1,22 @@
+{
+  String ipAddress=null;
+  for (int i=1; i < numberOfVirtualMachine + 1; i++) {
+    String instanceName=vmName + "_" + i;
+    IMachine machine=manager.getVBox().findMachine(instanceName);
+    System.out.println("\nLaunch VM named " + machine.getName() + " ...");
+    launchVMProcess(machine,manager.getSessionObject());
+    while (ipAddress == null || ipAddress.equals("")) {
+      try {
+        ipAddress=machine.getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
+        Thread.sleep(1000);
+      }
+ catch (      InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    System.out.println("VM " + instanceName + " started with IP "+ ipAddress);
+    IPSocket socket=new IPSocket(ipAddress,22);
+    System.out.println("Check SSH for " + instanceName + " ...");
+    checkSSH(socket);
+  }
+}
