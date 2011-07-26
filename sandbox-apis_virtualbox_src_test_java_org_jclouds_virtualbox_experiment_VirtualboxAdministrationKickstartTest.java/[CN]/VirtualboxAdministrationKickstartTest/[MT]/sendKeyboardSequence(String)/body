@@ -1,22 +1,20 @@
 {
   String[] sequenceSplited=keyboardSequence.split(" ");
-  for (  String word : sequenceSplited) {
-    IPSocket socket=new IPSocket("127.0.0.1",22);
-    socketTester.apply(socket);
-    SshClient client=sshFactory.create(socket,new Credentials(hostUsername,hostPassword));
-    try {
-      client.connect();
+  SshClient client=null;
+  try {
+    client=setupSshClient();
+    for (    String word : sequenceSplited) {
       String converted=stringToKeycode(word);
       for (      String string : converted.split("  ")) {
         ExecResponse response=client.exec(vboxManageCommand + " controlvm " + vmName+ " keyboardputscancode "+ string);
         System.out.println(response.getOutput());
       }
     }
- catch (    Exception e) {
-      e.printStackTrace();
-    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
  finally {
-      if (client != null)       client.disconnect();
-    }
+    if (client != null)     client.disconnect();
   }
 }
