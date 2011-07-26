@@ -1,21 +1,2 @@
 {
-  SshClient client=setupSshClient();
-  try {
-    ExecResponse exec=client.exec("echo " + sshPass + " | "+ "sudo -S m-a prepare -i");
-    System.out.println(exec);
-  }
-  finally {
-    if (client != null) {
-      client.disconnect();
-    }
-  }
-  try {
-    ExecResponse exec=client.exec("echo " + sshPass + " | "+ "sudo -S  mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt");
-    System.out.println(exec);
-    exec=client.exec("echo " + sshPass + " | "+ "sudo -S  sh /mnt/VBoxLinuxAdditions.run");
-    System.out.println(exec);
-  }
-  finally {
-    if (client != null)     client.disconnect();
-  }
 }
