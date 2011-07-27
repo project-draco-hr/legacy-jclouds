@@ -3,7 +3,7 @@
   credential=System.getProperty("test." + provider + ".credential","12345");
   endpoint=System.getProperty("test." + provider + ".endpoint","http://localhost:18083/");
   apiversion=System.getProperty("test." + provider + ".apiversion");
-  injector=Guice.createInjector(new SshjSshClientModule(),new Log4JLoggingModule());
+  injector=Guice.createInjector(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
   injector.injectMembers(socketTester);

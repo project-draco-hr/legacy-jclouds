@@ -1,12 +1,7 @@
 {
-  SshClient client=setupSshClient();
-  try {
-    client.exec("echo " + sshPass + " | "+ installVboxOse);
-  }
- catch (  Exception e) {
-    System.out.println("It is impossible to install virtualbox with this command " + installVboxOse);
-  }
- finally {
-    if (client != null)     client.disconnect();
+  if (runScriptOnNode(hostId,"VBoxManage -version").getExitCode() != 0) {
+    logger().debug("installing virtualbox");
+    if (isOSX(hostId))     ;
+ else     runScriptOnNode(hostId,"apt-get --yes install virtualbox-ose");
   }
 }

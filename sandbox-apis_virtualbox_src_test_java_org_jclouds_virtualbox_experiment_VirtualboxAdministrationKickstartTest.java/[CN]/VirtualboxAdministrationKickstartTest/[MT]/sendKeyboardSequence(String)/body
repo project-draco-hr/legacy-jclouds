@@ -1,21 +1,10 @@
 {
   String[] sequenceSplited=keyboardSequence.split(" ");
-  SshClient client=null;
-  try {
-    client=setupSshClient();
-    for (    String word : sequenceSplited) {
-      String converted=stringToKeycode(word);
-      for (      String string : converted.split("  ")) {
-        ExecResponse response=client.exec(vboxManageCommand + " controlvm " + vmName+ " keyboardputscancode "+ string);
-        System.out.println(response.getOutput());
-        if (converted.contains(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get("<Return>")))         Thread.sleep(180);
-      }
+  for (  String word : sequenceSplited) {
+    String converted=stringToKeycode(word);
+    for (    String string : converted.split("  ")) {
+      runScriptOnNode(hostId,"VBoxManage controlvm " + vmName + " keyboardputscancode "+ string);
+      if (converted.contains(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get("<Return>")))       Thread.sleep(180);
     }
-  }
- catch (  Exception e) {
-    e.printStackTrace();
-  }
- finally {
-    if (client != null)     client.disconnect();
   }
 }

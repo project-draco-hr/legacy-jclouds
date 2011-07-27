@@ -1,16 +1,12 @@
 {
-  injector=Guice.createInjector(new SshjSshClientModule(),new Log4JLoggingModule());
-  sshFactory=injector.getInstance(SshClient.Factory.class);
-  socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),130,10,TimeUnit.SECONDS);
-  injector.injectMembers(socketTester);
+  context=TestUtils.computeServiceForLocalhost();
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),130,10,TimeUnit.SECONDS);
   setupCredentials();
   setupConfigurationProperties();
+  downloadFileUnlessPresent(distroIsoUrl,workingDir,distroIsoName);
+  downloadFileUnlessPresent(gaIsoUrl,workingDir,gaIsoName);
   installVbox();
-  startupVboxWebServer(vboxwebsrvStartCommand);
-  try {
-    configureJettyServer();
-  }
- catch (  Exception e) {
-    propagate(e);
-  }
+  checkVboxVersionExpected();
+  if (!new InetSocketAddressConnect().apply(new IPSocket(endpoint.getHost(),endpoint.getPort())))   startupVboxWebServer();
+  configureJettyServer();
 }
