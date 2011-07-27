@@ -1,0 +1,14 @@
+{
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  IMedium guestAdditionsDVD=manager.getVBox().openMedium(guestAdditionsDvdName,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
+  for (  IStorageController storageController : machine.getStorageControllers()) {
+    if (storageController.getName().equals(controller)) {
+      machine.lockMachine(session,LockType.Write);
+      IMachine mutable=session.getMachine();
+      mutable.attachDevice(storageController.getName(),new Integer(1),new Integer(1),DeviceType.DVD,guestAdditionsDVD);
+      mutable.saveSettings();
+      session.unlockMachine();
+    }
+  }
+}
