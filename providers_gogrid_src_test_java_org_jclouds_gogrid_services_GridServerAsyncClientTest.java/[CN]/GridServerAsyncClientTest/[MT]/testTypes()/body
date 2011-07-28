@@ -1,0 +1,10 @@
+{
+  Method method=GridServerAsyncClient.class.getMethod("getTypes");
+  HttpRequest httpRequest=processor.createRequest(method);
+  assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/common/lookup/list?v=1.6&lookup=server.type HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseOptionsFromJsonResponse.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+}
