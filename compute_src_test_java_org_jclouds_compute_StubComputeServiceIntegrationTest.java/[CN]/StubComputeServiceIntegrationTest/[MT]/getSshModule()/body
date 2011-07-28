@@ -31,7 +31,7 @@
       SshClient client4=createMock(SshClient.class);
       SshClient client5=createMock(SshClient.class);
       expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("root","password1"))).andReturn(client1);
-      expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("web","privateKey"))).andReturn(client1New).times(5);
+      expect(factory.create(new IPSocket("144.175.1.1",22),new Credentials("web","privateKey"))).andReturn(client1New).times(6);
       runScriptAndService(client1,client1New);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2).times(4);
       expect(factory.create(new IPSocket("144.175.1.2",22),new Credentials("root","password2"))).andReturn(client2New);
@@ -106,6 +106,9 @@
         expect(client.exec("./" + scriptName + " tail")).andReturn(EXEC_GOOD);
         expect(client.exec("./" + scriptName + " tailerr")).andReturn(EXEC_GOOD);
         client.disconnect();
+        clientNew.connect();
+        expect(clientNew.exec("java -fullversion\n")).andReturn(EXEC_GOOD);
+        clientNew.disconnect();
         clientNew.connect();
         scriptName="jboss";
         clientNew.put("/tmp/init-" + scriptName,Strings2.toStringAndClose(StubComputeServiceIntegrationTest.class.getResourceAsStream("/runscript_jboss.sh")));

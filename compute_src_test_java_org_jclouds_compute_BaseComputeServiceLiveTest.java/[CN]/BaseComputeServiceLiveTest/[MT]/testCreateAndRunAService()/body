@@ -15,7 +15,7 @@
     startSeconds=currentTimeMillis();
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
     long configureSeconds=(currentTimeMillis() - startSeconds) / 1000;
-    getAnonymousLogger().info(format("<< configured node(%s) in %ss",nodeId,configureSeconds));
+    getAnonymousLogger().info(format("<< configured node(%s) with %s in %ss",nodeId,client.runScriptOnNode(nodeId,"java -fullversion",runAsRoot(false).wrapInInitScript(false)).getOutput().trim(),configureSeconds));
     trackAvailabilityOfJBossProcessOnNode(new Supplier<ExecResponse>(){
       @Override public ExecResponse get(){
         return client.runScriptOnNode(nodeId,startJBoss(configuration),runAsRoot(false).blockOnComplete(false).nameTask("jboss"));
