@@ -15,7 +15,7 @@
     assertEquals(oneResult.size(),1);
     final SecurityGroup group=oneResult.iterator().next();
     assertEquals(group.getName(),group1Name);
-    IpPermissions group2CanHttpGroup1=IpPermissions.permit(IpProtocol.TCP).fromPort(80).originatingFromSecurityGroupId(group1Id);
+    IpPermissions group2CanHttpGroup1=IpPermissions.permit(IpProtocol.TCP).port(80).originatingFromSecurityGroupId(group1Id);
     AWSSecurityGroupClient.class.cast(client).authorizeSecurityGroupIngressInRegion(null,group2Id,group2CanHttpGroup1);
     assertEventually(new GroupHasPermission(client,group2Name,new Predicate<IpPermission>(){
       @Override public boolean apply(      IpPermission arg0){
