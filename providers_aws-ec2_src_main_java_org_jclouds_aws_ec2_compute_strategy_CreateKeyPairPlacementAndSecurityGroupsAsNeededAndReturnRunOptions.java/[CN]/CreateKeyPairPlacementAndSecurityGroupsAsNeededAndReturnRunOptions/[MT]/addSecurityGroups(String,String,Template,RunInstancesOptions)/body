@@ -1,5 +1,8 @@
 {
-  String subnetId=AWSEC2TemplateOptions.class.cast(template.getOptions()).getSubnetId();
+  AWSEC2TemplateOptions awsTemplateOptions=AWSEC2TemplateOptions.class.cast(template.getOptions());
+  AWSRunInstancesOptions awsInstanceOptions=AWSRunInstancesOptions.class.cast(instanceOptions);
+  if (awsTemplateOptions.getGroupIds().size() > 0)   awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
+  String subnetId=awsTemplateOptions.getSubnetId();
   if (subnetId != null) {
     AWSRunInstancesOptions.class.cast(instanceOptions).withSubnetId(subnetId);
   }
