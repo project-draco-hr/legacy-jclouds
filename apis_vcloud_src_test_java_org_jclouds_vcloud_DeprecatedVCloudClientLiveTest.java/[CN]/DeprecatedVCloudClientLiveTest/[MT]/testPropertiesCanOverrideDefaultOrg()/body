@@ -2,7 +2,7 @@
   for (  Org org : orgs) {
     RestContext<VCloudClient,VCloudAsyncClient> newContext=null;
     try {
-      newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName())));
+      newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,Pattern.quote(org.getName()))));
       assertEquals(newContext.getApi().findOrgNamed(null),org);
     }
   finally {

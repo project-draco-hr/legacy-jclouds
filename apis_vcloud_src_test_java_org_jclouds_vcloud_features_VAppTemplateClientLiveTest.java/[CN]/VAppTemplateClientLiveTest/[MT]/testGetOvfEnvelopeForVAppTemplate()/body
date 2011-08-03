@@ -4,13 +4,9 @@
     Catalog response=getVCloudApi().getCatalogClient().getCatalog(cat.getHref());
     for (    ReferenceType resource : response.values()) {
       if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
-        try {
-          CatalogItem item=getVCloudApi().getCatalogClient().getCatalogItem(resource.getHref());
-          if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
-            assertNotNull(getVCloudApi().getVAppTemplateClient().getOvfEnvelopeForVAppTemplate(item.getEntity().getHref()));
-          }
-        }
- catch (        AuthorizationException e) {
+        CatalogItem item=getVCloudApi().getCatalogClient().getCatalogItem(resource.getHref());
+        if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
+          getVCloudApi().getVAppTemplateClient().getOvfEnvelopeForVAppTemplate(item.getEntity().getHref());
         }
       }
     }

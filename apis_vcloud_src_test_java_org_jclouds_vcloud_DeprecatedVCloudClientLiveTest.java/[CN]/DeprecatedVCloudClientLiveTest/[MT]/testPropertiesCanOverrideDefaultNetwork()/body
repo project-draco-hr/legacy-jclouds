@@ -5,7 +5,7 @@
       for (      ReferenceType net : response.getAvailableNetworks().values()) {
         RestContext<VCloudClient,VCloudAsyncClient> newContext=null;
         try {
-          newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,net.getName())));
+          newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,Pattern.quote(org.getName()),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,Pattern.quote(vdc.getName()),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,Pattern.quote(net.getName()))));
           assertEquals(newContext.getApi().findNetworkInOrgVDCNamed(null,null,net.getName()),connection.getNetwork(net.getHref()));
         }
   finally {

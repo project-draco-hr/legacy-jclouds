@@ -1,10 +1,10 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType vdc : org.getVDCs().values()) {
-      Set<PublicIpAddress> publicIpAddresses=tmClient.getPublicIpsAssociatedWithVDC(vdc.getHref());
+      Set<PublicIpAddress> publicIpAddresses=connection.getPublicIpsAssociatedWithVDC(vdc.getHref());
       PublicIpAddress publicIp=publicIpAddresses.iterator().next();
-      InternetService service=tmClient.addInternetServiceToExistingIp(publicIp.getId(),PREFIX + "-no-monitoring",Protocol.TCP,1234,AddInternetServiceOptions.Builder.monitorDisabled());
-      tmClient.deleteInternetService(service.getId());
+      InternetService service=connection.addInternetServiceToExistingIp(publicIp.getId(),PREFIX + "-no-monitoring",Protocol.TCP,1234,AddInternetServiceOptions.Builder.monitorDisabled());
+      connection.deleteInternetService(service.getId());
     }
   }
 }

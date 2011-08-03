@@ -6,10 +6,11 @@
         if (resource.getType().equals(VCloudMediaType.CATALOGITEM_XML)) {
           CatalogItem item=connection.getCatalogItem(resource.getHref());
           if (item.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML)) {
-            try {
-              assertNotNull(connection.getVAppTemplate(item.getEntity().getHref()));
+            VAppTemplate template=connection.getVAppTemplate(item.getEntity().getHref());
+            if (template != null) {
+              assertEquals(template.getName(),item.getEntity().getName());
             }
- catch (            AuthorizationException e) {
+ else {
             }
           }
         }
