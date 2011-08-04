@@ -3,7 +3,7 @@
     @Override public Map<String,Map<String,? extends CatalogItem>> apply(    Map<String,? extends org.jclouds.vcloud.domain.Catalog> from){
       return transformValues(from,new Function<org.jclouds.vcloud.domain.Catalog,Map<String,? extends org.jclouds.vcloud.domain.CatalogItem>>(){
         @Override public Map<String,? extends CatalogItem> apply(        org.jclouds.vcloud.domain.Catalog from){
-          return uniqueIndex(allCatalogItemsInCatalog.apply(from),name);
+          return uniqueIndex(filter(allCatalogItemsInCatalog.apply(from),notNull()),name);
         }
       }
 );
