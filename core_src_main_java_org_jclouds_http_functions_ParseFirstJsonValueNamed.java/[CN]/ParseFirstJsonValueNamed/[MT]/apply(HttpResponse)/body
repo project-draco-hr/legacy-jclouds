@@ -1,0 +1,24 @@
+{
+  if (arg0.getPayload() == null)   return nothing();
+  JsonReader reader=null;
+  try {
+    reader=new JsonReader(new InputStreamReader(arg0.getPayload().getInput()));
+    reader.setLenient(true);
+    AtomicReference<String> name=new AtomicReference<String>();
+    JsonToken token=reader.peek();
+    for (; token != JsonToken.END_DOCUMENT && nnn(this.name,reader,token,name); token=skipAndPeek(token,reader))     ;
+    if (name.get().equals(this.name)) {
+      return json.delegate().fromJson(reader,type.getType());
+    }
+ else {
+      return nothing();
+    }
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(String.format("error reading from stream, parsing object named %s from http response %s",this.name,arg0),e);
+  }
+ finally {
+    Closeables.closeQuietly(reader);
+    arg0.getPayload().release();
+  }
+}
