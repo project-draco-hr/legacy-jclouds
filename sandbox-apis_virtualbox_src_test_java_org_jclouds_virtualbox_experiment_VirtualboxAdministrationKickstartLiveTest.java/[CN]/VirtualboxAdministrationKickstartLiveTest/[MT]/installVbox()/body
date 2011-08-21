@@ -1,7 +1,12 @@
 {
-  if (runScriptOnNode(hostId,"VBoxManage -version").getExitCode() != 0) {
+  if (runScriptOnNode(hostId,"VBoxManage --version").getExitCode() != 0) {
     logger().debug("installing virtualbox");
     if (isOSX(hostId))     ;
- else     runScriptOnNode(hostId,"apt-get --yes install virtualbox-ose");
+ else {
+      runScriptOnNode(hostId,"cat > /etc/apt/sources.list.d/TODO");
+      runScriptOnNode(hostId,"wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | apt-key add -");
+      runScriptOnNode(hostId,"apt-get update");
+      runScriptOnNode(hostId,"apt-get --yes install virtualbox-4.1");
+    }
   }
 }
