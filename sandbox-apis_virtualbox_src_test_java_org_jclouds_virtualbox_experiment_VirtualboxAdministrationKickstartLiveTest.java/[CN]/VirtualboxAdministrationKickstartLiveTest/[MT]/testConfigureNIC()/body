@@ -1,0 +1,11 @@
+{
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  machine.lockMachine(session,LockType.Write);
+  IMachine mutable=session.getMachine();
+  mutable.getNetworkAdapter(new Long(0)).setAttachmentType(NetworkAttachmentType.NAT);
+  machine.getNetworkAdapter(new Long(0)).getNatDriver().addRedirect("guestssh",NATProtocol.TCP,"127.0.0.1",2222,"",22);
+  mutable.getNetworkAdapter(new Long(0)).setEnabled(true);
+  mutable.saveSettings();
+  session.unlockMachine();
+}

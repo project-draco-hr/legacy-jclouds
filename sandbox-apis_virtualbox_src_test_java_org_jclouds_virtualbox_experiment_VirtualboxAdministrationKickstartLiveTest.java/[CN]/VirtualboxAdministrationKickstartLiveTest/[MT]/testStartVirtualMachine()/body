@@ -1,0 +1,13 @@
+{
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  ISession session=manager.getSessionObject();
+  launchVMProcess(machine,session);
+  assertEquals(machine.getState(),MachineState.Running);
+  try {
+    Thread.sleep(5000);
+  }
+ catch (  InterruptedException e) {
+    propagate(e);
+  }
+  sendKeyboardSequence(keyboardSequence);
+}

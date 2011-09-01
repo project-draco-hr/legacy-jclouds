@@ -13,10 +13,10 @@
   }
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   providerTypeToBlobStoreMap=Maps.newHashMap();
-  for (  String hint : Splitter.on(',').split(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS))) {
+  for (  String hint : getBlobstoreContexts(props)) {
     providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
   }
-  Queue queue=QueueFactory.getQueue("twitter");
+  queue=QueueFactory.getQueue("twitter");
   for (  String name : providerTypeToBlobStoreMap.keySet()) {
     queue.add(withUrl("/store/do").header("context",name).method(Method.GET));
   }

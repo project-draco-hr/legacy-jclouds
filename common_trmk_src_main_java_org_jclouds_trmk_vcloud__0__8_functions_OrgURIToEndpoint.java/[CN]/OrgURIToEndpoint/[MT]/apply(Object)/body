@@ -1,0 +1,15 @@
+{
+  Map<URI,? extends Org> uriToOrg=Maps.uniqueIndex(orgMap.get().values(),new Function<Org,URI>(){
+    @Override public URI apply(    Org from){
+      return from.getHref();
+    }
+  }
+);
+  try {
+    Org org=uriToOrg.get(from == null ? defaultOrg.getHref() : from);
+    return getUriFromOrg(org);
+  }
+ catch (  NullPointerException e) {
+    throw new ResourceNotFoundException("org " + from + " not found in: "+ uriToOrg,e);
+  }
+}

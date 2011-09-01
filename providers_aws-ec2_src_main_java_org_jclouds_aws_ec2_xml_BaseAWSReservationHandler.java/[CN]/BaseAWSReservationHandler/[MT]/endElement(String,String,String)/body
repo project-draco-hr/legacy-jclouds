@@ -1,21 +1,134 @@
 {
-  if (qName.equals("state")) {
-    builder().monitoringState(MonitoringState.fromValue(currentOrNull()));
+  if (equalsOrSuffix(qName,"item")) {
+    inItem();
+    itemDepth--;
   }
- else   if (qName.equals("groupName")) {
-    builder().placementGroup(currentOrNull());
+ else   if (equalsOrSuffix(qName,"state")) {
+    builder.monitoringState(MonitoringState.fromValue(currentOrNull(currentText)));
   }
- else   if (qName.equals("subnetId")) {
-    builder().subnetId(currentOrNull());
+ else   if (equalsOrSuffix(qName,"groupId")) {
+    groupId=currentOrNull(currentText);
   }
- else   if (qName.equals("spotInstanceRequestId")) {
-    builder().spotInstanceRequestId(currentOrNull());
+ else   if (equalsOrSuffix(qName,"groupName") && inPlacement) {
+    builder.placementGroup(currentOrNull(currentText));
   }
- else   if (qName.equals("vpcId")) {
-    builder().vpcId(currentOrNull());
-  }
- else   if (qName.equals("productCode")) {
-    builder().productCode(currentOrNull());
-  }
-  super.endElement(uri,name,qName);
+ else   if (equalsOrSuffix(qName,"groupName")) {
+switch (itemDepth) {
+case 2:
+      reservationGroupIdToNames.put(groupId,currentOrNull(currentText));
+    break;
+case 3:
+  builder.securityGroupIdToName(groupId,currentOrNull(currentText));
+break;
+}
+groupId=null;
+}
+ else if (equalsOrSuffix(qName,"subnetId")) {
+builder.subnetId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"spotInstanceRequestId")) {
+builder.spotInstanceRequestId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"vpcId")) {
+builder.vpcId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"productCode")) {
+builder.productCode(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"instancesSet")) {
+inInstancesSet=false;
+}
+ else if (equalsOrSuffix(qName,"placement")) {
+inPlacement=false;
+}
+ else if (equalsOrSuffix(qName,"ownerId")) {
+ownerId=currentOrNull(currentText);
+}
+ else if (equalsOrSuffix(qName,"requesterId")) {
+requesterId=currentOrNull(currentText);
+}
+ else if (equalsOrSuffix(qName,"reservationId")) {
+reservationId=currentOrNull(currentText);
+}
+ else if (equalsOrSuffix(qName,"amiLaunchIndex")) {
+builder.amiLaunchIndex(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"dnsName")) {
+builder.dnsName(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"imageId")) {
+builder.imageId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"instanceId")) {
+builder.instanceId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"name")) {
+builder.instanceState(InstanceState.fromValue(currentOrNull(currentText)));
+}
+ else if (equalsOrSuffix(qName,"instanceType")) {
+builder.instanceType(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"ipAddress")) {
+builder.ipAddress(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"kernelId")) {
+builder.kernelId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"keyName")) {
+builder.keyName(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"launchTime")) {
+builder.launchTime(parseDate());
+}
+ else if (equalsOrSuffix(qName,"availabilityZone")) {
+builder.availabilityZone(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"virtualizationType")) {
+builder.virtualizationType(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"platform")) {
+builder.platform(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"privateDnsName")) {
+builder.privateDnsName(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"privateIpAddress")) {
+builder.privateIpAddress(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"ramdiskId")) {
+builder.ramdiskId(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"reason")) {
+builder.reason(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"rootDeviceType")) {
+builder.rootDeviceType(RootDeviceType.fromValue(currentOrNull(currentText)));
+}
+ else if (equalsOrSuffix(qName,"rootDeviceName")) {
+builder.rootDeviceName(currentOrNull(currentText));
+}
+ else if (equalsOrSuffix(qName,"deviceName")) {
+deviceName=currentOrNull(currentText);
+}
+ else if (equalsOrSuffix(qName,"volumeId")) {
+volumeId=currentOrNull(currentText);
+}
+ else if (equalsOrSuffix(qName,"status")) {
+attachmentStatus=Attachment.Status.fromValue(currentText.toString().trim());
+}
+ else if (equalsOrSuffix(qName,"attachTime")) {
+attachTime=dateService.iso8601DateParse(currentText.toString().trim());
+}
+ else if (equalsOrSuffix(qName,"deleteOnTermination")) {
+deleteOnTermination=Boolean.parseBoolean(currentText.toString().trim());
+}
+ else if (equalsOrSuffix(qName,"ebs")) {
+builder.device(deviceName,new BlockDevice(volumeId,attachmentStatus,attachTime,deleteOnTermination));
+this.deviceName=null;
+this.volumeId=null;
+this.attachmentStatus=null;
+this.attachTime=null;
+this.deleteOnTermination=true;
+}
+currentText=new StringBuilder();
 }

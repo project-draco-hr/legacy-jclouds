@@ -1,5 +1,5 @@
 {
   message+=": " + e.getMessage();
-  logger.error(e,"<< " + message);
-  throw new SshException(message,e);
+  if (e.getMessage() != null && e.getMessage().indexOf("Auth fail") != -1)   throw new AuthorizationException("(" + toString() + ") "+ message,e);
+  throw e instanceof SshException ? SshException.class.cast(e) : new SshException("(" + toString() + ") "+ message,e);
 }

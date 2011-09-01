@@ -1,0 +1,28 @@
+{
+  IPSocket socket=new IPSocket("127.0.0.1",2222);
+  socketTester.apply(socket);
+  SshClient client=sshFactory.create(socket,new Credentials(osUsername,osPassword));
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("yum install gcc kernel kernel-devel -y");
+    System.out.println(exec);
+  }
+  finally {
+    if (client != null)     client.disconnect();
+  }
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  powerDownMachine(machine);
+  launchVMProcess(machine,manager.getSessionObject());
+  socketTester.apply(socket);
+  client=sshFactory.create(socket,new Credentials(osUsername,osPassword));
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("mkdir -p /media/cdrom; mount /dev/cdrom /media/cdrom; sh /media/cdrom/VBoxLinuxAdditions.run --nox11 force");
+    System.out.println(exec);
+    exec=client.exec("echo '/usr/sbin/VBoxService' >> /etc/rc.d/rc.local");
+    System.out.println(exec);
+  }
+  finally {
+    if (client != null)     client.disconnect();
+  }
+}

@@ -1,7 +1,7 @@
 {
   RetryablePredicate<IPSocket> socketOpen=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,5,TimeUnit.SECONDS);
   socketOpen.apply(socket);
-  SshClient ssh=new JschSshClient(new BackoffLimitedRetryHandler(),socket,60000,credentials.identity,null,credentials.credential.getBytes());
+  SshClient ssh=new SshjSshClient(new BackoffLimitedRetryHandler(),socket,60000,credentials.identity,null,credentials.credential.getBytes());
   try {
     ssh.connect();
     ExecResponse hello=ssh.exec("echo hello");

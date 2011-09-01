@@ -1,0 +1,18 @@
+{
+  TerremarkVCloudExpressClient vCloudExpressClient=TerremarkVCloudExpressClient.class.cast(connection);
+  Org org=vCloudExpressClient.findOrgNamed(null);
+  try {
+    key=vCloudExpressClient.generateKeyPairInOrg(org.getHref(),"livetest",false);
+  }
+ catch (  IllegalStateException e) {
+    key=vCloudExpressClient.findKeyPairInOrg(org.getHref(),"livetest");
+    vCloudExpressClient.deleteKeyPair(key.getId());
+    key=vCloudExpressClient.generateKeyPairInOrg(org.getHref(),"livetest",false);
+  }
+  assertNotNull(key);
+  assertEquals(key.getName(),"livetest");
+  assertNotNull(key.getPrivateKey());
+  assertNotNull(key.getFingerPrint());
+  assertEquals(key.isDefault(),false);
+  assertEquals(key.getFingerPrint(),vCloudExpressClient.findKeyPairInOrg(org.getHref(),key.getName()).getFingerPrint());
+}

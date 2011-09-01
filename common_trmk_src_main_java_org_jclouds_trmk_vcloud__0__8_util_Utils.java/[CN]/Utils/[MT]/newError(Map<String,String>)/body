@@ -1,0 +1,16 @@
+{
+  String vendorSpecificErrorCode=attributes.get("vendorSpecificErrorCode");
+  int errorCode;
+  try {
+    errorCode=Integer.parseInt(attributes.get("majorErrorCode"));
+  }
+ catch (  NumberFormatException e) {
+    errorCode=500;
+    vendorSpecificErrorCode=attributes.get("majorErrorCode");
+  }
+  MinorCode minorErrorCode=attributes.containsKey("minorErrorCode") ? MinorCode.fromValue(attributes.get("minorErrorCode")) : null;
+  if (minorErrorCode == null || minorErrorCode == MinorCode.UNRECOGNIZED) {
+    vendorSpecificErrorCode=attributes.get("minorErrorCode");
+  }
+  return new ErrorImpl(attributes.get("message"),errorCode,minorErrorCode,vendorSpecificErrorCode,attributes.get("stackTrace"));
+}
