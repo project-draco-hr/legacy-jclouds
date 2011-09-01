@@ -1,0 +1,21 @@
+{
+  IMocksControl control=createControl();
+  EC2Client client=control.createMock(EC2Client.class);
+  AvailabilityZoneAndRegionClient regionClient=control.createMock(AvailabilityZoneAndRegionClient.class);
+  HttpCommand command=control.createMock(HttpCommand.class);
+  HttpResponseException exception=new HttpResponseException("Error: Unable to tunnel through proxy: ...",command,null);
+  expect(client.getAvailabilityZoneAndRegionServices()).andStubReturn(regionClient);
+  expect(regionClient.describeAvailabilityZonesInRegion("inaccessibleRegion")).andThrow(exception);
+  Map<String,URI> regions=new LinkedHashMap<String,URI>();
+  regions.put("inaccessibleRegion",null);
+  control.replay();
+  EC2RestClientModule.RegionIdToZoneId regionIdToZoneId=new EC2RestClientModule.RegionIdToZoneId(client,regions);
+  try {
+    regionIdToZoneId.get();
+    fail("expected exception");
+  }
+ catch (  HttpResponseException e) {
+    assertEquals(e,exception);
+  }
+  control.verify();
+}
