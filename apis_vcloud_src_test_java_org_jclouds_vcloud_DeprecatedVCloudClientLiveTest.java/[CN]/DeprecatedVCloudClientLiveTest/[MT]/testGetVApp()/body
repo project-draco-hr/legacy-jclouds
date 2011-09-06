@@ -1,0 +1,12 @@
+{
+  for (  Org org : orgs) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      VDC response=connection.getVDC(vdc.getHref());
+      for (      ReferenceType item : response.getResourceEntities().values()) {
+        if (item.getType().equals(VCloudMediaType.VAPP_XML)) {
+          connection.getVApp(item.getHref());
+        }
+      }
+    }
+  }
+}

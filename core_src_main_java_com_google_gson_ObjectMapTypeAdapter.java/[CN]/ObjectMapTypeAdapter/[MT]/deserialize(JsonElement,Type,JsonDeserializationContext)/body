@@ -1,0 +1,16 @@
+{
+  Map<Object,Object> map=constructMapType(typeOfT,context);
+  Type[] keyAndValueTypes=$Gson$Types.getMapKeyAndValueTypes(typeOfT,$Gson$Types.getRawType(typeOfT));
+  for (  Map.Entry<String,JsonElement> entry : json.getAsJsonObject().entrySet()) {
+    Object key=context.deserialize(new JsonPrimitive(entry.getKey()),keyAndValueTypes[0]);
+    Object value=null;
+    if (keyAndValueTypes[1] == Object.class) {
+      value=ParseObjectFromElement.SINGLETON.apply(entry.getValue());
+    }
+    if (value == null) {
+      value=context.deserialize(entry.getValue(),keyAndValueTypes[1]);
+    }
+    map.put(key,value);
+  }
+  return map;
+}

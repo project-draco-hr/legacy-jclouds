@@ -1,0 +1,8 @@
+{
+  String group=parseGroupFromName(from.getName());
+  String ip=ipFromIP.apply(from.getPrimaryIP());
+  Set<String> ipSet=ip != null ? ImmutableSet.of(ip) : ImmutableSet.<String>of();
+  Image image=images.get().get(from.getImageId());
+  String key=credentialsMap.get(from.getKeyName());
+  return new NodeMetadataBuilder().ids(from.getId() + "").name(from.getName()).location(locations.get().get(image.getLocation())).group(group).imageId(from.getImageId()).state(instanceStateToNodeState.get(from.getStatus())).operatingSystem(image != null ? image.getOperatingSystem() : null).publicAddresses(ipSet).privateAddresses(Iterables.filter(Iterables.transform(from.getSecondaryIPs(),ipFromIP),Predicates.notNull())).credentials(new Credentials(image.getDefaultCredentials().identity,key)).build();
+}

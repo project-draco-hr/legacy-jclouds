@@ -1,0 +1,24 @@
+{
+  String PARSE_VMTOOLSD="vmtoolsd --cmd=\"info-get guestinfo.ovfenv\" |grep vCloud_CustomizationInfo|sed 's/.*value=\"\\(.*\\)\".*/\\1/g'";
+  String group=prefix + "customize";
+  NodeMetadata node=null;
+  try {
+    TemplateOptions options=client.templateOptions();
+    options.blockOnPort(22,180);
+    options.as(VCloudTemplateOptions.class).customizationScript(script);
+    options.as(VCloudTemplateOptions.class).description(group);
+    node=getOnlyElement(client.createNodesInGroup(group,1,options));
+    VApp vapp=((VCloudClient)client.getContext().getProviderSpecificContext().getApi()).getVAppClient().getVApp(node.getUri());
+    assertEquals(vapp.getDescription(),group);
+    Vm vm=Iterables.get(vapp.getChildren(),0);
+    String apiOutput=vm.getGuestCustomizationSection().getCustomizationScript();
+    checkApiOutput(apiOutput);
+    ExecResponse vmTools=client.runScriptOnNode(node.getId(),PARSE_VMTOOLSD,wrapInInitScript(false).runAsRoot(false));
+    checkApiOutput(new String(base64(vmTools.getOutput().trim())));
+    ExecResponse foo=client.runScriptOnNode(node.getId(),"cat /root/foo.txt",wrapInInitScript(false).runAsRoot(false));
+    checkCustomizationOccurred(foo);
+  }
+  finally {
+    if (node != null)     client.destroyNode(node.getId());
+  }
+}

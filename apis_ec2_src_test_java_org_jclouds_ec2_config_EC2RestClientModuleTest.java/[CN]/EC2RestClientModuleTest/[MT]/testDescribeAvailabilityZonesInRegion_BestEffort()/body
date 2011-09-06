@@ -1,0 +1,26 @@
+{
+  IMocksControl control=createControl();
+  EC2Client client=control.createMock(EC2Client.class);
+  AvailabilityZoneAndRegionClient regionClient=control.createMock(AvailabilityZoneAndRegionClient.class);
+  AvailabilityZoneInfo info1=control.createMock(AvailabilityZoneInfo.class);
+  AvailabilityZoneInfo info2=control.createMock(AvailabilityZoneInfo.class);
+  HttpCommand command=control.createMock(HttpCommand.class);
+  HttpResponseException exception=new HttpResponseException("Error: Unable to tunnel through proxy: ...",command,null);
+  expect(client.getAvailabilityZoneAndRegionServices()).andStubReturn(regionClient);
+  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion1")).andReturn(Collections.singleton(info1));
+  expect(regionClient.describeAvailabilityZonesInRegion("inaccessibleRegion")).andThrow(exception);
+  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion2")).andReturn(Collections.singleton(info2));
+  expect(info1.getZone()).andStubReturn("zone1");
+  expect(info2.getZone()).andStubReturn("zone2");
+  Map<String,URI> regions=new LinkedHashMap<String,URI>();
+  regions.put("accessibleRegion1",null);
+  regions.put("inaccessibleRegion",null);
+  regions.put("accessibleRegion2",null);
+  control.replay();
+  Map<String,String> expectedResult=new HashMap<String,String>();
+  expectedResult.put("zone1","accessibleRegion1");
+  expectedResult.put("zone2","accessibleRegion2");
+  EC2RestClientModule.RegionIdToZoneId regionIdToZoneId=new EC2RestClientModule.RegionIdToZoneId(client,regions);
+  assertEquals(regionIdToZoneId.get(),expectedResult);
+  control.verify();
+}

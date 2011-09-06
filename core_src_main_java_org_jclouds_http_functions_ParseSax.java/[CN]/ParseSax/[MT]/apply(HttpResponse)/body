@@ -7,5 +7,14 @@
     return addDetailsAndPropagate(from,e);
   }
   if (from.getStatusCode() >= 300)   return convertStreamToStringAndParse(from);
-  return parse(from.getPayload().getInput());
+  InputStream is=from.getPayload().getInput();
+  try {
+    return parse(new InputSource(is));
+  }
+ catch (  RuntimeException e) {
+    return addDetailsAndPropagate(from,e);
+  }
+ finally {
+    closeQuietly(is);
+  }
 }

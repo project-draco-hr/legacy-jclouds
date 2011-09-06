@@ -1,0 +1,14 @@
+{
+  File iso=new File(destinationDir,filename);
+  if (!iso.exists()) {
+    InputStream is=context.utils().http().get(sourceURL);
+    checkNotNull(is,"%s not found",sourceURL);
+    try {
+      ByteStreams.copy(is,new FileOutputStream(iso));
+    }
+  finally {
+      Closeables.closeQuietly(is);
+    }
+  }
+  return iso;
+}

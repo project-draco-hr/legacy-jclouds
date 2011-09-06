@@ -1,19 +1,21 @@
 {
-  return new Predicate<OsFamilyVersion64Bit>(){
+  return Predicates.not(new Predicate<OsFamilyVersion64Bit>(){
     @Override public boolean apply(    OsFamilyVersion64Bit input){
 switch (input.family) {
 case RHEL:
-        return !input.version.equals("") && !input.version.equals("5.4");
+        return input.version.equals("") || input.version.equals("5.4");
+case DEBIAN:
+      return input.version.equals("") || input.version.equals("5.0");
 case UBUNTU:
-      return !input.version.equals("") && !input.version.equals("10.04");
+    return input.version.equals("") || input.version.equals("10.04");
 case CENTOS:
-    return !input.version.equals("") && !input.version.matches("5.[35]");
+  return input.version.equals("") || input.version.matches("5.[35]");
 case WINDOWS:
-  return !input.version.equals("") && (input.is64Bit && !input.version.matches("200[38]")) || (input.version.matches("200[38] [RS]P?2") && !input.is64Bit);
+return input.version.equals("") || input.version.matches("200[38]");
 default :
-return true;
+return false;
 }
 }
 }
-;
+);
 }

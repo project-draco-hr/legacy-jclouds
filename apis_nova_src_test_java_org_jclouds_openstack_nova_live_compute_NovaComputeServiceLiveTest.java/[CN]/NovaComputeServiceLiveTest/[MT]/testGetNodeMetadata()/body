@@ -1,6 +1,5 @@
 {
   Set<NodeMetadata> nodes=Sets.newHashSet(getDefaultNodeImmediately(group));
-  awaitForPublicAddressAssigned(nodes.iterator().next().getId());
   Map<String,? extends NodeMetadata> metadataMap=newLinkedHashMap(uniqueIndex(filter(computeService.listNodesDetailsMatching(all()),and(inGroup(group),not(TERMINATED))),new Function<NodeMetadata,String>(){
     @Override public String apply(    NodeMetadata from){
       return from.getId();
@@ -8,6 +7,7 @@
   }
 ));
   for (  NodeMetadata node : nodes) {
+    awaitForStartup(node.getId());
     metadataMap.remove(node.getId());
     NodeMetadata nodeMetadata=computeService.getNodeMetadata(node.getId());
     assertEquals(parseGroupFromName(nodeMetadata.getName()),group);

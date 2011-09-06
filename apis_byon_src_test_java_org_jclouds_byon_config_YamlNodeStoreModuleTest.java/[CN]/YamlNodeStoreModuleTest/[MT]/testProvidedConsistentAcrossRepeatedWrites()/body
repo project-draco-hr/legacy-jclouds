@@ -1,0 +1,9 @@
+{
+  Map<String,InputStream> map=new CopyInputStreamInputSupplierMap(new ConcurrentHashMap<String,InputSupplier<InputStream>>());
+  Injector injector=createInjectorWithProvidedMap(map);
+  assertEquals(injector.getInstance(Key.get(new TypeLiteral<Map<String,InputStream>>(){
+  }
+)),map);
+  Map<String,Node> store=getStore(injector);
+  for (int i=0; i < 10; i++)   check(map,store,"test" + i,"instance1" + i,"instancename" + i);
+}

@@ -1,9 +1,11 @@
 {
   super.configure();
+  installDependencies();
+  install(new EC2BindComputeStrategiesByClass());
+  install(new EC2BindComputeSuppliersByClass());
   bind(ReviseParsedImage.class).to(AWSEC2ReviseParsedImage.class);
   bind(CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class).to(CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class);
   bind(EC2HardwareSupplier.class).to(AWSEC2HardwareSupplier.class);
-  bind(RegionAndNameToImageSupplier.class).to(AWSRegionAndNameToImageSupplier.class);
   bind(EC2TemplateBuilderImpl.class).to(AWSEC2TemplateBuilderImpl.class);
   bind(EC2GetNodeMetadataStrategy.class).to(AWSEC2GetNodeMetadataStrategy.class);
   bind(EC2ListNodesStrategy.class).to(AWSEC2ListNodesStrategy.class);

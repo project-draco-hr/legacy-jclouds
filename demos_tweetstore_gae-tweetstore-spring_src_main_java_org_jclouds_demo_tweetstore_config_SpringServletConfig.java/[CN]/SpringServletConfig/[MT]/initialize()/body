@@ -1,0 +1,24 @@
+{
+  BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
+  Properties props=loadJCloudsProperties();
+  logger.trace("About to initialize members.");
+  Module googleModule=new GoogleAppEngineConfigurationModule();
+  Set<Module> modules=ImmutableSet.<Module>of(googleModule);
+  try {
+    twitter4j.conf.Configuration twitterConf=new ConfigurationBuilder().setOAuthConsumerKey(props.getProperty(PROPERTY_TWITTER_CONSUMER_KEY)).setOAuthConsumerSecret(props.getProperty(PROPERTY_TWITTER_CONSUMER_SECRET)).setOAuthAccessToken(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN)).setOAuthAccessTokenSecret(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN_SECRET)).build();
+    twitterClient=new TwitterFactory(twitterConf).getInstance();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("properties for twitter not configured properly in " + props.toString(),e);
+  }
+  container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
+  providerTypeToBlobStoreMap=Maps.newHashMap();
+  for (  String hint : getBlobstoreContexts(props)) {
+    providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
+  }
+  queue=QueueFactory.getQueue("twitter");
+  for (  String name : providerTypeToBlobStoreMap.keySet()) {
+    queue.add(withUrl("/store/do").header("context",name).method(Method.GET));
+  }
+  logger.trace("Members initialized. Twitter: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
+}

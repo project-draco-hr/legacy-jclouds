@@ -1,0 +1,9 @@
+{
+  try {
+    Map<String,ReferenceType> orgNameToEndpoint=orgNameToEndpointSupplier.get();
+    return from == null ? defaultOrg.getHref() : orgNameToEndpoint.get(from).getHref();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException("org " + from + " not found in "+ orgNameToEndpointSupplier.get().keySet());
+  }
+}

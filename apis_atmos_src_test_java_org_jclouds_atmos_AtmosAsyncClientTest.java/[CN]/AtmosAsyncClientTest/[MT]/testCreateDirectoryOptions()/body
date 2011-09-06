@@ -1,0 +1,11 @@
+{
+  Method method=AtmosAsyncClient.class.getMethod("createDirectory",String.class,PutOptions[].class);
+  HttpRequest request=processor.createRequest(method,"dir",PutOptions.Builder.publicRead());
+  assertRequestLineEquals(request,"POST https://accesspoint.atmosonline.com/rest/namespace/dir/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\nx-emc-groupacl: other=READ\nx-emc-useracl: root=FULL_CONTROL\n");
+  assertPayloadEquals(request,"","application/octet-stream",false);
+  assertResponseParserClassEquals(method,request,ParseURIFromListOrLocationHeaderIf20x.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnEndpointIfAlreadyExists.class);
+  checkFilters(request);
+}

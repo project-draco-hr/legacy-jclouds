@@ -2,6 +2,8 @@
   checkNotNull(from,"http response");
   AtmosObject object=objectProvider.create(systemMetadataParser.apply(from),userMetadataParser.apply(from));
   object.getContentMetadata().setName(object.getSystemMetadata().getObjectName());
+  object.getContentMetadata().setPath(path);
+  object.getContentMetadata().setUri(uri);
   object.getAllHeaders().putAll(from.getHeaders());
   object.setPayload(from.getPayload());
   object.getContentMetadata().setContentLength(attemptToParseSizeAndRangeFromHeaders(from));

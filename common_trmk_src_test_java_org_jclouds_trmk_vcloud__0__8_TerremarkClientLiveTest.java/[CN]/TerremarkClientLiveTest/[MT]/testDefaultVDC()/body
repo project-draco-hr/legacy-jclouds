@@ -1,0 +1,16 @@
+{
+  for (  Org org : orgs) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      VDC response=connection.getVDC(vdc.getHref());
+      assertNotNull(response);
+      assertNotNull(response.getName());
+      assertNotNull(response.getHref());
+      assertNotNull(response.getResourceEntities());
+      assertNotNull(response.getAvailableNetworks());
+      assertNotNull(response.getCatalog());
+      assertNotNull(response.getInternetServices());
+      assertNotNull(response.getPublicIps());
+      assertEquals(connection.getVDC(response.getHref()),response);
+    }
+  }
+}

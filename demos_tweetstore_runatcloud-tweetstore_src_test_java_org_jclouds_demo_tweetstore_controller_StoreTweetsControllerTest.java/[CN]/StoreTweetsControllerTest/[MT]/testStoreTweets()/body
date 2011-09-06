@@ -1,0 +1,39 @@
+{
+  Map<String,BlobStoreContext> stores=createBlobStores();
+  StoreTweetsController function=new StoreTweetsController(stores,"favo",createTwitter());
+  User frank=createMock(User.class);
+  expect(frank.getScreenName()).andReturn("frank").atLeastOnce();
+  Status frankStatus=createMock(Status.class);
+  expect(frankStatus.getId()).andReturn(1l).atLeastOnce();
+  expect(frankStatus.getUser()).andReturn(frank).atLeastOnce();
+  expect(frankStatus.getText()).andReturn("I love beans!").atLeastOnce();
+  User jimmy=createMock(User.class);
+  expect(jimmy.getScreenName()).andReturn("jimmy").atLeastOnce();
+  Status jimmyStatus=createMock(Status.class);
+  expect(jimmyStatus.getId()).andReturn(2l).atLeastOnce();
+  expect(jimmyStatus.getUser()).andReturn(jimmy).atLeastOnce();
+  expect(jimmyStatus.getText()).andReturn("cloud is king").atLeastOnce();
+  replay(frank);
+  replay(frankStatus);
+  replay(jimmy);
+  replay(jimmyStatus);
+  function.addMyTweets("test1",ImmutableList.of(frankStatus,jimmyStatus));
+  function.addMyTweets("test2",ImmutableList.of(frankStatus,jimmyStatus));
+  verify(frank);
+  verify(frankStatus);
+  verify(jimmy);
+  verify(jimmyStatus);
+  for (  Entry<String,BlobStoreContext> entry : stores.entrySet()) {
+    BlobMap map=entry.getValue().createBlobMap("favo");
+    Blob frankBlob=map.get("1");
+    assertEquals(frankBlob.getMetadata().getName(),"1");
+    assertEquals(frankBlob.getMetadata().getUserMetadata().get(TweetStoreConstants.SENDER_NAME),"frank");
+    assertEquals(frankBlob.getMetadata().getContentMetadata().getContentType(),"text/plain");
+    assertEquals(toStringAndClose(frankBlob.getPayload().getInput()),"I love beans!");
+    Blob jimmyBlob=map.get("2");
+    assertEquals(jimmyBlob.getMetadata().getName(),"2");
+    assertEquals(jimmyBlob.getMetadata().getUserMetadata().get(TweetStoreConstants.SENDER_NAME),"jimmy");
+    assertEquals(jimmyBlob.getMetadata().getContentMetadata().getContentType(),"text/plain");
+    assertEquals(toStringAndClose(jimmyBlob.getPayload().getInput()),"cloud is king");
+  }
+}

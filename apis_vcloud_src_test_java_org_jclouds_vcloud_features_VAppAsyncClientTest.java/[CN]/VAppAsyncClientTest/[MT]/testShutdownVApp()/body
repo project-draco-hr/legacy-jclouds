@@ -1,0 +1,11 @@
+{
+  Method method=VAppAsyncClient.class.getMethod("shutdownVApp",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcenterprise.bluelock.com/api/v1.0/vApp/1"));
+  assertRequestLineEquals(request,"POST https://vcenterprise.bluelock.com/api/v1.0/vApp/1/power/action/shutdown HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

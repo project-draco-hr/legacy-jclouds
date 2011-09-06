@@ -2,11 +2,7 @@
   Server addedServer=null;
   boolean notStarted=true;
   int numOfRetries=20;
-  GetIpListOptions unassignedIps=new GetIpListOptions().onlyUnassigned().inDatacenter(template.getLocation().getId());
-  if (template.getOptions() instanceof GoGridTemplateOptions) {
-    IpType ipType=GoGridTemplateOptions.class.cast(template.getOptions()).getIpType();
-    unassignedIps=unassignedIps.onlyWithType(ipType);
-  }
+  GetIpListOptions unassignedIps=new GetIpListOptions().onlyUnassigned().inDatacenter(template.getLocation().getId()).onlyWithType(IpType.PUBLIC);
   while (notStarted) {
     Set<Ip> availableIps=client.getIpServices().getIpList(unassignedIps);
     if (availableIps.isEmpty())     throw new RuntimeException("No IPs available on this identity.");
@@ -27,5 +23,8 @@
     serverLatestJobCompletedShort.apply(addedServer);
     addedServer=Iterables.getOnlyElement(client.getServerServices().getServersByName(addedServer.getName()));
   }
+  Credentials credentials=client.getServerServices().getServerCredentialsList().get(addedServer.getName());
+  if (credentials != null)   credentialStore.put("node#" + addedServer.getId(),credentials);
+ else   logger.warn("couldn't get credentials for server %s",addedServer.getName());
   return serverToNodeMetadata.apply(addedServer);
 }

@@ -1,0 +1,46 @@
+{
+  depth--;
+  if (equalsOrSuffix(qName,"PublicIpAddress")) {
+    inPublicIpAddress=false;
+    publicIpAddress=new PublicIpAddress(address,addressLocation);
+    address=null;
+    addressLocation=null;
+  }
+ else {
+    String value=currentOrNull(currentText);
+    if (value != null && !value.equals("")) {
+      if (depth == thisDepth) {
+        if (equalsOrSuffix(qName,"Href")) {
+          location=URI.create(value);
+        }
+ else         if (equalsOrSuffix(qName,"Name")) {
+          serviceName=value;
+        }
+ else         if (equalsOrSuffix(qName,"Port")) {
+          port=Integer.parseInt(value);
+        }
+ else         if (equalsOrSuffix(qName,"Protocol")) {
+          protocol=Protocol.valueOf(value);
+        }
+ else         if (equalsOrSuffix(qName,"Enabled")) {
+          enabled=Boolean.parseBoolean(value);
+        }
+ else         if (equalsOrSuffix(qName,"Timeout")) {
+          timeout=Integer.parseInt(value);
+        }
+ else         if (equalsOrSuffix(qName,"Description")) {
+          description=currentOrNull(currentText);
+        }
+      }
+ else       if (inPublicIpAddress) {
+        if (equalsOrSuffix(qName,"Href")) {
+          addressLocation=URI.create(value);
+        }
+ else         if (equalsOrSuffix(qName,"Name")) {
+          address=value;
+        }
+      }
+    }
+  }
+  currentText=new StringBuilder();
+}

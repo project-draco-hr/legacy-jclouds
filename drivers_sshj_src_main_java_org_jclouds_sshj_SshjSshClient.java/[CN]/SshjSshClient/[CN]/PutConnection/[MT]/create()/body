@@ -1,0 +1,21 @@
+{
+  sftp=acquire(sftpConnection);
+  try {
+    sftp.put(new InMemorySourceFile(){
+      @Override public String getName(){
+        return path;
+      }
+      @Override public long getLength(){
+        return contents.getContentMetadata().getContentLength();
+      }
+      @Override public InputStream getInputStream() throws IOException {
+        return checkNotNull(contents.getInput(),"inputstream for path %s",path);
+      }
+    }
+,path);
+  }
+  finally {
+    contents.release();
+  }
+  return null;
+}

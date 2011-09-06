@@ -1,0 +1,28 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  super.startElement(uri,localName,qName,attrs);
+  if (qName.endsWith("Vdc")) {
+    vDC=newReferenceType(attributes);
+  }
+ else   if (qName.endsWith("Network")) {
+    putReferenceType(availableNetworks,attributes);
+  }
+ else   if (qName.endsWith("ResourceEntity")) {
+    putReferenceType(resourceEntities,attributes);
+  }
+ else   if (equalsOrSuffix(qName,"Link")) {
+    String name=attributes.get("name");
+    if (name.equals("Internet Services")) {
+      internetServices=Utils.newReferenceType(attributes);
+    }
+ else     if (name.equals("Public IPs")) {
+      publicIps=Utils.newReferenceType(attributes);
+    }
+ else {
+      String type=attributes.get("type");
+      if (type.equals(TerremarkVCloudMediaType.CATALOG_XML)) {
+        catalog=Utils.newReferenceType(attributes);
+      }
+    }
+  }
+}

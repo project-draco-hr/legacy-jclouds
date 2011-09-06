@@ -1,0 +1,50 @@
+{
+  admin_pwd=System.getProperty("test." + provider + ".admin_pwd","password");
+  osUsername=System.getProperty("test." + provider + ".osusername","root");
+  osPassword=System.getProperty("test." + provider + ".ospassword","toortoor");
+  controller=System.getProperty("test." + provider + ".controller","IDE Controller");
+  diskFormat=System.getProperty("test." + provider + ".diskformat","");
+  settingsFile=null;
+  osTypeId=System.getProperty("test." + provider + ".osTypeId","");
+  vmId=System.getProperty("test." + provider + ".vmId",null);
+  forceOverwrite=true;
+  vmName=System.getProperty("test." + provider + ".vmname","jclouds-virtualbox-admin");
+  workingDir=System.getProperty("user.home") + File.separator + System.getProperty("test." + provider + ".workingDir","jclouds-virtualbox-test");
+  if (new File(workingDir).mkdir())   ;
+  vdiName=System.getProperty("test." + provider + ".vdiName","centos-5.2-x86.7z");
+  vdiUrl=System.getProperty("test." + provider + ".vdiUrl","http://leaseweb.dl.sourceforge.net/project/virtualboximage/CentOS/5.2/centos-5.2-x86.7z");
+  gaIsoName=System.getProperty("test." + provider + ".gaIsoName","VBoxGuestAdditions_4.0.2-update-69551.iso");
+  gaIsoUrl=System.getProperty("test." + provider + ".gaIsoUrl","http://download.virtualbox.org/virtualbox/4.0.2/VBoxGuestAdditions_4.0.2-update-69551.iso");
+  vboxwebsrvStartCommand=System.getProperty("test." + provider + ".vboxwebsrvStartCommand","/usr/bin/vboxwebsrv");
+  originalDisk=workingDir + File.separator + "VDI"+ File.separator+ System.getProperty("test." + provider + ".originalDisk","centos-5.2-x86.vdi");
+  clonedDisk=workingDir + File.separator + System.getProperty("test." + provider + ".clonedDisk","template.vdi");
+  guestAdditionsDvdName=workingDir + File.separator + System.getProperty("test." + provider + ".guestAdditionsDvdName","VBoxGuestAdditions_4.0.2-update-69551.iso");
+  install7zip=System.getProperty("test." + provider + ".install7zip","sudo -S apt-get --yes install p7zip");
+  run7zip=System.getProperty("test." + provider + ".run7zip","p7zip -d ");
+  installVboxOse=System.getProperty("test." + provider + ".installvboxose","sudo -S apt-get --yes install virtualbox-ose");
+  if (!new File(originalDisk).exists()) {
+    IPSocket socket=new IPSocket("127.0.0.1",22);
+    socketTester.apply(socket);
+    SshClient client=sshFactory.create(socket,new Credentials(hostUsername,hostPassword));
+    try {
+      File vdi7z=downloadFile(vdiUrl,workingDir,vdiName,null);
+      client.connect();
+      ExecResponse exec=client.exec("echo " + admin_pwd + " | "+ install7zip+ "; cd "+ workingDir+ "; "+ run7zip+ vdi7z.getName());
+      System.out.println(exec);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+ finally {
+      if (client != null)       client.disconnect();
+    }
+  }
+  if (!new File(guestAdditionsDvdName).exists()) {
+    try {
+      File gaIso=downloadFile(gaIsoUrl,workingDir,gaIsoName,null);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+}

@@ -8,7 +8,7 @@
   boolean powerOn=true;
   Boolean customizeOnInstantiate=null;
   Set<? extends NetworkConfig> networkConfig=null;
-  NetworkConfigDecorator networknetworkConfigDecorator=new NetworkConfigDecorator(template,defaultNetwork,defaultFenceMode,defaultNetworkNameInTemplate);
+  NetworkConfigDecorator networknetworkConfigDecorator=new NetworkConfigDecorator(template,defaultNetwork.getHref(),defaultFenceMode,defaultNetworkNameInTemplate);
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
   if (options != null) {
     if (options.getNetworkConfig().size() > 0)     networkConfig=Sets.newLinkedHashSet(Iterables.transform(options.getNetworkConfig(),networknetworkConfigDecorator));
@@ -18,7 +18,7 @@
   }
   if (networkConfig == null)   networkConfig=ImmutableSet.of(networknetworkConfigDecorator.apply(null));
   try {
-    return stringBinder.bindToRequest(request,generateXml(name,deploy,powerOn,template,networkConfig,customizeOnInstantiate));
+    return stringBinder.bindToRequest(request,generateXml(name,options.getDescription(),deploy,powerOn,template,networkConfig,customizeOnInstantiate));
   }
  catch (  ParserConfigurationException e) {
     throw new RuntimeException(e);

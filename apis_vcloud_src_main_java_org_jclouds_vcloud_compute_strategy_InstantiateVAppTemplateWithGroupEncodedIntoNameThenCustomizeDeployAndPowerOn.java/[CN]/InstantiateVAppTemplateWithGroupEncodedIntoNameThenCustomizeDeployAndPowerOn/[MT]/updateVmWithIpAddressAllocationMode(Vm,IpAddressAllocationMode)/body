@@ -1,5 +1,4 @@
 {
-  Task task;
   NetworkConnectionSection net=vm.getNetworkConnectionSection();
   Builder builder=net.toBuilder();
   builder.connections(Iterables.transform(net.getConnections(),new Function<NetworkConnection,NetworkConnection>(){
@@ -8,8 +7,5 @@
     }
   }
 ));
-  task=client.updateNetworkConnectionOfVm(vm.getHref(),builder.build());
-  if (!successTester.apply(task.getHref())) {
-    throw new RuntimeException(String.format("failed to %s %s: %s","updateNetworkConnectionOfVm",vm.getName(),task));
-  }
+  return client.getVmClient().updateNetworkConnectionOfVm(builder.build(),vm.getHref());
 }

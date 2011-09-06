@@ -16,7 +16,7 @@
   expect(input.template.getLocation()).andReturn(input.location).atLeastOnce();
   expect(input.template.getImage()).andReturn(input.image).atLeastOnce();
   expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
-  expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn((Reservation)reservation);
+  expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn(Reservation.class.cast(reservation));
   expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
   Credentials creds=new Credentials("foo","bar");
   expect(strategy.instanceToCredentials.apply(instance)).andReturn(creds);

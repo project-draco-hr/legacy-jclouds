@@ -1,7 +1,7 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new JschSshClientModule()),overrides);
+  context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
   keyPair=setupKeyPair();
   client=AWSEC2Client.class.cast(context.getProviderSpecificContext().getApi());
   availableTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupAvailable(client),60,1,TimeUnit.SECONDS);

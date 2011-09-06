@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkVCloudExpressAsyncClient.class.getMethod("getVDC",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud/vdc/1"));
+  assertRequestLineEquals(request,"GET https://vcloud/vdc/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vdc+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,VDCHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

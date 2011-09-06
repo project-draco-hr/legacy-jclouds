@@ -1,0 +1,15 @@
+{
+  AdminAccess.Configuration configuration=createMock(AdminAccess.Configuration.class);
+  AdminAccess statement=createMock(AdminAccess.class);
+  AdminAccess newStatement=createMock(AdminAccess.class);
+  expect(statement.init(configuration)).andReturn(newStatement);
+  replay(configuration);
+  replay(statement);
+  replay(newStatement);
+  InitBuilder testInitBuilder=new InitBuilder("mkebsboot","/mnt/tmp","/mnt/tmp",ImmutableMap.of("tmpDir","/mnt/tmp"),ImmutableList.<Statement>of(statement));
+  InitAdminAccess initAdminAccess=new InitAdminAccess(configuration);
+  initAdminAccess.visit(testInitBuilder);
+  verify(configuration);
+  verify(statement);
+  verify(newStatement);
+}

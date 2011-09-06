@@ -1,12 +1,14 @@
 {
-  if (vApp.getStatus().compareTo(Status.RESOLVED) > 0) {
+  if (vApp.getStatus() != Status.OFF) {
     logger.debug(">> undeploying vApp(%s), current status: %s",vApp.getName(),vApp.getStatus());
-    Task task=client.undeployVAppOrVm(vApp.getHref());
-    if (!successTester.apply(task.getHref())) {
-      throw new RuntimeException(String.format("failed to %s %s: %s","undeploy",vApp.getName(),task));
+    try {
+      waitForTask(client.getVAppClient().undeployVApp(vApp.getHref()),vApp);
+      vApp=client.getVAppClient().getVApp(vApp.getHref());
+      logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
     }
-    vApp=client.getVApp(vApp.getHref());
-    logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+ catch (    IllegalStateException e) {
+      logger.warn(e,"<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+    }
   }
   return vApp;
 }

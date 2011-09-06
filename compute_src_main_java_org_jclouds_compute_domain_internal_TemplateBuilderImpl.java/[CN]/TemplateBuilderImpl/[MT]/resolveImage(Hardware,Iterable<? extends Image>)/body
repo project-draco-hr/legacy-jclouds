@@ -1,21 +1,2 @@
 {
-  Predicate<Image> imagePredicate=new Predicate<Image>(){
-    @Override public boolean apply(    Image arg0){
-      return hardware.supportsImage().apply(arg0);
-    }
-    @Override public String toString(){
-      return "hardware(" + hardware + ").supportsImage()";
-    }
-  }
-;
-  try {
-    Iterable<? extends Image> matchingImages=filter(supportedImages,imagePredicate);
-    if (logger.isTraceEnabled())     logger.trace("<<   matched images(%s)",matchingImages);
-    List<? extends Image> maxImages=Lists2.multiMax(DEFAULT_IMAGE_ORDERING,matchingImages);
-    if (logger.isTraceEnabled())     logger.trace("<<   best images(%s)",maxImages);
-    return maxImages.get(maxImages.size() - 1);
-  }
- catch (  NoSuchElementException exception) {
-    throw new NoSuchElementException("image didn't match: " + toString() + "\n"+ supportedImages);
-  }
 }

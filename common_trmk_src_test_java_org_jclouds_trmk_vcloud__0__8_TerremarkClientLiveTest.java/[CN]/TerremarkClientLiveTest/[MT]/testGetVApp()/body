@@ -1,0 +1,17 @@
+{
+  for (  Org org : listOrgs()) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      VDC response=connection.getVDC(vdc.getHref());
+      for (      ReferenceType item : response.getResourceEntities().values()) {
+        if (item.getType().equals(TerremarkVCloudMediaType.VAPP_XML)) {
+          try {
+            VApp app=connection.getVApp(item.getHref());
+            assertNotNull(app);
+          }
+ catch (          RuntimeException e) {
+          }
+        }
+      }
+    }
+  }
+}

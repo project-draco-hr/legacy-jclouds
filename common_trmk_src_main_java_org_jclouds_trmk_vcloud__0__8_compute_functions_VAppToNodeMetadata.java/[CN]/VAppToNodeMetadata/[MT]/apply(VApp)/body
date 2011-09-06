@@ -1,0 +1,34 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.uri(from.getHref());
+  builder.name(from.getName());
+  builder.hostname(from.getName());
+  Location vdcLocation=findLocationForResourceInVDC.apply(from.getVDC());
+  builder.location(vdcLocation);
+  if (from.getOsType() != null && OSType.fromValue(from.getOsType()) != OSType.UNRECOGNIZED) {
+    builder.operatingSystem(new CIMOperatingSystem(OSType.fromValue(from.getOsType()),"",null,from.getOperatingSystemDescription()));
+  }
+ else   if (from.getOperatingSystemDescription() != null) {
+    OperatingSystem.Builder osBuilder=new OperatingSystem.Builder();
+    if (from.getOsType() != null)     osBuilder.name(from.getOsType() + "");
+    osBuilder.family(ComputeServiceUtils.parseOsFamilyOrUnrecognized(from.getOperatingSystemDescription()));
+    osBuilder.version("");
+    osBuilder.is64Bit(from.getOperatingSystemDescription().indexOf("64") != -1);
+    osBuilder.description(from.getOperatingSystemDescription());
+    builder.operatingSystem(osBuilder.build());
+  }
+  builder.hardware(hardwareForVCloudExpressVApp.apply(from));
+  builder.state(vAppStatusToNodeState.get(from.getStatus()));
+  builder.publicAddresses(computeClient.getPublicAddresses(from.getHref()));
+  builder.privateAddresses(computeClient.getPrivateAddresses(from.getHref()));
+  String group=parseGroupFromName(from.getName());
+  if (group != null) {
+    builder.group(group);
+    installCredentialsFromCache(from.getHref(),URI.create(vdcLocation.getParent().getId()),group,builder);
+  }
+ else {
+    builder.credentials(credentialStore.get("node#" + from.getHref().toASCIIString()));
+  }
+  return builder.build();
+}

@@ -8,7 +8,7 @@
     exceptions=awaitCompletion(responses,exec,maxTime,logger,logPrefix);
     if (exceptions.size() > 0) {
       fromIterable=exceptions.keySet();
-      retryHandler.imposeBackoffExponentialDelay(i + 1,String.format("error %s: %s: %s",logPrefix,fromIterable,exceptions));
+      retryHandler.imposeBackoffExponentialDelay(delayStart,2,i + 1,maxRetries,String.format("error %s: %s: %s",logPrefix,fromIterable,exceptions));
     }
  else {
       break;

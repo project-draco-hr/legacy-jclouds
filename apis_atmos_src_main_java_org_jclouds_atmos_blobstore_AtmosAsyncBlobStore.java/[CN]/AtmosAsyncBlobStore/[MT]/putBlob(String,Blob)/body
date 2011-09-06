@@ -1,7 +1,13 @@
 {
+  final org.jclouds.atmos.options.PutOptions options=new org.jclouds.atmos.options.PutOptions();
+  try {
+    if (isPublic.get(container + "/"))     options.publicRead();
+  }
+ catch (  NullPointerException e) {
+  }
   return Futures.makeListenable(service.submit(new Callable<String>(){
     @Override public String call() throws Exception {
-      return AtmosUtils.putBlob(sync,crypto,blob2Object,container,blob);
+      return AtmosUtils.putBlob(sync,crypto,blob2Object,container,blob,options);
     }
     @Override public String toString(){
       return "putBlob(" + container + ","+ blob.getMetadata().getName()+ ")";

@@ -1,0 +1,13 @@
+{
+  AdminAccess.Configuration configuration=createMock(AdminAccess.Configuration.class);
+  AdminAccess statement=createMock(AdminAccess.class);
+  Credentials creds=createMock(Credentials.class);
+  expect(statement.getAdminCredentials()).andReturn(creds);
+  replay(configuration);
+  replay(statement);
+  replay(creds);
+  assertEquals(CredentialsFromAdminAccess.INSTANCE.apply(Statements.newStatementList(statement)),creds);
+  verify(configuration);
+  verify(statement);
+  verify(creds);
+}

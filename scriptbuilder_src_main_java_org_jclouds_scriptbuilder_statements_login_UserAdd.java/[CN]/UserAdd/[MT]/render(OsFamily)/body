@@ -16,7 +16,7 @@
   userAddOptions.put("-d",homeDir);
   if (password != null) {
     try {
-      userAddOptions.put("-p","'" + Sha512Crypt.makeShadowLine(password,null,new JCECrypto()) + "'");
+      userAddOptions.put("-p","'" + cryptFunction.apply(password) + "'");
     }
  catch (    Exception e) {
       Throwables.propagate(e);

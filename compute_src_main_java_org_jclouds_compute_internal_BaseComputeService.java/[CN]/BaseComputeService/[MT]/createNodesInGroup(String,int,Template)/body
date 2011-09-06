@@ -5,9 +5,12 @@
   Set<NodeMetadata> goodNodes=newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
+  if (template.getOptions().getRunScript() != null)   initAdminAccess.visit(template.getOptions().getRunScript());
   Map<?,Future<Void>> responses=runNodesAndAddToSetStrategy.execute(group,count,template,goodNodes,badNodes,customizationResponses);
   Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"runNodesWithTag(" + group + ")");
-  for (  NodeMetadata node : concat(goodNodes,badNodes.keySet()))   if (node.getCredentials() != null)   credentialStore.put("node#" + node.getId(),node.getCredentials());
+  Function<NodeMetadata,NodeMetadata> fn=persistNodeCredentials.always(template.getOptions().getRunScript());
+  badNodes=Maps2.transformKeys(badNodes,fn);
+  goodNodes=ImmutableSet.copyOf(Iterables.transform(goodNodes,fn));
   if (executionExceptions.size() > 0 || badNodes.size() > 0) {
     throw new RunNodesException(group,count,template,goodNodes,executionExceptions,badNodes);
   }

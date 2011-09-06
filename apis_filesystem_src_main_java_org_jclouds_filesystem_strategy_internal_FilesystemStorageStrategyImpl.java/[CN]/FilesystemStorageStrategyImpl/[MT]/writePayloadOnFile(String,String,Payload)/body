@@ -1,20 +1,15 @@
 {
   filesystemContainerNameValidator.validate(container);
   filesystemBlobKeyValidator.validate(blobKey);
-  File outputFile=null;
-  OutputStream output=null;
-  InputStream input=null;
+  File outputFile=getFileForBlobKey(container,blobKey);
+  if (payload.getRawContent().equals(outputFile)) {
+    return;
+  }
+  FileOutputStream output=null;
   try {
-    outputFile=getFileForBlobKey(container,blobKey);
-    File parentDirectory=outputFile.getParentFile();
-    if (!parentDirectory.exists()) {
-      if (!parentDirectory.mkdirs()) {
-        throw new IOException("An error occurred creating directory [" + parentDirectory.getName() + "].");
-      }
-    }
-    output=new FileOutputStream(outputFile);
-    input=payload.getInput();
-    copy(input,output);
+    Files.createParentDirs(outputFile);
+    if (payload.getRawContent() instanceof File)     Files.copy(File.class.cast(payload.getRawContent()),outputFile);
+ else     payload.writeTo(new FileOutputStream(outputFile));
   }
  catch (  IOException ex) {
     if (outputFile != null) {
@@ -23,19 +18,7 @@
     throw ex;
   }
  finally {
-    if (input != null) {
-      try {
-        input.close();
-      }
- catch (      IOException ex) {
-      }
-    }
-    if (output != null) {
-      try {
-        output.close();
-      }
- catch (      IOException ex) {
-      }
-    }
+    Closeables.closeQuietly(output);
+    payload.release();
   }
 }

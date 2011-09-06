@@ -1,0 +1,19 @@
+{
+  String status;
+  String from;
+  String tweet;
+  try {
+    long start=System.currentTimeMillis();
+    Blob blob=map.get(id);
+    status=((System.currentTimeMillis() - start) + "ms");
+    from=blob.getMetadata().getUserMetadata().get(TweetStoreConstants.SENDER_NAME);
+    tweet=toStringAndClose(blob.getPayload().getInput());
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error listing container %s//%s/%s",service,container,id);
+    status=(e.getMessage());
+    tweet="";
+    from="";
+  }
+  return new StoredTweetStatus(service,host,container,id,from,tweet,status);
+}

@@ -1,0 +1,9 @@
+{
+  Set<String> contexts=new CredentialsCollector().apply(props).keySet();
+  String explicitContexts=props.getProperty(PROPERTY_TWEETSTORE_BLOBSTORES);
+  if (explicitContexts != null) {
+    contexts=filter(contexts,in(copyOf(Splitter.on(',').split(explicitContexts))));
+  }
+  checkState(!contexts.isEmpty(),"no credentials available for any requested  context");
+  return contexts;
+}

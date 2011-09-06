@@ -1,0 +1,12 @@
+{
+  Server server=new Server(8080);
+  ResourceHandler resource_handler=new ResourceHandler();
+  resource_handler.setDirectoriesListed(true);
+  resource_handler.setWelcomeFiles(new String[]{"index.html"});
+  resource_handler.setResourceBase(".");
+  logger().info("serving " + resource_handler.getBaseResource());
+  HandlerList handlers=new HandlerList();
+  handlers.setHandlers(new Handler[]{resource_handler,new DefaultHandler()});
+  server.setHandler(handlers);
+  server.start();
+}

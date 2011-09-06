@@ -2,9 +2,12 @@
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
   builder.ids(from.getId());
   builder.name(from.getName());
-  builder.location(location.get());
+  builder.loginPort(from.getLoginPort());
+  builder.hostname(from.getHostname());
+  builder.location(findLocationWithId(from.getLocationId()));
   builder.group(from.getGroup());
-  builder.operatingSystem(new OperatingSystemBuilder().arch(from.getOsArch()).family(OsFamily.fromValue(from.getOsFamily())).description(from.getOsDescription()).version(from.getOsVersion()).build());
+  builder.tags(from.getTags());
+  builder.operatingSystem(OperatingSystem.builder().arch(from.getOsArch()).family(OsFamily.fromValue(from.getOsFamily())).description(from.getOsDescription()).version(from.getOsVersion()).build());
   builder.state(NodeState.RUNNING);
   builder.publicAddresses(ImmutableSet.<String>of(from.getHostname()));
   if (from.getUsername() != null) {

@@ -1,0 +1,25 @@
+{
+  checkNotNull(family,"family");
+  if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
+  checkNotNull(config.getAdminUsername(),"adminUsername");
+  checkNotNull(config.getAdminPassword(),"adminPassword");
+  checkNotNull(config.getAdminPublicKey(),"adminPublicKey");
+  checkNotNull(config.getAdminPrivateKey(),"adminPrivateKey");
+  checkNotNull(config.getLoginPassword(),"loginPassword");
+  ImmutableList.Builder<Statement> statements=ImmutableList.<Statement>builder();
+  UserAdd.Builder userBuilder=UserAdd.builder();
+  userBuilder.login(config.getAdminUsername());
+  if (config.shouldAuthorizeAdminPublicKey())   userBuilder.authorizeRSAPublicKey(config.getAdminPublicKey());
+  userBuilder.password(config.getAdminPassword());
+  if (config.shouldInstallAdminPrivateKey())   userBuilder.installRSAPrivateKey(config.getAdminPrivateKey());
+  if (config.shouldGrantSudoToAdminUser()) {
+    statements.add(SudoStatements.createWheel());
+    userBuilder.group("wheel");
+  }
+  statements.add(userBuilder.build().cryptFunction(config.getCryptFunction()));
+  if (config.shouldLockSsh())   statements.add(SshStatements.lockSshd());
+  if (config.shouldResetLoginPassword()) {
+    statements.add(ShadowStatements.resetLoginUserPasswordTo(config.getLoginPassword()).cryptFunction(config.getCryptFunction()));
+  }
+  return new StatementList(statements.build()).render(family);
+}

@@ -1,0 +1,14 @@
+{
+  try {
+    session=acquire(execConnection());
+    Command output=session.exec(checkNotNull(command,"command"));
+    String outputString=IOUtils.readFully(output.getInputStream()).toString();
+    output.join(timeoutMillis,TimeUnit.SECONDS);
+    int errorStatus=output.getExitStatus();
+    String errorString=IOUtils.readFully(output.getErrorStream()).toString();
+    return new ExecResponse(outputString,errorString,errorStatus);
+  }
+  finally {
+    clear();
+  }
+}

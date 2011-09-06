@@ -1,0 +1,9 @@
+{
+  Iterable<Catalog> catalogs=transformParallel(org.getCatalogs().values(),new Function<ReferenceType,Future<Catalog>>(){
+    @SuppressWarnings("unchecked") @Override public Future<Catalog> apply(    ReferenceType from){
+      return (Future<Catalog>)aclient.getCatalog(from.getHref());
+    }
+  }
+,executor,null,logger,"catalogs in " + org.getName());
+  return catalogs;
+}

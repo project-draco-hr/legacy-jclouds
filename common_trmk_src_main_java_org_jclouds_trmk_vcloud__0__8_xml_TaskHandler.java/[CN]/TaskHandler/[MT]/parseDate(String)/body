@@ -1,0 +1,15 @@
+{
+  try {
+    return dateService.iso8601DateParse(toParse);
+  }
+ catch (  RuntimeException e) {
+    if (e.getCause() instanceof ParseException) {
+      if (!toParse.endsWith("Z"))       toParse+="Z";
+      return dateService.iso8601SecondsDateParse(toParse);
+    }
+ else {
+      logger.error(e,"error parsing date");
+    }
+  }
+  return null;
+}
