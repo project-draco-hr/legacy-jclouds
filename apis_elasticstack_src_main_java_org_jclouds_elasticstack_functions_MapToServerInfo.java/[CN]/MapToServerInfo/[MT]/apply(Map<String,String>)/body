@@ -11,8 +11,8 @@
   builder.user(from.get("user"));
   if (from.containsKey("started"))   builder.started(new Date(new Long(from.get("started"))));
   builder.uuid(from.get("server"));
-  builder.vnc(new VNC(from.get("vnc:ip"),from.get("vnc:password"),from.containsKey("vnc:tls") && Boolean.valueOf(from.get("vnc:tls"))));
   if (from.containsKey("boot"))   builder.bootDeviceIds(Splitter.on(' ').split(from.get("boot")));
+  builder.vnc(new VNC(from.get("vnc:ip") == null ? "auto" : from.get("vnc:ip"),from.get("vnc:password"),from.containsKey("vnc:tls") && Boolean.valueOf(from.get("vnc:tls"))));
   Map<String,String> metadata=Maps.newLinkedHashMap();
   for (  Entry<String,String> entry : from.entrySet()) {
     if (entry.getKey().startsWith("user:"))     metadata.put(entry.getKey().substring(entry.getKey().indexOf(':') + 1),entry.getValue());

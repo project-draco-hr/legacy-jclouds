@@ -20,7 +20,13 @@
     if (nic.getMac() != null)     builder.put("nic:" + nicId + ":mac",nic.getMac());
     nicId++;
   }
-  builder.put("vnc:ip",from.getVnc().getIp() == null ? "auto" : from.getVnc().getIp());
+  String vncIp=from.getVnc().getIp();
+  if (apiVersion.equals("2.0")) {
+    builder.put("vnc","auto");
+  }
+ else {
+    builder.put("vnc:ip",vncIp == null ? "auto" : vncIp);
+  }
   if (from.getVnc().getPassword() != null)   builder.put("vnc:password",from.getVnc().getPassword());
   if (from.getVnc().isTls())   builder.put("vnc:tls","on");
   if (from.getTags().size() != 0)   builder.put("tags",Joiner.on(' ').join(from.getTags()));
