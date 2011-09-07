@@ -13,7 +13,7 @@
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,"ssh-rsa"))).andReturn(keyPair);
   expect(options.dontAuthorizePublicKey()).andReturn(options);
   expect(options.getOverridingCredentials()).andReturn(new Credentials("foo","bar")).times(3);
-  expect(options.getRunScript()).andReturn(null);
+  expect(options.getRunScript()).andReturn(null).times(2);
   expect(options.getPrivateKey()).andReturn(null);
   expect(strategy.credentialsMap.put(new RegionAndName(region,"jclouds#" + group),keyPair.toBuilder().keyMaterial("bar").build())).andReturn(null);
   replay(options);
