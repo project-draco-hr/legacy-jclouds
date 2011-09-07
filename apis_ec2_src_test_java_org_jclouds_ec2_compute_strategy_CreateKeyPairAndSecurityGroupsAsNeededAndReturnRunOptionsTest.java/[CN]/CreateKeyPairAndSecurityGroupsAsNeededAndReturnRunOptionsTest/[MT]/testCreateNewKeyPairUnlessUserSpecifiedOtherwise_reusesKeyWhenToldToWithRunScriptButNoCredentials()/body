@@ -1,18 +1,18 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String tag="tag";
-  String userSuppliedKeyPair=null;
-  boolean shouldAutomaticallyCreateKeyPair=false;
+  String userSuppliedKeyPair="myKeyPair";
   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-  expect(options.getRunScript()).andReturn(null);
-  expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
+  expect(options.getOverridingCredentials()).andReturn(null);
+  expect(options.getRunScript()).andReturn(Statements.exec("echo foo"));
+  expect(strategy.credentialsMap.containsKey(new RegionAndName(region,userSuppliedKeyPair))).andReturn(false);
   replay(options);
   replay(keyPair);
   replayStrategy(strategy);
-  assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options),null);
+  assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options),userSuppliedKeyPair);
   verify(options);
   verify(keyPair);
   verifyStrategy(strategy);
