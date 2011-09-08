@@ -5,7 +5,12 @@
   builder.persistent(Boolean.parseBoolean(from.get("persistent")));
   if (from.containsKey("tags"))   builder.tags(Splitter.on(' ').split(from.get("tags")));
   if (from.containsKey("status"))   builder.status(ServerStatus.fromValue(from.get("status")));
-  if (from.containsKey("smp") && !"auto".equals(from.get("smp")))   builder.smp(new Integer(from.get("smp")));
+  if (from.containsKey("smp:cores")) {
+    builder.smp(new Integer(from.get("smp:cores")));
+  }
+ else   if (from.containsKey("smp") && !"auto".equals(from.get("smp"))) {
+    builder.smp(new Integer(from.get("smp")));
+  }
   builder.cpu(Integer.parseInt(from.get("cpu")));
   builder.mem(Integer.parseInt(from.get("mem")));
   builder.user(from.get("user"));
