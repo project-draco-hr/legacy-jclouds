@@ -10,4 +10,13 @@
     propagate(e);
   }
   sendKeyboardSequence(keyboardSequence);
+  boolean sshDeamonIsRunning=false;
+  while (!sshDeamonIsRunning) {
+    try {
+      if (runScriptOnNode(guestId,"echo ciao").getExitCode() == 0)       sshDeamonIsRunning=true;
+    }
+ catch (    SshException e) {
+      System.err.println("connection reset");
+    }
+  }
 }
