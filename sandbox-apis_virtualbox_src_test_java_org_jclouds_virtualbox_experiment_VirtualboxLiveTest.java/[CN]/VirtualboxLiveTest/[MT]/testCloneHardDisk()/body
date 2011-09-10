@@ -1,0 +1,10 @@
+{
+  IMedium hd=manager.getVBox().openMedium(originalDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,forceOverwrite);
+  if (!new File(clonedDiskPath).exists()) {
+    clonedHd=manager.getVBox().createHardDisk(diskFormat,clonedDiskPath);
+    IProgress cloning=hd.cloneTo(clonedHd,new Long(MediumVariant.STANDARD.ordinal()),null);
+    cloning.waitForCompletion(-1);
+  }
+ else   clonedHd=manager.getVBox().openMedium(clonedDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,forceOverwrite);
+  assertEquals(clonedHd.getId().equals(""),false);
+}
