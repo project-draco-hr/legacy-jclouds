@@ -1,10 +1,12 @@
 {
   StringBuilder keycodes=new StringBuilder();
-  for (  String specialButton : KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.keySet()) {
-    if (s.startsWith(specialButton)) {
-      keycodes.append(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get(specialButton));
-      return keycodes.toString();
+  if (s.startsWith("<")) {
+    String[] specials=s.split("<");
+    for (int i=1; i < specials.length; i++) {
+      keycodes.append(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get("<" + specials[i]) + "  ");
     }
+    System.out.println("keycodes: " + keycodes);
+    return keycodes.toString();
   }
   int i=0;
   while (i < s.length()) {

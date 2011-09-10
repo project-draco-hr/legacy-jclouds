@@ -1,9 +1,11 @@
 {
   ISession session=manager.getSessionObject();
   IMachine machine=manager.getVBox().findMachine(vmName);
+  IMedium distroMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
   machine.lockMachine(session,LockType.Write);
   IMachine mutable=session.getMachine();
-  mutable.getVRDEServer().setEnabled(new Boolean(true));
+  mutable.attachDevice(controllerIDE,1,1,DeviceType.DVD,distroMedium);
   mutable.saveSettings();
   session.unlockMachine();
+  assertEquals(distroMedium.getId().equals(""),false);
 }

@@ -13,7 +13,8 @@
   boolean sshDeamonIsRunning=false;
   while (!sshDeamonIsRunning) {
     try {
-      if (runScriptOnNode(guestId,"echo ciao",runAsRoot(false).wrapInInitScript(false)).getExitCode() == 0)       sshDeamonIsRunning=true;
+      AdminAccess.standard().init(new DefaultConfiguration()).render(OsFamily.UNIX);
+      if (runScriptOnNode(guestId,"id").getExitCode() == 0)       sshDeamonIsRunning=true;
     }
  catch (    SshException e) {
       System.err.println("connection reset");
