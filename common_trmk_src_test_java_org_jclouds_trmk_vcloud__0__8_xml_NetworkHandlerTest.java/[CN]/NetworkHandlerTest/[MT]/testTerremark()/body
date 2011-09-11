@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/network-terremark.xml");
+  injector=Guice.createInjector(new SaxParserModule());
+  factory=injector.getInstance(ParseSax.Factory.class);
+  Network result=factory.create(injector.getInstance(NetworkHandler.class)).parse(is);
+  assertEquals(result,new NetworkImpl("10.122.209.128/28","application/vnd.vmware.vcloud.network+xml",URI.create("https://services.enterprisecloud.terremark.com/api/v0.8b-ext2.5/network/40031"),null,"10.122.209.129","255.255.255.240",FenceMode.ISOLATED,new ReferenceTypeImpl("10.122.209.128/28","application/xml",URI.create("https://services.enterprisecloud.terremark.com/api/v0.8b-ext2.5/extensions/network/40031")),new ReferenceTypeImpl("IP Addresses","application/xml",URI.create("https://services.enterprisecloud.terremark.com/api/v0.8b-ext2.5/extensions/network/40031/ips"))));
+}

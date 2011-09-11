@@ -1,0 +1,14 @@
+{
+  for (  Org org : orgs) {
+    for (    ReferenceType cat : org.getCatalogs().values()) {
+      RestContext<VCloudClient,VCloudAsyncClient> newContext=null;
+      try {
+        newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,Pattern.quote(org.getName()),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_CATALOG,Pattern.quote(cat.getName()))));
+        assertEquals(newContext.getApi().findCatalogInOrgNamed(null,null),connection.getCatalog(cat.getHref()));
+      }
+  finally {
+        newContext.close();
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  Method method=TagOperationsAsyncClient.class.getMethod("getTagNameToUsageCountInOrg",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/org/1"));
+  assertRequestLineEquals(request,"GET https://vcloud.safesecureweb.com/api/v0.8/deviceTags/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.ecloud.tagsList+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TagNameToUsageCountHandler.class);
+  assertExceptionParserClassEquals(method,ReturnEmptyMapOnNotFoundOr404.class);
+  checkFilters(request);
+}

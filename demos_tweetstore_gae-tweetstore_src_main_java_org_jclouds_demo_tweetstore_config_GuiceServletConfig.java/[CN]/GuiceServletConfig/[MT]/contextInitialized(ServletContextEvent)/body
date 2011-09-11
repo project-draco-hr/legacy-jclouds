@@ -4,7 +4,7 @@
   Module googleModule=new GoogleAppEngineConfigurationModule();
   Set<Module> modules=ImmutableSet.<Module>of(googleModule);
   try {
-    Configuration twitterConf=new ConfigurationBuilder().setUser(props.getProperty("twitter.identity")).setPassword(props.getProperty("twitter.credential")).build();
+    Configuration twitterConf=new ConfigurationBuilder().setOAuthConsumerKey(props.getProperty(PROPERTY_TWITTER_CONSUMER_KEY)).setOAuthConsumerSecret(props.getProperty(PROPERTY_TWITTER_CONSUMER_SECRET)).setOAuthAccessToken(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN)).setOAuthAccessTokenSecret(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN_SECRET)).build();
     twitterClient=new TwitterFactory(twitterConf).getInstance();
   }
  catch (  IllegalArgumentException e) {
@@ -12,10 +12,10 @@
   }
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   providerTypeToBlobStoreMap=Maps.newHashMap();
-  for (  String hint : Splitter.on(',').split(checkNotNull(props.getProperty(PROPERTY_BLOBSTORE_CONTEXTS),PROPERTY_BLOBSTORE_CONTEXTS))) {
+  for (  String hint : getBlobstoreContexts(props)) {
     providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
   }
-  Queue queue=QueueFactory.getQueue("twitter");
+  queue=QueueFactory.getQueue("twitter");
   for (  String name : providerTypeToBlobStoreMap.keySet()) {
     queue.add(withUrl("/store/do").header("context",name).method(Method.GET));
   }

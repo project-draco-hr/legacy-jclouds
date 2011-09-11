@@ -1,0 +1,52 @@
+{
+  String current=currentOrNull();
+  if (current != null) {
+    if (qName.equals("Id")) {
+      this.id=current;
+    }
+ else     if (qName.equals("Tags")) {
+      this.tags=Arrays.asList(current.split(","));
+    }
+ else     if (qName.equals("LongName")) {
+      this.longName=current;
+    }
+ else     if (qName.equals("Href")) {
+      if (inSubnet) {
+        this.subnetLocation=URI.create(current);
+      }
+ else {
+        this.href=URI.create(current);
+      }
+    }
+ else     if (qName.equals("Name")) {
+      if (inSubnet) {
+        this.subnetName=current;
+      }
+ else       if (inAdapters) {
+        this.adapterName=current;
+      }
+ else {
+        this.name=current;
+      }
+    }
+ else     if (qName.equals("NetworkAdapters")) {
+      inAdapters=false;
+    }
+ else     if (qName.equals("NetworkAdapter")) {
+      networkAdapters.add(new NetworkAdapter(macAddress,adapterName,subnet));
+      macAddress=null;
+      adapterName=null;
+      subnet=null;
+    }
+ else     if (qName.equals("MacAddress")) {
+      macAddress=current;
+    }
+ else     if (qName.equals("Subnet")) {
+      subnet=new Subnet(subnetLocation,subnetName);
+      subnetLocation=null;
+      subnetName=null;
+      inSubnet=false;
+    }
+  }
+  currentText=new StringBuilder();
+}

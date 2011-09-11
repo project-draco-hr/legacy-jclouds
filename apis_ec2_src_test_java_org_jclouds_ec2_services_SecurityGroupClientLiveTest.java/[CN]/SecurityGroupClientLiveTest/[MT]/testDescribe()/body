@@ -1,10 +1,10 @@
 {
-  for (  String region : Lists.newArrayList(null,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1,Region.AP_SOUTHEAST_1)) {
-    SortedSet<SecurityGroup> allResults=Sets.newTreeSet(client.describeSecurityGroupsInRegion(region));
+  for (  String region : Lists.newArrayList(null,Region.EU_WEST_1,Region.US_EAST_1,Region.US_WEST_1,Region.AP_SOUTHEAST_1,Region.AP_NORTHEAST_1)) {
+    SortedSet<SecurityGroup> allResults=ImmutableSortedSet.<SecurityGroup>copyOf(client.describeSecurityGroupsInRegion(region));
     assertNotNull(allResults);
     if (allResults.size() >= 1) {
       SecurityGroup group=allResults.last();
-      SortedSet<SecurityGroup> result=Sets.newTreeSet(client.describeSecurityGroupsInRegion(region,group.getName()));
+      SortedSet<SecurityGroup> result=ImmutableSortedSet.<SecurityGroup>copyOf(client.describeSecurityGroupsInRegion(region,group.getName()));
       assertNotNull(result);
       SecurityGroup compare=result.last();
       assertEquals(compare,group);

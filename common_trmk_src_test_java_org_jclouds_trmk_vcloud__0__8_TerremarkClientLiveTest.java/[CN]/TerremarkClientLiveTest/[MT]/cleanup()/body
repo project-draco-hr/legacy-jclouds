@@ -1,0 +1,20 @@
+{
+  if (node != null)   connection.deleteNode(node.getId());
+  if (is != null)   connection.deleteInternetService(is.getId());
+  if (vApp != null) {
+    try {
+      successTester.apply(connection.powerOffVApp(vApp.getHref()).getHref());
+    }
+ catch (    Exception e) {
+    }
+    connection.deleteVApp(vApp.getHref());
+  }
+  if (clone != null) {
+    try {
+      successTester.apply(connection.powerOffVApp(clone.getHref()).getHref());
+    }
+ catch (    Exception e) {
+    }
+    connection.deleteVApp(clone.getHref());
+  }
+}

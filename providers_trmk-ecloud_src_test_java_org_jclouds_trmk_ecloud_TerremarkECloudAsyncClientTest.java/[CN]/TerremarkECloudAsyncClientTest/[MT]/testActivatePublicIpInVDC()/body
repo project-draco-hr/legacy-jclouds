@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkECloudAsyncClient.class.getMethod("activatePublicIpInVDC",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/1"));
+  assertRequestLineEquals(request,"POST https://vcloud.safesecureweb.com/api/v0.8/publicIps/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.ecloud.publicIp+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,PublicIpAddressHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

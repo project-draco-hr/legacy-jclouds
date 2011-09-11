@@ -1,0 +1,9 @@
+{
+  logger.debug(">> providing images");
+  Builder<String,DescribeImagesOptions> builder=ImmutableMap.<String,DescribeImagesOptions>builder();
+  for (  String region : regions)   builder.put(region,filters(filter));
+  Iterable<Entry<String,DescribeImagesOptions>> queries=builder.build().entrySet();
+  Iterable<Image> returnVal=filter(transform(describer.apply(queries),parser),Predicates.notNull());
+  if (logger.isDebugEnabled())   logger.debug("<< images(%s)",Iterables.size(returnVal));
+  return returnVal;
+}

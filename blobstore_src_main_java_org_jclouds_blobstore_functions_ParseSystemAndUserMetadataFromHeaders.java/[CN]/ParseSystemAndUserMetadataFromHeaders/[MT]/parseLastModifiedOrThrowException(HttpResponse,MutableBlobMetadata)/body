@@ -1,7 +1,7 @@
 {
   String lastModified=from.getFirstHeaderOrNull(HttpHeaders.LAST_MODIFIED);
   if (lastModified == null) {
-    if ((lastModified=from.getFirstHeaderOrNull("Last-modified")) == null)     throw new HttpException(HttpHeaders.LAST_MODIFIED + " header not present in response: " + from.getStatusLine());
+    if ((lastModified=from.getFirstHeaderOrNull("Last-modified")) == null)     throw new HttpException(HttpHeaders.LAST_MODIFIED + " header not present in response: " + from);
   }
   if (lastModified.startsWith("20")) {
     metadata.setLastModified(dateParser.iso8601DateParse(lastModified.replace("+0000","Z")));

@@ -23,5 +23,8 @@
     serverLatestJobCompletedShort.apply(addedServer);
     addedServer=Iterables.getOnlyElement(client.getServerServices().getServersByName(addedServer.getName()));
   }
+  Credentials credentials=client.getServerServices().getServerCredentialsList().get(addedServer.getName());
+  if (credentials != null)   credentialStore.put("node#" + addedServer.getId(),credentials);
+ else   logger.warn("couldn't get credentials for server %s",addedServer.getName());
   return serverToNodeMetadata.apply(addedServer);
 }

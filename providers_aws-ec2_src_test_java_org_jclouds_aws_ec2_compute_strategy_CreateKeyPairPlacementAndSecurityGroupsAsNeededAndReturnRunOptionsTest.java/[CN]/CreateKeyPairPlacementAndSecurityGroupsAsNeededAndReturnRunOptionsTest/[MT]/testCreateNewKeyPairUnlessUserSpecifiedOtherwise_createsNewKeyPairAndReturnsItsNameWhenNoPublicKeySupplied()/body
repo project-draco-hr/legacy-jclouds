@@ -12,7 +12,9 @@
   expect(strategy.credentialsMap.get(new RegionAndName(region,"jclouds#" + group))).andReturn(null);
   expect(options.getPublicKey()).andReturn(null).times(2);
   expect(strategy.createUniqueKeyPair.apply(new RegionAndName(region,group))).andReturn(keyPair);
+  expect(keyPair.getRegion()).andReturn(region).atLeastOnce();
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
+  expect(options.getRunScript()).andReturn(null);
   expect(strategy.credentialsMap.put(new RegionAndName(region,systemGeneratedKeyPairName),keyPair)).andReturn(null);
   replay(options);
   replay(keyPair);

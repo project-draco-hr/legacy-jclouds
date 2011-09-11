@@ -1,4 +1,9 @@
 {
-  if (options.isPublicRead())   throw new UnsupportedOperationException("publicRead");
+  if (options.isPublicRead())   return Futures.compose(async.createDirectory(container,publicRead()),new Function<URI,Boolean>(){
+    public Boolean apply(    URI from){
+      return true;
+    }
+  }
+,service);
   return createContainerInLocation(location,container);
 }

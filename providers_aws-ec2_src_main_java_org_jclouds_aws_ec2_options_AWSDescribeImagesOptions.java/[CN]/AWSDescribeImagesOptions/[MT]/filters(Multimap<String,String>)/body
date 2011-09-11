@@ -1,0 +1,9 @@
+{
+  int i=0;
+  for (  Entry<String,Collection<String>> filter : checkNotNull(filters,"filters").asMap().entrySet()) {
+    String filterPrefix=String.format("Filter.%s.",++i);
+    formParameters.put(filterPrefix + "Name",filter.getKey());
+    indexFormValuesWithPrefix(filterPrefix + "Value",filter.getValue());
+  }
+  return this;
+}

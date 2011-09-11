@@ -1,0 +1,12 @@
+{
+  OrgAndName orgAndName=new OrgAndName(orgId,group);
+  if (credentialsMap.containsKey(orgAndName)) {
+    Credentials creds=credentialsMap.get(orgAndName);
+    builder.credentials(creds);
+    credentialStore.put("node#" + nodeId,creds);
+  }
+  String adminPasswordKey="node#" + nodeId + "#adminPassword";
+  if (credentialStore.containsKey(adminPasswordKey)) {
+    builder.adminPassword(credentialStore.get(adminPasswordKey).credential);
+  }
+}

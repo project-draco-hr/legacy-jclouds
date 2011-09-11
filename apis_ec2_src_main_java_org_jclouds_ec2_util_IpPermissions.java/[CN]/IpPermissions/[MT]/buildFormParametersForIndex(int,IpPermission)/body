@@ -1,0 +1,33 @@
+{
+  Map<String,String> headers=Maps.newLinkedHashMap();
+  headers.put("IpPermissions.%d.IpProtocol",permission.getIpProtocol().toString());
+  headers.put("IpPermissions.%d.FromPort",permission.getFromPort() + "");
+  headers.put("IpPermissions.%d.ToPort",permission.getToPort() + "");
+  String prefix="IpPermissions.%d.IpRanges.";
+  int i=0;
+  for (  String cidrIp : checkNotNull(permission.getIpRanges(),"cidrIps")) {
+    headers.put(prefix + i++ + ".CidrIp",cidrIp);
+  }
+  prefix="IpPermissions.%d.Groups.";
+  i=0;
+  for (  String groupId : checkNotNull(permission.getGroupIds(),"groupIds")) {
+    headers.put(prefix + i++ + ".GroupId",groupId);
+  }
+  prefix="IpPermissions.%d.Groups.";
+  i=0;
+  for (  Entry<String,String> userIdGroupNamePair : checkNotNull(permission.getUserIdGroupPairs(),"userIdGroupNamePairs").entries()) {
+    headers.put(prefix + i++ + ".UserId",userIdGroupNamePair.getKey());
+    headers.put(prefix + i + ".GroupName",userIdGroupNamePair.getValue());
+  }
+  prefix="IpPermissions.%d.IpRanges.";
+  i=0;
+  for (  String cidrIp : checkNotNull(permission.getIpRanges(),"cidrIps")) {
+    headers.put(prefix + i++ + ".CidrIp",cidrIp);
+  }
+  return Multimaps.forMap(Maps2.transformKeys(headers,new Function<String,String>(){
+    @Override public String apply(    String arg0){
+      return String.format(arg0,index);
+    }
+  }
+));
+}

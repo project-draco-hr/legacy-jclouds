@@ -1,0 +1,51 @@
+{
+  int port=Integer.parseInt(sshPort);
+  if (sshUser == null || ((sshPass == null || sshPass.trim().equals("")) && (sshKeyFile == null || sshKeyFile.trim().equals(""))) || sshUser.trim().equals("")) {
+    System.err.println("ssh credentials not present.  Tests will be lame");
+    return new SshClient(){
+      public void connect(){
+      }
+      public void disconnect(){
+      }
+      public Payload get(      String path){
+        if (path.equals("/etc/passwd")) {
+          return Payloads.newStringPayload("root");
+        }
+ else         if (path.equals(temp.getAbsolutePath())) {
+          return Payloads.newStringPayload("rabbit");
+        }
+        throw new RuntimeException("path " + path + " not stubbed");
+      }
+      public ExecResponse exec(      String command){
+        if (command.equals("hostname")) {
+          return new ExecResponse(sshHost,"",0);
+        }
+        throw new RuntimeException("command " + command + " not stubbed");
+      }
+      @Override public void put(      String path,      Payload contents){
+      }
+      @Override public String getHostAddress(){
+        return null;
+      }
+      @Override public String getUsername(){
+        return null;
+      }
+      @Override public void put(      String path,      String contents){
+      }
+    }
+;
+  }
+ else {
+    Injector i=Guice.createInjector(new SshjSshClientModule());
+    SshClient.Factory factory=i.getInstance(SshClient.Factory.class);
+    SshClient connection;
+    if (sshKeyFile != null && !sshKeyFile.trim().equals("")) {
+      connection=factory.create(new IPSocket(sshHost,port),new Credentials(sshUser,Strings2.toStringAndClose(new FileInputStream(sshKeyFile))));
+    }
+ else {
+      connection=factory.create(new IPSocket(sshHost,port),new Credentials(sshUser,sshPass));
+    }
+    connection.connect();
+    return connection;
+  }
+}

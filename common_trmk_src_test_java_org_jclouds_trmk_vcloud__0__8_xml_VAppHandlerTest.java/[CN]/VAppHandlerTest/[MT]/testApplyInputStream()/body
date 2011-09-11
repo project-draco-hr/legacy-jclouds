@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/launched_vapp.xml");
+  VApp result=(VApp)factory.create(injector.getInstance(VAppHandler.class)).parse(is);
+  assertEquals(result.getName(),"adriantest");
+  assertEquals(result.getStatus(),Status.UNRESOLVED);
+  assertEquals(result.getSize().longValue(),4l);
+  assertEquals(result.getHref(),URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vapp/13775"));
+  assertEquals(result.getVDC(),new ReferenceTypeImpl(null,"application/vnd.vmware.vcloud.vdc+xml",URI.create("https://services.vcloudexpress.terremark.com/api/v0.8/vdc/32")));
+}

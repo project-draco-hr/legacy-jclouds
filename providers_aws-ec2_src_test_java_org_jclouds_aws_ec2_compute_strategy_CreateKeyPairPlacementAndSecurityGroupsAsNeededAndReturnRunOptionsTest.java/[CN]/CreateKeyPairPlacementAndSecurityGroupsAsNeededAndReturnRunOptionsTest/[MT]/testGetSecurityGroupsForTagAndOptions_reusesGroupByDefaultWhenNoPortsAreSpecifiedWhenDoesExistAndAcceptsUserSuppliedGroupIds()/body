@@ -1,0 +1,21 @@
+{
+  String region=Region.AP_SOUTHEAST_1;
+  String group="group";
+  String generatedMarkerGroup="jclouds#group#" + Region.AP_SOUTHEAST_1;
+  Set<String> groupNames=ImmutableSet.<String>of();
+  int[] ports=new int[]{};
+  boolean shouldAuthorizeSelf=true;
+  boolean groupExisted=true;
+  Set<String> returnVal=ImmutableSet.<String>of(generatedMarkerGroup);
+  CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
+  AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
+  expect(options.getGroupIds()).andReturn(ImmutableSet.<String>of("group1","group2"));
+  expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
+  RegionNameAndIngressRules regionNameAndIngressRules=new RegionNameAndIngressRules(region,generatedMarkerGroup,ports,shouldAuthorizeSelf);
+  expect(strategy.securityGroupMap.containsKey(regionNameAndIngressRules)).andReturn(groupExisted);
+  replay(options);
+  replayStrategy(strategy);
+  assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,group,options),returnVal);
+  verify(options);
+  verifyStrategy(strategy);
+}

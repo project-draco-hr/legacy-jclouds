@@ -1,0 +1,11 @@
+{
+  Method method=AWSSecurityGroupAsyncClient.class.getMethod("describeSecurityGroupsInRegionById",String.class,String[].class);
+  HttpRequest request=processor.createRequest(method,(String)null);
+  assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2011-05-15&Action=DescribeSecurityGroups","application/x-www-form-urlencoded",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,DescribeSecurityGroupsResponseHandler.class);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
+  checkFilters(request);
+}

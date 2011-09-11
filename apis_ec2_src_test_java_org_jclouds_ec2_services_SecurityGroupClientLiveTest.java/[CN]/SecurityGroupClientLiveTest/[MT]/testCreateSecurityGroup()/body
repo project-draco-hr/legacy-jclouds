@@ -1,8 +1,13 @@
 {
   String groupName=PREFIX + "1";
-  String groupDescription=PREFIX + "1 description";
-  client.deleteSecurityGroupInRegion(null,groupName);
-  client.deleteSecurityGroupInRegion(null,groupName);
-  client.createSecurityGroupInRegion(null,groupName,groupDescription);
-  verifySecurityGroup(groupName,groupDescription);
+  cleanupAndSleep(groupName);
+  try {
+    String groupDescription=PREFIX + "1 description";
+    client.deleteSecurityGroupInRegion(null,groupName);
+    client.createSecurityGroupInRegion(null,groupName,groupDescription);
+    verifySecurityGroup(groupName,groupDescription);
+  }
+  finally {
+    client.deleteSecurityGroupInRegion(null,groupName);
+  }
 }

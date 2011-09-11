@@ -1,0 +1,18 @@
+{
+  String cookieHeader=from.getFirstHeaderOrNull("x-vcloud-authorization");
+  if (cookieHeader != null) {
+    Matcher matcher=pattern.matcher(cookieHeader);
+    return matcher.find() ? matcher.group(2) : cookieHeader;
+  }
+ else {
+    try {
+      cookieHeader=Iterables.find(from.getHeaders().get(HttpHeaders.SET_COOKIE),Predicates.contains(pattern));
+      Matcher matcher=pattern.matcher(cookieHeader);
+      matcher.find();
+      return matcher.group(2);
+    }
+ catch (    NoSuchElementException e) {
+      throw new HttpResponseException(String.format("Header %s or %s must be present","x-vcloud-authorization",HttpHeaders.SET_COOKIE),null,from);
+    }
+  }
+}

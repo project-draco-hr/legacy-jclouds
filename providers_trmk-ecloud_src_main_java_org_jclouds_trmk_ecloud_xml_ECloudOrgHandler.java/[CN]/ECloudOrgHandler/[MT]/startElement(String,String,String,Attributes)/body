@@ -1,0 +1,18 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  super.startElement(uri,localName,qName,attrs);
+  if (qName.equals("Link")) {
+    if (attributes.containsKey("type")) {
+      String type=attributes.get("type");
+      if (type != null && type.endsWith("dataCentersList+xml")) {
+        dataCentersList=newReferenceType(attributes);
+      }
+ else       if (type != null && type.endsWith("tagsList+xml")) {
+        deviceTags=newReferenceType(attributes);
+      }
+ else       if (type != null && type.endsWith("VAppCatalogList+xml")) {
+        vAppCatalog=newReferenceType(attributes);
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  if (response.getPayload() == null)   return null;
+  if (TerremarkVCloudMediaType.ERROR_XML.equals(response.getPayload().getContentMetadata().getContentType())) {
+    try {
+      return (VCloudError)factory.create(errorHandlerProvider.get()).setContext(request).apply(response);
+    }
+ catch (    RuntimeException e) {
+      logger.warn(e,"error parsing error");
+    }
+  }
+  return null;
+}

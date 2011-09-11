@@ -1,0 +1,12 @@
+{
+  context=TestUtils.computeServiceForLocalhost();
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),130,10,TimeUnit.SECONDS);
+  setupCredentials();
+  setupConfigurationProperties();
+  downloadFileUnlessPresent(distroIsoUrl,workingDir,distroIsoName);
+  downloadFileUnlessPresent(gaIsoUrl,workingDir,gaIsoName);
+  installVbox();
+  checkVboxVersionExpected();
+  if (!new InetSocketAddressConnect().apply(new IPSocket(endpoint.getHost(),endpoint.getPort())))   startupVboxWebServer();
+  configureJettyServer();
+}

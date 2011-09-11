@@ -1,7 +1,7 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String group="group";
-  Hardware size=EC2HardwareBuilder.m1_small().build();
+  Hardware size=EC2HardwareBuilder.m1_small32().build();
   String systemGeneratedKeyPairName="systemGeneratedKeyPair";
   String generatedGroup="group";
   Set<String> generatedGroups=ImmutableSet.of(generatedGroup);
@@ -14,6 +14,7 @@
   expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping>of()).atLeastOnce();
   expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options)).andReturn(systemGeneratedKeyPairName);
   expect(strategy.getSecurityGroupsForTagAndOptions(region,group,options)).andReturn(generatedGroups);
+  expect(options.getGroupIds()).andReturn(ImmutableSet.<String>of());
   expect(options.getSubnetId()).andReturn(null);
   expect(options.getUserData()).andReturn(null);
   expect(options.isMonitoringEnabled()).andReturn(false);

@@ -1,0 +1,11 @@
+{
+  Method method=TerremarkECloudAsyncClient.class.getMethod("getVAppExtendedInfo",URI.class);
+  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud/extensions/vapp/12"));
+  assertRequestLineEquals(request,"GET https://vcloud/extensions/vapp/12 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/vnd.tmrk.ecloud.vApp+xml\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,VAppExtendedInfoHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

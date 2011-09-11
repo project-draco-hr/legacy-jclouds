@@ -1,12 +1,23 @@
 {
-  if (pushInitViaSftp) {
-    ssh.put(name,init.render(OsFamily.UNIX));
+  try {
+    ssh.put(initFile,init.render(OsFamily.UNIX));
   }
- else {
-    ssh.exec("rm " + name);
-    ssh.exec(Statements.appendFile(name,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.MARKER + "_" + name).render(OsFamily.UNIX));
+ catch (  SshException e) {
+    if (logger.isTraceEnabled())     logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+ else     logger.warn("<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+    ssh.disconnect();
+    ssh.connect();
+    ssh.exec("rm " + initFile);
+    ssh.exec(Statements.appendFile(initFile,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.MARKER + "_" + init.getInstanceName()).render(OsFamily.UNIX));
   }
-  ssh.exec("chmod 755 " + name);
+  ssh.exec("chmod 755 " + initFile);
+  setupLinkToInitFile();
   runAction("init");
+  init.getInitStatement().accept(new AdminAccessVisitor(){
+    @Override public void visit(    AdminAccess input){
+      refreshSshIfNewAdminCredentialsConfigured(input);
+    }
+  }
+);
   return runAction("start");
 }
