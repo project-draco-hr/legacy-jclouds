@@ -1,7 +1,11 @@
 {
-  runScriptOnNode(guestId,"m-a prepare -i",wrapInInitScript(true));
-  runScriptOnNode(guestId,"mount -o loop /dev/dvd /media/cdrom");
-  ExecResponse response=runScriptOnNode(guestId,"sh /media/cdrom/VBoxLinuxAdditions.run");
-  response.getExitCode();
-  runScriptOnNode(guestId,"rm /etc/udev/rules.d/70-persistent-net.rules");
+  if (isUbuntu(guestId)) {
+    runScriptOnNode(guestId,"m-a prepare -i",wrapInInitScript(true));
+    runScriptOnNode(guestId,"mount -o loop /dev/dvd /media/cdrom");
+    runScriptOnNode(guestId,"sh /media/cdrom/VBoxLinuxAdditions.run");
+    runScriptOnNode(guestId,"rm /etc/udev/rules.d/70-persistent-net.rules");
+    runScriptOnNode(guestId,"mkdir /etc/udev/rules.d/70-persistent-net.rules");
+    runScriptOnNode(guestId,"rm -rf /dev/.udev/");
+    runScriptOnNode(guestId,"rm /lib/udev/rules.d/75-persistent-net-generator.rules");
+  }
 }
