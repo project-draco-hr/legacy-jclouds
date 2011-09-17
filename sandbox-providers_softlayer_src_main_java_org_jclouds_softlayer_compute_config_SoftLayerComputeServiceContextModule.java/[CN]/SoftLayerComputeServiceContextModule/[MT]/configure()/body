@@ -1,0 +1,21 @@
+{
+  super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<VirtualGuest,Set<ProductItemPrice>,ProductItemPrice,Datacenter>>(){
+  }
+).to(SoftLayerComputeServiceAdapter.class);
+  bind(new TypeLiteral<Function<VirtualGuest,NodeMetadata>>(){
+  }
+).to(VirtualGuestToNodeMetadata.class);
+  bind(new TypeLiteral<Function<ProductItemPrice,org.jclouds.compute.domain.Image>>(){
+  }
+).to(ProductItemPriceToImage.class);
+  bind(new TypeLiteral<Function<Set<ProductItemPrice>,org.jclouds.compute.domain.Hardware>>(){
+  }
+).to(ProductItemPricesToHardware.class);
+  bind(new TypeLiteral<Function<Datacenter,Location>>(){
+  }
+).to(DatacenterToLocation.class);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(OnlyLocationOrFirstZone.class);
+}
