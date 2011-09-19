@@ -1,0 +1,23 @@
+{
+  String instanceName=vmName + "_" + i;
+  IMachine adminNode=manager.getVBox().findMachine(adminNodeName);
+  IMachine clonedVM=manager.getVBox().createMachine(settingsFile,instanceName,osTypeId,vmId,forceOverwrite);
+  List<CloneOptions> options=new ArrayList<CloneOptions>();
+  options.add(CloneOptions.Link);
+  IProgress progress=adminNode.getCurrentSnapshot().getMachine().cloneTo(clonedVM,CloneMode.MachineState,options);
+  if (progress.getCompleted())   logger().debug("clone done");
+  manager.getVBox().registerMachine(clonedVM);
+  System.out.println("\nLaunching VM named " + clonedVM.getName() + " ...");
+  launchVMProcess(clonedVM,manager.getSessionObject());
+  String ipAddress=null;
+  while (ipAddress == null || ipAddress.equals("")) {
+    try {
+      ipAddress=clonedVM.getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
+      Thread.sleep(1000);
+    }
+ catch (    InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+  logger().debug(ipAddress + " is the IP address of " + clonedVM.getName());
+}

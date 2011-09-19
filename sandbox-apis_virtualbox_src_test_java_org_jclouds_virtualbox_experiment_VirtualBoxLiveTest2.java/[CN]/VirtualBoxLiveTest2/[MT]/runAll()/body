@@ -1,0 +1,34 @@
+{
+  context=TestUtils.computeServiceForLocalhost();
+  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),130,10,TimeUnit.SECONDS);
+  setupCredentials();
+  setupConfigurationProperties();
+  manager.connect(endpoint.toASCIIString(),identity,credential);
+  for (int i=1; i < numberOfVirtualMachine + 1; i++) {
+    createAndLaunchVirtualMachine(i);
+  }
+  for (int i=1; i < numberOfVirtualMachine + 1; i++) {
+    String instanceName=vmName + "_" + i;
+    IMachine machine=manager.getVBox().findMachine(instanceName);
+    logMachineStatus(machine);
+    try {
+      ISession machineSession=manager.openMachineSession(machine);
+      IProgress progress=machineSession.getConsole().powerDown();
+      progress.waitForCompletion(-1);
+      machineSession.unlockMachine();
+      while (!machine.getSessionState().equals(SessionState.Unlocked)) {
+        try {
+          logger().debug("Waiting for unlocking session - session state: " + machine.getSessionState());
+          Thread.sleep(1000);
+        }
+ catch (        InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      logMachineStatus(machine);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+  }
+}

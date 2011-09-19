@@ -1,0 +1,10 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<VirtualBox,IMachine,VMSpec,Image,Host>("virtualbox",endpoint,apiversion,"",identity,credential,VirtualBox.class,VirtualBoxContextBuilder.class,ImmutableSet.<Module>of()));
+    context.getComputeService().listNodes();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}
