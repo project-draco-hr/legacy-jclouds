@@ -1,3 +1,4 @@
 {
-  SyncProxy.proxy(SyncWrongException.class,new SyncProxy(SyncWrongException.class,new Async(),new ConcurrentHashMap<ClassMethodArgs,Object>(),ImmutableMap.<Class<?>,Class<?>>of()));
+  Cache<ClassMethodArgs,Object> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.<Object>constant(null)));
+  SyncProxy.proxy(SyncWrongException.class,new SyncProxy(SyncWrongException.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of()));
 }

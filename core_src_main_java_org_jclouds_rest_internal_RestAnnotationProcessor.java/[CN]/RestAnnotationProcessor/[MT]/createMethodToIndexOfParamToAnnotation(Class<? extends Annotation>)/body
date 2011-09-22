@@ -1,7 +1,7 @@
 {
-  return new MapMaker().makeComputingMap(new Function<Method,Map<Integer,Set<Annotation>>>(){
-    public Map<Integer,Set<Annotation>> apply(    Method method){
-      return new MapMaker().makeComputingMap(new GetAnnotationsForMethodParameterIndex(method,annotation));
+  return CacheBuilder.newBuilder().build(new CacheLoader<Method,Cache<Integer,Set<Annotation>>>(){
+    public Cache<Integer,Set<Annotation>> load(    Method method){
+      return CacheBuilder.newBuilder().build(CacheLoader.from(new GetAnnotationsForMethodParameterIndex(method,annotation)));
     }
   }
 );

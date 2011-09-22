@@ -7,9 +7,10 @@
   KeyPair keyPair=createMock(KeyPair.class);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.getOverridingCredentials()).andReturn(new Credentials(null,"MyRsa")).atLeastOnce();
-  expect(strategy.credentialsMap.put(new RegionAndName(region,userSuppliedKeyPair),KeyPair.builder().region(region).keyName(userSuppliedKeyPair).keyFingerprint("//TODO").keyMaterial("MyRsa").build())).andReturn(null);
+  expect(strategy.knownKeys.put(new RegionAndName(region,tag),KeyPair.builder().region(region).keyName(userSuppliedKeyPair).keyFingerprint("//TODO").keyMaterial("MyRsa").build())).andReturn(null);
+  strategy.credentialsMap.invalidate(new RegionAndName(region,tag));
   expect(options.getRunScript()).andReturn(Statements.exec("echo foo"));
-  expect(strategy.credentialsMap.containsKey(new RegionAndName(region,userSuppliedKeyPair))).andReturn(true);
+  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,userSuppliedKeyPair))).andReturn(keyPair);
   replay(options);
   replay(keyPair);
   replayStrategy(strategy);

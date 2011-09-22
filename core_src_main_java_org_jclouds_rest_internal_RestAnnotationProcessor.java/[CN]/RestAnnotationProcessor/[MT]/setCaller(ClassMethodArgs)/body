@@ -1,9 +1,17 @@
 {
-  seedAnnotationCache.get(caller.getMethod().getDeclaringClass());
+  try {
+    seedAnnotationCache.get(caller.getMethod().getDeclaringClass());
+  }
+ catch (  ExecutionException e) {
+    Throwables.propagate(e);
+  }
   this.caller=caller;
   try {
     callerEndpoint=getEndpointFor(caller.getMethod(),caller.getArgs(),injector);
   }
  catch (  IllegalStateException e) {
+  }
+catch (  ExecutionException e) {
+    Throwables.propagate(e);
   }
 }

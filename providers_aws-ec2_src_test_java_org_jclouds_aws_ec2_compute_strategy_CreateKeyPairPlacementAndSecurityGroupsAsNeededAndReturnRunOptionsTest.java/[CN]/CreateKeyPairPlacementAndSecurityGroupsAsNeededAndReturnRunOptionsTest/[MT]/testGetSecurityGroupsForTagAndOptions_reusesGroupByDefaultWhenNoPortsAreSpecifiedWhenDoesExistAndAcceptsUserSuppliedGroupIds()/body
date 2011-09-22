@@ -12,7 +12,7 @@
   expect(options.getGroupIds()).andReturn(ImmutableSet.<String>of("group1","group2"));
   expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
   RegionNameAndIngressRules regionNameAndIngressRules=new RegionNameAndIngressRules(region,generatedMarkerGroup,ports,shouldAuthorizeSelf);
-  expect(strategy.securityGroupMap.containsKey(regionNameAndIngressRules)).andReturn(groupExisted);
+  expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(groupExisted ? "tag" : null);
   replay(options);
   replayStrategy(strategy);
   assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,group,options),returnVal);

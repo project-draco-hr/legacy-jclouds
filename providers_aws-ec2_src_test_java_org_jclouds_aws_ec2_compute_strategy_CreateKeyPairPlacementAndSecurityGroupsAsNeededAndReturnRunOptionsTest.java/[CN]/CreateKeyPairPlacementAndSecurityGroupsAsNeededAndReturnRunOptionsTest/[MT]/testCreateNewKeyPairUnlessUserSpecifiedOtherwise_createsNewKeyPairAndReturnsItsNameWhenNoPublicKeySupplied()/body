@@ -7,15 +7,13 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
+  expect(strategy.knownKeys.get(new RegionAndName(region,"jclouds#" + group))).andReturn(null);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
-  expect(strategy.credentialsMap.get(new RegionAndName(region,"jclouds#" + group))).andReturn(null);
+  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,group))).andReturn(keyPair);
   expect(options.getPublicKey()).andReturn(null).times(2);
-  expect(strategy.createUniqueKeyPair.apply(new RegionAndName(region,group))).andReturn(keyPair);
-  expect(keyPair.getRegion()).andReturn(region).atLeastOnce();
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
   expect(options.getRunScript()).andReturn(null);
-  expect(strategy.credentialsMap.put(new RegionAndName(region,systemGeneratedKeyPairName),keyPair)).andReturn(null);
   replay(options);
   replay(keyPair);
   replayStrategy(strategy);

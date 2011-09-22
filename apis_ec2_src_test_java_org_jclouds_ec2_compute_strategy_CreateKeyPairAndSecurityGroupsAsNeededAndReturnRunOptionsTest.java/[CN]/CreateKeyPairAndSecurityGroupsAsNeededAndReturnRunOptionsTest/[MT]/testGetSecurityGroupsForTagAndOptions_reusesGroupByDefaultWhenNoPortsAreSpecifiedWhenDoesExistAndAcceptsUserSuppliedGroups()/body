@@ -11,7 +11,7 @@
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   expect(options.getGroups()).andReturn(groupIds).atLeastOnce();
   RegionNameAndIngressRules regionNameAndIngressRules=new RegionNameAndIngressRules(region,generatedMarkerGroup,ports,shouldAuthorizeSelf);
-  expect(strategy.securityGroupMap.containsKey(regionNameAndIngressRules)).andReturn(groupExisted);
+  expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(groupExisted ? "tag" : null);
   replay(options);
   replayStrategy(strategy);
   assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,tag,options),returnVal);
