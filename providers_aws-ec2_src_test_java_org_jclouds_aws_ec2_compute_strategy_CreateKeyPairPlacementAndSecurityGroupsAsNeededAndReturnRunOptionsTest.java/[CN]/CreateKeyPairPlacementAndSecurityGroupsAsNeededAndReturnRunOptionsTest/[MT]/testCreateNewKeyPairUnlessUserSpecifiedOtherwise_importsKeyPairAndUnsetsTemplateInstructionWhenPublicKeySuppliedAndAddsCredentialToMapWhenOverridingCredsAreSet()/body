@@ -1,21 +1,17 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String group="group";
-  String userSuppliedKeyPair=null;
-  boolean shouldAutomaticallyCreateKeyPair=true;
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   KeyPair keyPair=new KeyPair(region,"jclouds#" + group,"fingerprint",null);
-  expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-  expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
-  expect(strategy.credentialsMap.get(new RegionAndName(region,"jclouds#" + group))).andReturn(null);
+  expect(strategy.knownKeys.get(new RegionAndName(region,group))).andReturn(null);
   expect(options.getPublicKey()).andReturn("ssh-rsa").times(2);
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,"ssh-rsa"))).andReturn(keyPair);
-  expect(options.dontAuthorizePublicKey()).andReturn(options);
   expect(options.getOverridingCredentials()).andReturn(new Credentials("foo","bar")).times(3);
-  expect(options.getRunScript()).andReturn(null).times(2);
+  expect(options.getRunScript()).andReturn(null);
   expect(options.getPrivateKey()).andReturn(null);
-  expect(strategy.credentialsMap.put(new RegionAndName(region,"jclouds#" + group),keyPair.toBuilder().keyMaterial("bar").build())).andReturn(null);
+  expect(options.dontAuthorizePublicKey()).andReturn(options);
+  expect(strategy.knownKeys.put(new RegionAndName(region,group),keyPair.toBuilder().keyMaterial("bar").build())).andReturn(null);
   replay(options);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options),"jclouds#" + group);

@@ -1,11 +1,21 @@
 {
   Iterable<DriveInfo> drives=transformParallel(client.listStandardDrives(),new Function<String,Future<DriveInfo>>(){
     @Override public Future<DriveInfo> apply(    String input){
-      return aclient.getDriveInfo(input);
+      try {
+        return Futures.immediateFuture(cache.getUnchecked(input));
+      }
+ catch (      NullPointerException e) {
+        logger.debug("drive %s not found",input);
+      }
+catch (      UncheckedExecutionException e) {
+        logger.warn(e,"error finding drive %s: %s",input,e.getMessage());
+      }
+      return Futures.immediateFuture(null);
+    }
+    @Override public String toString(){
+      return "seedDriveCache()";
     }
   }
 ,executor,null,logger,"drives");
-  Iterable<DriveInfo> returnVal=filter(drives,PREINSTALLED_DISK);
-  for (  DriveInfo drive : returnVal)   cache.put(drive.getUuid(),drive);
-  return returnVal;
+  return filter(drives,PREINSTALLED_DISK);
 }

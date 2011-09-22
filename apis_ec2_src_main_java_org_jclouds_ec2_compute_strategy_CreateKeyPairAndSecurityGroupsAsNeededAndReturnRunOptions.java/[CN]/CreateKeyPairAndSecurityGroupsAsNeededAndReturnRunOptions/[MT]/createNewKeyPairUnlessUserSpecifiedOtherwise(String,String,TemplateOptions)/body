@@ -11,12 +11,23 @@
  else   if (keyPairName != null) {
     if (options.getOverridingCredentials() != null && options.getOverridingCredentials().credential != null) {
       KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).keyFingerprint("//TODO").keyMaterial(options.getOverridingCredentials().credential).build();
-      putKeyPairIntoCredentialMap(keyPair);
+      RegionAndName key=new RegionAndName(region,keyPairName);
+      knownKeys.put(key,keyPair);
+      credentialsMap.invalidate(key);
     }
   }
   if (options.getRunScript() != null) {
     RegionAndName regionAndName=new RegionAndName(region,keyPairName);
-    checkState(credentialsMap.containsKey(regionAndName),"no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
+    String message=String.format("no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
+    try {
+      credentialsMap.getUnchecked(regionAndName);
+    }
+ catch (    NullPointerException nex) {
+      throw new IllegalArgumentException(message,nex);
+    }
+catch (    UncheckedExecutionException nex) {
+      throw new IllegalArgumentException(message,nex);
+    }
   }
   return keyPairName;
 }

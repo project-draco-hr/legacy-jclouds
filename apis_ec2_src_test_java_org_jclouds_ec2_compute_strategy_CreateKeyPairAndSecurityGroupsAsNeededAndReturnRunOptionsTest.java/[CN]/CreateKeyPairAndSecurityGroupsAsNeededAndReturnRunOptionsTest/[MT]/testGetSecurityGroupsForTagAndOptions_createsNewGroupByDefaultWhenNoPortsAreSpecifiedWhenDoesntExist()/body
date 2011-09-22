@@ -5,16 +5,13 @@
   Set<String> groupIds=ImmutableSet.<String>of();
   int[] ports=new int[]{};
   boolean shouldAuthorizeSelf=true;
-  boolean groupExisted=false;
   Set<String> returnVal=ImmutableSet.<String>of(generatedMarkerGroup);
   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   expect(options.getGroups()).andReturn(groupIds).atLeastOnce();
   expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
   RegionNameAndIngressRules regionNameAndIngressRules=new RegionNameAndIngressRules(region,generatedMarkerGroup,ports,shouldAuthorizeSelf);
-  expect(strategy.securityGroupMap.containsKey(regionNameAndIngressRules)).andReturn(groupExisted);
-  expect(strategy.createSecurityGroupIfNeeded.apply(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
-  expect(strategy.securityGroupMap.put(regionNameAndIngressRules,generatedMarkerGroup)).andReturn(null);
+  expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(tag);
   replay(options);
   replayStrategy(strategy);
   assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,tag,options),returnVal);

@@ -1,0 +1,40 @@
+{
+  Cache<String,String> cache=CacheBuilder.newBuilder().build(new CacheLoader<String,String>(){
+    @Override public String load(    String key) throws Exception {
+      if (key.equals("runtimeexception"))       throw new RuntimeException("runtimeexception");
+      if (key.equals("exception"))       throw new Exception("exception");
+      return key.equals("foo") ? null : key;
+    }
+    @Override public String toString(){
+      return "testLoader";
+    }
+  }
+);
+  try {
+    cache.get("foo");
+  }
+ catch (  NullPointerException e) {
+    assertEquals(e.getMessage(),"testLoader returned null for key foo.");
+  }
+  try {
+    cache.get("exception");
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.Exception: exception");
+  }
+  try {
+    cache.get("runtimeexception");
+  }
+ catch (  UncheckedExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.RuntimeException: runtimeexception");
+  }
+  try {
+    cache.getUnchecked("exception");
+  }
+ catch (  UncheckedExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.Exception: exception");
+  }
+  assertEquals(cache.get("bar"),"bar");
+  assertEquals(cache.get("baz"),"baz");
+  assertEquals(cache.asMap().size(),2);
+}

@@ -1,8 +1,14 @@
 {
   Map<InstanceState,NodeState> instanceToNodeState=EC2ComputeServiceDependenciesModule.instanceToNodeState;
-  Map<RegionAndName,Image> instanceToImage=Maps.uniqueIndex(images,new Function<Image,RegionAndName>(){
+  final ImmutableMap<RegionAndName,Image> backing=Maps.uniqueIndex(images,new Function<Image,RegionAndName>(){
     @Override public RegionAndName apply(    Image from){
       return new RegionAndName(from.getLocation().getId(),from.getProviderId());
+    }
+  }
+);
+  Cache<RegionAndName,Image> instanceToImage=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
+    @Override public Image load(    RegionAndName key) throws Exception {
+      return backing.get(key);
     }
   }
 );

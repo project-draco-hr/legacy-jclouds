@@ -8,9 +8,7 @@
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   expect(options.getPlacementGroup()).andReturn(userSuppliedPlacementGroup);
   expect(options.shouldAutomaticallyCreatePlacementGroup()).andReturn(shouldAutomaticallyCreatePlacementGroup);
-  expect(strategy.placementGroupMap.containsKey(new RegionAndName(region,generatedMarkerGroup))).andReturn(false);
-  expect(strategy.createPlacementGroupIfNeeded.apply(new RegionAndName(region,generatedMarkerGroup))).andReturn(generatedMarkerGroup);
-  expect(strategy.placementGroupMap.put(new RegionAndName(region,generatedMarkerGroup),generatedMarkerGroup)).andReturn(null);
+  expect(strategy.placementGroupMap.getUnchecked(new RegionAndName(region,generatedMarkerGroup))).andReturn(generatedMarkerGroup);
   replay(options);
   replayStrategy(strategy);
   assertEquals(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,group,options),generatedMarkerGroup);

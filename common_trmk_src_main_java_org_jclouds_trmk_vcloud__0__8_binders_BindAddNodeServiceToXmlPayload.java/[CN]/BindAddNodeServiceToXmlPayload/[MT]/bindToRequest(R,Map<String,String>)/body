@@ -5,6 +5,11 @@
   String enabled=checkNotNull(postParams.get("enabled"),"enabled parameter not present");
   String description=postParams.get("description");
   String payload=Strings2.replaceTokens(xmlTemplate,ImmutableMap.of("name",name,"ipAddress",ipAddress,"port",port,"enabled",enabled,"ns",ns));
-  payload=Strings2.replaceAll(payload,Patterns.TOKEN_TO_PATTERN.get("description"),description == null ? "" : String.format("\n    <Description>%s</Description>",description));
+  try {
+    payload=Strings2.replaceAll(payload,Patterns.TOKEN_TO_PATTERN.get("description"),description == null ? "" : String.format("\n    <Description>%s</Description>",description));
+  }
+ catch (  ExecutionException e) {
+    Throwables.propagate(e);
+  }
   return stringBinder.bindToRequest(request,payload);
 }

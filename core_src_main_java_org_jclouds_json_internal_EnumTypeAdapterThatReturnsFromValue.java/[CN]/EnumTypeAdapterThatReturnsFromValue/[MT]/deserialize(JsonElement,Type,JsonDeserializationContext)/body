@@ -3,13 +3,12 @@
     return (T)Enum.valueOf((Class<T>)classOfT,json.getAsString());
   }
  catch (  IllegalArgumentException e) {
-    Method converter=classToConvert.get(classOfT);
-    if (converter != null)     try {
+    try {
+      Method converter=classToConvert.get((Class<?>)classOfT);
       return (T)converter.invoke(null,json.getAsString());
     }
  catch (    Exception e1) {
       throw e;
     }
- else     throw e;
   }
 }
