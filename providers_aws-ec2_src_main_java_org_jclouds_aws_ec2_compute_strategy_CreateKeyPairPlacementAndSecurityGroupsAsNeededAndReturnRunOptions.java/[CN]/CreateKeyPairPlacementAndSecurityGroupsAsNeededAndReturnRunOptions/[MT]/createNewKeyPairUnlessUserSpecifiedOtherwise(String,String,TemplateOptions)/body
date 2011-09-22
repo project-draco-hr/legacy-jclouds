@@ -1,5 +1,5 @@
 {
-  RegionAndName key=new RegionAndName(region,"jclouds#" + group);
+  RegionAndName key=new RegionAndName(region,group);
   KeyPair pair=knownKeys.get(key);
   if (pair != null)   return pair.getKeyName();
   if (and(hasPublicKeyMaterial,or(doesntNeedSshAfterImportingPublicKey,hasLoginCredential)).apply(options)) {
@@ -12,7 +12,7 @@
     if (hasPublicKeyMaterial.apply(options)) {
       logger.warn("to avoid creating temporary keys in aws-ec2, use templateOption overrideLoginCredentialWith(id_rsa)");
     }
-    return super.createOrImportKeyPair(region,group,options);
+    return super.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options);
   }
   return pair.getKeyName();
 }
