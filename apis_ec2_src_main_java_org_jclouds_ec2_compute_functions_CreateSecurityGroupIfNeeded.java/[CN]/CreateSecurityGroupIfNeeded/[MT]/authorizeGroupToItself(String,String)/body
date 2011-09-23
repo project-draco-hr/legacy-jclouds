@@ -1,6 +1,6 @@
 {
   logger.debug(">> authorizing securityGroup region(%s) name(%s) permission to itself",region,name);
-  String myOwnerId=Iterables.get(ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,name),0).getOwnerId();
-  ec2Client.getSecurityGroupServices().authorizeSecurityGroupIngressInRegion(region,name,new UserIdGroupPair(myOwnerId,name));
+  String myOwnerId=Iterables.get(securityClient.describeSecurityGroupsInRegion(region,name),0).getOwnerId();
+  securityClient.authorizeSecurityGroupIngressInRegion(region,name,new UserIdGroupPair(myOwnerId,name));
   logger.debug("<< authorized securityGroup(%s)",name);
 }
