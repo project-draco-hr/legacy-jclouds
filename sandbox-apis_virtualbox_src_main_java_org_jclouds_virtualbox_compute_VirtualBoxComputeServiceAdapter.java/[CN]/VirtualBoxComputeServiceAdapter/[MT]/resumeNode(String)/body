@@ -1,2 +1,12 @@
 {
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  ISession machineSession;
+  try {
+    machineSession=manager.openMachineSession(machine);
+    machineSession.getConsole().resume();
+    machineSession.unlockMachine();
+  }
+ catch (  Exception e) {
+    propogate(e);
+  }
 }
