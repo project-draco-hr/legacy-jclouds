@@ -1,0 +1,9 @@
+{
+  Map<String,Node> map=Maps.newConcurrentMap();
+  Injector injector=createInjectorWithProvidedMap(map);
+  assertEquals(injector.getInstance(Key.get(new TypeLiteral<Cache<String,Node>>(){
+  }
+)).asMap(),map);
+  Cache<String,Node> store=getStore(injector);
+  for (int i=0; i < 10; i++)   check(map,store,"test" + i,"instance1" + i,"instancename" + i);
+}
