@@ -9,7 +9,7 @@
   configureJettyServer();
   VirtualBoxManager manager=VirtualBoxManager.createInstance("mach");
   manager.connect(endpoint.toASCIIString(),identity,credential);
-  IMachine newVM=manager.getVBox().createMachine(settingsFile,vmName,osTypeId,vmId,forceOverwrite);
+  IMachine newVM=manager.getVBox().createMachine(settingsFile,vmName,osTypeId,"host",forceOverwrite);
   manager.getVBox().registerMachine(newVM);
   Long memorySize=new Long(1024);
   ISession session=manager.getSessionObject();
@@ -88,13 +88,11 @@
   logMachineStatus(machine);
   logger().debug("Configuring guest additions...");
   if (isUbuntu(guestId)) {
-    runScriptOnNode(guestId,"m-a prepare -i",wrapInInitScript(true));
-    runScriptOnNode(guestId,"mount -o loop /dev/dvd /media/cdrom");
-    runScriptOnNode(guestId,"sh /media/cdrom/VBoxLinuxAdditions.run");
     runScriptOnNode(guestId,"rm /etc/udev/rules.d/70-persistent-net.rules");
     runScriptOnNode(guestId,"mkdir /etc/udev/rules.d/70-persistent-net.rules");
     runScriptOnNode(guestId,"rm -rf /dev/.udev/");
     runScriptOnNode(guestId,"rm /lib/udev/rules.d/75-persistent-net-generator.rules");
+    runScriptOnNode(guestId,"echo 0 | tee /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts");
   }
   logMachineStatus(machine);
   logger().debug("Powering down...");

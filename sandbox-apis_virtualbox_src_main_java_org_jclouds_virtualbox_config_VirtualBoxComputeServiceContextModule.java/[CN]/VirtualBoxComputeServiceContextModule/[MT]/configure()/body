@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,VMSpec,Image,Host>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,IMachine,IMachine,Host>>(){
   }
 ).to(VirtualBoxComputeServiceAdapter.class);
   bind(new TypeLiteral<Function<IMachine,NodeMetadata>>(){
@@ -9,12 +9,12 @@
   bind(new TypeLiteral<Function<Host,Location>>(){
   }
 ).to(HostToLocation.class);
-  bind(new TypeLiteral<Function<VMSpec,org.jclouds.compute.domain.Hardware>>(){
+  bind(new TypeLiteral<Function<IMachine,Hardware>>(){
   }
-).to(VMSpecToHardware.class);
-  bind(new TypeLiteral<Function<Image,org.jclouds.compute.domain.Image>>(){
+).to(IMachineToHardware.class);
+  bind(new TypeLiteral<Function<IMachine,Image>>(){
   }
-).to(ImageToImage.class);
+).to(IMachineToImage.class);
   bind(new TypeLiteral<Supplier<Location>>(){
   }
 ).to(OnlyLocationOrFirstZone.class);

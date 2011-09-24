@@ -1,0 +1,25 @@
+{
+  final File file=new File(workingDir,isoFile);
+  if (!file.exists()) {
+    final InputStream inputStream=context.utils().http().get(input);
+    checkNotNull(inputStream,"%s not found",input);
+    try {
+      copy(inputStream,new FileOutputStream(file));
+      return file;
+    }
+ catch (    FileNotFoundException e) {
+      logger.error(e,"File %s could not be found",file);
+    }
+catch (    IOException e) {
+      logger.error(e,"Error when downloading file %s",input);
+    }
+ finally {
+      closeQuietly(inputStream);
+    }
+    return null;
+  }
+ else {
+    logger.debug("File %s already exists. Skipping download",file);
+    return file;
+  }
+}
