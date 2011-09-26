@@ -1,0 +1,16 @@
+{
+  return new Function<ProductItem,String>(){
+    @Override public String apply(    ProductItem productItem){
+      final String description=productItem.getDescription();
+      OsFamily family=osFamily().apply(productItem);
+      if (family.equals(OsFamily.CENTOS))       return parseVersion(description,CENTOS);
+ else       if (family.equals(OsFamily.DEBIAN))       return parseVersion(description,DEBIAN);
+ else       if (family.equals(OsFamily.FEDORA))       return parseVersion(description,FEDORA);
+ else       if (family.equals(OsFamily.RHEL))       return parseVersion(description,RHEL);
+ else       if (family.equals(OsFamily.UBUNTU))       return parseVersion(description,UBUNTU);
+ else       if (family.equals(OsFamily.WINDOWS))       return parseVersion(description,WINDOWS);
+ else       throw new NoSuchElementException("No os parseVersion for item:" + productItem);
+    }
+  }
+;
+}

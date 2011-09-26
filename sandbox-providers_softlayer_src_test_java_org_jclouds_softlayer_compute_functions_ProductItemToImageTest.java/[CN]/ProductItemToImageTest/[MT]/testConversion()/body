@@ -1,0 +1,11 @@
+{
+  for (  String description : operatingSystems) {
+    ProductItem item=ProductItem.builder().description(description).build();
+    Image i=new ProductItemToImage().apply(item);
+    OperatingSystem os=i.getOperatingSystem();
+    assertNotNull(os);
+    assertNotNull(os.getFamily());
+    assertFalse(os.getFamily().equals(OsFamily.UNRECOGNIZED));
+    assertNotNull(os.getVersion());
+  }
+}
