@@ -4,11 +4,14 @@
   IMachine vm=createNiceMock(IMachine.class);
   IGuestOSType guestOsType=createNiceMock(IGuestOSType.class);
   expect(vbm.getVBox()).andReturn(vBox).anyTimes();
-  String linuxDescription="SomeOtherOs 2.04";
+  String unknownOsDescription="SomeOtherOs 2.04";
   expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
-  expect(vm.getDescription()).andReturn(linuxDescription).anyTimes();
-  expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
+  expect(vm.getDescription()).andReturn("my-unknown-machine").anyTimes();
+  expect(guestOsType.getDescription()).andReturn(unknownOsDescription).anyTimes();
   expect(guestOsType.getIs64Bit()).andReturn(true);
+  expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
   replay(vbm,vBox,vm,guestOsType);
-  new IMachineToImage(vbm).apply(vm);
+  Image image=new IMachineToImage(vbm).apply(vm);
+  assertEquals(image.getOperatingSystem().getDescription(),"SomeOtherOs 2.04");
+  assertEquals(image.getOperatingSystem().getVersion(),"");
 }
