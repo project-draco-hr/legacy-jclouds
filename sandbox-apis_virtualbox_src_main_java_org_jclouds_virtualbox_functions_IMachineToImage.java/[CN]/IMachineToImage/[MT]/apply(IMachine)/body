@@ -1,5 +1,6 @@
 {
-  ImageBuilder imageBuilder=new ImageBuilder();
-  imageBuilder.ids(vm.getId());
-  return null;
+  Boolean is64Bit=virtualboxManager.getVBox().getGuestOSType(from.getOSTypeId()).getIs64Bit();
+  OsFamily family=osFamily().apply(from);
+  OperatingSystem os=OperatingSystem.builder().description(from.getDescription()).family(family).version(osVersion().apply(from)).is64Bit(is64Bit).build();
+  return new ImageBuilder().id("" + from.getId()).description(from.getDescription()).operatingSystem(os).build();
 }
