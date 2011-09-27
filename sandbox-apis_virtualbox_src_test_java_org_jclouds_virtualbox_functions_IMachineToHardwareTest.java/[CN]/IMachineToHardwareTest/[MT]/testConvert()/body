@@ -1,0 +1,18 @@
+{
+  VirtualBoxManager vbm=createNiceMock(VirtualBoxManager.class);
+  IVirtualBox vBox=createNiceMock(IVirtualBox.class);
+  IMachine vm=createNiceMock(IMachine.class);
+  IGuestOSType guestOsType=createNiceMock(IGuestOSType.class);
+  String linuxDescription="Ubuntu Linux 10.04";
+  String machineId="hw-machineId";
+  expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
+  expect(vm.getDescription()).andReturn(linuxDescription).anyTimes();
+  expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
+  expect(vbm.getVBox()).andReturn(vBox);
+  expect(guestOsType.getIs64Bit()).andReturn(true);
+  expect(vm.getId()).andReturn(machineId);
+  replay(vbm,vBox,vm,guestOsType);
+  Hardware hardware=new IMachineToHardware(vbm).apply(vm);
+  assertEquals(hardware.getId(),machineId);
+  assertEquals(hardware.getProviderId(),machineId);
+}
