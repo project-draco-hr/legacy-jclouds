@@ -1,0 +1,10 @@
+{
+  ProductItem coresItem=getOnlyElement(filter(items,units("PRIVATE_CORE")));
+  ProductItem ramItem=getOnlyElement(filter(items,categoryCode("ram")));
+  ProductItem volumeItem=getOnlyElement(filter(items,matches(SoftLayerComputeServiceAdapter.SAN_DESCRIPTION_REGEX)));
+  final String hardwareId=hardwareId().apply(ImmutableList.of(coresItem,ramItem,volumeItem));
+  final double cores=ProductItems.capacity().apply(coresItem).doubleValue();
+  final int ram=ProductItems.capacity().apply(ramItem).intValue();
+  final float volumeSize=ProductItems.capacity().apply(volumeItem);
+  return new HardwareBuilder().id(hardwareId).processors(ImmutableList.of(new Processor(cores,CORE_SPEED))).ram(ram).volumes(ImmutableList.<Volume>of(new VolumeImpl(volumeSize,true,false))).build();
+}

@@ -1,0 +1,7 @@
+{
+  checkNotNull(productItem,"productItem");
+  OsFamily family=osFamily().apply(productItem);
+  Integer bits=osBits().apply(productItem);
+  OperatingSystem os=OperatingSystem.builder().description(productItem.getDescription()).family(family).version(osVersion().apply(productItem)).is64Bit(bits.equals(64)).build();
+  return new ImageBuilder().id(imageId().apply(productItem)).description(productItem.getDescription()).operatingSystem(os).build();
+}

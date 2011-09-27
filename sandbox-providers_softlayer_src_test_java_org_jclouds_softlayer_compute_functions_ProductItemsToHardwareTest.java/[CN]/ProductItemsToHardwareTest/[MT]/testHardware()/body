@@ -1,0 +1,14 @@
+{
+  ProductItem cpuItem=ProductItem.builder().id(1).description("2 cores").units("PRIVATE_CORE").capacity(2F).price(ProductItemPrice.builder().id(123).build()).build();
+  ProductItem ramItem=ProductItem.builder().id(2).description("2GB ram").capacity(2F).category(ProductItemCategory.builder().categoryCode("ram").build()).price(ProductItemPrice.builder().id(456).build()).build();
+  ProductItem volumeItem=ProductItem.builder().id(3).description("100 GB (SAN)").capacity(100F).price(ProductItemPrice.builder().id(789).build()).build();
+  Hardware hardware=new ProductItemsToHardware().apply(ImmutableSet.of(cpuItem,ramItem,volumeItem));
+  assertEquals("123,456,789",hardware.getId());
+  List<? extends Processor> processors=hardware.getProcessors();
+  assertEquals(1,processors.size());
+  assertEquals(2.0,processors.get(0).getCores());
+  assertEquals(2,hardware.getRam());
+  List<? extends Volume> volumes=hardware.getVolumes();
+  assertEquals(1,volumes.size());
+  assertEquals(100F,volumes.get(0).getSize());
+}
