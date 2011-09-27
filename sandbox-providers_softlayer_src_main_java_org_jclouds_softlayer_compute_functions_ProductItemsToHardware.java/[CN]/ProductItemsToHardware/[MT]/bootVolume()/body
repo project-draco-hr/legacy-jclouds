@@ -1,0 +1,14 @@
+{
+  return new Function<Set<ProductItem>,ProductItem>(){
+    @Override public ProductItem apply(    Set<ProductItem> productItems){
+      for (      ProductItem item : productItems) {
+        String description=item.getDescription();
+        if (SAN_REGEX.matcher(description).matches()) {
+          return item;
+        }
+      }
+      throw new NoSuchElementException("cannot find suitable boot volume item");
+    }
+  }
+;
+}
