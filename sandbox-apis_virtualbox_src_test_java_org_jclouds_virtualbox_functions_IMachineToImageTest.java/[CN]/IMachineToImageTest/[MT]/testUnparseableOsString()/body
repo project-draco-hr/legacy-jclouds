@@ -1,0 +1,14 @@
+{
+  VirtualBoxManager vbm=createNiceMock(VirtualBoxManager.class);
+  IVirtualBox vBox=createNiceMock(IVirtualBox.class);
+  IMachine vm=createNiceMock(IMachine.class);
+  IGuestOSType guestOsType=createNiceMock(IGuestOSType.class);
+  expect(vbm.getVBox()).andReturn(vBox).anyTimes();
+  String linuxDescription="SomeOtherOs 2.04";
+  expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
+  expect(vm.getDescription()).andReturn(linuxDescription).anyTimes();
+  expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
+  expect(guestOsType.getIs64Bit()).andReturn(true);
+  replay(vbm,vBox,vm,guestOsType);
+  new IMachineToImage(vbm).apply(vm);
+}
