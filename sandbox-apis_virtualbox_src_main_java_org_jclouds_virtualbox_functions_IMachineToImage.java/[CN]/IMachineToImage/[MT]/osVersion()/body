@@ -1,0 +1,11 @@
+{
+  return new Function<IMachine,String>(){
+    @Override public String apply(    IMachine iMachine){
+      final String description=iMachine.getDescription();
+      OsFamily family=osFamily().apply(iMachine);
+      if (family.equals(OsFamily.UBUNTU))       return parseVersion(description,UBUNTU);
+ else       throw new NoSuchElementException("No os parseVersion for item:" + iMachine);
+    }
+  }
+;
+}
