@@ -1,0 +1,19 @@
+{
+  checkNotNull(allGuests,"allGuests");
+  checkNotNull(hostname,"hostname");
+  checkNotNull(domainName,"domainName");
+  Iterable<VirtualGuest> guests=Iterables.filter(allGuests,new Predicate<VirtualGuest>(){
+    @Override public boolean apply(    VirtualGuest arg0){
+      return hostname.equals(arg0.getHostname()) && domainName.equals(arg0.getDomain());
+    }
+  }
+);
+switch (Iterables.size(guests)) {
+case 0:
+    return null;
+case 1:
+  return Iterables.get(guests,0);
+default :
+throw new IllegalStateException(String.format("expected only 1 virtual guest with hostname %s and domainname %s: %s",hostname,domainName,guests));
+}
+}
