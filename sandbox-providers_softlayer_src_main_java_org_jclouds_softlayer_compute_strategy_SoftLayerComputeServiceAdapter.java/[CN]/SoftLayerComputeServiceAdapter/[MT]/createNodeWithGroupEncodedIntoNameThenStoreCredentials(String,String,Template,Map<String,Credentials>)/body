@@ -2,14 +2,11 @@
   checkNotNull(template,"template was null");
   checkNotNull(template.getOptions(),"template options was null");
   checkArgument(template.getOptions().getClass().isAssignableFrom(SoftLayerTemplateOptions.class),"options class %s should have been assignable from SoftLayerTemplateOptions",template.getOptions().getClass());
-  Iterable<VirtualGuest> existing=findVirtualGuests(name,group);
-  if (!Iterables.isEmpty(existing)) {
-    throw new IllegalStateException("VirtualGuest(s) already exist with hostname:" + name + ", group:"+ group+ ". Existing:"+ existing);
-  }
-  VirtualGuest newGuest=VirtualGuest.builder().domain(template.getOptions().as(SoftLayerTemplateOptions.class).getDomainName()).hostname(name).build();
+  String domainName=template.getOptions().as(SoftLayerTemplateOptions.class).getDomainName();
+  VirtualGuest newGuest=VirtualGuest.builder().domain(domainName).hostname(name).build();
   ProductOrder order=ProductOrder.builder().packageId(getProductPackage().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuest(newGuest).build();
-  client.getVirtualGuestClient().orderVirtualGuest(order);
-  VirtualGuest result=Iterables.getOnlyElement(findVirtualGuests(name,group));
+  ProductOrderReceipt productOrderReceipt=client.getVirtualGuestClient().orderVirtualGuest(order);
+  VirtualGuest result=Iterables.get(productOrderReceipt.getOrderDetails().getVirtualGuests(),0);
   Credentials credentials=new Credentials(null,null);
   OperatingSystem os=result.getOperatingSystem();
   if (os != null) {
