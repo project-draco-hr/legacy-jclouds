@@ -12,7 +12,9 @@
         paramValue=injector.getInstance(extractor.value()).apply(args[entry.getKey()]);
       }
  else {
-        paramValue=args[entry.getKey()].toString();
+        Object pvo=args[entry.getKey()];
+        Preconditions.checkNotNull(pvo,paramKey);
+        paramValue=pvo.toString();
       }
       formParamValues.put(paramKey,paramValue);
     }
