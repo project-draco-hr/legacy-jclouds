@@ -1,0 +1,13 @@
+{
+  sshClient=createMock(SshClient.class);
+  sshFactory=new Function<NodeMetadata,SshClient>(){
+    @Override public SshClient apply(    @Nullable NodeMetadata nodeMetadata){
+      return sshClient;
+    }
+  }
+;
+  node=createMock(NodeMetadata.class);
+  expect(node.getCredentials()).andReturn(new Credentials("tester","notalot"));
+  expect(node.getAdminPassword()).andReturn(null).atLeastOnce();
+  replay(node);
+}
