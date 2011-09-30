@@ -1,0 +1,11 @@
+{
+  RunScriptOnNodeUsingSsh testMe=new RunScriptOnNodeUsingSsh(sshFactory,node,exec("echo $USER\necho $USER"),wrapInInitScript(false).runAsRoot(false));
+  testMe.init();
+  sshClient.connect();
+  expect(sshClient.getUsername()).andReturn("tester");
+  expect(sshClient.getHostAddress()).andReturn("somewhere.example.com");
+  expect(sshClient.exec("echo $USER\n" + "echo $USER\n")).andReturn(new ExecResponse("tester\ntester\n",null,0));
+  sshClient.disconnect();
+  replay(sshClient);
+  testMe.call();
+}
