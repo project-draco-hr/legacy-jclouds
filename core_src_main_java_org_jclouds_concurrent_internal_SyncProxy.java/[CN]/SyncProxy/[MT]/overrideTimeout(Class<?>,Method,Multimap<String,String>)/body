@@ -1,0 +1,22 @@
+{
+  if (constants == null) {
+    return;
+  }
+  final String classTimeouts=PROPERTY_TIMEOUTS_PREFIX + declaring.getSimpleName();
+  String strTimeout=Iterables.getFirst(constants.get(classTimeouts + "." + method.getName()),null);
+  if (strTimeout == null) {
+    strTimeout=Iterables.getFirst(constants.get(classTimeouts),null);
+  }
+  if (strTimeout != null) {
+    long timeout=0l;
+    try {
+      timeout=Long.valueOf(strTimeout);
+    }
+ catch (    final Throwable t) {
+      timeout=0l;
+    }
+    if (timeout > 0l) {
+      timeoutMap.put(method,TimeUnit.NANOSECONDS.convert(timeout,TimeUnit.MILLISECONDS));
+    }
+  }
+}
