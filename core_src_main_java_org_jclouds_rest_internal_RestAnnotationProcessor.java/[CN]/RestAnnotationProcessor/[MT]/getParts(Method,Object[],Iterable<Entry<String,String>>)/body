@@ -7,7 +7,9 @@
       PartOptions options=new PartOptions();
       if (!PartParam.NO_CONTENT_TYPE.equals(param.contentType()))       options.contentType(param.contentType());
       if (!PartParam.NO_FILENAME.equals(param.filename()))       options.filename(Strings2.replaceTokens(param.filename(),iterable));
-      Part part=Part.create(param.name(),newPayload(args[entry.getKey()]),options);
+      Object arg=args[entry.getKey()];
+      Preconditions.checkNotNull(arg,param.name());
+      Part part=Part.create(param.name(),newPayload(arg),options);
       parts.add(part);
     }
   }
