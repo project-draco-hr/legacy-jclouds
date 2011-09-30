@@ -5,11 +5,8 @@
   String domainName=template.getOptions().as(SoftLayerTemplateOptions.class).getDomainName();
   VirtualGuest newGuest=VirtualGuest.builder().domain(domainName).hostname(name).build();
   ProductOrder order=ProductOrder.builder().packageId(getProductPackage().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuest(newGuest).build();
-  client.getVirtualGuestClient().orderVirtualGuest(order);
-  boolean orderInSystem=orderTester.apply(newGuest);
-  checkState(orderInSystem,"order for guest %s didn't complete within %dms",newGuest,guestOrderDelay);
-  Iterable<VirtualGuest> allGuests=client.getVirtualGuestClient().listVirtualGuests();
-  VirtualGuest result=SoftLayerUtils.findVirtualGuest(allGuests,name,domainName);
+  ProductOrderReceipt productOrderReceipt=client.getVirtualGuestClient().orderVirtualGuest(order);
+  VirtualGuest result=Iterables.get(productOrderReceipt.getOrderDetails().getVirtualGuests(),0);
   Credentials credentials=new Credentials(null,null);
   OperatingSystem os=result.getOperatingSystem();
   if (os != null) {
