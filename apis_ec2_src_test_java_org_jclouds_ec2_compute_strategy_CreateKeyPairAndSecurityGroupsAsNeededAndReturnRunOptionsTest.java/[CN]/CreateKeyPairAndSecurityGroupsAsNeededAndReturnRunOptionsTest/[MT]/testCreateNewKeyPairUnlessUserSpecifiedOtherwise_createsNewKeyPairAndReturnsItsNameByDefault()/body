@@ -9,9 +9,9 @@
   KeyPair keyPair=createMock(KeyPair.class);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
-  expect(strategy.createUniqueKeyPair.apply(new RegionAndName(region,tag))).andReturn(keyPair);
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
-  expect(strategy.credentialsMap.put(new RegionAndName(region,systemGeneratedKeyPairName),keyPair)).andReturn(null);
+  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,tag))).andReturn(keyPair);
+  expect(options.getRunScript()).andReturn(null);
   replay(options);
   replay(keyPair);
   replayStrategy(strategy);

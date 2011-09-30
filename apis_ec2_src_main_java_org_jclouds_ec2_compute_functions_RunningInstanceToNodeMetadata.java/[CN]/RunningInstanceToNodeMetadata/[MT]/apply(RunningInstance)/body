@@ -16,10 +16,14 @@
   builder.imageId(instance.getRegion() + "/" + instance.getImageId());
   RegionAndName regionAndName=new RegionAndName(instance.getRegion(),instance.getImageId());
   try {
-    Image image=instanceToImage.get(regionAndName);
+    Image image=imageMap.get().getUnchecked(regionAndName);
     if (image != null)     builder.operatingSystem(image.getOperatingSystem());
   }
  catch (  NullPointerException e) {
+    logger.debug("image not found for %s: %s",regionAndName,e);
+  }
+catch (  UncheckedExecutionException e) {
+    logger.debug("error getting image for %s: %s",regionAndName,e);
   }
   return builder.build();
 }

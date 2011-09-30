@@ -1,0 +1,16 @@
+{
+  Iterable<Price> prices=Iterables.transform(order.getPrices(),new Function<ProductItemPrice,Price>(){
+    @Override public Price apply(    ProductItemPrice productItemPrice){
+      return new Price(productItemPrice.getId());
+    }
+  }
+);
+  Iterable<HostnameAndDomain> hosts=Iterables.transform(order.getVirtualGuests(),new Function<VirtualGuest,HostnameAndDomain>(){
+    @Override public HostnameAndDomain apply(    VirtualGuest virtualGuest){
+      return new HostnameAndDomain(virtualGuest.getHostname(),virtualGuest.getDomain());
+    }
+  }
+);
+  OrderData data=new OrderData(order.getPackageId(),order.getLocation(),Sets.newLinkedHashSet(prices),Sets.newLinkedHashSet(hosts),order.getQuantity(),order.getUseHourlyPricing());
+  return json.toJson(ImmutableMap.of("parameters",ImmutableList.<OrderData>of(data)));
+}

@@ -1,9 +1,25 @@
 {
-  Builder<String,String> map=ImmutableMap.<String,String>builder();
+  Builder<String,String> map=ImmutableMap.builder();
+  HttpResponseException exception=null;
   for (  Entry<String,URI> region : regions.entrySet()) {
-    for (    AvailabilityZoneInfo zoneInfo : client.describeAvailabilityZonesInRegion(region.getKey())) {
-      map.put(zoneInfo.getZone(),region.getKey());
+    try {
+      for (      AvailabilityZoneInfo zoneInfo : client.describeAvailabilityZonesInRegion(region.getKey())) {
+        map.put(zoneInfo.getZone(),region.getKey());
+      }
+    }
+ catch (    HttpResponseException e) {
+      if (e.getMessage().contains("Unable to tunnel through proxy")) {
+        exception=e;
+        logger.error(e,"Could not describe availability zones in Region: %s",region.getKey());
+      }
+ else {
+        throw e;
+      }
     }
   }
-  return map.build();
+  ImmutableMap<String,String> result=map.build();
+  if (result.isEmpty() && exception != null) {
+    throw exception;
+  }
+  return result;
 }

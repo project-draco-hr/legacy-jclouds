@@ -1,15 +1,11 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String group="group";
-  String userSuppliedKeyPair=null;
-  boolean shouldAutomaticallyCreateKeyPair=true;
   String systemGeneratedKeyPairName="systemGeneratedKeyPair";
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
-  expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-  expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
-  expect(strategy.credentialsMap.get(new RegionAndName(region,"jclouds#" + group))).andReturn(keyPair);
+  expect(strategy.knownKeys.get(new RegionAndName(region,group))).andReturn(keyPair);
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
   replay(options);
   replay(keyPair);

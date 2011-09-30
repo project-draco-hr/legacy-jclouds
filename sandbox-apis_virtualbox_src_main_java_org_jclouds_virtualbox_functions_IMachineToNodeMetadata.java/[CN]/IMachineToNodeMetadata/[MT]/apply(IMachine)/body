@@ -1,0 +1,37 @@
+{
+  NodeMetadataBuilder nodeMetadataBuilder=new NodeMetadataBuilder();
+  String s=vm.getName();
+  nodeMetadataBuilder.name(s);
+  LocationBuilder locationBuilder=new LocationBuilder();
+  locationBuilder.description("");
+  locationBuilder.id("");
+  locationBuilder.scope(LocationScope.HOST);
+  nodeMetadataBuilder.location(locationBuilder.build());
+  HardwareBuilder hardwareBuilder=new HardwareBuilder();
+  hardwareBuilder.ram(vm.getMemorySize().intValue());
+  Set<Processor> processors=new HashSet<Processor>();
+  for (int i=0; i < vm.getCPUCount(); i++) {
+    Processor processor=new Processor(1,0);
+    processors.add(processor);
+  }
+  hardwareBuilder.processors(processors);
+  hardwareBuilder.is64Bit(false);
+  nodeMetadataBuilder.hostname(vm.getName());
+  nodeMetadataBuilder.loginPort(18083);
+  MachineState vmState=vm.getState();
+  NodeState nodeState=machineToNodeState.get(vmState);
+  if (nodeState == null)   nodeState=NodeState.UNRECOGNIZED;
+  nodeMetadataBuilder.state(nodeState);
+  logger.debug("Setting virtualbox node to: " + nodeState + " from machine state: "+ vmState);
+  INetworkAdapter networkAdapter=vm.getNetworkAdapter(0l);
+  if (networkAdapter != null) {
+    String bridgedInterface=networkAdapter.getBridgedInterface();
+    System.out.println("Interface: " + bridgedInterface);
+  }
+  String provider="virtualbox";
+  String identity=System.getProperty("test." + provider + ".identity","administrator");
+  String credential=System.getProperty("test." + provider + ".credential","12345");
+  nodeMetadataBuilder.credentials(new Credentials(identity,credential));
+  nodeMetadataBuilder.id(vm.getId());
+  return nodeMetadataBuilder.build();
+}

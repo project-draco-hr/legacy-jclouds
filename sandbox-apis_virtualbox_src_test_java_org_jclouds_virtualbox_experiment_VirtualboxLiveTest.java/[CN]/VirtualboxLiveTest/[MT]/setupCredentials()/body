@@ -1,10 +1,8 @@
 {
   identity=System.getProperty("test." + provider + ".identity","administrator");
   credential=System.getProperty("test." + provider + ".credential","12345");
-  endpoint=System.getProperty("test." + provider + ".endpoint","http://localhost:18083/");
-  apiversion=System.getProperty("test." + provider + ".apiversion");
-  injector=Guice.createInjector(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule());
-  sshFactory=injector.getInstance(SshClient.Factory.class);
-  socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
-  injector.injectMembers(socketTester);
+  endpoint=URI.create(System.getProperty("test." + provider + ".endpoint","http://localhost:18083/"));
+  apiVersion=System.getProperty("test." + provider + ".apiversion","4.1.2r73507");
+  majorVersion=Iterables.get(Splitter.on('r').split(apiVersion),0);
+  minorVersion=Iterables.get(Splitter.on('r').split(apiVersion),1);
 }

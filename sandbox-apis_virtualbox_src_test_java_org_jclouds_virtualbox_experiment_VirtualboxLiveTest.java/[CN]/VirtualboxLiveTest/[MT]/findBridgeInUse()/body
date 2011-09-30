@@ -1,0 +1,23 @@
+{
+  String hostInterface=null;
+  String command="vboxmanage list bridgedifs";
+  try {
+    Process child=Runtime.getRuntime().exec(command);
+    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(child.getInputStream()));
+    String line="";
+    boolean found=false;
+    while ((line=bufferedReader.readLine()) != null && !found) {
+      System.out.println("- " + line);
+      if (line.split(":")[0].contains("Name")) {
+        hostInterface=line.substring(line.indexOf(":") + 1);
+      }
+      if (line.split(":")[0].contains("Status") && line.split(":")[1].contains("Up")) {
+        found=true;
+      }
+    }
+  }
+ catch (  IOException e) {
+    e.printStackTrace();
+  }
+  return hostInterface.trim();
+}

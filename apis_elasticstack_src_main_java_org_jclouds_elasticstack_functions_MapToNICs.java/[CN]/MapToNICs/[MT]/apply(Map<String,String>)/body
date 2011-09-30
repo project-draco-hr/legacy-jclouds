@@ -4,7 +4,8 @@
     String key=String.format("nic:%d",id);
     if (!from.containsKey(key + ":model"))     break NIC;
     NIC.Builder nicBuilder=new NIC.Builder();
-    nicBuilder.dhcp(from.get(key + ":dhcp"));
+    final String ip=getDhcpIp(from,key);
+    nicBuilder.dhcp(ip);
     nicBuilder.model(Model.fromValue(from.get(key + ":model")));
     nicBuilder.vlan(from.get(key + ":vlan"));
     nicBuilder.mac(from.get(key + ":mac"));

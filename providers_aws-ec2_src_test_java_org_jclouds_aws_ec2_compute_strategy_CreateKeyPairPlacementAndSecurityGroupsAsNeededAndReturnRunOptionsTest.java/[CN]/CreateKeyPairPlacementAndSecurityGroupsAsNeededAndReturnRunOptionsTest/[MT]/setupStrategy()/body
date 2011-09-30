@@ -1,10 +1,9 @@
 {
-  Map<RegionAndName,KeyPair> credentialsMap=createMock(Map.class);
-  Map<RegionAndName,String> securityGroupMap=createMock(Map.class);
-  Map<RegionAndName,String> placementGroupMap=createMock(Map.class);
-  Function<RegionAndName,KeyPair> createOrGetKeyPair=createMock(Function.class);
-  Function<RegionNameAndIngressRules,String> createSecurityGroupIfNeeded=createMock(Function.class);
+  Map<RegionAndName,KeyPair> knownKeys=createMock(Map.class);
+  Cache<RegionAndName,KeyPair> credentialsMap=createMock(Cache.class);
+  Cache<RegionAndName,String> securityGroupMap=createMock(Cache.class);
+  Cache<RegionAndName,String> placementGroupMap=createMock(Cache.class);
   Function<RegionNameAndPublicKeyMaterial,KeyPair> importExistingKeyPair=createMock(Function.class);
   CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded=createMock(CreatePlacementGroupIfNeeded.class);
-  return new CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(credentialsMap,securityGroupMap,placementGroupMap,createOrGetKeyPair,createSecurityGroupIfNeeded,OPTIONS_PROVIDER,createPlacementGroupIfNeeded,importExistingKeyPair);
+  return new CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(knownKeys,credentialsMap,securityGroupMap,OPTIONS_PROVIDER,placementGroupMap,createPlacementGroupIfNeeded,importExistingKeyPair);
 }

@@ -1,27 +1,6 @@
 {
-  Properties contextProperties=new Properties();
-  StringBuilder nodes=new StringBuilder();
-  nodes.append("nodes:\n");
-  nodes.append("    - id: host\n");
-  nodes.append("      name: host installing virtualbox\n");
-  nodes.append("      hostname: localhost\n");
-  nodes.append("      os_family: ").append(OsFamily.LINUX).append("\n");
-  nodes.append("      os_description: ").append(System.getProperty("os.name")).append("\n");
-  nodes.append("      os_version: ").append(System.getProperty("os.version")).append("\n");
-  nodes.append("      group: ").append("ssh").append("\n");
-  nodes.append("      username: ").append(System.getProperty("user.name")).append("\n");
-  nodes.append("      credential_url: file://").append(System.getProperty("user.home")).append("/.ssh/id_rsa").append("\n");
-  nodes.append("\n");
-  nodes.append("    - id: guest\n");
-  nodes.append("      name: new guest\n");
-  nodes.append("      hostname: localhost\n");
-  nodes.append("      login_port: 2222\n");
-  nodes.append("      os_family: ubuntu").append("\n");
-  nodes.append("      os_description: ubuntu/11.04").append("\n");
-  nodes.append("      os_version: 11.04").append("\n");
-  nodes.append("      group: guest").append("\n");
-  nodes.append("      username: toor").append("\n");
-  nodes.append("      credential: password").append("\n");
-  contextProperties.setProperty("byon.nodes",nodes.toString());
-  return new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule()),contextProperties);
+  String hostId=System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOST_ID);
+  Node host=Node.builder().id(hostId).name(System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOST_ID)).hostname(System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOSTNAME)).osFamily(OsFamily.LINUX.toString()).osDescription(System.getProperty("os.name")).osVersion(System.getProperty("os.version")).group("ssh").username(System.getProperty("user.name")).credentialUrl(privateKeyFile()).build();
+  final Map<String,Node> nodeMap=ImmutableMap.<String,Node>builder().put(hostId,host).build();
+  return new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule(),new CacheNodeStoreModule(nodeMap)));
 }

@@ -1,5 +1,8 @@
 {
-  runScriptOnNode(guestId,"m-a prepare -i");
-  runScriptOnNode(guestId,"mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt");
-  runScriptOnNode(guestId,"/mnt/VBoxLinuxAdditions.run");
+  if (isUbuntu(guestId)) {
+    runScriptOnNode(guestId,"rm /etc/udev/rules.d/70-persistent-net.rules");
+    runScriptOnNode(guestId,"mkdir /etc/udev/rules.d/70-persistent-net.rules");
+    runScriptOnNode(guestId,"rm -rf /dev/.udev/");
+    runScriptOnNode(guestId,"rm /lib/udev/rules.d/75-persistent-net-generator.rules");
+  }
 }

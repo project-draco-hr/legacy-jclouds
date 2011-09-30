@@ -9,13 +9,15 @@
   vmName=System.getProperty("test." + provider + ".vmname","jclouds-virtualbox-kickstart-admin");
   workingDir=System.getProperty("user.home") + File.separator + System.getProperty("test." + provider + ".workingDir","jclouds-virtualbox-test");
   if (new File(workingDir).mkdir())   ;
-  gaIsoName=System.getProperty("test." + provider + ".gaIsoName","VBoxGuestAdditions_" + majorVersion + "-update-"+ minorVersion+ ".iso");
-  gaIsoUrl=URI.create(System.getProperty("test." + provider + ".gaIsoUrl","http://download.virtualbox.org/virtualbox/" + majorVersion + "/VBoxGuestAdditions_"+ majorVersion+ "-update-"+ minorVersion+ ".iso"));
+  gaIsoName=System.getProperty("test." + provider + ".gaIsoName","VBoxGuestAdditions_" + majorVersion + ".iso");
+  gaIsoUrl=URI.create(System.getProperty("test." + provider + ".gaIsoUrl","http://download.virtualbox.org/virtualbox/" + majorVersion + "/"+ gaIsoName));
   distroIsoName=System.getProperty("test." + provider + ".distroIsoName","ubuntu-11.04-server-i386.iso");
   distroIsoUrl=URI.create(System.getProperty("test." + provider + ".distroIsoUrl","http://releases.ubuntu.com/11.04/ubuntu-11.04-server-i386.iso"));
-  originalDisk=workingDir + File.separator + "VDI"+ File.separator+ System.getProperty("test." + provider + ".originalDisk","centos-5.2-x86.vdi");
-  clonedDisk=workingDir + File.separator + System.getProperty("test." + provider + ".clonedDisk","template.vdi");
-  guestAdditionsDvd=workingDir + File.separator + System.getProperty("test." + provider + ".guestAdditionsDvd","VBoxGuestAdditions_" + majorVersion + "-update-"+ minorVersion+ ".iso");
+  vboxDmg=URI.create(System.getProperty("test." + provider + ".vboxDmg","http://download.virtualbox.org/virtualbox/4.1.2/VirtualBox-4.1.2-73507-OSX.dmg"));
+  vboxVersionName=System.getProperty("test" + provider + ".vboxVersionName","VirtualBox-4.1.2-73507-OSX.dmg");
+  adminDisk=workingDir + File.separator + System.getProperty("test." + provider + ".adminDisk","admin.vdi");
+  guestAdditionsDvd=workingDir + File.separator + System.getProperty("test." + provider + ".guestAdditionsDvd","VBoxGuestAdditions_" + majorVersion + ".iso");
   preseedUrl=System.getProperty("test." + provider + ".preseedurl","http://dl.dropbox.com/u/693111/preseed.cfg");
-  keyboardSequence=System.getProperty("test." + provider + ".keyboardSequence","<Esc> <Esc> <Enter> " + "/install/vmlinuz noapic preseed/url=http://10.0.2.2:8080/src/test/resources/preseed.cfg " + "debian-installer=en_US auto locale=en_US kbd-chooser/method=us "+ "hostname=" + vmName + " "+ "fb=false debconf/frontend=noninteractive "+ "keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false "+ "initrd=/install/initrd.gz -- <Enter>");
+  snapshotDescription=System.getProperty("test." + provider + "snapshotdescription","jclouds-virtualbox-snaphot");
+  keyboardSequence=System.getProperty("test." + provider + ".keyboardSequence","<Esc><Esc><Enter> " + "/install/vmlinuz noapic preseed/url=http://10.0.2.2:8080/src/test/resources/preseed.cfg " + "debian-installer=en_US auto locale=en_US kbd-chooser/method=us "+ "hostname=" + vmName + " "+ "fb=false debconf/frontend=noninteractive "+ "keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false "+ "initrd=/install/initrd.gz -- <Enter>");
 }

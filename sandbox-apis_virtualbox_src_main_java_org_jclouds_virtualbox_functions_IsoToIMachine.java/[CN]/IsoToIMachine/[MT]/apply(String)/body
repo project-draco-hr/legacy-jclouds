@@ -1,0 +1,43 @@
+{
+  IMachine vm=manager.getVBox().createMachine(settingsFile,vmName,osTypeId,vmId,forceOverwrite);
+  assertNotNull(vm.getName());
+  IMedium distroMedium=manager.getVBox().openMedium(VirtualBoxConstants.VIRTUALBOX_WORKINGDIR + "/" + isoName,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
+  ISession session=manager.getSessionObject();
+  IMachine machine=manager.getVBox().findMachine(vmName);
+  machine.lockMachine(session,LockType.Write);
+  IMachine mutable=session.getMachine();
+  mutable.addStorageController(controllerIDE,StorageBus.IDE);
+  mutable.saveSettings();
+  mutable.attachDevice(controllerIDE,0,0,DeviceType.DVD,distroMedium);
+  mutable.saveSettings();
+  IMedium hd=null;
+  if (new File(adminDisk).exists()) {
+    new File(adminDisk).delete();
+  }
+  hd=manager.getVBox().createHardDisk(diskFormat,adminDisk);
+  long size=4L * 1024L * 1024L* 1024L - 4L;
+  hd.createBaseStorage(new Long(size),new Long(MediumVariant.STANDARD.ordinal()));
+  mutable.attachDevice(controllerIDE,0,1,DeviceType.HardDisk,hd);
+  mutable.saveSettings();
+  assertEquals(hd.getId().equals(""),false);
+  mutable.getNetworkAdapter(new Long(0)).setAttachmentType(NetworkAttachmentType.NAT);
+  machine.getNetworkAdapter(new Long(0)).getNatDriver().addRedirect("guestssh",NATProtocol.TCP,"127.0.0.1",2222,"",22);
+  mutable.getNetworkAdapter(new Long(0)).setEnabled(true);
+  mutable.saveSettings();
+  launchVMProcess(machine,session);
+  assertEquals(machine.getState(),MachineState.Running);
+  try {
+    Thread.sleep(5000);
+  }
+ catch (  InterruptedException e) {
+    propagate(e);
+  }
+  try {
+    sendKeyboardSequence(VirtualBoxConstants.VIRTUALBOX_INSTALLATION_KEY_SEQUENCE);
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+  session.unlockMachine();
+  return vm;
+}
