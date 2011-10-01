@@ -7,15 +7,11 @@
   ProductOrder order=ProductOrder.builder().packageId(getProductPackage().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuest(newGuest).build();
   ProductOrderReceipt productOrderReceipt=client.getVirtualGuestClient().orderVirtualGuest(order);
   VirtualGuest result=Iterables.get(productOrderReceipt.getOrderDetails().getVirtualGuests(),0);
-  Credentials credentials=new Credentials(null,null);
-  OperatingSystem os=result.getOperatingSystem();
-  if (os != null) {
-    Set<Password> passwords=os.getPasswords();
-    if (passwords.size() > 0) {
-      Password pw=Iterables.get(passwords,0);
-      credentials=new Credentials(pw.getUsername(),pw.getPassword());
-    }
-  }
+  boolean orderInSystem=loginDetailsTester.apply(result);
+  checkState(orderInSystem,"order for guest %s doesn't have login details within %sms",result,Long.toString(guestLoginDelay));
+  result=client.getVirtualGuestClient().getVirtualGuest(result.getId());
+  Password pw=Iterables.get(result.getOperatingSystem().getPasswords(),0);
+  Credentials credentials=new Credentials(pw.getUsername(),pw.getPassword());
   credentialStore.put("node#" + result.getId(),credentials);
   return result;
 }

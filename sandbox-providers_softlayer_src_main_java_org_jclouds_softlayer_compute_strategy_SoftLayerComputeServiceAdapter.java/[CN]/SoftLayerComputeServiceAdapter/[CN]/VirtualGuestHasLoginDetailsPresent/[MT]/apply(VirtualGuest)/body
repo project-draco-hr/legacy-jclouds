@@ -1,0 +1,8 @@
+{
+  checkNotNull(guest,"virtual guest was null");
+  VirtualGuest newGuest=client.getVirtualGuestClient().getVirtualGuest(guest.getId());
+  boolean hasBackendIp=newGuest.getPrimaryBackendIpAddress() != null;
+  boolean hasPrimaryIp=newGuest.getPrimaryIpAddress() != null;
+  boolean hasPasswords=newGuest.getOperatingSystem() != null && newGuest.getOperatingSystem().getPasswords().size() > 0;
+  return hasBackendIp && hasPrimaryIp && hasPasswords;
+}
