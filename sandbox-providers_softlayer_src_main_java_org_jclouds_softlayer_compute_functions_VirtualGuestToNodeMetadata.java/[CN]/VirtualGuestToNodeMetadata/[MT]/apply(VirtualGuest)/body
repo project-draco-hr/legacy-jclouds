@@ -1,12 +1,9 @@
 {
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
   builder.ids(from.getId() + "");
-  builder.name(from.getNotes());
+  builder.name(from.getHostname());
   builder.location(findLocationForVirtualGuest.apply(from));
-  builder.group(parseGroupFromName(from.getNotes()));
-  Image image=findImageForVirtualGuest.apply(from);
-  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
-  builder.hardware(findHardwareForVirtualGuest.apply(from));
+  builder.group(parseGroupFromName(from.getHostname()));
   builder.state(serverStateToNodeState.get(from.getPowerState().getKeyName()));
   if (from.getPrimaryIpAddress() != null)   builder.publicAddresses(ImmutableSet.<String>of(from.getPrimaryIpAddress()));
   if (from.getPrimaryBackendIpAddress() != null)   builder.privateAddresses(ImmutableSet.<String>of(from.getPrimaryBackendIpAddress()));
