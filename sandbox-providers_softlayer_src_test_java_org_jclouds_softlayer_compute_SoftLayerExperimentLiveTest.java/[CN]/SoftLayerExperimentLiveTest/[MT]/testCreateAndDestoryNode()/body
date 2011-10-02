@@ -1,0 +1,16 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    String identity=checkNotNull(System.getProperty("test.softlayer.identity"),"test.softlayer.identity");
+    String credential=checkNotNull(System.getProperty("test.softlayer.credential"),"test.softlayer.credential");
+    context=new ComputeServiceContextFactory().createContext("softlayer",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()));
+    Template template=context.getComputeService().templateBuilder().locationId("3").build();
+    Set<? extends NodeMetadata> nodes=context.getComputeService().createNodesInGroup("computeservice",1,template);
+    assertTrue(nodes.size() == 1);
+    NodeMetadata data=Iterables.get(nodes,0);
+    context.getComputeService().destroyNode(data.getId());
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}
