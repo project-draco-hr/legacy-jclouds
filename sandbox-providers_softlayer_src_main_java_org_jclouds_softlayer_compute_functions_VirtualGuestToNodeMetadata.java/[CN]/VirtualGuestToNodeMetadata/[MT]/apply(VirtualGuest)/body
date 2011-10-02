@@ -7,8 +7,9 @@
   Image image=findImageForVirtualGuest.apply(from);
   if (image != null)   builder.operatingSystem(image.getOperatingSystem());
   builder.hardware(findHardwareForVirtualGuest.apply(from));
-  builder.publicAddresses(ImmutableSet.<String>of(from.getPrimaryIpAddress()));
-  builder.privateAddresses(ImmutableSet.<String>of(from.getPrimaryBackendIpAddress()));
+  builder.state(serverStateToNodeState.get(from.getPowerState().getKeyName()));
+  if (from.getPrimaryIpAddress() != null)   builder.publicAddresses(ImmutableSet.<String>of(from.getPrimaryIpAddress()));
+  if (from.getPrimaryBackendIpAddress() != null)   builder.privateAddresses(ImmutableSet.<String>of(from.getPrimaryBackendIpAddress()));
   builder.credentials(credentialStore.get("node#" + from.getId()));
   return builder.build();
 }
