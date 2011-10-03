@@ -1,9 +1,8 @@
 {
   for (  VirtualGuest guest : client.listVirtualGuests()) {
     if (guest.getHostname().startsWith(TEST_HOSTNAME_PREFIX)) {
-      BillingItemVirtualGuest billingItem=guest.getBillingItem();
-      if (billingItem != null) {
-        client.cancelService(billingItem.getId());
+      if (guest.getBillingItemId() != -1) {
+        client.cancelService(guest.getBillingItemId());
       }
     }
   }
