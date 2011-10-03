@@ -1,0 +1,11 @@
+{
+  if (guest.getStartCpus() < 1)   return null;
+  try {
+    ProductOrder order=client.getVirtualGuestClient().getOrderTemplate(guest.getId());
+    Iterable<ProductItem> items=Iterables.transform(order.getPrices(),ProductItems.item());
+    return new ProductItemsToHardware().apply(Sets.newLinkedHashSet(items));
+  }
+ catch (  HttpResponseException e) {
+    return null;
+  }
+}
