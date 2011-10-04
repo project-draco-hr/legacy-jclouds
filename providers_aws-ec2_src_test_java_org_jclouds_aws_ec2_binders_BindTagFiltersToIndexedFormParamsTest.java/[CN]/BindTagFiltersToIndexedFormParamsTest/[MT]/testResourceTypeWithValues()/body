@@ -1,0 +1,5 @@
+{
+  HttpRequest request=HttpRequest.builder().method("POST").endpoint(URI.create("http://localhost")).build();
+  request=binder.bindToRequest(request,ImmutableList.builder().add(new TagFilter(FilterName.RESOURCE_TYPE,ImmutableList.<String>builder().add(TagFilter.ResourceType.VPN_GATEWAY.value()).add(TagFilter.ResourceType.INTERNET_GATEWAY.value()).build())).build());
+  assertEquals(request.getPayload().getRawContent(),"Filter.1.Name=resource-type&Filter.1.Value.1=vpn-gateway&Filter.1.Value.2=internet-gateway");
+}

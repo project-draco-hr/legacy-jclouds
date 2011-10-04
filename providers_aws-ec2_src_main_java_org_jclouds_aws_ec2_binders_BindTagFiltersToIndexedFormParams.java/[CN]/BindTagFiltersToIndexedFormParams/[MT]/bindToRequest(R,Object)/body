@@ -1,0 +1,7 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Iterable,"this binder is only valid for Iterable<TagFilter>");
+  Builder<String,String> headers=ImmutableMultimap.<String,String>builder();
+  int index=1;
+  for (  TagFilter filter : (Iterable<TagFilter>)input)   headers.putAll(TagFilters.buildFormParametersForIndex(index++,filter));
+  return ModifyRequest.putFormParams(request,headers.build());
+}
