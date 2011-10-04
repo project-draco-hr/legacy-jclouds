@@ -1,0 +1,12 @@
+{
+  this.client=checkNotNull(client,"client");
+  this.guestLoginDelay=guestLoginDelay;
+  this.productPackageSupplier=checkNotNull(productPackageSupplier,"productPackageSupplier");
+  checkArgument(guestLoginDelay > 500,"guestOrderDelay must be in milliseconds and greater than 500");
+  this.loginDetailsTester=new RetryablePredicate<VirtualGuest>(virtualGuestHasLoginDetailsPresent,guestLoginDelay);
+  this.cpuPattern=Pattern.compile(checkNotNull(cpuRegex,"cpuRegex"));
+  this.prices=checkNotNull(prices,"prices");
+  this.portSpeed=portSpeed;
+  checkArgument(portSpeed > 0,"portSpeed must be greater than zero, often 10, 100, 1000, 10000");
+  this.disk0Type=Pattern.compile(".*" + checkNotNull(disk0Type,"disk0Type") + ".*");
+}

@@ -1,8 +1,13 @@
 {
-  ProductItem cpuItem=ProductItem.builder().id(1).description("2 cores").units("PRIVATE_CORE").capacity(2F).price(ProductItemPrice.builder().id(123).build()).build();
+  ProductItem cpuItem=ProductItem.builder().id(1).description("2 x 2.0 GHz Cores").units("PRIVATE_CORE").capacity(2F).price(ProductItemPrice.builder().id(123).build()).build();
   ProductItem ramItem=ProductItem.builder().id(2).description("2GB ram").capacity(2F).category(ProductItemCategory.builder().categoryCode("ram").build()).price(ProductItemPrice.builder().id(456).build()).build();
-  ProductItem volumeItem=ProductItem.builder().id(3).description("100 GB (SAN)").capacity(100F).price(ProductItemPrice.builder().id(789).build()).build();
-  Hardware hardware=new ProductItemsToHardware().apply(ImmutableSet.of(cpuItem,ramItem,volumeItem));
+  ProductItem volumeItem=ProductItem.builder().id(3).description("100 GB (SAN)").capacity(100F).price(ProductItemPrice.builder().id(789).build()).category(ProductItemCategory.builder().categoryCode("guest_disk0").build()).build();
+  Hardware hardware=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindProperties(binder(),new SoftLayerPropertiesBuilder(new Properties()).build());
+    }
+  }
+).getInstance(ProductItemsToHardware.class).apply(ImmutableSet.of(cpuItem,ramItem,volumeItem));
   assertEquals("123,456,789",hardware.getId());
   List<? extends Processor> processors=hardware.getProcessors();
   assertEquals(1,processors.size());

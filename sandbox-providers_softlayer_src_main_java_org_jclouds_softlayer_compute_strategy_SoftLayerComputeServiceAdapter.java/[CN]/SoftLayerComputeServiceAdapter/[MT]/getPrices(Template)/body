@@ -1,5 +1,5 @@
 {
-  Set<ProductItemPrice> result=Sets.newLinkedHashSet();
+  Builder<ProductItemPrice> result=ImmutableSet.<ProductItemPrice>builder();
   int imageId=Integer.parseInt(template.getImage().getId());
   result.add(ProductItemPrice.builder().id(imageId).build());
   Iterable<String> hardwareIds=Splitter.on(",").split(template.getHardware().getId());
@@ -7,6 +7,8 @@
     int id=Integer.parseInt(hardwareId);
     result.add(ProductItemPrice.builder().id(id).build());
   }
-  result.addAll(SoftLayerConstants.DEFAULT_VIRTUAL_GUEST_PRICES);
-  return result;
+  ProductItem uplinkItem=find(productPackageSupplier.get().getItems(),and(capacity(portSpeed),categoryCode("port_speed")));
+  result.add(get(uplinkItem.getPrices(),0));
+  result.addAll(prices);
+  return result.build();
 }
