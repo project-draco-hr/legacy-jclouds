@@ -1,5 +1,5 @@
 {
-  Set<Tag> results=client.describeTagsInRegion(null,ImmutableMultimap.<FilterName,Object>builder().put(FilterName.RESOURCE_ID,resourceId).put(FilterName.RESOURCE_TYPE,resourceType).put(FilterName.KEY,key).put(FilterName.VALUE,value).build());
+  Set<Tag> results=client.describeTagsInRegion(null,TagFilters.filters().resourceId(resourceId).resourceType(resourceType).keyValuePair(key,value).build());
   assertNotNull(results);
   assertEquals(results.size(),1);
   Tag tag=Iterables.getOnlyElement(results);
