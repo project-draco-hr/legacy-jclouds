@@ -1,16 +1,16 @@
 {
-  ProductItem coresItem=getOnlyElement(filter(items,matches(cpuRegex)));
-  ProductItem ramItem=getOnlyElement(filter(items,categoryCode("ram")));
-  ProductItem volumeItem=get(filter(items,categoryCode("guest_disk0")),0);
+  ProductItem coresItem=getOnlyElement(filter(items,matches(cpuDescriptionRegex)));
+  ProductItem ramItem=getOnlyElement(filter(items,categoryCode(RAM_CATEGORY)));
+  ProductItem volumeItem=get(filter(items,categoryCode(FIRST_GUEST_DISK)),0);
   String hardwareId=hardwareId().apply(ImmutableList.of(coresItem,ramItem,volumeItem));
   double cores=ProductItems.capacity().apply(coresItem).doubleValue();
-  Matcher cpuMatcher=cpuRegex.matcher(coresItem.getDescription());
-  double coreSpeed=(cpuMatcher.matches()) ? Double.parseDouble(cpuMatcher.group(cpuMatcher.groupCount())) : 2.0;
+  Matcher cpuMatcher=cpuDescriptionRegex.matcher(coresItem.getDescription());
+  double coreSpeed=(cpuMatcher.matches()) ? Double.parseDouble(cpuMatcher.group(cpuMatcher.groupCount())) : DEFAULT_CORE_SPEED;
   int ram=ProductItems.capacity().apply(ramItem).intValue();
-  return new HardwareBuilder().ids(hardwareId).processors(ImmutableList.of(new Processor(cores,coreSpeed))).ram(ram).volumes(Iterables.transform(filter(items,categoryCodeMatches(categoryCodeMatches)),new Function<ProductItem,Volume>(){
-    @Override public Volume apply(    ProductItem arg0){
-      float volumeSize=ProductItems.capacity().apply(arg0);
-      return new VolumeImpl(arg0.getId() + "",arg0.getDescription().indexOf("SAN") != -1 ? Volume.Type.SAN : Volume.Type.LOCAL,volumeSize,null,categoryCode("guest_disk0").apply(arg0),false);
+  return new HardwareBuilder().ids(hardwareId).processors(ImmutableList.of(new Processor(cores,coreSpeed))).ram(ram).volumes(Iterables.transform(filter(items,categoryCodeMatches(diskCategoryRegex)),new Function<ProductItem,Volume>(){
+    @Override public Volume apply(    ProductItem item){
+      float volumeSize=ProductItems.capacity().apply(item);
+      return new VolumeImpl(item.getId() + "",item.getDescription().indexOf(STORAGE_AREA_NETWORK) != -1 ? Volume.Type.SAN : Volume.Type.LOCAL,volumeSize,null,categoryCode(FIRST_GUEST_DISK).apply(item),false);
     }
   }
 )).build();
