@@ -1,0 +1,27 @@
+{
+  builder.providerId(instance.getId());
+  builder.id(instance.getRegion() + "/" + instance.getId());
+  String group=getGroupForInstance(instance);
+  builder.group(group);
+  if (instance.getPrivateDnsName() != null)   builder.hostname(instance.getPrivateDnsName().replaceAll("\\..*",""));
+  addCredentialsForInstance(builder,instance);
+  builder.state(instanceToNodeState.get(instance.getInstanceState()));
+  builder.publicAddresses(NullSafeCollections.nullSafeSet(instance.getIpAddress()));
+  builder.privateAddresses(NullSafeCollections.nullSafeSet(instance.getPrivateIpAddress()));
+  builder.hardware(parseHardware(instance));
+  Location location=getLocationForAvailabilityZoneOrRegion(instance);
+  builder.location(location);
+  builder.imageId(instance.getRegion() + "/" + instance.getImageId());
+  RegionAndName regionAndName=new RegionAndName(instance.getRegion(),instance.getImageId());
+  try {
+    Image image=imageMap.get().getUnchecked(regionAndName);
+    if (image != null)     builder.operatingSystem(image.getOperatingSystem());
+  }
+ catch (  NullPointerException e) {
+    logger.debug("image not found for %s: %s",regionAndName,e);
+  }
+catch (  UncheckedExecutionException e) {
+    logger.debug("error getting image for %s: %s",regionAndName,e);
+  }
+  return builder;
+}
