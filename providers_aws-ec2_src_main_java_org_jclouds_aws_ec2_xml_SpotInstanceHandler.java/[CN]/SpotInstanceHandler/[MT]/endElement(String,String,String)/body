@@ -1,28 +1,19 @@
 {
   if (equalsOrSuffix(qName,"tagSet")) {
     inTagSet=false;
+    builder.tags(tagSetHandler.getResult());
   }
  else   if (inTagSet) {
-    if (equalsOrSuffix(qName,"key")) {
-      key=currentOrNull(currentText);
-    }
- else     if (equalsOrSuffix(qName,"value")) {
-      value=currentOrNull(currentText);
-    }
+    tagSetHandler.endElement(uri,name,qName);
   }
   if (qName.equals("launchSpecification")) {
     inLaunchSpecification=false;
     builder.launchSpecification(launchSpecificationHandler.getResult());
   }
- else   if (qName.equals("item") && inTagSet) {
-    builder.tag(key,value);
-    key=null;
-    value=null;
-  }
-  if (inLaunchSpecification) {
+ else   if (inLaunchSpecification) {
     launchSpecificationHandler.endElement(uri,name,qName);
   }
- else   if (qName.equals("spotInstanceRequestId")) {
+  if (qName.equals("spotInstanceRequestId")) {
     builder.id(currentOrNull(currentText));
   }
  else   if (qName.equals("instanceId")) {

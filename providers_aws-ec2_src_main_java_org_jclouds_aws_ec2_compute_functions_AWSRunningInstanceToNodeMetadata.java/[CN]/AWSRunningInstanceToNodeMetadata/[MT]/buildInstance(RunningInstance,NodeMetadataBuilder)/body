@@ -1,3 +1,4 @@
 {
-  return super.buildInstance(instance,builder).userMetadata(AWSRunningInstance.class.cast(instance).getTags());
+  Map<String,String> tags=AWSRunningInstance.class.cast(instance).getTags();
+  return super.buildInstance(instance,builder).tags(filterValues(tags,equalTo("")).keySet()).userMetadata(filterValues(tags,not(equalTo(""))));
 }
