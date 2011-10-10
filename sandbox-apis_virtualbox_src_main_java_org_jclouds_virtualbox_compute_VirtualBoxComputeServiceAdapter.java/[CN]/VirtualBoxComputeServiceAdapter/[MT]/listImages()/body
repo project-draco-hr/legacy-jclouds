@@ -1,6 +1,9 @@
 {
-  for (  IMachine iMachine : manager.getVBox().getMachines()) {
-    System.out.println(iMachine.getName());
+  final Predicate<? super IMachine> imagePredicate=new Predicate<IMachine>(){
+    @Override public boolean apply(    @Nullable IMachine iMachine){
+      return iMachine.getName().startsWith(VIRTUALBOX_IMAGE_PREFIX);
+    }
   }
-  return manager.getVBox().getMachines();
+;
+  return filter(manager.getVBox().getMachines(),imagePredicate);
 }

@@ -1,6 +1,0 @@
-{
-  String hostId=System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOST_ID);
-  Node host=Node.builder().id(hostId).name(System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOST_ID)).hostname(System.getProperty(VirtualBoxConstants.VIRTUALBOX_HOSTNAME)).osFamily(OsFamily.LINUX.toString()).osDescription(System.getProperty("os.name")).osVersion(System.getProperty("os.version")).group("ssh").username(System.getProperty("user.name")).credentialUrl(privateKeyFile()).build();
-  final Map<String,Node> nodeMap=ImmutableMap.<String,Node>builder().put(hostId,host).build();
-  return new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule(),new CacheNodeStoreModule(nodeMap)));
-}
