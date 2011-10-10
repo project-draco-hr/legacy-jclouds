@@ -1,0 +1,18 @@
+{
+  String containerName="container";
+  String blobName="blob";
+  URI endPoint=new URI("http","localhost",String.format("/%s/%s",containerName,blobName),null);
+  BlobRequestSigner signer=context.getSigner();
+  HttpRequest request;
+  HttpRequest expected;
+  request=signer.signGetBlob(containerName,blobName);
+  expected=HttpRequest.builder().method("GET").endpoint(endPoint).headers(request.getHeaders()).build();
+  assertEquals(expected,request);
+  request=signer.signRemoveBlob(containerName,blobName);
+  expected=HttpRequest.builder().method("DELETE").endpoint(endPoint).headers(request.getHeaders()).build();
+  assertEquals(expected,request);
+  Blob blob=blobStore.blobBuilder(blobName).forSigning().build();
+  request=signer.signPutBlob(containerName,blob);
+  expected=HttpRequest.builder().method("PUT").endpoint(endPoint).headers(request.getHeaders()).payload(new PhantomPayload()).build();
+  assertEquals(expected,request);
+}
