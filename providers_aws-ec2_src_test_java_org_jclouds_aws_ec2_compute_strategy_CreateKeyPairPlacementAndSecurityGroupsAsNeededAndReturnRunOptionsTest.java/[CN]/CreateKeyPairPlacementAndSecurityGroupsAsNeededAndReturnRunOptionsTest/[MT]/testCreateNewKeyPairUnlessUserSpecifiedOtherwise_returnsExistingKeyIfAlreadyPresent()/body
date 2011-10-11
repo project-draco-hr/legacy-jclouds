@@ -5,13 +5,18 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
-  expect(strategy.knownKeys.get(new RegionAndName(region,group))).andReturn(keyPair);
+  ConcurrentMap<RegionAndName,KeyPair> backing=createMock(ConcurrentMap.class);
+  expect(strategy.credentialsMap.asMap()).andReturn(backing);
+  expect(backing.containsKey(new RegionAndName(region,group))).andReturn(true);
+  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,group))).andReturn(keyPair);
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
   replay(options);
   replay(keyPair);
+  replay(backing);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options),systemGeneratedKeyPairName);
   verify(options);
   verify(keyPair);
+  verify(backing);
   verifyStrategy(strategy);
 }

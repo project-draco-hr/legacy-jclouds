@@ -5,7 +5,7 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
-  expect(strategy.knownKeys.get(new RegionAndName(region,group))).andReturn(null);
+  expect(strategy.credentialsMap.asMap()).andReturn(Maps.<RegionAndName,KeyPair>newConcurrentMap());
   expect(options.getPublicKey()).andReturn(null).times(2);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.getOverridingCredentials()).andReturn(null);

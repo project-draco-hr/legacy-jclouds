@@ -2,7 +2,6 @@
   EC2Client client=createMock(EC2Client.class);
   KeyPairClient keyClient=createMock(KeyPairClient.class);
   Supplier<String> uniqueIdSupplier=createMock(Supplier.class);
-  Map<RegionAndName,KeyPair> knownKeys=createMock(Map.class);
   KeyPair pair=createMock(KeyPair.class);
   expect(client.getKeyPairServices()).andReturn(keyClient).atLeastOnce();
   expect(uniqueIdSupplier.get()).andReturn("1");
@@ -10,13 +9,11 @@
   expect(uniqueIdSupplier.get()).andReturn("2");
   expect(keyClient.createKeyPairInRegion("region","jclouds#group#region#2")).andReturn(pair);
   replay(client);
-  replay(knownKeys);
   replay(keyClient);
   replay(uniqueIdSupplier);
-  CreateUniqueKeyPair parser=new CreateUniqueKeyPair(knownKeys,client,uniqueIdSupplier);
+  CreateUniqueKeyPair parser=new CreateUniqueKeyPair(client,uniqueIdSupplier);
   assertEquals(parser.createNewKeyPairInRegion("region","group"),pair);
   verify(client);
-  verify(knownKeys);
   verify(keyClient);
   verify(uniqueIdSupplier);
 }

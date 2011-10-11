@@ -5,17 +5,20 @@
   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
+  ConcurrentMap<RegionAndName,KeyPair> backing=createMock(ConcurrentMap.class);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.getOverridingCredentials()).andReturn(new Credentials(null,"MyRsa")).atLeastOnce();
-  expect(strategy.knownKeys.put(new RegionAndName(region,userSuppliedKeyPair),KeyPair.builder().region(region).keyName(userSuppliedKeyPair).keyFingerprint("//TODO").keyMaterial("MyRsa").build())).andReturn(null);
-  strategy.credentialsMap.invalidate(new RegionAndName(region,userSuppliedKeyPair));
+  expect(strategy.credentialsMap.asMap()).andReturn(backing);
+  expect(backing.put(new RegionAndName(region,userSuppliedKeyPair),KeyPair.builder().region(region).keyName(userSuppliedKeyPair).keyFingerprint("//TODO").keyMaterial("MyRsa").build())).andReturn(null);
   expect(options.getRunScript()).andReturn(Statements.exec("echo foo"));
   expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,userSuppliedKeyPair))).andReturn(keyPair);
   replay(options);
   replay(keyPair);
+  replay(backing);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,tag,options),userSuppliedKeyPair);
   verify(options);
   verify(keyPair);
+  verify(backing);
   verifyStrategy(strategy);
 }

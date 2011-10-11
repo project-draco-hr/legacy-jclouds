@@ -1,20 +1,17 @@
 {
   String region=Region.AP_SOUTHEAST_1;
   String group="group";
+  AWSEC2TemplateOptions options=keyPair(group).authorizePublicKey("ssh-rsa");
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
-  AWSEC2TemplateOptions options=createMock(AWSEC2TemplateOptions.class);
   KeyPair keyPair=new KeyPair(region,"jclouds#" + group,"fingerprint",null);
-  expect(strategy.knownKeys.get(new RegionAndName(region,group))).andReturn(null);
-  expect(options.getPublicKey()).andReturn("ssh-rsa").times(2);
+  ConcurrentMap<RegionAndName,KeyPair> backing=createMock(ConcurrentMap.class);
+  expect(strategy.credentialsMap.asMap()).andReturn(backing).atLeastOnce();
+  expect(backing.containsKey(new RegionAndName(region,group))).andReturn(false);
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,"ssh-rsa"))).andReturn(keyPair);
-  expect(options.dontAuthorizePublicKey()).andReturn(options);
-  expect(options.getOverridingCredentials()).andReturn(null);
-  expect(options.getRunScript()).andReturn(null);
-  expect(options.getPrivateKey()).andReturn(null);
-  expect(strategy.knownKeys.put(new RegionAndName(region,group),keyPair)).andReturn(null);
-  replay(options);
+  expect(backing.put(new RegionAndName(region,group),keyPair)).andReturn(null);
+  replay(backing);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options),"jclouds#" + group);
-  verify(options);
+  verify(backing);
   verifyStrategy(strategy);
 }

@@ -24,17 +24,13 @@
     Throwables.propagate(e);
     return null;
   }
-  knownImages.clear();
-  knownImages.putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+  Cache<RegionAndName,Image> cache=CacheBuilder.newBuilder().build(regionAndIdToImage);
+  cache.asMap().putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
     @Override public RegionAndName apply(    Image from){
       return new RegionAndName(from.getLocation().getId(),from.getProviderId());
     }
   }
 ));
-  logger.debug("<< images(%d)",knownImages.size());
-  Cache<RegionAndName,Image> cache=CacheBuilder.newBuilder().build(regionAndIdToImage);
-  for (  RegionAndName image : knownImages.keySet()) {
-    cache.getUnchecked(image);
-  }
+  logger.debug("<< images(%d)",cache.asMap().size());
   return cache;
 }

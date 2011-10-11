@@ -12,8 +12,7 @@
     if (options.getOverridingCredentials() != null && options.getOverridingCredentials().credential != null) {
       KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).keyFingerprint("//TODO").keyMaterial(options.getOverridingCredentials().credential).build();
       RegionAndName key=new RegionAndName(region,keyPairName);
-      knownKeys.put(key,keyPair);
-      credentialsMap.invalidate(key);
+      credentialsMap.asMap().put(key,keyPair);
     }
   }
   if (options.getRunScript() != null) {
