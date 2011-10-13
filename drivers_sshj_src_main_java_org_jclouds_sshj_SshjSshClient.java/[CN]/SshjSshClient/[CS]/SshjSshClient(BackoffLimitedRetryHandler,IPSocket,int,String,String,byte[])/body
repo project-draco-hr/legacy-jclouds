@@ -8,4 +8,12 @@
   this.timeoutMillis=timeout;
   this.password=password;
   this.privateKey=privateKey;
+  if (privateKey == null) {
+    this.toString=String.format("%s@%s:%d",username,host,port);
+  }
+ else {
+    RSAPrivateCrtKeySpec key=(RSAPrivateCrtKeySpec)Pems.privateKeySpec(new String(privateKey));
+    String fingerPrint=fingerprint(key.getPublicExponent(),key.getModulus());
+    this.toString=String.format("%s:[%s]@%s:%d",username,fingerPrint,host,port);
+  }
 }
