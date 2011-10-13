@@ -1,0 +1,11 @@
+{
+  try {
+    KeySpec privateKeySpec=privateKeySpec(privateKeyPEM);
+    checkArgument(privateKeySpec instanceof RSAPrivateCrtKeySpec,"incorrect format expected RSAPrivateCrtKeySpec was %s",privateKeySpec);
+    return privateKeyMatchesPublicKey(RSAPrivateCrtKeySpec.class.cast(privateKeySpec),publicKeySpecFromOpenSSH(publicKeyOpenSSH));
+  }
+ catch (  IOException e) {
+    propagate(e);
+    return false;
+  }
+}

@@ -1,4 +1,4 @@
 {
-  String encoded=SshKeys.encodeAsOpenSSH((RSAPublicKey)KeyFactory.getInstance("RSA").generatePublic(Pems.publicKeySpec(Payloads.newStringPayload(PemsTest.PUBLIC_KEY))));
-  assertEquals(encoded,SSH_PUBLIC_KEY);
+  String encoded=SshKeys.encodeAsOpenSSH((RSAPublicKey)KeyFactory.getInstance("RSA").generatePublic(SshKeys.publicKeySpecFromOpenSSH(Payloads.newPayload(getClass().getResourceAsStream("/test.pub")))));
+  assertEquals(encoded,Strings2.toStringAndClose(getClass().getResourceAsStream("/test.pub")).trim());
 }

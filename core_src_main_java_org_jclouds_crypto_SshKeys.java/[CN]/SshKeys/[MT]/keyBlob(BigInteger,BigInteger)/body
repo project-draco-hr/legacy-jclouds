@@ -1,0 +1,13 @@
+{
+  try {
+    ByteArrayOutputStream out=new ByteArrayOutputStream();
+    writeLengthFirst("ssh-rsa".getBytes(),out);
+    writeLengthFirst(publicExponent.toByteArray(),out);
+    writeLengthFirst(modulus.toByteArray(),out);
+    return out.toByteArray();
+  }
+ catch (  IOException e) {
+    propagate(e);
+    return null;
+  }
+}
