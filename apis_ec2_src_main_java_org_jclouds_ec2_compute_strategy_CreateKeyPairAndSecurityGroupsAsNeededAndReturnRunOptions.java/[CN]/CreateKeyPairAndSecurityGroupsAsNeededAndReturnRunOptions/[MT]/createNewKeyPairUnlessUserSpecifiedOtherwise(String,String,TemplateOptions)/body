@@ -10,7 +10,8 @@
   }
  else   if (keyPairName != null) {
     if (options.getOverridingCredentials() != null && options.getOverridingCredentials().credential != null) {
-      KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).keyFingerprint("//TODO").keyMaterial(options.getOverridingCredentials().credential).build();
+      String pem=options.getOverridingCredentials().credential;
+      KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).fingerprint(fingerprintPrivateKey(pem)).sha1OfPrivateKey(sha1PrivateKey(pem)).keyMaterial(pem).build();
       RegionAndName key=new RegionAndName(region,keyPairName);
       credentialsMap.asMap().put(key,keyPair);
     }

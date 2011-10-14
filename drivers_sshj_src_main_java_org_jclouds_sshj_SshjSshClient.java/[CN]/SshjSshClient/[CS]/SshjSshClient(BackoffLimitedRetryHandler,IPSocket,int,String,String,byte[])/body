@@ -9,11 +9,11 @@
   this.password=password;
   this.privateKey=privateKey;
   if (privateKey == null) {
-    this.toString=String.format("%s@%s:%d",username,host,port);
+    this.toString=String.format("%s:password@%s:%d",username,host,port);
   }
  else {
-    RSAPrivateCrtKeySpec key=(RSAPrivateCrtKeySpec)Pems.privateKeySpec(new String(privateKey));
-    String fingerPrint=fingerprint(key.getPublicExponent(),key.getModulus());
-    this.toString=String.format("%s:[%s]@%s:%d",username,fingerPrint,host,port);
+    String fingerPrint=fingerprintPrivateKey(new String(privateKey));
+    String sha1=sha1PrivateKey(new String(privateKey));
+    this.toString=String.format("%s:rsa[fingerprint(%s),sha1(%s)]@%s:%d",username,fingerPrint,sha1,host,port);
   }
 }
