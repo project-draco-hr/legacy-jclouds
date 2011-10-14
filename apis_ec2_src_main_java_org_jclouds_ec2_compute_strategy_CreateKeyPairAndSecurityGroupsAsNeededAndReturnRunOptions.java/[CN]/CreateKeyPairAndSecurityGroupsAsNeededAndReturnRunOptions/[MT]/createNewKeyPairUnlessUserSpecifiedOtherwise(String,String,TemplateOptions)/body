@@ -13,21 +13,12 @@
       String pem=options.getOverridingCredentials().credential;
       KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).fingerprint(fingerprintPrivateKey(pem)).sha1OfPrivateKey(sha1PrivateKey(pem)).keyMaterial(pem).build();
       RegionAndName key=new RegionAndName(region,keyPairName);
-      credentialsMap.asMap().put(key,keyPair);
+      credentialsMap.put(key,keyPair);
     }
   }
   if (options.getRunScript() != null) {
     RegionAndName regionAndName=new RegionAndName(region,keyPairName);
-    String message=String.format("no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
-    try {
-      credentialsMap.getUnchecked(regionAndName);
-    }
- catch (    NullPointerException nex) {
-      throw new IllegalArgumentException(message,nex);
-    }
-catch (    UncheckedExecutionException nex) {
-      throw new IllegalArgumentException(message,nex);
-    }
+    checkArgument(credentialsMap.containsKey(regionAndName),"no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
   }
   return keyPairName;
 }

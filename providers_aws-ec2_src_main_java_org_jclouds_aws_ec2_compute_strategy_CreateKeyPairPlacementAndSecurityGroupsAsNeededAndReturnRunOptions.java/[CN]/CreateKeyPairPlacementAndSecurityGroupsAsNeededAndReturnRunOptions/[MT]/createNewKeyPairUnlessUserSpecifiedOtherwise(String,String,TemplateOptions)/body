@@ -1,12 +1,11 @@
 {
   RegionAndName key=new RegionAndName(region,group);
   KeyPair pair;
-  if (credentialsMap.asMap().containsKey(key))   return credentialsMap.getUnchecked(key).getKeyName();
   if (and(hasPublicKeyMaterial,or(doesntNeedSshAfterImportingPublicKey,hasLoginCredential)).apply(options)) {
     pair=importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,options.getPublicKey()));
     options.dontAuthorizePublicKey();
     if (hasLoginCredential.apply(options))     pair=pair.toBuilder().keyMaterial(options.getOverridingCredentials().credential).build();
-    credentialsMap.asMap().put(key,pair);
+    credentialsMap.put(key,pair);
   }
  else {
     if (hasPublicKeyMaterial.apply(options)) {

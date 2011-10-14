@@ -10,7 +10,8 @@
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
   expect(options.shouldAutomaticallyCreateKeyPair()).andReturn(shouldAutomaticallyCreateKeyPair);
   expect(keyPair.getKeyName()).andReturn(systemGeneratedKeyPairName).atLeastOnce();
-  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,group))).andReturn(keyPair);
+  expect(strategy.credentialsMap.containsKey(new RegionAndName(region,group))).andReturn(true);
+  expect(strategy.credentialsMap.get(new RegionAndName(region,group))).andReturn(keyPair);
   expect(options.getRunScript()).andReturn(null);
   replay(options);
   replay(keyPair);

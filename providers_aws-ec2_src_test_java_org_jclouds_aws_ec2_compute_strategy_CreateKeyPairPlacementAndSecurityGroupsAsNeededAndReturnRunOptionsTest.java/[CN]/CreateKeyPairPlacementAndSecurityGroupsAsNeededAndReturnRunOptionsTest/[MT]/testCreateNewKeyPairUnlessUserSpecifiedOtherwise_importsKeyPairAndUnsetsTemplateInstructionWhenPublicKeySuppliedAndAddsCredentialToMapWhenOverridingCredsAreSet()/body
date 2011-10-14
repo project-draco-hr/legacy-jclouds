@@ -4,14 +4,9 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   AWSEC2TemplateOptions options=keyPair(group).authorizePublicKey("ssh-rsa").overrideCredentialsWith(new Credentials("foo",CREDENTIALS.credential));
   KeyPair keyPair=new KeyPair(region,group,"//TODO",null,null);
-  ConcurrentMap<RegionAndName,KeyPair> backing=createMock(ConcurrentMap.class);
-  expect(strategy.credentialsMap.asMap()).andReturn(backing).atLeastOnce();
-  expect(backing.containsKey(new RegionAndName(region,group))).andReturn(false);
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,CREDENTIALS.credential))).andReturn(keyPair);
-  expect(backing.put(new RegionAndName(region,group),keyPair.toBuilder().keyMaterial(CREDENTIALS.credential).build())).andReturn(null);
-  replay(backing);
+  expect(strategy.credentialsMap.put(new RegionAndName(region,group),keyPair.toBuilder().keyMaterial(CREDENTIALS.credential).build())).andReturn(null);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options),group);
-  verify(backing);
   verifyStrategy(strategy);
 }

@@ -8,7 +8,8 @@
  else {
         logger.debug(">> deleting keyPair(%s)",keyPair.getKeyName());
         ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,keyPair.getKeyName());
-        credentialsMap.invalidate(new RegionAndName(region,keyPair.getKeyName()));
+        credentialsMap.remove(new RegionAndName(region,keyPair.getKeyName()));
+        credentialsMap.remove(new RegionAndName(region,group));
         logger.debug("<< deleted keyPair(%s)",keyPair.getKeyName());
       }
     }

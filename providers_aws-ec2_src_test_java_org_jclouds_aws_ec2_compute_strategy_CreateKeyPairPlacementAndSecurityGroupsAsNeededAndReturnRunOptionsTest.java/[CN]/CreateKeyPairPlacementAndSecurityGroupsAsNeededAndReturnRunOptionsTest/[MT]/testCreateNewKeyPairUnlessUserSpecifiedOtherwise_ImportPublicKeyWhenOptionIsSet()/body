@@ -5,22 +5,17 @@
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
-  ConcurrentMap<RegionAndName,KeyPair> backing=createMock(ConcurrentMap.class);
-  expect(strategy.credentialsMap.asMap()).andReturn(backing).atLeastOnce();
-  expect(backing.containsKey(new RegionAndName(region,group))).andReturn(false);
-  expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-  expect(options.getPublicKey()).andReturn(null).times(2);
+  expect(options.getPublicKey()).andReturn("ssh-rsa").times(2);
   expect(options.getOverridingCredentials()).andReturn(CREDENTIALS).atLeastOnce();
-  expect(backing.put(new RegionAndName(region,userSuppliedKeyPair),KEYPAIR)).andReturn(null);
+  expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,"ssh-rsa"))).andReturn(KEYPAIR);
+  expect(options.dontAuthorizePublicKey()).andReturn(options);
+  expect(strategy.credentialsMap.put(new RegionAndName(region,group),KEYPAIR)).andReturn(null);
   expect(options.getRunScript()).andReturn(Statements.exec("echo foo"));
-  expect(strategy.credentialsMap.getUnchecked(new RegionAndName(region,userSuppliedKeyPair))).andReturn(keyPair);
   replay(options);
   replay(keyPair);
-  replay(backing);
   replayStrategy(strategy);
   assertEquals(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options),userSuppliedKeyPair);
   verify(options);
   verify(keyPair);
-  verify(backing);
   verifyStrategy(strategy);
 }
