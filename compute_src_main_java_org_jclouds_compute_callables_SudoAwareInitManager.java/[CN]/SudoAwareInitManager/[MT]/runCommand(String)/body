@@ -1,6 +1,6 @@
 {
-  ExecResponse returnVal;
-  logger.debug(">> running [%s] as %s@%s",command.replace(node.getAdminPassword() != null ? node.getAdminPassword() : "XXXXX","XXXXX"),ssh.getUsername(),ssh.getHostAddress());
-  returnVal=ssh.exec(command);
-  return returnVal;
+  String statement=String.format(">> running [%s] as %s@%s",command.replace(node.getAdminPassword() != null ? node.getAdminPassword() : "XXXXX","XXXXX"),ssh.getUsername(),ssh.getHostAddress());
+  if (command.endsWith("status"))   computeLogger.trace(statement);
+ else   computeLogger.debug(statement);
+  return ssh.exec(command);
 }

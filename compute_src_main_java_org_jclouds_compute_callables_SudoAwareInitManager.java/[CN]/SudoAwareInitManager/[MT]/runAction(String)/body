@@ -2,7 +2,8 @@
   ExecResponse returnVal;
   String command=(runAsRoot) ? execScriptAsRoot(action) : execScriptAsDefaultUser(action);
   returnVal=runCommand(command);
-  if (logger.isTraceEnabled())   logger.trace("<< %s[%s]",action,returnVal);
- else   logger.debug("<< %s(%d)",action,returnVal.getExitCode());
+  if (computeLogger.isTraceEnabled())   computeLogger.trace("<< %s[%s]",action,returnVal);
+ else   if ("status".equals(action))   computeLogger.trace("<< %s(%d)",action,returnVal.getExitCode());
+ else   computeLogger.debug("<< %s(%d)",action,returnVal.getExitCode());
   return returnVal;
 }
