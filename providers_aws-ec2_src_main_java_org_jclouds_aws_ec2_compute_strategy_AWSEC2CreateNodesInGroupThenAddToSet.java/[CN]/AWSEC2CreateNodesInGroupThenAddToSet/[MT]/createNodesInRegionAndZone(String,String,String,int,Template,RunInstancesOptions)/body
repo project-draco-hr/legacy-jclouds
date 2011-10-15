@@ -4,9 +4,9 @@
     LaunchSpecification spec=AWSRunInstancesOptions.class.cast(instanceOptions).getLaunchSpecificationBuilder().imageId(template.getImage().getProviderId()).availabilityZone(zone).build();
     RequestSpotInstancesOptions options=AWSEC2TemplateOptions.class.cast(template.getOptions()).getSpotOptions();
     if (logger.isDebugEnabled())     logger.debug(">> requesting %d spot instances region(%s) price(%f) spec(%s) options(%s)",count,region,spotPrice,spec,options);
-    return addTagsToInstancesInRegion(template.getOptions().getUserMetadata(),transform(client.getSpotInstanceServices().requestSpotInstancesInRegion(region,spotPrice,count,spec,options),spotConverter),region);
+    return addTagsToInstancesInRegion(template.getOptions().getUserMetadata(),transform(client.getSpotInstanceServices().requestSpotInstancesInRegion(region,spotPrice,count,spec,options),spotConverter),region,group);
   }
  else {
-    return addTagsToInstancesInRegion(template.getOptions().getUserMetadata(),super.createNodesInRegionAndZone(region,zone,count,template,instanceOptions),region);
+    return addTagsToInstancesInRegion(template.getOptions().getUserMetadata(),super.createNodesInRegionAndZone(region,zone,group,count,template,instanceOptions),region,group);
   }
 }
