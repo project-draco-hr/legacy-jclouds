@@ -1,14 +1,7 @@
 {
-  Server server=configureJettyServer();
-  try {
-    logger.debug("Starting Jetty server for serving of preseed.cfg...");
-    server.start();
-    logger.debug("Jetty server started.");
-  }
- catch (  Exception e) {
-    logger.error(e,"Could not start Jetty server");
-    throw new IllegalStateException(e);
-  }
+  String port=System.getProperty(VirtualBoxConstants.VIRTUALBOX_JETTY_PORT,"8080");
+  String basebaseResource=".";
+  Server server=new StartJettyIfNotAlreadyRunning(port).apply(basebaseResource);
   IMachine vm=manager.getVBox().createMachine(settingsFile,vmName,osTypeId,vmId,forceOverwrite);
   manager.getVBox().registerMachine(vm);
   String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";

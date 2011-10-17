@@ -1,5 +1,4 @@
 {
-  logger().info("\n\n\n\nSetting up Virtualbox environment");
   context=TestUtils.computeServiceForLocalhostAndGuest();
   setupCredentials();
   setupConfigurationProperties();
@@ -7,6 +6,6 @@
   downloadFileUnlessPresent(gaIsoUrl,workingDir,gaIsoName);
   installVbox();
   checkVboxVersionExpected();
-  if (!new InetSocketAddressConnect().apply(new IPSocket(endpoint.getHost(),endpoint.getPort())))   startupVboxWebServer();
-  configureJettyServer();
+  new StartVBoxIfNotAlreadyRunning(context,hostId,new Credentials(vboxWebServerIdentity,vboxWebServerCredential));
+  new StartJettyIfNotAlreadyRunning(port).apply(basebaseResource);
 }
