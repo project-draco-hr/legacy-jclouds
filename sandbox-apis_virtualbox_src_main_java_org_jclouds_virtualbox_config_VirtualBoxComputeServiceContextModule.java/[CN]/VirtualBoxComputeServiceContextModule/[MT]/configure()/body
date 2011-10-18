@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,IMachine,IMachine,Location>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,IMachine,Image,Location>>(){
   }
 ).to(VirtualBoxComputeServiceAdapter.class);
   bind(new TypeLiteral<Function<IMachine,NodeMetadata>>(){
@@ -12,9 +12,9 @@
   bind(new TypeLiteral<Function<IMachine,Hardware>>(){
   }
 ).to(IMachineToHardware.class);
-  bind(new TypeLiteral<Function<IMachine,Image>>(){
+  bind(new TypeLiteral<Function<Image,Image>>(){
   }
-).to(IMachineToImage.class);
+).to((Class)IdentityFunction.class);
   bind(new TypeLiteral<Supplier<Location>>(){
   }
 ).to(OnlyLocationOrFirstZone.class);
