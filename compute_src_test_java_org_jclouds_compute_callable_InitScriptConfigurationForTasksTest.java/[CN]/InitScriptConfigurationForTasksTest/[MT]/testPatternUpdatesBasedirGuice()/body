@@ -1,0 +1,11 @@
+{
+  InitScriptConfigurationForTasks config=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named(InitScriptConfigurationForTasks.PROPERTY_INIT_SCRIPT_PATTERN)).to("/var/foo-init-%s");
+    }
+  }
+).getInstance(InitScriptConfigurationForTasks.class);
+  config.initScriptPattern("/var/foo-init-%s");
+  assertEquals(config.getBasedir(),"/var");
+  assertEquals(config.getInitScriptPattern(),"/var/foo-init-%s");
+}
