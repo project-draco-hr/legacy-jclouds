@@ -1,9 +1,10 @@
 {
-  int result;
+  final int prime=31;
+  int result=1;
+  result=prime * result + (int)(id ^ (id >>> 32));
+  result=prime * result + ((name == null) ? 0 : name.hashCode());
   long temp;
-  result=(int)(id ^ (id >>> 32));
-  result=31 * result + name.hashCode();
-  temp=price != +0.0d ? Double.doubleToLongBits(price) : 0L;
-  result=31 * result + (int)(temp ^ (temp >>> 32));
+  temp=Double.doubleToLongBits(price);
+  result=prime * result + (int)(temp ^ (temp >>> 32));
   return result;
 }

@@ -1,6 +1,6 @@
 {
-  return new MapMaker().makeComputingMap(new Function<URI,ComputeServiceContext>(){
-    @SuppressWarnings("unchecked") @Override public ComputeServiceContext apply(    URI from){
+  return CacheBuilder.newBuilder().build(new CacheLoader<URI,ComputeServiceContext>(){
+    @SuppressWarnings("unchecked") @Override public ComputeServiceContext load(    URI from){
       Properties props=getPropertiesFromResource("/rest.properties");
       props.putAll(projectProvider.get().getProperties());
       String provider=from.getHost();

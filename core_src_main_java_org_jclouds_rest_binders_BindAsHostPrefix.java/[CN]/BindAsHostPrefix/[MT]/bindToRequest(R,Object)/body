@@ -1,8 +1,8 @@
 {
   checkNotNull(payload,"hostprefix");
-  checkArgument(isValidLenient(request.getEndpoint().getHost()),"this is only valid for hostnames: " + request);
+  checkArgument(isValid(request.getEndpoint().getHost()),"this is only valid for hostnames: " + request);
   UriBuilder builder=uriBuilderProvider.get().uri(request.getEndpoint());
-  InternetDomainName name=fromLenient(request.getEndpoint().getHost()).child(payload.toString());
+  InternetDomainName name=from(request.getEndpoint().getHost()).child(payload.toString());
   builder.host(name.name());
   return (R)request.toBuilder().endpoint(builder.build()).build();
 }

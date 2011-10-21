@@ -1,0 +1,19 @@
+{
+  long bootSize=(long)(template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024* 1024l);
+  logger.debug(">> imaging boot drive source(%s) bytes(%d)",template.getImage().getId(),bootSize);
+  DriveInfo drive=client.cloneDrive(template.getImage().getId(),template.getImage().getId(),new CloneDriveOptions().size(bootSize));
+  boolean success=driveNotClaimed.apply(drive);
+  logger.debug("<< image(%s) complete(%s)",drive.getUuid(),success);
+  if (!success) {
+    client.destroyDrive(drive.getUuid());
+    throw new IllegalStateException("could not image drive in time!");
+  }
+  Server toCreate=Servers.small(name,drive.getUuid(),defaultVncPassword).mem(template.getHardware().getRam()).cpu((int)(template.getHardware().getProcessors().get(0).getSpeed())).build();
+  logger.debug(">> creating server");
+  ServerInfo from=client.createServer(toCreate);
+  logger.debug("<< created server(%s)",from.getUuid());
+  logger.debug(">> starting server(%s)",from.getUuid());
+  client.startServer(from.getUuid());
+  credentialStore.put("node#" + from.getUuid(),new Credentials("root",defaultVncPassword));
+  return from;
+}

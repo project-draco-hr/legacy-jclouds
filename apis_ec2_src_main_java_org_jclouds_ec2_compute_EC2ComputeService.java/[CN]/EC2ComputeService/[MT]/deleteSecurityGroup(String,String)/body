@@ -5,7 +5,7 @@
     logger.debug(">> deleting securityGroup(%s)",groupName);
     try {
       ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,groupName);
-      securityGroupMap.remove(new RegionNameAndIngressRules(region,groupName,null,false));
+      securityGroupMap.invalidate(new RegionNameAndIngressRules(region,groupName,null,false));
       logger.debug("<< deleted securityGroup(%s)",groupName);
     }
  catch (    IllegalStateException e) {

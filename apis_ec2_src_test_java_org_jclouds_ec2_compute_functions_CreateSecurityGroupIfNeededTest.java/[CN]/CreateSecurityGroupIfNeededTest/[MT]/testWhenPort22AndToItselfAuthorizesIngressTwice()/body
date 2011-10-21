@@ -1,0 +1,17 @@
+{
+  SecurityGroupClient client=createMock(SecurityGroupClient.class);
+  Predicate<RegionAndName> tester=Predicates.alwaysTrue();
+  SecurityGroup group=createNiceMock(SecurityGroup.class);
+  Set<SecurityGroup> groups=ImmutableSet.<SecurityGroup>of(group);
+  client.createSecurityGroupInRegion("region","group","group");
+  client.authorizeSecurityGroupIngressInRegion("region","group",IpProtocol.TCP,22,22,"0.0.0.0/0");
+  expect(client.describeSecurityGroupsInRegion("region","group")).andReturn(Set.class.cast(groups));
+  expect(group.getOwnerId()).andReturn("ownerId");
+  client.authorizeSecurityGroupIngressInRegion("region","group",new UserIdGroupPair("ownerId","group"));
+  replay(client);
+  replay(group);
+  CreateSecurityGroupIfNeeded function=new CreateSecurityGroupIfNeeded(client,tester);
+  assertEquals("group",function.load(new RegionNameAndIngressRules("region","group",new int[]{22},true)));
+  verify(client);
+  verify(group);
+}

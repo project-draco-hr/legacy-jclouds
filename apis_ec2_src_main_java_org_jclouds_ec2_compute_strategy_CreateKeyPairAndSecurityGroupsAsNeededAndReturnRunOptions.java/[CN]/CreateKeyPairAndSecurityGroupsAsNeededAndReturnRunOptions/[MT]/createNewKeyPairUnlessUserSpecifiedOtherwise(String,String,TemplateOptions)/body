@@ -10,13 +10,15 @@
   }
  else   if (keyPairName != null) {
     if (options.getOverridingCredentials() != null && options.getOverridingCredentials().credential != null) {
-      KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).keyFingerprint("//TODO").keyMaterial(options.getOverridingCredentials().credential).build();
-      putKeyPairIntoCredentialMap(keyPair);
+      String pem=options.getOverridingCredentials().credential;
+      KeyPair keyPair=KeyPair.builder().region(region).keyName(keyPairName).fingerprint(fingerprintPrivateKey(pem)).sha1OfPrivateKey(sha1PrivateKey(pem)).keyMaterial(pem).build();
+      RegionAndName key=new RegionAndName(region,keyPairName);
+      credentialsMap.put(key,keyPair);
     }
   }
   if (options.getRunScript() != null) {
     RegionAndName regionAndName=new RegionAndName(region,keyPairName);
-    checkState(credentialsMap.containsKey(regionAndName),"no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
+    checkArgument(credentialsMap.containsKey(regionAndName),"no private key configured for: %s; please use options.overrideLoginCredentialWith(rsa_private_text)",regionAndName);
   }
   return keyPairName;
 }

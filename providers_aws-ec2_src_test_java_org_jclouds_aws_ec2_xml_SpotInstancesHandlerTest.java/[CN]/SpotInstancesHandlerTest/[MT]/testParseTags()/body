@@ -1,0 +1,12 @@
+{
+  Set<SpotInstanceRequest> result=factory.create(injector.getInstance(SpotInstancesHandler.class)).parse(getClass().getResourceAsStream("/describe_spot_instance_tags.xml"));
+  Iterable<Map<String,String>> tags=Iterables.transform(result,new Function<SpotInstanceRequest,Map<String,String>>(){
+    @Override public Map<String,String> apply(    SpotInstanceRequest input){
+      return input.getTags();
+    }
+  }
+);
+  assertEquals(Iterables.get(tags,0),ImmutableMap.of("One","one","Two","one"));
+  assertEquals(Iterables.get(tags,1),ImmutableMap.of("One","two","Two","two"));
+  assertEquals(Iterables.get(tags,2),ImmutableMap.of("Two","three","Three","three","Four",""));
+}

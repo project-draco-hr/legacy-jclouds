@@ -7,7 +7,7 @@
       try {
         ec2Client.getPlacementGroupServices().deletePlacementGroupInRegion(region,placementGroup);
         checkState(placementGroupDeleted.apply(new PlacementGroup(region,placementGroup,"cluster",State.PENDING)),String.format("placementGroup region(%s) name(%s) failed to delete",region,placementGroup));
-        placementGroupMap.remove(new RegionAndName(region,placementGroup));
+        placementGroupMap.invalidate(new RegionAndName(region,placementGroup));
         logger.debug("<< deleted placementGroup(%s)",placementGroup);
       }
  catch (      IllegalStateException e) {

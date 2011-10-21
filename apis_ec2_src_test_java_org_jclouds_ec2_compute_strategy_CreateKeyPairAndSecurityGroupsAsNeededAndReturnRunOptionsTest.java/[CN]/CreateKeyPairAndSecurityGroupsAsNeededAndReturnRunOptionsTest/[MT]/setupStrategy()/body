@@ -1,7 +1,6 @@
 {
-  Map<RegionAndName,KeyPair> credentialsMap=createMock(Map.class);
-  Map<RegionAndName,String> securityGroupMap=createMock(Map.class);
-  CreateUniqueKeyPair createUniqueKeyPair=createMock(CreateUniqueKeyPair.class);
-  Function<RegionNameAndIngressRules,String> createSecurityGroupIfNeeded=createMock(CreateSecurityGroupIfNeeded.class);
-  return new CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions(credentialsMap,securityGroupMap,createUniqueKeyPair,createSecurityGroupIfNeeded,OPTIONS_PROVIDER);
+  Function<RegionAndName,KeyPair> makeKeyPair=createMock(Function.class);
+  ConcurrentMap<RegionAndName,KeyPair> credentialsMap=createMock(ConcurrentMap.class);
+  Cache<RegionAndName,String> securityGroupMap=createMock(Cache.class);
+  return new CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair,credentialsMap,securityGroupMap,OPTIONS_PROVIDER);
 }

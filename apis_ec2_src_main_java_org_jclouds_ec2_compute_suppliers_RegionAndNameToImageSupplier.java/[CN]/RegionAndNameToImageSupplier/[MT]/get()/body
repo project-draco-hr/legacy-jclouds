@@ -1,4 +1,5 @@
 {
+  Cache<RegionAndName,Image> cache=CacheBuilder.newBuilder().build(regionAndIdToImage);
   if (amiOwners.length == 0) {
     logger.debug(">> no owners specified, skipping image parsing");
   }
@@ -6,13 +7,13 @@
     logger.debug(">> providing images");
     Iterable<Entry<String,DescribeImagesOptions>> queries=getDescribeQueriesForOwnersInRegions(regions,amiOwners);
     Iterable<? extends Image> parsedImages=ImmutableSet.copyOf(filter(transform(describer.apply(queries),parser),Predicates.notNull()));
-    images.putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+    cache.asMap().putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
       @Override public RegionAndName apply(      Image from){
         return new RegionAndName(from.getLocation().getId(),from.getProviderId());
       }
     }
 ));
-    logger.debug("<< images(%d)",images.size());
+    logger.debug("<< images(%d)",cache.asMap().size());
   }
-  return images;
+  return cache;
 }

@@ -1,0 +1,6 @@
+{
+  KeySpec privateKeySpec=privateKeySpec(privateKeyPEM);
+  checkArgument(privateKeySpec instanceof RSAPrivateCrtKeySpec,"incorrect format expected RSAPrivateCrtKeySpec was %s",privateKeySpec);
+  RSAPrivateCrtKeySpec certKeySpec=RSAPrivateCrtKeySpec.class.cast(privateKeySpec);
+  return fingerprint(certKeySpec.getPublicExponent(),certKeySpec.getModulus());
+}

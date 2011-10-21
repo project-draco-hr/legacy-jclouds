@@ -1,7 +1,6 @@
 {
   checkNotNull(loadBalancer,"Load balancer must be a valid instance");
   checkNotNull(loadBalancer.getName(),"Load balancer must be a valid name");
-  GetJobListOptions jobOptions=new GetJobListOptions.Builder().latestJobForObjectByName(loadBalancer.getName());
-  Job latestJob=Iterables.getOnlyElement(jobClient.getJobList(jobOptions));
+  Job latestJob=Iterables.getOnlyElement(jobClient.getJobList(latestJobForObjectByName(loadBalancer.getName())));
   return JobState.SUCCEEDED.equals(latestJob.getCurrentState());
 }

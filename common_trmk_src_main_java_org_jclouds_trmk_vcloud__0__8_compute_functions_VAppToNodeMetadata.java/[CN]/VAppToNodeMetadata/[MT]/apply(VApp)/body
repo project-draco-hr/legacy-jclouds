@@ -23,8 +23,8 @@
   builder.publicAddresses(computeClient.getPublicAddresses(from.getHref()));
   builder.privateAddresses(computeClient.getPrivateAddresses(from.getHref()));
   String group=parseGroupFromName(from.getName());
-  if (group != null) {
-    builder.group(group);
+  builder.group(group);
+  if (group != null && !credentialStore.containsKey("node#" + from.getHref().toASCIIString())) {
     installCredentialsFromCache(from.getHref(),URI.create(vdcLocation.getParent().getId()),group,builder);
   }
  else {

@@ -1,4 +1,9 @@
 {
-  Node node=nodes.get().get(id);
+  Node node=null;
+  try {
+    node=nodes.get().getUnchecked(id);
+  }
+ catch (  UncheckedExecutionException e) {
+  }
   return node != null ? converter.apply(node) : null;
 }

@@ -1,0 +1,7 @@
+{
+  VirtualGuest guest=getNode(id);
+  if (guest == null)   return;
+  if (guest.getBillingItemId() == -1)   throw new IllegalStateException(String.format("no billing item for guest(%s) so we cannot cancel the order",id));
+  logger.debug(">> canceling service for guest(%s) billingItem(%s)",id,guest.getBillingItemId());
+  client.getVirtualGuestClient().cancelService(guest.getBillingItemId());
+}

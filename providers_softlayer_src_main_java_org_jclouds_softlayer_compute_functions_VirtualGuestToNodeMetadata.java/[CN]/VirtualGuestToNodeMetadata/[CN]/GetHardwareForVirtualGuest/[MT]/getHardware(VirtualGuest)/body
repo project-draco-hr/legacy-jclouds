@@ -1,0 +1,7 @@
+{
+  if (guest.getStartCpus() < 1)   return null;
+  ProductOrder order=client.getVirtualGuestClient().getOrderTemplate(guest.getId());
+  if (order == null)   return null;
+  Iterable<ProductItem> items=Iterables.transform(order.getPrices(),ProductItems.item());
+  return productItemsToHardware.apply(items);
+}

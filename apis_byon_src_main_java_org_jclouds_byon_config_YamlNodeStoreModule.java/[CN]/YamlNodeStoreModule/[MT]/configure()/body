@@ -1,4 +1,10 @@
 {
+  bind(new TypeLiteral<Supplier<Cache<String,Node>>>(){
+  }
+).to(NodesParsedFromSupplier.class);
+  bind(new TypeLiteral<Function<InputStream,Cache<String,Node>>>(){
+  }
+).to(NodesFromYamlStream.class);
   bind(new TypeLiteral<Function<YamlNode,InputStream>>(){
   }
 ).toInstance(org.jclouds.byon.domain.YamlNode.yamlNodeToInputStream);
@@ -14,15 +20,15 @@
   if (backing != null) {
     bind(new TypeLiteral<Map<String,InputStream>>(){
     }
-).toInstance(backing);
+).annotatedWith(Names.named("yaml")).toInstance(backing);
   }
  else {
     bind(new TypeLiteral<Map<String,InputSupplier<InputStream>>>(){
     }
-).toInstance(BACKING);
+).annotatedWith(Names.named("yaml")).toInstance(BACKING);
     bind(new TypeLiteral<Map<String,InputStream>>(){
     }
-).to(new TypeLiteral<CopyInputStreamInputSupplierMap>(){
+).annotatedWith(Names.named("yaml")).to(new TypeLiteral<YAMLCopyInputStreamInputSupplierMap>(){
     }
 );
   }
