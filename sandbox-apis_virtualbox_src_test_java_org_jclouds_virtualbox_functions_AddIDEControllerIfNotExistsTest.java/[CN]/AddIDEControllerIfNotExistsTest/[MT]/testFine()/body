@@ -1,0 +1,9 @@
+{
+  IMachine vm=createMock(IMachine.class);
+  String controllerName="IDE Controller";
+  expect(vm.addStorageController(controllerName,StorageBus.IDE)).andReturn(createNiceMock(IStorageController.class));
+  vm.saveSettings();
+  replay(vm);
+  new AddIDEControllerIfNotExists(controllerName).apply(vm);
+  verify(vm);
+}

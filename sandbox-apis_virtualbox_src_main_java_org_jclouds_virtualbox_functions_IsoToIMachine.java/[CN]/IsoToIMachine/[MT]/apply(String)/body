@@ -6,53 +6,64 @@
   manager.getVBox().registerMachine(vm);
   String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
   String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
-  IMedium distroMedium=manager.getVBox().openMedium(workingDir + "/" + isoName,DVD,ReadOnly,forceOverwrite);
-  Long memorySize=new Long(1024);
-  ISession session=manager.getSessionObject();
-  IMachine machine=manager.getVBox().findMachine(vmName);
-  machine.lockMachine(session,Write);
-  IMachine mutable=session.getMachine();
-  mutable.setMemorySize(memorySize);
-  mutable.saveSettings();
-  session.unlockMachine();
-  machine.lockMachine(session,Write);
-  mutable=session.getMachine();
-  mutable.addStorageController(controllerIDE,StorageBus.IDE);
-  mutable.saveSettings();
-  session.unlockMachine();
+  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
+    @Override public Void apply(    IMachine arg0){
+      arg0.setMemorySize(1024l);
+      arg0.saveSettings();
+      return null;
+    }
+  }
+);
+  ensureMachineHasIDEControllerNamed(vmName,controllerIDE);
   String adminDiskPath=workingDir + "/" + adminDisk;
   if (new File(adminDiskPath).exists()) {
     new File(adminDiskPath).delete();
   }
-  IMedium hd=manager.getVBox().createHardDisk(diskFormat,adminDiskPath);
+  final IMedium distroMedium=manager.getVBox().openMedium(workingDir + "/" + isoName,DVD,ReadOnly,forceOverwrite);
+  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
+    @Override public Void apply(    IMachine arg0){
+      try {
+        arg0.attachDevice(controllerIDE,0,0,DeviceType.DVD,distroMedium);
+        arg0.saveSettings();
+      }
+ catch (      VBoxException e) {
+        if (e.getMessage().indexOf("is already attached to port") == -1)         throw e;
+      }
+      return null;
+    }
+  }
+);
+  final IMedium hd=manager.getVBox().createHardDisk(diskFormat,adminDiskPath);
   long size=4L * 1024L * 1024L* 1024L - 4L;
   IProgress storageCreation=hd.createBaseStorage(size,(long)MediumVariant.STANDARD.ordinal());
   storageCreation.waitForCompletion(-1);
-  machine.lockMachine(session,Write);
-  mutable=session.getMachine();
-  mutable.attachDevice(controllerIDE,0,0,DeviceType.DVD,distroMedium);
-  mutable.saveSettings();
-  session.unlockMachine();
-  machine.lockMachine(session,Write);
-  mutable=session.getMachine();
-  mutable.attachDevice(controllerIDE,0,1,DeviceType.HardDisk,hd);
-  mutable.saveSettings();
-  session.unlockMachine();
-  machine.lockMachine(session,Write);
-  mutable=session.getMachine();
-  mutable.getNetworkAdapter(0l).setAttachmentType(NAT);
-  machine.getNetworkAdapter(0l).getNatDriver().addRedirect("guestssh",TCP,"127.0.0.1",2222,"",22);
-  mutable.getNetworkAdapter(0l).setEnabled(true);
-  mutable.saveSettings();
-  session.unlockMachine();
+  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
+    @Override public Void apply(    IMachine arg0){
+      arg0.attachDevice(controllerIDE,0,1,DeviceType.HardDisk,hd);
+      arg0.saveSettings();
+      return null;
+    }
+  }
+);
+  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
+    @Override public Void apply(    IMachine arg0){
+      arg0.getNetworkAdapter(0l).setAttachmentType(NAT);
+      arg0.getNetworkAdapter(0l).getNatDriver().addRedirect("guestssh",TCP,"127.0.0.1",2222,"",22);
+      arg0.getNetworkAdapter(0l).setEnabled(true);
+      return null;
+    }
+  }
+);
   String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
-  IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
-  machine.lockMachine(session,Write);
-  mutable=session.getMachine();
-  mutable.attachDevice(controllerIDE,1,1,DeviceType.DVD,guestAdditionsDvdMedium);
-  mutable.saveSettings();
-  session.unlockMachine();
-  IProgress prog=machine.launchVMProcess(session,"gui","");
+  final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
+  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
+    @Override public Void apply(    IMachine arg0){
+      arg0.attachDevice(controllerIDE,1,1,DeviceType.DVD,guestAdditionsDvdMedium);
+      return null;
+    }
+  }
+);
+  IProgress prog=vm.launchVMProcess(manager.getSessionObject(),"gui","");
   prog.waitForCompletion(-1);
   try {
     Thread.sleep(5000);
@@ -62,7 +73,6 @@
   }
   String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
   sendKeyboardSequence(installKeySequence);
-  session.unlockMachine();
   boolean sshDeamonIsRunning=false;
   while (!sshDeamonIsRunning) {
     try {
@@ -76,10 +86,14 @@
     }
   }
   logger.debug("Installation of image complete. Powering down...");
-  machine.lockMachine(session,LockType.Shared);
-  IProgress powerDownProgress=session.getConsole().powerDown();
-  powerDownProgress.waitForCompletion(-1);
-  session.unlockMachine();
+  lockSessionOnMachineAndApply(manager,Shared,vmName,new Function<ISession,Void>(){
+    @Override public Void apply(    ISession arg0){
+      IProgress powerDownProgress=arg0.getConsole().powerDown();
+      powerDownProgress.waitForCompletion(-1);
+      return null;
+    }
+  }
+);
   try {
     logger.debug("Stopping Jetty server...");
     server.stop();
