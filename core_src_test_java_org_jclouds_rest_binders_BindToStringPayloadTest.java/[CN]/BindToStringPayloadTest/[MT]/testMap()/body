@@ -1,0 +1,7 @@
+{
+  BindToStringPayload binder=new BindToStringPayload();
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).build();
+  request=binder.bindToRequest(request,ImmutableMap.of("imageName","foo","serverId","2"));
+  assertEquals(request.getPayload().getRawContent(),"{imageName=foo, serverId=2}");
+  assertEquals(request.getPayload().getContentMetadata().getContentType(),"application/unknown");
+}
