@@ -1,5 +1,10 @@
 {
-  InputStream is=getClass().getResourceAsStream("/testImages.yaml");
-  ImageFromYamlStream parser=new ImageFromYamlStream();
-  return parser.apply(is).asMap().values();
+  final Predicate<? super IMachine> imagePredicate=new Predicate<IMachine>(){
+    @Override public boolean apply(    @Nullable IMachine iMachine){
+      return iMachine.getName().startsWith(VIRTUALBOX_IMAGE_PREFIX);
+    }
+  }
+;
+  final Iterable<IMachine> imageMachines=filter(manager.getVBox().getMachines(),imagePredicate);
+  return transform(imageMachines,iMachineToImage);
 }
