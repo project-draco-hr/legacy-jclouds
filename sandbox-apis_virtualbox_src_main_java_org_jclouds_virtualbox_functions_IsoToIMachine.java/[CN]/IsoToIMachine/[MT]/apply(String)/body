@@ -19,18 +19,8 @@
   if (new File(adminDiskPath).exists()) {
     new File(adminDiskPath).delete();
   }
-  final IMedium hd=manager.getVBox().createHardDisk(diskFormat,adminDiskPath);
-  long size=4L * 1024L * 1024L* 1024L - 4L;
-  IProgress storageCreation=hd.createBaseStorage(size,(long)MediumVariant.STANDARD.ordinal());
-  storageCreation.waitForCompletion(-1);
-  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
-    @Override public Void apply(    IMachine machine){
-      machine.attachDevice(controllerIDE,0,1,DeviceType.HardDisk,hd);
-      machine.saveSettings();
-      return null;
-    }
-  }
-);
+  IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
+  lockMachineAndApply(manager,Write,vmName,new AttachHardDiskToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,manager));
   lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
     @Override public Void apply(    IMachine machine){
       machine.getNetworkAdapter(0l).setAttachmentType(NAT);
