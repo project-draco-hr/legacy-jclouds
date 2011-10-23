@@ -15,24 +15,11 @@
   }
 );
   ensureMachineHasIDEControllerNamed(vmName,controllerIDE);
+  ensureMachineHasAttachedDistroMedium(isoName,workingDir,controllerIDE);
   String adminDiskPath=workingDir + "/" + adminDisk;
   if (new File(adminDiskPath).exists()) {
     new File(adminDiskPath).delete();
   }
-  final IMedium distroMedium=manager.getVBox().openMedium(workingDir + "/" + isoName,DVD,ReadOnly,forceOverwrite);
-  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
-    @Override public Void apply(    IMachine machine){
-      try {
-        machine.attachDevice(controllerIDE,0,0,DeviceType.DVD,distroMedium);
-        machine.saveSettings();
-      }
- catch (      VBoxException e) {
-        if (e.getMessage().indexOf("is already attached to port") == -1)         throw e;
-      }
-      return null;
-    }
-  }
-);
   final IMedium hd=manager.getVBox().createHardDisk(diskFormat,adminDiskPath);
   long size=4L * 1024L * 1024L* 1024L - 4L;
   IProgress storageCreation=hd.createBaseStorage(size,(long)MediumVariant.STANDARD.ordinal());
