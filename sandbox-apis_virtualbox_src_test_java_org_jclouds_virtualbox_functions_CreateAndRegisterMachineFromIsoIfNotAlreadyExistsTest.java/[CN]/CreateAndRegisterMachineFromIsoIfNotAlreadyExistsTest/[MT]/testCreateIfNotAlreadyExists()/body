@@ -1,0 +1,19 @@
+{
+  VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
+  IVirtualBox vBox=createMock(IVirtualBox.class);
+  String vmName="jclouds-image-my-ubuntu-image";
+  IMachine createdMachine=createMock(IMachine.class);
+  expect(manager.getVBox()).andReturn(vBox).anyTimes();
+  StringBuilder errorMessageBuilder=new StringBuilder();
+  errorMessageBuilder.append("VirtualBox error: Could not find a registered machine named ");
+  errorMessageBuilder.append("'jclouds-image-virtualbox-iso-to-machine-test' (0x80BB0001)");
+  String errorMessage=errorMessageBuilder.toString();
+  VBoxException vBoxException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
+  vBox.findMachine(vmName);
+  expectLastCall().andThrow(vBoxException);
+  expect(vBox.createMachine(anyString(),eq(vmName),anyString(),anyString(),anyBoolean())).andReturn(createdMachine).anyTimes();
+  vBox.registerMachine(createdMachine);
+  replay(manager,vBox);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists("","","",false,manager).apply(vmName);
+  verify(manager,vBox);
+}
