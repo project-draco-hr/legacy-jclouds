@@ -1,0 +1,11 @@
+{
+  final IVirtualBox vBox=manager.getVBox();
+  try {
+    vBox.findMachine(vmName);
+    throw new IllegalStateException("Machine " + vmName + " is already registered.");
+  }
+ catch (  VBoxException e) {
+    if (machineNotFoundException(e))     return createMachine(vBox,vmName);
+ else     throw e;
+  }
+}

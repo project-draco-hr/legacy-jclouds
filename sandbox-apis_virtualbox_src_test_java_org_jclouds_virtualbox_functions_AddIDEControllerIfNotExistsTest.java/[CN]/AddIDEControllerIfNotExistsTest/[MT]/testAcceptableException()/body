@@ -1,0 +1,8 @@
+{
+  IMachine vm=createMock(IMachine.class);
+  String controllerName="IDE Controller";
+  expect(vm.addStorageController(controllerName,StorageBus.IDE)).andThrow(new VBoxException(createNiceMock(Throwable.class),"VirtualBox error: Storage controller named 'IDE Controller' already exists (0x80BB000C)"));
+  replay(vm);
+  new AddIDEControllerIfNotExists(controllerName).apply(vm);
+  verify(vm);
+}

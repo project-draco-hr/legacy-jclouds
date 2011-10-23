@@ -1,0 +1,14 @@
+{
+  String controllerIDE="IDE Controller";
+  IMedium distroMedium=createNiceMock(IMedium.class);
+  IMachine machine=createNiceMock(IMachine.class);
+  final StringBuilder errorBuilder=new StringBuilder();
+  errorBuilder.append("VirtualBox error: ");
+  errorBuilder.append("Some other VBox error");
+  String isoAlreadyAttachedException=errorBuilder.toString();
+  VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
+  machine.attachDevice(controllerIDE,0,0,DeviceType.DVD,distroMedium);
+  expectLastCall().andThrow(isoAttachedException);
+  replay(machine,distroMedium);
+  new AttachDistroMediumToMachine(controllerIDE,distroMedium).apply(machine);
+}

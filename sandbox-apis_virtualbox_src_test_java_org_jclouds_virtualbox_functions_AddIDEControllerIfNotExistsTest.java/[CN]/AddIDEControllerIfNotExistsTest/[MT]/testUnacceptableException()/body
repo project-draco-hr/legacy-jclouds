@@ -1,0 +1,8 @@
+{
+  IMachine vm=createMock(IMachine.class);
+  String controllerName="IDE Controller";
+  expect(vm.addStorageController(controllerName,StorageBus.IDE)).andThrow(new VBoxException(createNiceMock(Throwable.class),"VirtualBox error: General Error"));
+  replay(vm);
+  new AddIDEControllerIfNotExists(controllerName).apply(vm);
+  verify(vm);
+}

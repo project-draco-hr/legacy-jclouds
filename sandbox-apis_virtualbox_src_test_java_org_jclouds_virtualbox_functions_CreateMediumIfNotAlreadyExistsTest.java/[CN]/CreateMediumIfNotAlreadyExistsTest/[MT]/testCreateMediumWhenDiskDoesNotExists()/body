@@ -1,0 +1,22 @@
+{
+  String adminDiskPath="/Users/johndoe/jclouds-virtualbox-images/admin.vdi";
+  String diskFormat="vdi";
+  VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
+  IMachine machine=createMock(IMachine.class);
+  IVirtualBox vBox=createMock(IVirtualBox.class);
+  IMedium hardDisk=createMock(IMedium.class);
+  IProgress progress=createNiceMock(IProgress.class);
+  StringBuilder errorBuilder=new StringBuilder();
+  errorBuilder.append("org.virtualbox_4_1.VBoxException: VirtualBox error: ");
+  errorBuilder.append("Could not find an open hard disk with location ");
+  errorBuilder.append("'/Users/johndoe/jclouds-virtualbox-test/testadmin.vdi' (0x80BB0001)");
+  String errorMessage=errorBuilder.toString();
+  expect(manager.getVBox()).andReturn(vBox).anyTimes();
+  VBoxException notFoundException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
+  expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andThrow(notFoundException);
+  expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(hardDisk);
+  expect(hardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
+  replay(manager,machine,vBox,hardDisk);
+  new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
+  verify(machine,vBox);
+}

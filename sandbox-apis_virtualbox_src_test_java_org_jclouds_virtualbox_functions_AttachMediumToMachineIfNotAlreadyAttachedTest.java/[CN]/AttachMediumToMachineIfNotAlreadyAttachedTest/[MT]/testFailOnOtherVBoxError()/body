@@ -1,0 +1,18 @@
+{
+  String controllerIDE="IDE Controller";
+  int controllerPort=0;
+  int device=1;
+  VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
+  IMachine machine=createMock(IMachine.class);
+  IVirtualBox vBox=createMock(IVirtualBox.class);
+  IMedium hardDisk=createNiceMock(IMedium.class);
+  final StringBuilder errorBuilder=new StringBuilder();
+  errorBuilder.append("VirtualBox error: ");
+  errorBuilder.append("Some other VBox error");
+  String isoAlreadyAttachedException=errorBuilder.toString();
+  VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
+  machine.attachDevice(controllerIDE,controllerPort,device,HardDisk,hardDisk);
+  expectLastCall().andThrow(isoAttachedException);
+  replay(manager,machine,vBox,hardDisk);
+  new AttachMediumToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,controllerPort,device,HardDisk).apply(machine);
+}
