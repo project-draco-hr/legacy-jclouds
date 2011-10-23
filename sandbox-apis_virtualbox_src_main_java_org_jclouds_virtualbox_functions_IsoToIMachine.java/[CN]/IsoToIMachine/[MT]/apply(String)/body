@@ -12,18 +12,12 @@
   if (new File(adminDiskPath).exists()) {
     new File(adminDiskPath).delete();
   }
-  ensureMachineHasHardDiskAttached(vmName,adminDiskPath);
+  IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
+  ensureMachineHasHardDiskAttached(vmName,hardDisk);
   ensureNATNetworkingIsAppliedToMachine(vmName);
   String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
   final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
-  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
-    @Override public Void apply(    IMachine machine){
-      machine.attachDevice(controllerIDE,1,1,DeviceType.DVD,guestAdditionsDvdMedium);
-      machine.saveSettings();
-      return null;
-    }
-  }
-);
+  ensureGuestAdditionsMediumIsAttached(vmName,guestAdditionsDvdMedium);
   IProgress prog=vm.launchVMProcess(manager.getSessionObject(),"gui","");
   prog.waitForCompletion(-1);
   try {

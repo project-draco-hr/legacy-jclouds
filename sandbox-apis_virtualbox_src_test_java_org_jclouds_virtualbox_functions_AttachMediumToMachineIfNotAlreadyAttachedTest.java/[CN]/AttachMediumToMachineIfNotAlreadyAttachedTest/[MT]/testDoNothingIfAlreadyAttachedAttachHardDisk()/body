@@ -8,11 +8,14 @@
   IMedium hardDisk=createNiceMock(IMedium.class);
   final StringBuilder errorBuilder=new StringBuilder();
   errorBuilder.append("VirtualBox error: ");
-  errorBuilder.append("Some other VBox error");
+  errorBuilder.append("Medium '/Users/mattias/jclouds-virtualbox-test/testadmin.vdi' ");
+  errorBuilder.append("is already attached to port 0, device 1 of controller 'IDE Controller' ");
+  errorBuilder.append("of this virtual machine (0x80BB000C)");
   String isoAlreadyAttachedException=errorBuilder.toString();
   VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
-  machine.attachDevice(controllerIDE,controllerPort,device,DeviceType.HardDisk,hardDisk);
+  machine.attachDevice(controllerIDE,controllerPort,device,HardDisk,hardDisk);
   expectLastCall().andThrow(isoAttachedException);
   replay(manager,machine,vBox,hardDisk);
-  new AttachHardDiskToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,manager).apply(machine);
+  new AttachMediumToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,controllerPort,device,HardDisk).apply(machine);
+  verify(machine);
 }

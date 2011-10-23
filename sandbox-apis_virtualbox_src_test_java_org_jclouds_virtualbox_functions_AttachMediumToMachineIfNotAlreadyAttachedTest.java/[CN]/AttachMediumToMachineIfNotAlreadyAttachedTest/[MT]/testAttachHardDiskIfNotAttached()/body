@@ -12,9 +12,9 @@
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(hardDisk);
   expect(hardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
-  machine.attachDevice(controllerIDE,controllerPort,device,DeviceType.HardDisk,hardDisk);
+  machine.attachDevice(controllerIDE,controllerPort,device,HardDisk,hardDisk);
   machine.saveSettings();
   replay(manager,machine,vBox,hardDisk);
-  new AttachHardDiskToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,manager).apply(machine);
+  new AttachMediumToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,controllerPort,device,HardDisk).apply(machine);
   verify(machine);
 }
