@@ -21,16 +21,7 @@
   }
   IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
   lockMachineAndApply(manager,Write,vmName,new AttachHardDiskToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,manager));
-  lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
-    @Override public Void apply(    IMachine machine){
-      machine.getNetworkAdapter(0l).setAttachmentType(NAT);
-      machine.getNetworkAdapter(0l).getNatDriver().addRedirect("guestssh",TCP,"127.0.0.1",2222,"",22);
-      machine.getNetworkAdapter(0l).setEnabled(true);
-      machine.saveSettings();
-      return null;
-    }
-  }
-);
+  ensureNATNetworkingIsAppliedToMachine(vmName);
   String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
   final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
   lockMachineAndApply(manager,Write,vmName,new Function<IMachine,Void>(){
