@@ -1,7 +1,10 @@
 {
   ResponseParser annotation=method.getAnnotation(ResponseParser.class);
   if (annotation == null) {
-    if (method.getReturnType().equals(void.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureVoidLiteral)) {
+    if (method.isAnnotationPresent(JAXBResponseParser.class)) {
+      return getJAXBParserKeyForMethod(method);
+    }
+ else     if (method.getReturnType().equals(void.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureVoidLiteral)) {
       return Key.get(ReleasePayloadAndReturn.class);
     }
  else     if (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Boolean.class) || TypeLiteral.get(method.getGenericReturnType()).equals(futureBooleanLiteral)) {
