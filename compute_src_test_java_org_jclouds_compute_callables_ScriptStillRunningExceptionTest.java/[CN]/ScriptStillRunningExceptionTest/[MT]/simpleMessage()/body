@@ -1,0 +1,10 @@
+{
+  ListenableFuture<ExecResponse> future=new AbstractFuture<ExecResponse>(){
+    @Override public String toString(){
+      return "task for foo";
+    }
+  }
+;
+  ScriptStillRunningException testMe=new ScriptStillRunningException(1000,TimeUnit.MILLISECONDS,future);
+  assertEquals(testMe.getMessage(),"time up waiting 1s for task for foo to complete. call get() on this exception to get access to the task in progress");
+}

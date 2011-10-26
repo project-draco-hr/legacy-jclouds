@@ -1,4 +1,5 @@
 {
-  sync=SyncProxy.proxy(Sync.class,new SyncProxy(Sync.class,new Async(),new ConcurrentHashMap<ClassMethodArgs,Object>(),ImmutableMap.<Class<?>,Class<?>>of()));
+  Cache<ClassMethodArgs,Object> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.<Object>constant(null)));
+  sync=SyncProxy.proxy(Sync.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of(),ImmutableMap.of("Sync.takeXMillisecondsPropOverride",250L));
   sync.string();
 }

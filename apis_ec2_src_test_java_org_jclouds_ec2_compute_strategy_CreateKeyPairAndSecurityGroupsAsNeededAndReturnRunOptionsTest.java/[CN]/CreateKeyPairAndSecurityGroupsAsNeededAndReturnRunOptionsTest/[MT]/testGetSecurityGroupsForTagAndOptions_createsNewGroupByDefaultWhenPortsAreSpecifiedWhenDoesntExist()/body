@@ -1,23 +1,20 @@
 {
   String region=Region.AP_SOUTHEAST_1;
-  String tag="tag";
-  String generatedMarkerGroup="jclouds#tag#" + Region.AP_SOUTHEAST_1;
+  String group="group";
+  String generatedMarkerGroup="jclouds#group#" + Region.AP_SOUTHEAST_1;
   Set<String> groupIds=ImmutableSet.<String>of();
   int[] ports=new int[]{22,80};
   boolean shouldAuthorizeSelf=true;
-  boolean groupExisted=false;
   Set<String> returnVal=ImmutableSet.<String>of(generatedMarkerGroup);
   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   expect(options.getGroups()).andReturn(groupIds).atLeastOnce();
   expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
   RegionNameAndIngressRules regionNameAndIngressRules=new RegionNameAndIngressRules(region,generatedMarkerGroup,ports,shouldAuthorizeSelf);
-  expect(strategy.securityGroupMap.containsKey(regionNameAndIngressRules)).andReturn(groupExisted);
-  expect(strategy.createSecurityGroupIfNeeded.apply(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
-  expect(strategy.securityGroupMap.put(regionNameAndIngressRules,generatedMarkerGroup)).andReturn(null);
+  expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
   replay(options);
   replayStrategy(strategy);
-  assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,tag,options),returnVal);
+  assertEquals(strategy.getSecurityGroupsForTagAndOptions(region,group,options),returnVal);
   verify(options);
   verifyStrategy(strategy);
 }

@@ -1,0 +1,17 @@
+{
+  RegionAndName key=new RegionAndName(region,group);
+  KeyPair pair;
+  if (and(hasPublicKeyMaterial,or(doesntNeedSshAfterImportingPublicKey,hasLoginCredential)).apply(options)) {
+    pair=importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,options.getPublicKey()));
+    options.dontAuthorizePublicKey();
+    if (hasLoginCredential.apply(options))     pair=pair.toBuilder().keyMaterial(options.getOverridingCredentials().credential).build();
+    credentialsMap.put(key,pair);
+  }
+ else {
+    if (hasPublicKeyMaterial.apply(options)) {
+      logger.warn("to avoid creating temporary keys in aws-ec2, use templateOption overrideLoginCredentialWith(id_rsa)");
+    }
+    return super.createNewKeyPairUnlessUserSpecifiedOtherwise(region,group,options);
+  }
+  return pair.getKeyName();
+}

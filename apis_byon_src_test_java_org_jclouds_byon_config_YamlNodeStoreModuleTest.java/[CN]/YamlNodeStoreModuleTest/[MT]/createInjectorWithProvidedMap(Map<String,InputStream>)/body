@@ -1,3 +1,10 @@
 {
-  return Guice.createInjector(new YamlNodeStoreModule(map));
+  return Guice.createInjector(new YamlNodeStoreModule(map),new AbstractModule(){
+    @Override protected void configure(){
+      bind(new TypeLiteral<Supplier<InputStream>>(){
+      }
+).annotatedWith(Provider.class).toInstance(Suppliers.<InputStream>ofInstance(null));
+    }
+  }
+);
 }

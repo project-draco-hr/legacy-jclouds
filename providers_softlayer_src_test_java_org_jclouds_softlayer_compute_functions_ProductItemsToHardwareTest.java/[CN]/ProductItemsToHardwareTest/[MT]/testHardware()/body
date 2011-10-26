@@ -1,0 +1,14 @@
+{
+  Hardware hardware=toHardware.apply(ImmutableSet.of(cpuItem,ramItem,volumeItem));
+  assertEquals("123,456,789",hardware.getId());
+  List<? extends Processor> processors=hardware.getProcessors();
+  assertEquals(1,processors.size());
+  assertEquals(2.0,processors.get(0).getCores());
+  assertEquals(2,hardware.getRam());
+  List<? extends Volume> volumes=hardware.getVolumes();
+  assertEquals(1,volumes.size());
+  Volume volume=volumes.get(0);
+  assertEquals(100F,volume.getSize());
+  assertEquals(Volume.Type.SAN,volume.getType());
+  assertEquals(true,volume.isBootDevice());
+}

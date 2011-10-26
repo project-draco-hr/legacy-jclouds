@@ -1,0 +1,17 @@
+{
+  try {
+    for (    SecurityGroup secgroup : securityGroupClient.describeSecurityGroupsInRegion(region))     if (secgroup.getName().startsWith("jclouds#" + group) || secgroup.getName().equals(group)) {
+      securityGroupClient.deleteSecurityGroupInRegion(region,secgroup.getName());
+    }
+  }
+ catch (  Exception e) {
+  }
+  try {
+    for (    KeyPair pair : keyPairClient.describeKeyPairsInRegion(region))     if (pair.getKeyName().startsWith("jclouds#" + group) || pair.getKeyName().equals(group)) {
+      keyPairClient.deleteKeyPairInRegion(region,pair.getKeyName());
+    }
+  }
+ catch (  Exception e) {
+  }
+  Thread.sleep(2000);
+}

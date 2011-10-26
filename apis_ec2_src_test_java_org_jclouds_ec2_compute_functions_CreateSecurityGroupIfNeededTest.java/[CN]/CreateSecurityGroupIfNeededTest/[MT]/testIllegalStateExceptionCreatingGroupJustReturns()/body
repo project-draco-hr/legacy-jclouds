@@ -1,0 +1,10 @@
+{
+  SecurityGroupClient client=createMock(SecurityGroupClient.class);
+  Predicate<RegionAndName> tester=Predicates.alwaysTrue();
+  client.createSecurityGroupInRegion("region","group","group");
+  expectLastCall().andThrow(new IllegalStateException());
+  replay(client);
+  CreateSecurityGroupIfNeeded function=new CreateSecurityGroupIfNeeded(client,tester);
+  assertEquals("group",function.load(new RegionNameAndIngressRules("region","group",new int[]{22},true)));
+  verify(client);
+}

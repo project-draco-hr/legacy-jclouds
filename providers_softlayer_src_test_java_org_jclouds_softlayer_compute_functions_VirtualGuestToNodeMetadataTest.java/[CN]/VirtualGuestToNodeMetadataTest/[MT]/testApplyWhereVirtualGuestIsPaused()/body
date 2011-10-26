@@ -1,0 +1,12 @@
+{
+  VirtualGuest guest=new ParseVirtualGuestPausedTest().expected();
+  Password password=Iterables.get(guest.getOperatingSystem().getPasswords(),0);
+  Credentials credentials=new Credentials(password.getUsername(),password.getPassword());
+  Map<String,Credentials> credentialStore=ImmutableMap.<String,Credentials>of("node#416700",credentials);
+  Location expectedLocation=DatacenterToLocationTest.function.apply(guest.getDatacenter());
+  Supplier<Set<? extends Location>> locationSupplier=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(expectedLocation));
+  VirtualGuestToNodeMetadata parser=new VirtualGuestToNodeMetadata(credentialStore,new FindLocationForVirtualGuest(locationSupplier),new GetHardwareForVirtualGuestMock(),new GetImageForVirtualGuestMock());
+  NodeMetadata node=parser.apply(guest);
+  assertEquals(node,new NodeMetadataBuilder().ids("416700").name("node1703810489").hostname("node1703810489").location(expectedLocation).state(NodeState.SUSPENDED).credentials(credentials).publicAddresses(ImmutableSet.of("173.192.29.187")).privateAddresses(ImmutableSet.of("10.37.102.195")).hardware(new GetHardwareForVirtualGuestMock().getHardware(guest)).imageId(new GetImageForVirtualGuestMock().getImage(guest).getId()).operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
+  assertEquals(node.getCredentials(),credentials);
+}

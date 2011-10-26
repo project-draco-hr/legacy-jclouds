@@ -1,3 +1,12 @@
 {
-  return Pems.pem(key.getEncoded(),Pems.PRIVATE_PKCS1_MARKER,64);
+  StringWriter stringWriter=new StringWriter();
+  PEMWriter pemFormatWriter=new PEMWriter(stringWriter);
+  try {
+    pemFormatWriter.writeObject(key);
+    pemFormatWriter.close();
+  }
+ catch (  IOException e) {
+    Throwables.propagate(e);
+  }
+  return stringWriter.toString();
 }

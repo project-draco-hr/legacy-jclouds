@@ -1,0 +1,12 @@
+{
+  cpuItem=cpuItem.toBuilder().description("Private 2 x 2.0 GHz Cores").build();
+  Hardware hardware=toHardware.apply(ImmutableSet.of(cpuItem,ramItem,volumeItem));
+  assertEquals("123,456,789",hardware.getId());
+  List<? extends Processor> processors=hardware.getProcessors();
+  assertEquals(1,processors.size());
+  assertEquals(2.0,processors.get(0).getCores());
+  assertEquals(2,hardware.getRam());
+  List<? extends Volume> volumes=hardware.getVolumes();
+  assertEquals(1,volumes.size());
+  assertEquals(100F,volumes.get(0).getSize());
+}

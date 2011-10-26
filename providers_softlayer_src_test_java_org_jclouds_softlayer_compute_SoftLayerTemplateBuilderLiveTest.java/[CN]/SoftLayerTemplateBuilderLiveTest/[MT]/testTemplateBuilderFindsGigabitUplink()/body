@@ -1,0 +1,12 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(PROPERTY_SOFTLAYER_VIRTUALGUEST_PORT_SPEED,"1000");
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    context.getComputeService().templateBuilder().build();
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

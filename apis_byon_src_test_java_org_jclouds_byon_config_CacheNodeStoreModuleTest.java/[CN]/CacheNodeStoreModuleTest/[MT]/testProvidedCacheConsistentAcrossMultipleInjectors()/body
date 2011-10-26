@@ -1,0 +1,8 @@
+{
+  Map<String,Node> map=Maps.newConcurrentMap();
+  Cache<String,Node> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(map)));
+  put(map,getStore(createInjectorWithProvidedCache(cache)),"test","instance1","instancename");
+  checkConsistent(map,getStore(createInjectorWithProvidedCache(cache)),"test","instance1","instancename");
+  checkConsistent(map,getStore(createInjectorWithProvidedCache(cache)),"test","instance1","instancename");
+  remove(map,getStore(createInjectorWithProvidedCache(cache)),"test");
+}

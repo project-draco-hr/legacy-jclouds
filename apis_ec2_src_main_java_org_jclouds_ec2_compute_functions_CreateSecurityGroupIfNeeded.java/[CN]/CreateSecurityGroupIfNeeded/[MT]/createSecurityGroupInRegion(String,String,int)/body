@@ -3,7 +3,9 @@
   checkNotNull(name,"name");
   logger.debug(">> creating securityGroup region(%s) name(%s)",region,name);
   try {
-    ec2Client.getSecurityGroupServices().createSecurityGroupInRegion(region,name,name);
+    securityClient.createSecurityGroupInRegion(region,name,name);
+    boolean created=securityGroupEventualConsistencyDelay.apply(new RegionAndName(region,name));
+    if (!created)     throw new RuntimeException(String.format("security group %s/%s is not available after creating",region,name));
     logger.debug("<< created securityGroup(%s)",name);
     for (    int port : ports) {
       createIngressRuleForTCPPort(region,name,port);
