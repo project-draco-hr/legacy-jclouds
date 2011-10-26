@@ -1,0 +1,21 @@
+{
+  EC2ImageParser parser=createMock(EC2ImageParser.class);
+  EC2Client caller=createMock(EC2Client.class);
+  AMIClient client=createMock(AMIClient.class);
+  org.jclouds.ec2.domain.Image ec2Image=createMock(org.jclouds.ec2.domain.Image.class);
+  Image image=createNiceMock(Image.class);
+  Set<? extends org.jclouds.ec2.domain.Image> images=ImmutableSet.<org.jclouds.ec2.domain.Image>of(ec2Image);
+  expect(caller.getAMIServices()).andReturn(client).atLeastOnce();
+  expect(client.describeImagesInRegion("region",imageIds("ami"))).andReturn(Set.class.cast(images));
+  expect(parser.apply(ec2Image)).andThrow(new NoSuchElementException());
+  replay(caller);
+  replay(image);
+  replay(parser);
+  replay(client);
+  RegionAndIdToImage function=new RegionAndIdToImage(parser,caller);
+  assertEquals(function.load(new RegionAndName("region","ami")),null);
+  verify(caller);
+  verify(image);
+  verify(parser);
+  verify(client);
+}

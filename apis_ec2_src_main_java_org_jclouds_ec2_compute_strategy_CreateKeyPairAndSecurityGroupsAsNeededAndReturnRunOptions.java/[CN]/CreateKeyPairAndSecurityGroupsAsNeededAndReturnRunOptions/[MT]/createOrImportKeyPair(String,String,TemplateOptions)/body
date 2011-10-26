@@ -1,3 +1,11 @@
 {
-  return createUniqueKeyPairAndPutIntoMap(region,group);
+  RegionAndName regionAndGroup=new RegionAndName(region,group);
+  KeyPair keyPair;
+synchronized (credentialsMap) {
+    if (credentialsMap.containsKey(regionAndGroup))     return credentialsMap.get(regionAndGroup).getKeyName();
+    keyPair=makeKeyPair.apply(new RegionAndName(region,group));
+    credentialsMap.put(regionAndGroup,keyPair);
+  }
+  credentialsMap.put(new RegionAndName(region,keyPair.getKeyName()),keyPair);
+  return keyPair.getKeyName();
 }

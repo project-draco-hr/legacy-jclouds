@@ -5,7 +5,10 @@
   TemplateOptions other=(TemplateOptions)obj;
   if (blockUntilRunning != other.blockUntilRunning)   return false;
   if (!Arrays.equals(inboundPorts,other.inboundPorts))   return false;
-  if (includeMetadata != other.includeMetadata)   return false;
+  if (userMetadata == null) {
+    if (other.userMetadata != null)     return false;
+  }
+ else   if (!userMetadata.equals(other.userMetadata))   return false;
   if (port != other.port)   return false;
   if (privateKey == null) {
     if (other.privateKey != null)     return false;

@@ -1,0 +1,12 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    String identity=checkNotNull(System.getProperty("test.softlayer.identity"),"test.softlayer.identity");
+    String credential=checkNotNull(System.getProperty("test.softlayer.credential"),"test.softlayer.credential");
+    context=new ComputeServiceContextFactory().createContext("softlayer",identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()));
+    assertEquals(context.getComputeService().listAssignableLocations().size(),6);
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

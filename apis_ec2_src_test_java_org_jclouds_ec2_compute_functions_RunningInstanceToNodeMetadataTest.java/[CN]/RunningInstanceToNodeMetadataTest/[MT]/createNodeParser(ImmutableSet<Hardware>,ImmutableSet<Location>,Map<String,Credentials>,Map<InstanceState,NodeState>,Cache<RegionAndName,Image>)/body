@@ -1,0 +1,16 @@
+{
+  Supplier<Set<? extends Location>> locationSupplier=new Supplier<Set<? extends Location>>(){
+    @Override public Set<? extends Location> get(){
+      return locations;
+    }
+  }
+;
+  Supplier<Set<? extends Hardware>> hardwareSupplier=new Supplier<Set<? extends Hardware>>(){
+    @Override public Set<? extends Hardware> get(){
+      return hardware;
+    }
+  }
+;
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(instanceToNodeState,credentialStore,Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(instanceToImage),locationSupplier,hardwareSupplier);
+  return parser;
+}

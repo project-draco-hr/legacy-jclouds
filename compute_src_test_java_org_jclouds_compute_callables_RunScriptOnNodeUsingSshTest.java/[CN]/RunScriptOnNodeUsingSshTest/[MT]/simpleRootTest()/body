@@ -1,0 +1,11 @@
+{
+  RunScriptOnNodeUsingSsh testMe=new RunScriptOnNodeUsingSsh(sshFactory,node,exec("echo $USER\necho $USER"),wrapInInitScript(false).runAsRoot(true));
+  testMe.init();
+  sshClient.connect();
+  expect(sshClient.getUsername()).andReturn("tester");
+  expect(sshClient.getHostAddress()).andReturn("somewhere.example.com");
+  expect(sshClient.exec("sudo sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "echo $USER\n" + "echo $USER\n"+ "RUN_SCRIPT_AS_ROOT_SSH\n")).andReturn(new ExecResponse("root\nroot\n",null,0));
+  sshClient.disconnect();
+  replay(sshClient);
+  testMe.call();
+}

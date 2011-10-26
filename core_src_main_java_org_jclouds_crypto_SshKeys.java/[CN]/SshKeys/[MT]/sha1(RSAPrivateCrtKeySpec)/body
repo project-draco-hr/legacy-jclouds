@@ -1,0 +1,14 @@
+{
+  try {
+    String sha1=Joiner.on(":").join(Splitter.fixedLength(2).split(hex(CryptoStreams.sha1(KeyFactory.getInstance("RSA").generatePrivate(privateKey).getEncoded()))));
+    return sha1;
+  }
+ catch (  InvalidKeySpecException e) {
+    propagate(e);
+    return null;
+  }
+catch (  NoSuchAlgorithmException e) {
+    propagate(e);
+    return null;
+  }
+}

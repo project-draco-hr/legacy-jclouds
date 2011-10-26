@@ -1,0 +1,14 @@
+{
+  SshClient ssh=context.utils().sshFactory().create(new IPSocket("//TODO",22),creds);
+  try {
+    ssh.connect();
+    ExecResponse hello=ssh.exec("echo hello");
+    assertEquals(hello.getOutput().trim(),"hello");
+    System.err.println(ssh.exec("df -k").getOutput());
+    System.err.println(ssh.exec("mount").getOutput());
+    System.err.println(ssh.exec("uname -a").getOutput());
+  }
+  finally {
+    if (ssh != null)     ssh.disconnect();
+  }
+}

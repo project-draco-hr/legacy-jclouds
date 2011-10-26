@@ -17,10 +17,16 @@
     builder.put("nic:" + nicId + ":model",nic.getModel().toString());
     if (nic.getDhcp() != null)     builder.put("nic:" + nicId + ":dhcp",nic.getDhcp());
     if (nic.getVlan() != null)     builder.put("nic:" + nicId + ":vlan",nic.getVlan());
-    if (nic.getMac() != null)     builder.put("nic:" + nicId + ":mac",nic.getMac());
+    if (nic.getMac() != null)     logger.trace("setting mac on network interfaces not supported: %s",nic);
     nicId++;
   }
-  builder.put("vnc:ip",from.getVnc().getIp() == null ? "auto" : from.getVnc().getIp());
+  String vncIp=from.getVnc().getIp();
+  if (apiVersion.equals("2.0")) {
+    builder.put("vnc","auto");
+  }
+ else {
+    builder.put("vnc:ip",vncIp == null ? "auto" : vncIp);
+  }
   if (from.getVnc().getPassword() != null)   builder.put("vnc:password",from.getVnc().getPassword());
   if (from.getVnc().isTls())   builder.put("vnc:tls","on");
   if (from.getTags().size() != 0)   builder.put("tags",Joiner.on(' ').join(from.getTags()));

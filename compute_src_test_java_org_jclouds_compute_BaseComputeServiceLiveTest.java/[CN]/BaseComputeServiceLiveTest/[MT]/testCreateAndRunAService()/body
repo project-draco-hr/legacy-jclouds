@@ -7,10 +7,12 @@
  catch (  Exception e) {
   }
   try {
+    ImmutableMap<String,String> userMetadata=ImmutableMap.<String,String>of("Name",group);
     long startSeconds=currentTimeMillis();
-    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300)));
+    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300).userMetadata(userMetadata)));
     final String nodeId=node.getId();
     long createSeconds=(currentTimeMillis() - startSeconds) / 1000;
+    checkUserMetadataInNodeEquals(node,userMetadata);
     getAnonymousLogger().info(format("<< available node(%s) os(%s) in %ss",node.getId(),node.getOperatingSystem(),createSeconds));
     startSeconds=currentTimeMillis();
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));

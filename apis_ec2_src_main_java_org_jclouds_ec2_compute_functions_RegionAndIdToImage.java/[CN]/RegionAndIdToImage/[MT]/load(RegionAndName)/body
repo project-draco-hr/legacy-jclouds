@@ -1,0 +1,9 @@
+{
+  try {
+    org.jclouds.ec2.domain.Image image=Iterables.getOnlyElement(sync.getAMIServices().describeImagesInRegion(key.getRegion(),imageIds(key.getName())));
+    return parser.apply(image);
+  }
+ catch (  Exception e) {
+    throw new ExecutionException(message(key,e),e);
+  }
+}

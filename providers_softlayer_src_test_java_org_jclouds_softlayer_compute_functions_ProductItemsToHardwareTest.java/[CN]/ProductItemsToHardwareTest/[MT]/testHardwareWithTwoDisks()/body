@@ -1,0 +1,14 @@
+{
+  ProductItem localVolumeItem=ProductItem.builder().id(4).description("25 GB").capacity(25F).price(ProductItemPrice.builder().id(987).build()).category(ProductItemCategory.builder().categoryCode("guest_disk1").build()).build();
+  Hardware hardware=toHardware.apply(ImmutableSet.of(cpuItem,ramItem,volumeItem,localVolumeItem));
+  List<? extends Volume> volumes=hardware.getVolumes();
+  assertEquals(2,volumes.size());
+  Volume volume=volumes.get(0);
+  assertEquals(100F,volume.getSize());
+  assertEquals(Volume.Type.SAN,volume.getType());
+  assertEquals(true,volume.isBootDevice());
+  Volume volume1=volumes.get(1);
+  assertEquals(25F,volume1.getSize());
+  assertEquals(Volume.Type.LOCAL,volume1.getType());
+  assertEquals(false,volume1.isBootDevice());
+}

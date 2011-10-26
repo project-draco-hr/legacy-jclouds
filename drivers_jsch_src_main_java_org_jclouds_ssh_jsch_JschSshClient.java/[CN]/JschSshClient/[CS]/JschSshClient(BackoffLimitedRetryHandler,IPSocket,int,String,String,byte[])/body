@@ -8,4 +8,12 @@
   this.timeout=timeout;
   this.password=password;
   this.privateKey=privateKey;
+  if (privateKey == null) {
+    this.toString=String.format("%s:password@%s:%d",username,host,port);
+  }
+ else {
+    String fingerPrint=fingerprintPrivateKey(new String(privateKey));
+    String sha1=sha1PrivateKey(new String(privateKey));
+    this.toString=String.format("%s:rsa[fingerprint(%s),sha1(%s)]@%s:%d",username,fingerPrint,sha1,host,port);
+  }
 }

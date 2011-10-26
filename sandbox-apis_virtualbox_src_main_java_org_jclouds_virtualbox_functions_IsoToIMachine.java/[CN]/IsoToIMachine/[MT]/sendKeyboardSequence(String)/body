@@ -1,0 +1,18 @@
+{
+  String[] sequenceSplited=keyboardSequence.split(" ");
+  StringBuilder sb=new StringBuilder();
+  for (  String line : sequenceSplited) {
+    String converted=stringToKeycode(line);
+    for (    String word : converted.split("  ")) {
+      sb.append("vboxmanage controlvm " + vmName + " keyboardputscancode "+ word+ "; ");
+      if (word.endsWith(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get("<Enter>"))) {
+        runScriptOnNode(hostId,sb.toString(),runAsRoot(false).wrapInInitScript(false));
+        sb.delete(0,sb.length() - 1);
+      }
+      if (word.endsWith(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP.get("<Return>"))) {
+        runScriptOnNode(hostId,sb.toString(),runAsRoot(false).wrapInInitScript(false));
+        sb.delete(0,sb.length() - 1);
+      }
+    }
+  }
+}

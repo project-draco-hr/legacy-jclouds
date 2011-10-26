@@ -1,6 +1,11 @@
 {
   if (input.indexOf(match) != -1) {
-    input=CHAR_TO_PATTERN.get(match).matcher(input).replaceAll(replacement);
+    try {
+      input=CHAR_TO_PATTERN.get(match).matcher(input).replaceAll(replacement);
+    }
+ catch (    ExecutionException e) {
+      throw new IllegalStateException("error creating pattern: " + match,e);
+    }
   }
   return input;
 }

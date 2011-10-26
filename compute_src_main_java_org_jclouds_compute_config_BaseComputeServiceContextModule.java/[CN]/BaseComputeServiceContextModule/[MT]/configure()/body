@@ -7,7 +7,7 @@
   bind(new TypeLiteral<Function<TemplateOptions,Statement>>(){
   }
 ).to(TemplateOptionsToStatement.class);
-  install(new FactoryModuleBuilder().implement(RunScriptOnNode.class,Names.named("direct"),RunScriptOnNodeUsingSsh.class).implement(RunScriptOnNode.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNode.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));
+  install(new FactoryModuleBuilder().implement(RunScriptOnNodeUsingSsh.class,Names.named("direct"),RunScriptOnNodeUsingSsh.class).implement(RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNodeAsInitScriptUsingSsh.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));
   install(new PersistNodeCredentialsModule());
   bind(RunScriptOnNode.Factory.class).to(RunScriptOnNodeFactoryImpl.class);
   install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<Void>>(){
@@ -18,4 +18,5 @@
   install(new FactoryModuleBuilder().implement(new TypeLiteral<Callable<RunScriptOnNode>>(){
   }
 ,InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
+  install(new FactoryModuleBuilder().build(BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory.class));
 }

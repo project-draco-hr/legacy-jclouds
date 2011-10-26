@@ -1,10 +1,10 @@
 {
   final RegionAndName knownRegionAndName=new RegionAndName("region","ami");
-  ConcurrentMap<RegionAndName,Image> imageMap=new MapMaker().makeComputingMap(new Function<RegionAndName,Image>(){
-    @Override public Image apply(    RegionAndName from){
+  Cache<RegionAndName,? extends Image> imageMap=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
+    @Override public Image load(    RegionAndName from){
       return from.equals(knownRegionAndName) ? knownImage : null;
     }
   }
 );
-  return new EC2TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(defaultLocation),optionsProvider,templateBuilderProvider,imageMap);
+  return new EC2TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(defaultLocation),optionsProvider,templateBuilderProvider,Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(imageMap));
 }

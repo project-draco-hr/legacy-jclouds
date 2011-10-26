@@ -1,0 +1,15 @@
+{
+  node=createMock(NodeMetadata.class);
+  expect(node.getCredentials()).andReturn(new Credentials("tester","notalot"));
+  expect(node.getAdminPassword()).andReturn("testpassword!").atLeastOnce();
+  replay(node);
+  RunScriptOnNodeUsingSsh testMe=new RunScriptOnNodeUsingSsh(sshFactory,node,exec("echo $USER\necho $USER"),wrapInInitScript(false).runAsRoot(true));
+  testMe.init();
+  sshClient.connect();
+  expect(sshClient.getUsername()).andReturn("tester");
+  expect(sshClient.getHostAddress()).andReturn("somewhere.example.com");
+  expect(sshClient.exec("sudo -S sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "testpassword!\n" + "echo $USER\n"+ "echo $USER\n"+ "RUN_SCRIPT_AS_ROOT_SSH\n")).andReturn(new ExecResponse("root\nroot\n",null,0));
+  sshClient.disconnect();
+  replay(sshClient);
+  testMe.call();
+}

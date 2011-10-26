@@ -1,0 +1,18 @@
+{
+  userThreads.submit(new Runnable(){
+    @Override public void run(){
+      try {
+        boolean complete=notRunningAnymore.apply("status");
+        String stdout=commandRunner.runAction("tail").getOutput();
+        String stderr=commandRunner.runAction("tailerr").getOutput();
+        logger.debug("<< complete(%s) status(%s)",commandRunner.getStatement().getInstanceName(),complete);
+        set(new ExecResponse(stdout,stderr,complete && !shouldCancel ? 0 : -1));
+      }
+ catch (      Exception e) {
+        setException(e);
+      }
+    }
+  }
+);
+  return this;
+}

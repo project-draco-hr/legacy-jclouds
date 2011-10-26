@@ -1,0 +1,16 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(PROPERTY_SOFTLAYER_VIRTUALGUEST_DISK0_TYPE,"SAN");
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    Template template=context.getComputeService().templateBuilder().biggest().build();
+    assertEquals(getCores(template.getHardware()),16.0d);
+    assertEquals(template.getHardware().getRam(),16);
+    assertEquals(getSpace(template.getHardware()),100.0d);
+    assertEquals(template.getHardware().getVolumes().get(0).getType(),Volume.Type.SAN);
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

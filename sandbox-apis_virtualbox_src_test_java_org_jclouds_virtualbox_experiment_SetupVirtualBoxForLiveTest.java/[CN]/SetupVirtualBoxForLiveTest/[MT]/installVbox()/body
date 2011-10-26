@@ -1,0 +1,16 @@
+{
+  if (runScriptOnNode(hostId,"VBoxManage --version",runAsRoot(false).wrapInInitScript(false)).getExitCode() != 0) {
+    logger().debug("installing virtualbox");
+    if (isOSX(hostId)) {
+      downloadFileUnlessPresent(vboxDmg,workingDir,vboxVersionName);
+      runScriptOnNode(hostId,"hdiutil attach " + workingDir + "/"+ vboxVersionName);
+      runScriptOnNode(hostId,"installer -pkg /Volumes/VirtualBox/VirtualBox.mpkg -target /Volumes/Macintosh\\ HD");
+    }
+ else {
+      runScriptOnNode(hostId,"cat > /etc/apt/sources.list.d/TODO");
+      runScriptOnNode(hostId,"wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | apt-key add -");
+      runScriptOnNode(hostId,"apt-get update");
+      runScriptOnNode(hostId,"apt-get --yes install virtualbox-4.1");
+    }
+  }
+}
