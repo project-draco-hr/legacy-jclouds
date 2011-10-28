@@ -1,0 +1,21 @@
+{
+  try {
+    final IProgress progress=machine.launchVMProcess(manager.getSessionObject(),type.stringValue(),environment);
+    progress.waitForCompletion(-1);
+    Thread.sleep(5000);
+  }
+ catch (  InterruptedException e) {
+    propagate(e);
+  }
+catch (  VBoxException e) {
+    ErrorCode errorCode=ErrorCode.valueOf(e);
+switch (errorCode) {
+case VBOX_E_INVALID_OBJECT_STATE:
+      logger.warn(e,"Could not start machine. Got error code %s from launchMachine(). " + "The machine might already be running.",errorCode);
+    break;
+default :
+  propagate(e);
+}
+}
+return null;
+}

@@ -1,0 +1,14 @@
+{
+  final String type="gui";
+  final String environment="";
+  ISession session=createMock(ISession.class);
+  VirtualBoxManager manager=createMock(VirtualBoxManager.class);
+  IMachine machine=createMock(IMachine.class);
+  IProgress progress=createMock(IProgress.class);
+  expect(manager.getSessionObject()).andReturn(session);
+  expect(machine.launchVMProcess(session,type,environment)).andReturn(progress);
+  progress.waitForCompletion(-1);
+  replay(manager,machine,session,progress);
+  new LaunchMachineIfNotAlreadyRunning(manager,ExecutionType.GUI,"").apply(machine);
+  verify(manager,machine,session,progress);
+}

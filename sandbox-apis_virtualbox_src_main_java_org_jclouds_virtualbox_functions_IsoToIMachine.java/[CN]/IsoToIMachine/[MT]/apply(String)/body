@@ -18,14 +18,7 @@
   String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
   final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
   ensureGuestAdditionsMediumIsAttached(vmName,guestAdditionsDvdMedium);
-  IProgress prog=vm.launchVMProcess(manager.getSessionObject(),"gui","");
-  prog.waitForCompletion(-1);
-  try {
-    Thread.sleep(5000);
-  }
- catch (  InterruptedException e) {
-    propagate(e);
-  }
+  ensureMachineIsLaunched(vmName);
   String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
   sendKeyboardSequence(installKeySequence);
   boolean sshDeamonIsRunning=false;
