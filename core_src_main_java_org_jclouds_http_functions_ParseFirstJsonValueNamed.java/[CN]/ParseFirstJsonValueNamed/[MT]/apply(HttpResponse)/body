@@ -7,7 +7,11 @@
     AtomicReference<String> name=new AtomicReference<String>();
     JsonToken token=reader.peek();
     for (; token != JsonToken.END_DOCUMENT && nnn(this.name,reader,token,name); token=skipAndPeek(token,reader))     ;
-    if (name.get().equals(this.name)) {
+    if (name.get() == null) {
+      logger.trace("did not object named %s in json from response %s",this.name,arg0);
+      return nothing();
+    }
+ else     if (name.get().equals(this.name)) {
       return json.delegate().<T>fromJson(reader,type.getType());
     }
  else {
