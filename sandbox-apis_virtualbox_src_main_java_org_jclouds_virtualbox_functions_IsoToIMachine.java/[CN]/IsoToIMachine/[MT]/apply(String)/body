@@ -1,7 +1,4 @@
 {
-  String port=System.getProperty(VirtualBoxConstants.VIRTUALBOX_JETTY_PORT,"8080");
-  String baseResource=".";
-  Server server=new StartJettyIfNotAlreadyRunning(port).apply(baseResource);
   IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(settingsFile,osTypeId,vmId,forceOverwrite,manager).apply(vmName);
   String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
   String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
@@ -18,14 +15,7 @@
   String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
   final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
   ensureGuestAdditionsMediumIsAttached(vmName,guestAdditionsDvdMedium);
-  IProgress prog=vm.launchVMProcess(manager.getSessionObject(),"gui","");
-  prog.waitForCompletion(-1);
-  try {
-    Thread.sleep(5000);
-  }
- catch (  InterruptedException e) {
-    propagate(e);
-  }
+  ensureMachineIsLaunched(vmName);
   String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
   sendKeyboardSequence(installKeySequence);
   boolean sshDeamonIsRunning=false;
@@ -49,13 +39,5 @@
     }
   }
 );
-  try {
-    logger.debug("Stopping Jetty server...");
-    server.stop();
-    logger.debug("Jetty server stopped.");
-  }
- catch (  Exception e) {
-    logger.error(e,"Could not stop Jetty server.");
-  }
   return vm;
 }

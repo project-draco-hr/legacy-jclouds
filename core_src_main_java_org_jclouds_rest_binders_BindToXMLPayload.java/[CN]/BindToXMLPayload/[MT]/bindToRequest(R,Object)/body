@@ -1,0 +1,14 @@
+{
+  try {
+    String xml=xmlParser.toXML(checkNotNull(input,"input"));
+    request.setPayload(xml);
+    MutableContentMetadata metadata=request.getPayload().getContentMetadata();
+    if (contentTypeMustBeAdded(metadata)) {
+      metadata.setContentType(MediaType.APPLICATION_XML);
+    }
+    return request;
+  }
+ catch (  IOException ex) {
+    throw new BindException(request,ex);
+  }
+}

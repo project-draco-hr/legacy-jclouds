@@ -1,0 +1,15 @@
+{
+  InputStream xml=from.getPayload().getInput();
+  try {
+    return apply(xml);
+  }
+ catch (  Exception e) {
+    StringBuffer message=new StringBuffer();
+    message.append("Error parsing input");
+    logger.error(e,message.toString());
+    throw new HttpResponseException(message.toString() + "\n" + from,null,from,e);
+  }
+ finally {
+    releasePayload(from);
+  }
+}

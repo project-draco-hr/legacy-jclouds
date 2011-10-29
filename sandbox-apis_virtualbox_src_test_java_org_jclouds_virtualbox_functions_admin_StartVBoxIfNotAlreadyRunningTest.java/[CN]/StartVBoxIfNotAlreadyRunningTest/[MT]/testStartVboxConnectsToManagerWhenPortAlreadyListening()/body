@@ -1,0 +1,16 @@
+{
+  ComputeService compute=new ComputeServiceContextFactory().createContext("stub","foo","bar").getComputeService();
+  NodeMetadata node=Iterables.getOnlyElement(compute.createNodesInGroup("foo",1));
+  String hostId=node.getId();
+  VirtualBoxManager manager=createMock(VirtualBoxManager.class);
+  @SuppressWarnings("unchecked") Predicate<IPSocket> socketTester=createMock(Predicate.class);
+  URI endpointUri=URI.create("http://localhost:18083/");
+  Credentials localhostCredentials=new Credentials("toor","password");
+  expect(socketTester.apply(new IPSocket(endpointUri.getHost(),endpointUri.getPort()))).andReturn(true);
+  manager.connect(endpointUri.toASCIIString(),localhostCredentials.identity,localhostCredentials.credential);
+  replay(socketTester);
+  replay(manager);
+  assertEquals(new StartVBoxIfNotAlreadyRunning(compute,manager,socketTester,hostId,localhostCredentials).apply(endpointUri),manager);
+  verify(socketTester);
+  verify(manager);
+}

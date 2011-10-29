@@ -1,0 +1,12 @@
+{
+  ComputeService compute=new ComputeServiceContextFactory().createContext("stub","foo","bar").getComputeService();
+  VirtualBoxManager manager=createMock(VirtualBoxManager.class);
+  @SuppressWarnings("unchecked") Predicate<IPSocket> socketTester=createMock(Predicate.class);
+  String hostId="hostId";
+  URI endpointUri=URI.create("http://localhost:18083/");
+  Credentials localhostCredentials=new Credentials("toor","password");
+  manager.connect(endpointUri.toASCIIString(),localhostCredentials.identity,localhostCredentials.credential);
+  replay(socketTester);
+  replay(manager);
+  new StartVBoxIfNotAlreadyRunning(compute,manager,socketTester,hostId,localhostCredentials).apply(endpointUri);
+}
