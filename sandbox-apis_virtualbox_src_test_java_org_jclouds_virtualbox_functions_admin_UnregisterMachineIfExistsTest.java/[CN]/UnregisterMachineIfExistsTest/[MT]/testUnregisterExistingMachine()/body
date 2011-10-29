@@ -1,0 +1,14 @@
+{
+  VirtualBoxManager manager=createMock(VirtualBoxManager.class);
+  IVirtualBox vBox=createMock(IVirtualBox.class);
+  IMachine registeredMachine=createMock(IMachine.class);
+  List<IMedium> mediums=Collections.emptyList();
+  CleanupMode mode=CleanupMode.Full;
+  String vmName="jclouds-image-example-machine";
+  expect(manager.getVBox()).andReturn(vBox).anyTimes();
+  expect(vBox.findMachine(vmName)).andReturn(registeredMachine);
+  expect(registeredMachine.unregister(mode)).andReturn(mediums);
+  expectLastCall().anyTimes();
+  replay(manager,vBox,registeredMachine);
+  new UnregisterMachineIfExists(manager,mode).apply(vmName);
+}
