@@ -1,6 +1,5 @@
 {
-  final Server server=ServerJetty.getInstance().getServer();
-  if (!server.getState().equals(Server.STARTED) && !new InetSocketAddressConnect().apply(new IPSocket("localhost",port))) {
+  if (!jetty.getState().equals(Server.STARTED) && !new InetSocketAddressConnect().apply(new IPSocket("localhost",port))) {
     ResourceHandler resource_handler=new ResourceHandler();
     resource_handler.setDirectoriesListed(true);
     resource_handler.setWelcomeFiles(new String[]{"index.html"});
@@ -8,17 +7,17 @@
     logger.info("serving " + resource_handler.getBaseResource());
     HandlerList handlers=new HandlerList();
     handlers.setHandlers(new Handler[]{resource_handler,new DefaultHandler()});
-    server.setHandler(handlers);
+    jetty.setHandler(handlers);
     try {
-      server.start();
+      jetty.start();
     }
  catch (    Exception e) {
       logger.error(e,"Server jetty could not be started at this %s",baseResource);
     }
-    return server;
+    return jetty;
   }
  else {
     logger.debug("Server jetty serving %s already running. Skipping start",baseResource);
-    return server;
+    return jetty;
   }
 }

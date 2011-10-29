@@ -1,7 +1,4 @@
 {
-  String port=System.getProperty(VirtualBoxConstants.VIRTUALBOX_JETTY_PORT,"8080");
-  String baseResource=".";
-  Server server=new StartJettyIfNotAlreadyRunning(port).apply(baseResource);
   IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(settingsFile,osTypeId,vmId,forceOverwrite,manager).apply(vmName);
   String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
   String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
@@ -42,13 +39,5 @@
     }
   }
 );
-  try {
-    logger.debug("Stopping Jetty server...");
-    server.stop();
-    logger.debug("Jetty server stopped.");
-  }
- catch (  Exception e) {
-    logger.error(e,"Could not stop Jetty server.");
-  }
   return vm;
 }
