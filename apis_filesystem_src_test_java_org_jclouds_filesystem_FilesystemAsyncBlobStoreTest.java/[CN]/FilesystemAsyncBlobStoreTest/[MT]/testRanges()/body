@@ -1,17 +1,18 @@
 {
+  final String containerName="containerWithRanges";
   String payload="abcdefgh";
   Blob blob=blobStore.blobBuilder("test").payload(new StringPayload(payload)).build();
-  blobStore.putBlob(CONTAINER_NAME,blob);
+  blobStore.putBlob(containerName,blob);
   GetOptions getOptionsRangeStartAt=new GetOptions();
   getOptionsRangeStartAt.startAt(1);
-  Blob blobRangeStartAt=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsRangeStartAt);
+  Blob blobRangeStartAt=blobStore.getBlob(containerName,blob.getMetadata().getName(),getOptionsRangeStartAt);
   Assert.assertEquals("bcdefgh",IOUtils.toString(blobRangeStartAt.getPayload().getInput()));
   GetOptions getOptionsRangeTail=new GetOptions();
   getOptionsRangeTail.tail(3);
-  Blob blobRangeTail=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsRangeTail);
+  Blob blobRangeTail=blobStore.getBlob(containerName,blob.getMetadata().getName(),getOptionsRangeTail);
   Assert.assertEquals("fgh",IOUtils.toString(blobRangeTail.getPayload().getInput()));
   GetOptions getOptionsFragment=new GetOptions();
   getOptionsFragment.range(4,6);
-  Blob blobFragment=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsFragment);
+  Blob blobFragment=blobStore.getBlob(containerName,blob.getMetadata().getName(),getOptionsFragment);
   Assert.assertEquals("efg",IOUtils.toString(blobFragment.getPayload().getInput()));
 }
