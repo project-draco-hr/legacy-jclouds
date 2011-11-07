@@ -1,0 +1,8 @@
+{
+  final String publickey=SshKeys.generate().get("public");
+  sshKeyPair=client.getSSHKeyPairClient().registerSSHKeyPair(prefix + "jclouds-keypair",publickey);
+  checkSSHKeyPair(sshKeyPair);
+  client.getSSHKeyPairClient().deleteSSHKeyPair(sshKeyPair.getName());
+  assertEquals(client.getSSHKeyPairClient().getSSHKeyPair(sshKeyPair.getName()),null);
+  sshKeyPair=null;
+}
