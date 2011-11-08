@@ -1,0 +1,11 @@
+{
+  Method method=NovaAsyncClient.class.getMethod("getServer",String.class);
+  HttpRequest request=processor.createRequest(method,"dfdcd0a6-0a2f-11e1-8505-2837371c69ae");
+  assertRequestLineEquals(request,"GET http://endpoint/vapiversion/servers/dfdcd0a6-0a2f-11e1-8505-2837371c69ae?format=json HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: application/json\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,UnwrapOnlyJsonValue.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}
