@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/task.xml");
+  Injector injector=Guice.createInjector(new SaxParserModule());
+  Factory factory=injector.getInstance(ParseSax.Factory.class);
+  Task result=factory.create(injector.getInstance(TaskHandler.class)).parse(is);
+  assertEquals(result.toString(),expected.toString());
+}
