@@ -1,0 +1,11 @@
+{
+  String cdnUri=checkNotNull(from.getFirstHeaderOrNull(HPCloudObjectStorageHeaders.CDN_URI),HPCloudObjectStorageHeaders.CDN_URI);
+  String cdnTTL=checkNotNull(from.getFirstHeaderOrNull(HPCloudObjectStorageHeaders.CDN_TTL),HPCloudObjectStorageHeaders.CDN_TTL);
+  String cdnEnabled=checkNotNull(from.getFirstHeaderOrNull(HPCloudObjectStorageHeaders.CDN_ENABLED),HPCloudObjectStorageHeaders.CDN_ENABLED);
+  if (cdnUri == null) {
+    return null;
+  }
+ else {
+    return new ContainerCDNMetadata(request.getEndpoint().getPath(),Boolean.parseBoolean(cdnEnabled),Long.parseLong(cdnTTL),URI.create(cdnUri));
+  }
+}
