@@ -1,0 +1,6 @@
+{
+  checkArgument(input instanceof Iterable<?>,"this binder is only valid for Iterables!");
+  Iterable<Long> numbers=(Iterable<Long>)checkNotNull(input,"list of Longs");
+  checkArgument(Iterables.size(numbers) > 0,"you must specify at least one element");
+  return ModifyRequest.addQueryParam(request,"ids",Joiner.on(',').join(numbers),uriBuilderProvider.get());
+}
