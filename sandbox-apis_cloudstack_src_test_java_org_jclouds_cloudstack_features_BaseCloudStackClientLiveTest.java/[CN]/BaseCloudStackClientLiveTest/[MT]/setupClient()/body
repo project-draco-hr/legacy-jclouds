@@ -1,7 +1,8 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  context=new RestContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+  computeContext=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  context=computeContext.getProviderSpecificContext();
   client=context.getApi();
   Iterable<User> users=Iterables.concat(client.getAccountClient().listAccounts());
   User currentUser;

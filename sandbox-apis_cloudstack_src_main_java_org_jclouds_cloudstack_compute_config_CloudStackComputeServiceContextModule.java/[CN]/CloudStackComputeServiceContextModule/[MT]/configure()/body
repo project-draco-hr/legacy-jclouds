@@ -1,0 +1,25 @@
+{
+  super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<VirtualMachine,ServiceOffering,Template,Zone>>(){
+  }
+).to(CloudStackComputeServiceAdapter.class);
+  bind(new TypeLiteral<Function<VirtualMachine,NodeMetadata>>(){
+  }
+).to(VirtualMachineToNodeMetadata.class);
+  bind(new TypeLiteral<Function<Template,org.jclouds.compute.domain.Image>>(){
+  }
+).to(TemplateToImage.class);
+  bind(new TypeLiteral<Function<ServiceOffering,org.jclouds.compute.domain.Hardware>>(){
+  }
+).to(ServiceOfferingToHardware.class);
+  bind(new TypeLiteral<Function<Zone,Location>>(){
+  }
+).to(ZoneToLocation.class);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(OnlyLocationOrFirstZone.class);
+  bind(TemplateOptions.class).to(CloudStackTemplateOptions.class);
+  bind(new TypeLiteral<Function<Template,OperatingSystem>>(){
+  }
+).to(TemplateToOperatingSystem.class);
+}

@@ -1,0 +1,23 @@
+{
+  Builder builder=OperatingSystem.builder().description(from.getOSType());
+  OSType type=osTypes.get().get(from.getOSTypeId());
+  if (type == null) {
+    logger.warn("type for template %s not found in %s",from,osTypes.get());
+    return builder.build();
+  }
+  builder.description(type.getDescription());
+  builder.is64Bit(type.getDescription().indexOf("64-bit") != -1);
+  String osCategory=osCategories.get().get(type.getOSCategoryId());
+  if (osCategory == null) {
+    logger.warn("category for OSType %s not found in %s",type,osCategories.get());
+    return builder.build();
+  }
+  builder.name(osCategory);
+  OsFamily family=OsFamily.fromValue(osCategory.toLowerCase());
+  builder.family(family);
+  Matcher matcher=DEFAULT_PATTERN.matcher(type.getDescription());
+  if (matcher.find()) {
+    builder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(family,matcher.group(1),osVersionMap));
+  }
+  return builder.build();
+}

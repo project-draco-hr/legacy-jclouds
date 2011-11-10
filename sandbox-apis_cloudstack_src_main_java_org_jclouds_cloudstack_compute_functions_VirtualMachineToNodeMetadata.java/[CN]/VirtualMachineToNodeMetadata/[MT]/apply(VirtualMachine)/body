@@ -1,0 +1,26 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  String id=from.getZoneId() + "/" + from.getId();
+  builder.id(id);
+  builder.providerId(from.getId() + "");
+  builder.name(from.getName());
+  builder.hostname(from.getHostname());
+  builder.location(findLocationForVirtualMachine.apply(from));
+  builder.group(parseGroupFromName(from.getHostname()));
+  Image image=findImageForVirtualMachine.apply(from);
+  if (image != null) {
+    builder.imageId(image.getId());
+    builder.operatingSystem(image.getOperatingSystem());
+  }
+  Hardware hardware=findHardwareForVirtualMachine.apply(from);
+  if (hardware != null)   builder.hardware(hardware);
+  builder.state(vmStateToNodeState.get(from.getState()));
+  if (from.getIPAddress() != null) {
+    boolean isPrivate=InetAddresses2.isPrivateIPAddress(from.getIPAddress());
+    Set<String> addresses=ImmutableSet.<String>of(from.getIPAddress());
+    if (isPrivate)     builder.privateAddresses(addresses);
+ else     builder.publicAddresses(addresses);
+  }
+  builder.credentials(credentialStore.get("node#" + id));
+  return builder.build();
+}
