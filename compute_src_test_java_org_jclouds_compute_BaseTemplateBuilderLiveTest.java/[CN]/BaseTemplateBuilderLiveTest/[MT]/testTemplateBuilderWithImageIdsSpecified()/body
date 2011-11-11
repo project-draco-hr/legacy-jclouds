@@ -1,0 +1,23 @@
+{
+  Template defaultTemplate=context.getComputeService().templateBuilder().build();
+  ComputeServiceContext context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty("jclouds.image-id",defaultTemplate.getImage().getId());
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    assertEquals(context.getComputeService().templateBuilder().build(),defaultTemplate);
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+  context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(provider + ".image-id",defaultTemplate.getImage().getId());
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    assertEquals(context.getComputeService().templateBuilder().build(),defaultTemplate);
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}
