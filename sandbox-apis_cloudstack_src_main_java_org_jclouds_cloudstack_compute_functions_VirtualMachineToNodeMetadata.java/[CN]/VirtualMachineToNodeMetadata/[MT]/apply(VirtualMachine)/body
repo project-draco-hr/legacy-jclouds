@@ -1,8 +1,6 @@
 {
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
-  String id=from.getZoneId() + "/" + from.getId();
-  builder.id(id);
-  builder.providerId(from.getId() + "");
+  builder.ids(from.getId() + "");
   builder.name(from.getName());
   builder.hostname(from.getHostname());
   builder.location(findLocationForVirtualMachine.apply(from));
@@ -21,6 +19,6 @@
     if (isPrivate)     builder.privateAddresses(addresses);
  else     builder.publicAddresses(addresses);
   }
-  builder.credentials(credentialStore.get("node#" + id));
+  builder.credentials(credentialStore.get("node#" + from.getId()));
   return builder.build();
 }
