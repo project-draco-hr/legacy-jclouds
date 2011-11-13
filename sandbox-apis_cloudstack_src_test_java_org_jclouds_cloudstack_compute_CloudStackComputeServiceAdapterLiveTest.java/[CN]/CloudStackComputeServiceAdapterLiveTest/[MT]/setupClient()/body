@@ -11,4 +11,11 @@
   }
 ;
   adapter=Guice.createInjector(module,new Log4JLoggingModule()).getInstance(CloudStackComputeServiceAdapter.class);
+  keyPairName=prefix + "-adapter-test-keypair";
+  try {
+    keyPair=ComputeTestUtils.setupKeyPair();
+  }
+ catch (  IOException e) {
+    fail("Unable to create keypair",e);
+  }
 }
