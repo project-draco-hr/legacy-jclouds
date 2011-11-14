@@ -1,0 +1,9 @@
+{
+  Method method=TaskAsyncClient.class.getMethod("getTask",URI.class);
+  HttpRequest request=factory(TaskAsyncClient.class).createRequest(method);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,Task> parser=(Function<HttpResponse,Task>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/task.xml");
+  Task task=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals(task,expected1);
+}
