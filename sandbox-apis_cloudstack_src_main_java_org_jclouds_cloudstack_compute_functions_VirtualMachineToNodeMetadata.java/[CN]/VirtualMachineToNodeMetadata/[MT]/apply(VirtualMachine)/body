@@ -19,6 +19,16 @@
     if (isPrivate)     builder.privateAddresses(addresses);
  else     builder.publicAddresses(addresses);
   }
+  try {
+    IPForwardingRule rule=getIPForwardingRuleByVirtualMachine.getUnchecked(from.getId());
+    builder.publicAddresses(ImmutableSet.<String>of(rule.getIPAddress()));
+  }
+ catch (  UncheckedExecutionException e) {
+    if (Throwables2.getFirstThrowableOfType(e,ResourceNotFoundException.class) == null) {
+      Throwables.propagateIfPossible(e.getCause());
+      throw e;
+    }
+  }
   builder.credentials(credentialStore.get("node#" + from.getId()));
   return builder.build();
 }

@@ -1,0 +1,10 @@
+{
+  User currentUser=currentUserSupplier.get();
+  NetworkClient networkClient=client.getNetworkClient();
+  return Maps.uniqueIndex(networkClient.listNetworks(accountInDomain(currentUser.getAccount(),currentUser.getDomainId())),new Function<Network,Long>(){
+    @Override public Long apply(    Network arg0){
+      return arg0.getId();
+    }
+  }
+);
+}

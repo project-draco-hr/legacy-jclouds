@@ -1,0 +1,13 @@
+{
+  Iterable<User> users=Iterables.concat(client.getAccountClient().listAccounts());
+  Predicate<User> apiKeyMatches=UserPredicates.apiKeyEquals(identity);
+  User currentUser=null;
+  try {
+    currentUser=Iterables.find(users,apiKeyMatches);
+  }
+ catch (  NoSuchElementException e) {
+    throw new NoSuchElementException(String.format("none of the following users match %s: %s",apiKeyMatches,users));
+  }
+  if (currentUser.getAccountType() != Account.Type.USER)   throw new IllegalArgumentException(String.format("invalid account type: %s, please specify an apiKey of a USER, for example: %s",currentUser.getAccountType(),Iterables.filter(users,UserPredicates.isUserAccount())));
+  return currentUser;
+}

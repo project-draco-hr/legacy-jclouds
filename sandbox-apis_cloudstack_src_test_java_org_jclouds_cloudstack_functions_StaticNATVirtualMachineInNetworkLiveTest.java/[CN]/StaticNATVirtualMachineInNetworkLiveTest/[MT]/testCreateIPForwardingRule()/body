@@ -1,0 +1,21 @@
+{
+  if (networksDisabled)   return;
+  ip=new StaticNATVirtualMachineInNetwork(client,reuseOrAssociate,jobComplete,CacheBuilder.newBuilder().<Long,IPForwardingRule>build(new GetIPForwardingRuleByVirtualMachine(client)),network).apply(vm);
+  rule=client.getNATClient().getIPForwardingRuleForIPAddress(ip.getId());
+  assertEquals(rule.getIPAddressId(),ip.getId());
+  assertEquals(rule.getVirtualMachineId(),vm.getId());
+  assertEquals(rule.getStartPort(),22);
+  assertEquals(rule.getProtocol(),"tcp");
+  checkRule(rule);
+  IPSocket socket=new IPSocket(ip.getIPAddress(),22);
+  socketTester.apply(socket);
+  SshClient client=sshFactory.create(socket,new Credentials("root",password));
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("echo hello");
+    assertEquals(exec.getOutput().trim(),"hello");
+  }
+  finally {
+    if (client != null)     client.disconnect();
+  }
+}

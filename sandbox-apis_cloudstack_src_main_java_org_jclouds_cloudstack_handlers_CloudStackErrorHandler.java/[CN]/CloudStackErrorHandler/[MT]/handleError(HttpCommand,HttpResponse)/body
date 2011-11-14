@@ -20,7 +20,12 @@ exception=new IllegalArgumentException(message,exception);
 break;
 case 409:
 case 431:
+if (command.getCurrentRequest().getRequestLine().indexOf("delete") != -1 && message.indexOf("does not exist") != -1) {
+exception=new ResourceNotFoundException(message,exception);
+}
+ else {
 exception=new IllegalStateException(message,exception);
+}
 break;
 }
 }
