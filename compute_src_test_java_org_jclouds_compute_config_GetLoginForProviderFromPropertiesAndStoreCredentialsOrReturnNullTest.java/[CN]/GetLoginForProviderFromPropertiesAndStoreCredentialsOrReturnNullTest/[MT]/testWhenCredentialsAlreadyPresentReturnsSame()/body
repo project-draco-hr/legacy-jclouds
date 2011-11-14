@@ -1,0 +1,13 @@
+{
+  @SuppressWarnings("unchecked") Map<String,Credentials> credstore=createMock(Map.class);
+  Credentials expected=new Credentials("root",null);
+  ValueOfConfigurationKeyOrNull config=createMock(ValueOfConfigurationKeyOrNull.class);
+  expect(credstore.containsKey("image")).andReturn(true);
+  expect(credstore.get("image")).andReturn(expected);
+  replay(config);
+  replay(credstore);
+  GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull fn=new GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull("provider",config,credstore);
+  assertEquals(fn.get(),expected);
+  verify(config);
+  verify(credstore);
+}

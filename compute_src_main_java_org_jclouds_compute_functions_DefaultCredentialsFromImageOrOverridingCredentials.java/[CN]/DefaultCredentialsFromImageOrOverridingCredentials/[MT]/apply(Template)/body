@@ -1,0 +1,10 @@
+{
+  TemplateOptions options=template.getOptions();
+  Credentials creds=template.getImage().getDefaultCredentials();
+  Credentials overridingCredentials=options.getOverridingCredentials();
+  Credentials overrideCreds=(overridingCredentials != null) ? overridingCredentials : NO_CREDENTIALS;
+  if (creds == null)   creds=overrideCreds;
+  if (overrideCreds.identity != null)   creds=creds.toBuilder().identity(overrideCreds.identity).build();
+  if (overrideCreds.credential != null)   creds=creds.toBuilder().credential(overrideCreds.credential).build();
+  return creds.equals(NO_CREDENTIALS) ? null : creds;
+}

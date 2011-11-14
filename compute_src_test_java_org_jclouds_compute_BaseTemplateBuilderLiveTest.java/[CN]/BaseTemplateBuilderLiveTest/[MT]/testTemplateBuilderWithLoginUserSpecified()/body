@@ -1,0 +1,22 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty("jclouds.login-user","foo:bar");
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    assertEquals(context.getComputeService().templateBuilder().build().getImage().getDefaultCredentials(),new Credentials("foo","bar"));
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+  context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(provider + ".login-user","foo:bar");
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    assertEquals(context.getComputeService().templateBuilder().build().getImage().getDefaultCredentials(),new Credentials("foo","bar"));
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

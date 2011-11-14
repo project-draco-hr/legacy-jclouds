@@ -1,0 +1,13 @@
+{
+  Credentials expected=new Credentials("ubuntu","password");
+  Image image=createMock(Image.class);
+  Template template=createMock(Template.class);
+  expect(template.getImage()).andReturn(image);
+  expect(image.getDefaultCredentials()).andReturn(null);
+  expect(template.getOptions()).andReturn(TemplateOptions.Builder.overrideCredentialsWith(expected));
+  replay(template);
+  replay(image);
+  assertEquals(fn.apply(template,new Credentials("foo","bar")),expected);
+  verify(template);
+  verify(image);
+}

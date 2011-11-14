@@ -1,0 +1,15 @@
+{
+  @SuppressWarnings("unchecked") Map<String,Credentials> credstore=createMock(Map.class);
+  Credentials expected=new Credentials("ubuntu",null);
+  ValueOfConfigurationKeyOrNull config=createMock(ValueOfConfigurationKeyOrNull.class);
+  expect(credstore.containsKey("image")).andReturn(false);
+  expect(config.apply("provider.login-user")).andReturn(null);
+  expect(config.apply("jclouds.login-user")).andReturn("ubuntu");
+  expect(credstore.put("image",expected)).andReturn(null);
+  replay(config);
+  replay(credstore);
+  GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull fn=new GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull("provider",config,credstore);
+  assertEquals(fn.get(),expected);
+  verify(config);
+  verify(credstore);
+}

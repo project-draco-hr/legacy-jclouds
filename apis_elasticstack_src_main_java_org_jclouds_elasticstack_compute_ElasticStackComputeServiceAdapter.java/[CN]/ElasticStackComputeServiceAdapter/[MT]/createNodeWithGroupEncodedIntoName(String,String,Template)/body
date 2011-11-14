@@ -1,0 +1,19 @@
+{
+  long bootSize=(long)(template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024* 1024l);
+  logger.debug(">> creating boot drive bytes(%d)",bootSize);
+  DriveInfo drive=client.createDrive(new Drive.Builder().name(template.getImage().getId()).size(bootSize).build());
+  logger.debug("<< drive(%s)",drive.getUuid());
+  logger.debug(">> imaging boot drive source(%s)",template.getImage().getId());
+  client.imageDrive(template.getImage().getId(),drive.getUuid(),ImageConversionType.GUNZIP);
+  boolean success=driveNotClaimed.apply(drive);
+  logger.debug("<< imaged (%s)",success);
+  if (!success) {
+    client.destroyDrive(drive.getUuid());
+    throw new IllegalStateException("could not image drive in time!");
+  }
+  Server toCreate=small(name,drive.getUuid(),defaultVncPassword).mem(template.getHardware().getRam()).cpu((int)(template.getHardware().getProcessors().get(0).getSpeed())).build();
+  ServerInfo from=client.createServer(toCreate);
+  client.startServer(from.getUuid());
+  from=client.getServerInfo(from.getUuid());
+  return new NodeAndInitialCredentials<ServerInfo>(from,from.getUuid(),new Credentials(null,defaultVncPassword));
+}

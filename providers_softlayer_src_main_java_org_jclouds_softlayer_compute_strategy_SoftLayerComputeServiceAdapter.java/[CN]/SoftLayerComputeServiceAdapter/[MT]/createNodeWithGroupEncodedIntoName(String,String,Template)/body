@@ -1,0 +1,19 @@
+{
+  checkNotNull(template,"template was null");
+  checkNotNull(template.getOptions(),"template options was null");
+  checkArgument(template.getOptions().getClass().isAssignableFrom(SoftLayerTemplateOptions.class),"options class %s should have been assignable from SoftLayerTemplateOptions",template.getOptions().getClass());
+  String domainName=template.getOptions().as(SoftLayerTemplateOptions.class).getDomainName();
+  VirtualGuest newGuest=VirtualGuest.builder().domain(domainName).hostname(name).build();
+  ProductOrder order=ProductOrder.builder().packageId(productPackageSupplier.get().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuest(newGuest).build();
+  logger.debug(">> ordering new virtualGuest domain(%s) hostname(%s)",domainName,name);
+  ProductOrderReceipt productOrderReceipt=client.getVirtualGuestClient().orderVirtualGuest(order);
+  VirtualGuest result=get(productOrderReceipt.getOrderDetails().getVirtualGuests(),0);
+  logger.trace("<< virtualGuest(%s)",result.getId());
+  logger.debug(">> awaiting login details for virtualGuest(%s)",result.getId());
+  boolean orderInSystem=loginDetailsTester.apply(result);
+  logger.trace("<< virtualGuest(%s) complete(%s)",result.getId(),orderInSystem);
+  checkState(orderInSystem,"order for guest %s doesn't have login details within %sms",result,Long.toString(guestLoginDelay));
+  result=client.getVirtualGuestClient().getVirtualGuest(result.getId());
+  Password pw=get(result.getOperatingSystem().getPasswords(),0);
+  return new NodeAndInitialCredentials<VirtualGuest>(result,result.getId() + "",new Credentials(pw.getUsername(),pw.getPassword()));
+}

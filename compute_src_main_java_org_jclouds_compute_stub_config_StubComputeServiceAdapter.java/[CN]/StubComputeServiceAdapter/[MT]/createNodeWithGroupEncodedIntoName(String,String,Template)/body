@@ -1,0 +1,22 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  String id=idProvider.get() + "";
+  builder.ids(id);
+  builder.name(name);
+  builder.hostname(group);
+  builder.tags(template.getOptions().getTags());
+  builder.userMetadata(template.getOptions().getUserMetadata());
+  builder.group(group);
+  builder.location(location.get());
+  builder.imageId(template.getImage().getId());
+  builder.operatingSystem(template.getImage().getOperatingSystem());
+  builder.state(NodeState.PENDING);
+  builder.publicAddresses(ImmutableSet.<String>of(publicIpPrefix + id));
+  builder.privateAddresses(ImmutableSet.<String>of(privateIpPrefix + id));
+  builder.credentials(new Credentials(null,passwordPrefix + id));
+  NodeMetadata node=builder.build();
+  credentialStore.put("node#" + node.getId(),node.getCredentials());
+  nodes.put(node.getId(),node);
+  StubComputeServiceDependenciesModule.setState(node,NodeState.RUNNING,100);
+  return new NodeWithInitialCredentials(node);
+}

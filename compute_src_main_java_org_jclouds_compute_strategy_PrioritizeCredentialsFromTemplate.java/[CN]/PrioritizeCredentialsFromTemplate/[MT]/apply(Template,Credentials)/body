@@ -1,0 +1,10 @@
+{
+  Credentials creds=(fromNode != null) ? fromNode : NO_CREDENTIALS;
+  Credentials credsFromParameters=credentialsFromImageOrTemplateOptions.apply(template);
+  if (credsFromParameters != null) {
+    if (credsFromParameters.identity != null)     creds=creds.toBuilder().identity(credsFromParameters.identity).build();
+    if (credsFromParameters.credential != null)     creds=creds.toBuilder().credential(credsFromParameters.credential).build();
+  }
+  if (creds.equals(NO_CREDENTIALS))   creds=null;
+  return creds;
+}
