@@ -1,0 +1,12 @@
+{
+  final Set<Zone> zones=client.getZoneClient().listZones();
+  assertNotNull(zones);
+  final Zone zone=zones.iterator().next();
+  final Set<DiskOffering> diskOfferings=client.getOfferingClient().listDiskOfferings();
+  assertNotNull(diskOfferings);
+  final DiskOffering diskOffering=diskOfferings.iterator().next();
+  final VolumeClient volumeClient=client.getVolumeClient();
+  final Volume volumeWithDiskOffering=volumeClient.createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",diskOffering.getId(),zone.getId());
+  checkVolume(volumeWithDiskOffering);
+  volumeClient.deleteVolume(volumeWithDiskOffering.getId());
+}
