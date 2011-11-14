@@ -1,7 +1,7 @@
 {
   SshClient ssh=computeContext.utils().sshFactory().create(socket,creds);
   try {
-    ssh.connect();
+    connectWithRetry(ssh,5,2000);
     ExecResponse hello=ssh.exec("echo hello");
     assertEquals(hello.getOutput().trim(),"hello");
     System.err.println(ssh.exec("df -k").getOutput());
