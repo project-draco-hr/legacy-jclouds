@@ -1,0 +1,12 @@
+{
+  Method method=VirtualMachineAsyncClient.class.getMethod("getVirtualMachine",long.class);
+  HttpRequest request=factory(VirtualMachineAsyncClient.class).createRequest(method,1);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,VirtualMachine> parser=(Function<HttpResponse,VirtualMachine>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/virtualMachine.xml");
+  VirtualMachine virtualMachine=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals("My first terremark server",virtualMachine.getDescription());
+  assertEquals(6,virtualMachine.getLinks().size());
+  assertEquals(11,virtualMachine.getActions().size());
+  assertEquals(1,virtualMachine.getTasks().size());
+}
