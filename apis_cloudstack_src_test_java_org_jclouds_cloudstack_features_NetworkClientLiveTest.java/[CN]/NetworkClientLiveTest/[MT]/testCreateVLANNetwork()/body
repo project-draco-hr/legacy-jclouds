@@ -1,0 +1,30 @@
+{
+  if (!networksSupported)   return;
+  if (!domainAdminEnabled) {
+    Logger.getAnonymousLogger().log(Level.SEVERE,"domainAdmin credentials not present, skipping test");
+    return;
+  }
+  final NetworkOffering offering;
+  try {
+    offering=get(context.getApi().getOfferingClient().listNetworkOfferings(specifyVLAN(true).zoneId(zone.getId())),0);
+  }
+ catch (  NoSuchElementException e) {
+    Logger.getAnonymousLogger().log(Level.SEVERE,"VLAN networks not supported, skipping test");
+    return;
+  }
+  String name=prefix + "-vlan";
+  Network network=null;
+  try {
+    network=domainAdminContext.getApi().getNetworkClient().createNetworkInZone(zone.getId(),offering.getId(),name,name,vlan("2").startIP("192.168.1.2").netmask("255.255.255.0").gateway("192.168.1.1"));
+    checkNetwork(network);
+  }
+ catch (  IllegalStateException e) {
+    Logger.getAnonymousLogger().log(Level.SEVERE,"couldn't create a network, skipping test",e);
+  }
+ finally {
+    if (network != null) {
+      Long jobId=client.getNetworkClient().deleteNetwork(network.getId());
+      if (jobId != null)       jobComplete.apply(jobId);
+    }
+  }
+}

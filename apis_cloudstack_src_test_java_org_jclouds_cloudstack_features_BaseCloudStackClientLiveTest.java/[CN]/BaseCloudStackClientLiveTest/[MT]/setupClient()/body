@@ -1,18 +1,16 @@
 {
   setupCredentials();
-  Properties overrides=setupProperties();
-  computeContext=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  computeContext=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupProperties());
   context=computeContext.getProviderSpecificContext();
   client=context.getApi();
-  Iterable<User> users=Iterables.concat(client.getAccountClient().listAccounts());
-  Predicate<User> apiKeyMatches=UserPredicates.apiKeyEquals(identity);
-  try {
-    currentUser=Iterables.find(users,apiKeyMatches);
+  user=verifyCurrentUserIsOfType(context,Account.Type.USER);
+  domainAdminEnabled=setupAdminProperties() != null;
+  if (domainAdminEnabled) {
+    domainAdminComputeContext=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupAdminProperties());
+    domainAdminContext=domainAdminComputeContext.getProviderSpecificContext();
+    domainAdminClient=domainAdminContext.getApi();
+    domainAdminUser=verifyCurrentUserIsOfType(domainAdminContext,Account.Type.DOMAIN_ADMIN);
   }
- catch (  NoSuchElementException e) {
-    throw new NoSuchElementException(String.format("none of the following users match %s: %s",apiKeyMatches,users));
-  }
-  if (currentUser.getAccountType() != Account.Type.USER)   throw new IllegalArgumentException(String.format("invalid account type: %s, please specify an apiKey of a USER, for example: %s",currentUser.getAccountType(),Iterables.filter(users,UserPredicates.isUserAccount())));
   injector=Guice.createInjector(new SshjSshClientModule(),new Log4JLoggingModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);

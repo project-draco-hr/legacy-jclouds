@@ -1,0 +1,26 @@
+{
+  if (!networksSupported)   return;
+  final NetworkOffering offering;
+  try {
+    offering=find(client.getOfferingClient().listNetworkOfferings(),NetworkOfferingPredicates.supportsGuestVirtualNetworks());
+  }
+ catch (  NoSuchElementException e) {
+    Logger.getAnonymousLogger().log(Level.SEVERE,"guest networks not supported, skipping test");
+    return;
+  }
+  String name=prefix + "-virtual";
+  Network network=null;
+  try {
+    network=client.getNetworkClient().createNetworkInZone(zone.getId(),offering.getId(),name,name);
+    checkNetwork(network);
+  }
+ catch (  IllegalStateException e) {
+    Logger.getAnonymousLogger().log(Level.SEVERE,"couldn't create a network, skipping test",e);
+  }
+ finally {
+    if (network != null) {
+      Long jobId=client.getNetworkClient().deleteNetwork(network.getId());
+      if (jobId != null)       jobComplete.apply(jobId);
+    }
+  }
+}
