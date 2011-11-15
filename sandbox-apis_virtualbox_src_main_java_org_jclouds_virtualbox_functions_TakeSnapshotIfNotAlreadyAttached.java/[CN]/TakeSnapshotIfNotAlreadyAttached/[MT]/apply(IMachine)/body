@@ -1,0 +1,17 @@
+{
+  ISession session=null;
+  if (machine.getCurrentSnapshot() == null) {
+    try {
+      session=manager.openMachineSession(machine);
+      IProgress progress=session.getConsole().takeSnapshot(snapshotName,snapshotDesc);
+      if (progress.getCompleted())       logger.debug("Clone done with snapshot name: %s and descripton: %s",snapshotName,snapshotDesc);
+    }
+ catch (    Exception e) {
+      e.printStackTrace();
+    }
+ finally {
+      session.unlockMachine();
+    }
+  }
+  return machine.getCurrentSnapshot();
+}
