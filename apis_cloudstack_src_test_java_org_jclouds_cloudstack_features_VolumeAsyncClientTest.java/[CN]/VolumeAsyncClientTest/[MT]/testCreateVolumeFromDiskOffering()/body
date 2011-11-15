@@ -1,0 +1,9 @@
+{
+  Method method=VolumeAsyncClient.class.getMethod("createVolumeFromDiskOfferingInZone",String.class,long.class,long.class);
+  HttpRequest httpRequest=processor.createRequest(method,prefix + "-jclouds-volume",999L,111L);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=createVolume&name=" + prefix + "-jclouds-volume&zoneid=111&diskofferingid=999 HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertSaxResponseParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}
