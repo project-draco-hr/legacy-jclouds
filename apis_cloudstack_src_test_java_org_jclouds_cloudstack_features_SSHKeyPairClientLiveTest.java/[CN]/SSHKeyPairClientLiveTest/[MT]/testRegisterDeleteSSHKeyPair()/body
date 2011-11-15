@@ -1,10 +1,9 @@
 {
   final Map<String,String> sshKey=SshKeys.generate();
   final String publicKey=sshKey.get("public");
-  final String privateKey=sshKey.get("private");
-  sshKeyPair=client.getSSHKeyPairClient().registerSSHKeyPair(prefix + "jclouds-keypair",publicKey);
+  sshKeyPair=client.getSSHKeyPairClient().registerSSHKeyPair(keyPairName,publicKey);
   checkSSHKeyPair(sshKeyPair);
-  client.getSSHKeyPairClient().deleteSSHKeyPair(prefix + "jclouds-keypair");
+  client.getSSHKeyPairClient().deleteSSHKeyPair(keyPairName);
   assertEquals(client.getSSHKeyPairClient().getSSHKeyPair(sshKeyPair.getName()),null);
   sshKeyPair=null;
 }
