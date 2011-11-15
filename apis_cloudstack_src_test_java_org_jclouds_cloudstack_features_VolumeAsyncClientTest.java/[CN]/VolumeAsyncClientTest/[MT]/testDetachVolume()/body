@@ -1,0 +1,9 @@
+{
+  Method method=VolumeAsyncClient.class.getMethod("detachVolume",long.class);
+  HttpRequest httpRequest=processor.createRequest(method,111L);
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=detachVolume&id=111 HTTP/1.1");
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertSaxResponseParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}
