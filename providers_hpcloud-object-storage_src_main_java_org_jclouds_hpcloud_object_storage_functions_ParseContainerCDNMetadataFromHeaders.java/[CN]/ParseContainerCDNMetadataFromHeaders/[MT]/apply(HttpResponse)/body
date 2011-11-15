@@ -6,6 +6,7 @@
     return null;
   }
  else {
-    return new ContainerCDNMetadata(request.getEndpoint().getPath(),Boolean.parseBoolean(cdnEnabled),Long.parseLong(cdnTTL),URI.create(cdnUri));
+    List<String> parts=newArrayList(Splitter.on('/').split(request.getEndpoint().getPath()));
+    return new ContainerCDNMetadata(parts.get(parts.size() - 1),Boolean.parseBoolean(cdnEnabled),Long.parseLong(cdnTTL),URI.create(cdnUri));
   }
 }
