@@ -22,8 +22,12 @@
   injector.injectMembers(adminJobComplete);
   virtualMachineRunning=new RetryablePredicate<VirtualMachine>(new VirtualMachineRunning(client),600,5,5,TimeUnit.SECONDS);
   injector.injectMembers(virtualMachineRunning);
+  adminVirtualMachineRunning=new RetryablePredicate<VirtualMachine>(new VirtualMachineRunning(adminClient),600,5,5,TimeUnit.SECONDS);
+  injector.injectMembers(adminVirtualMachineRunning);
   virtualMachineDestroyed=new RetryablePredicate<VirtualMachine>(new VirtualMachineDestroyed(client),600,5,5,TimeUnit.SECONDS);
   injector.injectMembers(virtualMachineDestroyed);
+  adminVirtualMachineDestroyed=new RetryablePredicate<VirtualMachine>(new VirtualMachineDestroyed(adminClient),600,5,5,TimeUnit.SECONDS);
+  injector.injectMembers(adminVirtualMachineDestroyed);
   reuseOrAssociate=new ReuseOrAssociateNewPublicIPAddress(client,jobComplete);
   injector.injectMembers(reuseOrAssociate);
 }
