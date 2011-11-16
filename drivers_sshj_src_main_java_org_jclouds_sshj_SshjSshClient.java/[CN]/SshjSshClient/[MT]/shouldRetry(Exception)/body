@@ -1,5 +1,5 @@
 {
-  Predicate<Throwable> predicate=retryAuth ? Predicates.<Throwable>or(retryPredicate,instanceOf(AuthorizationException.class)) : retryPredicate;
+  Predicate<Throwable> predicate=retryAuth ? Predicates.<Throwable>or(retryPredicate,instanceOf(AuthorizationException.class),instanceOf(UserAuthException.class)) : retryPredicate;
   if (any(getCausalChain(from),predicate))   return true;
   if (!retryableMessages.equals(""))   return any(Splitter.on(",").split(retryableMessages),causalChainHasMessageContaining(from));
   return false;
