@@ -1,0 +1,8 @@
+{
+  Image image=createMock(Image.class);
+  expect(image.getOperatingSystem()).andReturn(OperatingSystem.builder().family(OsFamily.LINUX).description("foo").build()).atLeastOnce();
+  replay(image);
+  Credentials creds=new Credentials("root",null);
+  assertEquals(new ReturnCredentialsBoundToImage(null).execute(image),creds);
+  verify(image);
+}

@@ -1,3 +1,11 @@
 {
-  return creds;
+  checkState(resourceToAuthenticate instanceof Image,"this is only valid for images");
+  if (creds != null)   return creds;
+  Image image=Image.class.cast(resourceToAuthenticate);
+  if (image.getOperatingSystem() != null && OsFamily.WINDOWS.equals(image.getOperatingSystem().getFamily())) {
+    return new Credentials("Administrator",null);
+  }
+ else {
+    return new Credentials("root",null);
+  }
 }
