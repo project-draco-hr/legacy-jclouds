@@ -10,6 +10,7 @@
     domainAdminContext=domainAdminComputeContext.getProviderSpecificContext();
     domainAdminClient=domainAdminContext.getApi();
     domainAdminUser=verifyCurrentUserIsOfType(domainAdminContext,Account.Type.DOMAIN_ADMIN);
+    adminClient=domainAdminContext.getApi();
   }
   injector=Guice.createInjector(new SshjSshClientModule(),new Log4JLoggingModule());
   sshFactory=injector.getInstance(SshClient.Factory.class);
@@ -17,6 +18,8 @@
   injector.injectMembers(socketTester);
   jobComplete=new RetryablePredicate<Long>(new JobComplete(client),1200,1,5,TimeUnit.SECONDS);
   injector.injectMembers(jobComplete);
+  adminJobComplete=new RetryablePredicate<Long>(new JobComplete(adminClient),1200,1,5,TimeUnit.SECONDS);
+  injector.injectMembers(adminJobComplete);
   virtualMachineRunning=new RetryablePredicate<VirtualMachine>(new VirtualMachineRunning(client),600,5,5,TimeUnit.SECONDS);
   injector.injectMembers(virtualMachineRunning);
   virtualMachineDestroyed=new RetryablePredicate<VirtualMachine>(new VirtualMachineDestroyed(client),600,5,5,TimeUnit.SECONDS);
