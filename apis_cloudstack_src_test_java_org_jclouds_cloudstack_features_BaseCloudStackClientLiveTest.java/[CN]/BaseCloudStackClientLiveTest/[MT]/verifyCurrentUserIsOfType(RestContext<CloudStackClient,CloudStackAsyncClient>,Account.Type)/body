@@ -8,6 +8,8 @@
  catch (  NoSuchElementException e) {
     throw new NoSuchElementException(String.format("none of the following users match %s: %s",apiKeyMatches,users));
   }
-  if (currentUser.getAccountType() != type)   throw new IllegalArgumentException(String.format("invalid account type: %s, please specify an apiKey of %s, for example: %s",currentUser.getAccountType(),type,Iterables.filter(users,UserPredicates.accountTypeEquals(type))));
+  if (currentUser.getAccountType() != type) {
+    Logger.getAnonymousLogger().warning(String.format("Expecting an user with type %s. Got: %s",type.toString(),currentUser.toString()));
+  }
   return currentUser;
 }
