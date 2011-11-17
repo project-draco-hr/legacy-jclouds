@@ -8,7 +8,13 @@
       }
  else {
         Entry<String,JsonBall> entry=Iterables.get(toParse.getResult().entrySet(),0);
-        if (typeMap.containsKey(entry.getKey())) {
+        if ("template".equals(entry.getKey())) {
+          Template template=json.fromJson(entry.getValue().toString(),Template.class);
+          TemplateExtraction templateExtraction=json.fromJson(entry.getValue().toString(),TemplateExtraction.class);
+          boolean isTemplate=Strings.isNullOrEmpty(templateExtraction.getState());
+          builder.result(isTemplate ? template : templateExtraction);
+        }
+ else         if (typeMap.containsKey(entry.getKey())) {
           builder.result(json.fromJson(entry.getValue().toString(),typeMap.get(entry.getKey())));
         }
  else {
