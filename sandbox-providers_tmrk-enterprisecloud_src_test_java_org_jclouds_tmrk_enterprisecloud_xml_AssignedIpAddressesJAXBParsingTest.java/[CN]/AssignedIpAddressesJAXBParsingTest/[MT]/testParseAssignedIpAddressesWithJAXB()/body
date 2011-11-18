@@ -1,0 +1,16 @@
+{
+  Method method=VirtualMachineAsyncClient.class.getMethod("getAssignedIpAddresses",long.class);
+  HttpRequest request=factory(VirtualMachineAsyncClient.class).createRequest(method,1);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,AssignedIpAddresses> parser=(Function<HttpResponse,AssignedIpAddresses>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/assignedIpAddresses.xml");
+  AssignedIpAddresses addresses=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  Assert.assertNotNull(addresses);
+  Set<DeviceNetwork> deviceNetworks=addresses.getNetworks().getDeviceNetworks();
+  assertEquals(1,deviceNetworks.size());
+  DeviceNetwork network=Iterables.getOnlyElement(deviceNetworks);
+  Set<String> ips=network.getIpAddresses().getIpAddresses();
+  assertEquals(2,ips.size());
+  assertTrue(ips.contains("10.146.204.98"));
+  assertTrue(ips.contains("10.146.204.99"));
+}
