@@ -1,5 +1,15 @@
 {
-  Mac mac=provider == null ? Mac.getInstance(algorithm) : Mac.getInstance(algorithm,provider);
+  Mac mac=null;
+  if (provider != null) {
+    try {
+      mac=Mac.getInstance(algorithm,provider);
+    }
+ catch (    Exception e) {
+    }
+  }
+  if (mac == null) {
+    mac=Mac.getInstance(algorithm);
+  }
   SecretKeySpec signingKey=new SecretKeySpec(key,algorithm);
   mac.init(signingKey);
   return mac;
