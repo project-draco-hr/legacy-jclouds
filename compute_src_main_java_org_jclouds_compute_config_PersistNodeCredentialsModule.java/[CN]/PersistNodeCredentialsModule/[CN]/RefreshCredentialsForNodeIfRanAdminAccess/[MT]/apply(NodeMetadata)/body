@@ -2,7 +2,8 @@
   if (statement == null)   return input;
   Credentials credentials=CredentialsFromAdminAccess.INSTANCE.apply(statement);
   if (credentials != null) {
-    input=NodeMetadataBuilder.fromNodeMetadata(input).credentials(credentials).build();
+    LoginCredentials creds=LoginCredentials.builder(credentials).build();
+    input=NodeMetadataBuilder.fromNodeMetadata(input).credentials(creds).build();
     credentialStore.put("node#" + input.getId(),input.getCredentials());
   }
   return input;

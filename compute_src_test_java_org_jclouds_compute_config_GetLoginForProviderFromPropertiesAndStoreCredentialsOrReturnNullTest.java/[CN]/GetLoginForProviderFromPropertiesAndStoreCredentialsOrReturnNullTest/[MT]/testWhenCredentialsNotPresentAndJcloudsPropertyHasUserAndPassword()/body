@@ -3,8 +3,10 @@
   Credentials expected=new Credentials("ubuntu","password");
   ValueOfConfigurationKeyOrNull config=createMock(ValueOfConfigurationKeyOrNull.class);
   expect(credstore.containsKey("image")).andReturn(false);
-  expect(config.apply("provider.login-user")).andReturn(null);
-  expect(config.apply("jclouds.login-user")).andReturn("ubuntu:password");
+  expect(config.apply("provider.image.login-user")).andReturn(null);
+  expect(config.apply("jclouds.image.login-user")).andReturn("ubuntu:password");
+  expect(config.apply("provider.image.authenticate-sudo")).andReturn(null);
+  expect(config.apply("jclouds.image.authenticate-sudo")).andReturn(null);
   expect(credstore.put("image",expected)).andReturn(null);
   replay(config);
   replay(credstore);

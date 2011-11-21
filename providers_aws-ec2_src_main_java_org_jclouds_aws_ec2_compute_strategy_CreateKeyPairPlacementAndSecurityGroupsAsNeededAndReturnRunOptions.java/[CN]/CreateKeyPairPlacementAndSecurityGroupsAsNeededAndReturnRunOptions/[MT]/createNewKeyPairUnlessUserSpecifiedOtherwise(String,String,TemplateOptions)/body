@@ -4,7 +4,7 @@
   if (and(hasPublicKeyMaterial,or(doesntNeedSshAfterImportingPublicKey,hasLoginCredential)).apply(options)) {
     pair=importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,options.getPublicKey()));
     options.dontAuthorizePublicKey();
-    if (hasLoginCredential.apply(options))     pair=pair.toBuilder().keyMaterial(options.getOverridingCredentials().credential).build();
+    if (hasLoginCredential.apply(options))     pair=pair.toBuilder().keyMaterial(options.getLoginPrivateKey()).build();
     credentialsMap.put(key,pair);
   }
  else {

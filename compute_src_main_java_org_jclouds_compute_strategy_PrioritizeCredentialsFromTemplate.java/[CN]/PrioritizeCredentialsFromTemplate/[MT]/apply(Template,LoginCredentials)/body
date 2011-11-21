@@ -1,0 +1,13 @@
+{
+  LoginCredentials creds=fromNode;
+  LoginCredentials credsFromParameters=credentialsFromImageOrTemplateOptions.apply(template);
+  if (credsFromParameters != null) {
+    Builder builder=LoginCredentials.builder(creds);
+    if (credsFromParameters.getUser() != null)     builder.user(credsFromParameters.getUser());
+    if (credsFromParameters.getPassword() != null)     builder.password(credsFromParameters.getPassword());
+    if (credsFromParameters.getPrivateKey() != null)     builder.privateKey(credsFromParameters.getPrivateKey());
+    if (credsFromParameters.shouldAuthenticateSudo())     builder.authenticateSudo(true);
+    creds=builder.build();
+  }
+  return creds;
+}

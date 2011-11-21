@@ -15,5 +15,5 @@
   checkState(orderInSystem,"order for guest %s doesn't have login details within %sms",result,Long.toString(guestLoginDelay));
   result=client.getVirtualGuestClient().getVirtualGuest(result.getId());
   Password pw=get(result.getOperatingSystem().getPasswords(),0);
-  return new NodeAndInitialCredentials<VirtualGuest>(result,result.getId() + "",new Credentials(pw.getUsername(),pw.getPassword()));
+  return new NodeAndInitialCredentials<VirtualGuest>(result,result.getId() + "",LoginCredentials.builder().user(pw.getUsername()).password(pw.getPassword()).build());
 }

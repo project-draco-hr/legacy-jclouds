@@ -1,7 +1,13 @@
 {
   try {
-    PrivateCredentials credentials=json.fromJson(Strings2.toStringAndClose(checkNotNull(from)),PrivateCredentials.class);
-    return new Credentials(credentials.identity,credentials.credential);
+    String creds=Strings2.toStringAndClose(checkNotNull(from));
+    if (creds.indexOf("\"user\":") == -1) {
+      return json.fromJson(creds,Credentials.class);
+    }
+ else {
+      JsonLoginCredentials val=json.fromJson(creds,JsonLoginCredentials.class);
+      return LoginCredentials.builder().user(val.user).password(val.password).privateKey(val.privateKey).authenticateSudo(Boolean.TRUE.equals(val.authenticateSudo)).build();
+    }
   }
  catch (  Exception e) {
     logger.warn(e,"ignoring problem retrieving credentials");

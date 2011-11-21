@@ -1,10 +1,9 @@
 {
   TemplateOptions options=template.getOptions();
-  Credentials creds=template.getImage().getDefaultCredentials();
-  Credentials overridingCredentials=options.getOverridingCredentials();
-  Credentials overrideCreds=(overridingCredentials != null) ? overridingCredentials : NO_CREDENTIALS;
-  if (creds == null)   creds=overrideCreds;
-  if (overrideCreds.identity != null)   creds=creds.toBuilder().identity(overrideCreds.identity).build();
-  if (overrideCreds.credential != null)   creds=creds.toBuilder().credential(overrideCreds.credential).build();
-  return creds.equals(NO_CREDENTIALS) ? null : creds;
+  Builder builder=LoginCredentials.builder(template.getImage().getDefaultCredentials());
+  if (options.getLoginUser() != null)   builder.user(options.getLoginUser());
+  if (options.getLoginPassword() != null)   builder.password(options.getLoginPassword());
+  if (options.getLoginPrivateKey() != null)   builder.privateKey(options.getLoginPrivateKey());
+  if (options.shouldAuthenticateSudo() != null)   builder.authenticateSudo(true);
+  return builder.build();
 }

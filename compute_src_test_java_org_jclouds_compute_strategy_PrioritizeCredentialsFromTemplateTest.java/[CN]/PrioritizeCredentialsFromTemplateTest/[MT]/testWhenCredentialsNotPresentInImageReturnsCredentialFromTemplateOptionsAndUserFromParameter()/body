@@ -4,10 +4,10 @@
   Template template=createMock(Template.class);
   expect(template.getImage()).andReturn(image);
   expect(image.getDefaultCredentials()).andReturn(null);
-  expect(template.getOptions()).andReturn(TemplateOptions.Builder.overrideLoginUserWith("ubuntu"));
+  expect(template.getOptions()).andReturn(TemplateOptions.Builder.overrideLoginUser("ubuntu"));
   replay(template);
   replay(image);
-  assertEquals(fn.apply(template,new Credentials("foo","password")),expected);
+  assertEquals(fn.apply(template,new LoginCredentials("foo","password",null,false)),expected);
   verify(template);
   verify(image);
 }

@@ -4,7 +4,7 @@
   awaitForSshPort(address,new Credentials("root",keyPair.get("private")));
   OperatingSystem os=node.getOperatingSystem();
   try {
-    @SuppressWarnings("unused") Map<? extends NodeMetadata,ExecResponse> responses=runJavaInstallationScriptWithCreds(group,os,new Credentials("root","romeo"));
+    @SuppressWarnings("unused") Map<? extends NodeMetadata,ExecResponse> responses=runJavaInstallationScriptWithCreds(group,os,LoginCredentials.builder().user("root").password("romeo").build());
   }
  catch (  RunScriptOnNodesException e) {
     throw e.getNodeErrors().values().iterator().next().getCause();

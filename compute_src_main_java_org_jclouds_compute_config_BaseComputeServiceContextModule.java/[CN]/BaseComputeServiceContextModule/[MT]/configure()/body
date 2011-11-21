@@ -7,8 +7,8 @@
   bind(new TypeLiteral<Function<TemplateOptions,Statement>>(){
   }
 ).to(TemplateOptionsToStatement.class);
-  bind(Credentials.class).annotatedWith(Names.named("image")).toProvider(GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull.class);
-  bind(new TypeLiteral<Function<Template,Credentials>>(){
+  bind(LoginCredentials.class).annotatedWith(Names.named("image")).toProvider(GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull.class);
+  bind(new TypeLiteral<Function<Template,LoginCredentials>>(){
   }
 ).to(DefaultCredentialsFromImageOrOverridingCredentials.class);
   install(new FactoryModuleBuilder().implement(RunScriptOnNodeUsingSsh.class,Names.named("direct"),RunScriptOnNodeUsingSsh.class).implement(RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNodeAsInitScriptUsingSsh.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));

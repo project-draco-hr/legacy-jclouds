@@ -6,7 +6,7 @@
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
   expect(options.getKeyPair()).andReturn(userSuppliedKeyPair);
-  expect(options.getOverridingCredentials()).andReturn(CREDENTIALS).atLeastOnce();
+  expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getPrivateKey()).atLeastOnce();
   expect(strategy.credentialsMap.put(new RegionAndName(region,userSuppliedKeyPair),KEYPAIR)).andReturn(null);
   expect(options.getRunScript()).andReturn(Statements.exec("echo foo"));
   expect(strategy.credentialsMap.containsKey(new RegionAndName(region,userSuppliedKeyPair))).andReturn(true);

@@ -3,8 +3,8 @@
   if (node.getCredentials().identity.equals("root")) {
     command="./" + init.getInstanceName() + " "+ action;
   }
- else   if (node.getAdminPassword() != null) {
-    command=String.format("echo '%s'|sudo -S ./%s %s",node.getAdminPassword(),init.getInstanceName(),action);
+ else   if (node.getCredentials().shouldAuthenticateSudo()) {
+    command=String.format("echo '%s'|sudo -S ./%s %s",node.getCredentials().getPassword(),init.getInstanceName(),action);
   }
  else {
     command="sudo ./" + init.getInstanceName() + " "+ action;

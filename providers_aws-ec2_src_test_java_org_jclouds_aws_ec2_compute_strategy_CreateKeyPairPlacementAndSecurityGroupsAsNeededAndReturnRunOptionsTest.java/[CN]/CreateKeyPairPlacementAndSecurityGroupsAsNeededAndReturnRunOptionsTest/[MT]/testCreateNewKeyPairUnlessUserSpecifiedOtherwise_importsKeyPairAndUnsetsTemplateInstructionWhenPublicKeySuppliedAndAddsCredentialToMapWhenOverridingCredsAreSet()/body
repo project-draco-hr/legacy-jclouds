@@ -2,7 +2,7 @@
   String region=Region.AP_SOUTHEAST_1;
   String group="group";
   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy=setupStrategy();
-  AWSEC2TemplateOptions options=keyPair(group).authorizePublicKey("ssh-rsa").overrideCredentialsWith(new Credentials("foo",CREDENTIALS.credential));
+  AWSEC2TemplateOptions options=keyPair(group).authorizePublicKey("ssh-rsa").overrideLoginCredentials(LoginCredentials.builder().user("foo").privateKey(CREDENTIALS.credential).build());
   KeyPair keyPair=new KeyPair(region,group,"//TODO",null,null);
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,CREDENTIALS.credential))).andReturn(keyPair);
   expect(strategy.credentialsMap.put(new RegionAndName(region,group),keyPair.toBuilder().keyMaterial(CREDENTIALS.credential).build())).andReturn(null);

@@ -6,7 +6,7 @@
   EC2TemplateOptions options=createMock(EC2TemplateOptions.class);
   KeyPair keyPair=createMock(KeyPair.class);
   expect(options.getPublicKey()).andReturn("ssh-rsa").times(2);
-  expect(options.getOverridingCredentials()).andReturn(CREDENTIALS).atLeastOnce();
+  expect(options.getLoginPrivateKey()).andReturn(CREDENTIALS.getPrivateKey()).atLeastOnce();
   expect(strategy.importExistingKeyPair.apply(new RegionNameAndPublicKeyMaterial(region,group,"ssh-rsa"))).andReturn(KEYPAIR);
   expect(options.dontAuthorizePublicKey()).andReturn(options);
   expect(strategy.credentialsMap.put(new RegionAndName(region,group),KEYPAIR)).andReturn(null);

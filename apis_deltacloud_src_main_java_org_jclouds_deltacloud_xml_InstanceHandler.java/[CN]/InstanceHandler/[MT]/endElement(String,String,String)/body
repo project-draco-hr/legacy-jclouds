@@ -15,21 +15,21 @@
     this.keyName=currentOrNull(currentText);
   }
  else   if (qName.equalsIgnoreCase("username")) {
-    this.credentialsBuilder.identity(currentOrNull(currentText));
+    this.credentialsBuilder.user(currentOrNull(currentText));
   }
  else   if (qName.equalsIgnoreCase("password")) {
-    this.credentialsBuilder.credential(currentOrNull(currentText));
+    this.credentialsBuilder.password(currentOrNull(currentText));
   }
  else   if (qName.equalsIgnoreCase("authentication")) {
     if (keyName != null) {
       this.authentication=new KeyAuthentication(keyName);
     }
  else {
-      Credentials creds=credentialsBuilder.build();
-      if (creds.identity != null)       this.authentication=new PasswordAuthentication(creds);
+      LoginCredentials creds=credentialsBuilder.build();
+      if (creds != null && creds.identity != null)       this.authentication=new PasswordAuthentication(creds);
     }
     this.keyName=null;
-    this.credentialsBuilder=new Credentials.Builder<Credentials>();
+    this.credentialsBuilder=LoginCredentials.builder();
   }
  else   if (qName.equalsIgnoreCase("state")) {
     this.state=Instance.State.fromValue(currentOrNull(currentText));

@@ -11,8 +11,6 @@
   expect(serverStateToNodeState.get(ServerState.ON)).andReturn(NodeState.RUNNING);
   Location location=new LocationBuilder().scope(LocationScope.ZONE).id("1").description("US-West-1").build();
   Map<String,? extends Location> locations=ImmutableMap.<String,Location>of("1",location);
-  Map<String,Credentials> credentialsMap=createMock(Map.class);
-  expect(credentialsMap.get("node#1000")).andReturn(new Credentials("user","pass"));
   expect(server.getIp()).andReturn(new Ip("127.0.0.1"));
   ServerImage image=createMock(ServerImage.class);
   expect(server.getImage()).andReturn(image).atLeastOnce();
@@ -26,16 +24,13 @@
   replay(server);
   replay(image);
   replay(jcImage);
-  replay(credentialsMap);
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,credentialsMap,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(GoGridHardwareSupplier.H_ALL),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(GoGridHardwareSupplier.H_ALL),Suppliers.<Map<String,? extends Location>>ofInstance(locations));
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImageId(),"2000");
   assertEquals(metadata.getGroup(),"group");
-  assertEquals(metadata.getCredentials(),new Credentials("user","pass"));
   verify(serverStateToNodeState);
   verify(image);
-  verify(credentialsMap);
   verify(server);
   verify(jcImage);
 }

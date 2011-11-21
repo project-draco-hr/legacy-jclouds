@@ -1,0 +1,8 @@
+{
+  Map<String,InputStream> map=getMap(createInjector());
+  LoginCredentials creds=LoginCredentials.builder().user("user").password("pass").authenticateSudo(true).build();
+  put(map,getStore(createInjector()),"test",creds);
+  checkConsistent(map,getStore(createInjector()),"test",creds,"{\"user\":\"user\",\"password\":\"pass\",\"authenticateSudo\":true}");
+  checkConsistent(map,getStore(createInjector()),"test",creds,"{\"user\":\"user\",\"password\":\"pass\",\"authenticateSudo\":true}");
+  remove(map,getStore(createInjector()),"test");
+}

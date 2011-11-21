@@ -11,9 +11,8 @@
   Set<String> addresses=getIpsFromVApp(from);
   builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
   builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
-  builder.credentials(getCredentialsFrom(from));
   Credentials fromApi=getCredentialsFrom(from);
   if (fromApi != null && !credentialStore.containsKey("node#" + from.getHref().toASCIIString()))   credentialStore.put("node#" + from.getHref().toASCIIString(),fromApi);
-  builder.credentials(credentialStore.get("node#" + from.getHref().toASCIIString()));
+  builder.credentials(LoginCredentials.builder(credentialStore.get("node#" + from.getHref().toASCIIString())).build());
   return builder.build();
 }

@@ -1,15 +1,9 @@
 {
   checkNotNull(node,"node");
-  if (options.getOverridingCredentials() != null) {
-    Builder<? extends Credentials> builder=node.getCredentials() != null ? node.getCredentials().toBuilder() : new Credentials.Builder<Credentials>();
-    if (options.getOverridingCredentials().identity != null)     builder.identity(options.getOverridingCredentials().identity);
-    if (options.getOverridingCredentials().credential != null) {
-      builder=options.getOverridingCredentials().toBuilder();
-      Credentials cred=builder.build();
-      builder.identity(cred.identity);
-      builder.credential(options.getOverridingCredentials().credential);
-    }
-    node=NodeMetadataBuilder.fromNodeMetadata(node).credentials(builder.build()).build();
-  }
-  return node;
+  Builder builder=LoginCredentials.builder(node.getCredentials());
+  if (options.getLoginUser() != null)   builder.user(options.getLoginUser());
+  if (options.getLoginPassword() != null)   builder.password(options.getLoginPassword());
+  if (options.getLoginPrivateKey() != null)   builder.privateKey(options.getLoginPrivateKey());
+  if (options.shouldAuthenticateSudo() != null)   builder.authenticateSudo(true);
+  return NodeMetadataBuilder.fromNodeMetadata(node).credentials(builder.build()).build();
 }

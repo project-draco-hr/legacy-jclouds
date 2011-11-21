@@ -8,7 +8,11 @@
   this.loginPort=loginPort;
   this.publicAddresses=ImmutableSet.copyOf(checkNotNull(publicAddresses,"publicAddresses"));
   this.privateAddresses=ImmutableSet.copyOf(checkNotNull(privateAddresses,"privateAddresses"));
-  this.adminPassword=adminPassword;
-  this.credentials=credentials;
   this.hostname=hostname;
+  Builder builder=LoginCredentials.builder(credentials);
+  if (adminPassword != null) {
+    builder.authenticateSudo(true);
+    builder.password(adminPassword);
+  }
+  this.credentials=builder.build();
 }

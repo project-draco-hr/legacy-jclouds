@@ -1,7 +1,6 @@
 {
   node=createMock(NodeMetadata.class);
-  expect(node.getCredentials()).andReturn(new Credentials("tester","notalot"));
-  expect(node.getAdminPassword()).andReturn("testpassword!").atLeastOnce();
+  expect(node.getCredentials()).andReturn(new LoginCredentials("tester","testpassword!",null,true)).atLeastOnce();
   replay(node);
   RunScriptOnNodeUsingSsh testMe=new RunScriptOnNodeUsingSsh(sshFactory,node,exec("echo $USER\necho $USER"),wrapInInitScript(false).runAsRoot(true));
   testMe.init();

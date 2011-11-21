@@ -1,6 +1,10 @@
 {
   checkNotNull(loginCredential,"loginCredential");
-  org.jclouds.domain.Credentials.Builder<? extends Credentials> builder=overridingCredentials != null ? overridingCredentials.toBuilder() : new Credentials.Builder<Credentials>();
-  this.overridingCredentials=builder.credential(loginCredential).build();
+  if (CredentialUtils.isPrivateKeyCredential(loginCredential)) {
+    this.loginPrivateKey=loginCredential;
+  }
+ else {
+    this.loginPassword=loginCredential;
+  }
   return this;
 }

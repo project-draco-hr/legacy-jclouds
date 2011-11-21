@@ -1,0 +1,15 @@
+{
+  @SuppressWarnings("unchecked") Map<String,Credentials> credstore=createMock(Map.class);
+  LoginCredentials expected=LoginCredentials.builder().user("ubuntu").password("password").authenticateSudo(true).build();
+  ValueOfConfigurationKeyOrNull config=createMock(ValueOfConfigurationKeyOrNull.class);
+  expect(credstore.containsKey("image")).andReturn(false);
+  expect(config.apply("provider.image.login-user")).andReturn("ubuntu:password");
+  expect(config.apply("provider.image.authenticate-sudo")).andReturn("true");
+  expect(credstore.put("image",expected)).andReturn(null);
+  replay(config);
+  replay(credstore);
+  GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull fn=new GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull("provider",config,credstore);
+  assertEquals(fn.get(),expected);
+  verify(config);
+  verify(credstore);
+}
