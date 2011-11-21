@@ -1,2 +1,39 @@
 {
+  long diskOfferingId=Iterables.get(client.getOfferingClient().listDiskOfferings(),0).getId();
+  Volume volume=null;
+  while (volume == null) {
+    try {
+      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",diskOfferingId,zoneId);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      volume=findVolumeWithId(job.getId());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  checkVolume(volume);
+  long virtualMachineId=Iterables.get(client.getVirtualMachineClient().listVirtualMachines(),0).getId();
+  Volume attachedVolume=null;
+  while (attachedVolume == null) {
+    try {
+      AsyncCreateResponse job=client.getVolumeClient().attachVolume(volume.getId(),virtualMachineId);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      attachedVolume=findVolumeWithId(volume.getId());
+      assertEquals(virtualMachineId,attachedVolume.getVirtualMachineId());
+      assertNotNull(attachedVolume.getAttached());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  Volume detachedVolume=null;
+  while (detachedVolume == null) {
+    try {
+      AsyncCreateResponse job=client.getVolumeClient().detachVolume(volume.getId());
+      assertTrue(jobComplete.apply(job.getJobId()));
+      detachedVolume=findVolumeWithId(volume.getId());
+      checkVolume(detachedVolume);
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  client.getVolumeClient().deleteVolume(volume.getId());
 }

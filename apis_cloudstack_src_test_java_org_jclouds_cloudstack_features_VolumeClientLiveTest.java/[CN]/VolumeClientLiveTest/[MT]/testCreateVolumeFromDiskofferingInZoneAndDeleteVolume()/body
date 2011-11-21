@@ -1,2 +1,15 @@
 {
+  long diskOfferingId=Iterables.get(client.getOfferingClient().listDiskOfferings(),0).getId();
+  Volume volume=null;
+  while (volume == null) {
+    try {
+      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",diskOfferingId,zoneId);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      volume=findVolumeWithId(job.getId());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  checkVolume(volume);
+  client.getVolumeClient().deleteVolume(volume.getId());
 }
