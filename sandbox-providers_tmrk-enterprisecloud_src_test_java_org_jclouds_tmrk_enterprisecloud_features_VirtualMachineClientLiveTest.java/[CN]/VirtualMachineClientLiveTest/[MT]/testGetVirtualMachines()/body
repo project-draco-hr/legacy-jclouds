@@ -1,2 +1,8 @@
 {
+  VirtualMachines virtualMachines=client.getVirtualMachines(new URI("/cloudapi/ecloud/virtualMachines/computePools/89"));
+  for (  VirtualMachine vm : virtualMachines.getVirtualMachines()) {
+    VirtualMachine virtualMachine=client.getVirtualMachine(vm.getHref());
+    assertNotNull(virtualMachine,"virtualMachine should not be null");
+    assertEquals(virtualMachine.getStatus(),VirtualMachine.VirtualMachineStatus.DEPLOYED);
+  }
 }
