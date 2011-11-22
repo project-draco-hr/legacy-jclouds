@@ -2,6 +2,9 @@
   long guestId=Long.parseLong(id);
   Long job=client.getVirtualMachineClient().destroyVirtualMachine(guestId);
   boolean completed=jobComplete.apply(job);
-  IPForwardingRule forwardingRule=client.getNATClient().getIPForwardingRuleForVirtualMachine(guestId);
-  if (forwardingRule != null)   client.getNATClient().disableStaticNat(forwardingRule.getIPAddressId());
+  Set<IPForwardingRule> forwardingRules=client.getNATClient().getIPForwardingRulesForVirtualMachine(guestId);
+  for (  IPForwardingRule rule : forwardingRules) {
+    job=client.getNATClient().deleteIPForwardingRule(rule.getId());
+    jobComplete.apply(job);
+  }
 }

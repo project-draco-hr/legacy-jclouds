@@ -15,6 +15,6 @@
   checkState(jobComplete.apply(job.getJobId()),"Timeout creating IP forwarding rule: ",job);
   AsyncJob<IPForwardingRule> response=client.getAsyncJobClient().getAsyncJob(job.getJobId());
   checkState(response.getResult() != null,"No result after creating IP forwarding rule: ",response);
-  getIPForwardingRuleByVirtualMachine.asMap().put(vm.getId(),response.getResult());
+  getIPForwardingRulesByVirtualMachine.asMap().put(vm.getId(),ImmutableSet.of(response.getResult()));
   return ip;
 }
