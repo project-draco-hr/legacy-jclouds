@@ -1,0 +1,8 @@
+{
+  Task task2=Task.builder().href(URI.create("/tasks/1003")).type("application/vnd.tmrk.cloud.task").operation("test task 2").status(Task.Status.ERROR).impactedItem(NamedResource.builder().href(URI.create("/item/2")).name("sample item 2").type("application/vnd.tmrk.cloud.nodeService").build()).startTime(new Date()).completedTime(new Date()).notes("Some notes about the operation.").errorMessage("sample error message 2 here").initiatedBy(NamedResource.builder().href(URI.create("/users/2")).name("User 2").type("application/vnd.tmrk.cloud.admin.user").build()).build();
+  Tasks twoTasks=tasks.toBuilder().addTask(task2).build();
+  Set<Task> taskSet=twoTasks.getTasks();
+  assertEquals(2,taskSet.size());
+  assertTrue(taskSet.contains(task));
+  assertTrue(taskSet.contains(task2));
+}
