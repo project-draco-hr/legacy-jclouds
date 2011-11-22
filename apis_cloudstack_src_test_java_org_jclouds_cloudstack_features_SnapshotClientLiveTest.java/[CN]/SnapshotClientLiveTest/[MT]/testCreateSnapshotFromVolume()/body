@@ -1,0 +1,15 @@
+{
+  long volumeId=Iterables.get(client.getVolumeClient().listVolumes(),0).getId();
+  Snapshot snapshot=null;
+  while (snapshot == null) {
+    try {
+      AsyncCreateResponse job=client.getSnapshotClient().createSnapshot(volumeId);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      snapshot=findSnapshotWithId(job.getId());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  checkSnapshot(snapshot);
+  client.getSnapshotClient().deleteSnapshot(snapshot.getId());
+}
