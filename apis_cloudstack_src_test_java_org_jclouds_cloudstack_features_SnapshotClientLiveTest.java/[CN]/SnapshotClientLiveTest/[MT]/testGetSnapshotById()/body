@@ -1,0 +1,16 @@
+{
+  Iterable<Long> snapshotIds=Iterables.transform(client.getSnapshotClient().listSnapshots(),new Function<Snapshot,Long>(){
+    public Long apply(    Snapshot input){
+      return input.getId();
+    }
+  }
+);
+  assertNotNull(snapshotIds);
+  assertFalse(Iterables.isEmpty(snapshotIds));
+  for (  Long id : snapshotIds) {
+    Snapshot found=client.getSnapshotClient().getSnapshot(id);
+    assertNotNull(found);
+    assertEquals(id.longValue(),found.getId());
+    checkSnapshot(found);
+  }
+}
