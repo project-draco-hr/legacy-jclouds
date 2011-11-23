@@ -5,5 +5,9 @@
   Function<HttpResponse,VirtualMachineConfigurationOptions> parser=(Function<HttpResponse,VirtualMachineConfigurationOptions>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
   InputStream is=getClass().getResourceAsStream("/virtualMachineConfigurationOptions.xml");
   VirtualMachineConfigurationOptions virtualMachineConfigurationOptions=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertProcessorOptions(virtualMachineConfigurationOptions.getProcessor());
   assertMemoryOptions(virtualMachineConfigurationOptions.getMemory());
+  assertDiskConfigurationOption(virtualMachineConfigurationOptions.getDisk());
+  assertNetworkAdapterOptions(virtualMachineConfigurationOptions.getNetworkAdapter());
+  assertCustomizationOption(virtualMachineConfigurationOptions.getCustomization());
 }
