@@ -1,22 +1,25 @@
 {
-  IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(settingsFile,osTypeId,vmId,forceOverwrite,manager).apply(vmName);
-  String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
-  String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
+  final IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(settingsFile,osTypeId,vmId,forceOverwrite,manager).apply(vmName);
+  final String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
+  final String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
   ensureMachineHasMemory(vmName,1024l);
   ensureMachineHasIDEControllerNamed(vmName,controllerIDE);
   ensureMachineHasAttachedDistroMedium(isoName,workingDir,controllerIDE);
-  String adminDiskPath=workingDir + "/" + adminDisk;
+  final String adminDiskPath=workingDir + "/" + adminDisk;
   if (new File(adminDiskPath).exists()) {
-    new File(adminDiskPath).delete();
+    boolean deleted=new File(adminDiskPath).delete();
+    if (!deleted) {
+      logger.error(String.format("File %s could not be deleted.",adminDiskPath));
+    }
   }
-  IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
+  final IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
   ensureMachineHasHardDiskAttached(vmName,hardDisk);
   ensureNATNetworkingIsAppliedToMachine(vmName);
-  String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
+  final String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
   final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
   ensureGuestAdditionsMediumIsAttached(vmName,guestAdditionsDvdMedium);
   ensureMachineIsLaunched(vmName);
-  String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
+  final String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
   sendKeyboardSequence(installKeySequence);
   boolean sshDeamonIsRunning=false;
   while (!sshDeamonIsRunning) {

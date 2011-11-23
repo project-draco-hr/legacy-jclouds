@@ -1,7 +1,7 @@
 {
   VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
   ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
-  IMachine imageMachine=new IsoToIMachine(manager,adminDisk,diskFormat,settingsFile,vmName,osTypeId,vmId,forceOverwrite,controllerIDE,localHostContext,hostId,guestId,new Credentials("toor","password")).apply("ubuntu-11.04-server-i386.iso");
+  IMachine imageMachine=new IsoToIMachine(manager,adminDisk,diskFormat,settingsFile,vmName,osTypeId,vmId,forceOverwrite,controllerIDE,localHostContext,hostId,guestId).apply("ubuntu-11.04-server-i386.iso");
   IMachineToImage iMachineToImage=new IMachineToImage(manager,map);
   Image newImage=iMachineToImage.apply(imageMachine);
   Set<? extends Image> images=context.getComputeService().listImages();
