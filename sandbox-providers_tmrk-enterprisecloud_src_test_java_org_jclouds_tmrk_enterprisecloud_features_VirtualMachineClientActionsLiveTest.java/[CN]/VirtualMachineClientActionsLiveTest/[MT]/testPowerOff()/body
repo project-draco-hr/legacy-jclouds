@@ -1,8 +1,7 @@
 {
-  Task task=client.powerOff(vm.getHref());
   RetryablePredicate retryablePredicate=new RetryablePredicate(taskFinished(),1000 * 60);
-  if (!retryablePredicate.apply(task)) {
-    fail("Did not manage to powerOff VM within timeout");
+  if (!retryablePredicate.apply(client.powerOff(vm.getHref()))) {
+    fail("Did not manage to finish powerOff task");
   }
   vm=client.getVirtualMachine(vm.getHref());
   assertFalse(vm.isPoweredOn());
