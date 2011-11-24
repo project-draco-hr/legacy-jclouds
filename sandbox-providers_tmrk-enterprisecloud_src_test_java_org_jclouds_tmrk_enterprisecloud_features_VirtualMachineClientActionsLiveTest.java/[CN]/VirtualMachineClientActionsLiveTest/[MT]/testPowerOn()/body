@@ -1,0 +1,11 @@
+{
+  vm=client.getVirtualMachine(new URI(vmURI));
+  assertFalse(vm.isPoweredOn());
+  Task task=client.powerOn(vm.getHref());
+  RetryablePredicate retryablePredicate=new RetryablePredicate(taskFinished(),1000 * 60);
+  if (!retryablePredicate.apply(task)) {
+    fail("Did not manage to powerOn VM within timeout");
+  }
+  vm=client.getVirtualMachine(vm.getHref());
+  assertTrue(vm.isPoweredOn());
+}

@@ -1,0 +1,20 @@
+{
+  return new Predicate<Task>(){
+    @Override public boolean apply(    @Nullable Task task){
+      TaskClient taskClient=context.getApi().getTaskClient();
+      task=taskClient.getTask(task.getHref());
+      Task.Status status=task.getStatus();
+switch (status) {
+case QUEUED:
+case RUNNING:
+        return false;
+case COMPLETE:
+case SUCCESS:
+      return true;
+default :
+    throw new RuntimeException("Task Failed:" + task.getHref() + ", Status:"+ status);
+}
+}
+}
+;
+}
