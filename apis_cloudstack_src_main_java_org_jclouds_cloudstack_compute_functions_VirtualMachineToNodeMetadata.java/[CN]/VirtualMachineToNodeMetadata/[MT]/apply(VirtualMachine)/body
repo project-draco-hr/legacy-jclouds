@@ -20,8 +20,17 @@
  else     builder.publicAddresses(addresses);
   }
   try {
-    IPForwardingRule rule=getIPForwardingRuleByVirtualMachine.getUnchecked(from.getId());
-    builder.publicAddresses(ImmutableSet.<String>of(rule.getIPAddress()));
+    builder.publicAddresses(transform(filter(getIPForwardingRulesByVirtualMachine.getUnchecked(from.getId()),new Predicate<IPForwardingRule>(){
+      @Override public boolean apply(      @Nullable IPForwardingRule rule){
+        return !"Deleting".equals(rule.getState());
+      }
+    }
+),new Function<IPForwardingRule,String>(){
+      @Override public String apply(      @Nullable IPForwardingRule rule){
+        return rule.getIPAddress();
+      }
+    }
+));
   }
  catch (  UncheckedExecutionException e) {
     if (Throwables2.getFirstThrowableOfType(e,ResourceNotFoundException.class) == null) {

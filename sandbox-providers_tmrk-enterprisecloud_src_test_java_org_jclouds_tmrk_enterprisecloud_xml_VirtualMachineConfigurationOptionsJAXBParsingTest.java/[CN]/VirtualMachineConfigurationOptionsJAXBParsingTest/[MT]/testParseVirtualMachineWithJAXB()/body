@@ -1,0 +1,13 @@
+{
+  Method method=VirtualMachineAsyncClient.class.getMethod("getConfigurationOptions",URI.class);
+  HttpRequest request=factory(VirtualMachineAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,VirtualMachineConfigurationOptions> parser=(Function<HttpResponse,VirtualMachineConfigurationOptions>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/virtualMachineConfigurationOptions.xml");
+  VirtualMachineConfigurationOptions configurationOptions=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertProcessorOptions(configurationOptions.getProcessor());
+  assertMemoryOptions(configurationOptions.getMemory());
+  assertDiskConfigurationOption(configurationOptions.getDisk());
+  assertNetworkAdapterOptions(configurationOptions.getNetworkAdapter());
+  assertCustomizationOption(configurationOptions.getCustomization());
+}

@@ -1,0 +1,19 @@
+{
+  return new Predicate<URI>(){
+    @Override public boolean apply(    URI uri){
+      VirtualMachine virtualMachine=client.getVirtualMachine(uri);
+      ToolsStatus toolsStatus=virtualMachine.getToolsStatus();
+switch (toolsStatus) {
+case NOT_INSTALLED:
+case NOT_RUNNING:
+        return false;
+case CURRENT:
+case OUT_OF_DATE:
+      return true;
+default :
+    throw new RuntimeException("Unable to determine toolsStatus for:" + uri + ", ToolsStatus:"+ toolsStatus);
+}
+}
+}
+;
+}

@@ -1,0 +1,18 @@
+{
+  Set<Snapshot> snapshots=client.getSnapshotClient().listSnapshots();
+  assertNotNull(snapshots);
+  assertFalse(snapshots.isEmpty());
+  long snapshotId=Iterables.get(snapshots,0).getId();
+  Volume volume=null;
+  while (volume == null) {
+    try {
+      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromSnapshotInZone(prefix + "-jclouds-volume",snapshotId,zoneId);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      volume=findVolumeWithId(job.getId());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  checkVolume(volume);
+  client.getVolumeClient().deleteVolume(volume.getId());
+}
