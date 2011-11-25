@@ -1,0 +1,13 @@
+{
+  String controller="IDE Controller";
+  IMachine machine=createNiceMock(IMachine.class);
+  final StringBuilder errorBuilder=new StringBuilder();
+  errorBuilder.append("VirtualBox error: ");
+  errorBuilder.append("Some other VBox error");
+  String isoAlreadyAttachedException=errorBuilder.toString();
+  VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
+  machine.detachDevice(controller,0,0);
+  expectLastCall().andThrow(isoAttachedException);
+  replay(machine);
+  new DetachDistroMediumToMachine(controller).apply(machine);
+}

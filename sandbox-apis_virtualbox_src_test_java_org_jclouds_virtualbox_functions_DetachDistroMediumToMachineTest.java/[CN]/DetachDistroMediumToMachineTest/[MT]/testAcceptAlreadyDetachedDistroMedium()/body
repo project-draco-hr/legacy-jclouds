@@ -1,0 +1,16 @@
+{
+  String controller="IDE Controller";
+  IMachine machine=createNiceMock(IMachine.class);
+  final StringBuilder errorBuilder=new StringBuilder();
+  errorBuilder.append("VirtualBox error: ");
+  errorBuilder.append("Medium '/Users/johndoe/jclouds-virtualbox-test/ubuntu-11.04-server-i386.iso' ");
+  errorBuilder.append("is already detached from port 0, device 0 of controller 'IDE Controller' ");
+  errorBuilder.append("of this virtual machine (0x80BB000C)");
+  String isoAlreadyAttachedException=errorBuilder.toString();
+  VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
+  machine.detachDevice(controller,0,0);
+  expectLastCall().andThrow(isoAttachedException);
+  replay(machine);
+  new DetachDistroMediumToMachine(controller).apply(machine);
+  verify(machine);
+}
