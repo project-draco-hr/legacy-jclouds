@@ -1,0 +1,10 @@
+{
+  Method method=TemplateAsyncClient.class.getMethod("getTemplates",URI.class);
+  HttpRequest request=factory(TemplateAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,Templates> parser=(Function<HttpResponse,Templates>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/templates.xml");
+  Templates templates=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertLinks(templates.getLinks());
+  assertFamilies(templates.getTemplateFamilies());
+}
