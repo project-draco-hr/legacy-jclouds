@@ -1,0 +1,19 @@
+{
+  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
+  ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
+  IMachine master=null;
+  try {
+    Predicate<IPSocket> socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),10,1,TimeUnit.SECONDS);
+    master=new IsoToIMachine(manager,adminDisk,diskFormat,settingsFile,vmName,osTypeId,vmId,forceOverwrite,controllerIDE,localHostContext,hostId,guestId,socketTester,"127.0.0.1",8080).apply(isoName);
+  }
+ catch (  IllegalStateException e) {
+    master=manager.getVBox().findMachine(vmName);
+  }
+  if (master.getCurrentSnapshot() != null) {
+    ISession session=manager.openMachineSession(master);
+    session.getConsole().deleteSnapshot(master.getCurrentSnapshot().getId());
+    session.unlockMachine();
+  }
+  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,localHostContext,settingsFile,osTypeId,vmId,forceOverwrite,cloneName,hostId,snapshotName,snapshotDesc,controllerIDE).apply(master);
+  assertEquals(clone.getNetworkAdapter(0L).getAttachmentType(),Bridged);
+}
