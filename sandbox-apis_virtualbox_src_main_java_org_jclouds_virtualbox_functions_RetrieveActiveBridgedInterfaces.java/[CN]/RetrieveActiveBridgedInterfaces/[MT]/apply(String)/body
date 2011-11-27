@@ -4,15 +4,11 @@
   List<String> bridgedInterfaces=retrieveBridgedInterfaceNames(bridgedIfBlocks);
   checkNotNull(bridgedInterfaces);
   List<String> activeNetworkInterfaceNames=Lists.newArrayList();
-  Enumeration<NetworkInterface> nets;
   try {
-    Iterable<String> filterdBridgedInterface=null;
-    nets=NetworkInterface.getNetworkInterfaces();
+    Enumeration<NetworkInterface> nets=NetworkInterface.getNetworkInterfaces();
     for (    NetworkInterface inet : Collections.list(nets)) {
-      filterdBridgedInterface=Iterables.filter(bridgedInterfaces,new IsActiveBridgedInterface(inet));
-      for (      String filterInetName : filterdBridgedInterface) {
-        activeNetworkInterfaceNames.add(filterInetName);
-      }
+      Iterable<String> filteredBridgedInterface=filter(bridgedInterfaces,new IsActiveBridgedInterface(inet));
+      Iterables.addAll(activeNetworkInterfaceNames,filteredBridgedInterface);
     }
   }
  catch (  SocketException e) {
