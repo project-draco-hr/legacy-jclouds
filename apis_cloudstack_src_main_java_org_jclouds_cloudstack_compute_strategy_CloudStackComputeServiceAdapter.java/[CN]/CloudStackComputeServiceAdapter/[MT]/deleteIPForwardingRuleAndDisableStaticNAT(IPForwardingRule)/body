@@ -1,9 +1,8 @@
 {
-  boolean completed;
   Long job=client.getNATClient().deleteIPForwardingRule(rule.getId());
   if (job != null) {
     logger.debug(">> deleting IPForwardingRule(%s)",rule.getId());
-    completed=jobComplete.apply(job);
+    boolean completed=jobComplete.apply(job);
     logger.trace("<< IPForwardingRule(%s) deleted(%s)",rule.getId(),completed);
     disableStaticNATOnPublicIP(rule.getIPAddressId());
   }
