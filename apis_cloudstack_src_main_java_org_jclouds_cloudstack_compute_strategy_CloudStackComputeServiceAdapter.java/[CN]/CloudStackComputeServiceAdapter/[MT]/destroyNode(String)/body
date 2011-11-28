@@ -1,12 +1,8 @@
 {
   long virtualMachineId=Long.parseLong(id);
-  Builder<Long> jobsToTrack=ImmutableSet.<Long>builder();
-  Set<Long> ipAddresses=deleteIPForwardingRulesForVMAndReturnDistinctIPs(virtualMachineId,jobsToTrack);
-  disableStaticNATOnIPAddresses(jobsToTrack,ipAddresses);
-  destroyVirtualMachine(virtualMachineId,jobsToTrack);
-  ImmutableSet<Long> jobs=jobsToTrack.build();
-  logger.debug(">> awaiting completion of jobs(%s)",jobs);
-  for (  long job : jobsToTrack.build())   awaitCompletion(job);
-  logger.trace("<< completed jobs(%s)",jobs);
+  Set<Long> ipAddresses=deleteIPForwardingRulesForVMAndReturnDistinctIPs(virtualMachineId);
+  disableStaticNATOnIPAddresses(ipAddresses);
+  disassociateIPAddresses(ipAddresses);
+  destroyVirtualMachine(virtualMachineId);
   vmToRules.invalidate(virtualMachineId);
 }

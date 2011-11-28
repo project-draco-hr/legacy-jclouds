@@ -1,4 +1,5 @@
 {
+  Builder<Long> jobsToTrack=ImmutableSet.<Long>builder();
   Set<Long> ipAddresses=Sets.newLinkedHashSet();
   Set<IPForwardingRule> forwardingRules=client.getNATClient().getIPForwardingRulesForVirtualMachine(virtualMachineId);
   for (  IPForwardingRule rule : forwardingRules) {
@@ -11,5 +12,6 @@
       }
     }
   }
+  awaitCompletion(jobsToTrack.build());
   return ipAddresses;
 }

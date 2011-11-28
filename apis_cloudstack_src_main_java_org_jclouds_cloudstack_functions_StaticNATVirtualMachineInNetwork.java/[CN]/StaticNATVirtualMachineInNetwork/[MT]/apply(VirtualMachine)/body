@@ -3,10 +3,9 @@
   for (ip=reuseOrAssociate.apply(network); (!ip.isStaticNAT() || ip.getVirtualMachineId() != vm.getId()); ip=reuseOrAssociate.apply(network)) {
     if (ip.getVirtualMachineId() > 0 && ip.getVirtualMachineId() != vm.getId())     continue;
     try {
-      AsyncCreateResponse response=client.getNATClient().enableStaticNATForVirtualMachine(vm.getId(),ip.getId());
-      logger.debug(">> static NATing IPAddress(%s) to virtualMachine(%s); response(%s)",ip.getId(),vm.getId(),response);
-      if (AsyncCreateResponse.UNINITIALIZED.equals(response))       ip=client.getAddressClient().getPublicIPAddress(ip.getId());
- else       ip=blockUntilJobCompletesAndReturnResult.<PublicIPAddress>apply(response);
+      logger.debug(">> static NATing IPAddress(%s) to virtualMachine(%s)",ip.getId(),vm.getId());
+      client.getNATClient().enableStaticNATForVirtualMachine(vm.getId(),ip.getId());
+      ip=client.getAddressClient().getPublicIPAddress(ip.getId());
       if (ip.isStaticNAT() && ip.getVirtualMachineId() == vm.getId())       break;
     }
  catch (    IllegalStateException e) {
