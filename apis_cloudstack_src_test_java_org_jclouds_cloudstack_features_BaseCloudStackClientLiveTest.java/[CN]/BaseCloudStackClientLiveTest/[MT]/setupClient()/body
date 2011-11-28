@@ -28,6 +28,6 @@
   injector.injectMembers(virtualMachineDestroyed);
   adminVirtualMachineDestroyed=new RetryablePredicate<VirtualMachine>(new VirtualMachineDestroyed(adminClient),600,5,5,TimeUnit.SECONDS);
   injector.injectMembers(adminVirtualMachineDestroyed);
-  reuseOrAssociate=new ReuseOrAssociateNewPublicIPAddress(client,jobComplete);
+  reuseOrAssociate=new ReuseOrAssociateNewPublicIPAddress(client,new BlockUntilJobCompletesAndReturnResult(client,jobComplete));
   injector.injectMembers(reuseOrAssociate);
 }

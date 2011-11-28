@@ -1,12 +1,14 @@
 {
   CloudStackClient client=createMock(CloudStackClient.class);
-  Predicate<Long> jobComplete=Predicates.alwaysTrue();
+  BlockUntilJobCompletesAndReturnResult blockUntilJobCompletesAndReturnResult=createMock(BlockUntilJobCompletesAndReturnResult.class);
   AddressClient addressClient=createMock(AddressClient.class);
   expect(client.getAddressClient()).andReturn(addressClient).atLeastOnce();
   expect(addressClient.listPublicIPAddresses(allocatedOnly(true).networkId(networkId))).andReturn(ImmutableSet.<PublicIPAddress>of(address));
   replay(client);
+  replay(blockUntilJobCompletesAndReturnResult);
   replay(addressClient);
-  assertEquals(new ReuseOrAssociateNewPublicIPAddress(client,jobComplete).apply(Network.builder().id(networkId).zoneId(zoneId).build()),address);
+  assertEquals(new ReuseOrAssociateNewPublicIPAddress(client,blockUntilJobCompletesAndReturnResult).apply(Network.builder().id(networkId).zoneId(zoneId).build()),address);
   verify(client);
+  verify(blockUntilJobCompletesAndReturnResult);
   verify(addressClient);
 }

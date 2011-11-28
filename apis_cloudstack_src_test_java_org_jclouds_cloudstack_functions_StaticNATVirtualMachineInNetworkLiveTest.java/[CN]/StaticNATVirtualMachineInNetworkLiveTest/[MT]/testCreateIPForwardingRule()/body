@@ -1,6 +1,13 @@
 {
   if (networksDisabled)   return;
-  ip=new StaticNATVirtualMachineInNetwork(client,reuseOrAssociate,jobComplete,CacheBuilder.newBuilder().<Long,Set<IPForwardingRule>>build(new GetIPForwardingRulesByVirtualMachine(client)),network).apply(vm);
+  BlockUntilJobCompletesAndReturnResult blocker=new BlockUntilJobCompletesAndReturnResult(client,jobComplete);
+  StaticNATVirtualMachineInNetwork fn=new StaticNATVirtualMachineInNetwork(client,blocker,reuseOrAssociate,network);
+  CreatePortForwardingRulesForIP createPortForwardingRulesForIP=new CreatePortForwardingRulesForIP(client,blocker,CacheBuilder.newBuilder().<Long,Set<IPForwardingRule>>build(new GetIPForwardingRulesByVirtualMachine(client)));
+  injector.injectMembers(blocker);
+  injector.injectMembers(fn);
+  injector.injectMembers(createPortForwardingRulesForIP);
+  ip=fn.apply(vm);
+  createPortForwardingRulesForIP.apply(ip,ImmutableSet.of(22));
   rule=getOnlyElement(filter(client.getNATClient().getIPForwardingRulesForIPAddress(ip.getId()),new Predicate<IPForwardingRule>(){
     @Override public boolean apply(    @Nullable IPForwardingRule rule){
       return rule != null && rule.getStartPort() == 22;

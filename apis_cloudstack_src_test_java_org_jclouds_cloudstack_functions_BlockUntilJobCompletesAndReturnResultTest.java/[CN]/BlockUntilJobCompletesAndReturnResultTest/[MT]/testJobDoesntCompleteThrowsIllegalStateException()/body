@@ -1,0 +1,14 @@
+{
+  long id=1;
+  long jobId=2;
+  CloudStackClient client=createMock(CloudStackClient.class);
+  Predicate<Long> jobComplete=Predicates.alwaysFalse();
+  AsyncJobClient jobClient=createMock(AsyncJobClient.class);
+  expect(client.getAsyncJobClient()).andReturn(jobClient).atLeastOnce();
+  expect(jobClient.getAsyncJob(jobId)).andReturn(AsyncJob.builder().id(jobId).result("foo").build()).atLeastOnce();
+  replay(client);
+  replay(jobClient);
+  assertEquals(new BlockUntilJobCompletesAndReturnResult(client,jobComplete).<String>apply(new AsyncCreateResponse(id,jobId)),"foo");
+  verify(client);
+  verify(jobClient);
+}

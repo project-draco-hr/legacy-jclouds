@@ -1,4 +1,8 @@
 {
+  long virtualMachineId=Long.parseLong(id);
   Long job=client.getVirtualMachineClient().stopVirtualMachine(Long.parseLong(id));
-  boolean completed=jobComplete.apply(job);
+  if (job != null) {
+    logger.debug(">> stopping virtualMachine(%s) job(%s)",virtualMachineId,job);
+    awaitCompletion(job);
+  }
 }

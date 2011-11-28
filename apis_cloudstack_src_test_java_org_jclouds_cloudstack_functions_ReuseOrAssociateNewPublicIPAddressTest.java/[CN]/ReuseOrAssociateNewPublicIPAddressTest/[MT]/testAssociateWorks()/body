@@ -1,21 +1,17 @@
 {
-  long networkId=99l;
-  long zoneId=100l;
   CloudStackClient client=createMock(CloudStackClient.class);
-  Predicate<Long> jobComplete=Predicates.alwaysTrue();
+  BlockUntilJobCompletesAndReturnResult blockUntilJobCompletesAndReturnResult=createMock(BlockUntilJobCompletesAndReturnResult.class);
   AddressClient addressClient=createMock(AddressClient.class);
   expect(client.getAddressClient()).andReturn(addressClient).atLeastOnce();
   expect(addressClient.listPublicIPAddresses(allocatedOnly(true).networkId(networkId))).andReturn(ImmutableSet.<PublicIPAddress>of());
   AsyncCreateResponse job=new AsyncCreateResponse(1,2);
   expect(addressClient.associateIPAddressInZone(zoneId,networkId(networkId))).andReturn(job);
-  AsyncJobClient jobClient=createMock(AsyncJobClient.class);
-  expect(client.getAsyncJobClient()).andReturn(jobClient).atLeastOnce();
-  expect(jobClient.getAsyncJob(2)).andReturn(AsyncJob.builder().result(address).build());
+  expect(blockUntilJobCompletesAndReturnResult.apply(job)).andReturn(address);
   replay(client);
   replay(addressClient);
-  replay(jobClient);
-  assertEquals(new ReuseOrAssociateNewPublicIPAddress(client,jobComplete).apply(Network.builder().id(networkId).zoneId(zoneId).build()),address);
+  replay(blockUntilJobCompletesAndReturnResult);
+  assertEquals(new ReuseOrAssociateNewPublicIPAddress(client,blockUntilJobCompletesAndReturnResult).apply(Network.builder().id(networkId).zoneId(zoneId).build()),address);
   verify(client);
   verify(addressClient);
-  verify(jobClient);
+  verify(blockUntilJobCompletesAndReturnResult);
 }

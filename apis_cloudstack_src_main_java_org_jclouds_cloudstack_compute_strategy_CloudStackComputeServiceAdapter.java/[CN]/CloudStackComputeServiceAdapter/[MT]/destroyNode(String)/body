@@ -1,16 +1,12 @@
 {
-  long guestId=Long.parseLong(id);
-  Long job=client.getVirtualMachineClient().destroyVirtualMachine(guestId);
-  if (job != null) {
-    logger.debug(">> destroying virtualMachine(%s)",guestId);
-    boolean completed=jobComplete.apply(job);
-    logger.trace("<< virtualMachine(%s) destroyed(%s)",guestId,completed);
-    Set<IPForwardingRule> forwardingRules=client.getNATClient().getIPForwardingRulesForVirtualMachine(guestId);
-    for (    IPForwardingRule rule : forwardingRules) {
-      deleteIPForwardingRuleAndDisableStaticNAT(rule);
-    }
-  }
- else {
-    logger.trace("<< virtualMachine(%s) not found",guestId);
-  }
+  long virtualMachineId=Long.parseLong(id);
+  Builder<Long> jobsToTrack=ImmutableSet.<Long>builder();
+  Set<Long> ipAddresses=deleteIPForwardingRulesForVMAndReturnDistinctIPs(virtualMachineId,jobsToTrack);
+  disableStaticNATOnIPAddresses(jobsToTrack,ipAddresses);
+  destroyVirtualMachine(virtualMachineId,jobsToTrack);
+  ImmutableSet<Long> jobs=jobsToTrack.build();
+  logger.debug(">> awaiting completion of jobs(%s)",jobs);
+  for (  long job : jobsToTrack.build())   awaitCompletion(job);
+  logger.trace("<< completed jobs(%s)",jobs);
+  vmToRules.invalidate(virtualMachineId);
 }
