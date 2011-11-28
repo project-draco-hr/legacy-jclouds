@@ -1,0 +1,11 @@
+{
+  SshjSshClient ssh1=createClient();
+  SSHClient ssh=createMock(SSHClient.class);
+  expect(ssh.isConnected()).andReturn(true);
+  ssh.disconnect();
+  expectLastCall().andThrow(new ConnectionException("disconnected"));
+  replay(ssh);
+  ssh1.ssh=ssh;
+  ssh1.sshConnection.clear();
+  verify(ssh);
+}
