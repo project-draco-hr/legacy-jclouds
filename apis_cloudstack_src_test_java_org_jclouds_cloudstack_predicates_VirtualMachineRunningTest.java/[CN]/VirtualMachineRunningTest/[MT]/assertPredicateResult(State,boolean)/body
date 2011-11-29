@@ -1,0 +1,8 @@
+{
+  long virtualMachineId=229;
+  VirtualMachine virtualMachine=VirtualMachine.builder().id(virtualMachineId).state(state).build();
+  expect(virtualMachineClient.getVirtualMachine(virtualMachineId)).andReturn(virtualMachine);
+  replay(client,virtualMachineClient);
+  assertEquals(new VirtualMachineRunning(client).apply(virtualMachine),expected);
+  verify(client,virtualMachineClient);
+}
