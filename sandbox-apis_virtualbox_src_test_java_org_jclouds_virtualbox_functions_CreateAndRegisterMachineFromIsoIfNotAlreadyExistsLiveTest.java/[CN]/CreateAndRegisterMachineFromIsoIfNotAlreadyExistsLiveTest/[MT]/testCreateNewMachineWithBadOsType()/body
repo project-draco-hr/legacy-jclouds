@@ -1,0 +1,10 @@
+{
+  new UnregisterMachineIfExists(manager,CleanupMode.Full).apply("jclouds-test-create-2-node");
+  try {
+    new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(null,"SomeWeirdUnknownOs","jclouds-test-create-2",true,manager).apply("jclouds-test-create-2-node");
+  }
+ catch (  VBoxException e) {
+    ErrorCode errorCode=ErrorCode.valueOf(e);
+    assertEquals(errorCode,ErrorCode.VBOX_E_OBJECT_NOT_FOUND);
+  }
+}
