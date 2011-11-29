@@ -1,10 +1,6 @@
 {
-  CloudStackClient client=createMock(CloudStackClient.class);
-  VirtualMachineClient virtualMachineClient=createMock(VirtualMachineClient.class);
-  long virtualMachineId=229;
-  VirtualMachine virtualMachine=VirtualMachine.builder().id(virtualMachineId).build();
-  expect(client.getVirtualMachineClient()).andReturn(virtualMachineClient);
-  expect(virtualMachineClient.getVirtualMachine(virtualMachineId)).andReturn(null);
+  VirtualMachine virtualMachine=VirtualMachine.builder().id(229L).build();
+  expect(virtualMachineClient.getVirtualMachine(virtualMachine.getId())).andReturn(null);
   replay(client,virtualMachineClient);
   assertTrue(new VirtualMachineExpunged(client).apply(virtualMachine));
   verify(client,virtualMachineClient);
