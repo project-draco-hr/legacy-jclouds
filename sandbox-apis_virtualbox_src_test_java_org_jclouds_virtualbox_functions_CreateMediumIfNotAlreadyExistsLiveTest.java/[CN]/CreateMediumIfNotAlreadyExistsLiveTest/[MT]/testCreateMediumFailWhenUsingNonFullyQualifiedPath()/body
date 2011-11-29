@@ -1,0 +1,11 @@
+{
+  String path="test-medium-2.vdi";
+  try {
+    new CreateMediumIfNotAlreadyExists(manager,"vdi",true).apply(path);
+    fail();
+  }
+ catch (  VBoxException e) {
+    ErrorCode errorCode=ErrorCode.valueOf(e);
+    assertEquals(errorCode,ErrorCode.VBOX_E_FILE_ERROR);
+  }
+}
