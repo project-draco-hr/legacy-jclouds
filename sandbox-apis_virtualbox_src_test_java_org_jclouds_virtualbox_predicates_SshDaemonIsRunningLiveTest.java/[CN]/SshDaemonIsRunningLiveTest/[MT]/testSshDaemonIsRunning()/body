@@ -1,8 +1,0 @@
-{
-  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
-  ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
-  IMachine nodeWithSshDaemonRunning=getNodeWithSshDaemonRunning(manager,localHostContext);
-  ensureMachineIsLaunched(vmName);
-  RetryablePredicate<IMachine> predicate=new RetryablePredicate<IMachine>(new SshDaemonIsRunning(localHostContext,guestId),5,1,TimeUnit.SECONDS);
-  predicate.apply(nodeWithSshDaemonRunning);
-}
