@@ -1,3 +1,21 @@
 {
-  return Sets.newLinkedHashSet(map.get().asMap().values());
+  if (amiOwners.length == 0) {
+    logger.debug(">> no owners specified, skipping image parsing");
+    return Collections.emptySet();
+  }
+ else {
+    logger.debug(">> providing images");
+    Iterable<Entry<String,DescribeImagesOptions>> queries=getDescribeQueriesForOwnersInRegions(regions,amiOwners);
+    Iterable<? extends Image> parsedImages=ImmutableSet.copyOf(filter(transform(describer.apply(queries),parser),Predicates.notNull()));
+    ImmutableMap<RegionAndName,? extends Image> imageMap=uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+      @Override public RegionAndName apply(      Image from){
+        return new RegionAndName(from.getLocation().getId(),from.getProviderId());
+      }
+    }
+);
+    cache.get().invalidateAll();
+    cache.get().asMap().putAll((Map)imageMap);
+    logger.debug("<< images(%d)",imageMap.size());
+    return Sets.newLinkedHashSet(imageMap.values());
+  }
 }

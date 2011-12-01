@@ -1,14 +1,11 @@
 {
-  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
-  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
-  TemplateOptions defaultOptions=createMock(TemplateOptions.class);
-  expect(optionsProvider.get()).andReturn(defaultOptions);
-  replay(optionsProvider);
-  replay(templateBuilderProvider);
-  Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(location));
-  Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(new ImageBuilder().providerId("cc-image").name("image").id("us-east-1/cc-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","hvm","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build(),new ImageBuilder().providerId("normal-image").name("image").id("us-east-1/cc-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","paravirtual","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build()));
-  Supplier<Set<? extends Hardware>> sizes=Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of(t1_micro().build(),c1_medium().build(),c1_xlarge().build(),m1_large().build(),m1_small32().build(),m1_xlarge().build(),m2_xlarge().build(),m2_2xlarge().build(),m2_4xlarge().build(),CC1_4XLARGE));
-  return new TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(location),optionsProvider,templateBuilderProvider){
+  final Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(new ImageBuilder().providerId("cc-image").name("image").id("us-east-1/cc-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","hvm","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build(),new ImageBuilder().providerId("normal-image").name("image").id("us-east-1/normal-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","paravirtual","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build()));
+  @SuppressWarnings("unchecked") ImmutableMap<RegionAndName,Image> imageMap=(ImmutableMap<RegionAndName,Image>)uniqueIndex(images.get(),new Function<Image,RegionAndName>(){
+    @Override public RegionAndName apply(    Image from){
+      return new RegionAndName(from.getLocation().getId(),from.getProviderId());
+    }
   }
-;
+);
+  Supplier<Cache<RegionAndName,? extends Image>> imageCache=Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(CacheBuilder.newBuilder().<RegionAndName,Image>build(CacheLoader.from(Functions.forMap(imageMap))));
+  return newTemplateBuilder(images,imageCache);
 }

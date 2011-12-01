@@ -1,0 +1,24 @@
+{
+  Stopwatch stopwatch=new Stopwatch();
+  template=buildTemplate(client.templateBuilder());
+  String imageId=template.getImage().getId();
+  context.close();
+  setupClient();
+  stopwatch.start();
+  client.templateBuilder().imageId(imageId).build();
+  stopwatch.stop();
+  long timeByImageId=stopwatch.elapsedMillis();
+  context.close();
+  setupClient();
+  stopwatch.reset();
+  stopwatch.start();
+  try {
+    client.templateBuilder().osFamily(OsFamily.UBUNTU).build();
+  }
+ catch (  NoSuchElementException e) {
+  }
+  stopwatch.stop();
+  long timeByOsFamily=stopwatch.elapsedMillis();
+  System.out.println("testTemplateBuildsFasterByImageIdThanBySearchingAllImages: " + "timeByImageId=" + timeByImageId + "ms; timeByOsFamily="+ timeByOsFamily+ "ms");
+  assertTrue((timeByImageId * 2) < timeByOsFamily,"timeByImageId=" + timeByImageId + "; timeByOsFamily="+ timeByOsFamily);
+}

@@ -6,8 +6,7 @@
   }
  catch (  Exception e) {
     logger.warn(e,"Error parsing images in query %s",ccAmiQuery);
-    Throwables.propagate(e);
-    return null;
+    throw Throwables.propagate(e);
   }
   Iterables.addAll(clusterComputeIds,transform(clusterImages,new Function<Image,String>(){
     @Override public String apply(    Image arg0){
@@ -21,16 +20,16 @@
   }
  catch (  Exception e) {
     logger.warn(e,"Error parsing images in query %s",amiQuery);
-    Throwables.propagate(e);
-    return null;
+    throw Throwables.propagate(e);
   }
-  Cache<RegionAndName,Image> cache=CacheBuilder.newBuilder().build(regionAndIdToImage);
-  cache.asMap().putAll(uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
+  ImmutableMap<RegionAndName,? extends Image> imageMap=uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
     @Override public RegionAndName apply(    Image from){
       return new RegionAndName(from.getLocation().getId(),from.getProviderId());
     }
   }
-));
-  logger.debug("<< images(%d)",cache.asMap().size());
-  return cache;
+);
+  cache.get().invalidateAll();
+  cache.get().asMap().putAll((Map)imageMap);
+  logger.debug("<< images(%d)",imageMap.size());
+  return ImmutableSet.copyOf(imageMap.values());
 }
