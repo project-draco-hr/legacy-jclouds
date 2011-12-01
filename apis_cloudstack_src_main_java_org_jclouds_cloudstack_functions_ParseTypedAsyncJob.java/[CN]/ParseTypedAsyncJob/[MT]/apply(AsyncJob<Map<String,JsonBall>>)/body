@@ -27,7 +27,7 @@
  else     if (toParse.getResult().containsKey("errorcode")) {
       @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
       builder.result(null);
-      builder.error(new AsyncJobError(Integer.parseInt(toParse.getResult().get("errorcode").toString()),toParse.getResult().containsKey("errortext") ? toParse.getResult().get("errortext").toString().replace("\"","") : null));
+      builder.error(new AsyncJobError(ErrorCode.fromValue(toParse.getResult().get("errorcode").toString()),toParse.getResult().containsKey("errortext") ? toParse.getResult().get("errortext").toString().replace("\"","") : null));
       result=builder.build();
     }
  else     if (toParse.getResult().size() > 1) {

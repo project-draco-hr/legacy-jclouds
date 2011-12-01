@@ -1,10 +1,12 @@
 {
-  logger.trace("looking for status on job %s",checkNotNull(jobId,"jobId"));
+  logger.trace(">> looking for status on job %s",checkNotNull(jobId,"jobId"));
   AsyncJob<?> job=refresh(jobId);
-  if (job == null)   return false;
-  logger.trace("%s: looking for job status %s: currently: %s",job.getId(),1,job.getStatus());
-  if (job.getError() != null) {
-    throw new RuntimeException(String.format("job %s failed with exception %s",job.getId(),job.getError().toString()));
+  if (job == null) {
+    return false;
   }
-  return job.getStatus() > 0;
+  logger.trace("%s: looking for job status %s: currently: %s",job.getId(),1,job.getStatus());
+  if (job.hasFailed()) {
+    throw new AsyncJobException(String.format("job %s failed with exception %s",job.toString(),job.getError().toString()));
+  }
+  return job.hasSucceed();
 }
