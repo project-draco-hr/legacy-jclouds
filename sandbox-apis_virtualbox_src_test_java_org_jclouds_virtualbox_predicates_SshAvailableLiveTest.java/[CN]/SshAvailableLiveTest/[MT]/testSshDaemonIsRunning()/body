@@ -1,0 +1,16 @@
+{
+  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
+  ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
+  getNodeWithSshDaemonRunning(manager,localHostContext);
+  ensureMachineIsLaunched(vmName);
+  RetryablePredicate<String> predicate=new RetryablePredicate<String>(new SshAvailable(localHostContext),5,1,TimeUnit.SECONDS);
+  assertTrue(predicate.apply(guestId));
+  lockSessionOnMachineAndApply(manager,Shared,vmName,new Function<ISession,Void>(){
+    @Override public Void apply(    ISession session){
+      IProgress powerDownProgress=session.getConsole().powerDown();
+      powerDownProgress.waitForCompletion(-1);
+      return null;
+    }
+  }
+);
+}
