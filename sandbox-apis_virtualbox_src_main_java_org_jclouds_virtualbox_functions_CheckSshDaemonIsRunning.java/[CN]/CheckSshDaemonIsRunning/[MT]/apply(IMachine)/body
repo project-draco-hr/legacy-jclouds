@@ -1,0 +1,16 @@
+{
+  boolean sshDeamonIsRunning=false;
+  while (!sshDeamonIsRunning) {
+    try {
+      if (context.getComputeService().runScriptOnNode(nodeId,"id",wrapInInitScript(false)).getExitCode() == 0) {
+        logger.debug("Got response from ssh daemon.");
+        sshDeamonIsRunning=true;
+      }
+    }
+ catch (    SshException e) {
+      logger.debug("No response from ssh daemon...");
+      propagate(e);
+    }
+  }
+  return sshDeamonIsRunning;
+}

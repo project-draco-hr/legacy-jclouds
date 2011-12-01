@@ -1,0 +1,7 @@
+{
+  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
+  ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
+  IMachine nodeWithSshDaemonRunning=getNodeWithSshDaemonRunning(manager,localHostContext);
+  ensureMachineIsLaunched(vmName);
+  new CheckSshDaemonIsRunning(localHostContext,guestId).apply(nodeWithSshDaemonRunning);
+}
