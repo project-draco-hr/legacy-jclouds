@@ -1,15 +1,16 @@
 {
-  long volumeId=Iterables.get(client.getVolumeClient().listVolumes(),0).getId();
-  Snapshot snapshot=null;
-  while (snapshot == null) {
-    try {
-      AsyncCreateResponse job=client.getSnapshotClient().createSnapshot(volumeId);
+  final Volume volume=getPreferredVolume();
+  Snapshot snapshot=Retryables.retryGettingResultOrFailing(new PredicateCallable<Snapshot>(){
+    public Snapshot call(){
+      AsyncCreateResponse job=client.getSnapshotClient().createSnapshot(volume.getId());
       assertTrue(jobComplete.apply(job.getJobId()));
-      snapshot=findSnapshotWithId(job.getId());
+      return findSnapshotWithId(job.getId());
     }
- catch (    IllegalStateException e) {
+    protected void onFailure(){
+      logger.info("failed creating snapshot (retrying): %s",getLastFailure());
     }
   }
+,null,60 * 1000,"failed to create snapshot");
   checkSnapshot(snapshot);
   client.getSnapshotClient().deleteSnapshot(snapshot.getId());
 }
