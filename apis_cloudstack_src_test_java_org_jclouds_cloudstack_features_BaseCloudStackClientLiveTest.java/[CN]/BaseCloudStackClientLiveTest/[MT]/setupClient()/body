@@ -1,12 +1,13 @@
 {
   setupCredentials();
-  computeContext=CloudStackContext.class.cast(new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupProperties()));
+  computeContext=CloudStackContext.class.cast(new ComputeServiceContextFactory(setupRestProperties()).createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupProperties()));
+  computeClient=computeContext.getComputeService();
   context=computeContext.getProviderSpecificContext();
   client=context.getApi();
   user=verifyCurrentUserIsOfType(context,Account.Type.USER);
   domainAdminEnabled=setupAdminProperties() != null;
   if (domainAdminEnabled) {
-    domainAdminComputeContext=CloudStackContext.class.cast(new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupAdminProperties()));
+    domainAdminComputeContext=CloudStackContext.class.cast(new ComputeServiceContextFactory(setupRestProperties()).createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupAdminProperties()));
     domainAdminContext=domainAdminComputeContext.getDomainContext();
     domainAdminClient=domainAdminContext.getApi();
     domainAdminUser=verifyCurrentUserIsOfType(domainAdminContext,Account.Type.DOMAIN_ADMIN);

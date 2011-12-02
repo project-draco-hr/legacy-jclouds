@@ -1,39 +1,42 @@
 {
-  long diskOfferingId=Iterables.get(client.getOfferingClient().listDiskOfferings(),0).getId();
-  Volume volume=null;
-  while (volume == null) {
-    try {
-      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",diskOfferingId,zoneId);
-      assertTrue(jobComplete.apply(job.getJobId()));
-      volume=findVolumeWithId(job.getId());
+  logger.info("testCreateVolumeFromDiskofferingInZoneAndAttachVolumeToVirtualMachineAndDetachAndDelete");
+  final Volume volume=createPreferredVolumeFromDisk();
+  try {
+    checkVolume(volume);
+    final VirtualMachine virtualMachine=getPreferredVirtualMachine();
+    Volume attachedVolume=Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
+      public Volume call(){
+        logger.info("attaching volume %s to vm %s",volume,virtualMachine);
+        AsyncCreateResponse job=client.getVolumeClient().attachVolume(volume.getId(),virtualMachine.getId());
+        assertTrue(jobComplete.apply(job.getJobId()));
+        return findVolumeWithId(volume.getId());
+      }
+      int failures=0;
+      protected void onFailure(){
+        logger.info("failed attaching volume (retrying): %s",getLastFailure());
+        if (failures++ == 0)         logger.warn(getLastFailure(),"first failure attaching volume");
+      }
     }
- catch (    IllegalStateException e) {
+,null,60 * 1000,"failed to attach volume");
+    checkVolume(attachedVolume);
+    assertEquals(virtualMachine.getId(),attachedVolume.getVirtualMachineId());
+    assertNotNull(attachedVolume.getAttached());
+    Volume detachedVolume=Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
+      public Volume call(){
+        logger.info("detaching volume %s from vm %s",volume,virtualMachine);
+        AsyncCreateResponse job=client.getVolumeClient().detachVolume(volume.getId());
+        assertTrue(jobComplete.apply(job.getJobId()));
+        return findVolumeWithId(volume.getId());
+      }
+      protected void onFailure(){
+        logger.debug("failed detaching volume (retrying): %s",getLastFailure());
+      }
     }
+,null,60 * 1000,"failed to detach volume");
+    checkVolume(detachedVolume);
+    assertNull(detachedVolume.getAttached());
   }
-  checkVolume(volume);
-  long virtualMachineId=Iterables.get(client.getVirtualMachineClient().listVirtualMachines(),0).getId();
-  Volume attachedVolume=null;
-  while (attachedVolume == null) {
-    try {
-      AsyncCreateResponse job=client.getVolumeClient().attachVolume(volume.getId(),virtualMachineId);
-      assertTrue(jobComplete.apply(job.getJobId()));
-      attachedVolume=findVolumeWithId(volume.getId());
-      assertEquals(virtualMachineId,attachedVolume.getVirtualMachineId());
-      assertNotNull(attachedVolume.getAttached());
-    }
- catch (    IllegalStateException e) {
-    }
+  finally {
+    client.getVolumeClient().deleteVolume(volume.getId());
   }
-  Volume detachedVolume=null;
-  while (detachedVolume == null) {
-    try {
-      AsyncCreateResponse job=client.getVolumeClient().detachVolume(volume.getId());
-      assertTrue(jobComplete.apply(job.getJobId()));
-      detachedVolume=findVolumeWithId(volume.getId());
-      checkVolume(detachedVolume);
-    }
- catch (    IllegalStateException e) {
-    }
-  }
-  client.getVolumeClient().deleteVolume(volume.getId());
 }
