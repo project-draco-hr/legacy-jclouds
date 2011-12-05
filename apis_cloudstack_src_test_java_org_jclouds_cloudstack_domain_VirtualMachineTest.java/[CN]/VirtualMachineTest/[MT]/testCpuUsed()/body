@@ -1,0 +1,20 @@
+{
+  boolean caught=false;
+  try {
+    VirtualMachine.builder().cpuUsed("23.4").build();
+  }
+ catch (  Exception e) {
+    caught=true;
+  }
+  assertTrue(caught);
+  caught=false;
+  try {
+    VirtualMachine.builder().build();
+  }
+ catch (  Exception e) {
+    caught=true;
+  }
+  assertFalse(caught);
+  VirtualMachine vm=VirtualMachine.builder().cpuUsed("23.4%").build();
+  assertEquals(vm.getCpuUsed(),23.4,0.01);
+}
