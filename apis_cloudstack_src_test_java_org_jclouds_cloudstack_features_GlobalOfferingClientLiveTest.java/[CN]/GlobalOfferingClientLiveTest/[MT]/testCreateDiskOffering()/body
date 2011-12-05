@@ -1,0 +1,21 @@
+{
+  assertTrue(globalAdminEnabled,"Test cannot run without global admin identity and credentials");
+  String name=prefix + "-test-create-disk-offering";
+  String displayText=name + "-display";
+  DiskOffering offering=null;
+  try {
+    offering=globalAdminClient.getOfferingClient().createDiskOffering(name,displayText,diskSizeInGB(100).customized(true).tags(ImmutableSet.<String>of("dummy-tag")));
+    assertEquals(offering.getName(),name);
+    assertEquals(offering.getDisplayText(),displayText);
+    checkDiskOffering(offering);
+    offering=globalAdminClient.getOfferingClient().updateDiskOffering(offering.getId(),UpdateDiskOfferingOptions.Builder.name(name + "-2").displayText(displayText + "-2"));
+    assertEquals(offering.getName(),name + "-2");
+    assertEquals(offering.getDisplayText(),displayText + "-2");
+    checkDiskOffering(offering);
+  }
+  finally {
+    if (offering != null) {
+      globalAdminClient.getOfferingClient().deleteDiskOffering(offering.getId());
+    }
+  }
+}
