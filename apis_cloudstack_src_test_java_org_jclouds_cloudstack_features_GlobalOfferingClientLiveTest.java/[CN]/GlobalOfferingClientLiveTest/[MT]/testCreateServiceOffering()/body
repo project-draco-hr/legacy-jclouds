@@ -1,0 +1,22 @@
+{
+  assertTrue(globalAdminEnabled,"Test cannot run without global admin identity and credentials");
+  String name=prefix + "-test-create-service-offering";
+  String displayText=name + "-display";
+  ServiceOffering offering=null;
+  try {
+    offering=globalAdminClient.getOfferingClient().createServiceOffering(name,displayText,2,1024,2048,highlyAvailable(true).storageType(StorageType.LOCAL));
+    Logger.CONSOLE.info("Created Service Offering: " + offering);
+    assertEquals(offering.getName(),name);
+    assertEquals(offering.getDisplayText(),displayText);
+    checkServiceOffering(offering);
+    offering=globalAdminClient.getOfferingClient().updateServiceOffering(offering.getId(),name(name + "-2").displayText(displayText + "-2"));
+    assertEquals(offering.getName(),name + "-2");
+    assertEquals(offering.getDisplayText(),displayText + "-2");
+    checkServiceOffering(offering);
+  }
+  finally {
+    if (offering != null) {
+      globalAdminClient.getOfferingClient().deleteServiceOffering(offering.getId());
+    }
+  }
+}
