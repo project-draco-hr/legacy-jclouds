@@ -1,0 +1,14 @@
+{
+  Method method=ResourceAsyncClient.class.getMethod("getResourceSummary",URI.class);
+  HttpRequest request=factory(ResourceAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,ComputePoolResourceSummary> parser=(Function<HttpResponse,ComputePoolResourceSummary>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/computePoolResourceSummary.xml");
+  ComputePoolResourceSummary summary=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals(summary.getStartTime(),dateService.iso8601DateParse("2011-12-04T18:55:00.0Z"));
+  assertEquals(summary.getEndTime(),dateService.iso8601DateParse("2011-12-05T18:55:00.0Z"));
+  assertCpu(summary.getCpu());
+  assertMemory(summary.getMemory());
+  assertStorage(summary.getStorage());
+  assertVirtualMachines(summary.getVirtualMachines());
+}
