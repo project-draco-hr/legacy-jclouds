@@ -7,12 +7,7 @@
     logger.debug(">> providing images");
     Iterable<Entry<String,DescribeImagesOptions>> queries=getDescribeQueriesForOwnersInRegions(regions,amiOwners);
     Iterable<? extends Image> parsedImages=ImmutableSet.copyOf(filter(transform(describer.apply(queries),parser),Predicates.notNull()));
-    ImmutableMap<RegionAndName,? extends Image> imageMap=uniqueIndex(parsedImages,new Function<Image,RegionAndName>(){
-      @Override public RegionAndName apply(      Image from){
-        return new RegionAndName(from.getLocation().getId(),from.getProviderId());
-      }
-    }
-);
+    Map<RegionAndName,? extends Image> imageMap=ImagesToRegionAndIdMap.imagesToMap(parsedImages);
     cache.get().invalidateAll();
     cache.get().asMap().putAll((Map)imageMap);
     logger.debug("<< images(%d)",imageMap.size());

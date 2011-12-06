@@ -2,12 +2,7 @@
   Map<InstanceState,NodeState> instanceToNodeState=EC2ComputeServiceDependenciesModule.instanceToNodeState;
   CacheLoader<RegionAndName,Image> getRealImage=new CacheLoader<RegionAndName,Image>(){
     @Override public Image load(    @Nullable RegionAndName from){
-      return Maps.uniqueIndex(images,new Function<Image,RegionAndName>(){
-        @Override public RegionAndName apply(        Image from){
-          return new RegionAndName(from.getLocation().getId(),from.getProviderId());
-        }
-      }
-).get(from);
+      return ImagesToRegionAndIdMap.imagesToMap(images).get(from);
     }
   }
 ;

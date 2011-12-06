@@ -10,17 +10,7 @@
 );
   }
  else {
-    imageMap=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
-      @Override public Image load(      RegionAndName from){
-        return uniqueIndex(images.get(),new Function<Image,RegionAndName>(){
-          @Override public RegionAndName apply(          Image from){
-            return new RegionAndName(from.getLocation().getId(),from.getProviderId());
-          }
-        }
-).get(from);
-      }
-    }
-);
+    imageMap=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImagesToRegionAndIdMap.imagesToMap(images.get()))));
   }
   return new EC2TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(defaultLocation),optionsProvider,templateBuilderProvider,Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(imageMap));
 }

@@ -1,11 +1,6 @@
 {
   final Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(new ImageBuilder().providerId("cc-image").name("image").id("us-east-1/cc-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","hvm","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build(),new ImageBuilder().providerId("normal-image").name("image").id("us-east-1/normal-image").location(location).operatingSystem(new OperatingSystem(OsFamily.UBUNTU,null,"1.0","paravirtual","ubuntu",true)).description("description").version("1.0").defaultCredentials(new LoginCredentials("root",null,null,false)).build()));
-  @SuppressWarnings("unchecked") ImmutableMap<RegionAndName,Image> imageMap=(ImmutableMap<RegionAndName,Image>)uniqueIndex(images.get(),new Function<Image,RegionAndName>(){
-    @Override public RegionAndName apply(    Image from){
-      return new RegionAndName(from.getLocation().getId(),from.getProviderId());
-    }
-  }
-);
+  @SuppressWarnings("unchecked") ImmutableMap<RegionAndName,Image> imageMap=(ImmutableMap<RegionAndName,Image>)ImagesToRegionAndIdMap.imagesToMap(images.get());
   Supplier<Cache<RegionAndName,? extends Image>> imageCache=Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(CacheBuilder.newBuilder().<RegionAndName,Image>build(CacheLoader.from(Functions.forMap(imageMap))));
   return newTemplateBuilder(images,imageCache);
 }
