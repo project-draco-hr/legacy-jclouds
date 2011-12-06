@@ -1,0 +1,12 @@
+{
+  Method method=ResourceAsyncClient.class.getMethod("getComputePoolMemoryUsageDetail",URI.class);
+  HttpRequest request=factory(ResourceAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,ComputePoolMemoryUsageDetail> parser=(Function<HttpResponse,ComputePoolMemoryUsageDetail>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/computePoolMemoryUsageDetail.xml");
+  ComputePoolMemoryUsageDetail detail=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals(detail.getTime(),dateService.iso8601DateParse("2011-12-05T15:55:00.0Z"));
+  assertEquals(detail.getValue(),ResourceCapacity.builder().value(404).unit("MB").build());
+  Set<VirtualMachineMemoryUsageDetail> virtualMachinesMemoryUsageDetail=detail.getVirtualMachinesMemoryUsage().getVirtualMachinesMemoryUsageDetail();
+  assertDetail(virtualMachinesMemoryUsageDetail);
+}
