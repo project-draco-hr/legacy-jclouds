@@ -1,0 +1,19 @@
+{
+  assertTrue(globalAdminEnabled,"Test cannot run without global admin identity and credentials");
+  NetworkOffering offering=getFirst(globalAdminClient.getOfferingClient().listNetworkOfferings(),null);
+  assertNotNull(offering,"Unable to test, no network offering found.");
+  String name=offering.getName();
+  NetworkOfferingAvailabilityType availability=offering.getAvailability();
+  try {
+    NetworkOfferingAvailabilityType newValue=OPTIONAL;
+    if (availability == OPTIONAL) {
+      newValue=REQUIRED;
+    }
+    NetworkOffering updated=globalAdminClient.getOfferingClient().updateNetworkOffering(offering.getId(),UpdateNetworkOfferingOptions.Builder.name(prefix + name).availability(newValue));
+    assertEquals(updated.getName(),prefix + name);
+    assertEquals(updated.getAvailability(),newValue);
+  }
+  finally {
+    globalAdminClient.getOfferingClient().updateNetworkOffering(offering.getId(),UpdateNetworkOfferingOptions.Builder.name(name).availability(availability));
+  }
+}
