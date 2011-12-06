@@ -1,4 +1,9 @@
 {
   ComputePoolCpuUsage cpuUsage=client.getComputePoolCpuUsage(URI.create("/cloudapi/ecloud/computepools/89/usage/cpu"));
+  for (  Link link : cpuUsage.getLinks()) {
+    if ("application/vnd.tmrk.cloud.computePoolCpuUsageDetail".equals(link.getType())) {
+      testGetComputePoolCpuUsageDetail(link.getHref());
+    }
+  }
   assertNotNull(cpuUsage);
 }

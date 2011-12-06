@@ -1,0 +1,11 @@
+{
+  Method method=ResourceAsyncClient.class.getMethod("getComputePoolCpuUsageDetail",URI.class);
+  HttpRequest request=factory(ResourceAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,ComputePoolCpuUsageDetail> parser=(Function<HttpResponse,ComputePoolCpuUsageDetail>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/computePoolCpuUsageDetailNoDetail.xml");
+  ComputePoolCpuUsageDetail detail=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals(detail.getTime(),dateService.iso8601DateParse("1974-12-05T10:10:00.0Z"));
+  assertEquals(detail.getValue(),ResourceCapacity.builder().value(0).unit("MHz").build());
+  assertNull(detail.getVirtualMachinesCpuUsage());
+}
