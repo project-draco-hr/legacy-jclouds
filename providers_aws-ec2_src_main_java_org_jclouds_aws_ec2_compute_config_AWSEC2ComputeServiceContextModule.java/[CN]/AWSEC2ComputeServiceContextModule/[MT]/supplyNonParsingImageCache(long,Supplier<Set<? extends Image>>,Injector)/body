@@ -1,0 +1,11 @@
+{
+  final Supplier<Cache<RegionAndName,? extends Image>> cache=injector.getInstance(Key.get(new TypeLiteral<Supplier<Cache<RegionAndName,? extends Image>>>(){
+  }
+));
+  return new Supplier<Set<? extends Image>>(){
+    @Override public Set<? extends Image> get(){
+      return ImmutableSet.copyOf(cache.get().asMap().values());
+    }
+  }
+;
+}
