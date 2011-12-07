@@ -1,2 +1,19 @@
 {
+  if (networksDisabled)   return;
+  while (rule == null) {
+    ip=reuseOrAssociate.apply(network);
+    try {
+      AsyncCreateResponse job=client.getFirewallClient().createPortForwardingRuleForVirtualMachine(vm.getId(),ip.getId(),"tcp",22,22);
+      assertTrue(jobComplete.apply(job.getJobId()));
+      rule=findRuleWithId(job.getId());
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  assertEquals(rule.getIPAddressId(),ip.getId());
+  assertEquals(rule.getVirtualMachineId(),vm.getId());
+  assertEquals(rule.getPublicPort(),22);
+  assertEquals(rule.getProtocol(),"tcp");
+  checkRule(rule);
+  checkSSH(new IPSocket(ip.getIPAddress(),22));
 }
