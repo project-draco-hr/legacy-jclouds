@@ -1,2 +1,59 @@
 {
+  Long templateId=(imageId != null && !"".equals(imageId)) ? new Long(imageId) : null;
+  Network network=null;
+  try {
+    Template template=getOnlyElement(client.getTemplateClient().listTemplates(ListTemplatesOptions.Builder.id(templateId)));
+    logger.info("Using template: " + template);
+    Set<Network> allSafeNetworksInZone=adminClient.getNetworkClient().listNetworks(ListNetworksOptions.Builder.zoneId(template.getZoneId()).isSystem(false));
+    for (    Network net : allSafeNetworksInZone) {
+      if (net.getName().equals(prefix + "-ip-network")) {
+        logger.info("Deleting VMs in network: " + net);
+        Set<VirtualMachine> machinesInNetwork=adminClient.getVirtualMachineClient().listVirtualMachines(ListVirtualMachinesOptions.Builder.networkId(net.getId()));
+        for (        VirtualMachine machine : machinesInNetwork) {
+          if (machine.getState().equals(VirtualMachine.State.RUNNING)) {
+            logger.info("Deleting VM: " + machine);
+            destroyMachine(machine);
+          }
+        }
+        assertTrue(adminJobComplete.apply(adminClient.getNetworkClient().deleteNetwork(net.getId())),net.toString());
+      }
+    }
+    NetworkOffering offering=getFirst(client.getOfferingClient().listNetworkOfferings(ListNetworkOfferingsOptions.Builder.zoneId(template.getZoneId()).specifyVLAN(true)),null);
+    checkNotNull(offering,"No network offering found");
+    logger.info("Using network offering: " + offering);
+    network=adminClient.getNetworkClient().createNetworkInZone(template.getZoneId(),offering.getId(),prefix + "-ip-network","",CreateNetworkOptions.Builder.startIP("192.168.0.1").endIP("192.168.0.5").netmask("255.255.255.0").gateway("192.168.0.1").vlan("21"));
+    logger.info("Created network: " + network);
+    Network requiredNetwork=getOnlyElement(filter(adminClient.getNetworkClient().listNetworks(ListNetworksOptions.Builder.zoneId(template.getZoneId())),new Predicate<Network>(){
+      @Override public boolean apply(      @Nullable Network network){
+        return network.isDefault() && network.getGuestIPType() == GuestIPType.VIRTUAL && network.getNetworkOfferingId() == 6 && network.getId() == 204;
+      }
+    }
+));
+    logger.info("Required network: " + requiredNetwork);
+    String ipAddress="192.168.0.4";
+    Map<String,Long> ipsToNetworks=Maps.newHashMap();
+    ipsToNetworks.put(ipAddress,network.getId());
+    vm=createVirtualMachineInNetworkWithIp(adminClient,templateId,ImmutableSet.of(requiredNetwork,network),ipsToNetworks,adminJobComplete,adminVirtualMachineRunning);
+    logger.info("Created VM: " + vm);
+    boolean hasStaticIpNic=false;
+    for (    NIC nic : vm.getNICs()) {
+      if (nic.getNetworkId() == network.getId()) {
+        hasStaticIpNic=true;
+        assertEquals(nic.getIPAddress(),ipAddress);
+      }
+    }
+    assert hasStaticIpNic;
+    checkVm(vm);
+  }
+  finally {
+    if (vm != null) {
+      destroyMachine(vm);
+      vm=null;
+    }
+    if (network != null) {
+      long jobId=adminClient.getNetworkClient().deleteNetwork(network.getId());
+      adminJobComplete.apply(jobId);
+      network=null;
+    }
+  }
 }

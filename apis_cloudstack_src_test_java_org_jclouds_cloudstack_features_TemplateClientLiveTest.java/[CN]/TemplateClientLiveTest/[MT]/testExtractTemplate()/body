@@ -1,2 +1,11 @@
 {
+  AsyncCreateResponse response=client.getTemplateClient().extractTemplate(registeredTemplate.getId(),ExtractMode.HTTP_DOWNLOAD,registeredTemplate.getZoneId());
+  assertTrue(jobComplete.apply(response.getJobId()),registeredTemplate.toString());
+  AsyncJob<TemplateExtraction> asyncJob=client.getAsyncJobClient().getAsyncJob(response.getJobId());
+  TemplateExtraction extract=asyncJob.getResult();
+  assertNotNull(extract);
+  String extractUrl=extract.getUrl();
+  assertNotNull(extractUrl);
+  URI uri=new URI(URLDecoder.decode(extractUrl,"utf-8"));
+  assertTrue(context.utils().http().exists(uri),"does not exist: " + uri);
 }
