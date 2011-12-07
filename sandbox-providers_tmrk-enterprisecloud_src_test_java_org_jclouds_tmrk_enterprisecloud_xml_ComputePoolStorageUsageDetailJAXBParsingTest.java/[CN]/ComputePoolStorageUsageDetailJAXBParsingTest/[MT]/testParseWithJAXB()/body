@@ -1,0 +1,11 @@
+{
+  Method method=ResourceAsyncClient.class.getMethod("getComputePoolStorageUsage",URI.class);
+  HttpRequest request=factory(ResourceAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,ComputePoolStorageUsageDetail> parser=(Function<HttpResponse,ComputePoolStorageUsageDetail>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/computePoolStorageUsage.xml");
+  ComputePoolStorageUsageDetail storageUsageDetail=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertLinks(storageUsageDetail.getLinks());
+  assertEquals(storageUsageDetail.getAllocated(),ResourceCapacity.builder().value(10).unit("GB").build());
+  assertStorageDetails(storageUsageDetail.getVirtualMachinesStorageDetails().getVirtualMachinesStorageUsageDetail());
+}
