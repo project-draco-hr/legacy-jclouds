@@ -1,2 +1,22 @@
 {
+  Long job=client.getVirtualMachineClient().stopVirtualMachine(vm.getId());
+  assertTrue(jobComplete.apply(job));
+  vm=client.getVirtualMachineClient().getVirtualMachine(vm.getId());
+  assertEquals(vm.getState(),VirtualMachine.State.STOPPED);
+  if (vm.isPasswordEnabled()) {
+    job=client.getVirtualMachineClient().resetPasswordForVirtualMachine(vm.getId());
+    assertTrue(jobComplete.apply(job));
+    vm=client.getAsyncJobClient().<VirtualMachine>getAsyncJob(job).getResult();
+    if (vm.getPassword() != null) {
+      conditionallyCheckSSH();
+    }
+  }
+  job=client.getVirtualMachineClient().startVirtualMachine(vm.getId());
+  assertTrue(jobComplete.apply(job));
+  vm=client.getVirtualMachineClient().getVirtualMachine(vm.getId());
+  assertEquals(vm.getState(),VirtualMachine.State.RUNNING);
+  job=client.getVirtualMachineClient().rebootVirtualMachine(vm.getId());
+  assertTrue(jobComplete.apply(job));
+  vm=client.getVirtualMachineClient().getVirtualMachine(vm.getId());
+  assertEquals(vm.getState(),VirtualMachine.State.RUNNING);
 }

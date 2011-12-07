@@ -1,2 +1,7 @@
 {
+  if (networksDisabled)   return;
+  assertTrue(jobComplete.apply(client.getLoadBalancerClient().assignVirtualMachinesToLoadBalancerRule(rule.getId(),vm.getId())));
+  assertEquals(client.getLoadBalancerClient().listVirtualMachinesAssignedToLoadBalancerRule(rule.getId()).size(),1);
+  assertTrue(loadBalancerRuleActive.apply(rule),rule.toString());
+  loopAndCheckSSH();
 }
