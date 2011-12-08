@@ -1,0 +1,10 @@
+{
+  ComputePoolPerformanceStatistics statistics=client.getComputePoolPerformanceStatistics(URI.create("/cloudapi/ecloud/computepools/89/performancestatistics"));
+  URI uri=statistics.getDaily().getCpu().getHref();
+  Set<PerformanceStatistic> set=getStatsForFirstVM(uri,null,null);
+  assertEquals(set.size(),7);
+  Date start=Iterables.get(set,1).getTime();
+  Date end=Iterables.get(set,set.size() - 1).getTime();
+  Set<PerformanceStatistic> result=getStatsForFirstVM(uri,start,end);
+  assertEquals(result.size(),5);
+}
