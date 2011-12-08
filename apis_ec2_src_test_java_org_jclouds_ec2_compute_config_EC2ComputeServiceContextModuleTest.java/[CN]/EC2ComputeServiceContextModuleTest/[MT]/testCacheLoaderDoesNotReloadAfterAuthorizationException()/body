@@ -1,0 +1,22 @@
+{
+  EC2ComputeServiceContextModule module=new EC2ComputeServiceContextModule(){
+    public Supplier<CacheLoader<RegionAndName,Image>> provideRegionAndNameToImageSupplierCacheLoader(    RegionAndIdToImage delegate){
+      return super.provideRegionAndNameToImageSupplierCacheLoader(delegate);
+    }
+  }
+;
+  RegionAndName regionAndName=new RegionAndName("myregion","myname");
+  AuthorizationException authException=new AuthorizationException();
+  RegionAndIdToImage mockRegionAndIdToImage=createMock(RegionAndIdToImage.class);
+  expect(mockRegionAndIdToImage.load(regionAndName)).andThrow(authException).once();
+  replay(mockRegionAndIdToImage);
+  CacheLoader<RegionAndName,Image> cacheLoader=module.provideRegionAndNameToImageSupplierCacheLoader(mockRegionAndIdToImage).get();
+  for (int i=0; i < 2; i++) {
+    try {
+      Image image=cacheLoader.load(regionAndName);
+      fail("Expected Authrization exception, but got " + image);
+    }
+ catch (    AuthorizationException e) {
+    }
+  }
+}
