@@ -1,0 +1,14 @@
+{
+  Account account=null;
+  try {
+    account=globalAdminClient.getAccountClient().createAccount(prefix + "-account",Account.Type.USER,"dummy@example.com","First","Last","hashed-password");
+    assertNotNull(account);
+    assertEquals(account.getName(),prefix + "-account");
+    assertEquals(account.getType(),Account.Type.USER);
+  }
+  finally {
+    if (account != null) {
+      globalAdminClient.getAccountClient().deleteAccount(account.getId());
+    }
+  }
+}
