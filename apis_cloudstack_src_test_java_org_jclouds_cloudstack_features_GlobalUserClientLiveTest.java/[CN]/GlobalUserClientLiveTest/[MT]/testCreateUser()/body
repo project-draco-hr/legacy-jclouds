@@ -9,6 +9,10 @@
     User updatedUser=globalAdminClient.getUserClient().updateUser(testUser.getId(),userName(prefix + "-user-2"));
     assertNotNull(updatedUser);
     assertEquals(updatedUser.getName(),prefix + "-user-2");
+    ApiKeyPair apiKeys=globalAdminClient.getUserClient().registerUserKeys(updatedUser.getId());
+    assertNotNull(apiKeys.getApiKey());
+    assertNotNull(apiKeys.getSecretKey());
+    checkAuthAsUser(apiKeys);
   }
   finally {
     if (testUser != null) {
