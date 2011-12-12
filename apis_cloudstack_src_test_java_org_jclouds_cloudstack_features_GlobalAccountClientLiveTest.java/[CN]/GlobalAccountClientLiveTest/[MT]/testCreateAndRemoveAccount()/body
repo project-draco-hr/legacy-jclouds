@@ -1,7 +1,8 @@
 {
+  assert globalAdminEnabled;
   Account account=null;
   try {
-    account=globalAdminClient.getAccountClient().createAccount(prefix + "-account",Account.Type.USER,"dummy@example.com","First","Last","hashed-password");
+    account=createTestAccount(globalAdminClient,prefix);
     assertNotNull(account);
     assertEquals(account.getName(),prefix + "-account");
     assertEquals(account.getType(),Account.Type.USER);
