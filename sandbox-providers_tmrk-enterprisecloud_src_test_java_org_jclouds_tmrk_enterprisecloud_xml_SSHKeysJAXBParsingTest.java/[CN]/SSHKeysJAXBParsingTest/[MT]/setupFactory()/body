@@ -1,0 +1,13 @@
+{
+  RestContextSpec<String,Integer> contextSpec=contextSpec("test","http://localhost:9999","1","","userfoo","credentialFoo",String.class,Integer.class,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @SuppressWarnings("unused") @Provides @Named("exception") Set<String> exception(){
+      throw new AuthorizationException();
+    }
+  }
+));
+  injector=createContextBuilder(contextSpec).buildInjector();
+  parserFactory=injector.getInstance(ParseSax.Factory.class);
+  crypto=injector.getInstance(Crypto.class);
+}

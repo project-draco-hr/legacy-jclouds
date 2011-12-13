@@ -1,0 +1,10 @@
+{
+  checkArgument(checkNotNull(key,"key") instanceof SSHKey,"this binder is only valid for SSHKey instances!");
+  checkNotNull(request,"request");
+  SSHKey sshKey=SSHKey.class.cast(key);
+  String name=sshKey.getName();
+  String isDefault=Boolean.toString(sshKey.isDefaultKey());
+  String fingerPrint=sshKey.getFingerPrint();
+  String payload=Strings2.replaceTokens(xmlTemplate,ImmutableMap.of("name",name,"isDefault",isDefault,"fingerPrint",fingerPrint));
+  return stringBinder.bindToRequest(request,payload);
+}

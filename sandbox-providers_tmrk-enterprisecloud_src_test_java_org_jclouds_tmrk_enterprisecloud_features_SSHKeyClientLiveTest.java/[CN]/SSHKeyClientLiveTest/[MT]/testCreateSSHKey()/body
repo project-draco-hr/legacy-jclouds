@@ -1,0 +1,10 @@
+{
+  SSHKey sshKey=client.createSSHKey(URI.create("/cloudapi/ecloud/admin/sshkeys/organizations/17/action/createsshkey"),"mynewtestkey1",false);
+  assertNotNull(sshKey);
+  assertEquals(sshKey.getName(),"mynewtestkey1");
+  assertFalse(sshKey.isDefaultKey());
+  assertFalse(sshKey.getFingerPrint().isEmpty());
+  assertFalse(sshKey.getPrivateKey().isEmpty());
+  client.deleteSSHKey(sshKey.getHref());
+  assertNull(client.getSSHKey(sshKey.getHref()));
+}

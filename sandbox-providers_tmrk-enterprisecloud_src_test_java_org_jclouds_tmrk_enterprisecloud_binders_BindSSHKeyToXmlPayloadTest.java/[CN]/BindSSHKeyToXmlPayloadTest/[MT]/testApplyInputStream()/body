@@ -1,0 +1,8 @@
+{
+  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/EditSSHKey-test.xml"));
+  HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
+  BindSSHKeyToXmlPayload binder=injector.getInstance(BindSSHKeyToXmlPayload.class);
+  SSHKey key=SSHKey.builder().type("application/vnd.tmrk.cloud.admin.sshKey").href(URI.create("/cloudapi/ecloud/admin/sshkeys/77")).name("newName").defaultKey(false).fingerPrint("123").build();
+  binder.bindToRequest(request,key);
+  assertEquals(request.getPayload().getRawContent(),expected);
+}
