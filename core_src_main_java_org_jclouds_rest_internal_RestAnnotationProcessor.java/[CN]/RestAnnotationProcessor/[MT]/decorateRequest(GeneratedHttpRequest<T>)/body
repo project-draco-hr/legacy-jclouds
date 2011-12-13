@@ -1,4 +1,5 @@
 {
+  Cache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.get(request.getJavaMethod());
   OUTER:   for (  Entry<Integer,Set<Annotation>> entry : concat(filterValues(methodToIndexOfParamToBinderParamAnnotation.get(request.getJavaMethod()).asMap(),notEmpty).entrySet(),filterValues(methodToIndexOfParamToWrapWithAnnotation.get(request.getJavaMethod()).asMap(),notEmpty).entrySet())) {
     boolean shouldBreak=false;
     Annotation annotation=Iterables.get(entry.getValue(),0);
@@ -27,7 +28,16 @@
         }
       }
       if (input != null) {
-        request=binder.bindToRequest(request,input);
+        Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());
+        Object parsedValue=null;
+        if (extractors != null && extractors.size() > 0) {
+          ParamParser extractor=(ParamParser)extractors.iterator().next();
+          parsedValue=injector.getInstance(extractor.value()).apply(input);
+        }
+ else {
+          parsedValue=input;
+        }
+        request=binder.bindToRequest(request,parsedValue);
       }
       if (shouldBreak)       break OUTER;
     }
