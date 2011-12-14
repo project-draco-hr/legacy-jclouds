@@ -1,0 +1,28 @@
+{
+  final int NUM_BLOBS=31;
+  ListContainerOptions options=ListContainerOptions.Builder.maxResults(10);
+  BlobStoreContext context=new BlobStoreContextFactory().createContext("transient","dummyid","dummykey");
+  BlobStore blobStore=null;
+  try {
+    blobStore=context.getBlobStore();
+    blobStore.createContainerInLocation(null,containerName);
+    Set<String> expectedNames=new HashSet<String>();
+    for (int i=0; i < NUM_BLOBS; i++) {
+      String blobName="myname" + i;
+      blobStore.putBlob(containerName,blobStore.blobBuilder(blobName).payload("payload" + i).build());
+      expectedNames.add(blobName);
+    }
+    Iterable<StorageMetadata> iterable=BlobStores.listAll(blobStore,containerName,options);
+    Iterable<String> iterableNames=Iterables.transform(iterable,new Function<StorageMetadata,String>(){
+      @Override public String apply(      StorageMetadata input){
+        return input.getName();
+      }
+    }
+);
+    assertEquals(ImmutableSet.copyOf(iterableNames),expectedNames);
+  }
+  finally {
+    if (blobStore != null)     blobStore.deleteContainer(containerName);
+    context.close();
+  }
+}
