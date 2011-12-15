@@ -5,13 +5,12 @@
   ensureMachineHasMemory(vmName,1024l);
   Set<StorageController> controllers=vmSpecification.getControllers();
   if (controllers.isEmpty()) {
-    throw new IllegalStateException(missingIDEControllersMessage());
+    throw new IllegalStateException(missingIDEControllersMessage(vmSpecification));
   }
   StorageController controller=controllers.iterator().next();
   ensureMachineHasIDEControllerNamed(vmName,controller);
   setupHardDisksForController(vmName,controller);
-  setupDvdsForController(vmName,controller);
-  missingIDEControllersMessage();
+  setupDvdsForController(vmSpecification,vmName,controller);
   Map<Long,NatAdapter> natNetworkAdapters=vmSpecification.getNatNetworkAdapters();
   for (  Map.Entry<Long,NatAdapter> natAdapterAndSlot : natNetworkAdapters.entrySet()) {
     long slotId=natAdapterAndSlot.getKey();
