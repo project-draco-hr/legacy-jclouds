@@ -1,7 +1,7 @@
 {
-  String controllerIDE="IDE Controller";
+  String controllerName="IDE Controller";
   int controllerPort=0;
-  int device=1;
+  int deviceSlot=1;
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IMachine machine=createMock(IMachine.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
@@ -13,9 +13,11 @@
   errorBuilder.append("of this virtual machine (0x80BB000C)");
   String isoAlreadyAttachedException=errorBuilder.toString();
   VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
-  machine.attachDevice(controllerIDE,controllerPort,device,HardDisk,hardDisk);
+  machine.attachDevice(controllerName,controllerPort,deviceSlot,HardDisk,hardDisk);
   expectLastCall().andThrow(isoAttachedException);
   replay(manager,machine,vBox,hardDisk);
-  new AttachMediumToMachineIfNotAlreadyAttached(controllerIDE,hardDisk,controllerPort,device,HardDisk).apply(machine);
+  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,deviceSlot,"/Users/mattias/jclouds-virtualbox-test/testadmin.vdi").build();
+  DeviceDetails deviceDetails=getOnlyElement(controller.getHardDisks()).getDeviceDetails();
+  new AttachMediumToMachineIfNotAlreadyAttached(deviceDetails,hardDisk,controllerName).apply(machine);
   verify(machine);
 }

@@ -1,7 +1,8 @@
 {
   String path=System.getProperty("user.home") + "/jclouds-virtualbox-test/test-medium-3.vdi";
-  new CreateMediumIfNotAlreadyExists(manager,"vdi",true).apply(path);
-  new CreateMediumIfNotAlreadyExists(manager,"vdi",true).apply(path);
+  HardDisk hardDisk=new HardDisk(new DeviceDetails(0,0,DeviceType.HardDisk),path,"vdi");
+  new CreateMediumIfNotAlreadyExists(manager,true).apply(hardDisk);
+  new CreateMediumIfNotAlreadyExists(manager,true).apply(hardDisk);
   manager.getVBox().findMedium(path,DeviceType.HardDisk);
   assertFileCanBeDeleted(path);
 }

@@ -1,27 +1,26 @@
 {
   ensureWebServerIsRunning();
-  final IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(osTypeId,vmId,forceOverwrite,manager).apply(vmName);
-  final String defaultWorkingDir=System.getProperty("user.home") + "/jclouds-virtualbox-test";
-  final String workingDir=System.getProperty(VIRTUALBOX_WORKINGDIR,defaultWorkingDir);
+  final IMachine vm=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager).apply(vmSpecification);
+  String vmName=vmSpecification.getVmName();
   ensureMachineHasMemory(vmName,1024l);
-  ensureMachineHasIDEControllerNamed(vmName,controllerIDE);
-  ensureMachineHasAttachedDistroMedium(isoName,workingDir,controllerIDE);
-  final String adminDiskPath=workingDir + "/" + adminDisk;
-  if (new File(adminDiskPath).exists()) {
-    boolean deleted=new File(adminDiskPath).delete();
-    if (!deleted) {
-      logger.error(String.format("File %s could not be deleted.",adminDiskPath));
-    }
+  Set<StorageController> controllers=vmSpecification.getControllers();
+  if (controllers.isEmpty()) {
+    throw new IllegalStateException(missingIDEControllersMessage());
   }
-  final IMedium hardDisk=new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
-  ensureMachineHasHardDiskAttached(vmName,hardDisk);
-  ensureNATNetworkingIsAppliedToMachine(vmName);
-  final String guestAdditionsDvd=workingDir + "/VBoxGuestAdditions_4.1.2.iso";
-  final IMedium guestAdditionsDvdMedium=manager.getVBox().openMedium(guestAdditionsDvd,DeviceType.DVD,AccessMode.ReadOnly,forceOverwrite);
-  ensureGuestAdditionsMediumIsAttached(vmName,guestAdditionsDvdMedium);
+  StorageController controller=controllers.iterator().next();
+  ensureMachineHasIDEControllerNamed(vmName,controller);
+  setupHardDisksForController(vmName,controller);
+  setupDvdsForController(vmName,controller);
+  missingIDEControllersMessage();
+  Map<Long,NatAdapter> natNetworkAdapters=vmSpecification.getNatNetworkAdapters();
+  for (  Map.Entry<Long,NatAdapter> natAdapterAndSlot : natNetworkAdapters.entrySet()) {
+    long slotId=natAdapterAndSlot.getKey();
+    NatAdapter natAdapter=natAdapterAndSlot.getValue();
+    ensureNATNetworkingIsAppliedToMachine(vmName,slotId,natAdapter);
+  }
   ensureMachineIsLaunched(vmName);
-  final String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence());
-  sendKeyboardSequence(installKeySequence);
+  final String installKeySequence=System.getProperty(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE,defaultInstallSequence(vmName));
+  sendKeyboardSequence(installKeySequence,vmName);
   boolean sshDeamonIsRunning=false;
   while (!sshDeamonIsRunning) {
     try {

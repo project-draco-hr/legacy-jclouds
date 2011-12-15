@@ -1,0 +1,19 @@
+{
+  IVirtualBox vBox=manager.getVBox();
+  try {
+    String diskPath=hardDisk.getDiskPath();
+    final IMedium medium=vBox.findMedium(diskPath,DeviceType.HardDisk);
+    if (overwriteIfExists) {
+      final IProgress progress=medium.deleteStorage();
+      progress.waitForCompletion(-1);
+      return createNewMedium(vBox,hardDisk);
+    }
+ else {
+      throw new IllegalStateException("Medium for path " + diskPath + " already exists.");
+    }
+  }
+ catch (  VBoxException e) {
+    if (notFoundException(e))     return createNewMedium(vBox,hardDisk);
+    throw e;
+  }
+}

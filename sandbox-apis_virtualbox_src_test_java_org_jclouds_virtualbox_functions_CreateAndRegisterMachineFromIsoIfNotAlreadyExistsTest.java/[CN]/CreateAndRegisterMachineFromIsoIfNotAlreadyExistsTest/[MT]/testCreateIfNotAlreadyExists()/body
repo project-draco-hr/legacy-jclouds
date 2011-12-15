@@ -2,6 +2,7 @@
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
   String vmName="jclouds-image-my-ubuntu-image";
+  VmSpecification launchSpecification=VmSpecification.builder().id(vmName).name(vmName).osTypeId("").build();
   IMachine createdMachine=createMock(IMachine.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   StringBuilder errorMessageBuilder=new StringBuilder();
@@ -14,6 +15,6 @@
   expect(vBox.createMachine(anyString(),eq(vmName),anyString(),anyString(),anyBoolean())).andReturn(createdMachine).anyTimes();
   vBox.registerMachine(createdMachine);
   replay(manager,vBox);
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists("","",false,manager).apply(vmName);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager).apply(launchSpecification);
   verify(manager,vBox);
 }

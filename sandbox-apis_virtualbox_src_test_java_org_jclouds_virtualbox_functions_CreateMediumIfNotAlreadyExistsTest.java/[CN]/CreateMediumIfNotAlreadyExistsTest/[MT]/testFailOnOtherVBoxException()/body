@@ -1,17 +1,16 @@
 {
-  String adminDiskPath="/Users/johndoe/jclouds-virtualbox-images/admin.vdi";
-  String diskFormat="vdi";
+  HardDisk hardDisk=createTestHardDisk();
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IMachine machine=createMock(IMachine.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
-  IMedium hardDisk=createMock(IMedium.class);
+  IMedium medium=createMock(IMedium.class);
   IProgress progress=createNiceMock(IProgress.class);
   String errorMessage="VirtualBox error: Some other VBox error";
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   VBoxException notFoundException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
   expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andThrow(notFoundException);
-  expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(hardDisk);
-  expect(hardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
-  replay(manager,machine,vBox,hardDisk);
-  new CreateMediumIfNotAlreadyExists(manager,diskFormat,true).apply(adminDiskPath);
+  expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(medium);
+  expect(medium.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
+  replay(manager,machine,vBox,medium);
+  new CreateMediumIfNotAlreadyExists(manager,true).apply(hardDisk);
 }
