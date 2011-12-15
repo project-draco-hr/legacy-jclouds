@@ -1,23 +1,12 @@
 {
-  if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  Server other=(Server)obj;
-  if (datacenter == null) {
-    if (other.datacenter != null)     return false;
+  if (this == object) {
+    return true;
   }
- else   if (!datacenter.equals(other.datacenter))   return false;
-  if (hostname == null) {
-    if (other.hostname != null)     return false;
+  if (object instanceof Server) {
+    final Server other=(Server)object;
+    return Objects.equal(datacenter,other.datacenter) && Objects.equal(hostname,other.hostname) && Objects.equal(id,other.id)&& Objects.equal(platform,other.platform);
   }
- else   if (!hostname.equals(other.hostname))   return false;
-  if (id == null) {
-    if (other.id != null)     return false;
+ else {
+    return false;
   }
- else   if (!id.equals(other.id))   return false;
-  if (platform == null) {
-    if (other.platform != null)     return false;
-  }
- else   if (!platform.equals(other.platform))   return false;
-  return true;
 }
