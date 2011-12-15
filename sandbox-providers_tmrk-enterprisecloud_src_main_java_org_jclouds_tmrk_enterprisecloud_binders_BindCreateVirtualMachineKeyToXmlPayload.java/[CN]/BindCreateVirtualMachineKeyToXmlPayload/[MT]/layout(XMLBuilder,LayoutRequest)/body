@@ -1,0 +1,16 @@
+{
+  in=in.e("Layout");
+  if (layout.getGroup() != null) {
+    in=in.e("Group").a("href",layout.getGroup().getHref().toString()).a("type",layout.getGroup().getType()).up();
+  }
+ else   if (layout.getRow() != null) {
+    checkNotNull(layout.getNewGroup(),"newGroup");
+    in=in.e("Row").a("href",layout.getRow().getHref().toString()).a("type",layout.getRow().getType()).up().e("NewGroup").t(layout.getNewGroup()).up();
+  }
+ else {
+    checkNotNull(layout.getNewRow(),"newRow");
+    checkNotNull(layout.getNewGroup(),"newGroup");
+    in=in.e("NewRow").t(layout.getNewRow()).up().e("NewGroup").t(layout.getNewGroup()).up();
+  }
+  return in.up();
+}

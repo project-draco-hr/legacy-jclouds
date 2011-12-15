@@ -1,0 +1,12 @@
+{
+  LinuxCustomization linuxCustomization=vmData.getLinuxCustomization();
+  if (linuxCustomization == null)   return in;
+  if (vmData.getWindowsCustomization() != null)   throw new IllegalStateException("Cannot have linux and windows customizations");
+  in=in.e("LinuxCustomization").e("NetworkSettings").e("NetworkAdapterSettings");
+  for (  NetworkAdapterSetting setting : linuxCustomization.getNetworkSettings().getNetworkAdapterSettings().getNetworkAdapterSettings()) {
+    in=networkAdapterSetting(in,setting);
+  }
+  String href=linuxCustomization.getSshKey().getHref().toString();
+  String type=linuxCustomization.getSshKey().getType();
+  return in.up().up().e("SshKey").a("href",href).a("type",type).up().up();
+}
