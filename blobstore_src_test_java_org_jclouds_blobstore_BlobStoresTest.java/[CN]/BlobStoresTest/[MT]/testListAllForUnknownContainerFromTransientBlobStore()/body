@@ -1,0 +1,12 @@
+{
+  ListContainerOptions options=ListContainerOptions.NONE;
+  BlobStoreContext context=new BlobStoreContextFactory().createContext("transient","dummyid","dummykey");
+  try {
+    BlobStore blobStore=context.getBlobStore();
+    Iterable<StorageMetadata> iterable=BlobStores.listAll(blobStore,"wrongcontainer",options);
+    iterable.iterator().hasNext();
+  }
+  finally {
+    context.close();
+  }
+}
