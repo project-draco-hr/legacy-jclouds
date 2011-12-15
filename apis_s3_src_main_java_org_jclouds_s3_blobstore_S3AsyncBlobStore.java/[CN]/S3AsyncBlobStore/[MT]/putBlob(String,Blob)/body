@@ -1,10 +1,10 @@
 {
   PutObjectOptions options=new PutObjectOptions();
   try {
-    AccessControlList acl=bucketAcls.get(container);
-    if (acl != null && acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ))     options.withAcl(CannedAccessPolicy.PUBLIC_READ);
+    AccessControlList acl=bucketAcls.getUnchecked(container);
+    if (acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ))     options.withAcl(CannedAccessPolicy.PUBLIC_READ);
   }
- catch (  NullPointerException e) {
+ catch (  CacheLoader.InvalidCacheLoadException e) {
   }
   return async.putObject(container,blob2Object.apply(blob),options);
 }

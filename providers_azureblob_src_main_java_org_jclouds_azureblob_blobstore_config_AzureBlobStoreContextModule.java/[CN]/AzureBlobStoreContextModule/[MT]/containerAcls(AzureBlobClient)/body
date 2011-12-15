@@ -1,6 +1,6 @@
 {
-  return new MapMaker().expireAfterWrite(30,TimeUnit.SECONDS).makeComputingMap(new Function<String,PublicAccess>(){
-    public PublicAccess apply(    String container){
+  return CacheBuilder.newBuilder().expireAfterWrite(30,TimeUnit.SECONDS).build(new CacheLoader<String,PublicAccess>(){
+    @Override public PublicAccess load(    String container){
       return client.getPublicAccessForContainer(container);
     }
     @Override public String toString(){

@@ -1,9 +1,9 @@
 {
   final org.jclouds.atmos.options.PutOptions options=new org.jclouds.atmos.options.PutOptions();
   try {
-    if (isPublic.get(container + "/"))     options.publicRead();
+    if (isPublic.getUnchecked(container + "/"))     options.publicRead();
   }
- catch (  NullPointerException e) {
+ catch (  CacheLoader.InvalidCacheLoadException e) {
   }
   return Futures.makeListenable(service.submit(new Callable<String>(){
     @Override public String call() throws Exception {

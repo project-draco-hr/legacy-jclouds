@@ -1,7 +1,7 @@
 {
   Multimap<String,String> queryParamValues=LinkedHashMultimap.create();
-  Cache<Integer,Set<Annotation>> indexToQueryParam=methodToIndexOfParamToQueryParamAnnotations.get(method);
-  Cache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.get(method);
+  LoadingCache<Integer,Set<Annotation>> indexToQueryParam=methodToIndexOfParamToQueryParamAnnotations.get(method);
+  LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.get(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToQueryParam.asMap().entrySet()) {
     for (    Annotation key : entry.getValue()) {
       Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());

@@ -8,11 +8,11 @@
   to.setName(from.getName());
   to.setContainer(from.getContainer());
   to.setUri(from.getUrl());
-  try {
-    PublicAccess containerAcl=containerAcls.get(from.getContainer());
-    if (containerAcl != null && containerAcl != PublicAccess.PRIVATE)     to.setPublicUri(from.getUrl());
+  if (from.getContainer() != null)   try {
+    PublicAccess containerAcl=containerAcls.getUnchecked(from.getContainer());
+    if (containerAcl != PublicAccess.PRIVATE)     to.setPublicUri(from.getUrl());
   }
- catch (  NullPointerException e) {
+ catch (  CacheLoader.InvalidCacheLoadException e) {
   }
   String directoryName=ifDirectoryReturnName.execute(to);
   if (directoryName != null) {

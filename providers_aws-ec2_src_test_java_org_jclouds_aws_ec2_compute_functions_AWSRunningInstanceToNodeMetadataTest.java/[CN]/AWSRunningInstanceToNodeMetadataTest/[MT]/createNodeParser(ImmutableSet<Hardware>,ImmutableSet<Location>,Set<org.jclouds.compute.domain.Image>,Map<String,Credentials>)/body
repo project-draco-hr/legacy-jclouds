@@ -1,7 +1,7 @@
 {
   Map<InstanceState,NodeState> instanceToNodeState=EC2ComputeServiceDependenciesModule.instanceToNodeState;
   final Map<RegionAndName,? extends Image> backing=ImagesToRegionAndIdMap.imagesToMap(images);
-  Cache<RegionAndName,Image> instanceToImage=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
+  LoadingCache<RegionAndName,Image> instanceToImage=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
     @Override public Image load(    RegionAndName key) throws Exception {
       return backing.get(key);
     }

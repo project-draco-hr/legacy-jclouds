@@ -3,10 +3,10 @@
   MutableBlobMetadata to=new MutableBlobMetadataImpl();
   HttpUtils.copy(from.getContentMetadata(),to.getContentMetadata());
   try {
-    AccessControlList bucketAcl=bucketAcls.get(from.getBucket());
+    AccessControlList bucketAcl=bucketAcls.getUnchecked(from.getBucket());
     if (bucketAcl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ))     to.setPublicUri(from.getUri());
   }
- catch (  NullPointerException e) {
+ catch (  CacheLoader.InvalidCacheLoadException e) {
   }
   to.setUri(from.getUri());
   to.setContainer(from.getBucket());

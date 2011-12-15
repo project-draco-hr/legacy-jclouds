@@ -1,5 +1,5 @@
 {
-  Cache<RegionAndName,? extends Image> imageMap;
+  LoadingCache<RegionAndName,? extends Image> imageMap;
   if (knownImage != null) {
     final RegionAndName knownRegionAndName=new RegionAndName(knownImage.getLocation().getId(),knownImage.getProviderId());
     imageMap=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
@@ -12,5 +12,5 @@
  else {
     imageMap=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImagesToRegionAndIdMap.imagesToMap(images.get()))));
   }
-  return new EC2TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(defaultLocation),optionsProvider,templateBuilderProvider,Suppliers.<Cache<RegionAndName,? extends Image>>ofInstance(imageMap));
+  return new EC2TemplateBuilderImpl(locations,images,sizes,Suppliers.ofInstance(defaultLocation),optionsProvider,templateBuilderProvider,Suppliers.<LoadingCache<RegionAndName,? extends Image>>ofInstance(imageMap));
 }
