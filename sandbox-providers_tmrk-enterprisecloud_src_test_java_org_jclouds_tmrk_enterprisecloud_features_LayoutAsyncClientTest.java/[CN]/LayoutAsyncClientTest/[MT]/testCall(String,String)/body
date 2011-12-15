@@ -1,0 +1,11 @@
+{
+  Method method=LayoutAsyncClient.class.getMethod(methodName,URI.class);
+  HttpRequest httpRequest=processor.createRequest(method,URI.create(uri));
+  String requestLine=String.format("GET https://services-beta.enterprisecloud.terremark.com%s HTTP/1.1",uri);
+  assertRequestLineEquals(httpRequest,requestLine);
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/vnd.tmrk.cloud.deviceLayout\nx-tmrk-version: 2011-07-01\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseXMLWithJAXB.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}
