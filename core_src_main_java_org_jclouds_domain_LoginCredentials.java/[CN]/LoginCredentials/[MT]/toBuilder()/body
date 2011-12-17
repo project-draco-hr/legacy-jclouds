@@ -1,3 +1,20 @@
 {
-  return new Builder().user(identity).password(password).privateKey(privateKey).authenticateSudo(authenticateSudo);
+  Builder builder=new Builder().user(identity).authenticateSudo(authenticateSudo);
+  if (password != null) {
+    if (password.isPresent()) {
+      builder=builder.password(password.get());
+    }
+ else {
+      builder=builder.noPassword();
+    }
+  }
+  if (privateKey != null) {
+    if (privateKey.isPresent()) {
+      builder=builder.privateKey(privateKey.get());
+    }
+ else {
+      builder=builder.noPrivateKey();
+    }
+  }
+  return builder;
 }
