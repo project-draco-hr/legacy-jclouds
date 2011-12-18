@@ -1,0 +1,10 @@
+{
+  Iterable<String> ips=ImmutableSet.<String>of();
+  if (!autoAllocateElasticIps)   return ips;
+  String region=AWSUtils.getRegionFromLocationOrNull(template.getLocation());
+  logger.debug("<< allocating elastic IPs for nodes in region (%s)",region);
+  for (int i=0; i < count; ++i) {
+    ips=Iterables.concat(ips,ImmutableSet.<String>of(client.getElasticIPAddressServices().allocateAddressInRegion(region)));
+  }
+  return ips;
+}

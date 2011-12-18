@@ -2,6 +2,8 @@
   String[] parts=AWSUtils.parseHandle(id);
   String region=parts[0];
   String instanceId=parts[1];
+  Set<String> publicIps=getNode.getNode(id).getPublicAddresses();
+  releaseElasticIpInRegion(region,instanceId,publicIps);
   destroyInstanceInRegion(region,instanceId);
   return getNode.getNode(id);
 }
