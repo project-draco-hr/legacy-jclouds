@@ -1,6 +1,6 @@
 {
-  if (millis == 0l)   nodeWithState(node,state);
- else   service.execute(new Runnable(){
+  if (millis == 0l)   setStateOnNode(state,node);
+ else   ioThreads.execute(new Runnable(){
     @Override public void run(){
       try {
         Thread.sleep(millis);
@@ -8,7 +8,7 @@
  catch (      InterruptedException e) {
         Throwables.propagate(e);
       }
-      nodeWithState(node,state);
+      setStateOnNode(state,node);
     }
   }
 );

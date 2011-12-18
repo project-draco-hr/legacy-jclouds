@@ -1,9 +1,9 @@
 {
   NodeMetadata node=nodes.get(id);
   if (node == null)   return;
-  StubComputeServiceDependenciesModule.setState(node,NodeState.PENDING,0);
-  StubComputeServiceDependenciesModule.setState(node,NodeState.TERMINATED,50);
-  StubComputeServiceDependenciesModule.service.execute(new Runnable(){
+  setStateOnNodeAfterDelay(NodeState.PENDING,node,0);
+  setStateOnNodeAfterDelay(NodeState.TERMINATED,node,50);
+  ioThreads.execute(new Runnable(){
     @Override public void run(){
       try {
         Thread.sleep(200);
