@@ -1,10 +1,12 @@
 {
   checkNotNull(loginCredential,"loginCredential");
   if (CredentialUtils.isPrivateKeyCredential(loginCredential)) {
-    this.loginPrivateKey=loginCredential;
+    this.loginPrivateKey=Optional.of(loginCredential);
+    this.loginPassword=Optional.absent();
   }
  else {
-    this.loginPassword=loginCredential;
+    this.loginPrivateKey=Optional.absent();
+    this.loginPassword=Optional.of(loginCredential);
   }
   return this;
 }
