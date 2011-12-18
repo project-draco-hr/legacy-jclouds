@@ -1,0 +1,9 @@
+{
+  if (!autoAllocateElasticIps)   return;
+  Iterator<String> it=publicIps.iterator();
+  while (it.hasNext()) {
+    String publicIp=(String)it.next();
+    client.getElasticIPAddressServices().disassociateAddressInRegion(region,publicIp);
+    client.getElasticIPAddressServices().releaseAddressInRegion(region,publicIp);
+  }
+}

@@ -1,0 +1,9 @@
+{
+  if (!autoAllocateElasticIps)   return;
+  String region=AWSUtils.getRegionFromLocationOrNull(template.getLocation());
+  for (int i=0; i < count; ++i) {
+    String ip=Iterables.get(ips,i);
+    String id=Iterables.get(started,i).getId();
+    client.getElasticIPAddressServices().associateAddressInRegion(region,ip,id);
+  }
+}

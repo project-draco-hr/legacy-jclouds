@@ -1,0 +1,8 @@
+{
+  String[] parts=AWSUtils.parseHandle(arg0.getId());
+  String region=parts[0];
+  String instanceId=parts[1];
+  Iterable<PublicIpInstanceIdPair> elasticIpsAssociatedWithNode=ipAddressPairsAssignedToInstance(region,instanceId);
+  Set<String> publicIps=extractIpAddressFromPairs(elasticIpsAssociatedWithNode);
+  return addPublicIpsToNode(publicIps,arg0);
+}
