@@ -1,7 +1,9 @@
 {
+  List<IMedium> mediaToBeDeleted=null;
+  IMachine machine=null;
   try {
-    IMachine machine=manager.getVBox().findMachine(vmName);
-    machine.unregister(mode);
+    machine=manager.getVBox().findMachine(vmName);
+    mediaToBeDeleted=machine.unregister(mode);
   }
  catch (  VBoxException e) {
     ErrorCode errorCode=ErrorCode.valueOf(e);
@@ -12,6 +14,13 @@ case VBOX_E_OBJECT_NOT_FOUND:
 default :
   throw e;
 }
+}
+try {
+IProgress deletion=machine.delete(mediaToBeDeleted);
+deletion.waitForCompletion(-1);
+}
+ catch (Exception e) {
+e.printStackTrace();
 }
 return null;
 }
