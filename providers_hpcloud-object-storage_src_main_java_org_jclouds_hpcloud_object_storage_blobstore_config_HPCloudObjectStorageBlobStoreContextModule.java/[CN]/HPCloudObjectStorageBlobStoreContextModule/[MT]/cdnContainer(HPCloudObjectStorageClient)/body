@@ -1,0 +1,12 @@
+{
+  return new MapMaker().expireAfterWrite(30,TimeUnit.SECONDS).makeComputingMap(new Function<String,URI>(){
+    public URI apply(    String container){
+      ContainerCDNMetadata md=client.getCDNMetadata(container);
+      return md != null ? md.getCDNUri() : null;
+    }
+    @Override public String toString(){
+      return "getCDNMetadata()";
+    }
+  }
+);
+}
