@@ -1,13 +1,13 @@
 {
   CreateVirtualMachine.Builder builder=CreateVirtualMachine.builder();
-  builder.name("VirtualMachine2").processorCount(2).memory(ResourceCapacity.builder().value(1024).unit("MB").build());
+  builder.name("vmDMZ1").processorCount(2).memory(ResourceCapacity.builder().value(1024).unit("MB").build());
   AnonymousResource group=AnonymousResource.builder().href(URI.create("/cloudapi/ecloud/layoutgroups/308")).type("application/vnd.tmrk.cloud.layoutGroup").build();
   builder.layout(LayoutRequest.builder().group(group).build());
   builder.description("This is my first VM");
   builder.tags(ImmutableSet.of("Web"));
   AnonymousResource sshKey=AnonymousResource.builder().href(URI.create("/cloudapi/ecloud/admin/sshkeys/77")).type("application/vnd.tmrk.cloud.admin.sshKey").build();
-  NamedResource network=NamedResource.builder().href(URI.create("/cloudapi/ecloud/networks/3936")).name("10.146.204.64/28").type("application/vnd.tmrk.cloud.network").build();
-  NetworkAdapterSetting adapterSetting=NetworkAdapterSetting.builder().network(network).ipAddress("10.146.204.68").build();
+  NamedResource network=NamedResource.builder().href(URI.create("/cloudapi/ecloud/networks/3933")).name("10.146.205.128/27").type("application/vnd.tmrk.cloud.network").build();
+  NetworkAdapterSetting adapterSetting=NetworkAdapterSetting.builder().network(network).ipAddress("10.146.205.131").build();
   NetworkAdapterSettings adapterSettings=NetworkAdapterSettings.builder().addNetworkAdapterSetting(adapterSetting).build();
   NetworkSettings networkSettings=NetworkSettings.builder().networkAdapterSettings(adapterSettings).build();
   LinuxCustomization linuxCustomization=LinuxCustomization.builder().sshKey(sshKey).networkSettings(networkSettings).build();
@@ -16,4 +16,5 @@
   builder.template(template);
   VirtualMachine vm=client.createVirtualMachineFromTemplate(URI.create("/cloudapi/ecloud/virtualMachines/computePools/89/action/createVirtualMachine"),builder.build());
   assertNotNull(vm);
+  System.out.println(vm);
 }
