@@ -1,0 +1,9 @@
+{
+  client.resizeArchive(archiveUser,30);
+  assertTrue(new RetryablePredicate<String>(new Predicate<String>(){
+    public boolean apply(    String value){
+      return client.archiveDetails(archiveUser) != null && value.equals(client.archiveDetails(archiveUser).getTotalSize());
+    }
+  }
+,30,1,TimeUnit.SECONDS).apply("20 GB"));
+}
