@@ -1,0 +1,7 @@
+{
+  RegionAndName key=new RegionAndName("us-east-1",node.getProviderId());
+  String val=null;
+  LoadingCache<RegionAndName,String> cache=cacheOf(key,val);
+  AddElasticIpsToNodemetadata fn=new AddElasticIpsToNodemetadata(cache);
+  assertEquals(fn.apply(node).getPublicAddresses(),ImmutableSet.of("174.129.173.155"));
+}

@@ -1,0 +1,20 @@
+{
+  EC2Client client=createMock(EC2Client.class);
+  InstanceClient instanceClient=createMock(InstanceClient.class);
+  GetNodeMetadataStrategy getNode=createMock(GetNodeMetadataStrategy.class);
+  LoadingCache<RegionAndName,String> elasticIpCache=createMock(LoadingCache.class);
+  NodeMetadata node=createMock(NodeMetadata.class);
+  expect(client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
+  expect(instanceClient.terminateInstancesInRegion("region","i-blah")).andReturn(null);
+  expect(getNode.getNode("region/i-blah")).andReturn(node);
+  replay(client);
+  replay(getNode);
+  replay(instanceClient);
+  replay(elasticIpCache);
+  EC2DestroyNodeStrategy destroyer=new EC2DestroyNodeStrategy(client,getNode,elasticIpCache);
+  assertEquals(destroyer.destroyNode("region/i-blah"),node);
+  verify(client);
+  verify(getNode);
+  verify(instanceClient);
+  verify(elasticIpCache);
+}

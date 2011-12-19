@@ -4,7 +4,9 @@
   InstancePresent instancePresent=createMock(InstancePresent.class);
   RunningInstanceToNodeMetadata runningInstanceToNodeMetadata=createMock(RunningInstanceToNodeMetadata.class);
   LoadingCache<RunningInstance,Credentials> instanceToCredentials=createMock(LoadingCache.class);
+  LoadingCache<RegionAndName,String> elasticIpCache=createMock(LoadingCache.class);
+  Predicate<NodeMetadata> nodeRunning=createMock(Predicate.class);
   Map<String,Credentials> credentialStore=createMock(Map.class);
   ComputeUtils utils=createMock(ComputeUtils.class);
-  return new EC2CreateNodesInGroupThenAddToSet(client,Providers.<TemplateBuilder>of(template),createKeyPairAndSecurityGroupsAsNeededAndReturncustomize,instancePresent,runningInstanceToNodeMetadata,instanceToCredentials,credentialStore,utils);
+  return new EC2CreateNodesInGroupThenAddToSet(client,elasticIpCache,nodeRunning,Providers.<TemplateBuilder>of(template),createKeyPairAndSecurityGroupsAsNeededAndReturncustomize,instancePresent,runningInstanceToNodeMetadata,instanceToCredentials,credentialStore,utils);
 }

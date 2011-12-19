@@ -1,0 +1,19 @@
+{
+  if (!autoAllocateElasticIps)   return;
+  try {
+    String ip=elasticIpCache.get(new RegionAndName(region,instanceId));
+    logger.debug(">> disassociating elastic IP %s",ip);
+    client.getElasticIPAddressServices().disassociateAddressInRegion(region,ip);
+    logger.trace("<< disassociated elastic IP %s",ip);
+    elasticIpCache.invalidate(new RegionAndName(region,instanceId));
+    logger.debug(">> releasing elastic IP %s",ip);
+    client.getElasticIPAddressServices().releaseAddressInRegion(region,ip);
+    logger.trace("<< released elastic IP %s",ip);
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+    return;
+  }
+catch (  ExecutionException e) {
+    logger.warn(e,"error cleaning up elastic ip for instance %s/%s",region,instanceId);
+  }
+}

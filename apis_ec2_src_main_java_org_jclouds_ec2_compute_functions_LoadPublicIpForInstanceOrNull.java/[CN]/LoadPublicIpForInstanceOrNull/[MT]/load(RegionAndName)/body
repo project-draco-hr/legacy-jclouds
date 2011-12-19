@@ -1,0 +1,13 @@
+{
+  try {
+    return Iterables.find(client.getElasticIPAddressServices().describeAddressesInRegion(key.getRegion()),new Predicate<PublicIpInstanceIdPair>(){
+      @Override public boolean apply(      PublicIpInstanceIdPair input){
+        return key.getName().equals(input.getInstanceId());
+      }
+    }
+).getPublicIp();
+  }
+ catch (  NoSuchElementException e) {
+    return null;
+  }
+}

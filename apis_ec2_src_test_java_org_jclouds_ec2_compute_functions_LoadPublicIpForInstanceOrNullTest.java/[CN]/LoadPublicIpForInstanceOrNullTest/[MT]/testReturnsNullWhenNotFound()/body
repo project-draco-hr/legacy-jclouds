@@ -1,0 +1,12 @@
+{
+  EC2Client client=createMock(EC2Client.class);
+  ElasticIPAddressClient ipClient=createMock(ElasticIPAddressClient.class);
+  expect(client.getElasticIPAddressServices()).andReturn(ipClient).atLeastOnce();
+  expect(ipClient.describeAddressesInRegion("region")).andReturn(ImmutableSet.<PublicIpInstanceIdPair>of()).atLeastOnce();
+  replay(client);
+  replay(ipClient);
+  LoadPublicIpForInstanceOrNull parser=new LoadPublicIpForInstanceOrNull(client);
+  assertEquals(parser.load(new RegionAndName("region","i-blah")),null);
+  verify(client);
+  verify(ipClient);
+}

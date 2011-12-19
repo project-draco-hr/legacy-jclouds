@@ -7,7 +7,10 @@
 ).to(CredentialsForInstance.class);
   bind(new TypeLiteral<CacheLoader<RegionAndName,String>>(){
   }
-).to(CreateSecurityGroupIfNeeded.class);
+).annotatedWith(Names.named("SECURITY")).to(CreateSecurityGroupIfNeeded.class);
+  bind(new TypeLiteral<CacheLoader<RegionAndName,String>>(){
+  }
+).annotatedWith(Names.named("ELASTICIP")).to(LoadPublicIpForInstanceOrNull.class);
   bind(new TypeLiteral<Function<RegionAndName,KeyPair>>(){
   }
 ).to(CreateUniqueKeyPair.class);

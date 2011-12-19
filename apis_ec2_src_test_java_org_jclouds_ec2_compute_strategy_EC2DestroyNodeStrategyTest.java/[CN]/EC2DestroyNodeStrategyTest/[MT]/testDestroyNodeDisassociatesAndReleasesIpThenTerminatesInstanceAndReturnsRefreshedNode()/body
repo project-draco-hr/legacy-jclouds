@@ -1,0 +1,29 @@
+{
+  EC2Client client=createMock(EC2Client.class);
+  GetNodeMetadataStrategy getNode=createMock(GetNodeMetadataStrategy.class);
+  LoadingCache<RegionAndName,String> elasticIpCache=createMock(LoadingCache.class);
+  ElasticIPAddressClient ipClient=createMock(ElasticIPAddressClient.class);
+  InstanceClient instanceClient=createMock(InstanceClient.class);
+  NodeMetadata node=createMock(NodeMetadata.class);
+  expect(elasticIpCache.get(new RegionAndName("region","i-blah"))).andReturn("1.1.1.1");
+  expect(client.getElasticIPAddressServices()).andReturn(ipClient).atLeastOnce();
+  ipClient.disassociateAddressInRegion("region","1.1.1.1");
+  ipClient.releaseAddressInRegion("region","1.1.1.1");
+  elasticIpCache.invalidate(new RegionAndName("region","i-blah"));
+  expect(client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
+  expect(instanceClient.terminateInstancesInRegion("region","i-blah")).andReturn(null);
+  expect(getNode.getNode("region/i-blah")).andReturn(node);
+  replay(client);
+  replay(getNode);
+  replay(elasticIpCache);
+  replay(instanceClient);
+  replay(ipClient);
+  EC2DestroyNodeStrategy destroyer=new EC2DestroyNodeStrategy(client,getNode,elasticIpCache);
+  destroyer.autoAllocateElasticIps=true;
+  assertEquals(destroyer.destroyNode("region/i-blah"),node);
+  verify(client);
+  verify(getNode);
+  verify(elasticIpCache);
+  verify(instanceClient);
+  verify(ipClient);
+}

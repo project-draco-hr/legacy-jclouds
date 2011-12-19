@@ -2,7 +2,14 @@
   String[] parts=AWSUtils.parseHandle(arg0.getId());
   String region=parts[0];
   String instanceId=parts[1];
-  Iterable<PublicIpInstanceIdPair> elasticIpsAssociatedWithNode=ipAddressPairsAssignedToInstance(region,instanceId);
-  Set<String> publicIps=extractIpAddressFromPairs(elasticIpsAssociatedWithNode);
-  return addPublicIpsToNode(publicIps,arg0);
+  try {
+    String publicIp=cache.get(new RegionAndName(region,instanceId));
+    return NodeMetadataBuilder.fromNodeMetadata(arg0).publicAddresses(ImmutableSet.<String>builder().addAll(arg0.getPublicAddresses()).add(publicIp).build()).build();
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+    return arg0;
+  }
+catch (  ExecutionException e) {
+    throw Throwables.propagate(e);
+  }
 }
