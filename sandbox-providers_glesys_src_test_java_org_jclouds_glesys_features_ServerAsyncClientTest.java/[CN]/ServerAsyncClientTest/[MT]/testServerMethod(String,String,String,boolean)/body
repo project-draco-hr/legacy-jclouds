@@ -1,0 +1,13 @@
+{
+  Method method=ServerAsyncClient.class.getMethod(localMethod,String.class);
+  HttpRequest httpRequest=processor.createRequest(method,"abcd");
+  assertRequestLineEquals(httpRequest,"POST https://api.glesys.com/server/" + remoteMethod + "/format/json HTTP/1.1");
+  if (acceptHeader) {
+    assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
+    assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);
+    assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  }
+  assertPayloadEquals(httpRequest,serverIdField + "=abcd","application/x-www-form-urlencoded",false);
+  assertSaxResponseParserClassEquals(method,null);
+  checkFilters(httpRequest);
+}

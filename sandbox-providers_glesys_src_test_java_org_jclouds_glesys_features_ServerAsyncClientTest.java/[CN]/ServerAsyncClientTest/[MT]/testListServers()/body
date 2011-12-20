@@ -1,11 +1,3 @@
 {
-  Method method=ServerAsyncClient.class.getMethod("listServers");
-  HttpRequest httpRequest=processor.createRequest(method);
-  assertRequestLineEquals(httpRequest,"GET https://api.glesys.com/server/list/format/json HTTP/1.1");
-  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
-  assertPayloadEquals(httpRequest,null,null,false);
-  assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);
-  assertSaxResponseParserClassEquals(method,null);
-  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
-  checkFilters(httpRequest);
+  testVoidArgsMethod("listServers","list","POST",ReturnEmptySetOnNotFoundOr404.class);
 }
