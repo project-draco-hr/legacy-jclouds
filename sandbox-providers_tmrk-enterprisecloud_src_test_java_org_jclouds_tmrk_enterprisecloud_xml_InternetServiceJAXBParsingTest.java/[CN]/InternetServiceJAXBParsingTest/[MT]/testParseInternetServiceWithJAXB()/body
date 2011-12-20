@@ -1,0 +1,17 @@
+{
+  Method method=InternetServiceAsyncClient.class.getMethod("getInternetService",URI.class);
+  HttpRequest request=factory(InternetServiceAsyncClient.class).createRequest(method,new URI("/1"));
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  Function<HttpResponse,InternetService> parser=(Function<HttpResponse,InternetService>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  InputStream is=getClass().getResourceAsStream("/internetService.xml");
+  InternetService internetService=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
+  assertEquals(internetService.getProtocol(),Protocol.TCP);
+  assertEquals(internetService.getPort(),22);
+  assertTrue(internetService.isEnabled());
+  assertEquals(internetService.getPublicIp(),NamedResource.builder().href(URI.create("/cloudapi/ecloud/publicips/3929")).type("application/vnd.tmrk.cloud.publicIp").name("208.39.65.40").build());
+  assertEquals(internetService.getPersistence().getPersistenceType(),InternetServicePersistenceType.PersistenceType.NONE);
+  assertEquals(internetService.getPersistence().getTimeout(),-1);
+  assertEquals(internetService.getMonitor(),NamedResource.builder().href(URI.create("/cloudapi/ecloud/internetservices/797/monitor")).type("application/vnd.tmrk.cloud.defaultMonitor").build());
+  assertNodeServices(internetService.getNodeServices());
+  System.out.println(internetService);
+}

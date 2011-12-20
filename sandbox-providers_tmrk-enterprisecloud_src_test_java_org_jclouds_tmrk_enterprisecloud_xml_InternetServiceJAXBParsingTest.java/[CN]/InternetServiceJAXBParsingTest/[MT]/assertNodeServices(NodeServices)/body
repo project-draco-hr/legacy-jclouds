@@ -1,0 +1,12 @@
+{
+  assertEquals(nodeServices.getNodeServices().size(),1);
+  NodeService nodeService=Iterables.getOnlyElement(nodeServices.getNodeServices());
+  assertEquals(nodeService.getName(),"ssh");
+  IpAddressReference ipAddress=nodeService.getIpAddress();
+  assertEquals(ipAddress.getName(),"10.146.205.131");
+  assertEquals(ipAddress.getNetwork(),NamedResource.builder().href(URI.create("/cloudapi/ecloud/networks/3933")).type("application/vnd.tmrk.cloud.network").name("10.146.205.128/27").build());
+  assertEquals(ipAddress.getHost(),NamedResource.builder().href(URI.create("/cloudapi/ecloud/networkhosts/7144")).type("application/vnd.tmrk.cloud.networkHost").name("vmDMZ1").build());
+  assertEquals(nodeService.getProtocol(),Protocol.TCP);
+  assertEquals(nodeService.getPort(),22);
+  assertTrue(nodeService.isEnabled());
+}

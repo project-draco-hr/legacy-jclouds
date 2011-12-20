@@ -1,0 +1,40 @@
+{
+  try {
+    Properties outputProperties=new Properties();
+    outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
+    final String name=checkNotNull(data.getName(),"name");
+    final String enabled=Boolean.toString(data.isEnabled());
+    final String description=data.getDescription();
+    final InternetServicePersistenceType persistence=data.getPersistence();
+    final String redirectUrl=data.getRedirectUrl();
+    final NamedResource trustedNetworkGroup=data.getTrustedNetworkGroup();
+    final NamedResource backupInternetService=data.getBackupInternetService();
+    XMLBuilder builder=XMLBuilder.create("InternetService").a("name",name).e("Enabled").t(enabled).up();
+    if (description != null) {
+      builder=builder.e("Description").t(description).up();
+    }
+    builder=persistence(builder,persistence);
+    if (redirectUrl != null) {
+      builder=builder.e("RedirectUrl").t(redirectUrl);
+    }
+    if (trustedNetworkGroup != null) {
+      final String href=trustedNetworkGroup.getHref().toString();
+      String groupName=trustedNetworkGroup.getName();
+      String type=trustedNetworkGroup.getType();
+      builder=builder.e("TrustedNetworkGroup").a("href",href).a("name",groupName).a("type",type).up();
+    }
+    if (backupInternetService != null) {
+      final String href=backupInternetService.getHref().toString();
+      String groupName=backupInternetService.getName();
+      String type=backupInternetService.getType();
+      builder=builder.e("BackupInternetService").a("href",href).a("name",groupName).a("type",type).up();
+    }
+    return builder.asString(outputProperties);
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException t) {
+    throw new RuntimeException(t);
+  }
+}

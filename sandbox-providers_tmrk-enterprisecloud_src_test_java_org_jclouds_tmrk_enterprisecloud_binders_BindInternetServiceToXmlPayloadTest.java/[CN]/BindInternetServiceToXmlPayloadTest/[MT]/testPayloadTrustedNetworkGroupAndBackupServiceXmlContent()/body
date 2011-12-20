@@ -1,0 +1,14 @@
+{
+  String expected="<InternetService name='testName'>" + "<Enabled>true</Enabled>" + "<Persistence>"+ "<Type>None</Type>"+ "</Persistence>"+ "<TrustedNetworkGroup href='/dev/null' name='groupName' type='groupType'/>"+ "<BackupInternetService href='/foo/bar' name='backupName' type='backupType'/>"+ "</InternetService>";
+  HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
+  BindInternetServiceToXmlPayload binder=injector.getInstance(BindInternetServiceToXmlPayload.class);
+  InternetService.Builder builder=InternetService.builder();
+  builder.href(URI.create("/cloudapi/ecloud/internetservices/797"));
+  builder.name("testName");
+  builder.enabled(true);
+  builder.persistence(InternetServicePersistenceType.builder().persistenceType(InternetServicePersistenceType.PersistenceType.NONE).build());
+  builder.trustedNetworkGroup(NamedResource.builder().href(URI.create("/dev/null")).name("groupName").type("groupType").build());
+  builder.backupInternetService(NamedResource.builder().href(URI.create("/foo/bar")).name("backupName").type("backupType").build());
+  binder.bindToRequest(request,builder.build());
+  assertEquals(request.getPayload().getRawContent(),expected.replaceAll("'","\""));
+}

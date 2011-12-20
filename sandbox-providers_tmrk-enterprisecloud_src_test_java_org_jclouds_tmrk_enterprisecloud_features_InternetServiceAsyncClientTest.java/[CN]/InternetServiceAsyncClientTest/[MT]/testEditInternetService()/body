@@ -1,0 +1,13 @@
+{
+  Method method=InternetServiceAsyncClient.class.getMethod("editInternetService",InternetService.class);
+  URI uri=URI.create("/cloudapi/ecloud/internetservices/797");
+  InternetService service=InternetService.builder().href(uri).build();
+  HttpRequest httpRequest=processor.createRequest(method,service);
+  String requestLine="PUT https://services-beta.enterprisecloud.terremark.com/cloudapi/ecloud/internetservices/797 HTTP/1.1";
+  assertRequestLineEquals(httpRequest,requestLine);
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/vnd.tmrk.cloud.internetService\nx-tmrk-version: 2011-07-01\n");
+  assertPayloadEquals(httpRequest,null,null,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseXMLWithJAXB.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}
