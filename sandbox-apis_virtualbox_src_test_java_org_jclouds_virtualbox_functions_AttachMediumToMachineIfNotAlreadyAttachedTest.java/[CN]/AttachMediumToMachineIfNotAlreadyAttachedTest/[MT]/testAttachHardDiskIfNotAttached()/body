@@ -1,6 +1,7 @@
 {
   String controllerName="IDE Controller";
   String diskPath="/Users/johndoe/jclouds-virtualbox-images/admin.vdi";
+  String diskName="admin";
   String diskFormat="vdi";
   int controllerPort=0;
   int device=1;
@@ -15,7 +16,7 @@
   machine.attachDevice(controllerName,controllerPort,device,HardDisk,hardDisk);
   machine.saveSettings();
   replay(manager,machine,vBox,hardDisk);
-  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,device,diskPath).build();
+  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,device,diskPath,diskName).build();
   DeviceDetails deviceDetails=getOnlyElement(controller.getHardDisks()).getDeviceDetails();
   new AttachMediumToMachineIfNotAlreadyAttached(deviceDetails,hardDisk,controllerName).apply(machine);
   verify(machine);

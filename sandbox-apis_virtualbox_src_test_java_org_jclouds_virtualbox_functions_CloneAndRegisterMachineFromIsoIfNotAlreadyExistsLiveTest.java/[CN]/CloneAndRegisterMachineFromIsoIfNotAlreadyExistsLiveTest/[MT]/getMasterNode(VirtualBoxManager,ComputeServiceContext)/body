@@ -2,7 +2,7 @@
   try {
     Predicate<IPSocket> socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),10,1,TimeUnit.SECONDS);
     String workingDir=PropertyUtils.getWorkingDirFromProperty();
-    StorageController ideController=StorageController.builder().name(controllerIDE).bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(0,1,workingDir + "/testadmin.vdi").attachISO(1,1,workingDir + "/VBoxGuestAdditions_4.1.2.iso").build();
+    StorageController ideController=StorageController.builder().name(controllerIDE).bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(0,1,workingDir + "/testadmin.vdi","testadmin").attachISO(1,1,workingDir + "/VBoxGuestAdditions_4.1.2.iso").build();
     VmSpec vmSpecification=VmSpec.builder().id(vmId).name(vmName).osTypeId(osTypeId).controller(ideController).forceOverwrite(true).build();
     return new CreateAndInstallVm(manager,guestId,localHostContext,hostId,socketTester,"127.0.0.1",8080,HEADLESS).apply(vmSpecification);
   }

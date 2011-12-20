@@ -16,7 +16,7 @@
   machine.attachDevice(controllerName,controllerPort,deviceSlot,HardDisk,hardDisk);
   expectLastCall().andThrow(isoAttachedException);
   replay(manager,machine,vBox,hardDisk);
-  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,deviceSlot,"/Users/mattias/jclouds-virtualbox-test/testadmin.vdi").build();
+  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,deviceSlot,"/Users/mattias/jclouds-virtualbox-test/testadmin.vdi","testadmin").build();
   DeviceDetails deviceDetails=getOnlyElement(controller.getHardDisks()).getDeviceDetails();
   new AttachMediumToMachineIfNotAlreadyAttached(deviceDetails,hardDisk,controllerName).apply(machine);
   verify(machine);
