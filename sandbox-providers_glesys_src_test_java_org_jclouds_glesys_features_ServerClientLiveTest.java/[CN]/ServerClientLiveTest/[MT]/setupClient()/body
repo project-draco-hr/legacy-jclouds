@@ -1,17 +1,4 @@
 {
   super.setupClient();
   client=context.getApi().getServerClient();
-  runningServerCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
-    public boolean apply(    Integer value){
-      int count=0;
-      for (      Server server : client.listServers()) {
-        ServerStatus status=client.getServerStatus(server.getId());
-        if (status.getState() == ServerState.RUNNING && status.getUptime() > 0) {
-          count++;
-        }
-      }
-      return count == value;
-    }
-  }
-,120,5,TimeUnit.SECONDS);
 }
