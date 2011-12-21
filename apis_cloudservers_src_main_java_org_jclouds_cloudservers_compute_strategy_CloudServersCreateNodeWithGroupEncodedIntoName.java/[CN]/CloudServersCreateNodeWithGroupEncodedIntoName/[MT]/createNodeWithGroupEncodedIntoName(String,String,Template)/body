@@ -1,5 +1,12 @@
 {
-  Server from=client.createServer(name,Integer.parseInt(template.getImage().getProviderId()),Integer.parseInt(template.getHardware().getProviderId()),withMetadata(template.getOptions().getUserMetadata()));
-  credentialStore.put("node#" + from.getId(),new Credentials("root",from.getAdminPass()));
-  return serverToNodeMetadata.apply(from);
+  checkState(group != null,"group (that which groups identical nodes together) must be specified");
+  checkState(name != null && name.indexOf(group) != -1,"name should have %s encoded into it",group);
+  checkState(template != null,"template must be specified");
+  Server server=client.createServer(name,Integer.parseInt(template.getImage().getProviderId()),Integer.parseInt(template.getHardware().getProviderId()),withMetadata(template.getOptions().getUserMetadata()));
+  NodeAndInitialCredentials<Server> from=new NodeAndInitialCredentials<Server>(server,server.getId() + "",LoginCredentials.builder().password(server.getAdminPass()).build());
+  LoginCredentials fromNode=from.getCredentials();
+  LoginCredentials creds=prioritizeCredentialsFromTemplate.apply(template,fromNode);
+  if (creds != null)   credentialStore.put("node#" + from.getNodeId(),creds);
+  NodeMetadata node=serverToNodeMetadata.apply(from.getNode());
+  return node;
 }
