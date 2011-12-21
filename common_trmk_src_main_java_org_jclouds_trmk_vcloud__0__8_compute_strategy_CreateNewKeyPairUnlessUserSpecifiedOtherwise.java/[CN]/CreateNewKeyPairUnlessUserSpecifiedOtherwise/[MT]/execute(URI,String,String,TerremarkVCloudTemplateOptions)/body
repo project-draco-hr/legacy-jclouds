@@ -2,14 +2,17 @@
   String sshKeyFingerprint=options.getSshKeyFingerprint();
   boolean shouldAutomaticallyCreateKeyPair=options.shouldAutomaticallyCreateKeyPair();
   if (sshKeyFingerprint == null && shouldAutomaticallyCreateKeyPair) {
-    OrgAndName orgAndName=new OrgAndName(org,tag);
-    if (credentialsMap.containsKey(orgAndName)) {
-      options.sshKeyFingerprint(credentialsMap.get(orgAndName).getKeyPair().getFingerPrint());
-    }
+synchronized (credentialStore) {
+      if (credentialStore.containsKey("group#" + group)) {
+        LoginCredentials creds=LoginCredentials.fromCredentials(credentialStore.get("group#" + group));
+        checkState(creds.getOptionalPrivateKey().isPresent(),"incorrect state: should have private key for: %s",creds);
+        options.sshKeyFingerprint(SshKeys.fingerprintPrivateKey(creds.getPrivateKey()));
+      }
  else {
-      KeyPair keyPair=createUniqueKeyPair.apply(orgAndName);
-      credentialsMap.put(orgAndName,new KeyPairCredentials(identity,keyPair));
-      options.sshKeyFingerprint(keyPair.getFingerPrint());
+        KeyPair keyPair=createUniqueKeyPair.apply(new OrgAndName(org,group));
+        credentialStore.put("group#" + group,LoginCredentials.builder().user(identity).privateKey(keyPair.getPrivateKey()).build());
+        options.sshKeyFingerprint(keyPair.getFingerPrint());
+      }
     }
   }
 }

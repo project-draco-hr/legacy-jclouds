@@ -1,37 +1,3 @@
 {
-  if (portsToOpen.length > 0 && !options.shouldBlock())   throw new IllegalArgumentException("We cannot open ports on terremark unless we can deploy the vapp");
-  String password=null;
-  VAppTemplate template=client.getVAppTemplate(templateId);
-  if (template.getDescription().indexOf("Windows") != -1) {
-    password=passwordGenerator.get();
-    options.getProperties().put("password",password);
-  }
-  LoginCredentials defaultCredentials=credentialsProvider.apply(template);
-  checkNotNull(options,"options");
-  logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
-  VApp vAppResponse=client.instantiateVAppTemplateInVDC(VDC,templateId,name,options);
-  logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
-  if (options.shouldDeploy()) {
-    logger.debug(">> deploying vApp(%s)",vAppResponse.getName());
-    Task task=client.deployVApp(vAppResponse.getHref());
-    if (options.shouldBlock()) {
-      if (!taskTester.apply(task.getHref())) {
-        throw new RuntimeException(String.format("failed to %s %s: %s","deploy",vAppResponse.getName(),task));
-      }
-      logger.debug("<< deployed vApp(%s)",vAppResponse.getName());
-      if (options.shouldPowerOn()) {
-        logger.debug(">> powering vApp(%s)",vAppResponse.getName());
-        task=client.powerOnVApp(vAppResponse.getHref());
-        if (!taskTester.apply(task.getHref())) {
-          throw new RuntimeException(String.format("failed to %s %s: %s","powerOn",vAppResponse.getName(),task));
-        }
-        logger.debug("<< on vApp(%s)",vAppResponse.getName());
-      }
-    }
-  }
-  if (password != null) {
-    credentialStore.put("node#" + vAppResponse.getHref().toASCIIString(),new Credentials(defaultCredentials.identity,password));
-  }
-  if (portsToOpen.length > 0)   createPublicAddressMappedToPorts(vAppResponse.getHref(),portsToOpen);
-  return vAppResponse;
+  return startAndReturnCredentials(VDC,templateId,name,options,portsToOpen).getNode();
 }

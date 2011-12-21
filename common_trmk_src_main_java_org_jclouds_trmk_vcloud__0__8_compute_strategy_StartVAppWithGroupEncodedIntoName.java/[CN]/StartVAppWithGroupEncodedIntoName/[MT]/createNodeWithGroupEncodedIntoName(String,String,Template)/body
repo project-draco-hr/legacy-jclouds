@@ -1,8 +1,11 @@
 {
   InstantiateVAppTemplateOptions options=getOptions.apply(template);
-  VApp vApp=computeClient.start(URI.create(template.getLocation().getId()),URI.create(template.getImage().getId()),name,options,template.getOptions().getInboundPorts());
-  NodeMetadata node=vAppToNodeMetadata.apply(vApp);
-  NodeMetadataBuilder builder=NodeMetadataBuilder.fromNodeMetadata(node);
-  if (template.getImage().getDefaultCredentials() != null)   credentialStore.put("node#" + node.getId(),template.getImage().getDefaultCredentials());
-  return builder.build();
+  NodeAndInitialCredentials<VApp> from=computeClient.startAndReturnCredentials(URI.create(template.getLocation().getId()),URI.create(template.getImage().getId()),name,options,template.getOptions().getInboundPorts());
+  LoginCredentials fromNode=from.getCredentials();
+  if (credentialStore.containsKey("group#" + group)) {
+    fromNode=fromNode == null ? LoginCredentials.fromCredentials(credentialStore.get("group#" + group)) : fromNode.toBuilder().privateKey(credentialStore.get("group#" + group).credential).build();
+  }
+  LoginCredentials creds=prioritizeCredentialsFromTemplate.apply(template,fromNode);
+  if (creds != null)   credentialStore.put("node#" + from.getNodeId(),creds);
+  return vAppToNodeMetadata.apply(from.getNode());
 }
