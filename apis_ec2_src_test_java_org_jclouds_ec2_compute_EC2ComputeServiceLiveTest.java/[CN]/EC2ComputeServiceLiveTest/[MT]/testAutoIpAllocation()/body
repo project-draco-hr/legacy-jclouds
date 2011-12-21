@@ -1,2 +1,32 @@
 {
+  ComputeServiceContext context=null;
+  String group=this.group + "aip";
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(EC2Constants.PROPERTY_EC2_AUTO_ALLOCATE_ELASTIC_IPS,"true");
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    Set<? extends NodeMetadata> nodes=context.getComputeService().createNodesInGroup(group,1);
+    assertEquals(nodes.size(),1,"One node should have been created");
+    NodeMetadata node=Iterables.get(nodes,0);
+    String region=node.getLocation().getParent().getId();
+    Set<String> publicIps=node.getPublicAddresses();
+    assertFalse(Iterables.isEmpty(publicIps),String.format("no public addresses attached to node %s",node));
+    assertEquals(Iterables.size(publicIps),1);
+    String ip=Iterables.getOnlyElement(publicIps);
+    assertFalse(InetAddresses2.isPrivateIPAddress(ip));
+    IPSocket socket=new IPSocket(ip,22);
+    assertTrue(socketTester.apply(socket),String.format("failed to open socket %s on node %s",socket,node));
+    EC2Client ec2=EC2Client.class.cast(context.getProviderSpecificContext().getApi());
+    Set<PublicIpInstanceIdPair> ipidpairs=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,publicIps.toArray(new String[0]));
+    assertEquals(ipidpairs.size(),1,String.format("there should only be one address pair (%s)",Iterables.toString(ipidpairs)));
+    PublicIpInstanceIdPair ipidpair=Iterables.get(ipidpairs,0);
+    assertEquals(region + "/" + ipidpair.getInstanceId(),node.getId());
+    context.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
+    Set<PublicIpInstanceIdPair> ipidcheck=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,ipidpair.getPublicIp());
+    assertTrue(Iterables.isEmpty(ipidcheck),String.format("there should be no address pairs (%s)",Iterables.toString(ipidcheck)));
+  }
+  finally {
+    context.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
+    if (context != null)     context.close();
+  }
 }
