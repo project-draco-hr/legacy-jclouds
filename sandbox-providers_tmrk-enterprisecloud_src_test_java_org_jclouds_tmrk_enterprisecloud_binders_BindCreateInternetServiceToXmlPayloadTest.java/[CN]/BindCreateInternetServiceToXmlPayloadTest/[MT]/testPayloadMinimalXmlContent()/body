@@ -1,8 +1,0 @@
-{
-  String expected="<CreateInternetService name='testName'>" + "<Protocol>HTTP</Protocol>" + "<Port>2020</Port>"+ "<Enabled>true</Enabled>"+ "<Persistence>"+ "<Type>None</Type>"+ "</Persistence>"+ "</CreateInternetService>";
-  HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
-  BindInternetServiceToXmlPayload binder=injector.getInstance(BindCreateInternetServiceToXmlPayload.class);
-  InternetService.Builder builder=InternetService.builder().href(URI.create("")).name("testName").protocol(Protocol.HTTP).port(2020).enabled(true).persistence(InternetServicePersistenceType.builder().persistenceType(InternetServicePersistenceType.PersistenceType.NONE).build());
-  binder.bindToRequest(request,builder.build());
-  assertEquals(request.getPayload().getRawContent(),expected.replaceAll("'","\""));
-}

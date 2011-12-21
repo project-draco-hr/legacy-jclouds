@@ -1,9 +1,0 @@
-{
-  Method method=LocationAsyncClient.class.getMethod("getLocationById",URI.class);
-  HttpRequest request=factory(LocationAsyncClient.class).createRequest(method,new URI("/1"));
-  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
-  Function<HttpResponse,Location> parser=(Function<HttpResponse,Location>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
-  InputStream is=getClass().getResourceAsStream("/location.xml");
-  Location location=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
-  assertEquals(location,expected);
-}

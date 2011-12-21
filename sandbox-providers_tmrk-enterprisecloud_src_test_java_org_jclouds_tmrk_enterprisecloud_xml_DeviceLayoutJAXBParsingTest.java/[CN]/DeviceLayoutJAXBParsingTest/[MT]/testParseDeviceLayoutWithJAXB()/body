@@ -1,9 +1,0 @@
-{
-  Method method=LayoutAsyncClient.class.getMethod("getLayouts",URI.class);
-  HttpRequest request=factory(LayoutAsyncClient.class).createRequest(method,new URI("/1"));
-  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
-  Function<HttpResponse,DeviceLayout> parser=(Function<HttpResponse,DeviceLayout>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
-  InputStream is=getClass().getResourceAsStream("/deviceLayout.xml");
-  DeviceLayout location=parser.apply(new HttpResponse(200,"ok",newInputStreamPayload(is)));
-  assertRows(location.getRows());
-}
