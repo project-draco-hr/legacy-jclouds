@@ -15,14 +15,12 @@ default :
   throw e;
 }
 }
-if (!mediaToBeDeleted.isEmpty()) {
+List<IMedium> filteredMediaToBeDeleted=Lists.newArrayList(Iterables.filter(mediaToBeDeleted,new AutoDeleteHardDiskPredicate(vmSpec)));
+checkNotNull(filteredMediaToBeDeleted);
+if (!filteredMediaToBeDeleted.isEmpty()) {
 try {
-for (IMedium iMedium : mediaToBeDeleted) {
-  if (iMedium.getDeviceType().equals(DeviceType.HardDisk)) {
-    IProgress deletion=machine.delete(Lists.newArrayList(iMedium));
-    deletion.waitForCompletion(-1);
-  }
-}
+IProgress deletion=machine.delete(filteredMediaToBeDeleted);
+deletion.waitForCompletion(-1);
 }
  catch (Exception e) {
 logger.error(e,"Problem in deleting the media attached to %s",machine.getName());

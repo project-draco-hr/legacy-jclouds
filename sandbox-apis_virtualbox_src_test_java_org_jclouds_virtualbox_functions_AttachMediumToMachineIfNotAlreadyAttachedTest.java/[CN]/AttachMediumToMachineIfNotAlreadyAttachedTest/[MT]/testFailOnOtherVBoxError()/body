@@ -11,10 +11,10 @@
   errorBuilder.append("Some other VBox error");
   String isoAlreadyAttachedException=errorBuilder.toString();
   VBoxException isoAttachedException=new VBoxException(createNiceMock(Throwable.class),isoAlreadyAttachedException);
-  machine.attachDevice(controllerName,controllerPort,deviceSlot,HardDisk,hardDisk);
+  machine.attachDevice(controllerName,controllerPort,deviceSlot,DeviceType.HardDisk,hardDisk);
   expectLastCall().andThrow(isoAttachedException);
   replay(manager,machine,vBox,hardDisk);
-  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,deviceSlot,"/Users/mattias/jclouds-virtualbox-test/testadmin.vdi","testadmin").build();
+  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(HardDisk.builder().diskpath("/Users/mattias/jclouds-virtualbox-test/testadmin.vdi").controllerPort(controllerPort).deviceSlot(deviceSlot).build()).build();
   DeviceDetails deviceDetails=getOnlyElement(controller.getHardDisks()).getDeviceDetails();
   new AttachMediumToMachineIfNotAlreadyAttached(deviceDetails,hardDisk,controllerName).apply(machine);
 }

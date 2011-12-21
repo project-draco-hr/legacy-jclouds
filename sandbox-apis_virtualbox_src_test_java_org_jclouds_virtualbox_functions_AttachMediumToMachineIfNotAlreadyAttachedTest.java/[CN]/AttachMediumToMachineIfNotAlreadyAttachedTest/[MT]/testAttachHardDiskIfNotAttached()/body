@@ -4,7 +4,7 @@
   String diskName="admin";
   String diskFormat="vdi";
   int controllerPort=0;
-  int device=1;
+  int deviceSlot=1;
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IMachine machine=createMock(IMachine.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
@@ -13,10 +13,10 @@
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   expect(vBox.createHardDisk(diskFormat,diskPath)).andReturn(hardDisk);
   expect(hardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
-  machine.attachDevice(controllerName,controllerPort,device,HardDisk,hardDisk);
+  machine.attachDevice(controllerName,controllerPort,deviceSlot,DeviceType.HardDisk,hardDisk);
   machine.saveSettings();
   replay(manager,machine,vBox,hardDisk);
-  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(controllerPort,device,diskPath,diskName).build();
+  StorageController controller=StorageController.builder().name(controllerName).bus(StorageBus.IDE).attachHardDisk(HardDisk.builder().diskpath(diskPath).controllerPort(controllerPort).deviceSlot(deviceSlot).build()).build();
   DeviceDetails deviceDetails=getOnlyElement(controller.getHardDisks()).getDeviceDetails();
   new AttachMediumToMachineIfNotAlreadyAttached(deviceDetails,hardDisk,controllerName).apply(machine);
   verify(machine);
