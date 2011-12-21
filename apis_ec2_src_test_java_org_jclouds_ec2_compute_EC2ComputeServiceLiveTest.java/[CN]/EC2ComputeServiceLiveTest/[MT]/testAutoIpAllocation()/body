@@ -20,7 +20,7 @@
     Set<PublicIpInstanceIdPair> ipidpairs=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,publicIps.toArray(new String[0]));
     assertEquals(ipidpairs.size(),1,String.format("there should only be one address pair (%s)",Iterables.toString(ipidpairs)));
     PublicIpInstanceIdPair ipidpair=Iterables.get(ipidpairs,0);
-    assertEquals(ipidpair.getInstanceId(),node.getId());
+    assertEquals(region + "/" + ipidpair.getInstanceId(),node.getId());
     context.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
     try {
       ec2.getElasticIPAddressServices().describeAddressesInRegion(region,ipidpair.getPublicIp());
