@@ -3,9 +3,6 @@
   VApp vApp=computeClient.start(URI.create(template.getLocation().getId()),URI.create(template.getImage().getId()),name,options,template.getOptions().getInboundPorts());
   NodeMetadata node=vAppToNodeMetadata.apply(vApp);
   NodeMetadataBuilder builder=NodeMetadataBuilder.fromNodeMetadata(node);
-  if (template.getImage().getAdminPassword() != null) {
-    builder.adminPassword(template.getImage().getAdminPassword());
-    credentialStore.put("node#" + node.getId() + "#adminPassword",new Credentials("root",template.getImage().getAdminPassword()));
-  }
+  if (template.getImage().getDefaultCredentials() != null)   credentialStore.put("node#" + node.getId(),template.getImage().getDefaultCredentials());
   return builder.build();
 }

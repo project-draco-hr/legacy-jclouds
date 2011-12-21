@@ -25,10 +25,13 @@
   String group=parseGroupFromName(from.getName());
   builder.group(group);
   if (group != null && !credentialStore.containsKey("node#" + from.getHref().toASCIIString())) {
-    installCredentialsFromCache(from.getHref(),URI.create(vdcLocation.getParent().getId()),group,builder);
+    OrgAndName orgAndName=new OrgAndName(URI.create(vdcLocation.getParent().getId()),group);
+    if (credentialsMap.containsKey(orgAndName)) {
+      builder.credentials(LoginCredentials.builder(credentialsMap.get(orgAndName)).build());
+    }
   }
  else {
-    builder.credentials(credentialStore.get("node#" + from.getHref().toASCIIString()));
+    builder.credentials(LoginCredentials.builder(credentialStore.get("node#" + from.getHref().toASCIIString())).build());
   }
   return builder.build();
 }
