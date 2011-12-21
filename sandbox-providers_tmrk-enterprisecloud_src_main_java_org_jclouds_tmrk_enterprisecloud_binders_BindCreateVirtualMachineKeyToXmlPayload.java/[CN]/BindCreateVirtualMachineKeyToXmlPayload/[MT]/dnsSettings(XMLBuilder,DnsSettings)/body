@@ -1,0 +1,10 @@
+{
+  if (dnsSettings == null)   return in;
+  final String primary=dnsSettings.getPrimaryDns();
+  final String secondary=dnsSettings.getSecondaryDns();
+  in=in.e("DnsSettings").e("PrimaryDns").t(primary).up();
+  if (secondary != null && !secondary.isEmpty()) {
+    in=in.e("SecondaryDns").t(secondary).up();
+  }
+  return in.up();
+}
