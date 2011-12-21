@@ -22,12 +22,8 @@
     PublicIpInstanceIdPair ipidpair=Iterables.get(ipidpairs,0);
     assertEquals(region + "/" + ipidpair.getInstanceId(),node.getId());
     context.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
-    try {
-      ec2.getElasticIPAddressServices().describeAddressesInRegion(region,ipidpair.getPublicIp());
-      fail("address has not been deallocated");
-    }
- catch (    HttpResponseException e) {
-    }
+    Set<PublicIpInstanceIdPair> ipidcheck=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,ipidpair.getPublicIp());
+    assertTrue(Iterables.isEmpty(ipidcheck),String.format("there should be no address pairs (%s)",Iterables.toString(ipidcheck)));
   }
   finally {
     context.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
