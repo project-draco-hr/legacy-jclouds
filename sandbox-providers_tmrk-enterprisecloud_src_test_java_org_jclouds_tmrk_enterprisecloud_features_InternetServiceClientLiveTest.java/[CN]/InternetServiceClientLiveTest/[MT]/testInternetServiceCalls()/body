@@ -1,0 +1,20 @@
+{
+  InternetService service=InternetService.builder().name("live test").href(URI.create("")).protocol(Protocol.TCP).port(2020).enabled(true).persistence(InternetServicePersistenceType.builder().persistenceType(InternetServicePersistenceType.PersistenceType.NONE).build()).build();
+  URI uri=URI.create("/cloudapi/ecloud/publicips/3929");
+  InternetService internetService=client.createInternetService(uri,service);
+  System.out.println("service:" + internetService);
+  InternetService editServiceData=InternetService.builder().href(uri).name("testName").enabled(false).build();
+  Task editTask=client.editInternetService(editServiceData);
+  System.out.println("Task:" + editTask);
+  RetryablePredicate retryablePredicate=new RetryablePredicate(completeOrSuccess(taskClient),1000 * 60);
+  if (!retryablePredicate.apply(editTask)) {
+    fail("Did not manage to edit service:" + editTask);
+  }
+  InternetService editedService=client.getInternetService(internetService.getHref());
+  assertEquals(editedService.getName(),"testName");
+  assertFalse(editedService.isEnabled());
+  Task removeTask=client.removeInternetService(internetService.getHref());
+  if (!retryablePredicate.apply(removeTask)) {
+    fail("Did not manage to remove service:" + removeTask);
+  }
+}

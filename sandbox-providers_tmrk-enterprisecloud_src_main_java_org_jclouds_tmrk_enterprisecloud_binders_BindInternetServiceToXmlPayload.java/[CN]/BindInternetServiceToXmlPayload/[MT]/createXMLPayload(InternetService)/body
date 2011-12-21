@@ -3,13 +3,22 @@
     Properties outputProperties=new Properties();
     outputProperties.put(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION,"yes");
     final String name=checkNotNull(data.getName(),"name");
+    final Protocol protocol=data.getProtocol();
+    final int port=data.getPort();
     final String enabled=Boolean.toString(data.isEnabled());
     final String description=data.getDescription();
     final InternetServicePersistenceType persistence=data.getPersistence();
     final String redirectUrl=data.getRedirectUrl();
     final NamedResource trustedNetworkGroup=data.getTrustedNetworkGroup();
     final NamedResource backupInternetService=data.getBackupInternetService();
-    XMLBuilder builder=XMLBuilder.create("InternetService").a("name",name).e("Enabled").t(enabled).up();
+    XMLBuilder builder=XMLBuilder.create(rootElement).a("name",name);
+    if (protocol != null) {
+      builder=builder.e("Protocol").t(protocol.value()).up();
+    }
+    if (port > 0) {
+      builder=builder.e("Port").t(Integer.toString(port)).up();
+    }
+    builder=builder.e("Enabled").t(enabled).up();
     if (description != null) {
       builder=builder.e("Description").t(description).up();
     }

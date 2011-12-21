@@ -1,0 +1,14 @@
+{
+  Method method=InternetServiceAsyncClient.class.getMethod("createInternetService",URI.class,InternetService.class);
+  URI uri=URI.create("/cloudapi/ecloud/internetServices/publicIps/123/action/createInternetService");
+  InternetService createData=service.toBuilder().href(URI.create("")).protocol(Protocol.HTTP).port(2020).build();
+  HttpRequest httpRequest=processor.createRequest(method,uri,createData);
+  String requestLine="POST https://services-beta.enterprisecloud.terremark.com/cloudapi/ecloud/internetServices/publicIps/123/action/createInternetService HTTP/1.1";
+  String payload="<CreateInternetService name='testName'><Protocol>HTTP</Protocol><Port>2020</Port><Enabled>true</Enabled><Persistence><Type>None</Type></Persistence></CreateInternetService>".replaceAll("'","\"");
+  assertRequestLineEquals(httpRequest,requestLine);
+  assertNonPayloadHeadersEqual(httpRequest,"Accept: application/vnd.tmrk.cloud.internetService\nx-tmrk-version: 2011-07-01\n");
+  assertPayloadEquals(httpRequest,payload,MediaType.APPLICATION_XML,false);
+  assertResponseParserClassEquals(method,httpRequest,ParseXMLWithJAXB.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(httpRequest);
+}

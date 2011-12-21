@@ -1,0 +1,24 @@
+{
+  return new Predicate<Task>(){
+    @Override public boolean apply(    Task task){
+      checkNotNull(task,"task cannot be null");
+      if (client != null) {
+        task=client.getTask(task.getURI());
+      }
+switch (task.getStatus()) {
+case QUEUED:
+case RUNNING:
+        return false;
+case COMPLETE:
+case SUCCESS:
+      return true;
+default :
+    throw new RuntimeException("Task Failed:" + task.getHref() + ", Status:"+ task.getStatus());
+}
+}
+@Override public String toString(){
+return "completeOrSuccess";
+}
+}
+;
+}

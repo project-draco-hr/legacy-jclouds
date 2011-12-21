@@ -6,7 +6,9 @@
   for (  NetworkAdapterSetting setting : linuxCustomization.getNetworkSettings().getNetworkAdapterSettings().getNetworkAdapterSettings()) {
     in=networkAdapterSetting(in,setting);
   }
+  in=in.up();
+  in=dnsSettings(in,linuxCustomization.getNetworkSettings().getDnsSettings());
   String href=linuxCustomization.getSshKey().getHref().toString();
   String type=linuxCustomization.getSshKey().getType();
-  return in.up().up().e("SshKey").a("href",href).a("type",type).up().up();
+  return in.up().e("SshKey").a("href",href).a("type",type).up().up();
 }
