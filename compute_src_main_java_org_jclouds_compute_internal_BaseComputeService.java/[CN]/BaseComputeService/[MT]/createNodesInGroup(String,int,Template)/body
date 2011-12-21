@@ -7,7 +7,7 @@
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
   if (template.getOptions().getRunScript() != null)   initAdminAccess.visit(template.getOptions().getRunScript());
   Map<?,Future<Void>> responses=runNodesAndAddToSetStrategy.execute(group,count,template,goodNodes,badNodes,customizationResponses);
-  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"runNodesWithTag(" + group + ")");
+  Map<?,Exception> executionExceptions=awaitCompletion(responses,executor,null,logger,"createNodesInGroup(" + group + ")");
   Function<NodeMetadata,NodeMetadata> fn=persistNodeCredentials.always(template.getOptions().getRunScript());
   badNodes=Maps2.transformKeys(badNodes,fn);
   goodNodes=ImmutableSet.copyOf(Iterables.transform(goodNodes,fn));

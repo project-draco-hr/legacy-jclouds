@@ -39,11 +39,11 @@
     Injector i=Guice.createInjector(new SshjSshClientModule(),new SLF4JLoggingModule());
     SshClient.Factory factory=i.getInstance(SshClient.Factory.class);
     SshClient connection;
-    if (sshKeyFile != null && !sshKeyFile.trim().equals("")) {
-      connection=factory.create(new IPSocket(sshHost,port),new Credentials(sshUser,Strings2.toStringAndClose(new FileInputStream(sshKeyFile))));
+    if (Strings.emptyToNull(sshKeyFile) != null) {
+      connection=factory.create(new IPSocket(sshHost,port),LoginCredentials.builder().user(sshUser).privateKey(Strings2.toStringAndClose(new FileInputStream(sshKeyFile))).build());
     }
  else {
-      connection=factory.create(new IPSocket(sshHost,port),new Credentials(sshUser,sshPass));
+      connection=factory.create(new IPSocket(sshHost,port),LoginCredentials.builder().user(sshUser).password(sshPass).build());
     }
     connection.connect();
     return connection;

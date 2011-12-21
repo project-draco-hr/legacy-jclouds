@@ -1,6 +1,6 @@
 {
   IPSocket socket=new IPSocket(Iterables.get(server.getAddresses().getPublicAddresses(),0).getAddress(),22);
-  SshClient client=sshFactory.create(socket,new Credentials("root",keyPair.get("private")));
+  SshClient client=sshFactory.create(socket,LoginCredentials.builder().user("root").privateKey(keyPair.get("private")).build());
   try {
     client.connect();
     Payload etcPasswd=client.get("/etc/jclouds.txt");
