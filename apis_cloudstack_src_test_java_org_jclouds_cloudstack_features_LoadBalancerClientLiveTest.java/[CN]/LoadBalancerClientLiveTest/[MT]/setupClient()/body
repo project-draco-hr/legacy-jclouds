@@ -3,7 +3,7 @@
   loadBalancerRuleActive=new RetryablePredicate<LoadBalancerRule>(new LoadBalancerRuleActive(client),60,1,1,TimeUnit.SECONDS);
   prefix+="rule";
   try {
-    network=find(client.getNetworkClient().listNetworks(),NetworkPredicates.hasLoadBalancerService());
+    network=find(client.getNetworkClient().listNetworks(),Predicates.and(NetworkPredicates.hasLoadBalancerService(),NetworkPredicates.isVirtualNetwork()));
   }
  catch (  NoSuchElementException e) {
     networksDisabled=true;
