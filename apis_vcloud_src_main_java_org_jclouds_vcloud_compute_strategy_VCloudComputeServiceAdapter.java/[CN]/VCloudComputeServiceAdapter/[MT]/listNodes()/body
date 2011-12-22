@@ -1,0 +1,13 @@
+{
+  Builder<VApp> nodes=ImmutableSet.<VApp>builder();
+  for (  Org org : nameToOrg.get().values()) {
+    for (    ReferenceType vdc : org.getVDCs().values()) {
+      for (      ReferenceType resource : client.getVDCClient().getVDC(vdc.getHref()).getResourceEntities().values()) {
+        if (resource.getType().equals(VCloudMediaType.VAPP_XML)) {
+          addVAppToSetRetryingIfNotYetPresent(nodes,vdc,resource);
+        }
+      }
+    }
+  }
+  return nodes.build();
+}

@@ -1,7 +1,7 @@
 {
-  Iterable<org.jclouds.vcloud.domain.VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<org.jclouds.vcloud.domain.VDC>>(){
-    @SuppressWarnings("unchecked") @Override public Future<org.jclouds.vcloud.domain.VDC> apply(    ReferenceType from){
-      return (Future<org.jclouds.vcloud.domain.VDC>)aclient.getVDCClient().getVDC(from.getHref());
+  Iterable<VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<org.jclouds.vcloud.domain.VDC>>(){
+    @Override public Future<VDC> apply(    ReferenceType from){
+      return aclient.getVDCClient().getVDC(from.getHref());
     }
   }
 ,executor,null,logger,"vdcs in org " + org.getName());

@@ -1,0 +1,30 @@
+{
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(DefaultVDC.class).in(Scopes.SINGLETON);
+  bind(new TypeLiteral<ComputeServiceAdapter<VApp,VAppTemplate,VAppTemplate,Location>>(){
+  }
+).to(VCloudComputeServiceAdapter.class);
+  bind(new TypeLiteral<Function<VApp,NodeMetadata>>(){
+  }
+).to(VAppToNodeMetadata.class);
+  bind(TemplateOptions.class).to(VCloudTemplateOptions.class);
+  bind(TemplateBuilder.class).to(VCloudTemplateBuilderImpl.class);
+  bind(new TypeLiteral<Function<VApp,Hardware>>(){
+  }
+).to(new TypeLiteral<HardwareForVApp>(){
+  }
+);
+  bind(new TypeLiteral<Function<Org,Iterable<VAppTemplate>>>(){
+  }
+).to(VAppTemplatesInOrg.class);
+  bind(new TypeLiteral<Function<VAppTemplate,Image>>(){
+  }
+).to(ImageForVAppTemplate.class);
+  bind(new TypeLiteral<Function<VAppTemplate,Hardware>>(){
+  }
+).to(HardwareForVAppTemplate.class);
+  bind(new TypeLiteral<Function<Location,Location>>(){
+  }
+).to((Class)IdentityFunction.class);
+}

@@ -1,36 +1,4 @@
 {
   super.configure();
-  install(defineComputeStrategyModule());
-  install(defineComputeSupplierModule());
-  bind(new TypeLiteral<Function<VApp,NodeMetadata>>(){
-  }
-).to(VAppToNodeMetadata.class);
-  bind(TemplateOptions.class).to(VCloudTemplateOptions.class);
-  bind(TemplateBuilder.class).to(VCloudTemplateBuilderImpl.class);
-  bind(new TypeLiteral<Function<VApp,Hardware>>(){
-  }
-).to(new TypeLiteral<HardwareForVApp>(){
-  }
-);
-  bind(new TypeLiteral<ComputeServiceContext>(){
-  }
-).to(new TypeLiteral<ComputeServiceContextImpl<VCloudClient,VCloudClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<RestContext<VCloudClient,VCloudClient>>(){
-  }
-).to(new TypeLiteral<RestContextImpl<VCloudClient,VCloudClient>>(){
-  }
-).in(Scopes.SINGLETON);
-  bind(new TypeLiteral<Function<Org,Iterable<? extends Image>>>(){
-  }
-).to(new TypeLiteral<ImagesInOrg>(){
-  }
-);
-  bind(new TypeLiteral<Function<Org,Iterable<? extends Hardware>>>(){
-  }
-).to(new TypeLiteral<HardwareInOrg>(){
-  }
-);
-  bind(PopulateDefaultLoginCredentialsForImageStrategy.class).to(GetLoginCredentialsFromGuestConfiguration.class);
+  install(new VCloudComputeServiceDependenciesModule());
 }

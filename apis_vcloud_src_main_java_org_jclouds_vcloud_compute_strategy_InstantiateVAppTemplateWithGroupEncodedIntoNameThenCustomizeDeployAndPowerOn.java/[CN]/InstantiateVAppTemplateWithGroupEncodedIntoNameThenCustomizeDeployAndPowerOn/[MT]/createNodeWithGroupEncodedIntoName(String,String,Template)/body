@@ -33,5 +33,6 @@
   waitForTask(updateMemoryMBOfVm(vm,memoryMB),vAppResponse);
   logger.trace("<< updated memoryMB vm(%s) ",vm.getName());
   logger.trace(">> deploying and powering on vApp(%s) ",vAppResponse.getName());
-  return blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.getVAppClient().deployAndPowerOnVApp(vAppResponse.getHref()));
+  vAppResponse=blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.getVAppClient().deployAndPowerOnVApp(vAppResponse.getHref()));
+  return new NodeAndInitialCredentials<VApp>(vAppResponse,vAppResponse.getHref().toASCIIString(),getCredentialsFrom(vAppResponse));
 }

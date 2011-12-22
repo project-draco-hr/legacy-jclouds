@@ -18,7 +18,7 @@
   }
   VirtualHardwareSection hardware=Iterables.get(ovf.getVirtualSystem().getVirtualHardwareSections(),0);
   HardwareBuilder builder=rasdToHardwareBuilder.apply(hardware.getItems());
-  builder.location(findLocationForResource.apply(checkNotNull(parent,"parent")));
+  builder.location(findLocationForResource.apply(checkNotNull(from.getVDC(),"VDC")));
   builder.ids(from.getHref().toASCIIString()).name(from.getName()).supportsImage(ImagePredicates.idEquals(from.getHref().toASCIIString()));
   return builder.build();
 }

@@ -3,10 +3,9 @@
   builder.ids(from.getHref().toASCIIString());
   builder.uri(from.getHref());
   builder.name(from.getName());
-  builder.location(findLocationForResource.apply(checkNotNull(parent,"parent")));
+  builder.location(findLocationForResource.apply(checkNotNull(from.getVDC(),"VDC")));
   builder.description(from.getDescription() != null ? from.getDescription() : from.getName());
   Envelope ovf=client.getVAppTemplateClient().getOvfEnvelopeForVAppTemplate(from.getHref());
   builder.operatingSystem(CIMOperatingSystem.toComputeOs(ovf));
-  builder.defaultCredentials(credentialsProvider.apply(from));
   return builder.build();
 }

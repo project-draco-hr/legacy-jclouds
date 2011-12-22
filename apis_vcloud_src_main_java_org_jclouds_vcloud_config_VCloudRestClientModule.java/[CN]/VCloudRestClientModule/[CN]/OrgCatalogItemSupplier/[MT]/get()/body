@@ -1,8 +1,8 @@
 {
-  return transformValues(catalogSupplier.get(),new Function<Map<String,? extends org.jclouds.vcloud.domain.Catalog>,Map<String,Map<String,? extends org.jclouds.vcloud.domain.CatalogItem>>>(){
-    @Override public Map<String,Map<String,? extends CatalogItem>> apply(    Map<String,? extends org.jclouds.vcloud.domain.Catalog> from){
-      return transformValues(from,new Function<org.jclouds.vcloud.domain.Catalog,Map<String,? extends org.jclouds.vcloud.domain.CatalogItem>>(){
-        @Override public Map<String,? extends CatalogItem> apply(        org.jclouds.vcloud.domain.Catalog from){
+  return transformValues(catalogSupplier.get(),new Function<Map<String,org.jclouds.vcloud.domain.Catalog>,Map<String,Map<String,org.jclouds.vcloud.domain.CatalogItem>>>(){
+    @Override public Map<String,Map<String,CatalogItem>> apply(    Map<String,org.jclouds.vcloud.domain.Catalog> from){
+      return transformValues(from,new Function<org.jclouds.vcloud.domain.Catalog,Map<String,org.jclouds.vcloud.domain.CatalogItem>>(){
+        @Override public Map<String,CatalogItem> apply(        org.jclouds.vcloud.domain.Catalog from){
           return uniqueIndex(filter(allCatalogItemsInCatalog.apply(from),notNull()),name);
         }
       }
