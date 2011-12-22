@@ -1,0 +1,31 @@
+{
+  List<IMedium> mediaToBeDeleted=Collections.emptyList();
+  IMachine machine=null;
+  try {
+    machine=manager.getVBox().findMachine(vmSpec.getVmName());
+    mediaToBeDeleted=machine.unregister(vmSpec.getCleanupMode());
+  }
+ catch (  VBoxException e) {
+    ErrorCode errorCode=ErrorCode.valueOf(e);
+switch (errorCode) {
+case VBOX_E_OBJECT_NOT_FOUND:
+      logger.debug("Machine %s does not exists, cannot unregister",vmSpec.getVmName());
+    break;
+default :
+  throw e;
+}
+}
+List<IMedium> filteredMediaToBeDeleted=Lists.newArrayList(Iterables.filter(mediaToBeDeleted,new AutoDeleteHardDiskPredicate(vmSpec)));
+checkNotNull(filteredMediaToBeDeleted);
+if (!filteredMediaToBeDeleted.isEmpty()) {
+try {
+IProgress deletion=machine.delete(filteredMediaToBeDeleted);
+deletion.waitForCompletion(-1);
+}
+ catch (Exception e) {
+logger.error(e,"Problem in deleting the media attached to %s",machine.getName());
+Throwables.propagate(e);
+}
+}
+return null;
+}

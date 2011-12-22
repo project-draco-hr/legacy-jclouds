@@ -2,10 +2,9 @@
   try {
     Predicate<IPSocket> socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),10,1,TimeUnit.SECONDS);
     String vmId="jclouds-image-iso-2";
-    String isoName="ubuntu-11.04-server-i386.iso";
     String workingDir=PropertyUtils.getWorkingDirFromProperty();
-    StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(0,1,workingDir + "/testadmin.vdi").build();
-    VmSpec vmSpecification=VmSpec.builder().id(vmId).name(vmName).osTypeId("").controller(ideController).forceOverwrite(true).build();
+    StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(HardDisk.builder().diskpath(workingDir + "/testadmin.vdi").controllerPort(0).deviceSlot(1).build()).build();
+    VmSpec vmSpecification=VmSpec.builder().id(vmId).name(vmName).osTypeId("").memoryMB(512).controller(ideController).forceOverwrite(true).build();
     return new CreateAndInstallVm(manager,guestId,localHostContext,hostId,socketTester,"127.0.0.1",8080,HEADLESS).apply(vmSpecification);
   }
  catch (  IllegalStateException e) {
