@@ -1,0 +1,14 @@
+{
+  String currentTagsString=options.remove("tags");
+  Set<String> tags=(currentTagsString == null) ? new LinkedHashSet<String>() : Sets.newLinkedHashSet(Splitter.on(' ').split(currentTagsString));
+switch (affinity) {
+case SSD:
+    tags.add(SSD_AFFINITY_TAG);
+  break;
+case HDD:
+tags.remove(SSD_AFFINITY_TAG);
+break;
+}
+if (!tags.isEmpty()) options.put("tags",Joiner.on(' ').join(tags));
+return this;
+}
