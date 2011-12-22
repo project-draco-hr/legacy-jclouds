@@ -2,6 +2,7 @@
   checkState(resourceToAuthenticate instanceof Image,"this is only valid for images");
   if (creds != null)   return creds;
   Image image=Image.class.cast(resourceToAuthenticate);
+  if (credentialStore.containsKey("image#" + image.getId()))   return LoginCredentials.fromCredentials(credentialStore.get("image#" + image.getId()));
   if (image.getOperatingSystem() != null && OsFamily.WINDOWS.equals(image.getOperatingSystem().getFamily())) {
     return LoginCredentials.builder().user("Administrator").build();
   }

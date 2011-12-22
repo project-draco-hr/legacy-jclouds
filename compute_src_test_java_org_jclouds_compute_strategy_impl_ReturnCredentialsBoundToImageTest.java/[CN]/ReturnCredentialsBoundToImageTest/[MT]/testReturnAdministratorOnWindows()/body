@@ -1,8 +1,9 @@
 {
   Image image=createMock(Image.class);
+  expect(image.getId()).andReturn("1");
   expect(image.getOperatingSystem()).andReturn(OperatingSystem.builder().family(OsFamily.WINDOWS).description("foo").build()).atLeastOnce();
   replay(image);
   Credentials creds=new Credentials("Administrator",null);
-  assertEquals(new ReturnCredentialsBoundToImage(null).execute(image),creds);
+  assertEquals(new ReturnCredentialsBoundToImage(null,ImmutableMap.<String,Credentials>of()).execute(image),creds);
   verify(image);
 }
