@@ -1,6 +1,24 @@
 {
-  install(new CloudServersComputeServiceDependenciesModule());
-  install(new CloudServersBindComputeStrategiesByClass());
-  install(new CloudServersBindComputeSuppliersByClass());
   super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<Server,Flavor,org.jclouds.cloudservers.domain.Image,Location>>(){
+  }
+).to(CloudServersComputeServiceAdapter.class);
+  bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
+  }
+).to(ServerToNodeMetadata.class);
+  bind(new TypeLiteral<Function<org.jclouds.cloudservers.domain.Image,Image>>(){
+  }
+).to(CloudServersImageToImage.class);
+  bind(new TypeLiteral<Function<org.jclouds.cloudservers.domain.Image,OperatingSystem>>(){
+  }
+).to(CloudServersImageToOperatingSystem.class);
+  bind(new TypeLiteral<Function<Flavor,Hardware>>(){
+  }
+).to(FlavorToHardware.class);
+  bind(new TypeLiteral<Function<Location,Location>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(OnlyLocationOrFirstZone.class);
 }
