@@ -1,4 +1,5 @@
 {
   WellKnownImage input=preinstalledImages.get(drive.getUuid());
-  return new ImageBuilder().ids(drive.getUuid()).userMetadata(ImmutableMap.<String,String>builder().putAll(drive.getUserMetadata()).put("size",input.getSize() + "").build()).defaultCredentials(LoginCredentials.builder().user(input.getLoginUser()).build()).location(locationSupplier.get()).name(input.getDescription()).description(drive.getName()).operatingSystem(new OperatingSystem.Builder().family(input.getOsFamily()).version(input.getOsVersion()).name(input.getDescription()).description(drive.getName()).is64Bit(input.is64bit()).build()).version("").build();
+  credentialStore.put("image#" + drive.getUuid(),LoginCredentials.builder().user(input.getLoginUser()).build());
+  return new ImageBuilder().ids(drive.getUuid()).userMetadata(ImmutableMap.<String,String>builder().putAll(drive.getUserMetadata()).put("size",input.getSize() + "").build()).location(locationSupplier.get()).name(input.getDescription()).description(drive.getName()).operatingSystem(new OperatingSystem.Builder().family(input.getOsFamily()).version(input.getOsVersion()).name(input.getDescription()).description(drive.getName()).is64Bit(input.is64bit()).build()).version("").build();
 }
