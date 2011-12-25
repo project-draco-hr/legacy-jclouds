@@ -1,0 +1,21 @@
+{
+  ParseSax<String> parser=createParser();
+  HttpRequest request=new HttpRequest("GET",URI.create("http://foohost"));
+  HttpResponse response=new HttpResponse(304,"Not Modified",null);
+  Locator locator=createMock(Locator.class);
+  expect(locator.getColumnNumber()).andReturn(1);
+  expect(locator.getLineNumber()).andReturn(1);
+  expect(locator.getPublicId()).andReturn("publicId");
+  expect(locator.getSystemId()).andReturn("systemId");
+  replay(locator);
+  Exception input=new SAXParseException("foo",locator);
+  verify(locator);
+  try {
+    parser.setContext(request);
+    parser.addDetailsAndPropagate(response,input);
+  }
+ catch (  RuntimeException e) {
+    assertEquals(e.getMessage(),"request: GET http://foohost HTTP/1.1; response: HTTP/1.1 304 Not Modified; error at 1:1 in document systemId; cause: org.xml.sax.SAXParseExceptionpublicId: publicId; systemId: systemId; lineNumber: 1; columnNumber: 1; foo");
+    assertEquals(e.getCause(),input);
+  }
+}
