@@ -20,11 +20,11 @@
     GeneratedHttpRequest.Builder<T> requestBuilder;
     HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
     if (r != null) {
-      requestBuilder=GeneratedHttpRequest.Builder.<T>from(r);
+      requestBuilder=GeneratedHttpRequest.Builder.fromRequest(r);
       endpoint=r.getEndpoint();
     }
  else {
-      requestBuilder=new GeneratedHttpRequest.Builder<T>();
+      requestBuilder=GeneratedHttpRequest.requestBuilder();
       requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
     }
     requestBuilder.declaring(declaring).javaMethod(method).args(args).skips(skips);
