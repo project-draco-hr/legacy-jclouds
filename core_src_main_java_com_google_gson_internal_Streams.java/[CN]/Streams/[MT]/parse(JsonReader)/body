@@ -3,11 +3,11 @@
   try {
     reader.peek();
     isEmpty=false;
-    return parseRecursive(reader);
+    return TypeAdapters.JSON_ELEMENT.read(reader);
   }
  catch (  EOFException e) {
     if (isEmpty) {
-      return JsonNull.createJsonNull();
+      return JsonNull.INSTANCE;
     }
     throw new JsonIOException(e);
   }

@@ -3,6 +3,9 @@
   if (context != nonempty && context != empty) {
     throw new IllegalStateException("Nesting problem: " + stack);
   }
+  if (deferredName != null) {
+    throw new IllegalStateException("Dangling name: " + deferredName);
+  }
   stack.remove(stack.size() - 1);
   if (context == nonempty) {
     newline();
