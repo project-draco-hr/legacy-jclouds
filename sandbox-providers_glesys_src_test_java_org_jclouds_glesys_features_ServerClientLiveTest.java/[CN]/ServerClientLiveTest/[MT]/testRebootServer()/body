@@ -1,5 +1,12 @@
 {
-  client.rebootServer(testServer.getId());
-  assertTrue(runningServerCounter.apply(ServerState.STOPPED));
-  assertTrue(runningServerCounter.apply(ServerState.RUNNING));
+  long uptime=0;
+  while (uptime < 20) {
+    uptime=client.getServerStatus(testServerId).getUptime();
+  }
+  assertTrue(uptime > 19);
+  client.rebootServer(testServerId);
+  Thread.sleep(1000);
+  uptime=client.getServerStatus(testServerId).getUptime();
+  assertTrue(uptime < 20);
+  assertTrue(serverStatusChecker.apply(ServerState.RUNNING));
 }
