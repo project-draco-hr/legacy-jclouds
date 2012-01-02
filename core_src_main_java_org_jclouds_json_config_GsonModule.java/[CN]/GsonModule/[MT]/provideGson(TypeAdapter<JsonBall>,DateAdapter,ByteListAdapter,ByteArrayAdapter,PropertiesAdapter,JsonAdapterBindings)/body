@@ -1,0 +1,15 @@
+{
+  GsonBuilder builder=new GsonBuilder();
+  builder.registerTypeAdapter(Properties.class,propertiesAdapter.nullSafe());
+  builder.registerTypeAdapter(Date.class,adapter.nullSafe());
+  builder.registerTypeAdapter(new TypeToken<List<Byte>>(){
+  }
+.getType(),byteListAdapter.nullSafe());
+  builder.registerTypeAdapter(byte[].class,byteArrayAdapter.nullSafe());
+  builder.registerTypeAdapter(JsonBall.class,jsonAdapter.nullSafe());
+  builder.registerTypeHierarchyAdapter(Enum.class,new EnumTypeAdapterThatReturnsFromValue());
+  for (  Map.Entry<Type,Object> binding : bindings.getBindings().entrySet()) {
+    builder.registerTypeAdapter(binding.getKey(),binding.getValue());
+  }
+  return builder.create();
+}

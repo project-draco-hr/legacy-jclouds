@@ -1,0 +1,14 @@
+{
+  Writer writer=getWriter(jsonWriter);
+  boolean serializeNulls=jsonWriter.getSerializeNulls();
+  try {
+    NullReplacingWriter nullReplacingWriter=new NullReplacingWriter(writer,value.toString());
+    setWriter(jsonWriter,nullReplacingWriter);
+    jsonWriter.setSerializeNulls(true);
+    jsonWriter.nullValue();
+  }
+  finally {
+    setWriter(jsonWriter,writer);
+    jsonWriter.setSerializeNulls(serializeNulls);
+  }
+}
