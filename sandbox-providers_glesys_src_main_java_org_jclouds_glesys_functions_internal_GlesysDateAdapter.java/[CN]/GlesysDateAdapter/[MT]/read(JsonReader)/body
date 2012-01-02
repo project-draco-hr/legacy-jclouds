@@ -1,11 +1,11 @@
 {
-  String toParse=json.getAsJsonPrimitive().getAsString();
+  String toParse=reader.nextString();
   try {
 synchronized (dateFormat) {
       return dateFormat.parse(toParse);
     }
   }
  catch (  ParseException e) {
-    throw new RuntimeException(e);
+    throw Throwables.propagate(e);
   }
 }
