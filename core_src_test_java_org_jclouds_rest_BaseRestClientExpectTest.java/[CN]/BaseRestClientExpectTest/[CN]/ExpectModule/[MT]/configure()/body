@@ -1,5 +1,8 @@
 {
   bind(ExecutorService.class).annotatedWith(Names.named(Constants.PROPERTY_USER_THREADS)).toInstance(MoreExecutors.sameThreadExecutor());
   bind(ExecutorService.class).annotatedWith(Names.named(Constants.PROPERTY_IO_WORKER_THREADS)).toInstance(MoreExecutors.sameThreadExecutor());
-  bind(HttpCommandExecutorService.class).toInstance(mock);
+  bind(new TypeLiteral<Function<HttpRequest,HttpResponse>>(){
+  }
+).toInstance(fn);
+  bind(HttpCommandExecutorService.class).to(ExpectHttpCommandExecutorService.class);
 }

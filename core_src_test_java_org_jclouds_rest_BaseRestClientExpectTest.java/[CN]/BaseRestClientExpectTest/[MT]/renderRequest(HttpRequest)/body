@@ -1,0 +1,21 @@
+{
+  StringBuilder builder=new StringBuilder().append(request.getRequestLine()).append('\n');
+  for (  Entry<String,String> header : request.getHeaders().entries()) {
+    builder.append(header.getKey()).append(": ").append(header.getValue()).append('\n');
+  }
+  if (request.getPayload() != null) {
+    for (    Entry<String,String> header : HttpUtils.getContentHeadersFromMetadata(request.getPayload().getContentMetadata()).entries()) {
+      builder.append(header.getKey()).append(": ").append(header.getValue()).append('\n');
+    }
+    try {
+      builder.append('\n').append(Strings2.toStringAndClose(request.getPayload().getInput()));
+    }
+ catch (    IOException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+ else {
+    builder.append('\n');
+  }
+  return builder.toString();
+}
