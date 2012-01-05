@@ -1,0 +1,9 @@
+{
+  identity="toor";
+  credential="password";
+  String workingDir=PropertyUtils.getWorkingDirFromProperty();
+  HardDisk hardDisk=HardDisk.builder().diskpath(workingDir + "/testadmin.vdi").autoDelete(true).controllerPort(0).deviceSlot(1).build();
+  masterStorageController=StorageController.builder().name(ideControllerName).bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(hardDisk).attachISO(1,1,workingDir + "/VBoxGuestAdditions_4.1.2.iso").build();
+  masterSpec=VmSpec.builder().id(vmId).name(vmName).memoryMB(512).osTypeId(osTypeId).controller(masterStorageController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
+  cloneSpec=VmSpec.builder().id(cloneId).name(cloneName).memoryMB(512).osTypeId(osTypeId).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
+}

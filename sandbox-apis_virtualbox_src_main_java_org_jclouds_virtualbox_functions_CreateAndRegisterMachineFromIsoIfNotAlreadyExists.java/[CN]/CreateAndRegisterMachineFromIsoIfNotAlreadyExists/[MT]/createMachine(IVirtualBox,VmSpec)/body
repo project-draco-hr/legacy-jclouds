@@ -1,6 +1,23 @@
 {
-  String settingsFile1=null;
-  IMachine newMachine=vBox.createMachine(settingsFile1,launchSpecification.getVmName(),launchSpecification.getOsTypeId(),launchSpecification.getVmId(),launchSpecification.isForceOverwrite());
+  String workingDir=PropertyUtils.getWorkingDirFromProperty();
+  String settingsFile=vBox.composeMachineFilename(vmSpec.getVmName(),workingDir);
+  IMachine newMachine=vBox.createMachine(settingsFile,vmSpec.getVmName(),vmSpec.getOsTypeId(),vmSpec.getVmId(),vmSpec.isForceOverwrite());
   manager.getVBox().registerMachine(newMachine);
+  String vmName=vmSpec.getVmName();
+  ensureMachineHasMemory(vmName,vmSpec.getMemory());
+  Set<StorageController> controllers=vmSpec.getControllers();
+  if (controllers.isEmpty()) {
+    throw new IllegalStateException(missingIDEControllersMessage(vmSpec));
+  }
+  StorageController controller=controllers.iterator().next();
+  ensureMachineHasStorageControllerNamed(vmName,controller);
+  setupHardDisksForController(vmName,controller);
+  setupDvdsForController(vmSpec,vmName,controller);
+  Map<Long,NatAdapter> natNetworkAdapters=vmSpec.getNatNetworkAdapters();
+  for (  Map.Entry<Long,NatAdapter> natAdapterAndSlot : natNetworkAdapters.entrySet()) {
+    long slotId=natAdapterAndSlot.getKey();
+    NatAdapter natAdapter=natAdapterAndSlot.getValue();
+    ensureNATNetworkingIsAppliedToMachine(vmName,slotId,natAdapter);
+  }
   return newMachine;
 }
