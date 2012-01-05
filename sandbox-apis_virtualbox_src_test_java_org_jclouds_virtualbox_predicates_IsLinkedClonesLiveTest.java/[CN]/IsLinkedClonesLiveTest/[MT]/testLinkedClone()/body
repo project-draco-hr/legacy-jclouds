@@ -2,7 +2,7 @@
   VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
   new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(masterSpec);
   IMachine master=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager).apply(masterSpec);
-  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,cloneSpec,CloneOptions.Link).apply(master);
+  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,cloneSpec,IS_LINKED_CLONE).apply(master);
   assertTrue(new IsLinkedClone(manager).apply(clone));
   new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(new IMachineToVmSpec().apply(clone));
   new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(masterSpec);

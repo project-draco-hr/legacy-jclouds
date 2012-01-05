@@ -1,6 +1,5 @@
 {
   try {
-    Predicate<IPSocket> socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),10,1,TimeUnit.SECONDS);
     String workingDir=PropertyUtils.getWorkingDirFromProperty();
     StorageController ideController=StorageController.builder().name(ideControllerName).bus(StorageBus.IDE).attachISO(0,0,workingDir + "/ubuntu-11.04-server-i386.iso").attachHardDisk(HardDisk.builder().diskpath(workingDir + "/testadmin.vdi").controllerPort(0).deviceSlot(1).build()).attachISO(1,1,workingDir + "/VBoxGuestAdditions_4.1.2.iso").build();
     VmSpec vmSpec=VmSpec.builder().id(vmId).name(vmName).osTypeId(osTypeId).memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
