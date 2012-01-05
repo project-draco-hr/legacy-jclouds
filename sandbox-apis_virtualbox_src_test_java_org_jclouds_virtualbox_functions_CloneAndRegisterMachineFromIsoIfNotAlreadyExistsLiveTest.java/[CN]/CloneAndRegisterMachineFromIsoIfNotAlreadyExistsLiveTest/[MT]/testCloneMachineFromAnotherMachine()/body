@@ -7,6 +7,9 @@
     session.getConsole().deleteSnapshot(master.getCurrentSnapshot().getId());
     session.unlockMachine();
   }
-  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,localHostContext,settingsFile,osTypeId,vmId,forceOverwrite,cloneName,hostId,snapshotName,snapshotDesc,controllerIDE).apply(master);
-  assertEquals(clone.getNetworkAdapter(0L).getAttachmentType(),Bridged);
+  clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
+  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,clonedVmSpec,IS_LINKED_CLONE).apply(master);
+  assertEquals(clone.getName(),clonedVmSpec.getVmName());
+  new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(clonedVmSpec);
+  new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(new IMachineToVmSpec().apply(master));
 }
