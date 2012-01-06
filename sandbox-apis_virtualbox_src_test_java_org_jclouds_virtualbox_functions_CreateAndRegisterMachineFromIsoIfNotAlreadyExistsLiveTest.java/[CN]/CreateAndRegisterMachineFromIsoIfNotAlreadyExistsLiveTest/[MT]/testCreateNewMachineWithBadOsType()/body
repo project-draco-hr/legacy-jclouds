@@ -1,7 +1,7 @@
 {
   String vmName="jclouds-test-create-2-node";
   VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("SomeWeirdUnknownOs").forceOverwrite(true).build();
-  lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
+  unlockMachineAndApplyOrReturnNullIfNotRegistered(manager,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
   try {
     new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,workingDir).apply(launchSpecification);
     fail();
