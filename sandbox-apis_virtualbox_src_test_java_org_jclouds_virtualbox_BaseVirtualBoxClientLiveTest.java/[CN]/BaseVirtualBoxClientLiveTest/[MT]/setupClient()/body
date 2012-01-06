@@ -2,9 +2,10 @@
   setupCredentials();
   Properties overrides=setupProperties();
   context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  intializeImageIdFromContext();
   jetty=new StartJettyIfNotAlreadyRunning(port).apply(basebaseResource);
   startVboxIfNotAlreadyRunning();
-  hostVersion=Iterables.get(Splitter.on('r').split(buildVersion),0);
+  hostVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
   String workingDir=PropertyUtils.getWorkingDirFromProperty();
   adminDisk=workingDir + "/testadmin.vdi";
   operatingSystemIso=String.format("%s/%s.iso",workingDir,imageId);
