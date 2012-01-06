@@ -4,7 +4,7 @@
     String vmId="jclouds-image-iso-2";
     StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk).controllerPort(0).deviceSlot(1).build()).build();
     VmSpec vmSpecification=VmSpec.builder().id(vmId).name(vmName).osTypeId("").memoryMB(512).controller(ideController).forceOverwrite(true).build();
-    return new CreateAndInstallVm(manager,guestId,localHostContext,hostId,socketTester,"127.0.0.1",8080,HEADLESS).apply(vmSpecification);
+    return new CreateAndInstallVm(manager,new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,workingDir),guestId,vmId,localHostContext,hostId,socketTester,"127.0.0.1",8080,HEADLESS).apply(vmSpecification);
   }
  catch (  IllegalStateException e) {
     return manager.getVBox().findMachine(vmName);

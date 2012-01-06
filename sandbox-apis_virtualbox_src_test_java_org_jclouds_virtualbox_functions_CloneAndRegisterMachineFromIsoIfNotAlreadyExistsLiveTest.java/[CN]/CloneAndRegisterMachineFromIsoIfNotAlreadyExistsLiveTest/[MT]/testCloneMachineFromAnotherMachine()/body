@@ -8,7 +8,7 @@
     session.unlockMachine();
   }
   clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
-  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,clonedVmSpec,IS_LINKED_CLONE).apply(master);
+  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,clonedVmSpec,IS_LINKED_CLONE).apply(master);
   assertEquals(clone.getName(),clonedVmSpec.getVmName());
   new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(clonedVmSpec);
   new UnregisterMachineIfExistsAndDeleteItsMedia(manager).apply(new IMachineToVmSpec().apply(master));
