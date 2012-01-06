@@ -1,0 +1,11 @@
+{
+  try {
+    ISession session=manager.getSessionObject();
+    IMachine immutableMachine=manager.getVBox().findMachine(machineId);
+    if (immutableMachine.getSessionState().equals(SessionState.LOCKED))     session.unlockMachine();
+    return function.apply(immutableMachine);
+  }
+ catch (  VBoxException e) {
+    throw new RuntimeException(String.format("error applying %s to %s: %s",function,machineId,e.getMessage()),e);
+  }
+}

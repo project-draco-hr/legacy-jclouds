@@ -1,9 +1,9 @@
 {
   String vmName="jclouds-test-create-1-node";
   VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("Debian").forceOverwrite(true).build();
-  lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
+  unlockMachineAndApplyOrReturnNullIfNotRegistered(manager,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
   IMachine debianNode=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,workingDir).apply(launchSpecification);
   IMachine machine=manager.getVBox().findMachine(vmName);
   assertEquals(debianNode.getName(),machine.getName());
-  lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
+  unlockMachineAndApplyOrReturnNullIfNotRegistered(manager,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
 }
