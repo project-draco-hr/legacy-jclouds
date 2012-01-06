@@ -1,0 +1,18 @@
+{
+  Matcher matcher=ATTACHED_PATTERN.matcher(e.getMessage());
+  if (matcher.find()) {
+    String machineId=matcher.group(1);
+    IMachine immutableMachine=vBox.findMachine(machineId);
+    IMediumAttachment mediumAttachment=Iterables.find(immutableMachine.getMediumAttachments(),new Predicate<IMediumAttachment>(){
+      public boolean apply(      IMediumAttachment in){
+        return in.getMedium().getId().equals(medium.getId());
+      }
+    }
+);
+    lockMachineAndApply(manager,Write,immutableMachine.getName(),new DetachDistroMediumFromMachine(mediumAttachment.getController(),mediumAttachment.getPort(),mediumAttachment.getDevice()));
+    deleteMediumAndBlockUntilComplete(medium);
+  }
+ else {
+    throw e;
+  }
+}

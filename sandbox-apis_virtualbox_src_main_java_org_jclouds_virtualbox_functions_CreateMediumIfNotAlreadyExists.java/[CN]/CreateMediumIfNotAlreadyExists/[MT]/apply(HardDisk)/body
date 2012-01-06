@@ -4,8 +4,12 @@
     String diskPath=hardDisk.getDiskPath();
     final IMedium medium=vBox.findMedium(diskPath,DeviceType.HardDisk);
     if (overwriteIfExists) {
-      final IProgress progress=medium.deleteStorage();
-      progress.waitForCompletion(-1);
+      try {
+        deleteMediumAndBlockUntilComplete(medium);
+      }
+ catch (      VBoxException e) {
+        onAlreadyAttachedExceptionDetachOrPropagate(vBox,medium,e);
+      }
       return createNewMedium(vBox,hardDisk);
     }
  else {
