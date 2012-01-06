@@ -1,20 +1,28 @@
 {
-  VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
+  VirtualBoxManager manager=createMock(VirtualBoxManager.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
   String vmName="jclouds-image-my-ubuntu-image";
   VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
   IMachine createdMachine=createMock(IMachine.class);
+  ISession session=createMock(ISession.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
+  expect(vBox.composeMachineFilename(vmName,"/tmp/workingDir")).andReturn("settingsFile");
   StringBuilder errorMessageBuilder=new StringBuilder();
   errorMessageBuilder.append("VirtualBox error: Could not find a registered machine named ");
   errorMessageBuilder.append("'jclouds-image-virtualbox-iso-to-machine-test' (0x80BB0001)");
   String errorMessage=errorMessageBuilder.toString();
   VBoxException vBoxException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
-  vBox.findMachine(vmName);
-  expectLastCall().andThrow(vBoxException);
+  expect(vBox.findMachine(vmName)).andThrow(vBoxException);
   expect(vBox.createMachine(anyString(),eq(vmName),anyString(),anyString(),anyBoolean())).andReturn(createdMachine).anyTimes();
   vBox.registerMachine(createdMachine);
-  replay(manager,vBox);
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager).apply(launchSpecification);
-  verify(manager,vBox);
+  expect(vBox.findMachine(vmName)).andReturn(createdMachine).anyTimes();
+  expect(manager.getSessionObject()).andReturn(session);
+  expect(session.getMachine()).andReturn(createdMachine);
+  createdMachine.lockMachine(session,LockType.Write);
+  createdMachine.setMemorySize(1024l);
+  createdMachine.saveSettings();
+  session.unlockMachine();
+  replay(manager,createdMachine,vBox,session);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,"/tmp/workingDir").apply(launchSpecification);
+  verify(manager,createdMachine,vBox,session);
 }
