@@ -1,8 +1,5 @@
 {
-  Properties properties=new Properties();
-  properties.setProperty(provider + ".endpoint",endpoint);
-  properties.setProperty(provider + ".api-version",apiVersion);
-  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()));
+  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),setupProperties());
   jetty=new StartJettyIfNotAlreadyRunning(port).apply(basebaseResource);
   startVboxIfNotAlreadyRunning();
 }
