@@ -39,13 +39,14 @@
 ;
   server2=new Server();
   server2.setHandler(server2Handler);
-  SslSocketConnector ssl=new SslSocketConnector();
-  ssl.setPort(testPort + 1);
-  ssl.setMaxIdleTime(30000);
-  ssl.setKeystore("src/test/resources/test.jks");
-  ssl.setKeyPassword("jclouds");
-  ssl.setTruststore("src/test/resources/test.jks");
-  ssl.setTrustPassword("jclouds");
-  server2.setConnectors(new Connector[]{ssl});
+  SslSelectChannelConnector ssl_connector=new SslSelectChannelConnector();
+  ssl_connector.setPort(testPort + 1);
+  ssl_connector.setMaxIdleTime(30000);
+  SslContextFactory ssl=ssl_connector.getSslContextFactory();
+  ssl.setKeyStorePath("src/test/resources/test.jks");
+  ssl.setKeyStorePassword("jclouds");
+  ssl.setTrustStore("src/test/resources/test.jks");
+  ssl.setTrustStorePassword("jclouds");
+  server2.setConnectors(new Connector[]{ssl_connector});
   server2.start();
 }
