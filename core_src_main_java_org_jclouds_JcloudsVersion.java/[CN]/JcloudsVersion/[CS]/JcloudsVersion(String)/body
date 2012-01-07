@@ -1,0 +1,18 @@
+{
+  Matcher versionMatcher=SEMANTIC_VERSION_PATTERN.matcher(version);
+  checkArgument(versionMatcher.matches(),"Version '%s' did not match expected pattern '%s'",version,SEMANTIC_VERSION_PATTERN);
+  this.version=version;
+  majorVersion=Integer.valueOf(versionMatcher.group(1));
+  minorVersion=Integer.valueOf(versionMatcher.group(2));
+  patchVersion=Integer.valueOf(versionMatcher.group(3));
+  String releaseCandidateVersionIfPresent=versionMatcher.group(4);
+  if (releaseCandidateVersionIfPresent != null) {
+    releaseCandidate=true;
+    releaseCandidateVersion=Integer.valueOf(releaseCandidateVersionIfPresent);
+  }
+ else {
+    releaseCandidate=false;
+    releaseCandidateVersion=null;
+  }
+  snapshot=version.endsWith("-SNAPSHOT");
+}
