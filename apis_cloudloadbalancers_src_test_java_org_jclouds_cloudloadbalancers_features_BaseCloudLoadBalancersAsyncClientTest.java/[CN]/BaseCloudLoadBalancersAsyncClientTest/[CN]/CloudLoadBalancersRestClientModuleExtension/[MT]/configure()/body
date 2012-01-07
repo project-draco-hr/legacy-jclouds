@@ -1,0 +1,18 @@
+{
+  install(new OpenStackAuthenticationModule(){
+    @Override protected Supplier<AuthenticationResponse> provideAuthenticationResponseCache(    final GetAuthenticationResponse getAuthenticationResponse){
+      return Suppliers.ofInstance(new AuthenticationResponse("token",ImmutableMap.<String,URI>of()));
+    }
+  }
+);
+  bind(DateAdapter.class).to(Iso8601DateAdapter.class);
+  bindRegionsToProvider();
+  install(new FactoryModuleBuilder().build(ConvertLB.Factory.class));
+  bind(new TypeLiteral<RestContext>(){
+  }
+).to((TypeLiteral)TypeLiteral.get(Types.newParameterizedType(RestContextImpl.class,syncClientType,asyncClientType))).in(Scopes.SINGLETON);
+  bindAsyncClient();
+  bindClient();
+  bindErrorHandlers();
+  bindRetryHandlers();
+}

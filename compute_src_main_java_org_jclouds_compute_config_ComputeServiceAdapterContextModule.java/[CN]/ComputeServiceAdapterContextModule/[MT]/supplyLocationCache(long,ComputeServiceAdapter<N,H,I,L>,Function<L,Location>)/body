@@ -1,0 +1,8 @@
+{
+  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Set<? extends Location>>(authException,seconds,new Supplier<Set<? extends Location>>(){
+    @Override public Set<? extends Location> get(){
+      return ImmutableSet.<Location>copyOf(Iterables.transform(adapter.listLocations(),transformer));
+    }
+  }
+);
+}

@@ -2,7 +2,8 @@
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
   builder.ids(from.getId() + "");
   builder.name(from.getName());
-  builder.location(locations.get().get(from.getDatacenter().getId() + ""));
+  Location location=Iterables.find(locations.get(),LocationPredicates.idEquals(from.getDatacenter().getId() + ""));
+  builder.location(location);
   builder.group(parseGroupFromName(from.getName()));
   builder.hardware(parseHardware(from));
   builder.imageId(from.getImage().getId() + "");
