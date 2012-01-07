@@ -1,8 +1,8 @@
 {
-  setupCredentials();
-  String sourceName="jclouds#image#" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
-  String cloneName=CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
-  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk).controllerPort(0).deviceSlot(1).build()).attachISO(1,1,guestAdditionsIso).build();
+  super.setupClient();
+  String sourceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
+  String cloneName=VIRTUALBOX_IMAGE_PREFIX + "Clone#" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk).controllerPort(0).deviceSlot(1).autoDelete(true).build()).attachISO(1,1,guestAdditionsIso).build();
   sourceVmSpec=VmSpec.builder().id(sourceName).name(sourceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
   clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
 }
