@@ -1,0 +1,13 @@
+{
+  ClassLoader original=Thread.currentThread().getContextClassLoader();
+  Thread.currentThread().setContextClassLoader(new ResourceHidingClassLoader(original,VERSION_RESOURCE_FILE));
+  try {
+    new JcloudsVersion();
+    fail("Expected NullPointerException");
+  }
+ catch (  NullPointerException expected) {
+  }
+ finally {
+    Thread.currentThread().setContextClassLoader(original);
+  }
+}

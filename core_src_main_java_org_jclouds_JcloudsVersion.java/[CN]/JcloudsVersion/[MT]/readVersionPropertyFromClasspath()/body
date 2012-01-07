@@ -1,0 +1,10 @@
+{
+  Properties versionProperties=new Properties();
+  try {
+    versionProperties.load(checkNotNull(Thread.currentThread().getContextClassLoader().getResourceAsStream(VERSION_RESOURCE_FILE),VERSION_RESOURCE_FILE));
+  }
+ catch (  IOException exception) {
+    throw new IllegalStateException(format("Unable to load version resource file '%s'",VERSION_RESOURCE_FILE),exception);
+  }
+  return checkNotNull(versionProperties.getProperty(VERSION_PROPERTY_NAME),VERSION_PROPERTY_NAME);
+}
