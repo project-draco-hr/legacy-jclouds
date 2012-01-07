@@ -1,6 +1,0 @@
-{
-  Node host=Node.builder().id("host").name("host installing virtualbox").hostname("localhost").osFamily(OsFamily.LINUX.toString()).osDescription(System.getProperty("os.name")).osVersion(System.getProperty("os.version")).group("ssh").username(System.getProperty("user.name")).credentialUrl(privateKeyFile()).build();
-  Node guest=Node.builder().id("guest").name("new guest").hostname("localhost").loginPort(2222).osFamily(OsFamily.UBUNTU.toString()).osDescription("ubuntu/11.04").osVersion(System.getProperty("11.04")).group("guest").username("toor").sudoPassword("password").credential("password").build();
-  final Map<String,Node> nodeMap=ImmutableMap.<String,Node>builder().put("host",host).put("guest",guest).build();
-  return new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule(),new SLF4JLoggingModule(),new BouncyCastleCryptoModule(),new CacheNodeStoreModule(nodeMap)));
-}

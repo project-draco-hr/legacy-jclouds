@@ -1,7 +1,8 @@
 {
   super.setupClient();
+  String vmName="jclouds-image-virtualbox-iso-to-machine-test";
   HardDisk hardDisk=HardDisk.builder().diskpath(adminDisk).autoDelete(true).controllerPort(0).deviceSlot(1).build();
-  ideController=StorageController.builder().name(ideControllerName).bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(hardDisk).attachISO(1,1,guestAdditionsIso).build();
-  vmSpecification=VmSpec.builder().id(vmId).name(vmName).memoryMB(512).osTypeId(osTypeId).controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).natNetworkAdapter(0,NatAdapter.builder().tcpRedirectRule("127.0.0.1",2222,"",22).build()).build();
-  lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,vmName,new UnregisterMachineIfExistsAndDeleteItsMedia(vmSpecification));
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(hardDisk).attachISO(1,1,guestAdditionsIso).build();
+  vmSpecification=VmSpec.builder().id("jclouds-image-iso-1").name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).natNetworkAdapter(0,NatAdapter.builder().tcpRedirectRule("127.0.0.1",2222,"",22).build()).build();
+  undoVm(vmSpecification);
 }

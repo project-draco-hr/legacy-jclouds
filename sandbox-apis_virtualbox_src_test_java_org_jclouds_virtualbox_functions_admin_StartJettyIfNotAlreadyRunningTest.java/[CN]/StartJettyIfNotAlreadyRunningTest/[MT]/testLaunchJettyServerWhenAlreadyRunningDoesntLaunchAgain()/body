@@ -1,7 +1,10 @@
 {
   Server jetty=createMock(Server.class);
+  String preconfigurationUrl="http://foo:8080";
   expect(jetty.getState()).andReturn(Server.STARTED);
   replay(jetty);
-  assertEquals(new StartJettyIfNotAlreadyRunning(jetty,port).apply(basebaseResource),jetty);
+  StartJettyIfNotAlreadyRunning starter=new StartJettyIfNotAlreadyRunning(jetty,preconfigurationUrl);
+  starter.start();
+  assertEquals(starter.get(),URI.create(preconfigurationUrl));
   verify(jetty);
 }

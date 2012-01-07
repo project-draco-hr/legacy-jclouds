@@ -12,7 +12,7 @@
   expect(vbm.getVBox()).andReturn(vBox);
   expect(guestOsType.getIs64Bit()).andReturn(true);
   replay(vbm,vBox,vm,guestOsType);
-  Hardware hardware=new IMachineToHardware(vbm).apply(vm);
+  Hardware hardware=new IMachineToHardware(Suppliers.ofInstance(vbm)).apply(vm);
   assertEquals(hardware.getId(),machineId);
   assertEquals(hardware.getProviderId(),machineId);
   assertEquals(hardware.supportsImage().toString(),ImagePredicates.idEquals(machineId).toString());

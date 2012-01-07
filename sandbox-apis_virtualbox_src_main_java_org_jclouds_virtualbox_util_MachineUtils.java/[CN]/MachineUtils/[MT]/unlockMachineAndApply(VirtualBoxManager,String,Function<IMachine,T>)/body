@@ -2,7 +2,9 @@
   try {
     ISession session=manager.getSessionObject();
     IMachine immutableMachine=manager.getVBox().findMachine(machineId);
-    if (immutableMachine.getSessionState().equals(SessionState.LOCKED))     session.unlockMachine();
+    SessionState state=immutableMachine.getSessionState();
+    if (state.equals(SessionState.Locked))     session.unlockMachine();
+    Statement kill=newStatementList(call("default"),findPid(machineId),kill());
     return function.apply(immutableMachine);
   }
  catch (  VBoxException e) {

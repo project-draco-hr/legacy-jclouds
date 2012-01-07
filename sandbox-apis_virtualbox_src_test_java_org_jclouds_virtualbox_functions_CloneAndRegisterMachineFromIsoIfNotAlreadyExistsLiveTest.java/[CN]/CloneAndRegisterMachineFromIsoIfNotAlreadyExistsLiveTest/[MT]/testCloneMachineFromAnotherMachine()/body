@@ -1,14 +1,15 @@
 {
-  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
-  ComputeServiceContext localHostContext=computeServiceForLocalhostAndGuest(hostId,"localhost",guestId,"localhost",new Credentials("toor","password"));
-  IMachine master=getMasterNode(manager,localHostContext);
-  if (master.getCurrentSnapshot() != null) {
-    ISession session=manager.openMachineSession(master);
-    session.getConsole().deleteSnapshot(master.getCurrentSnapshot().getId());
-    session.unlockMachine();
+  try {
+    IMachine source=getSourceNode();
+    if (source.getCurrentSnapshot() != null) {
+      ISession session=manager.get().openMachineSession(source);
+      session.getConsole().deleteSnapshot(source.getCurrentSnapshot().getId());
+      session.unlockMachine();
+    }
+    IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,clonedVmSpec,IS_LINKED_CLONE).apply(source);
+    assertEquals(clone.getName(),clonedVmSpec.getVmName());
   }
-  clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
-  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,clonedVmSpec,IS_LINKED_CLONE).apply(master);
-  assertEquals(clone.getName(),clonedVmSpec.getVmName());
-  for (  VmSpec spec : ImmutableSet.of(clonedVmSpec,new IMachineToVmSpec().apply(master)))   unlockMachineAndApplyOrReturnNullIfNotRegistered(manager,spec.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(spec));
+  finally {
+    for (    VmSpec spec : ImmutableSet.of(clonedVmSpec,sourceVmSpec))     undoVm(spec);
+  }
 }

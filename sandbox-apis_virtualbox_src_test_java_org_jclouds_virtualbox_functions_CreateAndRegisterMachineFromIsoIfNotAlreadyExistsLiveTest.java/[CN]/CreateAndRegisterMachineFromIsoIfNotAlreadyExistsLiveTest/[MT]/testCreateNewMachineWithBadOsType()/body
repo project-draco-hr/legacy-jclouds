@@ -1,13 +1,16 @@
 {
   String vmName="jclouds-test-create-2-node";
   VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("SomeWeirdUnknownOs").forceOverwrite(true).build();
-  unlockMachineAndApplyOrReturnNullIfNotRegistered(manager,launchSpecification.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(launchSpecification));
+  undoVm(launchSpecification);
   try {
-    new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,workingDir).apply(launchSpecification);
+    context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(launchSpecification);
     fail();
   }
  catch (  VBoxException e) {
     ErrorCode errorCode=ErrorCode.valueOf(e);
     assertEquals(errorCode,ErrorCode.VBOX_E_OBJECT_NOT_FOUND);
+  }
+ finally {
+    undoVm(launchSpecification);
   }
 }

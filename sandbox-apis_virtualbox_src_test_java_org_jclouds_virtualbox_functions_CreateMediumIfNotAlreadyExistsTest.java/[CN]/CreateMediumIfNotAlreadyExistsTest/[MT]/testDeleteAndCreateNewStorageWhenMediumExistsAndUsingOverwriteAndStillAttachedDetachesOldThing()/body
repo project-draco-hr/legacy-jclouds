@@ -45,7 +45,7 @@
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(newHardDisk);
   expect(newHardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
   replay(manager,oldMachine,oldAttachment,oldMedium,detachSession,machine,vBox,medium,newHardDisk,progress);
-  IMedium newDisk=new CreateMediumIfNotAlreadyExists(manager,true).apply(hardDisk);
+  IMedium newDisk=new CreateMediumIfNotAlreadyExists(Suppliers.ofInstance(manager),true).apply(hardDisk);
   verify(machine,oldMachine,oldAttachment,detachSession,oldMedium,vBox,medium);
   assertNotSame(newDisk,medium);
 }

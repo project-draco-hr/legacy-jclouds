@@ -1,7 +1,7 @@
 {
-  final File file=new File(workingDir,isoFile);
+  final File file=new File(workingDir,new File(input.getPath()).getName());
   if (!file.exists()) {
-    final InputStream inputStream=context.utils().http().get(input);
+    final InputStream inputStream=client.get(input);
     checkNotNull(inputStream,"%s not found",input);
     try {
       copy(inputStream,new FileOutputStream(file));

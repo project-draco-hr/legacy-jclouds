@@ -11,7 +11,8 @@
   expect(guestOsType.getIs64Bit()).andReturn(true);
   expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
   replay(vbm,vBox,vm,guestOsType);
-  Image image=new IMachineToImage(vbm,map).apply(vm);
+  IMachineToImage fn=new IMachineToImage(Suppliers.ofInstance(vbm),map);
+  Image image=fn.apply(vm);
   assertEquals(image.getOperatingSystem().getDescription(),"SomeOtherOs 2.04");
   assertEquals(image.getOperatingSystem().getVersion(),"");
 }

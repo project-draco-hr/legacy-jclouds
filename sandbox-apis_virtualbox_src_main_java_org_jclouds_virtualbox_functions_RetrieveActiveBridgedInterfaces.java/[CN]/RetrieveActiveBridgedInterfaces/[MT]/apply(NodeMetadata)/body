@@ -1,0 +1,19 @@
+{
+  Statement command=Statements.exec("vboxmanage list bridgedifs");
+  String bridgedIfBlocks=runScriptOnNodeFactory.create(host,command,runAsRoot(false).wrapInInitScript(false)).init().call().getOutput();
+  List<String> bridgedInterfaces=retrieveBridgedInterfaceNames(bridgedIfBlocks);
+  checkNotNull(bridgedInterfaces);
+  List<String> activeNetworkInterfaceNames=Lists.newArrayList();
+  try {
+    Enumeration<NetworkInterface> nets=NetworkInterface.getNetworkInterfaces();
+    for (    NetworkInterface inet : Collections.list(nets)) {
+      Iterable<String> filteredBridgedInterface=filter(bridgedInterfaces,new IsActiveBridgedInterface(inet));
+      Iterables.addAll(activeNetworkInterfaceNames,filteredBridgedInterface);
+    }
+  }
+ catch (  SocketException e) {
+    logger.error(e,"Problem in listing network interfaces.");
+    propagate(e);
+  }
+  return activeNetworkInterfaceNames;
+}

@@ -1,0 +1,13 @@
+{
+  if (!socketTester.apply(new IPSocket(provider.getHost(),provider.getPort()))) {
+    logger.debug("disabling password access");
+    runScriptOnNodeFactory.create(host.get(),Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false)).init().call();
+    logger.debug(">> starting vboxwebsrv");
+    String vboxwebsrv="vboxwebsrv -t 10000 -v -b";
+    if (host.get().getOperatingSystem() != null && host.get().getOperatingSystem().getDescription().equals("Mac OS X"))     vboxwebsrv="cd /Applications/VirtualBox.app/Contents/MacOS/ && " + vboxwebsrv;
+    runScriptOnNodeFactory.create(host.get(),Statements.exec(vboxwebsrv),runAsRoot(false).wrapInInitScript(false).blockOnComplete(false).nameTask("vboxwebsrv")).init().call();
+  }
+  manager=managerForNode.apply(host);
+  manager.connect(provider.toASCIIString(),identity,credential);
+  if (logger.isDebugEnabled())   if (manager.getSessionObject().getState() == SessionState.Unlocked)   logger.warn("manager  is not in unlocked state " + manager);
+}

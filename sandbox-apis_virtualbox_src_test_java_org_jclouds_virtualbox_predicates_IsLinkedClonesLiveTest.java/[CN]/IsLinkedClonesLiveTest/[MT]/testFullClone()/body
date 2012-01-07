@@ -1,8 +1,5 @@
 {
-  VirtualBoxManager manager=(VirtualBoxManager)context.getProviderSpecificContext().getApi();
-  lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,masterSpec.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(masterSpec));
-  IMachine master=new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(manager,workingDir).apply(masterSpec);
+  IMachine master=context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(masterSpec);
   IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,cloneSpec,!IS_LINKED_CLONE).apply(master);
   assertFalse(new IsLinkedClone(manager).apply(clone));
-  for (  VmSpec spec : ImmutableSet.of(new IMachineToVmSpec().apply(clone),masterSpec))   lockMachineAndApplyOrReturnNullIfNotRegistered(manager,Write,spec.getVmName(),new UnregisterMachineIfExistsAndDeleteItsMedia(spec));
 }

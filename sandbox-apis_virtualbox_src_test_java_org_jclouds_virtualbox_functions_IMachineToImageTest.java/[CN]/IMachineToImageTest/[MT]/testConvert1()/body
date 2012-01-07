@@ -12,7 +12,7 @@
   expect(guestOsType.getDescription()).andReturn(guestOsDescription).anyTimes();
   expect(guestOsType.getIs64Bit()).andReturn(true);
   replay(vbm,vBox,vm,guestOsType);
-  IMachineToImage fn=new IMachineToImage(vbm,map);
+  IMachineToImage fn=new IMachineToImage(Suppliers.ofInstance(vbm),map);
   Image image=fn.apply(vm);
   assertEquals(image.getDescription(),vmDescription);
   assertEquals(image.getOperatingSystem().getDescription(),guestOsDescription);

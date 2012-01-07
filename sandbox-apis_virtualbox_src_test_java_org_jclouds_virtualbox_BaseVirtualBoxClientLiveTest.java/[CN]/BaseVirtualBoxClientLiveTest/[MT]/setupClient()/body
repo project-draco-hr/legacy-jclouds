@@ -1,12 +1,22 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  CacheNodeStoreModule hostModule=new CacheNodeStoreModule(ImmutableMap.of("host",Node.builder().id("host").name("host installing virtualbox").hostname("localhost").osFamily(OsFamily.LINUX.toString()).osDescription(System.getProperty("os.name")).osVersion(System.getProperty("os.version")).group("ssh").username(System.getProperty("user.name")).credentialUrl(URI.create("file://" + System.getProperty("user.home") + "/.ssh/id_rsa")).build()));
+  context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule(),hostModule),overrides);
   Function<String,String> configProperties=context.utils().injector().getInstance(ValueOfConfigurationKeyOrNull.class);
   imageId=configProperties.apply(ComputeServiceConstants.PROPERTY_IMAGE_ID);
   workingDir=configProperties.apply(VirtualBoxConstants.VIRTUALBOX_WORKINGDIR);
-  jetty=new StartJettyIfNotAlreadyRunning(port).apply(basebaseResource);
-  startVboxIfNotAlreadyRunning();
+  host=context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<NodeMetadata>>(){
+  }
+));
+  preconfigurationUri=context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<URI>>(){
+  }
+,Preconfiguration.class));
+  preconfigurationUri.get();
+  manager=context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<VirtualBoxManager>>(){
+  }
+));
+  manager.get();
   hostVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
   adminDisk=workingDir + "/testadmin.vdi";
   operatingSystemIso=String.format("%s/%s.iso",workingDir,imageId);

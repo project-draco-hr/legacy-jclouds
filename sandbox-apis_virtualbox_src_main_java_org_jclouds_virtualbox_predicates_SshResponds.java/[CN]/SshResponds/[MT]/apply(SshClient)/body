@@ -1,0 +1,15 @@
+{
+  try {
+    client.connect();
+    if (client.exec("id").getExitCode() == 0) {
+      return true;
+    }
+  }
+ catch (  SshException e) {
+    logger.trace("No response from ssh daemon connecting to %s: %s",client,e.getMessage());
+  }
+ finally {
+    client.disconnect();
+  }
+  return false;
+}

@@ -1,16 +1,14 @@
 {
-  ComputeService compute=new ComputeServiceContextFactory().createContext("stub","foo","bar").getComputeService();
-  NodeMetadata node=Iterables.getOnlyElement(compute.createNodesInGroup("foo",1));
-  String hostId=node.getId();
   VirtualBoxManager manager=createMock(VirtualBoxManager.class);
-  @SuppressWarnings("unchecked") Predicate<IPSocket> socketTester=createMock(Predicate.class);
-  URI endpointUri=URI.create("http://localhost:18083/");
-  Credentials localhostCredentials=new Credentials("toor","password");
-  expect(socketTester.apply(new IPSocket(endpointUri.getHost(),endpointUri.getPort()))).andReturn(true);
-  manager.connect(endpointUri.toASCIIString(),localhostCredentials.identity,localhostCredentials.credential);
-  replay(socketTester);
-  replay(manager);
-  assertEquals(new StartVBoxIfNotAlreadyRunning(compute,manager,socketTester,hostId,localhostCredentials).apply(endpointUri),manager);
-  verify(socketTester);
-  verify(manager);
+  Factory runScriptOnNodeFactory=createMock(Factory.class);
+  RetryIfSocketNotYetOpen client=createMock(RetryIfSocketNotYetOpen.class);
+  NodeMetadata host=new NodeMetadataBuilder().id("host").state(NodeState.RUNNING).build();
+  URI provider=URI.create("http://localhost:18083/");
+  String identity="adminstrator";
+  String credential="12345";
+  expect(client.apply(new IPSocket(provider.getHost(),provider.getPort()))).andReturn(true);
+  manager.connect(provider.toASCIIString(),identity,credential);
+  replay(manager,runScriptOnNodeFactory,client);
+  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),provider,identity,credential).start();
+  verify(manager,runScriptOnNodeFactory,client);
 }
