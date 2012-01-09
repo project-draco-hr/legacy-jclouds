@@ -3,11 +3,12 @@
   while (portForwardingRule == null) {
     ip=reuseOrAssociate.apply(network);
     try {
-      AsyncCreateResponse job=client.getFirewallClient().createPortForwardingRuleForVirtualMachine(vm.getId(),ip.getId(),"tcp",22,22);
+      AsyncCreateResponse job=client.getFirewallClient().createPortForwardingRuleForVirtualMachine(ip.getId(),"tcp",22,vm.getId(),22);
       assertTrue(jobComplete.apply(job.getJobId()));
       portForwardingRule=client.getFirewallClient().getPortForwardingRule(job.getId());
     }
  catch (    IllegalStateException e) {
+      Logger.CONSOLE.error("Failed while trying to allocate ip: " + e);
     }
   }
   assertEquals(portForwardingRule.getIPAddressId(),ip.getId());

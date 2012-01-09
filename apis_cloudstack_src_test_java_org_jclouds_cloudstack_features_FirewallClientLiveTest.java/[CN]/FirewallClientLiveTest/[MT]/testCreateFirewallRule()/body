@@ -1,2 +1,10 @@
 {
+  if (networksDisabled)   return;
+  AsyncCreateResponse job=client.getFirewallClient().createFirewallRuleForIpAndProtocol(ip.getId(),FirewallRule.Protocol.TCP,CreateFirewallRuleOptions.Builder.startPort(30).endPort(35));
+  assertTrue(jobComplete.apply(job.getJobId()));
+  firewallRule=client.getFirewallClient().getFirewallRule(job.getId());
+  assertEquals(firewallRule.getStartPort(),30);
+  assertEquals(firewallRule.getEndPort(),35);
+  assertEquals(firewallRule.getProtocol(),FirewallRule.Protocol.TCP);
+  checkFirewallRule(firewallRule);
 }
