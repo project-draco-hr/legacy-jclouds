@@ -8,11 +8,6 @@
   computeService.templateBuilder().imageId(imageRegistered.getRegion() + "/" + imageRegisteredId).build();
   Set<? extends org.jclouds.compute.domain.Image> after=computeService.listImages();
   assertEquals(after.size(),sizeBefore + 1);
-  Iterable<? extends org.jclouds.compute.domain.Image> filtered=Iterables.filter(after,new Predicate<org.jclouds.compute.domain.Image>(){
-    @Override public boolean apply(    @Nullable org.jclouds.compute.domain.Image i){
-      return i != null && i.getId().equals(imageRegistered.getRegion() + "/" + imageRegisteredId);
-    }
-  }
-);
+  Iterable<? extends org.jclouds.compute.domain.Image> filtered=Iterables.filter(after,ImagePredicates.idEquals(imageRegistered.getRegion() + "/" + imageRegisteredId));
   assertEquals(Iterables.size(filtered),1);
 }
