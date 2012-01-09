@@ -1,0 +1,11 @@
+{
+  client.createAlias("test2@" + testDomain,"test@" + testDomain);
+  EmailOverview overview=client.getEmailOverview();
+  assertTrue(overview.getSummary().getAliases() == 1);
+  client.editAlias("test2@" + testDomain,"test1@" + testDomain);
+  overview=client.getEmailOverview();
+  assertTrue(overview.getSummary().getAliases() == 1);
+  client.delete("test2@" + testDomain);
+  overview=client.getEmailOverview();
+  assertTrue(overview.getSummary().getAliases() == 0);
+}

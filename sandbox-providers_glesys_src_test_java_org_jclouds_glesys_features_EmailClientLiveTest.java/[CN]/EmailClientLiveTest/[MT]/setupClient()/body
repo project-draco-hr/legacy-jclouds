@@ -1,13 +1,6 @@
 {
   super.setupClient();
   client=context.getApi().getEmailClient();
-  try {
-    client.delete("test@" + testDomain);
-    client.delete("test2@" + testDomain);
-    context.getApi().getDomainClient().deleteDomain(testDomain);
-  }
- catch (  Exception e) {
-  }
   serverId=createServer("test-email-jclouds").getServerId();
   createDomain(testDomain);
   emailAccountCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
@@ -15,5 +8,6 @@
       return client.listAccounts(testDomain).size() == value;
     }
   }
-,30,1,TimeUnit.SECONDS);
+,90,5,TimeUnit.SECONDS);
+  assertTrue(emailAccountCounter.apply(0));
 }
