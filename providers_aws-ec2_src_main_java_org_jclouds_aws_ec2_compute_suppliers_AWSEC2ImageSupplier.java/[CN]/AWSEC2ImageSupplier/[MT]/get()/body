@@ -26,5 +26,10 @@
   cache.get().invalidateAll();
   cache.get().asMap().putAll((Map)imageMap);
   logger.debug("<< images(%d)",imageMap.size());
-  return ImmutableSet.copyOf(imageMap.values());
+  return new ForwardingSet<Image>(){
+    protected Set<Image> delegate(){
+      return ImmutableSet.copyOf(cache.get().asMap().values());
+    }
+  }
+;
 }
