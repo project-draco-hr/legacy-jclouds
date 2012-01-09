@@ -1,0 +1,12 @@
+{
+  AdvancedNetworkOptionsConverter converter=new AdvancedNetworkOptionsConverter();
+  Network unsuitableNetwork=Network.builder().id(25).zoneId(ZONE_ID).build();
+  boolean exceptionThrown=false;
+  try {
+    converter.apply(CloudStackTemplateOptions.NONE,ImmutableMap.of(unsuitableNetwork.getId(),unsuitableNetwork),ZONE_ID,DeployVirtualMachineOptions.NONE);
+  }
+ catch (  IllegalArgumentException e) {
+    exceptionThrown=true;
+  }
+  assertTrue(exceptionThrown);
+}
