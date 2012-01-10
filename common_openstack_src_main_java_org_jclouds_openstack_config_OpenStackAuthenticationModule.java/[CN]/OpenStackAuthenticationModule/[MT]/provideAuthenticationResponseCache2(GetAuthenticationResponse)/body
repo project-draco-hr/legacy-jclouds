@@ -1,0 +1,11 @@
+{
+  final RetryOnTimeOutExceptionSupplier<AuthenticationResponse> delegate=new RetryOnTimeOutExceptionSupplier<AuthenticationResponse>(getAuthenticationResponse);
+  CacheLoader<String,AuthenticationResponse> cacheLoader=new CacheLoader<String,AuthenticationResponse>(){
+    @Override public AuthenticationResponse load(    String key) throws Exception {
+      return delegate.get();
+    }
+  }
+;
+  LoadingCache<String,AuthenticationResponse> cache=CacheBuilder.newBuilder().expireAfterWrite(23,TimeUnit.HOURS).build(cacheLoader);
+  return cache;
+}

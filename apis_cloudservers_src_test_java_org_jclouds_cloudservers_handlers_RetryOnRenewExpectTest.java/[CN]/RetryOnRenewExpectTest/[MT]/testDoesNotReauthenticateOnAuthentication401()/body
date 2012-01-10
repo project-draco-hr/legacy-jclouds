@@ -1,0 +1,6 @@
+{
+  HttpRequest initialAuth=HttpRequest.builder().method("GET").endpoint(URI.create("https://auth/v1.0")).headers(ImmutableMultimap.<String,String>builder().put("X-Auth-User","identity").put("X-Auth-Key","credential").put("Accept","*/*").build()).build();
+  HttpResponse unauthResponse=HttpResponse.builder().statusCode(401).message("HTTP/1.1 401 Unauthorized").payload(Payloads.newStringPayload("[{\"unauthorized\":{\"message\":\"A different message implying fatal.\",\"code\":401}}]")).build();
+  CloudServersClient client=orderedRequestsSendResponses(initialAuth,unauthResponse);
+  client.deleteImage(11);
+}

@@ -1,0 +1,27 @@
+{
+  boolean retry=false;
+  try {
+switch (response.getStatusCode()) {
+case 401:
+      Multimap<String,String> headers=command.getCurrentRequest().getHeaders();
+    if (headers != null && headers.containsKey(AuthHeaders.AUTH_USER) && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
+      retry=false;
+    }
+ else {
+      String content=parsePayloadOrNull(response);
+      if (content != null && content.contains("lease renew")) {
+        authenticationResponseCache.invalidateAll();
+        retry=true;
+      }
+ else {
+        retry=false;
+      }
+    }
+  break;
+}
+return retry;
+}
+  finally {
+releasePayload(response);
+}
+}
