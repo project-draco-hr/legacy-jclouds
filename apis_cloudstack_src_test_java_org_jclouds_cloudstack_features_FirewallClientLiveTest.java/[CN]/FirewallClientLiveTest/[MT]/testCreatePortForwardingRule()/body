@@ -1,19 +1,20 @@
 {
   if (networksDisabled)   return;
-  while (rule == null) {
+  while (portForwardingRule == null) {
     ip=reuseOrAssociate.apply(network);
     try {
-      AsyncCreateResponse job=client.getFirewallClient().createPortForwardingRuleForVirtualMachine(vm.getId(),ip.getId(),"tcp",22,22);
+      AsyncCreateResponse job=client.getFirewallClient().createPortForwardingRuleForVirtualMachine(ip.getId(),PortForwardingRule.Protocol.TCP,22,vm.getId(),22);
       assertTrue(jobComplete.apply(job.getJobId()));
-      rule=findRuleWithId(job.getId());
+      portForwardingRule=client.getFirewallClient().getPortForwardingRule(job.getId());
     }
  catch (    IllegalStateException e) {
+      Logger.CONSOLE.error("Failed while trying to allocate ip: " + e);
     }
   }
-  assertEquals(rule.getIPAddressId(),ip.getId());
-  assertEquals(rule.getVirtualMachineId(),vm.getId());
-  assertEquals(rule.getPublicPort(),22);
-  assertEquals(rule.getProtocol(),"tcp");
-  checkRule(rule);
+  assertEquals(portForwardingRule.getIPAddressId(),ip.getId());
+  assertEquals(portForwardingRule.getVirtualMachineId(),vm.getId());
+  assertEquals(portForwardingRule.getPublicPort(),22);
+  assertEquals(portForwardingRule.getProtocol(),"tcp");
+  checkPortForwardingRule(portForwardingRule);
   checkSSH(new IPSocket(ip.getIPAddress(),22));
 }
