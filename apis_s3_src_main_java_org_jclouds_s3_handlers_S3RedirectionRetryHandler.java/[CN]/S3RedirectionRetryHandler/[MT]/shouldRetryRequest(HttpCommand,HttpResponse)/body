@@ -1,6 +1,7 @@
 {
   if (response.getFirstHeaderOrNull(HttpHeaders.LOCATION) == null && (response.getStatusCode() == 301 || response.getStatusCode() == 307)) {
-    if (command.getCurrentRequest().getMethod() == HttpMethod.HEAD) {
+    if (command.getCurrentRequest().getMethod().equals(HttpMethod.HEAD)) {
+      command.incrementRedirectCount();
       command.setCurrentRequest(command.getCurrentRequest().toBuilder().method("GET").build());
       return true;
     }
