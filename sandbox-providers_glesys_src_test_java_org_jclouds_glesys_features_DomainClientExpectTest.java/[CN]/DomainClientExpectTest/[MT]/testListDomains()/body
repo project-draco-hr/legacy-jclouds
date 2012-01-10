@@ -1,0 +1,6 @@
+{
+  DomainClient client=createMock("list","POST",200,"/domain_list.json");
+  assertEquals(client.listDomains(),ImmutableSet.<Domain>of(Domain.builder().domain("adamlowe.net").createTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-12-20 10:58:51")).build()));
+  client=createMock("list","POST",404,"/domain_list.json");
+  assertTrue(client.listDomains().isEmpty());
+}

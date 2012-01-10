@@ -1,0 +1,6 @@
+{
+  ServerClient client=createMock("list","POST",200,"/server_list.json");
+  Server expected=Server.builder().id("vz1541880").hostname("mammamia").datacenter("Falkenberg").platform("OpenVZ").build();
+  assertEquals(client.listServers(),ImmutableSet.<Server>of(expected));
+  assertTrue(createMock("list","POST",404,"Not found").listServers().isEmpty());
+}
