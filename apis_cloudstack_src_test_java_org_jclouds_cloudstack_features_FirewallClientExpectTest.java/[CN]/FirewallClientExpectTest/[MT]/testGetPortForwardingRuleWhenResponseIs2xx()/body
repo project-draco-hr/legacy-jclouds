@@ -1,0 +1,5 @@
+{
+  FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&" + "command=listPortForwardingRules&id=15&apiKey=identity&signature=ABJsciF4n2tXaiyUmEvc3oYh9MA%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/getportforwardingrulesresponse.json")).build()).getFirewallClient();
+  Set<String> cidrs=ImmutableSet.of("0.0.0.0/1","128.0.0.0/1");
+  assertEquals(client.getPortForwardingRule(15),PortForwardingRule.builder().id(15).privatePort(22).protocol("tcp").publicPort(2022).virtualMachineId(3).virtualMachineName("i-3-3-VM").IPAddressId(3).IPAddress("72.52.126.32").state("Active").CIDRs(cidrs).build());
+}
