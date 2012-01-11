@@ -7,8 +7,9 @@
     Blob blob=blobStore.blobBuilder(blobName).payload("something").build();
     blobStore.putBlob(containerName,blob,storageClass(StorageClass.REDUCED_REDUNDANCY));
     S3Client s3Client=S3Client.class.cast(context.getProviderSpecificContext().getApi());
-    S3Object s3Object=s3Client.getObject(containerName,blobName);
-    assertEquals(s3Object.getMetadata().getStorageClass(),StorageClass.REDUCED_REDUNDANCY);
+    ListBucketResponse response=s3Client.listBucket(containerName,withPrefix(blobName));
+    ObjectMetadata metadata=response.iterator().next();
+    assertEquals(metadata.getStorageClass(),StorageClass.REDUCED_REDUNDANCY);
   }
   finally {
     returnContainer(containerName);
