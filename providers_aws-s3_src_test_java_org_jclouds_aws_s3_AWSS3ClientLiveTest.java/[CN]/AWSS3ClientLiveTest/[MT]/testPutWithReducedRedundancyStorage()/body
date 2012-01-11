@@ -1,0 +1,16 @@
+{
+  String containerName=getContainerName();
+  try {
+    String blobName="test-rrs";
+    BlobStore blobStore=context.getBlobStore();
+    blobStore.createContainerInLocation(null,containerName);
+    Blob blob=blobStore.blobBuilder(blobName).payload("something").build();
+    blobStore.putBlob(containerName,blob,storageClass(StorageClass.REDUCED_REDUNDANCY));
+    S3Client s3Client=S3Client.class.cast(context.getProviderSpecificContext().getApi());
+    S3Object s3Object=s3Client.getObject(containerName,blobName);
+    assertEquals(s3Object.getMetadata().getStorageClass(),StorageClass.REDUCED_REDUNDANCY);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

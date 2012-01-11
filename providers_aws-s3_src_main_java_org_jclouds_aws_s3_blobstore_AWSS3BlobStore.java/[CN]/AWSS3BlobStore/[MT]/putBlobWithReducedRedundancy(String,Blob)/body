@@ -1,0 +1,13 @@
+{
+  AWSS3PutObjectOptions options=new AWSS3PutObjectOptions();
+  try {
+    AccessControlList acl=bucketAcls.getUnchecked(container);
+    if (acl != null && acl.hasPermission(AccessControlList.GroupGranteeURI.ALL_USERS,AccessControlList.Permission.READ)) {
+      options.withAcl(CannedAccessPolicy.PUBLIC_READ);
+    }
+    options.storageClass(ObjectMetadata.StorageClass.REDUCED_REDUNDANCY);
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+  }
+  return S3Client.class.cast(getContext().getProviderSpecificContext().getApi()).putObject(container,blob2Object.apply(blob),options);
+}

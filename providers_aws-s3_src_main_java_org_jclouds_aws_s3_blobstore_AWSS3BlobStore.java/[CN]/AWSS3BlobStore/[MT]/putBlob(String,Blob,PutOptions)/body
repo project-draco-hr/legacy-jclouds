@@ -1,3 +1,11 @@
 {
-  return multipartUploadStrategy.get().execute(container,blob);
+  if (options.isMultipart()) {
+    return multipartUploadStrategy.get().execute(container,blob,options);
+  }
+ else   if ((options instanceof AWSS3PutOptions) && (((AWSS3PutOptions)options).getStorageClass() == REDUCED_REDUNDANCY)) {
+    return putBlobWithReducedRedundancy(container,blob);
+  }
+ else {
+    return super.putBlob(container,blob,options);
+  }
 }
