@@ -1,29 +1,3 @@
 {
-  return new Iterable<StorageMetadata>(){
-    public Iterator<StorageMetadata> iterator(){
-      return new AbstractIterator<StorageMetadata>(){
-        private Iterator<? extends StorageMetadata> iterator;
-        private String marker;
-        public StorageMetadata computeNext(){
-          while (true) {
-            if (iterator == null) {
-              ListContainerOptions nextOptions=marker == null ? options : options.clone().afterMarker(marker);
-              PageSet<? extends StorageMetadata> list=blobStore.list(container,nextOptions);
-              iterator=list.iterator();
-              marker=list.getNextMarker();
-            }
-            if (iterator.hasNext()) {
-              return iterator.next();
-            }
-            if (marker == null) {
-              return endOfData();
-            }
-            iterator=null;
-          }
-        }
-      }
-;
-    }
-  }
-;
+  return listAll(blobStore,container,containerOptions,ListAllOptions.NONE);
 }
