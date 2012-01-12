@@ -1,0 +1,12 @@
+{
+  ListContainerOptions containerOptions=ListContainerOptions.NONE;
+  ListAllOptions listAllOptions=ListAllOptions.Builder.eager(true);
+  BlobStoreContext context=new BlobStoreContextFactory().createContext("transient","dummyid","dummykey");
+  try {
+    BlobStore blobStore=context.getBlobStore();
+    BlobStores.listAll(blobStore,"wrongcontainer",containerOptions,listAllOptions);
+  }
+  finally {
+    context.close();
+  }
+}

@@ -1,0 +1,47 @@
+{
+  final boolean eager=listAllOptions.isEager();
+  final PageSet<? extends StorageMetadata> firstList;
+  final String firstMarker;
+  if (eager) {
+    firstList=blobStore.list(container,containerOptions);
+    firstMarker=firstList.getNextMarker();
+  }
+ else {
+    firstList=null;
+    firstMarker=null;
+  }
+  return new Iterable<StorageMetadata>(){
+    public Iterator<StorageMetadata> iterator(){
+      return new AbstractIterator<StorageMetadata>(){
+        private Iterator<? extends StorageMetadata> iterator;
+        private String marker;
+        public StorageMetadata computeNext(){
+          while (true) {
+            if (iterator == null) {
+              PageSet<? extends StorageMetadata> list;
+              if (eager && marker == null) {
+                list=firstList;
+                marker=firstMarker;
+              }
+ else {
+                ListContainerOptions nextOptions=marker == null ? containerOptions : containerOptions.clone().afterMarker(marker);
+                list=blobStore.list(container,nextOptions);
+                marker=list.getNextMarker();
+              }
+              iterator=list.iterator();
+            }
+            if (iterator.hasNext()) {
+              return iterator.next();
+            }
+            if (marker == null) {
+              return endOfData();
+            }
+            iterator=null;
+          }
+        }
+      }
+;
+    }
+  }
+;
+}
