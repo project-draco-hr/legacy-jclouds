@@ -1,0 +1,8 @@
+{
+  Injector i=Guice.createInjector(new GsonModule());
+  InputStream is=ParseFloatingIPFromJsonResponse.class.getResourceAsStream("/test_get_floatingip.json");
+  UnwrapOnlyJsonValue<FloatingIP> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<FloatingIP>>(){
+  }
+));
+  return parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+}
