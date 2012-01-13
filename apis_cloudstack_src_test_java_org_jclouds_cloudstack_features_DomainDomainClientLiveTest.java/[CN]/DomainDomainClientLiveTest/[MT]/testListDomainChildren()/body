@@ -1,0 +1,10 @@
+{
+  assert domainAdminEnabled;
+  Set<Domain> allDomains=domainAdminClient.getDomainClient().listDomains();
+  Domain root=find(allDomains,withName("ROOT"));
+  Set<Domain> children=domainAdminClient.getDomainClient().listDomainChildren(parentDomainId(root.getId()).isRecursive(true));
+  assertEquals(allDomains.size() - 1,children.size());
+  for (  Domain domain : children) {
+    checkDomain(domain,allDomains);
+  }
+}

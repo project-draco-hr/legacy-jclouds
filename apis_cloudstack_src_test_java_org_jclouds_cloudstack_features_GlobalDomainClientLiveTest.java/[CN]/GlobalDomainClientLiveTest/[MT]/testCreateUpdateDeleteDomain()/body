@@ -1,0 +1,17 @@
+{
+  assert globalAdminEnabled;
+  Domain domain=null;
+  try {
+    domain=domainClient.createDomain(prefix + "-domain");
+    checkDomain(domain,rootDomain,prefix + "-domain");
+    Domain updated=domainClient.updateDomain(domain.getId(),name(prefix + "-domain-2"));
+    checkDomain(updated,rootDomain,prefix + "-domain-2");
+    assertEquals(updated.getId(),domain.getId());
+  }
+  finally {
+    if (domain != null) {
+      domainClient.deleteDomainAndAttachedResources(domain.getId());
+    }
+  }
+  assertNull(domainClient.getDomainById(domain.getId()));
+}
