@@ -1,0 +1,21 @@
+{
+  assert globalAdminEnabled;
+  Zone zone=null;
+  String zoneName=prefix + "-zone";
+  try {
+    zone=globalAdminClient.getZoneClient().createZone(zoneName,NetworkType.BASIC,"8.8.8.8","10.10.10.10");
+    assertNotNull(zone);
+    assertEquals(zone,globalAdminClient.getZoneClient().getZone(zone.getId()));
+    assertEquals(zone.getNetworkType(),NetworkType.BASIC);
+    assertEquals(zone.getDNS(),ImmutableList.of("8.8.8.8"));
+    assertEquals(zone.getInternalDNS(),ImmutableList.of("10.10.10.10"));
+    Zone updated=globalAdminClient.getZoneClient().updateZone(zone.getId(),name(zoneName + "-2").externalDns(ImmutableList.of("8.8.4.4")));
+    assertEquals(updated.getId(),zone.getId());
+    assertEquals(updated.getDNS(),ImmutableList.of("8.8.4.4"));
+  }
+  finally {
+    if (zone != null) {
+      globalAdminClient.getZoneClient().deleteZone(zone.getId());
+    }
+  }
+}
