@@ -1,6 +1,7 @@
 {
   if (response.getPayload() == null)   return null;
-  if (VCloudMediaType.ERROR_XML.equals(response.getPayload().getContentMetadata().getContentType())) {
+  String contentType=response.getPayload().getContentMetadata().getContentType();
+  if (contentType != null && contentType.startsWith(VCloudMediaType.ERROR_XML)) {
     try {
       return (VCloudError)factory.create(errorHandlerProvider.get()).setContext(request).apply(response);
     }

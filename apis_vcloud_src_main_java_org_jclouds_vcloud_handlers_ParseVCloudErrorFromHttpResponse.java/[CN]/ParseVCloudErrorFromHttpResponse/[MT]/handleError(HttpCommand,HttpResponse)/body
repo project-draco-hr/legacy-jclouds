@@ -5,21 +5,21 @@
     VCloudError error=null;
     String message=null;
     if (response.getPayload() != null) {
-      String contentType=response.getPayload().getContentMetadata().getContentType();
-      if (VCloudMediaType.ERROR_XML.equals(contentType)) {
+      try {
         error=utils.parseErrorFromContent(request,response);
         if (error != null) {
           message=error.getMessage();
           exception=new VCloudResponseException(command,response,error);
         }
-      }
  else {
-        try {
           message=Strings2.toStringAndClose(response.getPayload().getInput());
           exception=message != null ? new HttpResponseException(command,response,message) : exception;
         }
- catch (        IOException e) {
-        }
+      }
+ catch (      IOException e) {
+      }
+ finally {
+        response.getPayload().release();
       }
     }
     message=message != null ? message : String.format("%s -> %s",request.getRequestLine(),response.getStatusLine());
