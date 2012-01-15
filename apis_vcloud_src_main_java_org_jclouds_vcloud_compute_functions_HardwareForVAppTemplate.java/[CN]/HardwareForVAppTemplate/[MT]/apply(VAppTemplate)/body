@@ -1,18 +1,6 @@
 {
   checkNotNull(from,"VAppTemplate");
-  if (!from.isOvfDescriptorUploaded()) {
-    logger.warn("cannot parse hardware as ovf descriptor for %s is not uploaded",from);
-    return null;
-  }
-  Envelope ovf=client.getVAppTemplateClient().getOvfEnvelopeForVAppTemplate(from.getHref());
-  if (ovf == null) {
-    logger.warn("cannot parse hardware as no ovf envelope found for %s",from);
-    return null;
-  }
-  if (ovf.getVirtualSystem().getVirtualHardwareSections().size() == 0) {
-    logger.warn("cannot parse hardware for %s as no hardware sections exist in ovf %s",ovf);
-    return null;
-  }
+  Envelope ovf=templateToEnvelope.apply(from);
   if (ovf.getVirtualSystem().getVirtualHardwareSections().size() > 1) {
     logger.warn("multiple hardware choices found. using first",ovf);
   }

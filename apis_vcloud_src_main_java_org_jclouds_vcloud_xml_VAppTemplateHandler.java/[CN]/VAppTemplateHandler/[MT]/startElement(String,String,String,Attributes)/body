@@ -1,12 +1,12 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
-  if (qName.endsWith("Children")) {
+  if (equalsOrSuffix(qName,"Children")) {
     inChildren=true;
   }
- else   if (qName.endsWith("Tasks")) {
+ else   if (equalsOrSuffix(qName,"Tasks")) {
     inTasks=true;
   }
- else   if (qName.endsWith("NetworkSection")) {
+ else   if (equalsOrSuffix(qName,"NetworkSection")) {
     inNetworkSection=true;
   }
   if (inChildren) {
@@ -18,11 +18,11 @@
  else   if (inNetworkSection) {
     networkSectionHandler.startElement(uri,localName,qName,attrs);
   }
- else   if (qName.equals("VAppTemplate")) {
+ else   if (equalsOrSuffix(qName,"VAppTemplate")) {
     template=newReferenceType(attributes);
     if (attributes.containsKey("status"))     this.status=Status.fromValue(Integer.parseInt(attributes.get("status")));
   }
- else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+ else   if (equalsOrSuffix(qName,"Link") && "up".equals(attributes.get("rel"))) {
     vdc=newReferenceType(attributes);
   }
 }

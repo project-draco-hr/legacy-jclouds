@@ -1,0 +1,9 @@
+{
+  ComputeService compute=requestsSendResponses(ImmutableMap.<HttpRequest,HttpResponse>builder().put(versionsRequest,versionsResponseFromVCD1_5).put(version1_0LoginRequest,successfulVersion1_0LoginResponseFromVCD1_5WithSingleOrg).put(version1_0GetOrgRequest,successfulVersion1_0GetOrgResponseFromVCD1_5WithSingleTasksListVDCAndNetwork).put(version1_0GetCatalogRequest,successfulVersion1_0GetCatalogResponseFromVCD1_5WithSingleTemplate).put(version1_0GetCatalogItemRequest,successfulVersion1_0GetCatalogItemResponseFromVCD1_5ForTemplate).put(version1_0GetVDCRequest,successfulVersion1_0GetVDCResponseFromVCD1_5WithSingleTemplateAndNetwork).put(version1_0GetVAppTemplateRequest,successfulVersion1_0GetVAppTemplateResponseFromVCD1_5WithSingleVMAndVDCParent).put(version1_0GetOVFForVAppTemplateRequest,successfulVersion1_0GetOVFForVAppTemplateResponseFromVCD1_5WithSingleVM).build());
+  InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployAndPowerOn starter=compute.getContext().utils().injector().getInstance(InstantiateVAppTemplateWithGroupEncodedIntoNameThenCustomizeDeployAndPowerOn.class);
+  String group="group";
+  String name="group-abcd";
+  NodeAndInitialCredentials<VApp> appAndCreds=starter.createNodeWithGroupEncodedIntoName(group,name,compute.templateBuilder().build());
+  assertEquals(appAndCreds.getNode().getName(),name);
+  assertEquals(appAndCreds.getCredentials(),LoginCredentials.builder().user("root").password("fromVApp").build());
+}

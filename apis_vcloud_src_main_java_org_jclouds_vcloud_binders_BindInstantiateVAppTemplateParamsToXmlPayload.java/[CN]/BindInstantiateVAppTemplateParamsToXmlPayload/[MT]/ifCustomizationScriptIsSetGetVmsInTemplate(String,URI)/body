@@ -1,7 +1,7 @@
 {
-  Set<Vm> vms=Sets.newLinkedHashSet();
+  Set<Vm> vms=ImmutableSet.of();
   if (customizationScript != null) {
-    VAppTemplate vAppTemplate=client.getVAppTemplateClient().getVAppTemplate(template);
+    VAppTemplate vAppTemplate=templateCache.getUnchecked(template);
     checkArgument(vAppTemplate != null,"vAppTemplate %s not found!",template);
     vms=vAppTemplate.getChildren();
     checkArgument(vms.size() > 0,"no vms found in vAppTemplate %s",vAppTemplate);

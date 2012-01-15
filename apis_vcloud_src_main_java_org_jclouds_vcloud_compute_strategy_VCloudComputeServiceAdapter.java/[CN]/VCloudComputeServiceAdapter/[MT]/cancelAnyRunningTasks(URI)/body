@@ -1,0 +1,13 @@
+{
+  VApp vApp=client.getVAppClient().getVApp(vappId);
+  if (vApp.getTasks().size() == 0)   return vApp;
+  for (  Task task : vApp.getTasks()) {
+    try {
+      client.getTaskClient().cancelTask(task.getHref());
+      waitForTask(task);
+    }
+ catch (    TaskInErrorStateException e) {
+    }
+  }
+  return client.getVAppClient().getVApp(vappId);
+}

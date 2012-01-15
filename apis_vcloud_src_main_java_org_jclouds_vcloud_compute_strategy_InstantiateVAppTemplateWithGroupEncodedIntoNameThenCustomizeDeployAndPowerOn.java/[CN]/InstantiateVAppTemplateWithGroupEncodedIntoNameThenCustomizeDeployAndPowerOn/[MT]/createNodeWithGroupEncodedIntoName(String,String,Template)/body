@@ -1,37 +1,45 @@
 {
-  InstantiateVAppTemplateOptions options=new InstantiateVAppTemplateOptions();
+  ComputerNameValidator.INSTANCE.validate(name);
+  URI templateId=URI.create(template.getImage().getId());
+  VAppTemplate vAppTemplate=vAppTemplates.getUnchecked(templateId);
+  if (vAppTemplate.getChildren().size() > 1)   throw new UnsupportedOperationException("we currently do not support multiple vms in a vAppTemplate " + vAppTemplate);
+  if (vAppTemplate.getNetworkSection().getNetworks().size() > 1)   throw new UnsupportedOperationException("we currently do not support multiple network connections in a vAppTemplate " + vAppTemplate);
+  Network networkToConnect=get(vAppTemplate.getNetworkSection().getNetworks(),0);
+  NetworkConfig config;
+  if (networkWithNoIpAllocation.apply(networkToConnect))   config=defaultNetworkConfig;
+ else   config=defaultNetworkConfig.toBuilder().networkName(networkToConnect.getName()).build();
+  InstantiateVAppTemplateOptions options=addNetworkConfig(config);
   String customizationScript=VCloudTemplateOptions.class.cast(template.getOptions()).getCustomizationScript();
-  IpAddressAllocationMode ipAddressAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();
-  options.description(VCloudTemplateOptions.class.cast(template.getOptions()).getDescription());
+  IpAddressAllocationMode ipAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();
+  String description=VCloudTemplateOptions.class.cast(template.getOptions()).getDescription();
+  if (description == null)   description=vAppTemplate.getName();
+  options.description(description);
   options.deploy(false);
   options.powerOn(false);
-  if (!template.getOptions().shouldBlockUntilRunning())   options.block(false);
   URI VDC=URI.create(template.getLocation().getId());
-  URI templateId=URI.create(template.getImage().getId());
   logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
   VApp vAppResponse=client.getVAppTemplateClient().createVAppInVDCByInstantiatingTemplate(name,VDC,templateId,options);
-  waitForTask(vAppResponse.getTasks().get(0),vAppResponse);
+  waitForTask(vAppResponse.getTasks().get(0));
   logger.debug("<< instantiated VApp(%s)",vAppResponse.getName());
-  Vm vm=Iterables.get(client.getVAppClient().getVApp(vAppResponse.getHref()).getChildren(),0);
-  if (customizationScript != null) {
-    logger.trace(">> updating customization vm(%s) ",vm.getName());
-    waitForTask(updateVmWithCustomizationScript(vm,customizationScript),vAppResponse);
-    logger.trace("<< updated customization vm(%s) ",vm.getName());
-  }
-  if (ipAddressAllocationMode != null) {
-    logger.trace(">> updating ipAddressAllocationMode(%s) vm(%s) ",ipAddressAllocationMode,vm.getName());
-    waitForTask(updateVmWithIpAddressAllocationMode(vm,ipAddressAllocationMode),vAppResponse);
-    logger.trace("<< updated ipAddressAllocationMode vm(%s) ",vm.getName());
-  }
+  vAppResponse=client.getVAppClient().getVApp(vAppResponse.getHref());
+  Vm vm=get(vAppResponse.getChildren(),0);
+  logger.trace(">> updating customization vm(%s) name->(%s)",vm.getName(),name);
+  waitForTask(updateVmWithNameAndCustomizationScript(vm,name,customizationScript));
+  logger.trace("<< updated customization vm(%s)",name);
+  ensureVmHasAllocationModeOrPooled(vAppResponse,ipAllocationMode);
   int cpuCount=new Double(getCores(template.getHardware())).intValue();
-  logger.trace(">> updating cpuCount(%d) vm(%s) ",cpuCount,vm.getName());
-  waitForTask(updateCPUCountOfVm(vm,cpuCount),vAppResponse);
-  logger.trace("<< updated cpuCount vm(%s) ",vm.getName());
+  logger.trace(">> updating cpuCount(%d) vm(%s)",cpuCount,vm.getName());
+  waitForTask(updateCPUCountOfVm(vm,cpuCount));
+  logger.trace("<< updated cpuCount vm(%s)",vm.getName());
   int memoryMB=template.getHardware().getRam();
-  logger.trace(">> updating memoryMB(%d) vm(%s) ",memoryMB,vm.getName());
-  waitForTask(updateMemoryMBOfVm(vm,memoryMB),vAppResponse);
-  logger.trace("<< updated memoryMB vm(%s) ",vm.getName());
-  logger.trace(">> deploying and powering on vApp(%s) ",vAppResponse.getName());
-  vAppResponse=blockOnDeployAndPowerOnIfConfigured(options,vAppResponse,client.getVAppClient().deployAndPowerOnVApp(vAppResponse.getHref()));
+  logger.trace(">> updating memoryMB(%d) vm(%s)",memoryMB,vm.getName());
+  waitForTask(updateMemoryMBOfVm(vm,memoryMB));
+  logger.trace("<< updated memoryMB vm(%s)",vm.getName());
+  logger.trace(">> deploying vApp(%s)",vAppResponse.getName());
+  waitForTask(client.getVAppClient().deployVApp(vAppResponse.getHref()));
+  logger.trace("<< deployed vApp(%s)",vAppResponse.getName());
+  vAppResponse=client.getVAppClient().getVApp(vAppResponse.getHref());
+  logger.trace(">> powering on vApp(%s)",vAppResponse.getName());
+  client.getVAppClient().powerOnVApp(vAppResponse.getHref());
   return new NodeAndInitialCredentials<VApp>(vAppResponse,vAppResponse.getHref().toASCIIString(),getCredentialsFrom(vAppResponse));
 }

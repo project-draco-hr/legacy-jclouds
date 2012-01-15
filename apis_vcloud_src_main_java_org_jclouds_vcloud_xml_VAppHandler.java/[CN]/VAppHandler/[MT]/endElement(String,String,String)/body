@@ -12,12 +12,19 @@
  else     if (equalsOrSuffix(qName,"Description")) {
       description=SaxUtils.currentOrNull(currentText);
     }
+ else     if (equalsOrSuffix(qName,"NetworkSection")) {
+      inNetworkSection=false;
+      this.networkSection=networkSectionHandler.getResult();
+    }
   }
   if (inChildren) {
     vmHandler.endElement(uri,name,qName);
   }
  else   if (inTasks) {
     taskHandler.endElement(uri,name,qName);
+  }
+ else   if (inNetworkSection) {
+    networkSectionHandler.endElement(uri,name,qName);
   }
  else   if (equalsOrSuffix(qName,"ovfDescriptorUploaded")) {
     ovfDescriptorUploaded=Boolean.parseBoolean(SaxUtils.currentOrNull(currentText));

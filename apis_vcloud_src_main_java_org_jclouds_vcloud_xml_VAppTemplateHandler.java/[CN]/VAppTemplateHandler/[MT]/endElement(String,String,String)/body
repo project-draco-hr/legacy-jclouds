@@ -1,14 +1,14 @@
 {
-  if (qName.endsWith("Children")) {
+  if (equalsOrSuffix(qName,"Children")) {
     inChildren=false;
     Vm vm=vmHandler.getResult();
     if (vm != null)     this.children.add(vmHandler.getResult());
   }
- else   if (qName.endsWith("Tasks")) {
+ else   if (equalsOrSuffix(qName,"Tasks")) {
     inTasks=false;
     this.tasks.add(taskHandler.getResult());
   }
- else   if (qName.endsWith("NetworkSection")) {
+ else   if (equalsOrSuffix(qName,"NetworkSection")) {
     inNetworkSection=false;
     this.networkSection=networkSectionHandler.getResult();
   }
@@ -21,13 +21,13 @@
  else   if (inNetworkSection) {
     networkSectionHandler.endElement(uri,name,qName);
   }
- else   if (qName.equals("Description")) {
+ else   if (equalsOrSuffix(qName,"Description")) {
     description=currentOrNull();
   }
- else   if (qName.equals("VAppScopedLocalId")) {
+ else   if (equalsOrSuffix(qName,"VAppScopedLocalId")) {
     vAppScopedLocalId=currentOrNull();
   }
- else   if (qName.equals("ovfDescriptorUploaded")) {
+ else   if (equalsOrSuffix(qName,"ovfDescriptorUploaded")) {
     ovfDescriptorUploaded=Boolean.parseBoolean(currentOrNull());
   }
   currentText=new StringBuilder();

@@ -1,4 +1,6 @@
 {
+  checkNotNull(from,"VAppTemplate");
+  Envelope ovf=templateToEnvelope.apply(from);
   ImageBuilder builder=new ImageBuilder();
   builder.ids(from.getHref().toASCIIString());
   builder.uri(from.getHref());
@@ -9,7 +11,6 @@
  else {
   }
   builder.description(from.getDescription() != null ? from.getDescription() : from.getName());
-  Envelope ovf=client.getVAppTemplateClient().getOvfEnvelopeForVAppTemplate(from.getHref());
   builder.operatingSystem(CIMOperatingSystem.toComputeOs(ovf));
   return builder.build();
 }

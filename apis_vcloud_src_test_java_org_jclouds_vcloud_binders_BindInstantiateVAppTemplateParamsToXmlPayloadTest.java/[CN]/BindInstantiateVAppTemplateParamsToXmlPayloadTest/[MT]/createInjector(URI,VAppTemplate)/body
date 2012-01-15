@@ -1,15 +1,17 @@
 {
-  final VCloudClient client=createMock(VCloudClient.class);
-  final VAppTemplateClient tclient=createMock(VAppTemplateClient.class);
-  expect(client.getVAppTemplateClient()).andReturn(tclient).anyTimes();
-  expect(tclient.getVAppTemplate(vAppTemplate)).andReturn(value).anyTimes();
-  replay(client);
-  replay(tclient);
   return Guice.createInjector(new AbstractModule(){
+    @SuppressWarnings("unused") @Provides @Singleton @Network protected Function<VAppTemplate,String> templateToDefaultNetworkName(){
+      return Functions.forMap(ImmutableMap.of(value,"vAppNet-vApp Internal"));
+    }
+    @SuppressWarnings("unused") @Provides @Singleton protected LoadingCache<URI,VAppTemplate> templateIdToVAppTemplate(){
+      return CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImmutableMap.of(vAppTemplate,value))));
+    }
     @Override protected void configure(){
       Properties props=new Properties();
       Names.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(props).build(),"properties"));
-      bind(VCloudClient.class).toInstance(client);
+    }
+    @SuppressWarnings("unused") @Provides @Singleton public FenceMode defaultFenceMode(    @Named(PROPERTY_VCLOUD_DEFAULT_FENCEMODE) String fenceMode){
+      return FenceMode.fromValue(fenceMode);
     }
     @SuppressWarnings("unused") @Network @Provides @Singleton ReferenceType provideNetwork(){
       return new ReferenceTypeImpl(null,null,URI.create("https://vcenterprise.bluelock.com/api/v1.0/network/1990"));

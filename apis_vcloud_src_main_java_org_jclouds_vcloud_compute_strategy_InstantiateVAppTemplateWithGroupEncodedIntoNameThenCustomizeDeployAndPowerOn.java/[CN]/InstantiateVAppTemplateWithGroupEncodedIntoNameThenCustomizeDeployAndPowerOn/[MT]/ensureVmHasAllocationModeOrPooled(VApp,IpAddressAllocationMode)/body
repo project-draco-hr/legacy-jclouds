@@ -1,0 +1,18 @@
+{
+  Network networkToConnect=find(vApp.getNetworkSection().getNetworks(),not(networkWithNoIpAllocation));
+  Vm vm=get(vApp.getChildren(),0);
+  NetworkConnectionSection net=vm.getNetworkConnectionSection();
+  checkArgument(net.getConnections().size() > 0,"no connections on vm %s",vm);
+  NetworkConnection toConnect=findWithPoolAllocationOrFirst(net);
+  if (ipAllocationMode == null)   ipAllocationMode=toConnect.getIpAddressAllocationMode();
+  if (ipAllocationMode == IpAddressAllocationMode.NONE)   ipAllocationMode=IpAddressAllocationMode.POOL;
+  if (toConnect.isConnected() && toConnect.getIpAddressAllocationMode() == ipAllocationMode && toConnect.getNetwork().equals(networkToConnect.getName())) {
+  }
+ else {
+    Builder builder=net.toBuilder();
+    builder.connections(ImmutableSet.of(toConnect.toBuilder().network(networkToConnect.getName()).connected(true).ipAddressAllocationMode(ipAllocationMode).build()));
+    logger.trace(">> updating networkConnection vm(%s)",vm.getName());
+    waitForTask(client.getVmClient().updateNetworkConnectionOfVm(builder.build(),vm.getHref()));
+    logger.trace("<< updated networkConnection vm(%s)",vm.getName());
+  }
+}

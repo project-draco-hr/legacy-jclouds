@@ -1,7 +1,27 @@
 {
   URI vappId=URI.create(checkNotNull(id,"node.id"));
-  VApp vApp=client.getVAppClient().getVApp(vappId);
-  waitForPendingTasksToComplete(vApp);
-  vApp=undeployVAppIfDeployed(vApp);
-  deleteVApp(vApp);
+  VApp vApp=cancelAnyRunningTasks(vappId);
+  if (vApp.getStatus() != Status.OFF) {
+    logger.debug(">> powering off VApp vApp(%s), current status: %s",vApp.getName(),vApp.getStatus());
+    try {
+      waitForTask(client.getVAppClient().powerOffVApp(vApp.getHref()));
+      vApp=client.getVAppClient().getVApp(vApp.getHref());
+      logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+    }
+ catch (    IllegalStateException e) {
+      logger.warn(e,"<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+    }
+    logger.debug(">> undeploying vApp(%s), current status: %s",vApp.getName(),vApp.getStatus());
+    try {
+      waitForTask(client.getVAppClient().undeployVApp(vApp.getHref()));
+      vApp=client.getVAppClient().getVApp(vApp.getHref());
+      logger.debug("<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+    }
+ catch (    IllegalStateException e) {
+      logger.warn(e,"<< %s vApp(%s)",vApp.getStatus(),vApp.getName());
+    }
+  }
+  logger.debug(">> deleting vApp(%s)",vApp.getHref());
+  waitForTask(client.getVAppClient().deleteVApp(vApp.getHref()));
+  logger.debug("<< deleted vApp(%s)",vApp.getHref());
 }

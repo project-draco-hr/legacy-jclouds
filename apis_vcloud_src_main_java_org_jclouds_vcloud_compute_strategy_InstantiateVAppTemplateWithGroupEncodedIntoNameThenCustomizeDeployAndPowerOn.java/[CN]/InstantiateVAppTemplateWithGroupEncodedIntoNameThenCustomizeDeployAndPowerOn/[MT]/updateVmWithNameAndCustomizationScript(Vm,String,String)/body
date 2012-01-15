@@ -1,0 +1,9 @@
+{
+  GuestCustomizationSection guestConfiguration=vm.getGuestCustomizationSection();
+  guestConfiguration.setComputerName(name);
+  if (customizationScript != null) {
+    if (!buildVersion.startsWith("1.0.0") && !"".endsWith(buildVersion) && guestConfiguration.getCustomizationScript() != null)     customizationScript=guestConfiguration.getCustomizationScript() + "\n" + customizationScript;
+    guestConfiguration.setCustomizationScript(customizationScript);
+  }
+  return client.getVmClient().updateGuestCustomizationOfVm(guestConfiguration,vm.getHref());
+}

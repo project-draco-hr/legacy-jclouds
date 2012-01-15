@@ -1,5 +1,11 @@
 {
   Iterable<CatalogItem> catalogs=allCatalogItemsInOrg.apply(from);
   Iterable<VAppTemplate> vAppTemplates=vAppTemplatesForCatalogItems.apply(catalogs);
-  return Iterables.filter(vAppTemplates,Predicates.notNull());
+  return filter(vAppTemplates,and(notNull(),new Predicate<VAppTemplate>(){
+    @Override public boolean apply(    VAppTemplate input){
+      if (input == null)       return false;
+      return ImmutableSet.of(Status.RESOLVED,Status.OFF).contains(input.getStatus());
+    }
+  }
+));
 }

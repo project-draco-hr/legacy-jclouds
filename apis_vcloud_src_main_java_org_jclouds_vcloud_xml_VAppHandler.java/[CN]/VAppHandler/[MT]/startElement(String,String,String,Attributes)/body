@@ -8,12 +8,18 @@
  else     if (equalsOrSuffix(qName,"Tasks")) {
       inTasks=true;
     }
+ else     if (equalsOrSuffix(qName,"NetworkSection")) {
+      inNetworkSection=true;
+    }
   }
   if (inChildren) {
     vmHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attrs);
+  }
+ else   if (inNetworkSection) {
+    networkSectionHandler.startElement(uri,localName,qName,attrs);
   }
  else   if (equalsOrSuffix(qName,"VApp")) {
     template=newReferenceType(attributes);
