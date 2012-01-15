@@ -8,8 +8,9 @@ case 401:
       retry=false;
     }
  else {
-      String content=parsePayloadOrNull(response);
-      if (content != null && content.contains("lease renew")) {
+      byte[] content=closeClientButKeepContentStream(response);
+      if (content != null && new String(content).contains("lease renew")) {
+        logger.debug("invalidating authentication token");
         authenticationResponseCache.invalidateAll();
         retry=true;
       }
