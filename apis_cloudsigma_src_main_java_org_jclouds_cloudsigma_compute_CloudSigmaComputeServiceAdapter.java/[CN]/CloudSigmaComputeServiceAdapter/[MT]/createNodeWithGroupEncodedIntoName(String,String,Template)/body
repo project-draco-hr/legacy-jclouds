@@ -1,7 +1,12 @@
 {
   long bootSize=(long)(template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024* 1024l);
-  logger.debug(">> imaging boot drive source(%s) bytes(%d)",template.getImage().getId(),bootSize);
-  DriveInfo drive=client.cloneDrive(template.getImage().getId(),template.getImage().getId(),new CloneDriveOptions().size(bootSize));
+  AffinityType affinityType=AffinityType.HDD;
+  if (template.getOptions() instanceof CloudSigmaTemplateOptions) {
+    CloudSigmaTemplateOptions options=CloudSigmaTemplateOptions.class.cast(template.getOptions());
+    affinityType=options.getDiskDriveAffinity();
+  }
+  logger.debug(">> imaging boot drive source(%s) bytes(%d) affinityType(%s)",template.getImage().getId(),bootSize,affinityType);
+  DriveInfo drive=client.cloneDrive(template.getImage().getId(),template.getImage().getId(),new CloneDriveOptions().size(bootSize).affinity(affinityType));
   boolean success=driveNotClaimed.apply(drive);
   logger.debug("<< image(%s) complete(%s)",drive.getUuid(),success);
   if (!success) {
