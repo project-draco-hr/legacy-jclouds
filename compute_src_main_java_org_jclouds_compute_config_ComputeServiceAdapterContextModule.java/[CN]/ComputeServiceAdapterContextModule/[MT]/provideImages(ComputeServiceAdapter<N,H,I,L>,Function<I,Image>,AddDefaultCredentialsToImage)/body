@@ -1,8 +1,8 @@
 {
   return new TransformingSetSupplier<I,Image>(new Supplier<Iterable<I>>(){
     @Override public Iterable<I> get(){
-      return adapter.listImages();
+      return filter(adapter.listImages(),notNull());
     }
   }
-,Functions.compose(addDefaultCredentialsToImage,transformer));
+,compose(addDefaultCredentialsToImage,transformer));
 }
