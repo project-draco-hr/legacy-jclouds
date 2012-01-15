@@ -4,10 +4,10 @@
     if (options != null)     defaultTemplate.options(options);
     return defaultTemplate.build();
   }
-  if (location == null)   location=defaultLocation.get();
   if (options == null)   options=optionsProvider.get();
   logger.debug(">> searching params(%s)",this);
   Set<? extends Image> images=getImages();
+  if (location == null)   location=defaultLocation.get();
   Predicate<Image> imagePredicate=buildImagePredicate();
   Iterable<? extends Image> supportedImages=filter(images,buildImagePredicate());
   if (size(supportedImages) == 0) {
@@ -18,7 +18,7 @@
       throwNoSuchElementExceptionAfterLoggingImageIds(format("no image matched predicate: %s",imagePredicate),images);
     }
   }
-  Hardware hardware=resolveSize(hardwareSorter(),supportedImages);
+  Hardware hardware=resolveHardware(hardwareSorter(),supportedImages);
   Image image=resolveImage(hardware,supportedImages);
   logger.debug("<<   matched image(%s)",image.getId());
   return new TemplateImpl(image,hardware,location,options);

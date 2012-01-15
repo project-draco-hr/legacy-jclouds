@@ -1,0 +1,41 @@
+{
+  Set<? extends Hardware> hardwarel=hardwares.get();
+  Iterable<? extends Hardware> hardwaresThatAreCompatibleWithOurImages=ImmutableSet.of();
+  try {
+    hardwaresThatAreCompatibleWithOurImages=filter(hardwarel,new Predicate<Hardware>(){
+      @Override public boolean apply(      final Hardware hardware){
+        return Iterables.any(images,new Predicate<Image>(){
+          @Override public boolean apply(          Image input){
+            return hardware.supportsImage().apply(input);
+          }
+          @Override public String toString(){
+            return "hardware(" + hardware + ").supportsImage()";
+          }
+        }
+);
+      }
+    }
+);
+  }
+ catch (  NoSuchElementException exception) {
+  }
+  if (size(hardwaresThatAreCompatibleWithOurImages) == 0) {
+    String message=format("no hardware profiles support images matching params: %s",toString());
+    NoSuchElementException exception=new NoSuchElementException(message);
+    if (logger.isTraceEnabled())     logger.warn(exception,"hardware profiles %s\nimage ids %s",transform(hardwarel,hardwareToId),transform(images,imageToId));
+    throw exception;
+  }
+  Predicate<Hardware> hardwarePredicate=buildHardwarePredicate();
+  Hardware hardware;
+  try {
+    hardware=hardwareOrdering.max(filter(hardwaresThatAreCompatibleWithOurImages,hardwarePredicate));
+  }
+ catch (  NoSuchElementException exception) {
+    String message=format("no hardware profiles match params: %s",hardwarePredicate);
+    exception=new NoSuchElementException(message);
+    if (logger.isTraceEnabled())     logger.warn(exception,"hardware profiles %s",transform(hardwaresThatAreCompatibleWithOurImages,hardwareToId));
+    throw exception;
+  }
+  logger.debug("<<   matched hardware(%s)",hardware.getId());
+  return hardware;
+}
