@@ -1,5 +1,6 @@
 {
-  IMachine master=context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(masterSpec);
+  Injector injector=context.utils().injector();
+  IMachine master=injector.getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(masterMachineSpec);
   IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,cloneSpec,IS_LINKED_CLONE).apply(master);
   assertTrue(new IsLinkedClone(manager).apply(clone));
 }

@@ -1,6 +1,7 @@
 {
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IVirtualBox vBox=createNiceMock(IVirtualBox.class);
+  Supplier<URI> preconfiguration=createNiceMock(Supplier.class);
   String vmName="jclouds-image-my-ubuntu-image";
   String errorMessage="VirtualBox error: Soem other VBox error";
   VBoxException vBoxException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
@@ -9,5 +10,6 @@
   expectLastCall().andThrow(vBoxException);
   replay(manager,vBox);
   VmSpec launchSpecification=VmSpec.builder().id("").name(vmName).osTypeId("").cleanUpMode(CleanupMode.Full).memoryMB(1024).build();
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(launchSpecification);
+  IMachineSpec machineSpec=IMachineSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("dostuff").preConfiguration(preconfiguration).build()).vm(launchSpecification).network(NetworkSpec.builder().build()).build();
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(machineSpec);
 }
