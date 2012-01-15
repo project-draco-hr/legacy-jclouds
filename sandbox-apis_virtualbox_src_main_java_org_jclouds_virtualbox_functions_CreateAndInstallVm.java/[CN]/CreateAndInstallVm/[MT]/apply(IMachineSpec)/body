@@ -1,0 +1,23 @@
+{
+  VmSpec vmSpec=machineSpec.getVmSpec();
+  IsoSpec isoSpec=machineSpec.getIsoSpec();
+  String vmName=vmSpec.getVmName();
+  final IMachine vm=createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(machineSpec);
+  ensureMachineIsLaunched(vmName);
+  URI uri=isoSpec.getPreConfigurationUri().get();
+  String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",uri.toASCIIString());
+  sendKeyboardSequence(installationKeySequence,vmName);
+  SshClient client=sshClientForIMachine.apply(vm);
+  logger.debug(">> awaiting installation to finish node(%s)",vmName);
+  checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
+  logger.debug("<< installation of image complete. Powering down node(%s)",vmName);
+  lockSessionOnMachineAndApply(manager.get(),Shared,vmName,new Function<ISession,Void>(){
+    @Override public Void apply(    ISession session){
+      IProgress powerDownProgress=session.getConsole().powerDown();
+      powerDownProgress.waitForCompletion(-1);
+      return null;
+    }
+  }
+);
+  return vm;
+}

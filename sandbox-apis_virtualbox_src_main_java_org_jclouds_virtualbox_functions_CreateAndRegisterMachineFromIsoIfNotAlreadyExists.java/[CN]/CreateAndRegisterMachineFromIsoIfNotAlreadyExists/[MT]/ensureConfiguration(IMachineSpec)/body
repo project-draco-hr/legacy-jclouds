@@ -1,0 +1,20 @@
+{
+  VmSpec vmSpec=machineSpec.getVmSpec();
+  NetworkSpec networkSpec=machineSpec.getNetworkSpec();
+  String vmName=vmSpec.getVmName();
+  ensureMachineHasMemory(vmName,vmSpec.getMemory());
+  Set<StorageController> controllers=vmSpec.getControllers();
+  if (controllers.isEmpty()) {
+    throw new IllegalStateException(missingIDEControllersMessage(vmSpec));
+  }
+  StorageController controller=controllers.iterator().next();
+  ensureMachineHasStorageControllerNamed(vmName,controller);
+  setupHardDisksForController(vmName,controller);
+  setupDvdsForController(vmSpec,vmName,controller);
+  Map<Long,NatAdapter> natNetworkAdapters=networkSpec.getNatNetworkAdapters();
+  for (  Map.Entry<Long,NatAdapter> natAdapterAndSlot : natNetworkAdapters.entrySet()) {
+    long slotId=natAdapterAndSlot.getKey();
+    NatAdapter natAdapter=natAdapterAndSlot.getValue();
+    ensureNATNetworkingIsAppliedToMachine(vmName,slotId,natAdapter);
+  }
+}

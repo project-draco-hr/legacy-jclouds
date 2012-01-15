@@ -1,8 +1,10 @@
 {
   VirtualBoxManager manager=createMock(VirtualBoxManager.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
+  Supplier<URI> preconfiguration=createNiceMock(Supplier.class);
   String vmName="jclouds-image-my-ubuntu-image";
-  VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
+  VmSpec vmSpec=VmSpec.builder().id(vmName).name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
+  IMachineSpec machineSpec=IMachineSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("").preConfiguration(preconfiguration).build()).vm(vmSpec).network(NetworkSpec.builder().build()).build();
   IMachine createdMachine=createMock(IMachine.class);
   ISession session=createMock(ISession.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
@@ -23,6 +25,6 @@
   createdMachine.saveSettings();
   session.unlockMachine();
   replay(manager,createdMachine,vBox,session);
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(launchSpecification);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(machineSpec);
   verify(manager,createdMachine,vBox,session);
 }
