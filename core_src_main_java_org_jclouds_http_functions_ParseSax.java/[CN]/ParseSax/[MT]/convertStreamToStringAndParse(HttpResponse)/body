@@ -1,8 +1,11 @@
 {
+  String from=null;
   try {
-    return parse(Strings2.toStringAndClose(from.getPayload().getInput()));
+    from=new String(closeClientButKeepContentStream(response));
+    validateXml(from);
+    return doParse(new InputSource(new StringReader(from)));
   }
  catch (  Exception e) {
-    return addDetailsAndPropagate(from,e);
+    return addDetailsAndPropagate(response,e,from);
   }
 }

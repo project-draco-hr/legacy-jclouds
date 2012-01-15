@@ -6,15 +6,17 @@
  catch (  NullPointerException e) {
     return addDetailsAndPropagate(from,e);
   }
-  if (from.getStatusCode() >= 300)   return convertStreamToStringAndParse(from);
-  InputStream is=from.getPayload().getInput();
+  InputStream is=null;
   try {
+    if (from.getStatusCode() >= 300 || logger.isTraceEnabled())     return convertStreamToStringAndParse(from);
+    is=from.getPayload().getInput();
     return parse(new InputSource(is));
   }
  catch (  RuntimeException e) {
     return addDetailsAndPropagate(from,e);
   }
  finally {
-    closeQuietly(is);
+    Closeables.closeQuietly(is);
+    from.getPayload().release();
   }
 }

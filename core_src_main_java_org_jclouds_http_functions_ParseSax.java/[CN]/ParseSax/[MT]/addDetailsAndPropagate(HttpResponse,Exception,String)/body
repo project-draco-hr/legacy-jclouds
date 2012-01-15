@@ -1,0 +1,27 @@
+{
+  StringBuilder message=new StringBuilder();
+  if (request != null) {
+    message.append("request: ").append(request.getRequestLine());
+  }
+  if (response != null) {
+    if (message.length() != 0)     message.append("; ");
+    message.append("response: ").append(response.getStatusLine());
+  }
+  if (e instanceof SAXParseException) {
+    SAXParseException parseException=(SAXParseException)e;
+    String systemId=parseException.getSystemId();
+    if (systemId == null) {
+      systemId="";
+    }
+    if (message.length() != 0)     message.append("; ");
+    message.append(String.format("error at %d:%d in document %s",parseException.getColumnNumber(),parseException.getLineNumber(),systemId));
+  }
+  if (text != null)   message.append("; source:\n").append(text);
+  if (message.length() != 0) {
+    message.append("; cause: ").append(e.toString());
+    throw new RuntimeException(message.toString(),e);
+  }
+ else {
+    throw Throwables.propagate(e);
+  }
+}

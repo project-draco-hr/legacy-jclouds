@@ -3,9 +3,11 @@
   try {
     saxParser=factory.newSAXParser();
     XMLReader parser=saxParser.getXMLReader();
-    return new ParseSax<T>(parser,handler);
+    ParseSax<T> returnVal=new ParseSax<T>(parser,handler);
+    i.injectMembers(returnVal);
+    return returnVal;
   }
  catch (  Exception e) {
-    throw new RuntimeException(e);
+    throw Throwables.propagate(e);
   }
 }
