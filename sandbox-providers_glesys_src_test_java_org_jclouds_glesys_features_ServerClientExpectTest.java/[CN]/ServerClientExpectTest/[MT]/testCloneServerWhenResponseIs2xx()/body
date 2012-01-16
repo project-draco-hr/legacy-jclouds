@@ -1,5 +1,5 @@
 {
   ServerClient client=requestSendsResponse(HttpRequest.builder().method("POST").endpoint(URI.create("https://api.glesys.com/server/clone/format/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(newUrlEncodedFormPayload(ImmutableMultimap.<String,String>builder().put("serverid","server111").put("hostname","hostname1").build())).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_created.json")).build()).getServerClient();
-  ServerCreated expected=ServerCreated.builder().hostname("jclouds-test").id("xm3630641").ips(ServerIp.builder().ip("109.74.10.27").build()).build();
+  ServerCreated expected=ServerCreated.builder().hostname("jclouds-test").id("xm3630641").ips(Ip.builder().ip("109.74.10.27").build()).build();
   assertEquals(client.cloneServer("server111","hostname1"),expected);
 }
