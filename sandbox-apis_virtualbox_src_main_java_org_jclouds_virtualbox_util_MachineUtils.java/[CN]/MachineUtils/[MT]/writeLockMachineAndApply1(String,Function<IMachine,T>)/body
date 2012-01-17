@@ -1,0 +1,14 @@
+{
+  ISession lockedSessionOnMachineId=null;
+  LockType writeType=LockType.Write;
+  try {
+    lockedSessionOnMachineId=lockSessionOnMachine(writeType,machineId);
+    return function.apply(lockedSessionOnMachineId.getMachine());
+  }
+ catch (  VBoxException e) {
+    throw new RuntimeException(String.format("error applying %s to %s with %s lock: %s",function,machineId,writeType,e.getMessage()),e);
+  }
+ finally {
+    lockedSessionOnMachineId.unlockMachine();
+  }
+}

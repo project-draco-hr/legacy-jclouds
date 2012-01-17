@@ -1,4 +1,5 @@
 {
+  MachineUtils machineUtils=createMock(MachineUtils.class);
   VirtualBoxManager manager=createMock(VirtualBoxManager.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
   Supplier<URI> preconfiguration=createNiceMock(Supplier.class);
@@ -25,6 +26,6 @@
   createdMachine.saveSettings();
   session.unlockMachine();
   replay(manager,createdMachine,vBox,session);
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(machineSpec);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),machineUtils,"/tmp/workingDir").apply(machineSpec);
   verify(manager,createdMachine,vBox,session);
 }

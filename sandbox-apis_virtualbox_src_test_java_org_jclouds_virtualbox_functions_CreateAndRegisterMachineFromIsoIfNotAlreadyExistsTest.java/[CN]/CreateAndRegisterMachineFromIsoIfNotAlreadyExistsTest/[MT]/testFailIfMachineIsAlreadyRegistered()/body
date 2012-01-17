@@ -1,4 +1,5 @@
 {
+  MachineUtils machineUtils=createMock(MachineUtils.class);
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
   IVirtualBox vBox=createNiceMock(IVirtualBox.class);
   Supplier<URI> preconfiguration=createNiceMock(Supplier.class);
@@ -6,8 +7,8 @@
   IMachine registeredMachine=createMock(IMachine.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   expect(vBox.findMachine(vmName)).andReturn(registeredMachine).anyTimes();
-  replay(manager,vBox);
+  replay(manager,vBox,machineUtils);
   VmSpec launchSpecification=VmSpec.builder().id("").name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
   IMachineSpec machineSpec=IMachineSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("dostuff").preConfiguration(preconfiguration).build()).vm(launchSpecification).network(NetworkSpec.builder().build()).build();
-  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),"/tmp/workingDir").apply(machineSpec);
+  new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),machineUtils,"/tmp/workingDir").apply(machineSpec);
 }

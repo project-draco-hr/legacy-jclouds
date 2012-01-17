@@ -1,0 +1,14 @@
+{
+  try {
+    ISession session=lockSessionOnMachine(type,machineId);
+    try {
+      return function.apply(session);
+    }
+  finally {
+      session.unlockMachine();
+    }
+  }
+ catch (  VBoxException e) {
+    throw new RuntimeException(String.format("error applying %s to %s with %s lock: %s",function,machineId,type,e.getMessage()),e);
+  }
+}

@@ -1,9 +1,10 @@
 {
+  ISession session=null;
   try {
-    ISession session=manager.getSessionObject();
+    session=manager.getSessionObject();
     IMachine immutableMachine=manager.getVBox().findMachine(machineId);
     immutableMachine.lockMachine(session,type);
-    return immutableMachine;
+    return session;
   }
  catch (  VBoxException e) {
     throw new RuntimeException(String.format("error locking %s with %s lock: %s",machineId,type,e.getMessage()),e);
