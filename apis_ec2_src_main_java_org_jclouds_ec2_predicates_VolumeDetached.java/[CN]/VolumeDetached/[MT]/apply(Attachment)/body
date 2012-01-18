@@ -1,0 +1,10 @@
+{
+  logger.trace("looking for volume %s",attachment.getVolumeId());
+  Volume volume=Iterables.getOnlyElement(client.describeVolumesInRegion(attachment.getRegion(),attachment.getVolumeId()));
+  if (volume.getAttachments().size() == 0) {
+    return true;
+  }
+  Attachment lastAttachment=Sets.newTreeSet(volume.getAttachments()).last();
+  logger.trace("%s: looking for status %s: currently: %s",lastAttachment,Attachment.Status.DETACHED,lastAttachment.getStatus());
+  return lastAttachment.getStatus() == Attachment.Status.DETACHED;
+}
