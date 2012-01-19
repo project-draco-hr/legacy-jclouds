@@ -11,13 +11,6 @@
   logger.debug(">> awaiting installation to finish node(%s)",vmName);
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
   logger.debug("<< installation of image complete. Powering down node(%s)",vmName);
-  lockSessionOnMachineAndApply(manager.get(),Shared,vmName,new Function<ISession,Void>(){
-    @Override public Void apply(    ISession session){
-      IProgress powerDownProgress=session.getConsole().powerDown();
-      powerDownProgress.waitForCompletion(-1);
-      return null;
-    }
-  }
-);
+  ensureMachineHasPowerDown(vmName);
   return vm;
 }

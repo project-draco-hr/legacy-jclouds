@@ -1,6 +1,7 @@
 {
   HardDisk hardDisk=createTestHardDisk();
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
+  MachineUtils machineUtils=createMock(MachineUtils.class);
   IMachine machine=createMock(IMachine.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
   IMedium medium=createMock(IMedium.class);
@@ -11,6 +12,6 @@
   expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andThrow(notFoundException);
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(medium);
   expect(medium.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
-  replay(manager,machine,vBox,medium);
-  new CreateMediumIfNotAlreadyExists(Suppliers.ofInstance(manager),true).apply(hardDisk);
+  replay(manager,machine,vBox,medium,machineUtils);
+  new CreateMediumIfNotAlreadyExists(Suppliers.ofInstance(manager),machineUtils,true).apply(hardDisk);
 }
