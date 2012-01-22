@@ -9,26 +9,13 @@
     return this.hashCode();
   }
  else   if (method.isAnnotationPresent(Provides.class)) {
-    try {
-      try {
-        Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
-        return injector.getInstance(Key.get(method.getGenericReturnType(),qualifier));
-      }
- catch (      NoSuchElementException e) {
-        return injector.getInstance(Key.get(method.getGenericReturnType()));
-      }
-    }
- catch (    ProvisionException e) {
-      AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
-      if (aex != null)       throw aex;
-      throw e;
-    }
+    return lookupValueFromGuice(method);
   }
  else   if (method.isAnnotationPresent(Delegate.class)) {
-    return delegateMap.get(new ClassMethodArgs(method.getReturnType(),method,args));
+    return propagateContextToDelegate(method,args);
   }
- else   if (annotationProcessor.getDelegateOrNull(method) != null && ListenableFuture.class.isAssignableFrom(method.getReturnType())) {
-    return createListenableFuture(method,args);
+ else   if (isRestCall(method)) {
+    return createListenableFutureForHttpRequestMappedToMethodAndArgs(method,args);
   }
  else {
     throw new RuntimeException("method is intended solely to set constants: " + method);

@@ -1,0 +1,16 @@
+{
+  try {
+    try {
+      Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
+      return injector.getInstance(Key.get(method.getGenericReturnType(),qualifier));
+    }
+ catch (    NoSuchElementException e) {
+      return injector.getInstance(Key.get(method.getGenericReturnType()));
+    }
+  }
+ catch (  ProvisionException e) {
+    AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
+    if (aex != null)     throw aex;
+    throw e;
+  }
+}
