@@ -8,7 +8,7 @@
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   expect(vBox.findMachine(vmName)).andReturn(registeredMachine).anyTimes();
   replay(manager,vBox,machineUtils);
-  VmSpec launchSpecification=VmSpec.builder().id("").name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
+  VmSpec launchSpecification=VmSpec.builder().id(vmName).name(vmName).osTypeId("").memoryMB(1024).cleanUpMode(CleanupMode.Full).build();
   IMachineSpec machineSpec=IMachineSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("dostuff").preConfiguration(preconfiguration).build()).vm(launchSpecification).network(NetworkSpec.builder().build()).build();
   new CreateAndRegisterMachineFromIsoIfNotAlreadyExists(Suppliers.ofInstance(manager),machineUtils,"/tmp/workingDir").apply(machineSpec);
 }
