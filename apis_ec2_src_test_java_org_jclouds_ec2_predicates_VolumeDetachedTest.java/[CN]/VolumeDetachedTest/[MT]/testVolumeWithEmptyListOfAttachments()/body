@@ -1,0 +1,8 @@
+{
+  Attachment attachment=newAttachmentWithStatus(Status.ATTACHED);
+  Set<Volume> volumes=newHashSet(newVolumeWithAttachments());
+  expect(client.describeVolumesInRegion(attachment.getRegion(),attachment.getVolumeId())).andReturn(volumes);
+  replay(client);
+  assertTrue(volumeDetached.apply(attachment));
+  verify(client);
+}
