@@ -6,7 +6,7 @@
   ensureMachineIsLaunched(vmName);
   URI uri=isoSpec.getPreConfigurationUri().get();
   String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",uri.toASCIIString());
-  sendKeyboardSequence(installationKeySequence,vmName);
+  configureOsInstallationWithKeyboardSequence(vmName,installationKeySequence);
   SshClient client=sshClientForIMachine.apply(vm);
   logger.debug(">> awaiting installation to finish node(%s)",vmName);
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
