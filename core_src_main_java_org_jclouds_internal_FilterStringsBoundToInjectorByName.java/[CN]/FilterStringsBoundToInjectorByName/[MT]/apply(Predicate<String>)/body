@@ -1,0 +1,28 @@
+{
+  List<Binding<String>> stringBindings=injector.findBindingsByType(new TypeLiteral<String>(){
+  }
+);
+  Iterable<Binding<String>> annotatedWithName=Iterables.filter(stringBindings,new Predicate<Binding<String>>(){
+    @Override public boolean apply(    Binding<String> input){
+      Annotation annotation=input.getKey().getAnnotation();
+      if (annotation == null)       return false;
+      return (annotation instanceof javax.inject.Named) || (annotation instanceof com.google.inject.name.Named);
+    }
+  }
+);
+  Map<String,Binding<String>> bindingsByName=Maps.uniqueIndex(annotatedWithName,new Function<Binding<String>,String>(){
+    @Override public String apply(    Binding<String> input){
+      Annotation annotation=input.getKey().getAnnotation();
+      return ((annotation instanceof javax.inject.Named) ? javax.inject.Named.class.cast(annotation).value() : com.google.inject.name.Named.class.cast(annotation).value());
+    }
+  }
+);
+  Map<String,Binding<String>> filteredBindingsByName=Maps.filterKeys(bindingsByName,filter);
+  Map<String,String> stringBoundByName=Maps.transformValues(filteredBindingsByName,new Function<Binding<String>,String>(){
+    @Override public String apply(    Binding<String> input){
+      return input.getProvider().get();
+    }
+  }
+);
+  return stringBoundByName;
+}

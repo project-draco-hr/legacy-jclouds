@@ -1,0 +1,10 @@
+{
+  FilterStringsBoundToInjectorByName fn=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named("foo")).to("bar");
+      bindConstant().annotatedWith(Names.named("bing")).to("bong");
+    }
+  }
+).getInstance(FilterStringsBoundToInjectorByName.class);
+  assertEquals(fn.apply(Predicates.<String>equalTo("bing")),ImmutableMap.<String,String>of("bing","bong"));
+}
