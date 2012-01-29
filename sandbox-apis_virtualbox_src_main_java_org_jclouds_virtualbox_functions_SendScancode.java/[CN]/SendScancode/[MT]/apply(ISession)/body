@@ -1,30 +1,13 @@
 {
-  int i=0, j=0, length=scancodes.size();
-  if (length > MAX_KEYCODES_ACCEPTED) {
-    while (i <= length) {
-      j=(i + 30 > length) ? length : i + MAX_KEYCODES_ACCEPTED;
-      List<Integer> sublist=Lists.newArrayList(scancodes).subList(i,j);
-      long codeStores=iSession.getConsole().getKeyboard().putScancodes(sublist);
-      logger.debug("List of scancodes sent: ",sublist);
-      assert(codeStores == sublist.size());
-      i=i + MAX_KEYCODES_ACCEPTED;
-      try {
-        Thread.sleep(50);
-      }
- catch (      InterruptedException e) {
-        logger.debug("There was a problem in sleeping this thread",e);
-      }
+  for (  List<Integer> maxOrLess : Lists.partition(scancodes,MAX_SIZE)) {
+    long codeStores=iSession.getConsole().getKeyboard().putScancodes(maxOrLess);
+    logger.debug("List of scancodes sent: ",maxOrLess);
+    assert(codeStores == maxOrLess.size());
+    try {
+      Thread.sleep(250);
     }
-  }
- else {
-    iSession.getConsole().getKeyboard().putScancodes(scancodes);
-    if (Sets.difference(Sets.newHashSet(scancodes),Sets.newHashSet(KeyboardScancodes.SPECIAL_KEYBOARD_BUTTON_MAP_LIST.values())) != null) {
-      try {
-        Thread.sleep(200);
-      }
- catch (      InterruptedException e) {
-        logger.debug("There was a problem in sleeping this thread",e);
-      }
+ catch (    InterruptedException e) {
+      logger.debug("There was a problem in sleeping this thread",e);
     }
   }
   return null;
