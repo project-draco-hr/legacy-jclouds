@@ -6,8 +6,8 @@
   VmSpec sourceVmSpec=VmSpec.builder().id(sourceName).name(sourceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
   Injector injector=context.utils().injector();
   Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
-  IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",sourceVmSpec.getVmName())).preConfiguration(preconfigurationUri).build();
+  IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",sourceVmSpec.getVmName())).build();
   NetworkSpec networkSpec=NetworkSpec.builder().build();
-  sourceMachineSpec=IMachineSpec.builder().iso(isoSpec).vm(sourceVmSpec).network(networkSpec).build();
+  sourceMachineSpec=MasterSpec.builder().iso(isoSpec).vm(sourceVmSpec).network(networkSpec).build();
   clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
 }

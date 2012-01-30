@@ -2,11 +2,11 @@
   MachineUtils machineUtils=createMock(MachineUtils.class);
   VirtualBoxManager manager=createMock(VirtualBoxManager.class);
   IVirtualBox vBox=createMock(IVirtualBox.class);
-  Supplier<URI> preconfiguration=createNiceMock(Supplier.class);
+  LoadingCache<IsoSpec,URI> preconfiguration=createNiceMock(LoadingCache.class);
   String vmName="jclouds-image-my-ubuntu-image";
   StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).build();
   VmSpec vmSpec=VmSpec.builder().id(vmName).name(vmName).osTypeId("").memoryMB(1024).controller(ideController).cleanUpMode(CleanupMode.Full).build();
-  IMachineSpec machineSpec=IMachineSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("").preConfiguration(preconfiguration).build()).vm(vmSpec).network(NetworkSpec.builder().build()).build();
+  MasterSpec machineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath("some.iso").installationScript("").build()).vm(vmSpec).network(NetworkSpec.builder().build()).build();
   IMachine createdMachine=createMock(IMachine.class);
   ISession session=createMock(ISession.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();

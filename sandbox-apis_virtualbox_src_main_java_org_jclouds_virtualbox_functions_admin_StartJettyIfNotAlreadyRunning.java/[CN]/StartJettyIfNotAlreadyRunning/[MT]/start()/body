@@ -4,12 +4,12 @@
   }
  else {
     logger.debug(">> starting jetty to serve %s",preconfigurationUrl);
-    ResourceHandler resource_handler=new ResourceHandler();
-    resource_handler.setDirectoriesListed(true);
-    resource_handler.setWelcomeFiles(new String[]{"index.html"});
-    resource_handler.setResourceBase("");
+    ResourceHandler resourceHandler=new ResourceHandler();
+    resourceHandler.setDirectoriesListed(true);
+    resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+    resourceHandler.setResourceBase("");
     HandlerList handlers=new HandlerList();
-    handlers.setHandlers(new Handler[]{resource_handler,new DefaultHandler()});
+    handlers.setHandlers(new Handler[]{resourceHandler,new DefaultHandler()});
     jetty.setHandler(handlers);
     try {
       jetty.start();
@@ -17,6 +17,6 @@
  catch (    Exception e) {
       logger.error(e,"Server jetty could not be started for %s",preconfigurationUrl);
     }
-    logger.debug("<< serving %s",resource_handler.getBaseResource());
+    logger.debug("<< serving %s",resourceHandler.getBaseResource());
   }
 }
