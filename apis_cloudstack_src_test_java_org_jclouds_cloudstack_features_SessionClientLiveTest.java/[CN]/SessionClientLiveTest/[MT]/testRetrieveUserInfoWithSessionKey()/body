@@ -1,0 +1,14 @@
+{
+  Account account=client.getSessionClient().getAccountByNameUsingSession(login.getAccountName(),login.getSessionKey(),login.getJSessionId());
+  assertNotNull(account);
+  assertEquals(account.getName(),login.getAccountName());
+  User currentUser=find(account.getUsers(),new Predicate<User>(){
+    @Override public boolean apply(    User user){
+      return user.getId() == login.getUserId();
+    }
+  }
+);
+  assertNotNull(currentUser);
+  assertEquals(currentUser.getName(),login.getUserName());
+  assertEquals(currentUser.getDomainId(),login.getDomainId());
+}
