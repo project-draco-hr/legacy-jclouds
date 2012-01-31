@@ -1,9 +1,9 @@
 {
   super(new Function<Credentials,Access>(){
     @Override public Access apply(    Credentials input){
-      Iterable<String> usernameTenantId=Splitter.on(':').split(input.identity);
-      String username=Iterables.get(usernameTenantId,0);
-      String tenantId=Iterables.get(usernameTenantId,1);
+      Iterable<String> tenantIdUsername=Splitter.on(':').split(input.identity);
+      String tenantId=Iterables.get(tenantIdUsername,0);
+      String username=Iterables.get(tenantIdUsername,1);
       PasswordCredentials passwordCredentials=PasswordCredentials.createWithUsernameAndPassword(username,input.credential);
       try {
         return factory.create(ServiceAsyncClient.class).authenticateTenantWithCredentials(tenantId,passwordCredentials).get();
