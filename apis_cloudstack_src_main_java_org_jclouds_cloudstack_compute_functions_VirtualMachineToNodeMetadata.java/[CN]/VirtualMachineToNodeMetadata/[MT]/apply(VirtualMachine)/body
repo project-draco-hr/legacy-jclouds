@@ -12,14 +12,28 @@
   }
   builder.hardware(new HardwareBuilder().ids(from.getServiceOfferingId() + "").name(from.getServiceOfferingName() + "").processors(ImmutableList.of(new Processor(from.getCpuCount(),from.getCpuSpeed()))).ram((int)from.getMemory()).hypervisor(from.getHypervisor()).build());
   builder.state(vmStateToNodeState.get(from.getState()));
+  Set<String> publicAddresses=newHashSet(), privateAddresses=newHashSet();
   if (from.getIPAddress() != null) {
-    boolean isPrivate=InetAddresses2.isPrivateIPAddress(from.getIPAddress());
-    Set<String> addresses=ImmutableSet.<String>of(from.getIPAddress());
-    if (isPrivate)     builder.privateAddresses(addresses);
- else     builder.publicAddresses(addresses);
+    boolean isPrivate=isPrivateIPAddress(from.getIPAddress());
+    if (isPrivate) {
+      privateAddresses.add(from.getIPAddress());
+    }
+ else {
+      publicAddresses.add(from.getIPAddress());
+    }
+  }
+  for (  NIC nic : from.getNICs()) {
+    if (nic.getIPAddress() != null) {
+      if (isPrivateIPAddress(nic.getIPAddress())) {
+        privateAddresses.add(nic.getIPAddress());
+      }
+ else {
+        publicAddresses.add(nic.getIPAddress());
+      }
+    }
   }
   try {
-    builder.publicAddresses(transform(filter(getIPForwardingRulesByVirtualMachine.getUnchecked(from.getId()),new Predicate<IPForwardingRule>(){
+    Iterables.addAll(publicAddresses,transform(filter(getIPForwardingRulesByVirtualMachine.getUnchecked(from.getId()),new Predicate<IPForwardingRule>(){
       @Override public boolean apply(      @Nullable IPForwardingRule rule){
         return !"Deleting".equals(rule.getState());
       }
@@ -37,5 +51,5 @@
       throw e;
     }
   }
-  return builder.build();
+  return builder.privateAddresses(privateAddresses).publicAddresses(publicAddresses).build();
 }
