@@ -1,0 +1,14 @@
+{
+  Function<Credentials,Access> authMethod;
+switch (credentialType) {
+case PASSWORD_CREDENTIALS:
+    authMethod=authenticatePasswordCredentials;
+  break;
+case API_ACCESS_KEY_CREDENTIALS:
+authMethod=authenticateApiAccessKeyCredentials;
+break;
+default :
+throw new IllegalArgumentException("credential type not supported: " + credentialType);
+}
+return new RetryOnTimeOutExceptionFunction<Credentials,Access>(authMethod);
+}
