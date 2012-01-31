@@ -10,8 +10,7 @@
     builder.imageId(image.getId());
     builder.operatingSystem(image.getOperatingSystem());
   }
-  Hardware hardware=findHardwareForVirtualMachine.apply(from);
-  if (hardware != null)   builder.hardware(hardware);
+  builder.hardware(new HardwareBuilder().ids(from.getServiceOfferingId() + "").name(from.getServiceOfferingName() + "").processors(ImmutableList.of(new Processor(from.getCpuCount(),from.getCpuSpeed()))).ram((int)from.getMemory()).hypervisor(from.getHypervisor()).build());
   builder.state(vmStateToNodeState.get(from.getState()));
   if (from.getIPAddress() != null) {
     boolean isPrivate=InetAddresses2.isPrivateIPAddress(from.getIPAddress());
