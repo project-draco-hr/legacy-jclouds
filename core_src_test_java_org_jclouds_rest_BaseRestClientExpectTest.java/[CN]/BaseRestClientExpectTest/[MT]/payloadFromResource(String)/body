@@ -1,3 +1,8 @@
 {
-  return Payloads.newInputStreamPayload(getClass().getResourceAsStream(resource));
+  try {
+    return payloadFromString(Strings2.toStringAndClose(getClass().getResourceAsStream(resource)));
+  }
+ catch (  IOException e) {
+    throw Throwables.propagate(e);
+  }
 }
