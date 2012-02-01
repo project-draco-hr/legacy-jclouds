@@ -8,7 +8,8 @@
     testUser=createTestUser(globalAdminClient,testAccount,prefix);
     String expectedUsername=prefix + "-user";
     assertEquals(testUser.getName(),expectedUsername);
-    assertEquals(globalAdminClient.getUserClient().registerUserKeys(testUser.getId()),ApiKeyPairs.getApiKeyPairForUser(System.getProperty("test.cloudstack.endpoint"),prefix + "-user",CryptoStreams.md5Hex("password"),"/"));
+    checkLoginAsTheNewUser(expectedUsername);
+    assertEquals(globalAdminClient.getUserClient().registerUserKeys(testUser.getId()),ApiKeyPairs.getApiKeyPairForUser(System.getProperty("test.cloudstack.endpoint"),prefix + "-user","password",""));
   }
   finally {
     if (testUser != null)     globalAdminClient.getUserClient().deleteUser(testUser.getId());
