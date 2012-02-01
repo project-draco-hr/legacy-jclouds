@@ -1,0 +1,19 @@
+{
+  ComputeServiceContext context=null;
+  try {
+    context=new ComputeServiceContextFactory(setupRestProperties()).createContext(PROVIDER,ImmutableSet.<Module>of(),setupProperties(endpoint,username,password,domain));
+    CloudStackClient client=CloudStackClient.class.cast(context.getProviderSpecificContext().getApi());
+    Set<Account> listOfAccounts=client.getAccountClient().listAccounts();
+    for (    Account account : listOfAccounts) {
+      for (      User user : account.getUsers()) {
+        if (user.getName().equals(username) && user.getDomain().equals(domain)) {
+          return ApiKeyPair.builder().apiKey(user.getApiKey()).secretKey(user.getSecretKey()).build();
+        }
+      }
+    }
+    return null;
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}
