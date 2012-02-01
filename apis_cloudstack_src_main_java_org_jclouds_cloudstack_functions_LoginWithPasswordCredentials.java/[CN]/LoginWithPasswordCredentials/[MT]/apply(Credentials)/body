@@ -1,0 +1,11 @@
+{
+  String username=input.identity;
+  String domain="ROOT";
+  if (username.indexOf('/') != -1) {
+    File domainUsername=new File(username);
+    username=domainUsername.getName();
+    domain=domainUsername.getParent();
+  }
+  String hashedPassword=CryptoStreams.md5Hex(input.credential);
+  return client.loginUserInDomainWithHashOfPassword(username,domain,hashedPassword);
+}
