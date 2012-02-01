@@ -1,0 +1,9 @@
+{
+  Crypto crypto=new BouncyCastleCrypto();
+  WindowsLoginCredentialsFromEncryptedData f=new WindowsLoginCredentialsFromEncryptedData(crypto);
+  PasswordData passwordData=PasswordData.builder().passwordData(ENCRYPTED_PASSWORD).build();
+  LoginCredentials credentials=f.apply(new PasswordDataAndPrivateKey(passwordData,PRIVATE_KEY));
+  assertEquals(credentials.getUser(),"Administrator");
+  assertEquals(credentials.getPassword(),"u4.y9mb;nR.");
+  assertFalse(credentials.getOptionalPrivateKey().isPresent());
+}
