@@ -1,0 +1,20 @@
+{
+  assert globalAdminEnabled;
+  Account testAccount=null;
+  User testUser=null;
+  String prefix=this.prefix + "-session";
+  try {
+    testAccount=createTestAccount(globalAdminClient,prefix);
+    testUser=createTestUser(globalAdminClient,testAccount,prefix);
+    String expectedUsername=prefix + "-user";
+    assertEquals(testUser.getName(),expectedUsername);
+    checkLoginAsTheNewUser(expectedUsername);
+    ApiKeyPair expected=globalAdminClient.getUserClient().registerUserKeys(testUser.getId());
+    ApiKeyPair actual=ApiKeyPairs.loginToEndpointAsUsernameInDomainWithPasswordAndReturnApiKeyPair(URI.create(endpoint),prefix + "-user","password","");
+    assertEquals(actual,expected);
+  }
+  finally {
+    if (testUser != null)     globalAdminClient.getUserClient().deleteUser(testUser.getId());
+    if (testAccount != null)     globalAdminClient.getAccountClient().deleteAccount(testAccount.getId());
+  }
+}
