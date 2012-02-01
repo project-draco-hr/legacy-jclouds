@@ -9,7 +9,9 @@
     String expectedUsername=prefix + "-user";
     assertEquals(testUser.getName(),expectedUsername);
     checkLoginAsTheNewUser(expectedUsername);
-    assertEquals(globalAdminClient.getUserClient().registerUserKeys(testUser.getId()),ApiKeyPairs.getApiKeyPairForUser(endpoint,prefix + "-user","password",""));
+    ApiKeyPair expected=globalAdminClient.getUserClient().registerUserKeys(testUser.getId());
+    ApiKeyPair actual=ApiKeyPairs.loginToEndpointAsUsernameInDomainWithPasswordAndReturnApiKeyPair(URI.create(endpoint),prefix + "-user","password","");
+    assertEquals(actual,expected);
   }
   finally {
     if (testUser != null)     globalAdminClient.getUserClient().deleteUser(testUser.getId());
