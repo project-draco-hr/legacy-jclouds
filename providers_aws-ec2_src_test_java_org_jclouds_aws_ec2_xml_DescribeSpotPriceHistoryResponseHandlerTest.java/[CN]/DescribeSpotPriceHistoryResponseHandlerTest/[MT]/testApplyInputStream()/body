@@ -3,7 +3,9 @@
   Set<Spot> expected=ImmutableSet.of(Spot.builder().region("us-west-1").instanceType("t1.micro").productDescription("SUSE Linux").spotPrice(0.013f).timestamp(new SimpleDateFormatDateService().iso8601DateParse("2011-03-07T12:17:19.000Z")).build(),Spot.builder().region("us-west-1").instanceType("m1.large").productDescription("Linux/UNIX").spotPrice(0.119f).timestamp(new SimpleDateFormatDateService().iso8601DateParse("2011-03-07T16:29:16.000Z")).build(),Spot.builder().region("us-west-1").instanceType("t1.micro").productDescription("Windows").spotPrice(0.013f).timestamp(new SimpleDateFormatDateService().iso8601DateParse("2011-03-07T17:56:54.000Z")).build());
   Set<Spot> result=factory.create(injector.createChildInjector(new AbstractModule(){
     @Override protected void configure(){
-      bindConstant().annotatedWith(Region.class).to("us-west-1");
+      bind(new TypeLiteral<Supplier<String>>(){
+      }
+).annotatedWith(Region.class).toInstance(Suppliers.ofInstance("us-west-1"));
     }
   }
 ).getInstance(DescribeSpotPriceHistoryResponseHandler.class)).parse(is);

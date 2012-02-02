@@ -1,0 +1,29 @@
+{
+  Builder<String,Set<String>> map=ImmutableMap.builder();
+  HttpResponseException exception=null;
+  for (  String region : regions.get()) {
+    try {
+      ImmutableSet<String> zones=ImmutableSet.copyOf(Iterables.transform(client.describeAvailabilityZonesInRegion(region),new Function<AvailabilityZoneInfo,String>(){
+        @Override public String apply(        AvailabilityZoneInfo arg0){
+          return arg0.getZone();
+        }
+      }
+));
+      if (zones.size() > 0)       map.put(region,zones);
+    }
+ catch (    HttpResponseException e) {
+      if (e.getMessage().contains("Unable to tunnel through proxy")) {
+        exception=e;
+        logger.error(e,"Could not describe availability zones in Region: %s",region);
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+  ImmutableMap<String,Set<String>> result=map.build();
+  if (result.isEmpty() && exception != null) {
+    throw exception;
+  }
+  return Maps.transformValues(result,Suppliers2.<Set<String>>ofInstanceFunction());
+}

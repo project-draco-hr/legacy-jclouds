@@ -2,12 +2,20 @@
   super.setContext(request);
   region=AWSUtils.findRegionInArgsOrNull(getRequest());
   if (region == null) {
-    String zone=findAvailabilityZoneInArgsOrNull(getRequest(),availabilityZoneToRegion.keySet());
+    Set<String> zones=zonesSupplier.get();
+    String zone=findAvailabilityZoneInArgsOrNull(getRequest(),zones);
     if (zone != null) {
-      region=checkNotNull(availabilityZoneToRegion.get(zone),String.format("zone %s not in %s",zone,availabilityZoneToRegion));
+      Map<String,Set<String>> regionToZones=Maps.transformValues(regionToZonesSupplier.get(),Suppliers.<Set<String>>supplierFunction());
+      for (      Entry<String,Set<String>> entry : regionToZones.entrySet()) {
+        if (entry.getValue().contains(zone)) {
+          region=entry.getKey();
+          break;
+        }
+      }
+      checkNotNull(regionToZones,String.format("zone %s not in %s",zone,regionToZones));
     }
  else {
-      region=defaultRegion;
+      region=defaultRegion.get();
     }
   }
   return this;

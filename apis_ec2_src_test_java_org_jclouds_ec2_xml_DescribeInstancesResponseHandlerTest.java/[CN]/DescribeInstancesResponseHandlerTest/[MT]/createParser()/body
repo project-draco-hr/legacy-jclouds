@@ -1,7 +1,9 @@
 {
   Injector injector=Guice.createInjector(new SaxParserModule(),new AbstractModule(){
     @Override protected void configure(){
-      bind(String.class).annotatedWith(Region.class).toInstance("us-east-1");
+      bind(new TypeLiteral<Supplier<String>>(){
+      }
+).annotatedWith(Region.class).toInstance(Suppliers.ofInstance("us-east-1"));
     }
   }
 );

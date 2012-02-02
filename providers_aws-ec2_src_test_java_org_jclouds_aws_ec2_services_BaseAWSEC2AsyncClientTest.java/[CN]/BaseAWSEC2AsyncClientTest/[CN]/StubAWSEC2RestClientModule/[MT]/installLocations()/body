@@ -1,0 +1,15 @@
+{
+  install(new LocationModule());
+  bind(RegionIdToURISupplier.class).toInstance(new RegionIdToURISupplier(){
+    @Override public Map<String,Supplier<URI>> get(){
+      return transformValues(ImmutableMap.<String,URI>of(Region.EU_WEST_1,URI.create("https://ec2.eu-west-1.amazonaws.com"),Region.US_EAST_1,URI.create("https://ec2.us-east-1.amazonaws.com"),Region.US_WEST_1,URI.create("https://ec2.us-west-1.amazonaws.com")),Suppliers2.<URI>ofInstanceFunction());
+    }
+  }
+);
+  bind(RegionIdToZoneIdsSupplier.class).toInstance(new RegionIdToZoneIdsSupplier(){
+    @Override public Map<String,Supplier<Set<String>>> get(){
+      return transformValues(ImmutableMap.<String,Set<String>>of("us-east-1",ImmutableSet.of("us-east-1a","us-east-1b","us-east-1c","us-east-1b")),Suppliers2.<Set<String>>ofInstanceFunction());
+    }
+  }
+);
+}
