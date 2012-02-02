@@ -15,9 +15,6 @@
   bind(new TypeLiteral<Function<Zone,Location>>(){
   }
 ).to(ZoneToLocation.class);
-  bind(new TypeLiteral<Supplier<Location>>(){
-  }
-).to(OnlyLocationOrFirstZone.class);
   bind(TemplateOptions.class).to(CloudStackTemplateOptions.class);
   bind(new TypeLiteral<Function<Template,OperatingSystem>>(){
   }
@@ -32,4 +29,7 @@
   bind(new TypeLiteral<Supplier<LoadingCache<Long,Zone>>>(){
   }
 ).to(ZoneIdToZoneSupplier.class);
+  install(new LocationsFromComputeServiceAdapterModule<VirtualMachine,ServiceOffering,Template,Zone>(){
+  }
+);
 }
