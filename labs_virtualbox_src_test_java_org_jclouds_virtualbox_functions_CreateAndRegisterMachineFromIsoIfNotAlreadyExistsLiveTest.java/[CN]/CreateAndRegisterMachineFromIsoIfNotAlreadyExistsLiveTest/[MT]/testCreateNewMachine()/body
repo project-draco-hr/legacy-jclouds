@@ -1,0 +1,15 @@
+{
+  String vmName="jclouds-test-create-1-node";
+  String vmId=UUID.randomUUID().toString();
+  VmSpec vmSpec=VmSpec.builder().id(vmId).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("Debian").forceOverwrite(true).build();
+  MasterSpec machineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript("").build()).vm(vmSpec).network(NetworkSpec.builder().build()).build();
+  undoVm(vmSpec);
+  try {
+    IMachine debianNode=context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(machineSpec);
+    IMachine machine=manager.get().getVBox().findMachine(vmName);
+    assertEquals(debianNode.getName(),machine.getName());
+  }
+  finally {
+    undoVm(vmSpec);
+  }
+}

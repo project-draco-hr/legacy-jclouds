@@ -1,13 +1,13 @@
 {
-  Set<Email> accounts=client.listAccounts(testDomain);
-  for (  Email account : accounts) {
+  Set<EmailAccount> accounts=client.listAccounts(testDomain);
+  for (  EmailAccount account : accounts) {
     if (account.getAccount().equals("test@" + testDomain)) {
       assertTrue(account.getAntiVirus());
     }
   }
-  client.editAccount("test@" + testDomain,EmailEditOptions.Builder.antiVirus(false));
+  client.editAccount("test@" + testDomain,EditAccountOptions.Builder.antiVirus(false));
   accounts=client.listAccounts(testDomain);
-  for (  Email account : accounts) {
+  for (  EmailAccount account : accounts) {
     if (account.getAccount().equals("test@" + testDomain)) {
       assertFalse(account.getAntiVirus());
     }

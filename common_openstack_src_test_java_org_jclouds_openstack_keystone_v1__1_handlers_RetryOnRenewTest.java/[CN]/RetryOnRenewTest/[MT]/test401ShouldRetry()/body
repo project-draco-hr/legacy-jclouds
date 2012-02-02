@@ -1,0 +1,19 @@
+{
+  HttpCommand command=createMock(HttpCommand.class);
+  HttpRequest request=createMock(HttpRequest.class);
+  HttpResponse response=createMock(HttpResponse.class);
+  @SuppressWarnings("unchecked") LoadingCache<Credentials,Auth> cache=createMock(LoadingCache.class);
+  expect(command.getCurrentRequest()).andReturn(request);
+  cache.invalidateAll();
+  expectLastCall();
+  expect(response.getPayload()).andReturn(Payloads.newStringPayload("token expired, please renew")).anyTimes();
+  expect(response.getStatusCode()).andReturn(401).atLeastOnce();
+  replay(command);
+  replay(response);
+  replay(cache);
+  RetryOnRenew retry=new RetryOnRenew(cache);
+  assertTrue(retry.shouldRetryRequest(command,response));
+  verify(command);
+  verify(response);
+  verify(cache);
+}

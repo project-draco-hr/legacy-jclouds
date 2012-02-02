@@ -1,6 +1,6 @@
 {
   HttpRequest listServers=HttpRequest.builder().method("GET").endpoint(URI.create("http://compute-1.jclouds.org:8774/v1.1/40806637803162/servers")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_list.json")).build();
-  ServerClient clientWhenServersExist=requestsSendResponses(initialAuth,responseWithAccess,listServers,listServersResponse).getServerClient();
+  ServerClient clientWhenServersExist=requestsSendResponses(initialAuthWithApiAccessKeyCredentials,responseWithAccess,listServers,listServersResponse).getServerClient();
   assertEquals(clientWhenServersExist.listServers().toString(),new ParseServerListTest().expected().toString());
 }

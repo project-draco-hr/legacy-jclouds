@@ -1,16 +1,18 @@
 {
-  Builder<String,Set<String>> codes=ImmutableMap.<String,Set<String>>builder();
-  for (  String key : ImmutableSet.of(PROPERTY_REGION,PROPERTY_ZONE))   try {
-    String regionString=injector.getInstance(Key.get(String.class,named(key + "s")));
-    for (    String region : Splitter.on(',').split(regionString)) {
-      try {
-        codes.put(region,ImmutableSet.copyOf(Splitter.on(',').split(injector.getInstance(Key.get(String.class,named(key + "." + region+ "."+ ISO3166_CODES))))));
-      }
- catch (      ConfigurationException e) {
-      }
+  Map<String,String> stringsBoundWithRegionOrZonePrefix=filterStringsBoundByName.apply(new Predicate<String>(){
+    @Override public boolean apply(    String input){
+      return input.startsWith(PROPERTY_REGION) || input.startsWith(PROPERTY_ZONE);
     }
   }
- catch (  ConfigurationException e) {
+);
+  Builder<String,Set<String>> codes=ImmutableMap.<String,Set<String>>builder();
+  for (  String key : ImmutableSet.of(PROPERTY_REGION,PROPERTY_ZONE)) {
+    String regionOrZoneString=stringsBoundWithRegionOrZonePrefix.get(key + "s");
+    if (regionOrZoneString == null)     continue;
+    for (    String region : Splitter.on(',').split(regionOrZoneString)) {
+      String isoCodes=stringsBoundWithRegionOrZonePrefix.get(key + "." + region+ "."+ ISO3166_CODES);
+      if (isoCodes != null)       codes.put(region,ImmutableSet.copyOf(Splitter.on(',').split(isoCodes)));
+    }
   }
   return codes.build();
 }

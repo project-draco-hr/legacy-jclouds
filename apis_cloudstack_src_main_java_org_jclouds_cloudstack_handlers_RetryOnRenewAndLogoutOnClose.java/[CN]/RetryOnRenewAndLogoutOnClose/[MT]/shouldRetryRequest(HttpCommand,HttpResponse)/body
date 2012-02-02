@@ -1,0 +1,18 @@
+{
+  boolean retry=false;
+  try {
+switch (response.getStatusCode()) {
+case 401:
+      byte[] content=closeClientButKeepContentStream(response);
+    if (new String(content).equals("TODO: What state can we retry?")) {
+      logger.debug("invalidating session");
+      authenticationResponseCache.invalidateAll();
+      retry=true;
+    }
+}
+return retry;
+}
+  finally {
+releasePayload(response);
+}
+}

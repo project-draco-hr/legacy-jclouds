@@ -1,0 +1,13 @@
+{
+  Iterable<String> tenantIdUsernameOrAccessKey=Splitter.on(':').split(input.identity);
+  String tenantId=Iterables.get(tenantIdUsernameOrAccessKey,0);
+  String usernameOrAccessKey=Iterables.get(tenantIdUsernameOrAccessKey,1);
+  String passwordOrSecretKey=input.credential;
+  try {
+    ApiAccessKeyCredentials apiAccessKeyCredentials=ApiAccessKeyCredentials.createWithAccessKeyAndSecretKey(usernameOrAccessKey,passwordOrSecretKey);
+    return client.authenticateTenantWithCredentials(tenantId,apiAccessKeyCredentials).get();
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
+}

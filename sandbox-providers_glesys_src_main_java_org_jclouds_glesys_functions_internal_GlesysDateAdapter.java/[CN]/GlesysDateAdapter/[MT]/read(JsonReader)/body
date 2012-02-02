@@ -1,11 +1,16 @@
 {
   String toParse=reader.nextString();
   try {
-synchronized (dateFormat) {
-      return dateFormat.parse(toParse);
-    }
+    return standardDateService.iso8601SecondsDateParse(toParse);
   }
- catch (  ParseException e) {
-    throw Throwables.propagate(e);
+ catch (  Exception ex) {
+    try {
+synchronized (dateFormat) {
+        return dateFormat.parse(toParse);
+      }
+    }
+ catch (    ParseException e) {
+      throw Throwables.propagate(e);
+    }
   }
 }

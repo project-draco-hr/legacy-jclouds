@@ -1,0 +1,26 @@
+{
+  super.configure();
+  bind(new TypeLiteral<ComputeServiceAdapter<ServerDetails,Hardware,OSTemplate,String>>(){
+  }
+).to(GleSYSComputeServiceAdapter.class);
+  bind(new TypeLiteral<Function<ServerDetails,NodeMetadata>>(){
+  }
+).to(ServerDetailsToNodeMetadata.class);
+  bind(new TypeLiteral<Function<OSTemplate,org.jclouds.compute.domain.Image>>(){
+  }
+).to(OSTemplateToImage.class);
+  bind(new TypeLiteral<Function<Hardware,Hardware>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<String,Location>>(){
+  }
+).to(DatacenterToLocation.class);
+  bind(new TypeLiteral<Function<String,OsFamilyVersion64Bit>>(){
+  }
+).to(ParseOsFamilyVersion64BitFromImageName.class);
+  bind(new TypeLiteral<Supplier<Location>>(){
+  }
+).to(OnlyLocationOrFirstZone.class);
+  bind(TemplateOptions.class).to(GleSYSTemplateOptions.class);
+  bind(String.class).annotatedWith(Names.named("PASSWORD")).toProvider(PasswordProvider.class).in(Scopes.SINGLETON);
+}

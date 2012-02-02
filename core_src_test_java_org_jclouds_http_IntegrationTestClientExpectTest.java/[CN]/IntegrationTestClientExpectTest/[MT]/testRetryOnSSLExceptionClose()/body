@@ -1,0 +1,13 @@
+{
+  final AtomicInteger counter=new AtomicInteger(0);
+  IntegrationTestClient client=createClient(new Function<HttpRequest,HttpResponse>(){
+    @Override public HttpResponse apply(    HttpRequest input){
+      if (counter.getAndIncrement() == 0)       throw propagate(new SSLException("Received close_notify during handshake"));
+      assertEquals(renderRequest(input),renderRequest(HttpRequest.builder().method("HEAD").endpoint(URI.create("http://mock/objects/rabbit")).build()));
+      return HttpResponse.builder().statusCode(200).build();
+    }
+  }
+);
+  for (int i=0; i < 3; i++)   assertEquals(client.exists("rabbit"),true);
+  assertEquals(counter.get(),4);
+}

@@ -1,0 +1,22 @@
+{
+  if (jetty.getState().equals(Server.STARTED)) {
+    logger.debug("not starting jetty, as existing host is serving %s",preconfigurationUrl);
+  }
+ else {
+    logger.debug(">> starting jetty to serve %s",preconfigurationUrl);
+    ResourceHandler resourceHandler=new ResourceHandler();
+    resourceHandler.setDirectoriesListed(true);
+    resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+    resourceHandler.setResourceBase("");
+    HandlerList handlers=new HandlerList();
+    handlers.setHandlers(new Handler[]{resourceHandler,new DefaultHandler()});
+    jetty.setHandler(handlers);
+    try {
+      jetty.start();
+    }
+ catch (    Exception e) {
+      logger.error(e,"Server jetty could not be started for %s",preconfigurationUrl);
+    }
+    logger.debug("<< serving %s",resourceHandler.getBaseResource());
+  }
+}
