@@ -8,8 +8,8 @@
       bindProperties(binder(),new SoftLayerPropertiesBuilder(new Properties()).build());
       bind(SoftLayerClient.class).toInstance(context.getApi());
     }
-    @SuppressWarnings("unused") @Provides @Singleton @Memoized public Supplier<ProductPackage> getProductPackage(    SoftLayerClient client,    @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_PACKAGE_NAME) String virtualGuestPackageName){
-      return new SoftLayerComputeServiceContextModule().getProductPackage(30,client,virtualGuestPackageName);
+    @SuppressWarnings("unused") @Provides @Singleton @Memoized public Supplier<ProductPackage> getProductPackage(    AtomicReference<AuthorizationException> authException,    SoftLayerClient client,    @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_PACKAGE_NAME) String virtualGuestPackageName){
+      return new SoftLayerComputeServiceContextModule().getProductPackage(authException,30,client,virtualGuestPackageName);
     }
     @SuppressWarnings("unused") @Provides @Singleton public Iterable<ProductItemPrice> prices(    @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_PRICES) String prices){
       return new SoftLayerComputeServiceContextModule().prices(prices);
