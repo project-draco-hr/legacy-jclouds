@@ -1,6 +1,7 @@
 {
-  if (from == null || from.equals(defaultProvider))   return defaultUri;
+  if (from == null || from.equals(defaultProvider))   return defaultUri.get();
   checkArgument(from instanceof String,"region is a String argument");
+  Map<String,Supplier<URI>> regionToEndpoint=regionToEndpointSupplier.get();
   checkArgument(regionToEndpoint.containsKey(from),"requested location %s, which is not in the configured locations: %s",from,regionToEndpoint);
-  return regionToEndpoint.get(from);
+  return regionToEndpoint.get(from).get();
 }

@@ -1,0 +1,15 @@
+{
+  Builder<String,Supplier<URI>> locations=ImmutableMap.<String,Supplier<URI>>builder();
+  for (  String location : locationIds.get()) {
+    String configKey=configPrefix + "." + location+ "."+ ENDPOINT;
+    String locationUri=config.apply(configKey);
+    if (locationUri == null) {
+      logger.debug("config key %s not present, defaulting to %s",configKey,providerURI);
+      locations.put(location,providerURI);
+    }
+ else {
+      locations.put(location,Suppliers.ofInstance(URI.create(locationUri)));
+    }
+  }
+  return locations.build();
+}

@@ -1,0 +1,26 @@
+{
+  Map<String,Location> zoneIdToParent=Maps.newLinkedHashMap();
+  Location provider=Iterables.find(locations,LocationPredicates.isProvider(),null);
+  if (locations.size() == 1 && provider != null) {
+    for (    String zone : zoneIds)     zoneIdToParent.put(zone,provider);
+  }
+ else {
+    Map<String,Supplier<Set<String>>> regionIdToZoneIds=regionIdToZoneIdsSupplier.get();
+    for (    Location region : Iterables.filter(locations,LocationPredicates.isRegion())) {
+      provider=region.getParent();
+      if (regionIdToZoneIds.containsKey(region.getId())) {
+        for (        String zoneId : regionIdToZoneIds.get(region.getId()).get())         zoneIdToParent.put(zoneId,region);
+      }
+ else {
+        logger.debug("no zones configured for region: %s",region);
+      }
+    }
+  }
+  SetView<String> orphans=Sets.difference(zoneIds,zoneIdToParent.keySet());
+  if (orphans.size() > 0) {
+    checkState(provider != null,"cannot configure zones %s as we need a parent, and the only available location [%s] is not a provider",zoneIds,locations);
+    for (    String orphanedZoneId : orphans)     zoneIdToParent.put(orphanedZoneId,provider);
+  }
+  checkState(zoneIdToParent.keySet().containsAll(zoneIds),"orphaned zones: %s ",Sets.difference(zoneIds,zoneIdToParent.keySet()));
+  return zoneIdToParent;
+}

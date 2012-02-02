@@ -1,5 +1,7 @@
 {
   super.configure();
-  bind(URI.class).annotatedWith(Localhost2.class).toInstance(URI.create("http://localhost:1111"));
+  bind(new TypeLiteral<Supplier<URI>>(){
+  }
+).annotatedWith(Localhost2.class).toInstance(Suppliers.ofInstance(URI.create("http://localhost:1111")));
   bind(IOExceptionRetryHandler.class).toInstance(IOExceptionRetryHandler.NEVER_RETRY);
 }

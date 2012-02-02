@@ -5,7 +5,7 @@
   final AtomicInteger complete=new AtomicInteger(0);
   final AtomicInteger errors=new AtomicInteger(0);
   final long start=System.currentTimeMillis();
-  final Map<T,Exception> errorMap=Maps.newHashMap();
+  final Map<T,Exception> errorMap=newHashMap();
   for (  final java.util.Map.Entry<T,? extends Future<?>> future : responses.entrySet()) {
     Futures.makeListenable(future.getValue(),exec).addListener(new Runnable(){
       @Override public void run(){
@@ -43,7 +43,7 @@
     String message=message(logPrefix,total,complete.get(),errors.get(),start);
     TimeoutException exception=new TimeoutException(message);
     logger.error(exception,message);
-    Throwables.propagate(exception);
+    propagate(exception);
   }
   return errorMap;
 }

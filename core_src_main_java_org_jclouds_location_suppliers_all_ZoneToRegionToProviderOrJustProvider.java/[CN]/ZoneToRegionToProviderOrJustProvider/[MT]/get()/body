@@ -1,0 +1,17 @@
+{
+  Set<? extends Location> regionsOrJustProvider=regionToProviderOrJustProvider.get();
+  Set<String> zoneIds=zoneIdsSupplier.get();
+  if (zoneIds.size() == 0)   return regionsOrJustProvider;
+  Map<String,Location> zoneIdToParent=setParentOfZoneToRegionOrProvider(zoneIds,regionsOrJustProvider);
+  Map<String,Supplier<Set<String>>> isoCodesById=isoCodesByIdSupplier.get();
+  Builder<Location> locations=ImmutableSet.builder();
+  locations.addAll(regionsOrJustProvider);
+  for (  String zoneId : zoneIdToParent.keySet()) {
+    Location parent=zoneIdToParent.get(zoneId);
+    LocationBuilder builder=new LocationBuilder().scope(LocationScope.ZONE).id(zoneId).description(zoneId).parent(parent);
+    if (isoCodesById.containsKey(zoneId))     builder.iso3166Codes(isoCodesById.get(zoneId).get());
+ else     if (parent.getScope() == LocationScope.REGION)     builder.iso3166Codes(parent.getIso3166Codes());
+    locations.add(builder.build());
+  }
+  return locations.build();
+}

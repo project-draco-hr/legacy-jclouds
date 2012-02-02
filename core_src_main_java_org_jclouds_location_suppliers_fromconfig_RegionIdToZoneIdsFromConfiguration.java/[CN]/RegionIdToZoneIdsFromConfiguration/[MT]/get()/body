@@ -1,0 +1,15 @@
+{
+  Set<String> regions=regionsSupplier.get();
+  if (regions.size() == 0) {
+    logger.debug("no regions configured for provider %s",provider);
+    return ImmutableMap.of();
+  }
+  Builder<String,Supplier<Set<String>>> regionToZones=ImmutableMap.<String,Supplier<Set<String>>>builder();
+  for (  String region : regions) {
+    String configKey=PROPERTY_REGION + "." + region+ ".zones";
+    String zones=config.apply(configKey);
+    if (zones == null)     logger.debug("config key %s not present",configKey);
+ else     regionToZones.put(region,Suppliers.<Set<String>>ofInstance(ImmutableSet.copyOf(Splitter.on(',').split(zones))));
+  }
+  return regionToZones.build();
+}

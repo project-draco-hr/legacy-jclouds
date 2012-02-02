@@ -11,7 +11,8 @@
  else {
       throw new IllegalStateException("no annotations on class or method: " + method);
     }
-    endpoint=injector.getInstance(Key.get(URI.class,annotation.value()));
+    endpoint=injector.getInstance(Key.get(uriSupplierLiteral,annotation.value())).get();
   }
-  return addHostIfMissing(endpoint,injector.getInstance(Key.get(URI.class,org.jclouds.location.Provider.class)));
+  URI providerEndpoint=injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get();
+  return addHostIfMissing(endpoint,providerEndpoint);
 }
