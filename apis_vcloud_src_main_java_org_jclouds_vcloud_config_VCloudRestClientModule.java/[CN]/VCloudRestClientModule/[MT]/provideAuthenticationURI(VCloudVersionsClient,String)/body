@@ -1,0 +1,14 @@
+{
+  return new Supplier<URI>(){
+    @Override public URI get(){
+      SortedMap<String,URI> versions=versionService.getSupportedVersions();
+      checkState(versions.size() > 0,"No versions present");
+      checkState(versions.containsKey(version),"version " + version + " not present in: "+ versions);
+      return versions.get(version);
+    }
+    public String toString(){
+      return "login()";
+    }
+  }
+;
+}

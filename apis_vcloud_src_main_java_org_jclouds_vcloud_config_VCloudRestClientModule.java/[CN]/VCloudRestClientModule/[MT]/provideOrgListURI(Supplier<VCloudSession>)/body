@@ -1,4 +1,11 @@
 {
-  VCloudSession session=sessionSupplier.get();
-  return URI.create(getLast(session.getOrgs().values()).getHref().toASCIIString().replaceAll("org/.*","org"));
+  return Suppliers.compose(new Function<VCloudSession,URI>(){
+    @Override public URI apply(    VCloudSession arg0){
+      return URI.create(getLast(arg0.getOrgs().values()).getHref().toASCIIString().replaceAll("org/.*","org"));
+    }
+    @Override public String toString(){
+      return "orgListURI()";
+    }
+  }
+,sessionSupplier);
 }
