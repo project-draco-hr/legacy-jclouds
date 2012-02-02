@@ -8,10 +8,13 @@
 ),Predicates.<DataCenter>notNull());
   Location provider=Iterables.getOnlyElement(super.get());
   if (Iterables.size(list) == 0)   locations.add(provider);
- else   for (  DataCenter from : list) {
-    LocationBuilder builder=new LocationBuilder().scope(LocationScope.ZONE).id(from.getId()).description(from.getName()).parent(provider);
-    if (isoCodesById.containsKey(from.getId()))     builder.iso3166Codes(isoCodesById.get(from.getId()));
-    locations.add(builder.build());
+ else {
+    Map<String,Supplier<Set<String>>> isoCodesById=isoCodesByIdSupplier.get();
+    for (    DataCenter from : list) {
+      LocationBuilder builder=new LocationBuilder().scope(LocationScope.ZONE).id(from.getId()).description(from.getName()).parent(provider);
+      if (isoCodesById.containsKey(from.getId()))       builder.iso3166Codes(isoCodesById.get(from.getId()).get());
+      locations.add(builder.build());
+    }
   }
   return locations.build();
 }
