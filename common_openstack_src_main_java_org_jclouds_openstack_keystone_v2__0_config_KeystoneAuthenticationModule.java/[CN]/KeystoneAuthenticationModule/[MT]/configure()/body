@@ -1,4 +1,6 @@
 {
   bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
   bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
+  bindClientAndAsyncClient(binder(),ServiceClient.class,ServiceAsyncClient.class);
+  install(new FactoryModuleBuilder().build(PublicURLFromAccessForService.Factory.class));
 }
