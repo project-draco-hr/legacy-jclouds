@@ -1,6 +1,5 @@
 {
   VirtualBoxManager manager=createNiceMock(VirtualBoxManager.class);
-  JustProvider justProvider=createNiceMock(JustProvider.class);
   IVirtualBox vBox=createNiceMock(IVirtualBox.class);
   IGuestOSType osType=createNiceMock(IGuestOSType.class);
   List<IMachine> machines=new ArrayList<IMachine>();
@@ -17,9 +16,9 @@
   expect(vBox.getGuestOSType(EasyMock.<String>anyObject())).andReturn(osType).anyTimes();
   expect(osType.getDescription()).andReturn("Ubuntu 10.04").anyTimes();
   expect(osType.getIs64Bit()).andReturn(true).anyTimes();
-  replay(manager,justProvider,vBox,clonedMachine,imageMachine,osType);
+  replay(manager,vBox,clonedMachine,imageMachine,osType);
   Function<IMachine,Image> iMachineToImage=new IMachineToImage(Suppliers.ofInstance(manager),osMap);
-  VirtualBoxComputeServiceAdapter adapter=new VirtualBoxComputeServiceAdapter(Suppliers.ofInstance(manager),justProvider,iMachineToImage);
+  VirtualBoxComputeServiceAdapter adapter=new VirtualBoxComputeServiceAdapter(Suppliers.ofInstance(manager),iMachineToImage);
   Iterator<Image> iterator=adapter.listImages().iterator();
   Image image=Iterators.getOnlyElement(iterator);
   assertEquals(image.getDescription(),VIRTUALBOX_IMAGE_PREFIX + "ubuntu-10.04");
