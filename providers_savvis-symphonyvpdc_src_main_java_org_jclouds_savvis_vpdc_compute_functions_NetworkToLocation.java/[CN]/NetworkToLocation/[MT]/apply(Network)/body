@@ -1,7 +1,7 @@
 {
   Matcher matcher=netPattern.matcher(from.getHref().toASCIIString());
   if (matcher.find()) {
-    Location provider=new LocationBuilder().scope(LocationScope.PROVIDER).id(providerName).description(endpoint.toASCIIString()).iso3166Codes(isoCodes).build();
+    Location provider=new LocationBuilder().scope(LocationScope.PROVIDER).id(providerName).description(endpoint.get().toASCIIString()).iso3166Codes(isoCodes).build();
     Org org=client.getBrowsingClient().getOrg(matcher.group(1));
     Location orgLocation=new LocationBuilder().scope(LocationScope.REGION).id(org.getId()).description(org.getDescription()).parent(provider).build();
     VDC vdc=client.getBrowsingClient().getVDCInOrg(org.getId(),matcher.group(2));
