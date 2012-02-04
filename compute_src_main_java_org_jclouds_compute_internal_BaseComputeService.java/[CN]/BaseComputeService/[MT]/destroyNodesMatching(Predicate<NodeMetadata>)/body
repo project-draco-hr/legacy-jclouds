@@ -4,7 +4,7 @@
     @Override public Future<NodeMetadata> apply(    final NodeMetadata from){
       return executor.submit(new Callable<NodeMetadata>(){
         @Override public NodeMetadata call() throws Exception {
-          destroyNode(from.getId());
+          doDestroyNode(from.getId());
           return from;
         }
         @Override public String toString(){
@@ -16,5 +16,6 @@
   }
 ,executor,null,logger,"destroyNodesMatching(" + filter + ")"));
   logger.debug("<< destroyed(%d)",set.size());
+  cleanUpIncidentalResourcesOfDeadNodes(set);
   return set;
 }
