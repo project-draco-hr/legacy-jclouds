@@ -1,0 +1,59 @@
+{
+  AWSSecurityGroupClient securityGroupClient=AWSEC2Client.class.cast(context.getProviderSpecificContext().getApi()).getSecurityGroupServices();
+  KeyPairClient keyPairClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getKeyPairServices();
+  InstanceClient instanceClient=EC2Client.class.cast(context.getProviderSpecificContext().getApi()).getInstanceServices();
+  String group=this.group + "incidental";
+  String region=null;
+  try {
+    Template template=client.templateBuilder().build();
+    Set<? extends NodeMetadata> nodes=client.createNodesInGroup(group,2,template);
+    NodeMetadata first=Iterables.get(nodes,0);
+    NodeMetadata second=Iterables.get(nodes,1);
+    String instanceId1=Iterables.get(nodes,0).getProviderId();
+    String instanceId2=Iterables.get(nodes,1).getProviderId();
+    AWSRunningInstance instance1=AWSRunningInstance.class.cast(getInstance(instanceClient,instanceId1));
+    AWSRunningInstance instance2=AWSRunningInstance.class.cast(getInstance(instanceClient,instanceId2));
+    region=instance1.getRegion();
+    String expectedSecurityGroupName="jclouds#" + group + "#"+ region;
+    assertEquals(instance1.getRegion(),region);
+    assertNotNull(instance1.getKeyName());
+    assertEquals(instance1.getRegion(),instance2.getRegion(),"Nodes are not in the same region");
+    assertEquals(instance1.getKeyName(),instance2.getKeyName(),"Nodes do not have same key-pair name");
+    assertEquals(instance1.getGroupIds(),instance2.getGroupIds(),"Nodes are not in the same group");
+    assertEquals(instance1.getGroupIds(),ImmutableSet.of(expectedSecurityGroupName),"Nodes are not in the expected security group");
+    String expectedKeyPairName=instance1.getKeyName();
+    Set<SecurityGroup> securityGroups=securityGroupClient.describeSecurityGroupsInRegion(region,expectedSecurityGroupName);
+    Set<KeyPair> keyPairs=keyPairClient.describeKeyPairsInRegion(region,expectedKeyPairName);
+    assertEquals(securityGroups.size(),1);
+    assertEquals(Iterables.get(securityGroups,0).getName(),expectedSecurityGroupName);
+    assertEquals(keyPairs.size(),1);
+    assertEquals(Iterables.get(keyPairs,0).getKeyName(),expectedKeyPairName);
+    destroyer.apply(first.getId());
+    Set<SecurityGroup> securityGroupsAfterDestroyFirst=securityGroupClient.describeSecurityGroupsInRegion(region,expectedSecurityGroupName);
+    Set<KeyPair> keyPairsAfterDestroyFirst=keyPairClient.describeKeyPairsInRegion(region,expectedKeyPairName);
+    assertEquals(securityGroupsAfterDestroyFirst,securityGroups);
+    assertEquals(keyPairsAfterDestroyFirst,keyPairs);
+    destroyer.apply(second.getId());
+    final int TIMEOUT_MS=30 * 1000;
+    boolean firstAttempt=true;
+    boolean done;
+    Set<SecurityGroup> securityGroupsAfterDestroyAll;
+    Set<KeyPair> keyPairsAfterDestroyAll;
+    Stopwatch stopwatch=new Stopwatch();
+    stopwatch.start();
+    do {
+      if (!firstAttempt)       Thread.sleep(1000);
+      firstAttempt=false;
+      securityGroupsAfterDestroyAll=securityGroupClient.describeSecurityGroupsInRegion(region,expectedSecurityGroupName);
+      keyPairsAfterDestroyAll=keyPairClient.describeKeyPairsInRegion(region,expectedKeyPairName);
+      done=securityGroupsAfterDestroyAll.isEmpty() && keyPairsAfterDestroyAll.isEmpty();
+    }
+ while (!done && stopwatch.elapsedMillis() < TIMEOUT_MS);
+    assertEquals(securityGroupsAfterDestroyAll,Collections.emptySet());
+    assertEquals(keyPairsAfterDestroyAll,Collections.emptySet());
+  }
+  finally {
+    client.destroyNodesMatching(NodePredicates.inGroup(group));
+    if (region != null)     cleanupExtendedStuffInRegion(region,securityGroupClient,keyPairClient,group);
+  }
+}

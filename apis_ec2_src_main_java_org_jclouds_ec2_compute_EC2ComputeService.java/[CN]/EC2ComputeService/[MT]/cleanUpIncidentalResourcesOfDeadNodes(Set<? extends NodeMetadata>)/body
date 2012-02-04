@@ -1,11 +1,9 @@
 {
-  Set<? extends NodeMetadata> deadOnes=super.destroyNodesMatching(filter);
   Builder<String,String> regionGroups=ImmutableMultimap.<String,String>builder();
-  for (  NodeMetadata nodeMetadata : deadOnes) {
+  for (  NodeMetadata nodeMetadata : deadNodes) {
     if (nodeMetadata.getGroup() != null)     regionGroups.put(AWSUtils.parseHandle(nodeMetadata.getId())[0],nodeMetadata.getGroup());
   }
   for (  Entry<String,String> regionGroup : regionGroups.build().entries()) {
-    cleanUpIncidentalResources(regionGroup);
+    cleanUpIncidentalResources(regionGroup.getKey(),regionGroup.getValue());
   }
-  return deadOnes;
 }
