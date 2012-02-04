@@ -4,4 +4,5 @@
 ).to(GetAuthenticationResponse.class);
   bindClientAndAsyncClient(binder(),OpenStackAuthClient.class,OpenStackAuthAsyncClient.class);
   install(new FactoryModuleBuilder().build(URIFromAuthenticationResponseForService.Factory.class));
+  bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
 }

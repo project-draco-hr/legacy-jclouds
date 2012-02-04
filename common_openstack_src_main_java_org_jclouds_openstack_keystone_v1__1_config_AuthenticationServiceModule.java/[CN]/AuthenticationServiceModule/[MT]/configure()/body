@@ -3,5 +3,6 @@
   }
 ).to(GetAuth.class);
   bindClientAndAsyncClient(binder(),ServiceClient.class,ServiceAsyncClient.class);
-  install(new FactoryModuleBuilder().build(PublicURLFromAuthResponseForService.Factory.class));
+  install(new FactoryModuleBuilder().implement(RegionIdToURISupplier.class,RegionIdToURIFromAuthForServiceSupplier.class).build(RegionIdToURISupplier.Factory.class));
+  bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
 }

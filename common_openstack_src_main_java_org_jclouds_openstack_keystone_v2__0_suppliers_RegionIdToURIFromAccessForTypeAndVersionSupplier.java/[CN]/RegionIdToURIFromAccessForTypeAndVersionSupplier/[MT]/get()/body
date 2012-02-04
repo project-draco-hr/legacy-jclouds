@@ -1,0 +1,16 @@
+{
+  Access accessResponse=access.get();
+  Service service=Iterables.find(accessResponse.getServiceCatalog(),new Predicate<Service>(){
+    @Override public boolean apply(    Service input){
+      return input.getType().equals(apiType);
+    }
+  }
+);
+  Map<String,Endpoint> regionIdToEndpoint=Maps.uniqueIndex(Iterables.filter(service.getEndpoints(),new Predicate<Endpoint>(){
+    @Override public boolean apply(    Endpoint input){
+      return input.getVersionId().equals(apiVersion);
+    }
+  }
+),endpointToRegion);
+  return Maps.transformValues(regionIdToEndpoint,endpointToSupplierURI);
+}
