@@ -7,7 +7,7 @@
     Predicate<String> passwordReady=new Predicate<String>(){
       @Override public boolean apply(      @Nullable String s){
         if (Strings.isNullOrEmpty(s))         return false;
-        PasswordData data=client.getPasswordData(null,s);
+        PasswordData data=client.getPasswordDataInRegion(null,s);
         if (data == null)         return false;
         return !Strings.isNullOrEmpty(data.getPasswordData());
       }
@@ -15,7 +15,7 @@
 ;
     RetryablePredicate<String> passwordReadyRetryable=new RetryablePredicate<String>(passwordReady,600,10,TimeUnit.SECONDS);
     assertTrue(passwordReadyRetryable.apply(node.getProviderId()));
-    PasswordDataAndPrivateKey dataAndKey=new PasswordDataAndPrivateKey(client.getPasswordData(null,node.getProviderId()),node.getCredentials().getPrivateKey());
+    PasswordDataAndPrivateKey dataAndKey=new PasswordDataAndPrivateKey(client.getPasswordDataInRegion(null,node.getProviderId()),node.getCredentials().getPrivateKey());
     WindowsLoginCredentialsFromEncryptedData f=context.getUtils().getInjector().getInstance(WindowsLoginCredentialsFromEncryptedData.class);
     LoginCredentials credentials=f.apply(dataAndKey);
     assertEquals(credentials.getUser(),"Administrator");
