@@ -1,0 +1,9 @@
+{
+  IMachine vm=manager.get().getVBox().findMachine(vmName);
+  ensureMachineIsLaunched(vmName);
+  InstallGuestAdditions installGuestAdditions=new InstallGuestAdditions(vboxVersion);
+  StatementList statementList=new StatementList(Statements.exec(RunScriptData.aptInstallLazyUpgrade("curl")),installGuestAdditions);
+  NodeMetadata vmMetadata=new IMachineToNodeMetadata().apply(vm);
+  context.getComputeService().submitScriptOnNode(vmMetadata.getId(),statementList,runAsRoot(true).wrapInInitScript(false));
+  return vm;
+}
