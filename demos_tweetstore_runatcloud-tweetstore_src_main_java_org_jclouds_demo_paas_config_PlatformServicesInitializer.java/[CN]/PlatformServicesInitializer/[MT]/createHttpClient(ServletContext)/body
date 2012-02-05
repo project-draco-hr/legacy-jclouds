@@ -1,0 +1,12 @@
+{
+  return Guice.createInjector(new ExecutorServiceModule(),new JavaUrlHttpCommandExecutorServiceModule(),new AbstractModule(){
+    @Override protected void configure(){
+      Properties toBind=new PropertiesBuilder().build();
+      toBind.putAll(checkNotNull(new PropertiesLoader(context).get(),"properties"));
+      toBind.putAll(System.getProperties());
+      bindProperties(binder(),toBind);
+      bind(UriBuilder.class).to(UriBuilderImpl.class);
+    }
+  }
+).getInstance(HttpCommandExecutorService.class);
+}
