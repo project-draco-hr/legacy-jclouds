@@ -13,6 +13,6 @@
   install(new CloudStackParserModule());
   bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
   bindClientAndAsyncClient(binder(),SessionClient.class,SessionAsyncClient.class);
-  bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenewAndLogoutOnClose.class);
+  bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(InvalidateSessionAndRetryOn401AndLogoutOnClose.class);
   super.configure();
 }

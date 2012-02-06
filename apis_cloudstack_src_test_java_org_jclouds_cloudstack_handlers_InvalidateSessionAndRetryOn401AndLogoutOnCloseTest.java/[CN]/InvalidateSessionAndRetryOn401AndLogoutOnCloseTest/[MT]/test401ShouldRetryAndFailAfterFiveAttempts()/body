@@ -1,0 +1,29 @@
+{
+  HttpCommand command=createMock(HttpCommand.class);
+  SessionClient sessionClient=createMock(SessionClient.class);
+  LoadingCache<Credentials,LoginResponse> cache=createMock(LoadingCache.class);
+  cache.invalidateAll();
+  expectLastCall().anyTimes();
+  final AtomicInteger counter=new AtomicInteger();
+  expect(command.incrementFailureCount()).andAnswer(new IAnswer<Integer>(){
+    @Override public Integer answer() throws Throwable {
+      return counter.incrementAndGet();
+    }
+  }
+).anyTimes();
+  expect(command.isReplayable()).andReturn(true).anyTimes();
+  expect(command.getFailureCount()).andAnswer(new IAnswer<Integer>(){
+    @Override public Integer answer() throws Throwable {
+      return counter.get();
+    }
+  }
+).anyTimes();
+  replay(cache,command);
+  HttpResponse response=HttpResponse.builder().payload(Payloads.newStringPayload("Not relevant")).statusCode(401).build();
+  InvalidateSessionAndRetryOn401AndLogoutOnClose retry=new InvalidateSessionAndRetryOn401AndLogoutOnClose(cache,sessionClient);
+  for (int i=0; i < 5; i++) {
+    assertTrue(retry.shouldRetryRequest(command,response));
+  }
+  assertFalse(retry.shouldRetryRequest(command,response));
+  verify(cache,command);
+}
