@@ -1,0 +1,13 @@
+{
+  return new Supplier<SessionWithToken>(){
+    @Override public SessionWithToken get(){
+      try {
+        return cache.get(creds);
+      }
+ catch (      ExecutionException e) {
+        throw propagate(e.getCause());
+      }
+    }
+  }
+;
+}
