@@ -4,6 +4,15 @@
   InstallGuestAdditions installGuestAdditions=new InstallGuestAdditions(vboxVersion);
   StatementList statementList=new StatementList(Statements.exec(RunScriptData.aptInstallLazyUpgrade("curl")),installGuestAdditions);
   NodeMetadata vmMetadata=new IMachineToNodeMetadata().apply(vm);
-  context.getComputeService().submitScriptOnNode(vmMetadata.getId(),statementList,runAsRoot(true).wrapInInitScript(false));
+  ListenableFuture<ExecResponse> execFuture=context.getComputeService().submitScriptOnNode(vmMetadata.getId(),statementList,runAsRoot(true).wrapInInitScript(false));
+  try {
+    execFuture.get();
+  }
+ catch (  InterruptedException e) {
+    e.printStackTrace();
+  }
+catch (  ExecutionException e) {
+    e.printStackTrace();
+  }
   return vm;
 }
