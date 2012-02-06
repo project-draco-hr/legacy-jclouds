@@ -1,0 +1,13 @@
+{
+  try {
+switch (response.getStatusCode()) {
+case 401:
+      authenticationResponseCache.invalidateAll();
+    return super.shouldRetryRequest(command,response);
+}
+return false;
+}
+  finally {
+releasePayload(response);
+}
+}
