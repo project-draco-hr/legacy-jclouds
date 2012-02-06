@@ -3,12 +3,10 @@
     Type genericReturnType=method.getGenericReturnType();
     try {
       Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
-      Binding<?> binding=injector.getExistingBinding(Key.get(genericReturnType,qualifier));
-      if (binding != null)       return binding.getProvider().get();
-      return Supplier.class.cast(injector.getInstance(Key.get(Types.newParameterizedType(Supplier.class,genericReturnType),qualifier))).get();
+      return getInstanceOfTypeWithQualifier(genericReturnType,qualifier);
     }
  catch (    NoSuchElementException e) {
-      return injector.getInstance(Key.get(genericReturnType));
+      return getInstanceOfType(genericReturnType);
     }
   }
  catch (  ProvisionException e) {
