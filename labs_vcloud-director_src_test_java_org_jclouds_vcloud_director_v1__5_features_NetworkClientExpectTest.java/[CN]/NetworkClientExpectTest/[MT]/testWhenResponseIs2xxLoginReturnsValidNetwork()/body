@@ -1,0 +1,6 @@
+{
+  URI orgRef=URI.create("https://vcloudbeta.bluelock.com/api/network/NETWORK_KEY");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",orgRef),getStandardPayloadResponse("/network/network.xml",VCloudDirectorMediaType.ORG_NETWORK_XML));
+  OrgNetwork expected=OrgNetwork.builder().name("internet01-Jclouds").id("urn:vcloud:network:55a677cf-ab3f-48ae-b880-fab90421980c").type(VCloudDirectorMediaType.ORG_NETWORK_XML).href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.org+xml").name("Cluster01-JClouds").href(URI.create("https://vcloudbeta.bluelock.com/api/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).build()).link(Link.builder().rel("down").type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadat")).build()).description("").configuration(NetworkConfiguration.builder().IpScope(IpScope.builder().isInherited(true).gateway("").netmask("").dns1("").dns2("").ipRange("","").build()).fenceMode("bridged").retainNetInfoAcrossDeployments(false).syslogServerSettings(null).build()).allowedExternalIpAddresses(null).build();
+  assertEquals(client.getNetworkClient().getNetwork(networkRef),expected);
+}

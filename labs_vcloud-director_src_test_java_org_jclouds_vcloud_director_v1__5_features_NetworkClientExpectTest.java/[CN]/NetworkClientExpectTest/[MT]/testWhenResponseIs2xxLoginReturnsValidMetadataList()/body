@@ -1,0 +1,7 @@
+{
+  URI orgRef=URI.create("https://vcloudbeta.bluelock.com/api/network/NETWORK_KEY");
+  URI metaRef=URI.create(orgRef.toASCIIString() + "/metadata/");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metaRef),getStandardPayloadResponse("/network/metadata.xml",VCloudDirectorMediaType.METADATA_XML));
+  Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/NETWORK_KEY/metadata")).link(Link.builder().rel("up").type("????????").href(URI.create("??????")).build()).build();
+  assertEquals(client.getOrgClient().getMetadata(orgRef),expected);
+}
