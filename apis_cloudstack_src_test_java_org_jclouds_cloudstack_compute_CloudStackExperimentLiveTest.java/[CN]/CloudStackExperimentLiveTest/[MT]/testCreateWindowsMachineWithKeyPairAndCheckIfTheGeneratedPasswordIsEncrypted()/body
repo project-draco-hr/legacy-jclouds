@@ -8,7 +8,9 @@
   try {
     node=getOnlyElement(computeContext.getComputeService().createNodesInGroup(group,1,template));
     EncryptedPassword password=client.getVirtualMachineClient().getEncryptedPasswordForVirtualMachine(Long.parseLong(node.getId()));
-    Assert.fail("Private key:" + keyPair.getPrivateKey() + "\nPassword: "+ password.getEncryptedPassword());
+    Crypto crypto=new BouncyCastleCrypto();
+    WindowsLoginCredentialsFromEncryptedData passwordDecrypt=new WindowsLoginCredentialsFromEncryptedData(crypto);
+    assertEquals(passwordDecrypt.apply(EncryptedPasswordAndPrivateKey.builder().encryptedPassword(password).privateKey(keyPair.getPrivateKey()).build()).getPassword(),"bX7vvptvw");
   }
   finally {
     if (node != null) {
