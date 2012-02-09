@@ -1,0 +1,13 @@
+{
+  this.httpRequestFactory=httpRequestFactory;
+  timer=new Timer(name);
+  timer.scheduleAtFixedRate(new TimerTask(){
+    @Override public void run(){
+      Runnable task=tasks.poll();
+      if (task != null) {
+        task.run();
+      }
+    }
+  }
+,0,pollingIntervalMillis);
+}
