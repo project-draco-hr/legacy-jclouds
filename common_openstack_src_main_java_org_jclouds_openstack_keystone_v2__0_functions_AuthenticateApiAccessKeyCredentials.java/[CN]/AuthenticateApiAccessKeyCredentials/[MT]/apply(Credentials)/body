@@ -1,7 +1,7 @@
 {
-  Iterable<String> tenantIdUsernameOrAccessKey=Splitter.on(':').split(input.identity);
-  String tenantId=Iterables.get(tenantIdUsernameOrAccessKey,0);
-  String usernameOrAccessKey=Iterables.get(tenantIdUsernameOrAccessKey,1);
+  checkArgument(input.identity.indexOf(':') != -1,"format is tenantId:accesskey");
+  String tenantId=input.identity.substring(0,input.identity.indexOf(':'));
+  String usernameOrAccessKey=input.identity.substring(input.identity.indexOf(':') + 1);
   String passwordOrSecretKey=input.credential;
   ApiAccessKeyCredentials apiAccessKeyCredentials=ApiAccessKeyCredentials.createWithAccessKeyAndSecretKey(usernameOrAccessKey,passwordOrSecretKey);
   return client.authenticateTenantWithCredentials(tenantId,apiAccessKeyCredentials);
