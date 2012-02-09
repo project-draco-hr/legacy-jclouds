@@ -1,21 +1,2 @@
 {
-  NodeMetadataBuilder builder=new NodeMetadataBuilder();
-  builder.ids(from.getId() + "");
-  builder.name(from.getHostname());
-  builder.hostname(from.getHostname());
-  builder.location(findLocationForServerDetails.apply(from));
-  builder.group(parseGroupFromName(from.getHostname()));
-  builder.imageId(from.getTemplateName() + "");
-  builder.operatingSystem(parseOperatingSystem(from));
-  builder.hardware(new HardwareBuilder().ids(from.getId() + "").ram(from.getMemorySizeMB()).processors(ImmutableList.of(new Processor(from.getCpuCores(),1.0))).volumes(ImmutableList.<Volume>of(new VolumeImpl((float)from.getDiskSizeGB(),true,true))).hypervisor(from.getPlatform()).build());
-  builder.state(serverStateToNodeState.get(client.getServerClient().getServerStatus(from.getId(),ServerStatusOptions.Builder.state()).getState()));
-  Iterable<String> addresses=Iterables.transform(from.getIps(),new Function<Ip,String>(){
-    @Override public String apply(    Ip arg0){
-      return arg0.getIp();
-    }
-  }
-);
-  builder.publicAddresses(Iterables.filter(addresses,Predicates.not(IsPrivateIPAddress.INSTANCE)));
-  builder.privateAddresses(Iterables.filter(addresses,IsPrivateIPAddress.INSTANCE));
-  return builder.build();
 }
