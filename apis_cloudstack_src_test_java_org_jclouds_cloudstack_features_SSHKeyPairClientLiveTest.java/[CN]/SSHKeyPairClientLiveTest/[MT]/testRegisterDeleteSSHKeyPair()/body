@@ -2,8 +2,10 @@
   final Map<String,String> sshKey=SshKeys.generate();
   final String publicKey=sshKey.get("public");
   sshKeyPair=client.getSSHKeyPairClient().registerSSHKeyPair(keyPairName,publicKey);
+  assertNull(sshKeyPair.getPrivateKey());
   checkSSHKeyPair(sshKeyPair);
   client.getSSHKeyPairClient().deleteSSHKeyPair(keyPairName);
   assertEquals(client.getSSHKeyPairClient().getSSHKeyPair(sshKeyPair.getName()),null);
+  assertEquals(SshKeys.fingerprintPublicKey(publicKey),sshKeyPair.getFingerprint());
   sshKeyPair=null;
 }
