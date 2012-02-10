@@ -1,6 +1,7 @@
 {
-  URI metadataRef=URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata/KEY");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metadataRef),getStandardPayloadResponse("/network/metadata.xml",VCloudDirectorMediaType.METADATAENTRY_XML));
+  URI metadataUri=URI.create(endpoint + "/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata/KEY");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metadataUri),getStandardPayloadResponse("/network/metadata.xml",VCloudDirectorMediaType.METADATA_ENTRY));
   MetadataEntry expected=MetadataEntry.builder().build();
-  assertEquals(client.getOrgClient().getMetadataEntry(metadataRef),expected);
+  Reference orgRef=Reference.builder().href(metadataUri).build();
+  assertEquals(client.getNetworkClient().getMetadataEntry(metadataUri),expected);
 }
