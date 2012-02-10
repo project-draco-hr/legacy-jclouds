@@ -1,7 +1,7 @@
 {
   URI orgRef=URI.create("https://vcloudbeta.bluelock.com/api/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/org/error403-fake.xml",VCloudDirectorMediaType.ERROR_XML));
-  Error expected=Error.builder().message("No access to entity &quot;com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee&quot;.").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/org/error403-fake.xml",VCloudDirectorMediaType.ERROR));
+  Error expected=Error.builder().message("No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   String orgId=getUuidFromReference.apply(Reference.builder().href(orgRef).build());
   try {
     client.getOrgClient().getOrg(orgId);

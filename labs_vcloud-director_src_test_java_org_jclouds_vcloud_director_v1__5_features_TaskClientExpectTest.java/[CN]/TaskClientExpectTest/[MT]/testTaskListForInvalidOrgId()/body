@@ -1,7 +1,7 @@
 {
-  HttpRequest orgListRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/tasksList/NOTAUUID")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
-  HttpResponse orgListResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/task/error400.xml",VCloudDirectorMediaType.ERROR_XML + ";version=1.5")).build();
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,orgListRequest,orgListResponse);
+  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/tasksList/NOTAUUID")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpResponse taskResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/task/error400.xml",VCloudDirectorMediaType.ERROR.getMediaType() + ";version=1.5")).build();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse);
   String orgId="NOTAUUID";
   Error expected=Error.builder().message("validation error on field 'id': String value has invalid format or length").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
   try {
