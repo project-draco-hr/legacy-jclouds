@@ -1,0 +1,12 @@
+{
+  Preconditions.checkNotNull(input);
+  Preconditions.checkArgument(input instanceof ReferenceType<?>);
+  ReferenceType<?> reference=(ReferenceType<?>)input;
+  Org org=client.getOrg(reference);
+  for (  Link link : org.getLinks()) {
+    if (link.getType().equals(VCloudDirectorMediaType.TASKS_LIST)) {
+      return link.getHref();
+    }
+  }
+  throw new RuntimeException(String.format("Could not find a link of type %s",VCloudDirectorMediaType.TASKS_LIST));
+}
