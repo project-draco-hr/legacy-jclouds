@@ -5,6 +5,6 @@
   Multimap<String,String> headers=ImmutableMultimap.<String,String>of("Content-type","application/unknown");
   HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).headers(headers).build();
   request=binder.bindToRequest(request,obj);
-  assertEquals(request.getPayload().getRawContent(),XMLParser.DEFAULT_XML_HEADER + "<test><elem>Hello World</elem></test>");
+  assertEquals(request.getPayload().getRawContent(),XMLParser.DEFAULT_XML_HEADER + "\n<test>\n    <elem>Hello World</elem>\n</test>\n");
   assertEquals(request.getPayload().getContentMetadata().getContentType(),MediaType.APPLICATION_XML);
 }
