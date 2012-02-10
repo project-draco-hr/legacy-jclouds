@@ -8,15 +8,16 @@ case 401:
 case 403:
       exception=new AuthorizationException(message,exception);
     break;
-case 404:
-  if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
+case 400:
+  if (command.getCurrentRequest().getEndpoint().getPath().indexOf("delete") != -1 && message.indexOf("Could not find") != -1) {
     exception=new ResourceNotFoundException(message,exception);
   }
 break;
-case 500:
-if (message != null && message.indexOf("Unable to determine package for") != -1) {
+case 404:
+if (command.getCurrentRequest().getEndpoint().getPath().indexOf("delete") == -1) {
 exception=new ResourceNotFoundException(message,exception);
 }
+break;
 }
 }
   finally {
