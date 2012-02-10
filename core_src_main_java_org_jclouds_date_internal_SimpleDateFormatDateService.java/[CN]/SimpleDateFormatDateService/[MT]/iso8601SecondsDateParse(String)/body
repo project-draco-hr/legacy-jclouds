@@ -1,11 +1,14 @@
 {
+  String tz=findTZ(toParse);
+  toParse=trimToMillis(toParse);
   toParse=trimTZ(toParse);
+  toParse+=tz;
 synchronized (iso8601SecondsSimpleDateFormat) {
     try {
       return iso8601SecondsSimpleDateFormat.parse(toParse);
     }
- catch (    ParseException e) {
-      throw new RuntimeException(e);
+ catch (    ParseException pe) {
+      throw new RuntimeException("Error parsing data at " + pe.getErrorOffset(),pe);
     }
   }
 }

@@ -1,3 +1,8 @@
 {
-  return iso8601DateFormatter.print(new DateTime(date));
+  String parsed=iso8601DateFormatter.print(new DateTime(date));
+  String tz=findTZ(parsed);
+  if (tz.equals("+0000")) {
+    parsed=trimTZ(parsed) + "Z";
+  }
+  return parsed;
 }

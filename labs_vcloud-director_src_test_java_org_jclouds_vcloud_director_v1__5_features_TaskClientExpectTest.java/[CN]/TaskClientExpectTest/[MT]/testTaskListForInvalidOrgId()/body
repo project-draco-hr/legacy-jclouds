@@ -1,0 +1,19 @@
+{
+  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/tasksList/NOTAUUID")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpResponse taskResponse=HttpResponse.builder().build();
+  HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/org/NOTAUUID")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpResponse orgResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/org/error400.xml",VCloudDirectorMediaType.ERROR + ";version=1.5")).build();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
+  Error expected=Error.builder().message("validation error on field 'id': String value has invalid format or length").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
+  Reference orgRef=Reference.builder().href(URI.create("https://vcloudbeta.bluelock.com/api/org/NOTAUUID")).build();
+  try {
+    client.getTaskClient().getTaskList(orgRef);
+    fail("Should give HTTP 400 error");
+  }
+ catch (  VCloudDirectorException vde) {
+    assertEquals(vde.getError(),expected);
+  }
+catch (  Exception e) {
+    fail("Should have thrown a VCloudDirectorException");
+  }
+}
