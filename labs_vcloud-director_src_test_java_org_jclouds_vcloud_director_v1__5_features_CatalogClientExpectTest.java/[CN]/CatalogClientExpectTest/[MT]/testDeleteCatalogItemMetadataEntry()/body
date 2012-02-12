@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("DELETE","/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY",VCloudDirectorMediaType.TASK),getStandardPayloadResponse("/catalog/deleteMetadataEntryTask.xml",VCloudDirectorMediaType.TASK));
+  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
+  Task expected=deleteMetadataEntryTask();
+  assertEquals(client.getCatalogClient().deleteCatalogItemMetadataEntry(catalogItemReference,"KEY"),expected);
+}

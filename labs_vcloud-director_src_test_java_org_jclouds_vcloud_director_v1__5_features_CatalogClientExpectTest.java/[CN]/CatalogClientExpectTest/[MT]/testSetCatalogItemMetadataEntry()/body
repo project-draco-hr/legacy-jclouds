@@ -1,0 +1,7 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequestWithPayload("PUT","/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY",VCloudDirectorMediaType.TASK,"/catalog/setCatalogItemMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE),getStandardPayloadResponse("/catalog/setMetadataValueTask.xml",VCloudDirectorMediaType.TASK));
+  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
+  MetadataValue value=MetadataValue.builder().value("KITTENS").build();
+  Task expected=setMetadataValueTask();
+  assertEquals(client.getCatalogClient().setCatalogItemMetadataEntry(catalogItemReference,"KEY",value),expected);
+}

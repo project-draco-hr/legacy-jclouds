@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df"),getStandardPayloadResponse("/catalog/catalogItem.xml",VCloudDirectorMediaType.CATALOG_ITEM));
+  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
+  CatalogItem expected=catalogItem();
+  assertEquals(client.getCatalogClient().getCatalogItem(catalogItemReference),expected);
+}

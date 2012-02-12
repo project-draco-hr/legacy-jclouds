@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata"),getStandardPayloadResponse("/catalog/catalogItemMetadata.xml",VCloudDirectorMediaType.METADATA));
+  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
+  Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.catalogItem+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build()).metadata(ImmutableSet.of(itemMetadataEntry())).build();
+  assertEquals(client.getCatalogClient().getCatalogItemMetadata(catalogItemReference),expected);
+}
