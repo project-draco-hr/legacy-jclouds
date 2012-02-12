@@ -1,0 +1,17 @@
+{
+  try {
+    IMachine machine=getVmWithGuestAdditionsInstalled();
+    assertTrue(machineUtils.lockSessionOnMachineAndApply(machine.getName(),LockType.Shared,new Function<ISession,Boolean>(){
+      @Override public Boolean apply(      ISession session){
+        return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestAdd/Version") != null;
+      }
+    }
+));
+  }
+  finally {
+    for (    VmSpec spec : ImmutableSet.of(sourceMachineSpec.getVmSpec())) {
+      ensureMachineHasPowerDown(spec.getVmName());
+      undoVm(spec);
+    }
+  }
+}

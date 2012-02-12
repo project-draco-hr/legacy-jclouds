@@ -1,0 +1,18 @@
+{
+  IMachine vm=manager.get().getVBox().findMachine(vmName);
+  ensureMachineIsLaunched(vmName);
+  InstallGuestAdditions installGuestAdditions=new InstallGuestAdditions(vboxVersion);
+  StatementList statementList=new StatementList(Statements.exec(RunScriptData.aptInstallLazyUpgrade("curl")),installGuestAdditions);
+  NodeMetadata vmMetadata=new IMachineToNodeMetadata().apply(vm);
+  ListenableFuture<ExecResponse> execFuture=context.getComputeService().submitScriptOnNode(vmMetadata.getId(),statementList,runAsRoot(true).wrapInInitScript(false));
+  try {
+    execFuture.get();
+  }
+ catch (  InterruptedException e) {
+    Throwables.propagate(e);
+  }
+catch (  ExecutionException e) {
+    Throwables.propagate(e);
+  }
+  return vm;
+}
