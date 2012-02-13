@@ -1,0 +1,8 @@
+{
+  return transformParallel(client.getServerClient().listServers(),new Function<Server,Future<ServerDetails>>(){
+    @Override public Future<ServerDetails> apply(    Server from){
+      return aclient.getServerClient().getServerDetails(from.getId());
+    }
+  }
+,userThreads,null,logger,"server details");
+}
