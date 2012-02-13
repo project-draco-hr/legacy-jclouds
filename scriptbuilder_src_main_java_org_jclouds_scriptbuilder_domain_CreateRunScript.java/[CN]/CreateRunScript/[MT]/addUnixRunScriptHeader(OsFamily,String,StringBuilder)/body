@@ -9,5 +9,11 @@
     String variableNameInUpper=CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,export);
     builder.append("export ").append(variableNameInUpper).append("='$").append(variableNameInUpper).append("'\n");
   }
+  Map<String,String> functionsToWrite=ScriptBuilder.resolveFunctionDependenciesForStatements(ImmutableMap.<String,String>of("abort",Utils.writeFunctionFromResource("abort",family)),statements,family);
+  if (functionsToWrite.size() > 1) {
+    StringBuilder inNeedOfEscaping=new StringBuilder();
+    ScriptBuilder.writeFunctions(functionsToWrite,family,inNeedOfEscaping);
+    builder.append(inNeedOfEscaping.toString().replace("$","\\$"));
+  }
   builder.append(MARKER).append("\n");
 }

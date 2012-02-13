@@ -14,20 +14,14 @@
     }
   }
 )),osFamily));
-  resolveFunctionDependencies(functions,osFamily);
-  if (functions.size() > 0) {
-    builder.append(ShellToken.BEGIN_FUNCTIONS.to(osFamily));
-    for (    String function : functions.values()) {
-      builder.append(Utils.replaceTokens(function,tokenValueMap));
-    }
-    builder.append(ShellToken.END_FUNCTIONS.to(osFamily));
-  }
+  Map<String,String> functionsToWrite=resolveFunctionDependenciesForStatements(functions,statements,osFamily);
+  writeFunctions(functionsToWrite,osFamily,builder);
   builder.append(Utils.writeZeroPath(osFamily));
   StringBuilder statementBuilder=new StringBuilder();
   for (  Statement statement : statements) {
     statementBuilder.append(statement.render(osFamily));
   }
-  builder.append(statementBuilder.toString().replaceAll(ShellToken.RETURN.to(osFamily),ShellToken.EXIT.to(osFamily)));
+  builder.append(statementBuilder.toString());
   builder.append(ShellToken.END_SCRIPT.to(osFamily));
   return builder.toString();
 }

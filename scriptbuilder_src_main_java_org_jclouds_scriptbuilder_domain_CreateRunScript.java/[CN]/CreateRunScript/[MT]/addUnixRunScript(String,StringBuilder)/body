@@ -3,6 +3,9 @@
   builder.append("cat >> ").append(runScript).append(" <<'").append(MARKER).append("'\n");
   builder.append("cd ").append(pwd).append("\n");
   for (  Statement statement : statements) {
+    if (statement instanceof Call || (statement instanceof StatementList && any(StatementList.class.cast(statement).delegate(),instanceOf(Call.class)))) {
+      statement=new ExitInsteadOfReturn(statement);
+    }
     builder.append(statement.render(OsFamily.UNIX)).append("\n");
   }
   builder.append(MARKER).append("\n");
