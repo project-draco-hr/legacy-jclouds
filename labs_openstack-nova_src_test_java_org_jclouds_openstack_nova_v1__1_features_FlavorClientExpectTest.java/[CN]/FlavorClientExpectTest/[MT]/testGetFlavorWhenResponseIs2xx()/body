@@ -1,0 +1,6 @@
+{
+  HttpRequest getFlavor=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/flavors/foo")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse getFlavorResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_details.json")).build();
+  NovaClient clientWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,getFlavor,getFlavorResponse);
+  assertEquals(clientWhenServersExist.getFlavorClientForRegion("North").getFlavor("foo").toString(),new ParseFlavorTest().expected().toString());
+}
