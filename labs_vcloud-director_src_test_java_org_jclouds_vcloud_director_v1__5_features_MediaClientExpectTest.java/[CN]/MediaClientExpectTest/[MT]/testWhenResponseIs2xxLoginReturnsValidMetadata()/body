@@ -1,7 +1,8 @@
 {
-  URI mediaRef=URI.create("https://vcloudbeta.bluelock.com/api/media/KEY");
-  URI metaRef=URI.create(mediaRef.toASCIIString() + "/metadata/");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metaRef),getStandardPayloadResponse("/media/metadata.xml",VCloudDirectorMediaType.METADATA));
-  Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/media/KEY/metadata")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.network+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/media/KEY")).build()).build();
+  URI mediaUri=URI.create("https://vcloudbeta.bluelock.com/api/media/794eb334-754e-4917-b5a0-5df85cbd61d1");
+  URI metadataUri=URI.create(mediaUri.toASCIIString() + "/metadata");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metadataUri),getStandardPayloadResponse("/media/metadata.xml",VCloudDirectorMediaType.METADATA));
+  Reference mediaRef=Reference.builder().href(mediaUri).build();
+  Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/media/794eb334-754e-4917-b5a0-5df85cbd61d1/metadata")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.media+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/media/794eb334-754e-4917-b5a0-5df85cbd61d1")).build()).build();
   assertEquals(client.getMediaClient().getMetadata(mediaRef),expected);
 }

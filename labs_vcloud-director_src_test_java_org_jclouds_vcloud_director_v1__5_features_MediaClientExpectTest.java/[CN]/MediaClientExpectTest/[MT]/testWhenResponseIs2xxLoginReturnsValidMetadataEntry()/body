@@ -1,6 +1,8 @@
 {
-  URI metadataRef=URI.create("https://vcloudbeta.bluelock.com/api/media/KEY/metadata/KEY");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metadataRef),getStandardPayloadResponse("/media/metadataEntry.xml",VCloudDirectorMediaType.METADATA_ENTRY));
+  URI mediaUri=URI.create("https://vcloudbeta.bluelock.com/api/media/794eb334-754e-4917-b5a0-5df85cbd61d1");
+  URI metadataUri=URI.create(mediaUri.toASCIIString() + "/metadata/key");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",metadataUri),getStandardPayloadResponse("/media/metadataEntry.xml",VCloudDirectorMediaType.METADATA_ENTRY));
   MetadataEntry expected=MetadataEntry.builder().build();
-  assertEquals(client.getMediaClient().getMetadataEntry(metadataRef),expected);
+  Reference mediaRef=Reference.builder().href(mediaUri).build();
+  assertEquals(client.getMediaClient().getMetadataEntry(mediaRef,"key"),expected);
 }

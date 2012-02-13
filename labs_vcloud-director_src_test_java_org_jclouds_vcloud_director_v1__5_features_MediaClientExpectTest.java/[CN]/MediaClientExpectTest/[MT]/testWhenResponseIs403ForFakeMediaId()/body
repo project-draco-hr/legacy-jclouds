@@ -1,9 +1,10 @@
 {
   URI mediaUri=URI.create(endpoint + "/media/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",mediaUri),getStandardPayloadResponse(403,"/media/error403-fake.xml",VCloudDirectorMediaType.ERROR));
-  Error expected=Error.builder().message("No access to entity \"(com.vmware.vcloud.entity.media:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee)\"").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  Error expected=Error.builder().message("No access to entity \"(com.vmware.vcloud.entity.media:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee)\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  Reference mediaRef=Reference.builder().href(mediaUri).build();
   try {
-    client.getMediaClient().getMedia(mediaUri);
+    client.getMediaClient().getMedia(mediaRef);
     fail("Should give HTTP 403 error");
   }
  catch (  VCloudDirectorException vde) {
