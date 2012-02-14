@@ -1,7 +1,7 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> rebooting node(%s)",id);
-  NodeMetadata node=rebootNodeStrategy.rebootNode(id);
+  AtomicReference<NodeMetadata> node=new AtomicReference<NodeMetadata>(rebootNodeStrategy.rebootNode(id));
   boolean successful=nodeRunning.apply(node);
   logger.debug("<< rebooted node(%s) success(%s)",id,successful);
 }

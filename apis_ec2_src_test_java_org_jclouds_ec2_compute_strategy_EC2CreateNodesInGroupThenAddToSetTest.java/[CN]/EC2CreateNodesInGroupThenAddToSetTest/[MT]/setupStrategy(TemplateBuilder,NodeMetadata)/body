@@ -1,0 +1,18 @@
+{
+  EC2Client client=createMock(EC2Client.class);
+  CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions createKeyPairAndSecurityGroupsAsNeededAndReturncustomize=createMock(CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class);
+  InstancePresent instancePresent=createMock(InstancePresent.class);
+  RunningInstanceToNodeMetadata runningInstanceToNodeMetadata=createMock(RunningInstanceToNodeMetadata.class);
+  LoadingCache<RunningInstance,Credentials> instanceToCredentials=createMock(LoadingCache.class);
+  LoadingCache<RegionAndName,String> elasticIpCache=createMock(LoadingCache.class);
+  GetNodeMetadataStrategy nodeRunning=new GetNodeMetadataStrategy(){
+    @Override public NodeMetadata getNode(    String input){
+      Assert.assertEquals(input,node.getId());
+      return node;
+    }
+  }
+;
+  Map<String,Credentials> credentialStore=createMock(Map.class);
+  ComputeUtils utils=createMock(ComputeUtils.class);
+  return new EC2CreateNodesInGroupThenAddToSet(client,elasticIpCache,new AtomicNodeRunning(nodeRunning),Providers.<TemplateBuilder>of(template),createKeyPairAndSecurityGroupsAsNeededAndReturncustomize,instancePresent,runningInstanceToNodeMetadata,instanceToCredentials,credentialStore,utils);
+}

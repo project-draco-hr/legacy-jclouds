@@ -1,0 +1,9 @@
+{
+  expect(node.getState()).andReturn(NodeState.ERROR).atLeastOnce();
+  replay(node);
+  replay(computeService);
+  AtomicNodeRunning nodeRunning=new AtomicNodeRunning(computeService);
+  AtomicReference<NodeMetadata> reference=new AtomicReference<NodeMetadata>(node);
+  nodeRunning.apply(reference);
+  Assert.assertEquals(reference.get(),node);
+}
