@@ -1,0 +1,8 @@
+{
+  URI mediaUri=URI.create("https://vcloudbeta.bluelock.com/api/media/794eb334-754e-4917-b5a0-5df85cbd61d1");
+  URI setMetadataUri=URI.create(mediaUri.toASCIIString() + "/metadata/key");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("DELETE",setMetadataUri),getStandardPayloadResponse("/media/deleteMetadataTask.xml",VCloudDirectorMediaType.TASK));
+  Reference mediaRef=Reference.builder().href(mediaUri).build();
+  Task expectedTask=Task.builder().build();
+  assertEquals(client.getMediaClient().deleteMetadataEntry(mediaRef,"key"),expectedTask);
+}
