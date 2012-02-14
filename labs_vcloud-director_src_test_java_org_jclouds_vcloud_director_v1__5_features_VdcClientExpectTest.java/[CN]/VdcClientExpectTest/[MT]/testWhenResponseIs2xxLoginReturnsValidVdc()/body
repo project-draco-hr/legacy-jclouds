@@ -1,0 +1,7 @@
+{
+  URI vdcUri=URI.create(endpoint + "/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f"),getStandardPayloadResponse("/vdc/vdc.xml",VCloudDirectorMediaType.VDC));
+  Vdc expected=vdc();
+  Reference vdcRef=Reference.builder().href(vdcUri).build();
+  assertEquals(client.getVdcClient().getVdc(vdcRef),expected);
+}

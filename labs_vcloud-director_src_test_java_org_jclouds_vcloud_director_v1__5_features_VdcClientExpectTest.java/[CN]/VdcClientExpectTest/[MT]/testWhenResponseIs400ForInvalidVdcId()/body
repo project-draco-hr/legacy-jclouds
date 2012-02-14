@@ -1,0 +1,16 @@
+{
+  URI vdcUri=URI.create(endpoint + "/vdc/NOTAUUID");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/vdc/NOTAUUID"),getStandardPayloadResponse(400,"/vdc/error400.xml",VCloudDirectorMediaType.ERROR));
+  Error expected=Error.builder().message("validation error : EntityRef has incorrect type, expected type is com.vmware.vcloud.entity.vdc.").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
+  Reference vdcRef=Reference.builder().href(vdcUri).build();
+  try {
+    client.getVdcClient().getVdc(vdcRef);
+    fail("Should give HTTP 400 error");
+  }
+ catch (  VCloudDirectorException vde) {
+    assertEquals(vde.getError(),expected);
+  }
+catch (  Exception e) {
+    fail("Should have thrown a VCloudDirectorException");
+  }
+}
