@@ -1,0 +1,13 @@
+{
+  Iterable<String> parts=Splitter.on(':').split(id);
+  assertEquals(Iterables.size(parts),4,"The Id must be well formed");
+  assertEquals(Iterables.get(parts,0),"urn","The Id must start with 'urn'");
+  assertEquals(Iterables.get(parts,1),"vcloud","The Id must include 'vcloud'");
+  try {
+    UUID uuid=UUID.fromString(Iterables.get(parts,3));
+    assertNotNull(uuid,"The UUID part of an Id must be well formed");
+  }
+ catch (  IllegalArgumentException iae) {
+    fail("The UUID part of an Id must be well formed");
+  }
+}

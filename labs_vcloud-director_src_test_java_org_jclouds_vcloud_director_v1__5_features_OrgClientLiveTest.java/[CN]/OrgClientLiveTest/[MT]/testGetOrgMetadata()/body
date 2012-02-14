@@ -1,0 +1,10 @@
+{
+  Metadata metadata=orgClient.getOrgMetadata(orgRef);
+  assertFalse(Iterables.isEmpty(metadata.getMetadataEntries()),"There must always be MetadataEntry elements in the Org");
+  checkResourceType(metadata);
+  for (  MetadataEntry entry : metadata.getMetadataEntries()) {
+    assertNotNull(entry.getKey(),String.format(FIELD_NOT_NULL_FMT,"Key","MetadataEntry"));
+    assertNotNull(entry.getValue(),String.format(FIELD_NOT_NULL_FMT,"Value","MetadataEntry"));
+    checkResourceType(entry);
+  }
+}
