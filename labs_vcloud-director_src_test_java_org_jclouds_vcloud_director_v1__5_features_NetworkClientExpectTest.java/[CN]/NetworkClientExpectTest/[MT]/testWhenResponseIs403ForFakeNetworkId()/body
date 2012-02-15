@@ -1,0 +1,16 @@
+{
+  URI networkUri=URI.create(endpoint + "/network/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/network/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/network/error403-fake.xml",VCloudDirectorMediaType.ERROR));
+  Error expected=Error.builder().message("This operation is denied.").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  Reference networkRef=Reference.builder().href(networkUri).build();
+  try {
+    client.getNetworkClient().getNetwork(networkRef);
+    fail("Should give HTTP 403 error");
+  }
+ catch (  VCloudDirectorException vde) {
+    assertEquals(vde.getError(),expected);
+  }
+catch (  Exception e) {
+    fail("Should have thrown a VCloudDirectorException");
+  }
+}

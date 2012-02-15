@@ -1,6 +1,7 @@
 {
-  URI networkRef=URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET",networkRef),getStandardPayloadResponse("/network/network.xml",VCloudDirectorMediaType.ORG_NETWORK));
-  OrgNetwork expected=OrgNetwork.builder().name("internet01-Jclouds").id("urn:vcloud:network:55a677cf-ab3f-48ae-b880-fab90421980c").type(VCloudDirectorMediaType.ORG_NETWORK).href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.org+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).build()).link(Link.builder().rel("down").type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata")).build()).description("").configuration(NetworkConfiguration.builder().ipScope(IpScope.builder().isInherited(true).gateway("173.240.107.49").netmask("255.255.255.240").dns1("173.240.111.52").dns2("173.240.111.53").ipRanges(IpRanges.builder().ipRange(IpRange.builder().startAddress("173.240.107.50").endAddress("173.240.107.62").build()).build()).build()).fenceMode("bridged").retainNetInfoAcrossDeployments(false).syslogServerSettings(SyslogServerSettings.builder().build()).build()).allowedExternalIpAddresses(IpAddresses.builder().build()).build();
+  URI networkUri=URI.create(endpoint + "/network/55a677cf-ab3f-48ae-b880-fab90421980c");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/network/55a677cf-ab3f-48ae-b880-fab90421980c"),getStandardPayloadResponse("/network/network.xml",VCloudDirectorMediaType.ORG_NETWORK));
+  OrgNetwork expected=orgNetwork();
+  Reference networkRef=Reference.builder().href(networkUri).build();
   assertEquals(client.getNetworkClient().getNetwork(networkRef),expected);
 }
