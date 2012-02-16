@@ -1,0 +1,9 @@
+{
+  Task deleteMetadataEntry=mediaClient.deleteMetadataEntry(mediaRef,"key");
+  Checks.checkTask(deleteMetadataEntry);
+  assertTrue(taskTester.apply(deleteMetadataEntry.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMetadataEntry"));
+  metadataEntry=mediaClient.getMetadataEntry(mediaRef,"key");
+  assertNull(metadataEntry,String.format(OBJ_FIELD_ATTRB_DEL,MEDIA,"Metadata",metadataEntry,"metadataEntry",metadataEntry));
+  testWhenResponseIs2xxLoginReturnsValidMetadata();
+  testWhenResponseIs2xxLoginReturnsValidMedia();
+}
