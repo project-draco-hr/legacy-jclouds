@@ -1,0 +1,8 @@
+{
+  logger.trace("looking for status on task %s",taskUri);
+  Task task=taskClient.getTask(taskUri);
+  if (task == null)   return false;
+  logger.trace("%s: looking for status %s: currently: %s",task,TaskStatus.SUCCESS,task.getStatus());
+  if (task.getStatus() == TaskStatus.ERROR)   throw new TaskInErrorStateException(task);
+  return task.getStatus() == TaskStatus.SUCCESS;
+}
