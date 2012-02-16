@@ -1,5 +1,7 @@
 {
-  mediaRef=Reference.builder().type("application/vnd.vmware.vcloud.media+xml").name("").href(URI.create(endpoint + "media/794eb334-754e-4917-b5a0-5df85cbd61d1")).build();
+  String mediaId="68dc01a4-6c76-4177-9f19-ec12bf94287c";
+  mediaRef=Reference.builder().type("application/vnd.vmware.vcloud.media+xml").name("").href(URI.create(endpoint + "/media/" + mediaId)).id(mediaId).build();
   mediaClient=context.getApi().getMediaClient();
   taskTester=new RetryablePredicate<URI>(new TaskSuccess(context),10,1,TimeUnit.SECONDS);
+  mediaClient.setMetadata(mediaRef,"key",MetadataValue.builder().value("value").build());
 }

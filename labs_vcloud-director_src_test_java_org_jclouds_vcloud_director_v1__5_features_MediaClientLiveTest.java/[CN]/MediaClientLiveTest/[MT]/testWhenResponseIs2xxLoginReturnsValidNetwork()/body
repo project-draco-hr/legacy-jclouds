@@ -1,6 +1,8 @@
 {
-  String newName="new " + media.getName();
-  String newDescription="new " + media.getDescription();
+  String oldName=media.getName();
+  String newName="new " + oldName;
+  String oldDescription=media.getDescription();
+  String newDescription="new " + oldDescription;
   media.setName(newName);
   media.setDescription(newDescription);
   Task updateMedia=mediaClient.updateMedia(mediaRef,media);
@@ -10,4 +12,10 @@
   assertTrue(equal(media.getName(),newName),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"name"));
   assertTrue(equal(media.getDescription(),newDescription),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"description"));
   testWhenResponseIs2xxLoginReturnsValidMedia();
+  media.setName(newName);
+  media.setDescription(newDescription);
+  updateMedia=mediaClient.updateMedia(mediaRef,media);
+  Checks.checkTask(updateMedia);
+  assertTrue(taskTester.apply(updateMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"updateMedia"));
+  media=mediaClient.getMedia(mediaRef);
 }

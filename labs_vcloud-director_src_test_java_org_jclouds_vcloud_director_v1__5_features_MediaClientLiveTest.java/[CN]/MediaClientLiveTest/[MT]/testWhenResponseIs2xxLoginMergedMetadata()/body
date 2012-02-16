@@ -1,38 +1,18 @@
 {
-  Set<MetadataEntry> inputEntries=null;
-  MetadataEntry keyEntry=null;
-  MetadataEntry updateEntry=null;
-  MetadataEntry newEntry=null;
-  for (  MetadataEntry entry : metadata.getMetadataEntries()) {
-    if (entry.getKey().equals("key")) {
-      keyEntry=entry;
-    }
- else {
-      updateEntry=entry;
-    }
-    if (updateEntry != null && keyEntry != null) {
-      newEntry=MetadataEntry.builder().entry("new " + updateEntry.getKey(),"new " + updateEntry.getValue()).build();
-      break;
-    }
-  }
-  if (newEntry != null) {
-    inputEntries=ImmutableSet.of(keyEntry,updateEntry,newEntry);
-  }
- else   if (keyEntry != null) {
-    metadataEntryValue="new " + updateEntry.getValue();
-    updateEntry=MetadataEntry.builder().entry(keyEntry.getKey(),metadataEntryValue).build();
-    newEntry=MetadataEntry.builder().entry("new key","new value").build();
-    inputEntries=ImmutableSet.of(updateEntry,newEntry);
-  }
- else   if (updateEntry != null) {
-    keyEntry=newEntry=MetadataEntry.builder().entry("key","value").build();
-    inputEntries=ImmutableSet.of(updateEntry,newEntry);
-  }
+  Set<MetadataEntry> inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","testValue").build());
   Metadata inputMetadata=Metadata.builder().entries(inputEntries).build();
   Task mergeMetadata=mediaClient.mergeMetadata(mediaRef,inputMetadata);
   Checks.checkTask(mergeMetadata);
-  assertTrue(taskTester.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata"));
+  assertTrue(taskTester.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(new)"));
   metadata=mediaClient.getMetadata(mediaRef);
-  assertEquals(metadata.getMetadataEntries(),inputEntries,String.format(OBJ_FIELD_EQ,MEDIA,"metadata",metadata.getMetadataEntries(),inputEntries));
+  checkMetadataContainsEntries(metadata,inputEntries);
+  testWhenResponseIs2xxLoginReturnsValidMetadata();
+  inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","new testValue").build());
+  inputMetadata=Metadata.builder().entries(inputEntries).build();
+  mergeMetadata=mediaClient.mergeMetadata(mediaRef,inputMetadata);
+  Checks.checkTask(mergeMetadata);
+  assertTrue(taskTester.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(modify)"));
+  metadata=mediaClient.getMetadata(mediaRef);
+  checkMetadataContainsEntries(metadata,inputEntries);
   testWhenResponseIs2xxLoginReturnsValidMetadata();
 }
