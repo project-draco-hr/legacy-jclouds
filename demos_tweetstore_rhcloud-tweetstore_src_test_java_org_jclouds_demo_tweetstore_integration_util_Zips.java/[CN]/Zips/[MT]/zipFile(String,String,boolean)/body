@@ -1,0 +1,19 @@
+{
+  ZipOutputStream zipOut=new ZipOutputStream(new FileOutputStream(zipFile));
+  try {
+    File srcFile=new File(fileToZip);
+    if (excludeToplevelFolder && srcFile.isDirectory()) {
+      for (      String fileName : srcFile.list()) {
+        addToZip("",fileToZip + "/" + fileName,zipOut);
+      }
+    }
+ else {
+      addToZip("",fileToZip,zipOut);
+    }
+    zipOut.flush();
+  }
+  finally {
+    zipOut.close();
+  }
+  return new File(zipFile);
+}

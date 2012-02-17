@@ -1,0 +1,31 @@
+{
+  if (jbossHomeDir == null || jbossHomeDir.isDirectory() == false)   throw new IllegalStateException("Invalid jboss.home.dir: " + jbossHomeDir);
+  if (systemProps.getProperty(ServerEnvironment.HOME_DIR) == null)   systemProps.setProperty(ServerEnvironment.HOME_DIR,jbossHomeDir.getAbsolutePath());
+  File modulesDir=new File(jbossHomeDir + "/modules");
+  final ModuleLoader moduleLoader=InitialModuleLoaderFactory.getModuleLoader(modulesDir,systemPackages);
+  try {
+    Module.registerURLStreamHandlerFactoryModule(moduleLoader.loadModule(ModuleIdentifier.create("org.jboss.vfs")));
+    ModuleIdentifier logModuleId=ModuleIdentifier.create("org.jboss.logmanager");
+    ModuleClassLoader logModuleClassLoader=moduleLoader.loadModule(logModuleId).getClassLoader();
+    try {
+      LogManager jbossLogManager=(LogManager)logModuleClassLoader.loadClass("org.jboss.logmanager.LogManager").newInstance();
+      ObjectFields.set("manager",null,jbossLogManager,LogManager.class);
+      ObjectFields.set("readPrimordialConfiguration",jbossLogManager,false,LogManager.class);
+      if (LogManager.getLogManager().getClass() == LogManager.class) {
+        System.err.println("WARNING: Failed to load the specified logmodule " + logModuleId);
+      }
+ else {
+        Module.setModuleLogger(new JDKModuleLogger());
+      }
+    }
+ catch (    Exception exception) {
+      System.err.println("Could not load Logmanager \"org.jboss.logmanager.LogManager\"");
+      exception.printStackTrace();
+    }
+    __redirected.__JAXPRedirected.changeAll(ModuleIdentifier.fromString("javax.xml.jaxp-provider"),moduleLoader);
+    return EmbeddedServerFactory.create(moduleLoader,jbossHomeDir,systemProps,systemEnv);
+  }
+ catch (  ModuleLoadException e) {
+    throw new RuntimeException(e);
+  }
+}
