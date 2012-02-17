@@ -1,0 +1,11 @@
+{
+  catalogClient.deleteCatalogItem(newCatalogItemRef);
+  try {
+    catalogClient.getCatalogItem(newCatalogItemRef);
+    fail("The CatalogItem should have been deleted");
+  }
+ catch (  VCloudDirectorException vcde) {
+    checkError(vcde.getError());
+    assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The majorErrorCode should be 403 since the item has been deleted");
+  }
+}
