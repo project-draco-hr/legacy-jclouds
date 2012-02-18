@@ -1,8 +1,9 @@
 {
   checkNotNull(family,"family");
   if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
+  checkArgument(!"root".equals(config.getAdminUsername()),"cannot create admin user 'root'; " + "ensure jclouds is not running as root, or specify an explicit non-root username in AdminAccess");
+  if (Iterables.any(Lists.newArrayList(config.getAdminUsername(),config.getAdminPassword(),config.getAdminPublicKey(),config.getAdminPrivateKey(),config.getLoginPassword()),Predicates.isNull()))   init(new DefaultConfiguration());
   checkNotNull(config.getAdminUsername(),"adminUsername");
-  Preconditions.checkArgument(!"root".equals(config.getAdminUsername()),"cannot create admin user 'root'; " + "ensure jclouds is not running as root, or specify an explicit non-root username in AdminAccess");
   checkNotNull(config.getAdminPassword(),"adminPassword");
   checkNotNull(config.getAdminPublicKey(),"adminPublicKey");
   checkNotNull(config.getAdminPrivateKey(),"adminPrivateKey");

@@ -1,6 +1,8 @@
 {
-  String statement=String.format(">> running [%s] as %s@%s",command.replace(node.getCredentials().getPassword() != null ? node.getCredentials().getPassword() : "XXXXX","XXXXX"),ssh.getUsername(),ssh.getHostAddress());
-  if (command.endsWith("status"))   logger.trace(statement);
- else   computeLogger.debug(statement);
-  return ssh.exec(command);
+  String statement=String.format("[%s] as %s@%s",command.replace(node.getCredentials().getPassword() != null ? node.getCredentials().getPassword() : "XXXXX","XXXXX"),ssh.getUsername(),ssh.getHostAddress());
+  if (command.endsWith("status"))   logger.trace(">> running " + statement);
+ else   computeLogger.debug(">> running " + statement);
+  ExecResponse returnVal=ssh.exec(command);
+  if (!command.endsWith("status"))   checkState(returnVal.getExitStatus() == 0,"error running %s; returnVal !=0: %s",statement,returnVal);
+  return returnVal;
 }

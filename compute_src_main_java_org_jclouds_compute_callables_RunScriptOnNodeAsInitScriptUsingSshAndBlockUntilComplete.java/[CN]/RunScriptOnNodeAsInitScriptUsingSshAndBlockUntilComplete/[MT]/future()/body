@@ -1,5 +1,9 @@
 {
   ExecResponse returnVal=super.doCall();
-  checkState(returnVal.getExitCode() == 0,String.format("task: %s had non-zero exit status: %s",init.getInstanceName(),returnVal));
+  if (returnVal.getExitStatus() != 0) {
+    IllegalStateException e=new IllegalStateException(String.format("instance: %s on node: %s had non-zero exit status: %s",init.getInstanceName(),getNode().getId(),returnVal));
+    eventBus.post(new StatementOnNodeFailure(init,node,e));
+    throw e;
+  }
   return statusFactory.create(this).init();
 }

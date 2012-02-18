@@ -23,6 +23,10 @@ catch (  RuntimeException e) {
       logger.warn(e,"predicate %s on %s illegal state [%s], returning false",input,predicate,e.getMessage());
       return false;
     }
+ else     if (getFirstThrowableOfType(e,CancellationException.class) != null) {
+      logger.warn(e,"predicate %s on %s cancelled [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
  else     if (getFirstThrowableOfType(e,TimeoutException.class) != null) {
       logger.warn(e,"predicate %s on %s timed out [%s], returning false",input,predicate,e.getMessage());
       return false;

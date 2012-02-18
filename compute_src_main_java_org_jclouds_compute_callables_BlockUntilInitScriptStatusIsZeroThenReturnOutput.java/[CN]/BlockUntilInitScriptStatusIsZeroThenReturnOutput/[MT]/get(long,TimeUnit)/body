@@ -3,6 +3,8 @@
     return super.get(timeout,unit);
   }
  catch (  TimeoutException e) {
-    throw new ScriptStillRunningException(timeout,unit,this);
+    ScriptStillRunningException exception=new ScriptStillRunningException(timeout,unit,this);
+    exception.initCause(e);
+    throw exception;
   }
 }

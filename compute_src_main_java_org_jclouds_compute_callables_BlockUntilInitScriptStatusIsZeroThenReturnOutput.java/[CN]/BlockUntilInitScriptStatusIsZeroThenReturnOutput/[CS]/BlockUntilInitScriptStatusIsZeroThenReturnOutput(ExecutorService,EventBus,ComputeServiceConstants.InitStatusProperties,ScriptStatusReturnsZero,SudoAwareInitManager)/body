@@ -1,0 +1,24 @@
+{
+  long retryMaxWait=TimeUnit.DAYS.toMillis(365);
+  long retryInitialPeriod=properties.initStatusInitialPeriod;
+  long retryMaxPeriod=properties.initStatusMaxPeriod;
+  this.commandRunner=checkNotNull(commandRunner,"commandRunner");
+  this.userThreads=checkNotNull(userThreads,"userThreads");
+  this.eventBus=checkNotNull(eventBus,"eventBus");
+  this.notRunningAnymore=new RetryablePredicate<String>(new Predicate<String>(){
+    @Override public boolean apply(    String arg0){
+      return commandRunner.runAction(arg0).getOutput().trim().equals("");
+    }
+  }
+,retryMaxWait,retryInitialPeriod,retryMaxPeriod,TimeUnit.MILLISECONDS){
+    /** 
+ * make sure we stop the retry loop if someone cancelled the future,
+ * this keeps threads from being consumed on dead tasks
+ */
+    @Override protected boolean atOrAfter(    Date end){
+      if (isCancelled())       Throwables.propagate(new CancellationException("cancelled"));
+      return super.atOrAfter(end);
+    }
+  }
+;
+}

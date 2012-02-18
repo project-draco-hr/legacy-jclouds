@@ -1,6 +1,7 @@
 {
   logger.debug("<< cancelled(%s)",commandRunner.getStatement().getInstanceName());
-  commandRunner.refreshAndRunAction("stop");
-  shouldCancel=true;
+  ExecResponse returnVal=commandRunner.refreshAndRunAction("stop");
+  CancellationException e=new CancellationException(String.format("cancelled %s on node: %s; stop command had exit status: %s",getCommandRunner().getStatement().getInstanceName(),getCommandRunner().getNode().getId(),returnVal));
+  eventBus.post(new StatementOnNodeFailure(getCommandRunner().getStatement(),getCommandRunner().getNode(),e));
   super.interruptTask();
 }

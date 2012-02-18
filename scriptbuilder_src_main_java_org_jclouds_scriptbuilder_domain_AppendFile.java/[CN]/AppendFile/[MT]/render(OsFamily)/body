@@ -1,14 +1,8 @@
 {
-  List<Statement> statements=Lists.newArrayList();
   if (family == OsFamily.UNIX) {
-    StringBuilder builder=new StringBuilder();
-    hereFile(path,builder);
-    statements.add(interpret(builder.toString()));
+    return interpret(hereFile()).render(family);
   }
  else {
-    for (    String line : lines) {
-      statements.add(appendToFile(line,path,family));
-    }
+    return interpret(appendToWindowsFile()).render(family);
   }
-  return new StatementList(statements).render(family);
 }

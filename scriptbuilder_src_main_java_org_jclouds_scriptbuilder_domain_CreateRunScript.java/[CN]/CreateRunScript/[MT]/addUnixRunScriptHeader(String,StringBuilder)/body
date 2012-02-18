@@ -1,0 +1,22 @@
+{
+  builder.append("# create runscript header\n");
+  Builder<String> beginningOfFile=ImmutableList.<String>builder();
+  beginningOfFile.addAll(Splitter.on(ShellToken.LF.to(OsFamily.UNIX)).split(ShellToken.BEGIN_SCRIPT.to(OsFamily.UNIX)));
+  beginningOfFile.add(format("PROMPT_COMMAND='echo -ne \\\"\\033]0;%s\\007\\\"'",instanceName));
+  beginningOfFile.add(Utils.writeZeroPath(OsFamily.UNIX));
+  beginningOfFile.add(format("export INSTANCE_NAME='%s'",instanceName));
+  builder.append(createOrOverwriteFile(runScript,beginningOfFile.build(),DELIMETER).render(OsFamily.UNIX));
+  builder.append(AppendFile.builder().path(runScript).delimeter(DELIMETER).expandVariables(true).lines(Iterables.transform(exports,new Function<String,String>(){
+    @Override public String apply(    String export){
+      String variableNameInUpper=CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,export);
+      return new StringBuilder().append("export ").append(variableNameInUpper).append("='$").append(variableNameInUpper).append("'").toString();
+    }
+  }
+)).build().render(OsFamily.UNIX));
+  Map<String,String> functionsToWrite=ScriptBuilder.resolveFunctionDependenciesForStatements(ImmutableMap.<String,String>of("abort",Utils.writeFunctionFromResource("abort",OsFamily.UNIX)),statements,OsFamily.UNIX);
+  if (functionsToWrite.size() > 1) {
+    StringBuilder functions=new StringBuilder();
+    ScriptBuilder.writeFunctions(functionsToWrite,OsFamily.UNIX,functions);
+    builder.append(appendFile(runScript,functions.toString(),DELIMETER).render(OsFamily.UNIX));
+  }
+}

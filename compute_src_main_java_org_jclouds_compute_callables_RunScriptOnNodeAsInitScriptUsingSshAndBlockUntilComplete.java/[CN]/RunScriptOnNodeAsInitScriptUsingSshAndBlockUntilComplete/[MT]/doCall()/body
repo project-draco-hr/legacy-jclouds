@@ -2,8 +2,8 @@
   try {
     return future().get(timeouts.scriptComplete,TimeUnit.MILLISECONDS);
   }
- catch (  Exception e) {
-    Throwables.propagate(e);
-    return null;
+ catch (  Throwable e) {
+    eventBus.post(new StatementOnNodeFailure(init,node,e));
+    throw Throwables.propagate(e);
   }
 }

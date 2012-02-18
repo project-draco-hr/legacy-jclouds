@@ -37,10 +37,10 @@
       }
     }
 ),"jboss",node,JBOSS_PATTERN);
-    client.runScriptOnNode(nodeId,"./jboss stop",runAsRoot(false).wrapInInitScript(false));
+    client.runScriptOnNode(nodeId,"/tmp/init-jboss stop",runAsRoot(false).wrapInInitScript(false));
     trackAvailabilityOfProcessOnNode(context.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
-        return client.runScriptOnNode(nodeId,"./jboss start",runAsRoot(false).wrapInInitScript(false));
+        return client.runScriptOnNode(nodeId,"/tmp/init-jboss start",runAsRoot(false).wrapInInitScript(false));
       }
       @Override public String toString(){
         return "warm start of jboss";

@@ -1,23 +1,30 @@
 {
+  eventBus.post(new InitScriptOnNodeSubmission(init,node));
   try {
-    ssh.put(initFile,init.render(OsFamily.UNIX));
-  }
- catch (  SshException e) {
-    if (logger.isTraceEnabled())     logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
- else     logger.warn("<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
-    ssh.disconnect();
-    ssh.connect();
-    ssh.exec("rm " + initFile);
-    ssh.exec(Statements.appendFile(initFile,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.MARKER + "_" + init.getInstanceName()).render(OsFamily.UNIX));
-  }
-  ssh.exec("chmod 755 " + initFile);
-  setupLinkToInitFile();
-  runAction("init");
-  init.getInitStatement().accept(new AdminAccessVisitor(){
-    @Override public void visit(    AdminAccess input){
-      refreshSshIfNewAdminCredentialsConfigured(input);
+    try {
+      ssh.put(initFile,init.render(OsFamily.UNIX));
     }
-  }
+ catch (    SshException e) {
+      if (logger.isTraceEnabled())       logger.warn(e,"<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+ else       logger.warn("<< (%s) problem using sftp [%s], attempting via sshexec",ssh.toString(),e.getMessage());
+      ssh.disconnect();
+      ssh.connect();
+      ssh.exec("rm " + initFile);
+      ssh.exec(Statements.appendFile(initFile,Splitter.on('\n').split(init.render(OsFamily.UNIX)),AppendFile.DELIMETER + "_" + init.getInstanceName()).render(OsFamily.UNIX));
+    }
+    ssh.exec("chmod 755 " + initFile);
+    setupLinkToInitFile();
+    runAction("init");
+    init.getInitStatement().accept(new AdminAccessVisitor(){
+      @Override public void visit(      AdminAccess input){
+        refreshSshIfNewAdminCredentialsConfigured(input);
+      }
+    }
 );
-  return runAction("start");
+    return runAction("start");
+  }
+ catch (  Throwable e) {
+    eventBus.post(new StatementOnNodeFailure(init,node,e));
+    throw Throwables.propagate(e);
+  }
 }

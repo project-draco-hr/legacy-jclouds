@@ -2,8 +2,8 @@
   ExecResponse returnVal;
   String command=(runAsRoot && Predicates.in(ImmutableSet.of("start","stop","run")).apply(action)) ? execScriptAsRoot(action) : execScriptAsDefaultUser(action);
   returnVal=runCommand(command);
-  if ("status".equals(action))   logger.trace("<< %s(%d)",action,returnVal.getExitCode());
+  if ("status".equals(action))   logger.trace("<< %s(%d)",action,returnVal.getExitStatus());
  else   if (computeLogger.isTraceEnabled())   computeLogger.trace("<< %s[%s]",action,returnVal);
- else   computeLogger.debug("<< %s(%d)",action,returnVal.getExitCode());
+ else   computeLogger.debug("<< %s(%d)",action,returnVal.getExitStatus());
   return returnVal;
 }

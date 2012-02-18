@@ -1,4 +1,4 @@
 {
-  Statement statement=new InitBuilder("install_guest_additions",ImmutableSet.<Statement>of(),ImmutableSet.<Statement>of(new InstallGuestAdditions("4.1.6")));
+  Statement statement=InitScript.builder().name("install_guest_additions").run(new InstallGuestAdditions("4.1.6")).build();
   assertEquals(statement.render(OsFamily.UNIX),CharStreams.toString(Resources.newReaderSupplier(Resources.getResource("test_guest_additions_installer_init." + ShellToken.SH.to(OsFamily.UNIX)),Charsets.UTF_8)));
 }

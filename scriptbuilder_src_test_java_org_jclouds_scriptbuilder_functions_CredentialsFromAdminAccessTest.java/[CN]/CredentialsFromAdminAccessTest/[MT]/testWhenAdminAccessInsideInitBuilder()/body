@@ -6,7 +6,7 @@
   replay(configuration);
   replay(statement);
   replay(creds);
-  InitBuilder testInitBuilder=new InitBuilder("mkebsboot","/mnt/tmp","/mnt/tmp",ImmutableMap.of("tmpDir","/mnt/tmp"),ImmutableList.<Statement>of(statement));
+  InitScript testInitBuilder=InitScript.builder().name("mkebsboot").home("/mnt/tmp").exportVariables(ImmutableMap.of("tmpDir","/mnt/tmp")).run(statement).build();
   assertEquals(CredentialsFromAdminAccess.INSTANCE.apply(testInitBuilder),creds);
   verify(configuration);
   verify(statement);

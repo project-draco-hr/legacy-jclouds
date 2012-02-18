@@ -3,10 +3,18 @@
   try {
     ssh.connect();
     ExecResponse returnVal;
+    eventBus.post(new StatementOnNodeSubmission(statement,node));
     String command=(runAsRoot) ? execAsRoot(statement.render(OsFamily.UNIX)) : execScriptAsDefaultUser(statement.render(OsFamily.UNIX));
-    returnVal=runCommand(command);
+    try {
+      returnVal=runCommand(command);
+    }
+ catch (    Throwable e) {
+      eventBus.post(new StatementOnNodeFailure(statement,node,e));
+      throw Throwables.propagate(e);
+    }
+    eventBus.post(new StatementOnNodeCompletion(statement,node,returnVal));
     if (logger.isTraceEnabled())     logger.trace("<< %s[%s]",statement,returnVal);
- else     logger.debug("<< %s(%d)",statement,returnVal.getExitCode());
+ else     logger.debug("<< %s(%d)",statement,returnVal.getExitStatus());
     return returnVal;
   }
   finally {
