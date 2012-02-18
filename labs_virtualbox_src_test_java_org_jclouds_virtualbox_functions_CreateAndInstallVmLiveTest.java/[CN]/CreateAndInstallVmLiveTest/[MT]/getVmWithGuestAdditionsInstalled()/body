@@ -1,0 +1,9 @@
+{
+  try {
+    Injector injector=context.utils().injector();
+    return injector.getInstance(CreateAndInstallVm.class).apply(masterSpec);
+  }
+ catch (  IllegalStateException e) {
+    return manager.get().getVBox().findMachine(masterSpec.getVmSpec().getVmId());
+  }
+}
