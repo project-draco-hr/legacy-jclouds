@@ -1,0 +1,22 @@
+{
+  try {
+    IMachine machine=getVmWithGuestAdditionsInstalled();
+    machineUtils.applyForMachine(machine.getName(),new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,""));
+    sshClientForIMachine=injector.getInstance(IMachineToSshClient.class);
+    SshClient client=sshClientForIMachine.apply(machine);
+    sshResponds=injector.getInstance(SshResponds.class);
+    checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
+    assertTrue(machineUtils.lockSessionOnMachineAndApply(machine.getName(),LockType.Shared,new Function<ISession,Boolean>(){
+      @Override public Boolean apply(      ISession session){
+        String vboxVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
+        return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestAdd/Version").equals(vboxVersion);
+      }
+    }
+));
+  }
+  finally {
+    for (    VmSpec spec : ImmutableSet.of(vmSpecification)) {
+      ensureMachineHasPowerDown(spec.getVmName());
+    }
+  }
+}
