@@ -1,0 +1,14 @@
+{
+  Task deleteCatalogItemMetadataValue=catalogClient.deleteCatalogItemMetadataValue(catalogItemRef,"KEY");
+  checkTask(deleteCatalogItemMetadataValue);
+  try {
+    catalogClient.getCatalogItemMetadataValue(catalogItemRef,"KEY");
+    fail("The CatalogItem MetadataValue for KEY should have been deleted");
+  }
+ catch (  VCloudDirectorException vcde) {
+    Error error=vcde.getError();
+    checkError(error);
+    Integer majorErrorCode=error.getMajorErrorCode();
+    assertEquals(majorErrorCode,Integer.valueOf(403),String.format(CORRECT_VALUE_OBJECT_FMT,"MajorErrorCode","Error","403",Integer.toString(majorErrorCode)));
+  }
+}

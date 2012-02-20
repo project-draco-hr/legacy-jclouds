@@ -1,7 +1,6 @@
 {
-  assertNotNull(task.getStatus(),"The Status attribute of a Task must be set");
-  assertTrue(Task.Status.ALL.contains(task.getStatus()),String.format("The Status of a Task must be from the allowed list: %s",Iterables.toString(Task.Status.ALL)));
-  assertTrue(Task.Status.ALL.contains(task.getStatus()),String.format("The Status of a Task cannot be '%s'",task.getStatus()));
+  assertNotNull(task.getStatus(),String.format(NOT_NULL_OBJECT_FMT,"Status","Task"));
+  assertTrue(Task.Status.ALL.contains(task.getStatus()),String.format(REQUIRED_VALUE_OBJECT_FMT,"Status","Task",task.getStatus(),Iterables.toString(Link.Rel.ALL)));
   ReferenceType<?> owner=task.getOwner();
   if (owner != null)   checkReferenceType(owner);
   Error error=task.getError();

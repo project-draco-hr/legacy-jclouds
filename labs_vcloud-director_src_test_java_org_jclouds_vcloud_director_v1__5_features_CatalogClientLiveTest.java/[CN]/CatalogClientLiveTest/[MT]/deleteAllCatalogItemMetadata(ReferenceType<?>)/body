@@ -1,0 +1,8 @@
+{
+  Metadata currentMetadata=catalogClient.getCatalogItemMetadata(catalogItemRef);
+  for (  MetadataEntry currentMetadataEntry : currentMetadata.getMetadataEntries()) {
+    catalogClient.deleteCatalogItemMetadataValue(catalogItemRef,currentMetadataEntry.getKey());
+  }
+  Metadata emptyMetadata=catalogClient.getCatalogItemMetadata(catalogItemRef);
+  assertTrue(emptyMetadata.getMetadataEntries().isEmpty(),"The catalogItem Metadata should be empty");
+}
