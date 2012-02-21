@@ -1,13 +1,13 @@
 {
   String command;
   if (node.getCredentials().identity.equals("root")) {
-    command="./" + init.getInstanceName() + " "+ action;
+    command=initFile + " " + action;
   }
  else   if (node.getCredentials().shouldAuthenticateSudo()) {
-    command=String.format("echo '%s'|sudo -S ./%s %s",node.getCredentials().getPassword(),init.getInstanceName(),action);
+    command=String.format("echo '%s'|sudo -S %s %s",node.getCredentials().getPassword(),initFile,action);
   }
  else {
-    command="sudo ./" + init.getInstanceName() + " "+ action;
+    command="sudo " + initFile + " "+ action;
   }
   return command;
 }

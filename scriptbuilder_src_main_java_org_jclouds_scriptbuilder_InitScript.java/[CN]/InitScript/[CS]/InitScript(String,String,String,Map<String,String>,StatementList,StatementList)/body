@@ -1,0 +1,10 @@
+{
+  this.instanceName=checkNotNull(instanceName,"instanceName");
+  this.instanceHome=checkNotNull(instanceHome,"instanceHome");
+  this.logDir=checkNotNull(logDir,"logDir");
+  this.exports=ImmutableMap.<String,String>copyOf(checkNotNull(exports,"exports"));
+  this.init=checkNotNull(init,"init");
+  this.run=checkNotNull(run,"run");
+  checkArgument(run.delegate().size() > 0,"you must specify at least one statement to run");
+  this.delegate=makeInitScriptStatement(instanceName,instanceHome,logDir,exports,init,run);
+}

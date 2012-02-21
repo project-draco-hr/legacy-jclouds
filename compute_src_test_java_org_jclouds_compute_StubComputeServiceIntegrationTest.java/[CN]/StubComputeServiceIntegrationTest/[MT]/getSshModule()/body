@@ -99,12 +99,13 @@
         expect(client.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
         expect(client.getUsername()).andReturn("root").atLeastOnce();
         expect(client.getHostAddress()).andReturn("localhost").atLeastOnce();
-        expect(client.exec("./" + scriptName + " init")).andReturn(EXEC_GOOD);
-        expect(client.exec("./" + scriptName + " start")).andReturn(EXEC_GOOD);
-        expect(client.exec("./" + scriptName + " status")).andReturn(EXEC_GOOD);
-        expect(client.exec("./" + scriptName + " status")).andReturn(EXEC_BAD);
-        expect(client.exec("./" + scriptName + " tail")).andReturn(EXEC_GOOD);
-        expect(client.exec("./" + scriptName + " tailerr")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " init")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " start")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " status")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " status")).andReturn(EXEC_BAD);
+        expect(client.exec("/tmp/init-" + scriptName + " stdout")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " stderr")).andReturn(EXEC_GOOD);
+        expect(client.exec("/tmp/init-" + scriptName + " exitstatus")).andReturn(EXEC_RC_GOOD);
         client.disconnect();
         clientNew.connect();
         expect(clientNew.exec("ls /usr/local/jboss/bundles/org/jboss/as/osgi/configadmin/main|sed -e 's/.*-//g' -e 's/.jar//g'\n")).andReturn(EXEC_GOOD);
@@ -128,20 +129,20 @@
         expect(clientNew.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
         expect(clientNew.getUsername()).andReturn("web").atLeastOnce();
         expect(clientNew.getHostAddress()).andReturn("localhost").atLeastOnce();
-        expect(clientNew.exec("./" + scriptName + " init")).andReturn(EXEC_GOOD);
-        expect(clientNew.exec("./" + scriptName + " start")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " init")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " start")).andReturn(EXEC_GOOD);
         clientNew.disconnect();
         clientNew.connect();
-        expect(clientNew.exec("./" + scriptName + " tail\n")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " stdout\n")).andReturn(EXEC_GOOD);
         clientNew.disconnect();
         clientNew.connect();
-        expect(clientNew.exec("./" + scriptName + " stop\n")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " stop\n")).andReturn(EXEC_GOOD);
         clientNew.disconnect();
         clientNew.connect();
-        expect(clientNew.exec("./" + scriptName + " start\n")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " start\n")).andReturn(EXEC_GOOD);
         clientNew.disconnect();
         clientNew.connect();
-        expect(clientNew.exec("./" + scriptName + " tail\n")).andReturn(EXEC_GOOD);
+        expect(clientNew.exec("/tmp/init-" + scriptName + " stdout\n")).andReturn(EXEC_GOOD);
         clientNew.disconnect();
       }
  catch (      IOException e) {
@@ -165,12 +166,13 @@
       expect(client.exec("ln -fs /tmp/init-" + scriptName + " "+ scriptName)).andReturn(EXEC_GOOD);
       expect(client.getUsername()).andReturn("root").atLeastOnce();
       expect(client.getHostAddress()).andReturn(nodeId + "").atLeastOnce();
-      expect(client.exec("./" + scriptName + " init")).andReturn(EXEC_GOOD);
-      expect(client.exec("./" + scriptName + " start")).andReturn(EXEC_GOOD);
-      expect(client.exec("./" + scriptName + " status")).andReturn(EXEC_GOOD);
-      expect(client.exec("./" + scriptName + " status")).andReturn(EXEC_BAD);
-      expect(client.exec("./" + scriptName + " tail")).andReturn(EXEC_GOOD);
-      expect(client.exec("./" + scriptName + " tailerr")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " init")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " start")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " status")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " status")).andReturn(EXEC_BAD);
+      expect(client.exec("/tmp/init-" + scriptName + " stdout")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " stderr")).andReturn(EXEC_GOOD);
+      expect(client.exec("/tmp/init-" + scriptName + " exitstatus")).andReturn(EXEC_RC_GOOD);
     }
     private void helloAndJava(    SshClient client){
       client.connect();

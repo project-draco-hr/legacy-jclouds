@@ -1,7 +1,5 @@
 {
-  Predicate<NodeMetadata> nodeRunning=createMock(Predicate.class);
   InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory=createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
-  GetNodeMetadataStrategy getNode=createMock(GetNodeMetadataStrategy.class);
   RetryIfSocketNotYetOpen socketTester=createMock(RetryIfSocketNotYetOpen.class);
   Timeouts timeouts=new Timeouts();
   Function<TemplateOptions,Statement> templateOptionsToStatement=new TemplateOptionsToStatement();
@@ -10,20 +8,22 @@
   Set<NodeMetadata> goodNodes=Sets.newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.PENDING).build();
-  expect(nodeRunning.apply(node)).andReturn(false);
-  expect(getNode.getNode(node.getId())).andReturn(null);
-  replay(nodeRunning);
-  replay(initScriptRunnerFactory);
-  replay(getNode);
-  replay(socketTester);
-  new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(nodeRunning,getNode,socketTester,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,node,goodNodes,badNodes,customizationResponses).apply(node);
+  final NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.PENDING).build();
+  final NodeMetadata deadNnode=new NodeMetadataBuilder().ids("id").state(NodeState.TERMINATED).build();
+  GetNodeMetadataStrategy nodeRunning=new GetNodeMetadataStrategy(){
+    @Override public NodeMetadata getNode(    String input){
+      Assert.assertEquals(input,node.getId());
+      return deadNnode;
+    }
+  }
+;
+  replay(initScriptRunnerFactory,socketTester);
+  AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(node);
+  new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(new AtomicNodeRunning(nodeRunning),socketTester,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,atomicNode,goodNodes,badNodes,customizationResponses).apply(atomicNode);
   assertEquals(goodNodes.size(),0);
   assertEquals(badNodes.keySet(),ImmutableSet.of(node));
+  badNodes.get(node).printStackTrace();
   assertEquals(badNodes.get(node).getMessage(),"node(id) terminated before we could customize");
   assertEquals(customizationResponses.size(),0);
-  verify(nodeRunning);
-  verify(initScriptRunnerFactory);
-  verify(getNode);
-  verify(socketTester);
+  verify(initScriptRunnerFactory,socketTester);
 }

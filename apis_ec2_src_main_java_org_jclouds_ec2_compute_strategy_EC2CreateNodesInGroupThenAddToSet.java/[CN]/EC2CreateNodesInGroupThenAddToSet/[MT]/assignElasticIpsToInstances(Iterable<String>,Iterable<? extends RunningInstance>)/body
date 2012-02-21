@@ -7,7 +7,8 @@
     String id=startedInstance.getId();
     RegionAndName coordinates=new RegionAndName(region,id);
     logger.debug(">> awaiting status running instance(%s)",coordinates);
-    nodeRunning.apply(runningInstanceToNodeMetadata.apply(startedInstance));
+    AtomicReference<NodeMetadata> node=new AtomicReference<NodeMetadata>(runningInstanceToNodeMetadata.apply(startedInstance));
+    nodeRunning.apply(node);
     logger.trace("<< running instance(%s)",coordinates);
     logger.debug(">> associating elastic IP %s to instance %s",ip,coordinates);
     client.getElasticIPAddressServices().associateAddressInRegion(region,ip,id);

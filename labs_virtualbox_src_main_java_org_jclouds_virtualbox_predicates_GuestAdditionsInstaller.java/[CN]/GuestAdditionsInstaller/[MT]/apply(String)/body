@@ -1,15 +1,6 @@
 {
-  StatementList statementList=prepareStatementList();
-  ListenableFuture<ExecResponse> execFuture=context.getComputeService().submitScriptOnNode(vmName,statementList,runAsRoot(true).wrapInInitScript(false));
-  ExecResponse execResponse=null;
-  try {
-    execResponse=execFuture.get();
-  }
- catch (  InterruptedException e) {
-    Throwables.propagate(e);
-  }
-catch (  ExecutionException e) {
-    Throwables.propagate(e);
-  }
-  return execResponse == null ? false : execResponse.getExitCode() == 0;
+  vboxVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
+  ListenableFuture<ExecResponse> execFuture=context.getComputeService().submitScriptOnNode(vmName,new InstallGuestAdditions(vboxVersion),RunScriptOptions.NONE);
+  ExecResponse execResponse=Futures.getUnchecked(execFuture);
+  return execResponse == null ? false : execResponse.getExitStatus() == 0;
 }

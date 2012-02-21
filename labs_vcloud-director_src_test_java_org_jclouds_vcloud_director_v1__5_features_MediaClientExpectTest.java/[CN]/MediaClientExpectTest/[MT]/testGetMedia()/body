@@ -1,0 +1,7 @@
+{
+  URI mediaUri=URI.create(endpoint + "/media/794eb334-754e-4917-b5a0-5df85cbd61d1");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/media/794eb334-754e-4917-b5a0-5df85cbd61d1").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/media.xml",VCloudDirectorMediaType.MEDIA).httpResponseBuilder().build());
+  Media expected=media();
+  Reference mediaRef=Reference.builder().href(mediaUri).build();
+  assertEquals(client.getMediaClient().getMedia(mediaRef),expected);
+}

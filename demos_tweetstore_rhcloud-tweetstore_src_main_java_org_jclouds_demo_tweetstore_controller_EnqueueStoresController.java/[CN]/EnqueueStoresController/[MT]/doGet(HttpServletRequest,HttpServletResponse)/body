@@ -1,0 +1,14 @@
+{
+  if (!nullToEmpty(request.getHeader("X-Rhcloud-Cron")).equals("true")) {
+    response.sendError(401);
+  }
+  try {
+    enqueueStoreTweetTasks();
+    response.setContentType(MediaType.TEXT_PLAIN);
+    response.getWriter().println("Done!");
+  }
+ catch (  Exception e) {
+    logger.error(e,"Error storing tweets");
+    throw new ServletException(e);
+  }
+}

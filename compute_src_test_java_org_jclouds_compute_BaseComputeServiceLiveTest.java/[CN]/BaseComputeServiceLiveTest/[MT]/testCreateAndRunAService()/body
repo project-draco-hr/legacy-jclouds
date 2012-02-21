@@ -18,7 +18,7 @@
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
     long configureSeconds=watch.elapsedTime(TimeUnit.SECONDS);
     getAnonymousLogger().info(format("<< configured node(%s) with %s and JBoss %s in %ss",nodeId,exec(nodeId,"java -fullversion"),exec(nodeId,format("ls %s/bundles/org/jboss/as/osgi/configadmin/main|sed -e 's/.*-//g' -e 's/.jar//g'",JBOSS_HOME)),configureSeconds));
-    for (    Entry<String,URI> download : ImmutableMap.<String,URI>of("jboss7",JBOSS7_URL,"jdk7",JDK7_URL).entrySet()) {
+    for (    Entry<String,URI> download : ImmutableMap.<String,URI>of("jboss7",JBOSS7_URL,"jdk7",InstallJDK.FromURL.JDK7_URL).entrySet()) {
       String downloadSourceIp=exec(nodeId,format("nslookup -query=a -timeout=5 %s|grep Address|tail -1|sed 's/.* //g'",download.getValue().getHost()));
       if (InetAddresses.isInetAddress(downloadSourceIp)) {
         getAnonymousLogger().info(format("<< location of %s(%s) from perpective of node(%s): %s",download.getKey(),download.getValue().getHost(),nodeId,getLocationForIp(downloadSourceIp)));
@@ -37,10 +37,10 @@
       }
     }
 ),"jboss",node,JBOSS_PATTERN);
-    client.runScriptOnNode(nodeId,"./jboss stop",runAsRoot(false).wrapInInitScript(false));
+    client.runScriptOnNode(nodeId,"/tmp/init-jboss stop",runAsRoot(false).wrapInInitScript(false));
     trackAvailabilityOfProcessOnNode(context.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
-        return client.runScriptOnNode(nodeId,"./jboss start",runAsRoot(false).wrapInInitScript(false));
+        return client.runScriptOnNode(nodeId,"/tmp/init-jboss start",runAsRoot(false).wrapInInitScript(false));
       }
       @Override public String toString(){
         return "warm start of jboss";

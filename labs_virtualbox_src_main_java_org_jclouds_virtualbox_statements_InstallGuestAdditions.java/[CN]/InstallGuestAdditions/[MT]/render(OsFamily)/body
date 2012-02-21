@@ -1,7 +1,4 @@
 {
-  checkNotNull(family,"family");
-  if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
-  String vboxGuestAdditionsIso="VBoxGuestAdditions_" + vboxVersion + ".iso";
-  ScriptBuilder scriptBuilder=new ScriptBuilder().addStatement(new SaveHttpResponseTo("{tmp}{fs}",vboxGuestAdditionsIso,"GET",URI.create("http://download.virtualbox.org/virtualbox/" + vboxVersion + "/"+ vboxGuestAdditionsIso),ImmutableMultimap.<String,String>of())).addStatement(exec(String.format("mount -o loop {tmp}{fs}%s %s",vboxGuestAdditionsIso,mountPoint))).addStatement(call("installModuleAssistantIfNeeded")).addStatement(exec(String.format("%s%s",mountPoint,"/VBoxLinuxAdditions.run"))).addStatement(exec(String.format("umount %s",mountPoint)));
-  return scriptBuilder.render(family);
+  if (checkNotNull(family,"family") == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
+  return super.render(family);
 }

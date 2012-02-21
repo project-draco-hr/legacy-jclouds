@@ -1,0 +1,12 @@
+{
+  NodeMetadata running=new NodeMetadataBuilder().id("myid").state(NodeState.RUNNING).build();
+  NodeMetadata pending=new NodeMetadataBuilder().id("myid").state(NodeState.PENDING).build();
+  GetNodeMetadataStrategy computeService=createMock(GetNodeMetadataStrategy.class);
+  expect(computeService.getNode("myid")).andReturn(running);
+  replay(computeService);
+  AtomicNodeRunning nodeRunning=new AtomicNodeRunning(computeService);
+  AtomicReference<NodeMetadata> reference=new AtomicReference<NodeMetadata>(pending);
+  Assert.assertTrue(nodeRunning.apply(reference));
+  Assert.assertEquals(reference.get(),running);
+  verify(computeService);
+}

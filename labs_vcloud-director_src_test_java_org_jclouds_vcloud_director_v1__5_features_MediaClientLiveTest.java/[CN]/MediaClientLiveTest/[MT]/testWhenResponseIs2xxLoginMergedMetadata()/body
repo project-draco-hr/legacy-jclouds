@@ -1,0 +1,18 @@
+{
+  Set<MetadataEntry> inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","testValue").build());
+  Metadata inputMetadata=Metadata.builder().entries(inputEntries).build();
+  Task mergeMetadata=mediaClient.mergeMetadata(mediaRef,inputMetadata);
+  Checks.checkTask(mergeMetadata);
+  assertTrue(taskTester.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(new)"));
+  metadata=mediaClient.getMetadata(mediaRef);
+  checkMetadataContainsEntries(metadata,inputEntries);
+  testWhenResponseIs2xxLoginReturnsValidMetadata();
+  inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","new testValue").build());
+  inputMetadata=Metadata.builder().entries(inputEntries).build();
+  mergeMetadata=mediaClient.mergeMetadata(mediaRef,inputMetadata);
+  Checks.checkTask(mergeMetadata);
+  assertTrue(taskTester.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(modify)"));
+  metadata=mediaClient.getMetadata(mediaRef);
+  checkMetadataContainsEntries(metadata,inputEntries);
+  testWhenResponseIs2xxLoginReturnsValidMetadata();
+}

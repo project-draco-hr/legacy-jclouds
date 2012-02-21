@@ -3,6 +3,6 @@
   NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).credentials(LoginCredentials.builder().user("tester").password("notalot").build()).build();
   SshClient sshClient=createMock(SshClient.class);
   replay(sshClient);
-  RunScriptOnNodeAsInitScriptUsingSsh testMe=new RunScriptOnNodeAsInitScriptUsingSsh(Functions.forMap(ImmutableMap.of(node,sshClient)),InitScriptConfigurationForTasks.create().appendIncrementingNumberToAnonymousTaskNames(),node,command,new RunScriptOptions());
+  RunScriptOnNodeAsInitScriptUsingSsh testMe=new RunScriptOnNodeAsInitScriptUsingSsh(Functions.forMap(ImmutableMap.of(node,sshClient)),eventBus,InitScriptConfigurationForTasks.create().appendIncrementingNumberToAnonymousTaskNames(),node,command,new RunScriptOptions());
   testMe.call();
 }

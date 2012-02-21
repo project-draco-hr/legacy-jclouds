@@ -1,14 +1,14 @@
 {
   String imageId="ami1";
   String instanceCreatedId="instance1";
+  NodeMetadata nodeMetadata=new NodeMetadataBuilder().id(region + "/" + instanceCreatedId).providerId(instanceCreatedId).state(NodeState.RUNNING).build();
   TemplateBuilder templateBuilder=createMock(TemplateBuilder.class);
-  EC2CreateNodesInGroupThenAddToSet strategy=setupStrategy(templateBuilder);
+  EC2CreateNodesInGroupThenAddToSet strategy=setupStrategy(templateBuilder,nodeMetadata);
   InputParams input=new InputParams(location);
   InstanceClient instanceClient=createMock(InstanceClient.class);
   RunInstancesOptions ec2Options=createMock(RunInstancesOptions.class);
   RunningInstance instance=createMock(RunningInstance.class);
   Reservation<? extends RunningInstance> reservation=new Reservation<RunningInstance>(region,ImmutableSet.<String>of(),ImmutableSet.<RunningInstance>of(instance),"ownerId","requesterId","reservationId");
-  NodeMetadata nodeMetadata=createMock(NodeMetadata.class);
   expect(templateBuilder.fromTemplate(input.template)).andReturn(templateBuilder);
   expect(templateBuilder.build()).andReturn(input.template);
   expect(strategy.client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
@@ -30,7 +30,6 @@
   replay(instanceClient);
   replay(ec2Options);
   replay(instance);
-  replay(nodeMetadata);
   input.replayMe();
   replayStrategy(strategy);
   strategy.execute(input.tag,input.count,input.template,input.nodes,input.badNodes,input.customization);
@@ -38,7 +37,6 @@
   verify(instanceClient);
   verify(ec2Options);
   verify(instance);
-  verify(nodeMetadata);
   input.verifyMe();
   verifyStrategy(strategy);
 }

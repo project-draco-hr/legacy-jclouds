@@ -1,9 +1,12 @@
 {
   builder.append("# add desired commands from the user\n");
-  builder.append("cat >> ").append(runScript).append(" <<'").append(MARKER).append("'\n");
-  builder.append("cd ").append(pwd).append("\n");
+  Builder<String> userCommands=ImmutableList.<String>builder();
+  userCommands.add("cd " + pwd);
   for (  Statement statement : statements) {
-    builder.append(statement.render(OsFamily.UNIX)).append("\n");
+    if (statement instanceof Call || (statement instanceof StatementList && any(StatementList.class.cast(statement).delegate(),instanceOf(Call.class)))) {
+      statement=new ExitInsteadOfReturn(statement);
+    }
+    userCommands.addAll(Splitter.on('\n').split(statement.render(OsFamily.UNIX)));
   }
-  builder.append(MARKER).append("\n");
+  builder.append(appendFile(runScript,userCommands.build(),DELIMETER).render(OsFamily.UNIX));
 }

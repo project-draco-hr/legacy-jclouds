@@ -1,0 +1,15 @@
+{
+  assertNotNull(task.getStatus(),"The Status attribute of a Task must be set");
+  assertTrue(Task.Status.ALL.contains(task.getStatus().toString()),String.format("The Status of a Task (%s) must be one of the allowed list - %s",task.getStatus().toString(),Iterables.toString(Task.Status.ALL)));
+  ReferenceType<?> owner=task.getOwner();
+  if (owner != null)   checkReferenceType(owner);
+  Error error=task.getError();
+  if (error != null)   checkError(error);
+  ReferenceType<?> user=task.getUser();
+  if (user != null)   checkReferenceType(user);
+  ReferenceType<?> org=task.getOrg();
+  if (org != null)   checkReferenceType(org);
+  Integer progress=task.getProgress();
+  if (progress != null)   checkProgress(progress);
+  checkEntityType(task);
+}

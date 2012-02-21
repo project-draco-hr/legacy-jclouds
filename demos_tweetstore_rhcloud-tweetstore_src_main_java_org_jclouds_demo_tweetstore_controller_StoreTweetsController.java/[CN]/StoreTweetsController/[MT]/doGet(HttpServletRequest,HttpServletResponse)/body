@@ -1,0 +1,19 @@
+{
+  if (nullToEmpty(request.getHeader(PLATFORM_REQUEST_ORIGINATOR_HEADER)).equals("taskqueue-twitter")) {
+    try {
+      String contextName=checkNotNull(request.getHeader("context"),"missing header context");
+      logger.info("retrieving tweets");
+      addMyTweets(contextName,client.getMentions());
+      logger.debug("done storing tweets");
+      response.setContentType(MediaType.TEXT_PLAIN);
+      response.getWriter().println("Done!");
+    }
+ catch (    Exception e) {
+      logger.error(e,"Error storing tweets");
+      throw new ServletException(e);
+    }
+  }
+ else {
+    response.sendError(401);
+  }
+}

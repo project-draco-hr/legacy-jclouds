@@ -1,7 +1,7 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> resuming node(%s)",id);
-  NodeMetadata node=resumeNodeStrategy.resumeNode(id);
+  AtomicReference<NodeMetadata> node=new AtomicReference<NodeMetadata>(resumeNodeStrategy.resumeNode(id));
   boolean successful=nodeRunning.apply(node);
   logger.debug("<< resumed node(%s) success(%s)",id,successful);
 }

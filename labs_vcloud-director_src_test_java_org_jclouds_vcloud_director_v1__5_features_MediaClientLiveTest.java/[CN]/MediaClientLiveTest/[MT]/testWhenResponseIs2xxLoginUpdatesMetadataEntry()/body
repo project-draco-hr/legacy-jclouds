@@ -1,0 +1,9 @@
+{
+  metadataEntryValue="newValue";
+  MetadataValue newValue=MetadataValue.builder().value(metadataEntryValue).build();
+  Task setMetadataEntry=mediaClient.setMetadata(mediaRef,"key",newValue);
+  Checks.checkTask(setMetadataEntry);
+  assertTrue(taskTester.apply(setMetadataEntry.getHref()),String.format(TASK_COMPLETE_TIMELY,"setMetadataEntry"));
+  metadataValue=mediaClient.getMetadataValue(mediaRef,"key");
+  testWhenResponseIs2xxLoginReturnsValidMetadataValue();
+}

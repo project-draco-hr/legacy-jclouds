@@ -2,7 +2,9 @@
   checkState(ssh != null,"please call init() before invoking call");
   try {
     ssh.connect();
-    return doCall();
+    ExecResponse returnVal=doCall();
+    eventBus.post(new StatementOnNodeCompletion(init,node,returnVal));
+    return returnVal;
   }
   finally {
     if (ssh != null)     ssh.disconnect();

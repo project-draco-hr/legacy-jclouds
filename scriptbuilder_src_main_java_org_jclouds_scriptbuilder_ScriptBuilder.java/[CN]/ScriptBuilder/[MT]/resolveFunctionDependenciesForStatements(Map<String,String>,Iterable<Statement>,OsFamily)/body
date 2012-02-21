@@ -1,0 +1,12 @@
+{
+  Builder<String,String> builder=ImmutableMap.<String,String>builder();
+  builder.putAll(knownFunctions);
+  Set<String> dependentFunctions=ImmutableSet.copyOf(Iterables.concat(Iterables.transform(statements,new Function<Statement,Iterable<String>>(){
+    @Override public Iterable<String> apply(    Statement from){
+      return from.functionDependencies(osFamily);
+    }
+  }
+)));
+  for (  String unresolved : Sets.difference(dependentFunctions,knownFunctions.keySet()))   builder.put(unresolved,Utils.writeFunctionFromResource(unresolved,osFamily));
+  return builder.build();
+}

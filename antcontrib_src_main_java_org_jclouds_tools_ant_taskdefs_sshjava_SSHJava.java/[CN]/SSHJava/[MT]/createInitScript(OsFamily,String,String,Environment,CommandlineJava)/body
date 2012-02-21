@@ -25,6 +25,6 @@
   if (commandLine.getJavaCommand().getArguments() != null && commandLine.getJavaCommand().getArguments().length > 0) {
     commandBuilder.append(" ").append(Joiner.on(' ').join(commandLine.getJavaCommand().getArguments()));
   }
-  InitBuilder testInitBuilder=new InitBuilder(id,basedir,basedir,envVariables,ImmutableList.<Statement>of(Statements.interpret(commandBuilder.toString())));
+  InitScript testInitBuilder=InitScript.builder().name(id).home(basedir).exportVariables(envVariables).run(Statements.interpret(commandBuilder.toString())).build();
   return testInitBuilder.render(osFamily);
 }
