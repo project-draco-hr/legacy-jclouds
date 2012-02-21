@@ -1,8 +1,6 @@
 {
-  URI vdcUri=URI.create(endpoint + "/vdc/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/vdc/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/vdc/error403-fake.xml",VCloudDirectorMediaType.ERROR));
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/vdc/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/error403-fake.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(403).build());
   Error expected=Error.builder().message("No access to entity \"com.vmware.vcloud.entity.vdc:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
-  Reference vdcRef=Reference.builder().href(vdcUri).build();
   try {
     client.getVdcClient().getVdc(vdcRef);
     fail("Should give HTTP 403 error");

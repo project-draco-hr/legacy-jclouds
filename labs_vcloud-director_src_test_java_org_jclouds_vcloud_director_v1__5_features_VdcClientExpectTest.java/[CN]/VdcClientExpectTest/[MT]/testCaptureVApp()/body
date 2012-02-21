@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST","/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f/action/captureVApp").xmlFilePayload("/vdc/params/captureVApp.xml",VCloudDirectorMediaType.CAPTURE_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/vdc.xml",VCloudDirectorMediaType.VDC).httpResponseBuilder().build());
+  VAppTemplate expected=captureVApp();
+  CaptureVAppParams params=CaptureVAppParams.builder().build();
+  assertEquals(client.getVdcClient().captureVApp(vdcRef,params),expected);
+}
