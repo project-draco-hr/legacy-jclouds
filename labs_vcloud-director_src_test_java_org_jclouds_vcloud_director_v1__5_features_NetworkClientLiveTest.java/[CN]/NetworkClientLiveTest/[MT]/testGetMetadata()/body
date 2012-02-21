@@ -1,0 +1,10 @@
+{
+  Metadata metadata=networkClient.getMetadata(networkRef);
+  assertFalse(Iterables.isEmpty(metadata.getMetadataEntries()),String.format(OBJ_FIELD_REQ_LIVE,NETWORK,"metadata.entries"));
+  checkResourceType(metadata);
+  for (  MetadataEntry entry : metadata.getMetadataEntries()) {
+    assertNotNull(entry.getKey(),String.format(OBJ_FIELD_ATTRB_REQ,networkClient,"MetadataEntry",entry.getKey(),"key"));
+    assertNotNull(entry.getValue(),String.format(OBJ_FIELD_ATTRB_REQ,networkClient,"MetadataEntry",entry.getValue(),"value"));
+    checkResourceType(entry);
+  }
+}
