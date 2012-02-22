@@ -1,0 +1,11 @@
+{
+  MetadataEntry existingMetadataEntry=Iterables.find(catalogItemMetadata.getMetadataEntries(),new Predicate<MetadataEntry>(){
+    @Override public boolean apply(    MetadataEntry input){
+      return input.getKey().equals("KEY");
+    }
+  }
+);
+  MetadataValue metadataValue=catalogClient.getCatalogItemMetadataValue(catalogItemRef,"KEY");
+  assertEquals(existingMetadataEntry.getValue(),metadataValue.getValue());
+  checkMetadataValue(metadataValue);
+}

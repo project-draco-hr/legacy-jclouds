@@ -1,7 +1,7 @@
 {
   Task deleteMedia=mediaClient.deleteMedia(mediaRef);
   Checks.checkTask(deleteMedia);
-  assertTrue(taskTester.apply(deleteMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMedia"));
+  assertTrue(retryTaskSuccess.apply(deleteMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMedia"));
   Error expected=Error.builder().message(String.format("No access to entity \"(com.vmware.vcloud.entity.media:%s)\".",mediaRef.getId())).majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
     media=mediaClient.getMedia(mediaRef);
