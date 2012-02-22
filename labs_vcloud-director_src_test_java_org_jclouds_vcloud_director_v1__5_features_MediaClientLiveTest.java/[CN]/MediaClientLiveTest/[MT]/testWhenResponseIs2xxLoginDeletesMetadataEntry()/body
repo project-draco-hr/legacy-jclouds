@@ -1,7 +1,7 @@
 {
   Task deleteMetadataEntry=mediaClient.deleteMetadataEntry(mediaRef,"testKey");
   Checks.checkTask(deleteMetadataEntry);
-  assertTrue(taskTester.apply(deleteMetadataEntry.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMetadataEntry"));
+  assertTrue(retryTaskSuccess.apply(deleteMetadataEntry.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMetadataEntry"));
   Error expected=Error.builder().message("The access to the resource metadata_item with id testKey is forbidden").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
     metadataValue=mediaClient.getMetadataValue(mediaRef,"testKey");

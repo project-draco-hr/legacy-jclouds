@@ -1,0 +1,7 @@
+{
+  setupCredentials();
+  Properties overrides=setupProperties();
+  context=new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  TaskSuccess taskSuccess=context.utils().injector().getInstance(TaskSuccess.class);
+  retryTaskSuccess=new RetryablePredicate<URI>(taskSuccess,1000L);
+}
