@@ -5,14 +5,18 @@
   Checks.checkTask(mergeMetadata);
   assertTrue(retryTaskSuccess.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(new)"));
   metadata=mediaClient.getMetadata(mediaRef);
+  Checks.checkMetadataFor(MEDIA,metadata);
   checkMetadataContainsEntries(metadata,inputEntries);
-  testWhenResponseIs2xxLoginReturnsValidMetadata();
+  media=mediaClient.getMedia(mediaRef);
+  Checks.checkMediaFor(MEDIA,media);
   inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","new testValue").build());
   inputMetadata=Metadata.builder().entries(inputEntries).build();
   mergeMetadata=mediaClient.mergeMetadata(mediaRef,inputMetadata);
   Checks.checkTask(mergeMetadata);
   assertTrue(retryTaskSuccess.apply(mergeMetadata.getHref()),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(modify)"));
   metadata=mediaClient.getMetadata(mediaRef);
+  Checks.checkMetadataFor(MEDIA,metadata);
   checkMetadataContainsEntries(metadata,inputEntries);
-  testWhenResponseIs2xxLoginReturnsValidMetadata();
+  media=mediaClient.getMedia(mediaRef);
+  Checks.checkMediaFor(MEDIA,media);
 }
