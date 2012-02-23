@@ -1,0 +1,31 @@
+{
+  assertNotNull(vdcRef,String.format(REF_REQ_LIVE,VDC));
+  Vdc vdc=vdcClient.getVdc(vdcRef);
+  assertNotNull(vdc,String.format(OBJ_REQ_LIVE,VDC));
+  assertTrue(!vdc.getDescription().equals("DO NOT USE"),"vDC isn't to be used for testing");
+  Checks.checkEntityType(vdc);
+  assertNotNull(vdc.getAllocationModel(),String.format(OBJ_FIELD_REQ,VDC,"allocationModel"));
+  assertNotNull(vdc.getStorageCapacity(),String.format(OBJ_FIELD_REQ,VDC,"storageCapacity"));
+  Checks.checkCapacityWithUsage(vdc.getStorageCapacity());
+  assertNotNull(vdc.getComputeCapacity(),String.format(OBJ_FIELD_REQ,VDC,"computeCapacity"));
+  Checks.checkComputeCapacity(vdc.getComputeCapacity());
+  assertNotNull(vdc.getNicQuota(),String.format(OBJ_FIELD_REQ,VDC,"nicQuota"));
+  assertTrue(vdc.getNicQuota() >= 0,String.format(OBJ_FIELD_GTE_0,VDC,"nicQuota",vdc.getNicQuota()));
+  assertNotNull(vdc.getNetworkQuota(),String.format(OBJ_FIELD_REQ,VDC,"networkQuota"));
+  assertTrue(vdc.getNetworkQuota() >= 0,String.format(OBJ_FIELD_GTE_0,VDC,"networkQuota",vdc.getNetworkQuota()));
+  if (vdc.getResourceEntities() != null) {
+    Checks.checkResourceEntities(vdc.getResourceEntities());
+  }
+  if (vdc.getAvailableNetworks() != null) {
+    Checks.checkAvailableNetworks(vdc.getAvailableNetworks());
+  }
+  if (vdc.getCapabilities() != null) {
+    Checks.checkCapabilities(vdc.getCapabilities());
+  }
+  if (vdc.getVmQuota() != null) {
+    assertTrue(vdc.getVmQuota() >= 0,String.format(OBJ_FIELD_GTE_0,VDC,"vmQuota",vdc.getVmQuota()));
+  }
+  if (vdc.getVmQuota() != null) {
+    assertTrue(vdc.getVmQuota() >= 0,String.format(OBJ_FIELD_GTE_0,VDC,"vmQuota",vdc.getVmQuota()));
+  }
+}
