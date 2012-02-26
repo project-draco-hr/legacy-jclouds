@@ -1,3 +1,8 @@
 {
-  return checkNotNull(cache.get().getVCloudToken(),"No token present in session");
+  return Suppliers.compose(new Function<VCloudSession,String>(){
+    @Override public String apply(    VCloudSession input){
+      return checkNotNull(input.getVCloudToken(),"No token present in session");
+    }
+  }
+,cache);
 }

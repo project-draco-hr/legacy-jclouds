@@ -6,8 +6,8 @@
   if (vAppTemplate.getNetworkSection().getNetworks().size() > 1)   throw new UnsupportedOperationException("we currently do not support multiple network connections in a vAppTemplate " + vAppTemplate);
   Network networkToConnect=get(vAppTemplate.getNetworkSection().getNetworks(),0);
   NetworkConfig config;
-  if (networkWithNoIpAllocation.apply(networkToConnect))   config=defaultNetworkConfig;
- else   config=defaultNetworkConfig.toBuilder().networkName(networkToConnect.getName()).build();
+  if (networkWithNoIpAllocation.apply(networkToConnect))   config=defaultNetworkConfig.get();
+ else   config=defaultNetworkConfig.get().toBuilder().networkName(networkToConnect.getName()).build();
   InstantiateVAppTemplateOptions options=addNetworkConfig(config);
   String customizationScript=VCloudTemplateOptions.class.cast(template.getOptions()).getCustomizationScript();
   IpAddressAllocationMode ipAllocationMode=VCloudTemplateOptions.class.cast(template.getOptions()).getIpAddressAllocationMode();

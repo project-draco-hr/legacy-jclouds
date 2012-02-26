@@ -5,7 +5,7 @@
   String name=checkNotNull(postParams.remove("name"),"name");
   URI template=URI.create(checkNotNull(postParams.remove("template"),"template"));
   Set<NetworkConfig> networkConfig=null;
-  NetworkConfigDecorator networkConfigDecorator=new NetworkConfigDecorator(templateCache.getUnchecked(template),defaultNetwork.getHref(),defaultFenceMode,defaultNetworkNameInTemplate);
+  NetworkConfigDecorator networkConfigDecorator=new NetworkConfigDecorator(templateCache.getUnchecked(template),defaultNetwork.get().getHref(),defaultFenceMode,defaultNetworkNameInTemplate);
   InstantiateVAppTemplateOptions options=findOptionsInArgsOrNull(gRequest);
   if (options != null) {
     if (options.getNetworkConfig().size() > 0)     networkConfig=ImmutableSet.copyOf(transform(options.getNetworkConfig(),networkConfigDecorator));
