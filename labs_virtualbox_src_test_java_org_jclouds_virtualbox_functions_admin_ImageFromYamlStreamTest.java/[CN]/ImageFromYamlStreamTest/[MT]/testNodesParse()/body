@@ -1,6 +1,8 @@
 {
-  InputStream is=getClass().getResourceAsStream("/testImages.yaml");
-  ImageFromYamlStream parser=new ImageFromYamlStream();
-  assertEquals(parser.apply(is).asMap(),ImmutableMap.of(TEST1.getId(),TEST1));
-  is.close();
+  StringBuilder yamlFileLines=new StringBuilder();
+  for (  Object line : IOUtils.readLines(new InputStreamReader(getClass().getResourceAsStream("/testImages.yaml")))) {
+    yamlFileLines.append(line).append("\n");
+  }
+  ImageFromYamlString parser=new ImageFromYamlString();
+  assertEquals(parser.apply(yamlFileLines.toString()).asMap(),ImmutableMap.of(TEST1.getId(),TEST1));
 }
