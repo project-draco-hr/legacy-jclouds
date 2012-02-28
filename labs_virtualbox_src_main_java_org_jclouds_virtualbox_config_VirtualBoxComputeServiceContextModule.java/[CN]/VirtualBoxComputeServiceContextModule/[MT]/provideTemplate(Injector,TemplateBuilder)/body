@@ -1,4 +1,6 @@
 {
-  injector.getInstance(Supplier.class);
-  return template.osFamily(OsFamily.UBUNTU).osVersionMatches("11.04");
+  Supplier<Map<Image,YamlImage>> imagesSupplier=injector.getInstance(Supplier.class);
+  Image image=Iterables.getFirst(imagesSupplier.get().keySet(),null);
+  template.fromImage(image);
+  return template;
 }
