@@ -1,4 +1,6 @@
 {
+  checkNotNull(source,"yaml descriptor");
+  checkState(!source.equals(""),"yaml descriptor is empty");
   Constructor constructor=new Constructor(Config.class);
   TypeDescription imageDesc=new TypeDescription(YamlImage.class);
   imageDesc.putListPropertyType("images",String.class);
@@ -7,13 +9,9 @@
   Config config=(Config)yaml.load(source);
   checkState(config != null,"missing config: class");
   checkState(config.images != null,"missing images: collection");
-  Map<String,Image> backingMap=Maps.uniqueIndex(Iterables.transform(config.images,YamlImage.toImage),new Function<Image,String>(){
-    public String apply(    Image image){
-      return image.getId();
-    }
+  Map<Image,YamlImage> backingMap=Maps.newLinkedHashMap();
+  for (  YamlImage yamlImage : config.images) {
+    backingMap.put(YamlImage.toImage.apply(yamlImage),yamlImage);
   }
-);
-  LoadingCache<String,Image> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(backingMap)));
-  for (  String node : backingMap.keySet())   cache.getUnchecked(node);
-  return cache;
+  return backingMap;
 }

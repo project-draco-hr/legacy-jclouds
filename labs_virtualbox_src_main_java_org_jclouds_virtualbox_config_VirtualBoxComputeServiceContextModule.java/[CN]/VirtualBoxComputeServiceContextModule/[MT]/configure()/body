@@ -24,9 +24,21 @@
   bind(new TypeLiteral<Supplier<VirtualBoxManager>>(){
   }
 ).to((Class)StartVBoxIfNotAlreadyRunning.class);
-  bind(new TypeLiteral<Function<InputStream,LoadingCache<String,Image>>>(){
+  bind(new TypeLiteral<Function<String,Map<Image,YamlImage>>>(){
   }
 ).to((Class)ImageFromYamlString.class);
+  bind(new TypeLiteral<Supplier<String>>(){
+  }
+).to((Class)YamlImagesFromFileConfig.class);
+  bind(new TypeLiteral<LoadingCache<Image,IMachine>>(){
+  }
+).to((Class)MasterImages.class);
+  bind(new TypeLiteral<Function<MasterSpec,IMachine>>(){
+  }
+).to((Class)MasterLoader.class);
+  bind(new TypeLiteral<Function<IMachine,NodeAndInitialCredentials<IMachine>>>(){
+  }
+).to((Class)NodeCreator.class);
   bind(new TypeLiteral<Function<URI,InputStream>>(){
   }
 ).to(SupplyFromProviderURIOrNodesProperty.class);

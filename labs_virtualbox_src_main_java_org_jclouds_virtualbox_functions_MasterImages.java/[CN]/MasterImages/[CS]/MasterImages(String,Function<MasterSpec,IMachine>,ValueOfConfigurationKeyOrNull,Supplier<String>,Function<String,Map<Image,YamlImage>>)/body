@@ -1,0 +1,13 @@
+{
+  checkNotNull(version,"version");
+  this.mastersLoader=masterLoader;
+  this.cfg=cfg;
+  this.workingDir=cfg.apply(VIRTUALBOX_WORKINGDIR) == null ? VIRTUALBOX_DEFAULT_DIR : cfg.apply(VIRTUALBOX_WORKINGDIR);
+  File wdFile=new File(workingDir);
+  if (!wdFile.exists()) {
+    wdFile.mkdirs();
+  }
+  this.adminDisk=workingDir + "/testadmin.vdi";
+  this.imageMapping=yamlMapper.apply(yamlSupplier.get());
+  this.guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",workingDir,Iterables.get(Splitter.on('r').split(version),0));
+}
