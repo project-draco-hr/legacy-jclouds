@@ -1,0 +1,24 @@
+{
+  oldMedia=media;
+  media=vdcClient.cloneMedia(vdcRef,CloneMediaParams.builder().source(Reference.builder().fromEntity(media).build()).build());
+  Checks.checkMediaFor(VDC,media);
+  Task copyTask=Iterables.getFirst(media.getTasksInProgress().getTasks(),null);
+  if (copyTask != null) {
+    Checks.checkTask(copyTask);
+    assertTrue(retryTaskSuccess.apply(copyTask),String.format(TASK_COMPLETE_TIMELY,"copyTask"));
+    media=mediaClient.getMedia(media);
+  }
+  Checks.checkMediaFor(MEDIA,media);
+  assertTrue(media.clone(oldMedia),"");
+  mediaClient.setMetadata(media,"key",MetadataValue.builder().value("value").build());
+  media=vdcClient.cloneMedia(vdcRef,CloneMediaParams.builder().source(Reference.builder().fromEntity(media).build()).name("copied test media").description("copied by testCloneMedia()").isSourceDelete(true).build());
+  Checks.checkMediaFor(VDC,media);
+  copyTask=Iterables.getFirst(media.getTasksInProgress().getTasks(),null);
+  if (copyTask != null) {
+    Checks.checkTask(copyTask);
+    assertTrue(retryTaskSuccess.apply(copyTask),String.format(TASK_COMPLETE_TIMELY,"copyTask"));
+    media=mediaClient.getMedia(media);
+  }
+  Checks.checkMediaFor(MEDIA,media);
+  assertTrue(media.clone(oldMedia),"");
+}
