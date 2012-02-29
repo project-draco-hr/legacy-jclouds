@@ -8,7 +8,12 @@
   if (!wdFile.exists()) {
     wdFile.mkdirs();
   }
+  this.isosDir=wdFile.getAbsolutePath() + File.separator + "isos";
   this.adminDisk=workingDir + "/testadmin.vdi";
-  this.imageMapping=yamlMapper.get();
-  this.guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",workingDir,Iterables.get(Splitter.on('r').split(version),0));
+  this.imageMapping=Maps.newLinkedHashMap();
+  for (  Entry<Image,YamlImage> entry : yamlMapper.get().entrySet()) {
+    this.imageMapping.put(entry.getKey().getId(),entry.getValue());
+  }
+  this.guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,Iterables.get(Splitter.on('r').split(version),0));
+  checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
 }

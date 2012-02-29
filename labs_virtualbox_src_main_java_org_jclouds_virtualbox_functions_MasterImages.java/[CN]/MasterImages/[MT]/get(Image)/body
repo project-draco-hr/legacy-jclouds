@@ -1,17 +1,17 @@
 {
-  if (masters.containsKey(key)) {
+  if (masters.containsKey(key.getId())) {
     return masters.get(key);
   }
-  checkNotNull(key,key);
-  checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
-  YamlImage yamlImage=imageMapping.get(key);
+  checkNotNull(key,"key");
+  YamlImage yamlImage=imageMapping.get(key.getId());
   checkNotNull(yamlImage,"could not find yaml image for image: " + key);
+  String localIsoUrl=getFilePathOrDownload(yamlImage.iso);
   String vmName=VIRTUALBOX_IMAGE_PREFIX + yamlImage.id;
   HardDisk hardDisk=HardDisk.builder().diskpath(adminDisk).autoDelete(true).controllerPort(0).deviceSlot(1).build();
-  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,yamlImage.iso).attachHardDisk(hardDisk).attachISO(1,1,guestAdditionsIso).build();
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,localIsoUrl).attachHardDisk(hardDisk).attachISO(1,1,guestAdditionsIso).build();
   VmSpec vmSpecification=VmSpec.builder().id(yamlImage.id).name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
-  MasterSpec masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(yamlImage.iso).installationScript(installationKeySequence.replace("HOSTNAME",vmSpecification.getVmName())).build()).network(NetworkSpec.builder().natNetworkAdapter(0,NatAdapter.builder().tcpRedirectRule("127.0.0.1",2222,"",22).build()).build()).build();
+  MasterSpec masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(localIsoUrl).installationScript(installationKeySequence.replace("HOSTNAME",vmSpecification.getVmName())).build()).network(NetworkSpec.builder().natNetworkAdapter(0,NatAdapter.builder().tcpRedirectRule("127.0.0.1",2222,"",22).build()).build()).build();
   IMachine masterMachine=mastersLoader.apply(masterSpec);
-  masters.put(key,masterMachine);
+  masters.put(key.getId(),masterMachine);
   return masterMachine;
 }
