@@ -1,0 +1,18 @@
+{
+  String group=null;
+  try {
+    group=Iterables.getOnlyElement(Iterables.filter(data,new Predicate<String>(){
+      @Override public boolean apply(      String input){
+        return input.startsWith("jclouds#") && input.contains("#" + instance.getRegion());
+      }
+    }
+)).split("#")[1];
+  }
+ catch (  NoSuchElementException e) {
+    logger.debug("no group parsed from %s's data: %s",instance.getId(),data);
+  }
+catch (  IllegalArgumentException e) {
+    logger.debug("too many groups match %s; %s's data: %s","jclouds#",instance.getId(),data);
+  }
+  return group;
+}
