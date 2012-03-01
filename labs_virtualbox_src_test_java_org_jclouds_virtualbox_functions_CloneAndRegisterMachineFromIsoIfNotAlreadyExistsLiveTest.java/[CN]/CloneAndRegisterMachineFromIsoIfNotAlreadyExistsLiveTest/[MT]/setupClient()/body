@@ -7,7 +7,10 @@
   Injector injector=context.utils().injector();
   Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
   IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",sourceVmSpec.getVmName())).build();
-  NetworkSpec networkSpec=NetworkSpec.builder().build();
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
+  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC1(networkInterfaceCard).build();
   sourceMachineSpec=MasterSpec.builder().iso(isoSpec).vm(sourceVmSpec).network(networkSpec).build();
-  clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
+  VmSpec clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
+  cloneSpec=CloneSpec.builder().vm(clonedVmSpec).network(networkSpec).build();
 }

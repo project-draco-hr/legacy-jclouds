@@ -1,0 +1,9 @@
+{
+  if (hasNatAdapter(nic)) {
+    return machineUtils.writeLockMachineAndApply(vmName,new AttachNATAdapterToMachineIfNotAlreadyExists(nic));
+  }
+ else   if (hasBridgedAdapter(nic)) {
+    return machineUtils.writeLockMachineAndApply(vmName,new AttachBridgedAdapterToMachine(nic));
+  }
+ else   return null;
+}

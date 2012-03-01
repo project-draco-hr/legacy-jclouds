@@ -1,15 +1,17 @@
 {
   Long adapterId=0l;
   IMachine machine=createMock(IMachine.class);
-  INetworkAdapter networkAdapter=createMock(INetworkAdapter.class);
-  expect(machine.getNetworkAdapter(adapterId)).andReturn(networkAdapter);
-  networkAdapter.setAttachmentType(Bridged);
-  networkAdapter.setAdapterType(Am79C973);
-  networkAdapter.setMACAddress(macAddress);
-  networkAdapter.setBridgedInterface(hostInterface);
-  networkAdapter.setEnabled(true);
+  INetworkAdapter iNetworkAdapter=createMock(INetworkAdapter.class);
+  expect(machine.getNetworkAdapter(adapterId)).andReturn(iNetworkAdapter);
+  iNetworkAdapter.setAttachmentType(Bridged);
+  iNetworkAdapter.setAdapterType(Am79C973);
+  iNetworkAdapter.setMACAddress(macAddress);
+  iNetworkAdapter.setBridgedInterface(hostInterface);
+  iNetworkAdapter.setEnabled(true);
   machine.saveSettings();
-  replay(machine,networkAdapter);
-  new AttachBridgedAdapterToMachine(adapterId,macAddress,hostInterface).apply(machine);
-  verify(machine,networkAdapter);
+  replay(machine,iNetworkAdapter);
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
+  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
+  new AttachBridgedAdapterToMachine(networkInterfaceCard).apply(machine);
+  verify(machine,iNetworkAdapter);
 }
