@@ -1,10 +1,18 @@
 {
-  machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,Void>(){
-    @Override public Void apply(    ISession session){
-      IProgress powerDownProgress=session.getConsole().powerDown();
-      powerDownProgress.waitForCompletion(-1);
-      return null;
+  while (manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.RUNNING)) {
+    machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,Void>(){
+      @Override public Void apply(      ISession session){
+        IProgress powerDownProgress=session.getConsole().powerDown();
+        powerDownProgress.waitForCompletion(-1);
+        return null;
+      }
+    }
+);
+    try {
+      Thread.sleep(1000);
+    }
+ catch (    InterruptedException e) {
+      Throwables.propagate(e);
     }
   }
-);
 }
