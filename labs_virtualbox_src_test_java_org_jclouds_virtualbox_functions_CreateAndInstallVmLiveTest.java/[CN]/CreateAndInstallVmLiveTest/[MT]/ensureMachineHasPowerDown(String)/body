@@ -1,5 +1,5 @@
 {
-  while (manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.RUNNING)) {
+  while (!manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.POWERED_OFF)) {
     machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,Void>(){
       @Override public Void apply(      ISession session){
         IProgress powerDownProgress=session.getConsole().powerDown();
