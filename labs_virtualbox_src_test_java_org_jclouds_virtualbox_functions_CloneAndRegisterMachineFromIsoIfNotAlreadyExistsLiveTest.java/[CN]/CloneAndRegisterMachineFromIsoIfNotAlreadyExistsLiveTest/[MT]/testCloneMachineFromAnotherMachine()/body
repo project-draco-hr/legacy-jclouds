@@ -6,10 +6,10 @@
       session.getConsole().deleteSnapshot(source.getCurrentSnapshot().getId());
       session.unlockMachine();
     }
-    IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,clonedVmSpec,IS_LINKED_CLONE).apply(source);
-    assertEquals(clone.getName(),clonedVmSpec.getVmName());
+    IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,cloneSpec,IS_LINKED_CLONE,machineUtils).apply(source);
+    assertEquals(clone.getName(),cloneSpec.getVmSpec().getVmName());
   }
   finally {
-    for (    VmSpec spec : ImmutableSet.of(clonedVmSpec,sourceMachineSpec.getVmSpec()))     undoVm(spec);
+    for (    VmSpec spec : ImmutableSet.of(cloneSpec.getVmSpec(),sourceMachineSpec.getVmSpec()))     undoVm(spec);
   }
 }

@@ -6,6 +6,9 @@
   vmSpecification=VmSpec.builder().id(vmName).name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
   injector=context.utils().injector();
   Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
-  masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",vmSpecification.getVmName())).build()).network(NetworkSpec.builder().natNetworkAdapter(0,NatAdapter.builder().tcpRedirectRule("127.0.0.1",2222,"",22).build()).build()).build();
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",2222,"",22).build();
+  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
+  masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",vmSpecification.getVmName())).build()).network(networkSpec).build();
   undoVm(vmSpecification);
 }
