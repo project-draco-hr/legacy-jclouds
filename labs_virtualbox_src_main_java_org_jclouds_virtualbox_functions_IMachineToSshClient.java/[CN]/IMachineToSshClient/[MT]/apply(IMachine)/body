@@ -1,5 +1,14 @@
 {
-  INetworkAdapter networkAdapter=vm.getNetworkAdapter(0l);
+  INetworkAdapter networkAdapter=null;
+  for (long i=0; i < 1000; i++) {
+    try {
+      networkAdapter=vm.getNetworkAdapter(i);
+      logger.warn("NATDRIVERREDIRECTS: " + networkAdapter.getNatDriver().getRedirects().toString());
+    }
+ catch (    Exception e) {
+      break;
+    }
+  }
   SshClient client=null;
   checkState(networkAdapter != null);
   for (  String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
@@ -8,9 +17,11 @@
     String hostAddress=Iterables.get(stuff,2);
     String inboundPort=Iterables.get(stuff,3);
     String targetPort=Iterables.get(stuff,5);
+    logger.warn("PROTOCOLNUMBER: " + protocolNumber);
     if ("1".equals(protocolNumber) && "22".equals(targetPort)) {
       client=sshClientFactory.create(new IPSocket(hostAddress,Integer.parseInt(inboundPort)),LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
     }
   }
+  checkNotNull(client);
   return client;
 }
