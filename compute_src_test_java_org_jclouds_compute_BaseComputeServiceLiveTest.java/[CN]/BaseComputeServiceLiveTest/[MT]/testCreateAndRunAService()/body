@@ -18,7 +18,7 @@
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
     long configureSeconds=watch.elapsedTime(TimeUnit.SECONDS);
     getAnonymousLogger().info(format("<< configured node(%s) with %s and JBoss %s in %ss",nodeId,exec(nodeId,"java -fullversion"),exec(nodeId,format("ls %s/bundles/org/jboss/as/osgi/configadmin/main|sed -e 's/.*-//g' -e 's/.jar//g'",JBOSS_HOME)),configureSeconds));
-    for (    Entry<String,URI> download : ImmutableMap.<String,URI>of("jboss7",JBOSS7_URL,"jdk7",InstallJDK.FromURL.JDK7_URL).entrySet()) {
+    for (    Entry<String,URI> download : ImmutableMap.<String,URI>of("jboss7",JBOSS7_URL,"jdk7",URI.create("http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz")).entrySet()) {
       String downloadSourceIp=exec(nodeId,format("nslookup -query=a -timeout=5 %s|grep Address|tail -1|sed 's/.* //g'",download.getValue().getHost()));
       if (InetAddresses.isInetAddress(downloadSourceIp)) {
         getAnonymousLogger().info(format("<< location of %s(%s) from perpective of node(%s): %s",download.getKey(),download.getValue().getHost(),nodeId,getLocationForIp(downloadSourceIp)));

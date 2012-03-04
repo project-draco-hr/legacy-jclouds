@@ -1,0 +1,12 @@
+{
+  OpSourceServersErrorHandler function=Guice.createInjector().getInstance(OpSourceServersErrorHandler.class);
+  HttpCommand command=createMock(HttpCommand.class);
+  HttpRequest request=new HttpRequest(method,uri);
+  HttpResponse response=new HttpResponse(statusCode,message,Payloads.newInputStreamPayload(Strings2.toInputStream(content)));
+  response.getPayload().getContentMetadata().setContentType(contentType);
+  expect(command.getCurrentRequest()).andReturn(request).atLeastOnce();
+  command.setException(classEq(expected));
+  replay(command);
+  function.handleError(command,response);
+  verify(command);
+}

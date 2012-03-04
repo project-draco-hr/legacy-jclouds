@@ -1,0 +1,42 @@
+{
+  try {
+switch (compareHttpRequestAsType(a)) {
+case XML:
+{
+        if (a == null || b == null || a.getPayload() == null || b.getPayload() == null) {
+          return false;
+        }
+        Diff diff=XMLUnit.compareXML(Strings2.toStringAndClose(a.getPayload().getInput()),Strings2.toStringAndClose(b.getPayload().getInput()));
+        diff.overrideDifferenceListener(new DifferenceListener(){
+          @Override public int differenceFound(          Difference difference){
+            if (difference.getId() == DifferenceConstants.SCHEMA_LOCATION_ID || difference.getId() == DifferenceConstants.NAMESPACE_PREFIX_ID) {
+              return RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+            }
+            return RETURN_ACCEPT_DIFFERENCE;
+          }
+          @Override public void skippedComparison(          Node node,          Node node1){
+          }
+        }
+);
+        return diff.identical() && Objects.equal(a.getHeaders(),b.getHeaders());
+      }
+case JSON:
+{
+      if (a == null || b == null || a.getPayload() == null || b.getPayload() == null) {
+        return false;
+      }
+      JsonParser parser=new JsonParser();
+      JsonElement payloadA=parser.parse(Strings2.toStringAndClose(a.getPayload().getInput()));
+      JsonElement payloadB=parser.parse(Strings2.toStringAndClose(b.getPayload().getInput()));
+      return Objects.equal(payloadA,payloadB) && Objects.equal(a.getHeaders(),b.getHeaders());
+    }
+default :
+{
+    return Objects.equal(a,b);
+  }
+}
+}
+ catch (Exception e) {
+throw Throwables.propagate(e);
+}
+}

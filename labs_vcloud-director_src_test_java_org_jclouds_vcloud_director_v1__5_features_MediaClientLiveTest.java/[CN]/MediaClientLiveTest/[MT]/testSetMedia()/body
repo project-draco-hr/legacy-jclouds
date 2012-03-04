@@ -1,0 +1,19 @@
+{
+  String oldName=media.getName();
+  String newName="new " + oldName;
+  String oldDescription=media.getDescription();
+  String newDescription="new " + oldDescription;
+  media=media.toBuilder().name(newName).description(newDescription).build();
+  Task updateMedia=mediaClient.updateMedia(mediaRef,media);
+  Checks.checkTask(updateMedia);
+  assertTrue(retryTaskSuccess.apply(updateMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"updateMedia"));
+  media=mediaClient.getMedia(mediaRef);
+  assertTrue(equal(media.getName(),newName),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"name"));
+  assertTrue(equal(media.getDescription(),newDescription),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"description"));
+  Checks.checkMediaFor(MEDIA,media);
+  media=media.toBuilder().name(oldName).description(oldDescription).build();
+  updateMedia=mediaClient.updateMedia(mediaRef,media);
+  Checks.checkTask(updateMedia);
+  assertTrue(retryTaskSuccess.apply(updateMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"updateMedia"));
+  media=mediaClient.getMedia(mediaRef);
+}

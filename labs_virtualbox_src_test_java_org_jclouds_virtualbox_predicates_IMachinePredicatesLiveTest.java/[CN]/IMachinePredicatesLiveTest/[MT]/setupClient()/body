@@ -6,5 +6,9 @@
   masterStorageController=StorageController.builder().name(ideControllerName).bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(hardDisk).attachISO(1,1,guestAdditionsIso).build();
   VmSpec masterSpec=VmSpec.builder().id(vmName).name(vmName).memoryMB(512).osTypeId(osTypeId).controller(masterStorageController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
   masterMachineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript("").build()).vm(masterSpec).network(NetworkSpec.builder().build()).build();
-  cloneSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(CleanupMode.Full).forceOverwrite(true).build();
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
+  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
+  VmSpec clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(CleanupMode.Full).forceOverwrite(true).build();
+  cloneSpec=CloneSpec.builder().vm(clonedVmSpec).network(networkSpec).build();
 }

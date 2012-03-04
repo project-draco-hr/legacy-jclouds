@@ -1,6 +1,8 @@
 {
   Task deleteCatalogItemMetadataValue=catalogClient.deleteCatalogItemMetadataValue(catalogItemRef,"KEY");
   checkTask(deleteCatalogItemMetadataValue);
+  Checks.checkTask(deleteCatalogItemMetadataValue);
+  assertTrue(retryTaskSuccess.apply(deleteCatalogItemMetadataValue.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteCatalogItemMetadataValue"));
   try {
     catalogClient.getCatalogItemMetadataValue(catalogItemRef,"KEY");
     fail("The CatalogItem MetadataValue for KEY should have been deleted");

@@ -11,10 +11,7 @@
   ensureMachineHasStorageControllerNamed(vmName,controller);
   setupHardDisksForController(vmName,controller);
   setupDvdsForController(vmSpec,vmName,controller);
-  Map<Long,NatAdapter> natNetworkAdapters=networkSpec.getNatNetworkAdapters();
-  for (  Map.Entry<Long,NatAdapter> natAdapterAndSlot : natNetworkAdapters.entrySet()) {
-    long slotId=natAdapterAndSlot.getKey();
-    NatAdapter natAdapter=natAdapterAndSlot.getValue();
-    ensureNATNetworkingIsAppliedToMachine(vmName,slotId,natAdapter);
+  for (  NetworkInterfaceCard networkInterfaceCard : networkSpec.getNetworkInterfaceCards()) {
+    new AttachNicToMachine(vmName,machineUtils).apply(networkInterfaceCard);
   }
 }
