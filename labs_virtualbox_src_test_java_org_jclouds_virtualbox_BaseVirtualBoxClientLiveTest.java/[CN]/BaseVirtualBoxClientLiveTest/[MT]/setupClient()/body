@@ -4,8 +4,13 @@
   CacheNodeStoreModule hostModule=new CacheNodeStoreModule(ImmutableMap.of("host",Node.builder().id("host").name("host installing virtualbox").hostname("localhost").osFamily(OsFamily.LINUX.toString()).osDescription(System.getProperty("os.name")).osVersion(System.getProperty("os.version")).group("ssh").username(System.getProperty("user.name")).credentialUrl(URI.create("file://" + System.getProperty("user.home") + "/.ssh/id_rsa")).build()));
   context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new SLF4JLoggingModule(),new SshjSshClientModule(),hostModule),overrides);
   Function<String,String> configProperties=context.utils().injector().getInstance(ValueOfConfigurationKeyOrNull.class);
-  imageId=configProperties.apply(ComputeServiceConstants.PROPERTY_IMAGE_ID);
+  imageId="ubuntu-11.04-server-i386";
   workingDir=configProperties.apply(VirtualBoxConstants.VIRTUALBOX_WORKINGDIR);
+  isosDir=workingDir + File.separator + "isos";
+  File isosDirFile=new File(isosDir);
+  if (!isosDirFile.exists()) {
+    isosDirFile.mkdirs();
+  }
   host=context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<NodeMetadata>>(){
   }
 ));
@@ -19,6 +24,6 @@
   machineUtils=context.utils().injector().getInstance(MachineUtils.class);
   hostVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
   adminDisk=workingDir + "/testadmin.vdi";
-  operatingSystemIso=String.format("%s/%s.iso",workingDir,imageId);
-  guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",workingDir,hostVersion);
+  operatingSystemIso=String.format("%s/%s.iso",isosDir,imageId);
+  guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,hostVersion);
 }

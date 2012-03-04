@@ -2,7 +2,7 @@
   VmSpec vmSpec=masterSpec.getVmSpec();
   IsoSpec isoSpec=masterSpec.getIsoSpec();
   String vmName=vmSpec.getVmName();
-  final IMachine vm=createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(masterSpec);
+  IMachine vm=createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(masterSpec);
   ensureMachineIsLaunched(vmName);
   URI uri=preConfiguration.getUnchecked(isoSpec);
   String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",uri.toASCIIString());
@@ -11,9 +11,10 @@
   logger.debug(">> awaiting installation to finish node(%s)",vmName);
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
   logger.debug(">> awaiting installation of guest additions on vm: %s",vmName);
-  checkState(new GuestAdditionsInstaller(context).apply(vmName));
+  checkState(guestAdditionsInstaller.apply(vm));
   logger.debug(">> awaiting post-installation actions on vm: %s",vmName);
-  ListenableFuture<ExecResponse> execFuture=context.getComputeService().submitScriptOnNode(vmName,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);
+  NodeMetadata vmMetadata=imachineToNodeMetadata.apply(vm);
+  ListenableFuture<ExecResponse> execFuture=machineUtils.runScriptOnNode(vmMetadata,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);
   ExecResponse execResponse=Futures.getUnchecked(execFuture);
   checkState(execResponse.getExitCode() == 0);
   logger.debug("<< installation of image complete. Powering down node(%s)",vmName);
