@@ -1,6 +1,6 @@
 {
   URI networkUri=URI.create(endpoint + "/network/55a677cf-ab3f-48ae-b880-fab90421980c");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata"),getStandardPayloadResponse("/network/metadata.xml",VCloudDirectorMediaType.METADATA));
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/network/metadata.xml",VCloudDirectorMediaType.METADATA).httpResponseBuilder().build());
   Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.network+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c")).build()).entries(ImmutableSet.of(MetadataEntry.builder().entry("key","value").build())).build();
   Reference networkRef=Reference.builder().href(networkUri).build();
   assertEquals(client.getNetworkClient().getMetadataClient().getMetadata(networkRef),expected);
