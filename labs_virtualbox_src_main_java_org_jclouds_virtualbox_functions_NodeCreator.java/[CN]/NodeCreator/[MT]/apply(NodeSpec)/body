@@ -1,0 +1,8 @@
+{
+  Master master=nodeSpec.getMaster();
+  if (master.getMachine().getCurrentSnapshot() != null) {
+    ISession session=manager.get().openMachineSession(master.getMachine());
+    session.getConsole().deleteSnapshot(master.getMachine().getCurrentSnapshot().getId());
+    session.unlockMachine();
+  }
+}

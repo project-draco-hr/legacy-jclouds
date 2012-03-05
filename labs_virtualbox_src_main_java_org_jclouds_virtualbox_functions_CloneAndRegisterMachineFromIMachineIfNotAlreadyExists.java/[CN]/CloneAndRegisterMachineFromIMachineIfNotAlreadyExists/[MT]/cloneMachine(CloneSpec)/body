@@ -1,0 +1,17 @@
+{
+  VmSpec vmSpec=cloneSpec.getVmSpec();
+  boolean isLinkedClone=cloneSpec.isLinked();
+  IMachine master=cloneSpec.getMaster();
+  String settingsFile=manager.get().getVBox().composeMachineFilename(vmSpec.getVmName(),workingDir);
+  IMachine clonedMachine=manager.get().getVBox().createMachine(settingsFile,vmSpec.getVmName(),vmSpec.getOsTypeId(),vmSpec.getVmId(),vmSpec.isForceOverwrite());
+  List<CloneOptions> options=new ArrayList<CloneOptions>();
+  if (isLinkedClone)   options.add(CloneOptions.Link);
+  ISnapshot currentSnapshot=new TakeSnapshotIfNotAlreadyAttached(manager,"snapshotName","snapshotDesc").apply(master);
+  IProgress progress=currentSnapshot.getMachine().cloneTo(clonedMachine,CloneMode.MachineState,options);
+  if (progress.getCompleted())   logger.debug("clone done");
+  manager.get().getVBox().registerMachine(clonedMachine);
+  for (  NetworkInterfaceCard nic : cloneSpec.getNetworkSpec().getNetworkInterfaceCards()) {
+    ensureBridgedNetworkingIsAppliedToMachine(clonedMachine.getName(),nic);
+  }
+  return clonedMachine;
+}
