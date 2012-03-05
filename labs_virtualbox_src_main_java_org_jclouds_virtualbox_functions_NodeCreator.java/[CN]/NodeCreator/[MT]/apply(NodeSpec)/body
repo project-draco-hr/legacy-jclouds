@@ -19,7 +19,6 @@
   NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
   CloneSpec cloneSpec=CloneSpec.builder().linked(true).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
-  new AttachNicToMachine(cloneName,machineUtils).apply(networkInterfaceCard);
   new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(cloned);
   NodeAndInitialCredentials<IMachine> nodeAndInitialCredentials=new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
   return nodeAndInitialCredentials;

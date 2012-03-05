@@ -1,5 +1,6 @@
 {
   VmSpec vmSpec=cloneSpec.getVmSpec();
+  NetworkSpec networkSpec=cloneSpec.getNetworkSpec();
   boolean isLinkedClone=cloneSpec.isLinked();
   IMachine master=cloneSpec.getMaster();
   String settingsFile=manager.get().getVBox().composeMachineFilename(vmSpec.getVmName(),workingDir);
@@ -11,5 +12,8 @@
   progress.waitForCompletion(-1);
   logger.debug("clone done");
   manager.get().getVBox().registerMachine(clonedMachine);
+  for (  NetworkInterfaceCard networkInterfaceCard : networkSpec.getNetworkInterfaceCards()) {
+    new AttachNicToMachine(vmSpec.getVmName(),machineUtils).apply(networkInterfaceCard);
+  }
   return clonedMachine;
 }
