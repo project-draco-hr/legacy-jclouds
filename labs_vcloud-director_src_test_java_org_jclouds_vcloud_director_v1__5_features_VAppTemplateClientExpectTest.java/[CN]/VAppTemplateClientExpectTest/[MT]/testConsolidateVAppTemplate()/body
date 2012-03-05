@@ -1,8 +1,8 @@
 {
   final String templateId="/vAppTemplate/vAppTemplate/vappTemplate-ef4415e6-d413-4cbb-9262-f9bbec5f2ea9";
-  Reference vappTemplateRef=Reference.builder().href(URI.create(endpoint + templateId)).build();
+  URI uri=URI.create(endpoint + templateId);
   VAppTemplateClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",templateId + "/action/consolidate").acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateClient();
   assertNotNull(client);
-  Task task=client.consolidateVappTemplate(vappTemplateRef);
+  Task task=client.consolidateVappTemplate(uri);
   assertNotNull(task);
 }

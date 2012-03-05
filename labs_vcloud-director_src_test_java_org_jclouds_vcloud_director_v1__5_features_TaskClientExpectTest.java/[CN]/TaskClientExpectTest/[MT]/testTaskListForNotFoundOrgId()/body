@@ -5,9 +5,8 @@
   HttpResponse orgResponse=HttpResponse.builder().statusCode(403).payload(payloadFromResourceWithContentType("/org/error403-fake.xml",VCloudDirectorMediaType.ERROR + ";version=1.5")).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
   Error expected=Error.builder().message("No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
-  Reference orgRef=Reference.builder().href(URI.create("https://vcloudbeta.bluelock.com/api/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")).build();
   try {
-    client.getTaskClient().getTaskList(orgRef);
+    client.getTaskClient().getTaskList(URI.create("https://vcloudbeta.bluelock.com/api/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"));
     fail("Should give HTTP 403 error");
   }
  catch (  VCloudDirectorException vde) {

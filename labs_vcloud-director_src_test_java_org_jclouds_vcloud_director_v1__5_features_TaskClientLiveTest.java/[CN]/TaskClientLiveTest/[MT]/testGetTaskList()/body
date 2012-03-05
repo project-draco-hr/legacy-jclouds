@@ -1,7 +1,9 @@
 {
   orgList=orgClient.getOrgList();
-  orgRef=Iterables.getFirst(orgList.getOrgs(),null);
-  taskList=taskClient.getTaskList(orgRef);
+  Reference orgRef=Iterables.getFirst(orgList.getOrgs(),null);
+  assertNotNull(orgRef);
+  orgURI=orgRef.getHref();
+  taskList=taskClient.getTaskList(orgURI);
   assertFalse(Iterables.isEmpty(taskList.getTasks()),String.format(NOT_EMPTY_OBJECT_FMT,"Task","TaskList"));
   for (  Task task : taskList.getTasks()) {
     checkTask(task);

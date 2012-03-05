@@ -2,6 +2,5 @@
   URI vdcUri=URI.create("https://vcloudbeta.bluelock.com/api/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f");
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f/metadata/key").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/metadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE).httpResponseBuilder().build());
   MetadataValue expected=metadataValue();
-  Reference mediaRef=Reference.builder().href(vdcUri).build();
-  assertEquals(client.getVdcClient().getMetadataClient().getMetadataValue(mediaRef,"key"),expected);
+  assertEquals(client.getVdcClient().getMetadataClient().getMetadataValue(vdcUri,"key"),expected);
 }

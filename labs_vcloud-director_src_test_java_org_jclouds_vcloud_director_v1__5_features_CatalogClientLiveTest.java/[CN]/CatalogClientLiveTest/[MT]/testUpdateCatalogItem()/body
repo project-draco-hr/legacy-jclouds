@@ -1,5 +1,5 @@
 {
-  Catalog catalog=catalogClient.getCatalog(catalogRef);
+  Catalog catalog=catalogClient.getCatalog(catalogRef.getHref());
   newCatalogItemRef=Iterables.find(catalog.getCatalogItems().getCatalogItems(),new Predicate<Reference>(){
     @Override public boolean apply(    Reference input){
       return input.getHref().equals(newCatalogItem.getHref());
@@ -7,7 +7,7 @@
   }
 );
   CatalogItem updatedCatalogItem=CatalogItem.builder().fromCatalogItem(catalogItem).name("UPDATEDNAME").build();
-  newCatalogItem=catalogClient.updateCatalogItem(catalogRef,updatedCatalogItem);
+  newCatalogItem=catalogClient.updateCatalogItem(catalogRef.getHref(),updatedCatalogItem);
   checkCatalogItem(newCatalogItem);
   assertEquals(newCatalogItem.getName(),"UPDATEDNAME");
 }

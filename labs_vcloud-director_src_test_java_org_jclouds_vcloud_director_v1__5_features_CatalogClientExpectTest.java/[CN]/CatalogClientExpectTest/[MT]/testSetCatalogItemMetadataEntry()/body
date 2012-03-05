@@ -2,8 +2,8 @@
   HttpRequest catalogItemRequest=HttpRequest.builder().method("PUT").endpoint(URI.create(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/vnd.vmware.vcloud.task+xml").put("x-vcloud-authorization",token).build()).payload(payloadFromResourceWithContentType("/catalog/setCatalogItemMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE)).build();
   HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/setMetadataValueTask.xml",VCloudDirectorMediaType.TASK + ";version=1.5")).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
-  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
+  URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
   MetadataValue value=MetadataValue.builder().value("KITTENS").build();
   Task expected=setMetadataValueTask();
-  assertEquals(client.getCatalogClient().getMetadataClient().setMetadata(catalogItemReference,"KEY",value),expected);
+  assertEquals(client.getCatalogClient().getMetadataClient().setMetadata(catalogItemURI,"KEY",value),expected);
 }
