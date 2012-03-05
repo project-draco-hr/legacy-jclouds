@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/admin/catalog/7212e451-76e1-4631-b2de-ba1dfd8080e4").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/admin/catalog/catalog.xml",VCloudDirectorMediaType.ADMIN_CATALOG).httpResponseBuilder().build());
+  AdminCatalog expected=catalog();
+  Reference catalogRef=Reference.builder().type("application/vnd.vmware.vcloud.catalog+xml").name("QunyingTestCatalog").href(URI.create(endpoint + "/admin/catalog/7212e451-76e1-4631-b2de-ba1dfd8080e4")).build();
+  assertEquals(client.getCatalogClient().getCatalog(catalogRef),expected);
+}
