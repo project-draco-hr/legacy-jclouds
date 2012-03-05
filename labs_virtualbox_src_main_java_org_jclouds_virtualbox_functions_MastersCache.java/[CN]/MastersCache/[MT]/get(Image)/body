@@ -15,11 +15,15 @@
   MasterSpec masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(localIsoUrl).installationScript(installationKeySequence.replace("HOSTNAME",vmSpecification.getVmName())).build()).network(networkSpec).build();
   IMachine masterMachine;
   try {
-    masterMachine=manager.get().getVBox().findMachine(masterSpec.getVmSpec().getVmId());
+    masterMachine=manager.get().getVBox().findMachine(vmName);
   }
  catch (  VBoxException e) {
-    if (machineNotFoundException(e))     masterMachine=masterCreatorAndInstaller.apply(masterSpec);
- else     throw e;
+    if (machineNotFoundException(e)) {
+      masterMachine=masterCreatorAndInstaller.apply(masterSpec);
+    }
+ else {
+      throw e;
+    }
   }
   Master master=Master.builder().machine(masterMachine).spec(masterSpec).build();
   masters.put(key.getId(),master);

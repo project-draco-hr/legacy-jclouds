@@ -9,6 +9,7 @@
     }
     IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,machineUtils).apply(cloneSpec);
     assertEquals(clone.getName(),cloneSpec.getVmSpec().getVmName());
+    new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(clone);
   }
   finally {
     for (    VmSpec spec : ImmutableSet.of(cloneSpec.getVmSpec(),sourceMachineSpec.getVmSpec()))     undoVm(spec);

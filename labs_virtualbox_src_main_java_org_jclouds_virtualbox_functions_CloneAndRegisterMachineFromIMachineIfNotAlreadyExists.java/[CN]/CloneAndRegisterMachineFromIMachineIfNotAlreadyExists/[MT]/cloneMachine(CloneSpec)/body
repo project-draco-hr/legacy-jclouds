@@ -8,7 +8,8 @@
   if (isLinkedClone)   options.add(CloneOptions.Link);
   ISnapshot currentSnapshot=new TakeSnapshotIfNotAlreadyAttached(manager,"snapshotName","snapshotDesc").apply(master);
   IProgress progress=currentSnapshot.getMachine().cloneTo(clonedMachine,CloneMode.MachineState,options);
-  if (progress.getCompleted())   logger.debug("clone done");
+  progress.waitForCompletion(-1);
+  logger.debug("clone done");
   manager.get().getVBox().registerMachine(clonedMachine);
   for (  NetworkInterfaceCard nic : cloneSpec.getNetworkSpec().getNetworkInterfaceCards()) {
     ensureBridgedNetworkingIsAppliedToMachine(clonedMachine.getName(),nic);
