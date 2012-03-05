@@ -1,14 +1,14 @@
 {
   Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).entry(MetadataEntry.builder().entry("VEGIMITE","VALUE").build()).build();
-  Task mergeCatalogItemMetadata=catalogClient.mergeCatalogItemMetadata(catalogItemRef,newMetadata);
+  Task mergeCatalogItemMetadata=catalogClient.getMetadataClient().mergeMetadata(catalogItemRef,newMetadata);
   checkTask(mergeCatalogItemMetadata);
   assertTrue(retryTaskSuccess.apply(mergeCatalogItemMetadata),String.format(TASK_COMPLETE_TIMELY,"mergeCatalogItemMetadata"));
-  Metadata mergedCatalogItemMetadata=catalogClient.getCatalogItemMetadata(catalogItemRef);
+  Metadata mergedCatalogItemMetadata=catalogClient.getMetadataClient().getMetadata(catalogItemRef);
   assertEquals(mergedCatalogItemMetadata.getMetadataEntries().size(),catalogItemMetadata.getMetadataEntries().size() + 1,"Should have added another MetadataEntry to the CatalogItem");
-  MetadataValue keyMetadataValue=catalogClient.getCatalogItemMetadataValue(catalogItemRef,"KEY");
+  MetadataValue keyMetadataValue=catalogClient.getMetadataClient().getMetadataValue(catalogItemRef,"KEY");
   assertEquals(keyMetadataValue.getValue(),"MARMALADE","The Value of the MetadataValue for KEY should have changed");
   checkMetadataValue(keyMetadataValue);
-  MetadataValue newKeyMetadataValue=catalogClient.getCatalogItemMetadataValue(catalogItemRef,"VEGIMITE");
+  MetadataValue newKeyMetadataValue=catalogClient.getMetadataClient().getMetadataValue(catalogItemRef,"VEGIMITE");
   assertEquals(newKeyMetadataValue.getValue(),"VALUE","The Value of the MetadataValue for NEW_KEY should have been set");
   checkMetadataValue(newKeyMetadataValue);
 }
