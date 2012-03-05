@@ -1,10 +1,10 @@
 {
-  Task deleteCatalogItemMetadataValue=catalogClient.deleteCatalogItemMetadataValue(catalogItemRef,"KEY");
+  Task deleteCatalogItemMetadataValue=catalogClient.getMetadataClient().deleteMetadataEntry(catalogItemRef,"KEY");
   checkTask(deleteCatalogItemMetadataValue);
   Checks.checkTask(deleteCatalogItemMetadataValue);
-  assertTrue(retryTaskSuccess.apply(deleteCatalogItemMetadataValue.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteCatalogItemMetadataValue"));
+  assertTrue(retryTaskSuccess.apply(deleteCatalogItemMetadataValue),String.format(TASK_COMPLETE_TIMELY,"deleteCatalogItemMetadataValue"));
   try {
-    catalogClient.getCatalogItemMetadataValue(catalogItemRef,"KEY");
+    catalogClient.getMetadataClient().getMetadataValue(catalogItemRef,"KEY");
     fail("The CatalogItem MetadataValue for KEY should have been deleted");
   }
  catch (  VCloudDirectorException vcde) {

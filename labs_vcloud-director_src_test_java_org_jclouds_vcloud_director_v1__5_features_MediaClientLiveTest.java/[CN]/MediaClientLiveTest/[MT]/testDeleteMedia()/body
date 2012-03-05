@@ -1,10 +1,10 @@
 {
-  Task deleteMedia=mediaClient.deleteMedia(mediaRef);
+  Task deleteMedia=mediaClient.deleteMedia(media);
   Checks.checkTask(deleteMedia);
-  assertTrue(retryTaskSuccess.apply(deleteMedia.getHref()),String.format(TASK_COMPLETE_TIMELY,"deleteMedia"));
-  Error expected=Error.builder().message(String.format("No access to entity \"(com.vmware.vcloud.entity.media:%s)\".",mediaRef.getId())).majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  assertTrue(retryTaskSuccess.apply(deleteMedia),String.format(TASK_COMPLETE_TIMELY,"deleteMedia"));
+  Error expected=Error.builder().message(String.format("No access to entity \"(com.vmware.vcloud.entity.media:%s)\".",media.getId())).majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
-    media=mediaClient.getMedia(mediaRef);
+    media=mediaClient.getMedia(media);
     fail("Should give HTTP 403 error");
   }
  catch (  VCloudDirectorException vde) {
@@ -17,4 +17,6 @@ catch (  Exception e) {
   if (media != null) {
     assertNull(metadataValue,String.format(OBJ_DEL,MEDIA,media.toString()));
   }
+  deleteMedia=mediaClient.deleteMedia(oldMedia);
+  Checks.checkTask(deleteMedia);
 }
