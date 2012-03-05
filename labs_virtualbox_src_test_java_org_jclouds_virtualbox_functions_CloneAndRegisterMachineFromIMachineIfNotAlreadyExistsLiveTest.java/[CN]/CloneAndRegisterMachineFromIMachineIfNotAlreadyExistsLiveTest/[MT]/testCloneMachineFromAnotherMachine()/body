@@ -1,7 +1,8 @@
 {
+  CloneSpec cloneSpec=null;
   try {
     IMachine source=getSourceNode();
-    CloneSpec cloneSpec=CloneSpec.builder().vm(clonedVmSpec).network(cloneNetworkSpec).master(source).linked(IS_LINKED_CLONE).build();
+    cloneSpec=CloneSpec.builder().vm(clonedVmSpec).network(cloneNetworkSpec).master(source).linked(IS_LINKED_CLONE).build();
     if (source.getCurrentSnapshot() != null) {
       ISession session=manager.get().openMachineSession(source);
       session.getConsole().deleteSnapshot(source.getCurrentSnapshot().getId());
@@ -12,6 +13,9 @@
     new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(clone);
   }
   finally {
-    for (    VmSpec spec : ImmutableSet.of(cloneSpec.getVmSpec(),sourceMachineSpec.getVmSpec()))     undoVm(spec);
+    Set<VmSpec> specs=cloneSpec == null ? ImmutableSet.of(sourceMachineSpec.getVmSpec()) : ImmutableSet.of(cloneSpec.getVmSpec(),sourceMachineSpec.getVmSpec());
+    for (    VmSpec spec : specs) {
+      undoVm(spec);
+    }
   }
 }
