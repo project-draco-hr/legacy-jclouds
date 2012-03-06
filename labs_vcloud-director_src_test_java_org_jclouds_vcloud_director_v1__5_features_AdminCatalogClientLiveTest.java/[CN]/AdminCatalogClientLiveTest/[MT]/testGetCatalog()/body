@@ -1,7 +1,5 @@
 {
-  CatalogReferences catalogReferences=queryClient.catalogReferencesQuery(String.format("name==%s",catalogName));
-  assertEquals(Iterables.size(catalogReferences.getReferences()),1,String.format(MUST_EXIST_FMT,catalogName,"Catalog"));
-  catalogRef=Iterables.getOnlyElement(catalogReferences.getReferences());
-  catalog=catalogClient.getCatalog(catalogRef);
+  assertNotNull(catalogRef,String.format(REF_REQ_LIVE,"Catalog"));
+  catalog=catalogClient.getCatalog(catalogRef.getURI());
   Checks.checkAdminCatalog(catalog);
 }
