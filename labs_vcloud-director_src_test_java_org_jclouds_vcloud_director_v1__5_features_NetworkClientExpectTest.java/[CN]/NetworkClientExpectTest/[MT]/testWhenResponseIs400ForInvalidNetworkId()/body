@@ -2,9 +2,8 @@
   URI networkUri=URI.create(endpoint + "/network/NOTAUUID");
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/network/NOTAUUID"),getStandardPayloadResponse(400,"/network/error400.xml",VCloudDirectorMediaType.ERROR));
   Error expected=Error.builder().message("validation error : EntityRef has incorrect type, expected type is com.vmware.vcloud.entity.network.").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
-  Reference networkRef=Reference.builder().href(networkUri).build();
   try {
-    client.getNetworkClient().getNetwork(networkRef);
+    client.getNetworkClient().getNetwork(networkUri);
     fail("Should give HTTP 400 error");
   }
  catch (  VCloudDirectorException vde) {

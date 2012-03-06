@@ -2,6 +2,6 @@
   HttpRequest catalogItemRequest=HttpRequest.builder().method("DELETE").endpoint(URI.create(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
   HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
-  Reference catalogItemReference=Reference.builder().type("application/vnd.vmware.vcloud.catalogItem+xml").name("ubuntu10").href(URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).build();
-  client.getCatalogClient().deleteCatalogItem(catalogItemReference);
+  URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
+  client.getCatalogClient().deleteCatalogItem(catalogItemURI);
 }

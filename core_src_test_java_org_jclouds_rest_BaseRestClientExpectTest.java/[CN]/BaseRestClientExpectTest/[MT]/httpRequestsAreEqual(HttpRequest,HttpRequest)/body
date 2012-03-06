@@ -8,8 +8,16 @@ case XML:
         }
         Diff diff=XMLUnit.compareXML(Strings2.toStringAndClose(a.getPayload().getInput()),Strings2.toStringAndClose(b.getPayload().getInput()));
         diff.overrideDifferenceListener(new DifferenceListener(){
-          @Override public int differenceFound(          Difference difference){
-            if (difference.getId() == DifferenceConstants.SCHEMA_LOCATION_ID || difference.getId() == DifferenceConstants.NAMESPACE_PREFIX_ID) {
+          @Override public int differenceFound(          Difference diff){
+            if (diff.getId() == DifferenceConstants.SCHEMA_LOCATION_ID || diff.getId() == DifferenceConstants.NAMESPACE_PREFIX_ID) {
+              return RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+            }
+            if (diff.getId() == DifferenceConstants.TEXT_VALUE_ID) {
+              for (              NodeDetail detail : ImmutableSet.of(diff.getControlNodeDetail(),diff.getTestNodeDetail())) {
+                if (detail.getNode().getParentNode().getChildNodes().getLength() < 2 || !detail.getValue().trim().isEmpty()) {
+                  return RETURN_ACCEPT_DIFFERENCE;
+                }
+              }
               return RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
             }
             return RETURN_ACCEPT_DIFFERENCE;

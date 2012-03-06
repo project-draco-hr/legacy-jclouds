@@ -1,0 +1,10 @@
+{
+  final String templateId="/vAppTemplate/vappTemplate-ef4415e6-d413-4cbb-9262-f9bbec5f2ea9";
+  URI uri=URI.create(endpoint + templateId);
+  VAppTemplateClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",templateId + "/action/relocate").xmlFilePayload("/vappTemplate/relocateParams.xml",RELOCATE_TEMPLATE).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateClient();
+  assertNotNull(client);
+  Reference datastore=Reference.builder().href(URI.create("https://vcloud.example.com/api/admin/extension/datastore/607")).build();
+  RelocateParams params=RelocateParams.builder().datastore(datastore).build();
+  Task task=client.relocateVappTemplate(uri,params);
+  assertNotNull(task);
+}

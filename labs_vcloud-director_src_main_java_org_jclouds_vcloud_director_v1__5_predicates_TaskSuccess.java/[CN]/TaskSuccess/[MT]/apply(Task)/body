@@ -1,0 +1,8 @@
+{
+  logger.trace("looking for status on task %s",task);
+  task=taskClient.getTask(task.getURI());
+  if (task == null)   return false;
+  logger.trace("%s: looking for status %s: currently: %s",task,Task.Status.SUCCESS,task.getStatus());
+  if (task.getStatus().equals(Task.Status.ERROR))   throw new VCloudDirectorException(task);
+  return task.getStatus().equals(Task.Status.SUCCESS);
+}

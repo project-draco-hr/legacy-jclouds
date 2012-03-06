@@ -1,10 +1,10 @@
 {
-  Task deleteMetadataEntry=mediaClient.getMetadataClient().deleteMetadataEntry(media,"testKey");
+  Task deleteMetadataEntry=mediaClient.getMetadataClient().deleteMetadataEntry(media.getHref(),"testKey");
   Checks.checkTask(deleteMetadataEntry);
   assertTrue(retryTaskSuccess.apply(deleteMetadataEntry),String.format(TASK_COMPLETE_TIMELY,"deleteMetadataEntry"));
   Error expected=Error.builder().message("The access to the resource metadata_item with id testKey is forbidden").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
-    metadataValue=mediaClient.getMetadataClient().getMetadataValue(media,"testKey");
+    metadataValue=mediaClient.getMetadataClient().getMetadataValue(media.getHref(),"testKey");
     fail("Should give HTTP 403 error");
   }
  catch (  VCloudDirectorException vde) {
@@ -17,8 +17,8 @@ catch (  Exception e) {
   if (metadataValue != null) {
     assertNull(metadataValue,String.format(OBJ_FIELD_ATTRB_DEL,MEDIA,"Metadata",metadataValue.toString(),"metadataEntry",metadataValue.toString()));
   }
-  metadataValue=mediaClient.getMetadataClient().getMetadataValue(media,"key");
+  metadataValue=mediaClient.getMetadataClient().getMetadataValue(media.getHref(),"key");
   Checks.checkMetadataValueFor(MEDIA,metadataValue);
-  media=mediaClient.getMedia(media);
+  media=mediaClient.getMedia(media.getHref());
   Checks.checkMediaFor(MEDIA,media);
 }

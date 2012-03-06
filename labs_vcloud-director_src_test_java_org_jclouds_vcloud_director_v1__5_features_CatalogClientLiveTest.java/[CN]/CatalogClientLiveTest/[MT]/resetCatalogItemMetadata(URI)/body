@@ -1,0 +1,7 @@
+{
+  deleteAllCatalogItemMetadata(catalogItemURI);
+  Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","VALUE").build()).build();
+  Task mergeCatalogItemMetadata=catalogClient.getMetadataClient().mergeMetadata(catalogItemURI,newMetadata);
+  Checks.checkTask(mergeCatalogItemMetadata);
+  assertTrue(retryTaskSuccess.apply(mergeCatalogItemMetadata),String.format(TASK_COMPLETE_TIMELY,"mergeCatalogItemMetadata"));
+}
