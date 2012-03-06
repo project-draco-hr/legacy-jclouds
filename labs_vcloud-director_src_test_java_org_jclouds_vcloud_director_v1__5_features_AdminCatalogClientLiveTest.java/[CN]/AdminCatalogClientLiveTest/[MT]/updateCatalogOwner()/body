@@ -1,0 +1,14 @@
+{
+  Owner oldOwner=owner;
+  Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().type("application/vnd.vmware.admin.user+xml").name("adk@cloudsoftcorp.com").href(URI.create("https://vcloudbeta.bluelock.com/api/admin/user/e9eb1b29-0404-4c5e-8ef7-e584acc51da9")).build()).build();
+  try {
+    catalogClient.setOwner(catalog.getURI(),newOwner);
+    owner=catalogClient.getOwner(catalog.getURI());
+    Checks.checkOwner(owner);
+    assertTrue(equal(owner,newOwner),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
+  }
+  finally {
+    catalogClient.setOwner(catalog.getURI(),oldOwner);
+    owner=catalogClient.getOwner(catalog.getURI());
+  }
+}
