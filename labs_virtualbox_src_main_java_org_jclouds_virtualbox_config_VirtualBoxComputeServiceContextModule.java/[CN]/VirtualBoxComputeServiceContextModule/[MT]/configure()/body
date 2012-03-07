@@ -24,6 +24,24 @@
   bind(new TypeLiteral<Supplier<VirtualBoxManager>>(){
   }
 ).to((Class)StartVBoxIfNotAlreadyRunning.class);
+  bind(new TypeLiteral<Supplier<Map<Image,YamlImage>>>(){
+  }
+).to((Class)ImagesToYamlImagesFromYamlDescriptor.class);
+  bind(new TypeLiteral<Supplier<String>>(){
+  }
+).to((Class)YamlImagesFromFileConfig.class);
+  bind(new TypeLiteral<LoadingCache<Image,Master>>(){
+  }
+).to((Class)MastersCache.class);
+  bind(new TypeLiteral<Function<MasterSpec,IMachine>>(){
+  }
+).to((Class)CreateAndInstallVm.class);
+  bind(new TypeLiteral<Function<NodeSpec,NodeAndInitialCredentials<IMachine>>>(){
+  }
+).to((Class)NodeCreator.class);
+  bind(new TypeLiteral<Function<CloneSpec,IMachine>>(){
+  }
+).to((Class)CloneAndRegisterMachineFromIMachineIfNotAlreadyExists.class);
   bind(new TypeLiteral<Function<URI,InputStream>>(){
   }
 ).to(SupplyFromProviderURIOrNodesProperty.class);

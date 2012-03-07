@@ -1,7 +1,7 @@
 {
-  INetworkAdapter networkAdapter=vm.getNetworkAdapter(0l);
+  INetworkAdapter networkAdapter=vm.getNetworkAdapter(0L);
   SshClient client=null;
-  checkState(networkAdapter != null);
+  checkNotNull(networkAdapter);
   for (  String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
     Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
     String protocolNumber=Iterables.get(stuff,1);
@@ -12,5 +12,6 @@
       client=sshClientFactory.create(new IPSocket(hostAddress,Integer.parseInt(inboundPort)),LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
     }
   }
+  checkNotNull(client);
   return client;
 }

@@ -1,0 +1,20 @@
+{
+  checkNotNull(version,"version");
+  checkNotNull(installationKeySequence,"installationKeySequence");
+  checkNotNull(manager,"vboxmanager");
+  this.manager=manager;
+  this.masterCreatorAndInstaller=masterLoader;
+  this.installationKeySequence=installationKeySequence;
+  this.workingDir=workingDir == null ? VIRTUALBOX_DEFAULT_DIR : workingDir;
+  File wdFile=new File(this.workingDir);
+  if (!wdFile.exists()) {
+    wdFile.mkdirs();
+  }
+  this.isosDir=wdFile.getAbsolutePath() + File.separator + "isos";
+  this.imageMapping=Maps.newLinkedHashMap();
+  for (  Entry<Image,YamlImage> entry : yamlMapper.get().entrySet()) {
+    this.imageMapping.put(entry.getKey().getId(),entry.getValue());
+  }
+  this.guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,Iterables.get(Splitter.on('r').split(version),0));
+  checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
+}
