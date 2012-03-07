@@ -1,0 +1,6 @@
+{
+  HttpRequest listGridServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://api.gogrid.com/api/grid/server/list?" + "v=1.6&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity")).build();
+  HttpResponse listGridServersResponse=HttpResponse.builder().statusCode(404).payload(payloadFromResourceWithContentType("/test_error_handler.json","application/json")).build();
+  GoGridClient clientWhenNoGridServersExist=requestSendsResponse(listGridServers,listGridServersResponse);
+  assertTrue(clientWhenNoGridServersExist.getServerServices().getServerList().isEmpty());
+}

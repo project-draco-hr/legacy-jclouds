@@ -4,9 +4,8 @@
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/list?v=1.6&isSandbox=true HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
-  assertResponseParserClassEquals(method,httpRequest,ParseServerListFromJsonResponse.class);
   assertSaxResponseParserClassEquals(method,null);
-  assertExceptionParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);
   checkFilters(httpRequest);
   httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/list?" + "v=1.6&isSandbox=true&sig=3f446f171455fbb5574aecff4997b273&api_key=foo " + "HTTP/1.1");

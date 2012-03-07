@@ -1,7 +1,9 @@
 {
   try {
-    Exception exception=new HttpResponseException(command,response);
-    Set<ErrorResponse> errors=parseErrorsFromContentOrNull(response);
+    byte[] data=closeClientButKeepContentStream(response);
+    String message=data != null ? new String(data) : null;
+    Exception exception=message != null ? new HttpResponseException(command,response,message) : new HttpResponseException(command,response);
+    Set<ErrorResponse> errors=parseErrorsFromContentOrNull(data);
     if (errors != null)     exception=new GoGridResponseException(command,response,errors);
 switch (response.getStatusCode()) {
 case 400:

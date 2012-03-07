@@ -1,0 +1,6 @@
+{
+  HttpRequest listGridServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://api.gogrid.com/api/grid/server/list?" + "v=1.6&isSandbox=true&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity")).build();
+  HttpResponse listGridServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/test_get_server_list.json","application/json")).build();
+  GoGridClient clientWhenGridServersExist=requestSendsResponse(listGridServers,listGridServersResponse);
+  assertEquals(clientWhenGridServersExist.getServerServices().getServerList(new GetServerListOptions.Builder().onlySandboxServers()).toString(),new ParseServerListTest().expected().toString());
+}
