@@ -1,3 +1,22 @@
 {
-  return Multimaps2.fromOldSchool(addresses);
+  ImmutableSetMultimap.Builder returnMapBuilder=new ImmutableSetMultimap.Builder<Type,Address>();
+  Set<Address> publicAddresses=addresses.get(Address.Type.PUBLIC);
+  Set<Address> privateAddresses=addresses.get(Address.Type.PRIVATE);
+  if (privateAddresses.size() > 1) {
+    if (publicAddresses != null) {
+      returnMapBuilder.putAll(Type.PUBLIC,publicAddresses);
+    }
+    for (    Address address : privateAddresses) {
+      if (address.getAddr().startsWith("10.") || address.getAddr().startsWith("192.168.") || address.getAddr().matches("^172\\.(1[6-9]|2[0-9]|3[0-1])\\..*")) {
+        returnMapBuilder.put(Address.Type.PRIVATE,address);
+      }
+ else {
+        returnMapBuilder.put(Address.Type.PUBLIC,address);
+      }
+    }
+  }
+ else {
+    return Multimaps2.fromOldSchool(addresses);
+  }
+  return returnMapBuilder.build();
 }
