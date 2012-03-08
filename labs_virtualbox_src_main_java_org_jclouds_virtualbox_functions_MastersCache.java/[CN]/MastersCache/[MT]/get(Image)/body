@@ -2,6 +2,13 @@
   if (masters.containsKey(key.getId())) {
     return masters.get(key);
   }
+  String guestAdditionsFileName=String.format("VBoxGuestAdditions_%s.iso",version);
+  String guestAdditionsIso=String.format("%s/%s",isosDir,guestAdditionsFileName);
+  String guestAdditionsUri="http://download.virtualbox.org/virtualbox/" + version + "/"+ guestAdditionsFileName;
+  if (!new File(guestAdditionsIso).exists()) {
+    getFilePathOrDownload(guestAdditionsUri);
+  }
+  checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
   YamlImage yamlImage=imageMapping.get(key.getId());
   checkNotNull(yamlImage,"could not find yaml image for image: " + key);
   String localIsoUrl=getFilePathOrDownload(yamlImage.iso);

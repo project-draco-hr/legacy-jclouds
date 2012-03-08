@@ -1,9 +1,15 @@
 {
-  checkNotNull(yamlFilePath,"yaml file path");
-  File yamlFile=new File(yamlFilePath);
-  checkState(yamlFile.exists(),"yaml file does not exist at: " + yamlFilePath);
   try {
-    return IOUtils.toString(new FileInputStream(yamlFile));
+    File yamlFile=new File(yamlFilePath);
+    String yamlDesc=null;
+    if (!yamlFile.exists()) {
+      yamlDesc=IOUtils.toString(new InputStreamReader(getClass().getResourceAsStream("/default-images.yaml")));
+    }
+ else {
+      yamlDesc=IOUtils.toString(new FileInputStream(yamlFile));
+    }
+    checkNotNull(yamlDesc,"yaml descriptor");
+    return yamlDesc;
   }
  catch (  IOException e) {
     throw new RuntimeException("error reading yaml file");
