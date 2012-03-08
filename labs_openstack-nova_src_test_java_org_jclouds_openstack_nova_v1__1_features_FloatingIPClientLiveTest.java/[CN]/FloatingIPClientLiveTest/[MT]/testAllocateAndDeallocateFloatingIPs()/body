@@ -1,0 +1,22 @@
+{
+  for (  String regionId : context.getApi().getConfiguredRegions()) {
+    FloatingIPClient client=context.getApi().getFloatingIPClientForRegion(regionId);
+    FloatingIP floatingIP=client.allocate();
+    assertNotNull(floatingIP);
+    Set<FloatingIP> response=client.listFloatingIPs();
+    boolean ipInSet=false;
+    for (    FloatingIP ip : response) {
+      if (ip.getId().equals(floatingIP.getId()))       ipInSet=true;
+    }
+    assertTrue(ipInSet);
+    client.deallocate(floatingIP.getId());
+    response=client.listFloatingIPs();
+    ipInSet=false;
+    for (    FloatingIP ip : response) {
+      if (ip.getId().equals(floatingIP.getId())) {
+        ipInSet=true;
+      }
+    }
+    assertFalse(ipInSet);
+  }
+}
