@@ -1,6 +1,10 @@
 {
   String fileName=httpUrl.substring(httpUrl.lastIndexOf('/') + 1,httpUrl.length());
   File localFile=new File(isosDir,fileName);
+  if (!localFile.exists()) {
+    logger.debug("iso not found in cache, downloading: %s",httpUrl);
+    localFile=isoDownloader.apply(URI.create(httpUrl));
+  }
   checkState(localFile.exists(),"iso file has not been downloaded: " + fileName);
   return localFile.getAbsolutePath();
 }
