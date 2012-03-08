@@ -1,0 +1,21 @@
+{
+  try {
+    session=SessionChannel.class.cast(acquire(execConnection()));
+    Command output=session.exec(command);
+    output.join(timeoutMillis,TimeUnit.SECONDS);
+    return new ExecChannel(session.getOutputStream(),session.getInputStream(),session.getErrorStream(),new Supplier<Integer>(){
+      @Override public Integer get(){
+        return session.getExitStatus();
+      }
+    }
+,new Closeable(){
+      @Override public void close() throws IOException {
+        clear();
+      }
+    }
+);
+  }
+  finally {
+    clear();
+  }
+}

@@ -1,0 +1,22 @@
+{
+  checkConnected();
+  String channel="exec";
+  executor=(ChannelExec)session.openChannel(channel);
+  executor.setPty(true);
+  executor.setCommand(command);
+  ByteArrayOutputStream error=new ByteArrayOutputStream();
+  executor.setErrStream(error);
+  executor.connect();
+  return new ExecChannel(executor.getOutputStream(),executor.getInputStream(),executor.getErrStream(),new Supplier<Integer>(){
+    @Override public Integer get(){
+      int exitStatus=executor.getExitStatus();
+      return exitStatus != -1 ? exitStatus : null;
+    }
+  }
+,new Closeable(){
+    @Override public void close() throws IOException {
+      clear();
+    }
+  }
+);
+}

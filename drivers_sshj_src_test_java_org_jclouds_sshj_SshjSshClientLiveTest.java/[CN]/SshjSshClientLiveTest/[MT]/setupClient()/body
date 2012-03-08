@@ -32,6 +32,16 @@
       }
       @Override public void put(      String path,      String contents){
       }
+      @Override public ExecChannel execChannel(      String command){
+        if (command.equals("hostname")) {
+          return new ExecChannel(new ByteArrayOutputStream(),new ByteArrayInputStream(sshHost.getBytes()),new ByteArrayInputStream(new byte[]{}),Suppliers.ofInstance(0),new Closeable(){
+            @Override public void close(){
+            }
+          }
+);
+        }
+        throw new RuntimeException("command " + command + " not stubbed");
+      }
     }
 ;
   }

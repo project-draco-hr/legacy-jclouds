@@ -1,0 +1,11 @@
+{
+  ExecChannel response=setupClient().execChannel("hostname");
+  try {
+    assertEquals(Strings2.toStringAndClose(response.getError()),"");
+    assertEquals(Strings2.toStringAndClose(response.getOutput()).trim(),"localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName() : sshHost);
+  }
+  finally {
+    Closeables.closeQuietly(response);
+  }
+  assertEquals(response.getExitStatus().get(),new Integer(0));
+}
