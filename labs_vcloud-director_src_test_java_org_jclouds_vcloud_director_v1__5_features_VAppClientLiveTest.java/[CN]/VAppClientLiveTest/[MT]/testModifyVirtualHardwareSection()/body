@@ -1,0 +1,8 @@
+{
+  VirtualHardwareSection hardware=vAppClient.getVirtualHardwareSection(vApp.getHref());
+  hardware.setInfo("New Info");
+  Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vApp.getHref(),hardware);
+  assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
+  VirtualHardwareSection modified=vAppClient.getVirtualHardwareSection(vApp.getHref());
+  assertEquals(modified.getInfo(),"New Info");
+}

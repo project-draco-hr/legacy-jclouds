@@ -1,0 +1,7 @@
+{
+  Task powerOffVApp=vAppClient.reset(vApp.getHref());
+  assertTrue(retryTaskSuccess.apply(powerOffVApp),String.format(TASK_COMPLETE_TIMELY,"powerOffVApp"));
+  vApp=vAppClient.getVApp(vApp.getHref());
+  Integer poweredOffStatus=Status.POWERED_ON.getValue();
+  assertEquals(vApp.getStatus(),poweredOffStatus,String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOffStatus,"powered off"));
+}
