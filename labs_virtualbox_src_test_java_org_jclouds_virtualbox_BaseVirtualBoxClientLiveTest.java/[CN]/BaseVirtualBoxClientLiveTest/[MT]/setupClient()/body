@@ -9,4 +9,6 @@
   hostVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
   operatingSystemIso=String.format("%s/%s.iso",isosDir,imageId);
   guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,hostVersion);
+  Template template=context.getComputeService().templateBuilder().build();
+  checkNotNull(mastersCache.apply(template.getImage()));
 }
