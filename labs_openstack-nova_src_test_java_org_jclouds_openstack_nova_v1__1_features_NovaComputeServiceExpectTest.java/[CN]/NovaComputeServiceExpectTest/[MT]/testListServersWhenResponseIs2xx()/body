@@ -1,0 +1,12 @@
+{
+  HttpRequest listServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/servers/detail")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse listServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_list_details.json")).build();
+  ComputeService clientWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listServers,listServersResponse);
+  assertNotNull(clientWhenServersExist.listAssignableLocations());
+  assertEquals(clientWhenServersExist.listAssignableLocations().size(),1);
+  assertEquals(clientWhenServersExist.listAssignableLocations().iterator().next().getId(),"North");
+  assertNotNull(clientWhenServersExist.listNodes());
+  assertEquals(clientWhenServersExist.listNodes().size(),1);
+  assertEquals(clientWhenServersExist.listNodes().iterator().next().getId(),"52415800-8b69-11e0-9b19-734f000004d2");
+  assertEquals(clientWhenServersExist.listNodes().iterator().next().getName(),"sample-server");
+}
