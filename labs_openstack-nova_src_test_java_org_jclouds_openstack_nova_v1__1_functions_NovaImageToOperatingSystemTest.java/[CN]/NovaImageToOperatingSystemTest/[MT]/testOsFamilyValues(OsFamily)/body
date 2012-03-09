@@ -1,0 +1,11 @@
+{
+  Image imageToConvert=Image.builder().id("id-" + family.name()).name(family.name()).build();
+  NovaImageToOperatingSystem converter=new NovaImageToOperatingSystem(new HashMap<OsFamily,Map<String,String>>());
+  OperatingSystem convertedOs=converter.apply(imageToConvert);
+  assertEquals(convertedOs.getName(),imageToConvert.getName());
+  assertEquals(convertedOs.getFamily(),family);
+  assertEquals(convertedOs.getDescription(),imageToConvert.getName());
+  assertEquals(convertedOs.getVersion(),null);
+  assertEquals(convertedOs.getArch(),null);
+  assertTrue(convertedOs.is64Bit());
+}
