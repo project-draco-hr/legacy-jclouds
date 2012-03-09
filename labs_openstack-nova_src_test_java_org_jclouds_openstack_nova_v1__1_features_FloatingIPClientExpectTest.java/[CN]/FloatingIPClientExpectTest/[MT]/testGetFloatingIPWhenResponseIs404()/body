@@ -1,0 +1,6 @@
+{
+  HttpRequest getFloatingIP=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-floating-ips/1")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse getFloatingIPResponse=HttpResponse.builder().statusCode(404).build();
+  NovaClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,getFloatingIP,getFloatingIPResponse);
+  assertNull(clientWhenNoServersExist.getFloatingIPClientForRegion("North").getFloatingIP("1"));
+}

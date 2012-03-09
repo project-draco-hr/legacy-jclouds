@@ -1,3 +1,16 @@
 {
-  return Multimaps2.fromOldSchool(addresses);
+  ImmutableSetMultimap.Builder returnMapBuilder=new ImmutableSetMultimap.Builder<Type,Address>();
+  Set<Address> publicAddresses=addresses.get(Address.Type.PUBLIC);
+  Set<Address> privateAddresses=addresses.get(Address.Type.PRIVATE);
+  if (privateAddresses.size() > 1) {
+    if (publicAddresses != null) {
+      returnMapBuilder.putAll(Address.Type.PUBLIC,Iterables.filter(publicAddresses,Predicates.not(IsPrivateAddress.INSTANCE)));
+    }
+    returnMapBuilder.putAll(Address.Type.PRIVATE,Iterables.filter(privateAddresses,IsPrivateAddress.INSTANCE));
+    returnMapBuilder.putAll(Address.Type.PUBLIC,Iterables.filter(privateAddresses,Predicates.not(IsPrivateAddress.INSTANCE)));
+  }
+ else {
+    return Multimaps2.fromOldSchool(addresses);
+  }
+  return returnMapBuilder.build();
 }

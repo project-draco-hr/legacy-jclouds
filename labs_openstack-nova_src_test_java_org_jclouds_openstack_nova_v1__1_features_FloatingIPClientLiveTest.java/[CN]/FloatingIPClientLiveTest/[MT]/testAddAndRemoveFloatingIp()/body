@@ -1,0 +1,18 @@
+{
+  for (  String regionId : context.getApi().getConfiguredRegions()) {
+    FloatingIPClient client=context.getApi().getFloatingIPClientForRegion(regionId);
+    ServerClient serverClient=context.getApi().getServerClientForRegion(regionId);
+    Server server=serverClient.createServer("test","121","100");
+    blockUntilServerActive(server.getId(),serverClient);
+    FloatingIP floatingIP=client.allocate();
+    assertNotNull(floatingIP);
+    try {
+      client.addFloatingIP(server.getId(),floatingIP.getIp());
+      assertEventually(new ServerHasFloatingIP(serverClient,server.getId(),floatingIP.getIp()));
+    }
+  finally {
+      client.removeFloatingIP(server.getId(),floatingIP.getIp());
+      serverClient.deleteServer(server.getId());
+    }
+  }
+}
