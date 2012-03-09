@@ -1,21 +1,15 @@
 {
-  try {
-    session=SessionChannel.class.cast(acquire(execConnection()));
-    Command output=session.exec(command);
-    output.join(timeoutMillis,TimeUnit.SECONDS);
-    return new ExecChannel(session.getOutputStream(),session.getInputStream(),session.getErrorStream(),new Supplier<Integer>(){
-      @Override public Integer get(){
-        return session.getExitStatus();
-      }
+  session=SessionChannel.class.cast(acquire(execConnection()));
+  output=session.exec(command);
+  return new ExecChannel(output.getOutputStream(),output.getInputStream(),output.getErrorStream(),new Supplier<Integer>(){
+    @Override public Integer get(){
+      return output.getExitStatus();
     }
+  }
 ,new Closeable(){
-      @Override public void close() throws IOException {
-        clear();
-      }
+    @Override public void close() throws IOException {
+      clear();
     }
+  }
 );
-  }
-  finally {
-    clear();
-  }
 }
