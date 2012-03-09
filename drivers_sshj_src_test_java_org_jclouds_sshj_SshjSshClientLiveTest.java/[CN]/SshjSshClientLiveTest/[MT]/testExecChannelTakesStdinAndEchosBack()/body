@@ -1,0 +1,16 @@
+{
+  ExecChannel response=setupClient().execChannel("cat <<EOF");
+  assertEquals(response.getExitStatus().get(),null);
+  try {
+    PrintStream printStream=new PrintStream(response.getInput());
+    printStream.append("foo\n");
+    printStream.append("EOF\n");
+    printStream.close();
+    assertEquals(Strings2.toStringAndClose(response.getError()),"");
+    assertEquals(Strings2.toStringAndClose(response.getOutput()),"foo\r\nEOF\r\n");
+  }
+  finally {
+    Closeables.closeQuietly(response);
+  }
+  assertEquals(response.getExitStatus().get(),new Integer(0));
+}
