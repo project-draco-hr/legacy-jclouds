@@ -1,12 +1,14 @@
 {
   return new Connection<Session>(){
     private Session session=null;
+    private SSHClient sshClientConnection;
     @Override public void clear() throws TransportException, ConnectionException {
       if (session != null)       session.close();
+      if (sshClientConnection != null)       Closeables.closeQuietly(sshClientConnection);
     }
     @Override public Session create() throws Exception {
-      checkConnected();
-      session=ssh.startSession();
+      this.sshClientConnection=acquire(SSHClientConnection.builder().fromSSHClientConnection(SshjSshClient.this.sshClientConnection).sessionTimeout(0).build());
+      session=sshClientConnection.startSession();
       return session;
     }
     @Override public String toString(){

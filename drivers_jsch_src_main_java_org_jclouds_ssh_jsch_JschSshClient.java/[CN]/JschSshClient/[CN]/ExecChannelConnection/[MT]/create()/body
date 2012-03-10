@@ -1,7 +1,7 @@
 {
-  checkConnected();
+  this.sessionConnection=acquire(SessionConnection.builder().fromSessionConnection(JschSshClient.this.sessionConnection).sessionTimeout(0).build());
   String channel="exec";
-  executor=(ChannelExec)session.openChannel(channel);
+  executor=(ChannelExec)sessionConnection.openChannel(channel);
   executor.setCommand(command);
   ByteArrayOutputStream error=new ByteArrayOutputStream();
   executor.setErrStream(error);
