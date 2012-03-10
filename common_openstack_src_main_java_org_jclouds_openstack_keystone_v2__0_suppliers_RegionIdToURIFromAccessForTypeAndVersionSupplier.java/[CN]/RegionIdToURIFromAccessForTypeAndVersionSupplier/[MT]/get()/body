@@ -14,6 +14,9 @@
   }
   Map<String,Endpoint> regionIdToEndpoint=Maps.uniqueIndex(Iterables.filter(service.getEndpoints(),new Predicate<Endpoint>(){
     @Override public boolean apply(    Endpoint input){
+      if (input.getVersionId() == null) {
+        return true;
+      }
       return input.getVersionId().equals(apiVersion);
     }
   }

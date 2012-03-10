@@ -1,0 +1,5 @@
+{
+  ServerClient serverClient=template.getLocation() != null ? novaClient.getServerClientForRegion(template.getLocation().getId()) : defaultLocationServerClient;
+  Server server=serverClient.createServer(name,template.getImage().getId(),template.getHardware().getId());
+  return new NodeAndInitialCredentials<Server>(server,server.getId() + "",LoginCredentials.builder().password(server.getAdminPass()).build());
+}
