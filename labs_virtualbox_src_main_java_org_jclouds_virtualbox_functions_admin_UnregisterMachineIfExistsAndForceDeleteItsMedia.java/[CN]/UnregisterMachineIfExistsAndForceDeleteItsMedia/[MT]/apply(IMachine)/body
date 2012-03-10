@@ -1,0 +1,28 @@
+{
+  List<IMedium> mediaToBeDeleted=Collections.emptyList();
+  try {
+    mediaToBeDeleted=machine.unregister(CleanupMode.Full);
+  }
+ catch (  VBoxException e) {
+    ErrorCode errorCode=ErrorCode.valueOf(e);
+switch (errorCode) {
+case VBOX_E_OBJECT_NOT_FOUND:
+      logger.debug("Machine %s does not exists, cannot unregister",machine.getName());
+    break;
+default :
+  throw e;
+}
+}
+List<IMedium> filteredMediaToBeDeleted=Lists.newArrayList(transform(mediaToBeDeleted,new DeleteChildrenOfMedium()));
+if (!filteredMediaToBeDeleted.isEmpty()) {
+try {
+IProgress deletion=machine.delete(filteredMediaToBeDeleted);
+deletion.waitForCompletion(-1);
+}
+ catch (Exception e) {
+logger.error(e,"Problem in deleting the media attached to %s",machine.getName());
+Throwables.propagate(e);
+}
+}
+return null;
+}
