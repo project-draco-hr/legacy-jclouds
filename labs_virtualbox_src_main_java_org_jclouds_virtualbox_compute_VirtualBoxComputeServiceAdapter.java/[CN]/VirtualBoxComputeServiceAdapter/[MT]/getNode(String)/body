@@ -1,3 +1,11 @@
 {
-  return manager.get().getVBox().findMachine(vmName);
+  try {
+    return manager.get().getVBox().findMachine(vmName);
+  }
+ catch (  VBoxException e) {
+    if (e.getMessage().contains("Could not find a registered machine named")) {
+      return null;
+    }
+    throw Throwables.propagate(e);
+  }
 }
