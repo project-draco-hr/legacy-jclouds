@@ -1,0 +1,17 @@
+{
+  return new Connection<Session>(){
+    private Session session=null;
+    @Override public void clear() throws TransportException, ConnectionException {
+      if (session != null)       session.close();
+    }
+    @Override public Session create() throws Exception {
+      checkConnected();
+      session=ssh.startSession();
+      return session;
+    }
+    @Override public String toString(){
+      return "Session()";
+    }
+  }
+;
+}
