@@ -21,7 +21,7 @@
   NetworkAdapter hostOnlyAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.HostOnly).staticIp(VMS_NETWORK + this.nodeIps.getAndIncrement()).build();
   NetworkInterfaceCard hostOnlyIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(hostOnlyAdapter).addHostInterfaceName(HOST_ONLY_IFACE_NAME).slot(1L).build();
   NetworkSpec networkSpec=NetworkSpec.builder().addNIC(natIfaceCard).addNIC(hostOnlyIfaceCard).build();
-  CloneSpec cloneSpec=CloneSpec.builder().linked(true).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
+  CloneSpec cloneSpec=CloneSpec.builder().linked(USE_LINKED).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
   new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(cloned);
   machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);
