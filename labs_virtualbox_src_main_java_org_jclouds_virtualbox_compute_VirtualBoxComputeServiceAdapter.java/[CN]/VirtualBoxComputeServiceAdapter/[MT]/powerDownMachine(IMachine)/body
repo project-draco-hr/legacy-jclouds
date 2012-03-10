@@ -1,5 +1,10 @@
 {
   try {
+    if (machine.getState() == MachineState.PoweredOff) {
+      logger.debug("vm was already powered down: ",machine.getName());
+      return;
+    }
+    logger.debug("powering down vm: ",machine.getName());
     ISession machineSession=manager.get().openMachineSession(machine);
     IProgress progress=machineSession.getConsole().powerDown();
     progress.waitForCompletion(-1);
