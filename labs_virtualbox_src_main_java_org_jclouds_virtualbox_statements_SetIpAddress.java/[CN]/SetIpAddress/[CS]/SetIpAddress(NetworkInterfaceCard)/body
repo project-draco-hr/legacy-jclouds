@@ -1,0 +1,23 @@
+{
+  String ipAddress=networkInterfaceCard.getNetworkAdapter().getStaticIp();
+  checkNotNull(ipAddress,"ip address");
+  int slot=(int)networkInterfaceCard.getSlot();
+  String iface=null;
+switch (slot) {
+case 0:
+    iface="eth0";
+  break;
+case 1:
+iface="eth1";
+break;
+case 2:
+iface="eth2";
+break;
+case 3:
+iface="eth3";
+break;
+default :
+throw new IllegalArgumentException("slot must be 0,1,2,3 (was: " + slot + ")");
+}
+script=String.format("ifconfig %s %s;",iface,ipAddress);
+}

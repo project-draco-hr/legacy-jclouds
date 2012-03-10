@@ -1,5 +1,7 @@
 {
+  checkNotNull(nodeSpec,"NodeSpec");
   Master master=nodeSpec.getMaster();
+  checkNotNull(master,"Master");
   if (master.getMachine().getCurrentSnapshot() != null) {
     ISession session;
     try {
@@ -14,12 +16,15 @@
   String masterNameWithoutPrefix=master.getSpec().getVmSpec().getVmName().replace(VIRTUALBOX_IMAGE_PREFIX,"");
   String cloneName=VIRTUALBOX_NODE_PREFIX + masterNameWithoutPrefix + "-"+ nodeSpec.getTag()+ "-"+ nodeSpec.getName();
   VmSpec cloneVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(CleanupMode.Full).forceOverwrite(true).build();
-  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",2222,"",22).build();
-  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
-  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
-  CloneSpec cloneSpec=CloneSpec.builder().linked(false).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
+  NetworkAdapter natAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",this.nodePorts.getAndIncrement(),"",22).build();
+  NetworkInterfaceCard natIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(natAdapter).slot(0L).build();
+  NetworkAdapter hostOnlyAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.HostOnly).staticIp(VMS_NETWORK + this.nodeIps.getAndIncrement()).build();
+  NetworkInterfaceCard hostOnlyIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(hostOnlyAdapter).addHostInterfaceName(HOST_ONLY_IFACE_NAME).slot(1L).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(natIfaceCard).addNIC(hostOnlyIfaceCard).build();
+  CloneSpec cloneSpec=CloneSpec.builder().linked(USE_LINKED).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
   new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(cloned);
+  machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);
   NodeAndInitialCredentials<IMachine> nodeAndInitialCredentials=new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
   return nodeAndInitialCredentials;
 }
