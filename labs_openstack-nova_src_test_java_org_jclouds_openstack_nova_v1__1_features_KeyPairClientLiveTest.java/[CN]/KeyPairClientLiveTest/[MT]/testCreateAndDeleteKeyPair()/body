@@ -1,0 +1,16 @@
+{
+  final String KEYPAIR_NAME="testkp";
+  for (  String regionId : context.getApi().getConfiguredRegions()) {
+    KeyPairClient client=context.getApi().getKeyPairClientForRegion(regionId);
+    KeyPair keyPair=null;
+    try {
+      keyPair=client.createKeyPair(KEYPAIR_NAME);
+      assertNotNull(keyPair);
+    }
+  finally {
+      if (keyPair != null) {
+        client.deleteKeyPair(KEYPAIR_NAME);
+      }
+    }
+  }
+}

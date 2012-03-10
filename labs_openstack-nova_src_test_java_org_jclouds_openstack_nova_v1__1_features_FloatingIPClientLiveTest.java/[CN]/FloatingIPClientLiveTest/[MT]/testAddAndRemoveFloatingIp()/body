@@ -2,7 +2,7 @@
   for (  String regionId : context.getApi().getConfiguredRegions()) {
     FloatingIPClient client=context.getApi().getFloatingIPClientForRegion(regionId);
     ServerClient serverClient=context.getApi().getServerClientForRegion(regionId);
-    Server server=serverClient.createServer("test","121","100");
+    Server server=serverClient.createServer("test",imageIdForRegion(regionId),flavorRefForRegion(regionId));
     blockUntilServerActive(server.getId(),serverClient);
     FloatingIP floatingIP=client.allocate();
     assertNotNull(floatingIP);
