@@ -9,7 +9,7 @@
   IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",sourceVmSpec.getVmName())).build();
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
-  this.cloneNetworkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
+  this.cloneNetworkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   sourceMachineSpec=MasterSpec.builder().iso(isoSpec).vm(sourceVmSpec).network(cloneNetworkSpec).build();
   this.clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
 }

@@ -1,0 +1,20 @@
+{
+  ssh=new net.schmizz.sshj.SSHClient();
+  ssh.addHostKeyVerifier(new PromiscuousVerifier());
+  if (connectTimeout != 0) {
+    ssh.setConnectTimeout(connectTimeout);
+  }
+  if (sessionTimeout != 0) {
+    ssh.setTimeout(sessionTimeout);
+  }
+  ssh.connect(hostAndPort.getHostText(),hostAndPort.getPortOrDefault(22));
+  if (loginCredentials.getPassword() != null) {
+    ssh.authPassword(loginCredentials.getUser(),loginCredentials.getPassword());
+  }
+ else {
+    OpenSSHKeyFile key=new OpenSSHKeyFile();
+    key.init(loginCredentials.getPrivateKey(),null);
+    ssh.authPublickey(loginCredentials.getUser(),key);
+  }
+  return ssh;
+}

@@ -5,7 +5,7 @@
   VmSpec vmSpec=VmSpec.builder().id(vmId).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("Debian").forceOverwrite(true).build();
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",2222,"",22).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
-  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   MasterSpec machineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript("").build()).vm(vmSpec).network(networkSpec).build();
   undoVm(vmSpec);
   try {

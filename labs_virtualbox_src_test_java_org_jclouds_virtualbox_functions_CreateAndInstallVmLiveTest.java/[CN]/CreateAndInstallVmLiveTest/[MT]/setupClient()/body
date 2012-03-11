@@ -8,7 +8,7 @@
   Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",2222,"",22).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
-  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(0L,networkInterfaceCard).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",vmSpecification.getVmName())).build()).network(networkSpec).build();
   undoVm(vmSpecification);
 }
