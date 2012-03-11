@@ -2,8 +2,8 @@
   boolean deleteOnStorageLeaseExpiration=vAppTemplateLeaseSettings.deleteOnStorageLeaseExpiration();
   Integer storageLeaseSeconds=vAppTemplateLeaseSettings.getStorageLeaseSeconds();
   try {
-    vAppTemplateLeaseSettings=vAppTemplateLeaseSettings.toBuilder().deleteOnStorageLeaseExpiration(!deleteOnStorageLeaseExpiration).storageLeaseSeconds(storageLeaseSeconds + 1).build();
-    vAppTemplateLeaseSettings=orgClient.updateVAppTemplateLeaseSettings(orgRef.getURI(),vAppTemplateLeaseSettings);
+    newVAppTemplateLeaseSettings=vAppTemplateLeaseSettings.toBuilder().deleteOnStorageLeaseExpiration(!deleteOnStorageLeaseExpiration).storageLeaseSeconds(storageLeaseSeconds + 1).build();
+    vAppTemplateLeaseSettings=orgClient.updateVAppTemplateLeaseSettings(orgRef.getURI(),newVAppTemplateLeaseSettings);
     assertTrue(equal(vAppTemplateLeaseSettings.deleteOnStorageLeaseExpiration(),!deleteOnStorageLeaseExpiration),String.format(OBJ_FIELD_UPDATABLE,"vAppTemplateLeaseSettings","deleteOnStorageLeaseExpiration"));
     assertTrue(equal(vAppTemplateLeaseSettings.getStorageLeaseSeconds(),storageLeaseSeconds + 1),String.format(OBJ_FIELD_UPDATABLE,"vAppTemplateLeaseSettings","storageLeaseSeconds"));
     Checks.checkVAppTemplateLeaseSettings(vAppTemplateLeaseSettings);

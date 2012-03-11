@@ -4,8 +4,8 @@
   boolean useServerBootSequence=generalSettings.useServerBootSequence();
   Integer delayAfterPowerOnSeconds=generalSettings.getDelayAfterPowerOnSeconds();
   try {
-    generalSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota + 1).storedVmQuota(storedVmQuota + 1).useServerBootSequence(!useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds + 1).build();
-    generalSettings=orgClient.updateGeneralSettings(orgRef.getURI(),generalSettings);
+    newGeneralSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota + 1).storedVmQuota(storedVmQuota + 1).useServerBootSequence(!useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds + 1).build();
+    generalSettings=orgClient.updateGeneralSettings(orgRef.getURI(),newGeneralSettings);
     assertTrue(equal(generalSettings.getDeployedVMQuota(),deployedVMQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","deployedVMQuota"));
     assertTrue(equal(generalSettings.getStoredVmQuota(),storedVmQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","storedVmQuota"));
     assertTrue(equal(generalSettings.useServerBootSequence(),!useServerBootSequence),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","useServerBootSequence"));
