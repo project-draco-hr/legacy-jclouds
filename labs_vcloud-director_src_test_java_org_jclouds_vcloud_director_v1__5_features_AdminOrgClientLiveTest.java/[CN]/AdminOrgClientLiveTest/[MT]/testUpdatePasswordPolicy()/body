@@ -1,0 +1,17 @@
+{
+  boolean accountLockoutEnabled=passwordPolicy.isAccountLockoutEnabled();
+  Integer invalidLoginsBeforeLockout=passwordPolicy.getInvalidLoginsBeforeLockout();
+  Integer accountLockoutIntervalMinutes=passwordPolicy.getAccountLockoutIntervalMinutes();
+  try {
+    passwordPolicy=passwordPolicy.toBuilder().accountLockoutEnabled(!accountLockoutEnabled).invalidLoginsBeforeLockout(invalidLoginsBeforeLockout + 1).accountLockoutIntervalMinutes(accountLockoutIntervalMinutes + 1).build();
+    passwordPolicy=orgClient.updatePasswordPolicy(orgRef.getURI(),passwordPolicy);
+    assertTrue(equal(passwordPolicy.isAccountLockoutEnabled(),!accountLockoutEnabled),String.format(OBJ_FIELD_UPDATABLE,"PasswordPolicySettings","deleteOnStorageLeaseExpiration"));
+    assertTrue(equal(passwordPolicy.getInvalidLoginsBeforeLockout(),invalidLoginsBeforeLockout + 1),String.format(OBJ_FIELD_UPDATABLE,"PasswordPolicySettings","storageLeaseSeconds"));
+    assertTrue(equal(passwordPolicy.getAccountLockoutIntervalMinutes(),accountLockoutIntervalMinutes + 1),String.format(OBJ_FIELD_UPDATABLE,"PasswordPolicySettings","deploymentLeaseSeconds"));
+    Checks.checkPasswordPolicySettings(passwordPolicy);
+  }
+  finally {
+    passwordPolicy=passwordPolicy.toBuilder().accountLockoutEnabled(accountLockoutEnabled).invalidLoginsBeforeLockout(invalidLoginsBeforeLockout).accountLockoutIntervalMinutes(accountLockoutIntervalMinutes).build();
+    passwordPolicy=orgClient.updatePasswordPolicy(orgRef.getURI(),passwordPolicy);
+  }
+}
