@@ -1,0 +1,14 @@
+{
+  assertNotNull(settings.getHostName(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","hostName"));
+  assertNotNull(settings.getPort(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","port"));
+  assertTrue(settings.getPort() >= 0,String.format(OBJ_FIELD_GTE_0,"CustomOrgLdapSettings","port",settings.getPort()));
+  assertNotNull(settings.getAuthenticationMechanism(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","authenticationMechanism"));
+  assertTrue(AuthenticationMechanism.ALL.contains(settings.getAuthenticationMechanism()),String.format(REQUIRED_VALUE_OBJECT_FMT,"AuthenticationMechanism","CustomOrdLdapSettings",settings.getAuthenticationMechanism(),Iterables.toString(CustomOrgLdapSettings.AuthenticationMechanism.ALL)));
+  assertNotNull(settings.isGroupSearchBaseEnabled(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","isGroupSearchBaseEnabled"));
+  assertNotNull(settings.getConnectorType(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","connectorType"));
+  assertTrue(ConnectorType.ALL.contains(settings.getConnectorType()),String.format(REQUIRED_VALUE_OBJECT_FMT,"ConnectorType","CustomOrdLdapSettings",settings.getConnectorType(),Iterables.toString(CustomOrgLdapSettings.ConnectorType.ALL)));
+  assertNotNull(settings.getUserAttributes(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","userAttributes"));
+  checkUserAttributes("CustomOrdLdapSettings",settings.getUserAttributes());
+  assertNotNull(settings.getGroupAttributes(),String.format(OBJ_FIELD_REQ,"CustomOrgLdapSettings","groupAttributes"));
+  checkGroupAttributes("CustomOrdLdapSettings",settings.getGroupAttributes());
+}

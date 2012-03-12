@@ -1,4 +1,5 @@
 {
   orgClient=context.getApi().getAdminOrgClient();
-  orgRef=Reference.builder().href(URI.create("https://vcloudbeta.bluelock.com/api/admin/org/???")).build();
+  orgRef=Iterables.getFirst(orgClient.getOrgList().getOrgs(),null).toAdminReference(endpoint);
+  assertNotNull(orgRef,String.format(REF_REQ_LIVE,"admin org"));
 }
