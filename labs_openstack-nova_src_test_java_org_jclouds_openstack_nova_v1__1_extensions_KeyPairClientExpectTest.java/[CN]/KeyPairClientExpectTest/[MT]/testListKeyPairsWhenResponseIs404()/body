@@ -1,0 +1,6 @@
+{
+  HttpRequest listKeyPairs=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-keypairs")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse listKeyPairsResponse=HttpResponse.builder().statusCode(404).build();
+  NovaClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listKeyPairs,listKeyPairsResponse);
+  assertTrue(clientWhenNoServersExist.getKeyPairClientForRegion("North").listKeyPairs().isEmpty());
+}
