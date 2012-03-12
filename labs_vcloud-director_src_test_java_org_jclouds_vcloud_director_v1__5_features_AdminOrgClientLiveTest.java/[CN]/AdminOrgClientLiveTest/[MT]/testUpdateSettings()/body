@@ -1,7 +1,7 @@
 {
   try {
     newSettings=settings.toBuilder().generalSettings(newGeneralSettings).vAppLeaseSettings(newVAppLeaseSettings).vAppTemplateLeaseSettings(newVAppTemplateLeaseSettings).ldapSettings(newLdapSettings).emailSettings(newEmailSettings).passwordPolicy(newPasswordPolicy).build();
-    settings=orgClient.updateSettings(orgRef.getURI(),newSettings);
+    settings=orgClient.updateSettings(orgRef.getHref(),newSettings);
     assertTrue(equal(settings.getGeneralSettings(),newGeneralSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","generalSettings"));
     assertTrue(equal(settings.getVAppLeaseSettings(),newVAppLeaseSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","vAppLeaseSettings"));
     assertTrue(equal(settings.getVAppTemplateLeaseSettings(),newVAppTemplateLeaseSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","vAppTemplateLeaseSettings"));
@@ -12,6 +12,6 @@
   }
   finally {
     settings=settings.toBuilder().generalSettings(generalSettings).vAppLeaseSettings(vAppLeaseSettings).vAppTemplateLeaseSettings(vAppTemplateLeaseSettings).ldapSettings(ldapSettings).emailSettings(emailSettings).passwordPolicy(passwordPolicy).build();
-    settings=orgClient.updateSettings(orgRef.getURI(),settings);
+    settings=orgClient.updateSettings(orgRef.getHref(),settings);
   }
 }
