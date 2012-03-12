@@ -1,0 +1,6 @@
+{
+  HttpRequest deleteKeyPair=HttpRequest.builder().method("DELETE").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-keypairs/testkeypair")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse deleteKeyPairResponse=HttpResponse.builder().statusCode(202).build();
+  NovaClient clientWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,deleteKeyPair,deleteKeyPairResponse);
+  assertTrue(clientWhenServersExist.getKeyPairClientForRegion("North").deleteKeyPair("testkeypair"));
+}
