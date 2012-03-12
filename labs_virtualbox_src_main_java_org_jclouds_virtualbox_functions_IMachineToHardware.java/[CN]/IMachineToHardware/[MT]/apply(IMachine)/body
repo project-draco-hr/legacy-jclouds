@@ -1,12 +1,12 @@
 {
   String osTypeId=vm.getOSTypeId();
+  String vmNameWithoutPrefix=vm.getName().replace(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX,"");
   IGuestOSType guestOSType=virtualBoxManager.get().getVBox().getGuestOSType(osTypeId);
   Boolean is64Bit=guestOSType.getIs64Bit();
   HardwareBuilder hardwareBuilder=new HardwareBuilder();
-  hardwareBuilder.ids(vm.getId());
-  hardwareBuilder.supportsImage(ImagePredicates.idEquals(vm.getId()));
+  hardwareBuilder.ids(vmNameWithoutPrefix);
   hardwareBuilder.is64Bit(is64Bit);
-  hardwareBuilder.supportsImage(ImagePredicates.idEquals(vm.getId()));
+  hardwareBuilder.supportsImage(ImagePredicates.idEquals(vmNameWithoutPrefix));
   hardwareBuilder.hypervisor("VirtualBox");
   return hardwareBuilder.build();
 }
