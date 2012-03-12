@@ -2,8 +2,8 @@
   oldMedia=media;
   media=vdcClient.cloneMedia(vdcURI,CloneMediaParams.builder().source(Reference.builder().fromEntity(media).build()).name("copied test media").description("copied by testCloneMedia()").build());
   Checks.checkMediaFor(VDC,media);
-  if (media.getTasksInProgress() != null) {
-    Task copyTask=Iterables.getFirst(media.getTasksInProgress().getTasks(),null);
+  if (media.getTasks() != null) {
+    Task copyTask=getFirst(media.getTasks(),null);
     if (copyTask != null) {
       Checks.checkTask(copyTask);
       assertTrue(retryTaskSuccess.apply(copyTask),String.format(TASK_COMPLETE_TIMELY,"copyTask"));
@@ -15,8 +15,8 @@
   mediaClient.getMetadataClient().setMetadata(media.getHref(),"key",MetadataValue.builder().value("value").build());
   media=vdcClient.cloneMedia(vdcURI,CloneMediaParams.builder().source(Reference.builder().fromEntity(media).build()).name("moved test media").description("moved by testCloneMedia()").isSourceDelete(true).build());
   Checks.checkMediaFor(VDC,media);
-  if (media.getTasksInProgress() != null) {
-    Task copyTask=Iterables.getFirst(media.getTasksInProgress().getTasks(),null);
+  if (media.getTasks() != null) {
+    Task copyTask=getFirst(media.getTasks(),null);
     if (copyTask != null) {
       Checks.checkTask(copyTask);
       assertTrue(retryTaskSuccess.apply(copyTask),String.format(TASK_COMPLETE_TIMELY,"copyTask"));

@@ -1,0 +1,7 @@
+{
+  URI vdcUri=URI.create(endpoint + "/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f");
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST","/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f/action/cloneMedia").acceptMedia(VCloudDirectorMediaType.MEDIA).xmlFilePayload("/media/cloneMediaParams.xml",VCloudDirectorMediaType.CLONE_MEDIA_PARAMS).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/cloneMedia.xml",VCloudDirectorMediaType.MEDIA).httpResponseBuilder().statusCode(201).build());
+  CloneMediaParams params=CloneMediaParams.builder().name("moved test media").description("moved by testCloneMedia()").source(Reference.builder().type("application/vnd.vmware.vcloud.media+xml").name("copied test media").id("urn:vcloud:media:da8361af-cccd-4103-a71c-493513c49094").href(URI.create("https://mycloud.greenhousedata.com/api/media/da8361af-cccd-4103-a71c-493513c49094")).build()).isSourceDelete(false).build();
+  Media expected=MediaClientExpectTest.cloneMedia();
+  assertEquals(client.getVdcClient().cloneMedia(vdcUri,params),expected);
+}

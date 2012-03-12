@@ -1,0 +1,18 @@
+{
+  SshClient client=setupClient();
+  ExecChannel response=client.execChannel("cat <<EOF");
+  client.disconnect();
+  assertEquals(response.getExitStatus().get(),null);
+  try {
+    PrintStream printStream=new PrintStream(response.getInput());
+    printStream.append("foo\n");
+    printStream.append("EOF\n");
+    printStream.close();
+    assertEquals(Strings2.toStringAndClose(response.getError()),"");
+    assertEquals(Strings2.toStringAndClose(response.getOutput()),"");
+  }
+  finally {
+    Closeables.closeQuietly(response);
+  }
+  assertEquals(response.getExitStatus().get(),new Integer(0));
+}

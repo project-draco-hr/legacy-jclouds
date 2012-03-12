@@ -3,7 +3,7 @@
     session=acquire(execConnection());
     Command output=session.exec(checkNotNull(command,"command"));
     String outputString=IOUtils.readFully(output.getInputStream()).toString();
-    output.join(timeoutMillis,TimeUnit.SECONDS);
+    output.join(sshClientConnection.getSessionTimeout(),TimeUnit.MILLISECONDS);
     int errorStatus=output.getExitStatus();
     String errorString=IOUtils.readFully(output.getErrorStream()).toString();
     return new ExecResponse(outputString,errorString,errorStatus);

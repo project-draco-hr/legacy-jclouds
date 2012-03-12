@@ -5,13 +5,13 @@
   String newDescription="new " + oldDescription;
   try {
     catalog=catalog.toBuilder().name(newName).description(newDescription).build();
-    catalog=catalogClient.updateCatalog(catalog.getURI(),catalog);
+    catalog=catalogClient.updateCatalog(catalog.getHref(),catalog);
     assertTrue(equal(catalog.getName(),newName),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"name"));
     assertTrue(equal(catalog.getDescription(),newDescription),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"description"));
     Checks.checkAdminCatalog(catalog);
   }
   finally {
     catalog=catalog.toBuilder().name(oldName).description(oldDescription).build();
-    catalog=catalogClient.updateCatalog(catalog.getURI(),catalog);
+    catalog=catalogClient.updateCatalog(catalog.getHref(),catalog);
   }
 }
