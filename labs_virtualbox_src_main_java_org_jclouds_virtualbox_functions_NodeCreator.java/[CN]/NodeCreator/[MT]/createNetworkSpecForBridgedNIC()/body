@@ -1,0 +1,8 @@
+{
+  List<BridgedIf> activeBridgedInterfaces=new RetrieveActiveBridgedInterfaces(scriptRunnerFactory).apply(hostSupplier.get());
+  BridgedIf bridgedActiveInterface=checkNotNull(activeBridgedInterfaces.get(0),"activeBridgedIf");
+  NetworkAdapter bridgedAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
+  NetworkInterfaceCard bridgedNIC=NetworkInterfaceCard.builder().addNetworkAdapter(bridgedAdapter).addHostInterfaceName(bridgedActiveInterface.getName()).slot(0L).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(bridgedNIC).build();
+  return networkSpec;
+}

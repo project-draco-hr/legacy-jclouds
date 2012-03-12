@@ -1,17 +1,7 @@
 {
-  List<String> bridgedInterfaceNames=Lists.newArrayList();
+  List<BridgedIf> bridgedInterfaces=Lists.newArrayList();
   for (  String bridgedIfBlock : Splitter.on(Pattern.compile("(?m)^[ \t]*\r?\n")).split(bridgedIfBlocks)) {
-    Iterable<String> bridgedIfName=filter(Splitter.on("\n").split(bridgedIfBlock),new Predicate<String>(){
-      @Override public boolean apply(      String arg0){
-        return arg0.startsWith("Name:");
-      }
-    }
-);
-    for (    String bridgedInterfaceName : bridgedIfName) {
-      for (      String string : Splitter.on("Name:").split(bridgedInterfaceName)) {
-        if (!string.isEmpty())         bridgedInterfaceNames.add(string.trim());
-      }
-    }
+    if (!bridgedIfBlock.isEmpty())     bridgedInterfaces.add(new BridgedIfStringToBridgedIf().apply(bridgedIfBlock));
   }
-  return bridgedInterfaceNames;
+  return bridgedInterfaces;
 }

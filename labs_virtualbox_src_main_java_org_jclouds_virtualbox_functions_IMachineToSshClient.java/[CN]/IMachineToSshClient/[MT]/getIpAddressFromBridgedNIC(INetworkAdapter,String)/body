@@ -1,0 +1,12 @@
+{
+  List<BridgedIf> activeBridgedInterfaces=new RetrieveActiveBridgedInterfaces(scriptRunnerFactory).apply(hostSupplier.get());
+  BridgedIf activeBrigedIf=checkNotNull(Iterables.get(activeBridgedInterfaces,0),"activeBridgrdIf");
+  network=activeBrigedIf.getIpAddress();
+  RunScriptOnNode ipScanRunScript=scriptRunnerFactory.create(hostSupplier.get(),new ScanNetworkWithPing(network),RunScriptOptions.NONE);
+  ExecResponse execResponse=ipScanRunScript.init().call();
+  checkState(execResponse.getExitStatus() == 0);
+  RunScriptOnNode getIpFromMACAddressRunScript=scriptRunnerFactory.create(hostSupplier.get(),new GetIPAddressFromMAC(networkAdapter.getMACAddress()),RunScriptOptions.NONE);
+  ExecResponse ipExecResponse=getIpFromMACAddressRunScript.init().call();
+  checkState(ipExecResponse.getExitStatus() == 0);
+  return checkNotNull(ipExecResponse.getOutput(),"ipAddress");
+}
