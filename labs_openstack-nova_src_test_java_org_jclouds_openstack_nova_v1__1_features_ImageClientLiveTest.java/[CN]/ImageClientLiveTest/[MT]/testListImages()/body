@@ -1,0 +1,15 @@
+{
+  for (  String regionId : context.getApi().getConfiguredRegions()) {
+    ImageClient client=context.getApi().getImageClientForRegion(regionId);
+    Set<Resource> response=client.listImages();
+    assertNotNull(response);
+    assertTrue(response.size() >= 0);
+    for (    Resource image : response) {
+      Image newDetails=client.getImage(image.getId());
+      assertNotNull(newDetails);
+      assertEquals(newDetails.getId(),image.getId());
+      assertEquals(newDetails.getName(),image.getName());
+      assertEquals(newDetails.getLinks(),image.getLinks());
+    }
+  }
+}
