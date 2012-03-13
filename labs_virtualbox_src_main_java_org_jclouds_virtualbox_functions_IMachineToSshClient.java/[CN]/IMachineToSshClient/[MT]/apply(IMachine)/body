@@ -2,16 +2,28 @@
   INetworkAdapter networkAdapter=vm.getNetworkAdapter(0L);
   SshClient client=null;
   checkNotNull(networkAdapter);
-  for (  String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
-    Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
-    String protocolNumber=Iterables.get(stuff,1);
-    String hostAddress=Iterables.get(stuff,2);
-    String inboundPort=Iterables.get(stuff,3);
-    String targetPort=Iterables.get(stuff,5);
-    if ("1".equals(protocolNumber) && "22".equals(targetPort)) {
-      client=sshClientFactory.create(new IPSocket(hostAddress,Integer.parseInt(inboundPort)),LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
+  String clientIpAddress=null;
+  String sshPort="22";
+  LoginCredentials loginCredentials=LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build();
+  if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.NAT)) {
+    for (    String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
+      Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
+      String protocolNumber=Iterables.get(stuff,1);
+      String hostAddress=Iterables.get(stuff,2);
+      String inboundPort=Iterables.get(stuff,3);
+      String targetPort=Iterables.get(stuff,5);
+      if ("1".equals(protocolNumber) && "22".equals(targetPort)) {
+        clientIpAddress=hostAddress;
+        sshPort=inboundPort;
+      }
     }
   }
+ else   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.Bridged)) {
+    String network="1.1.1.1";
+    clientIpAddress=getIpAddressFromBridgedNIC(networkAdapter,network);
+  }
+  checkNotNull(clientIpAddress,"clientIpAddress");
+  client=sshClientFactory.create(new IPSocket(clientIpAddress,Integer.parseInt(sshPort)),loginCredentials);
   checkNotNull(client);
   return client;
 }
