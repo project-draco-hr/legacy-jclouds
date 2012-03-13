@@ -1,11 +1,19 @@
 {
-  try {
-    logger.debug(">> deleting incidentalResources(%s @ %s)",region,group);
-    deleteSecurityGroup(region,group);
-    deleteKeyPair(region,group);
-    logger.debug("<< deleted incidentalResources(%s @ %s)",region,group);
+  final int maxAttempts=3;
+  Retryables.retryNumTimes(new Predicate<Void>(){
+    @Override public boolean apply(    Void input){
+      try {
+        logger.debug(">> deleting incidentalResources(%s @ %s)",region,group);
+        deleteSecurityGroup(region,group);
+        deleteKeyPair(region,group);
+        logger.debug("<< deleted incidentalResources(%s @ %s)",region,group);
+        return true;
+      }
+ catch (      IllegalStateException e) {
+        logger.debug("<< inUse incidentalResources(%s @ %s)",region,group);
+        return false;
+      }
+    }
   }
- catch (  IllegalStateException e) {
-    logger.debug("<< inUse incidentalResources(%s @ %s)",region,group);
-  }
+,(Void)null,maxAttempts);
 }

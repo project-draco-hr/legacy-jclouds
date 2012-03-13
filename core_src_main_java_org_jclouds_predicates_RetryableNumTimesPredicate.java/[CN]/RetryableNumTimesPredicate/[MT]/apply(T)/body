@@ -1,0 +1,34 @@
+{
+  try {
+    for (int i=1; i <= maxAttempts; Thread.sleep(nextMaxInterval(i++))) {
+      if (predicate.apply(input)) {
+        return true;
+      }
+    }
+    return false;
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"predicate %s on %s interrupted, returning false",input,predicate);
+    Thread.currentThread().interrupt();
+  }
+catch (  RuntimeException e) {
+    if (getFirstThrowableOfType(e,ExecutionException.class) != null) {
+      logger.warn(e,"predicate %s on %s errored [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,IllegalStateException.class) != null) {
+      logger.warn(e,"predicate %s on %s illegal state [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,CancellationException.class) != null) {
+      logger.warn(e,"predicate %s on %s cancelled [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,TimeoutException.class) != null) {
+      logger.warn(e,"predicate %s on %s timed out [%s], returning false",input,predicate,e.getMessage());
+      return false;
+    }
+ else     throw e;
+  }
+  return false;
+}
