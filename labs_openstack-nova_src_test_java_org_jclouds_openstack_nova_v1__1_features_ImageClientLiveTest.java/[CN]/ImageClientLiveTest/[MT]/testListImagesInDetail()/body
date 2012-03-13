@@ -1,2 +1,24 @@
 {
+  for (  String regionId : context.getApi().getConfiguredRegions()) {
+    ImageClient client=context.getApi().getImageClientForRegion(regionId);
+    Set<Image> response=client.listImagesInDetail();
+    assertNotNull(response);
+    assertTrue(response.size() >= 0);
+    for (    Image image : response) {
+      Image newDetails=client.getImage(image.getId());
+      assertNotNull(newDetails);
+      assertEquals(newDetails.getId(),image.getId());
+      assertEquals(newDetails.getName(),image.getName());
+      assertEquals(newDetails.getLinks(),image.getLinks());
+      assertEquals(newDetails.getCreated(),image.getCreated());
+      assertEquals(newDetails.getMinDisk(),image.getMinDisk());
+      assertEquals(newDetails.getMinRam(),image.getMinRam());
+      assertEquals(newDetails.getProgress(),image.getProgress());
+      assertEquals(newDetails.getStatus(),image.getStatus());
+      assertEquals(newDetails.getServer(),image.getServer());
+      assertEquals(newDetails.getTenantId(),image.getTenantId());
+      assertEquals(newDetails.getUpdated(),image.getUpdated());
+      assertEquals(newDetails.getUserId(),image.getUserId());
+    }
+  }
 }
