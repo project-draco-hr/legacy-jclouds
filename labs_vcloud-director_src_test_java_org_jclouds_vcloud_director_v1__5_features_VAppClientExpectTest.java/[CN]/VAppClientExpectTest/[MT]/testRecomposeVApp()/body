@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/recomposeVApp.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/recomposeVApp.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=recomposeVApp();
-  assertEquals(client.getVAppClient().recomposeVApp(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/recomposeVApp").xmlFilePayload("/vApp/recomposeVAppParams.xml",VCloudDirectorMediaType.RECOMPOSE_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/recomposeVAppTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RecomposeVAppParams params=RecomposeVAppParams.builder().build();
+  Task expected=recomposeVAppTask();
+  assertEquals(client.getVAppClient().recomposeVApp(vAppURI,params),expected);
 }

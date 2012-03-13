@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/upgradeHardwareVersion.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/upgradeHardwareVersion.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=upgradeHardwareVersion();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/upgradeHardwareVersion").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/upgradeHardwareVersionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=upgradeHardwareVersionTask();
   assertEquals(client.getVAppClient().upgradeHardwareVersion(vAppURI),expected);
 }

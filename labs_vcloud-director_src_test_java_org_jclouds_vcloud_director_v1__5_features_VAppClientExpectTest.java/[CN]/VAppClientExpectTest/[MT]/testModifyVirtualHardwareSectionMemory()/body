@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/modifyVirtualHardwareSectionMemory.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/modifyVirtualHardwareSectionMemory.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=modifyVirtualHardwareSectionMemory();
-  assertEquals(client.getVAppClient().modifyVirtualHardwareSectionMemory(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/virtualHardwareSection/memory").xmlFilePayload("/vApp/modifyVirtualHardwareSectionMemory.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyVirtualHardwareSectionMemoryTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RASD memory=getVirtualHardwareSectionCpu();
+  Task expected=modifyVirtualHardwareSectionMemoryTask();
+  assertEquals(client.getVAppClient().modifyVirtualHardwareSectionMemory(vAppURI,memory),expected);
 }

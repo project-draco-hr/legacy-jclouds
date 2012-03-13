@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/getOwner.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/getOwner.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=getOwner();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",vAppId + "/owner").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/getOwner.xml",VCloudDirectorMediaType.OWNER).httpResponseBuilder().build());
+  Owner expected=getOwner();
   assertEquals(client.getVAppClient().getOwner(vAppURI),expected);
 }

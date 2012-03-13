@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/discardSuspendedState.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/discardSuspendedState.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=discardSuspendedState();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/discardSuspendedState").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/discardSuspendedStateTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=discardSuspendedStateTask();
   assertEquals(client.getVAppClient().discardSuspendedState(vAppURI),expected);
 }

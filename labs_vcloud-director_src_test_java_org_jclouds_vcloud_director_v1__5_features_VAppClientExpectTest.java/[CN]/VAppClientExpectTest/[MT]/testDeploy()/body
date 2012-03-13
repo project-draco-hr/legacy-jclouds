@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/deploy.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/deploy.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=deploy();
-  assertEquals(client.getVAppClient().deploy(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/deploy").xmlFilePayload("/vApp/deployParams.xml",VCloudDirectorMediaType.DEPLOY_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/deployTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  DeployVAppParams params=DeployVAppParams.builder().build();
+  Task expected=deployTask();
+  assertEquals(client.getVAppClient().deploy(vAppURI,params),expected);
 }

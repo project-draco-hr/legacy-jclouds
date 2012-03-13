@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/modifyGuestCustomizationSection.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/modifyGuestCustomizationSection.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=modifyGuestCustomizationSection();
-  assertEquals(client.getVAppClient().modifyGuestCustomizationSection(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/guestCustomizationSection").xmlFilePayload("/vApp/modifyGuestCustomizationSection.xml",VCloudDirectorMediaType.GUEST_CUSTOMIZATION_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyGuestCustomizationSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  GuestCustomizationSection section=getGuestCustomizationSection().toBuilder().build();
+  Task expected=modifyGuestCustomizationSectionTask();
+  assertEquals(client.getVAppClient().modifyGuestCustomizationSection(vAppURI,section),expected);
 }

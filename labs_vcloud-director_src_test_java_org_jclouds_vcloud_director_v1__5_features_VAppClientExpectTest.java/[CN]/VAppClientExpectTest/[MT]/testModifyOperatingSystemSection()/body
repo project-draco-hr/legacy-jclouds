@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/modifyOperatingSystemSection.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/modifyOperatingSystemSection.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=modifyOperatingSystemSection();
-  assertEquals(client.getVAppClient().modifyOperatingSystemSection(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/operatingSystemSection").xmlFilePayload("/vApp/modifyOperatingSystemSection.xml",VCloudDirectorMediaType.OPERATING_SYSTEM_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyOperatingSystemSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  OperatingSystemSection section=getOperatingSystemSection().toBuilder().build();
+  Task expected=modifyOperatingSystemSectionTask();
+  assertEquals(client.getVAppClient().modifyOperatingSystemSection(vAppURI,section),expected);
 }

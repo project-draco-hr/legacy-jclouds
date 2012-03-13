@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/powerOn.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/powerOn.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=powerOn();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/power/action/powerOn").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/powerOnTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=powerOnTask();
   assertEquals(client.getVAppClient().powerOn(vAppURI),expected);
 }

@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/insertMedia.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/insertMedia.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=insertMedia();
-  assertEquals(client.getVAppClient().insertMedia(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/media/action/insertMedia").xmlFilePayload("/vApp/insertMediaParams.xml",VCloudDirectorMediaType.MEDIA_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/insertMediaTask.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
+  MediaInsertOrEjectParams params=MediaInsertOrEjectParams.builder().build();
+  Task expected=insertMediaTask();
+  assertEquals(client.getVAppClient().insertMedia(vAppURI,params),expected);
 }

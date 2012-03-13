@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/modifyVirtualHardwareSectionSerialPorts.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/modifyVirtualHardwareSectionSerialPorts.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=modifyVirtualHardwareSectionSerialPorts();
-  assertEquals(client.getVAppClient().modifyVirtualHardwareSectionSerialPorts(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/virtualHardwareSection/serialPorts").xmlFilePayload("/vApp/modifyVirtualHardwareSectionSerialPorts.xml",VCloudDirectorMediaType.OVF_RASD_ITEMS_LIST).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyVirtualHardwareSectionSerialPortsTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RasdItemsList serialPorts=getVirtualHardwareSectionSerialPorts().toBuilder().build();
+  Task expected=modifyVirtualHardwareSectionSerialPortsTask();
+  assertEquals(client.getVAppClient().modifyVirtualHardwareSectionSerialPorts(vAppURI,serialPorts),expected);
 }

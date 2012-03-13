@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/getNetworkConnectionSection.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/getNetworkConnectionSection.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=getNetworkConnectionSection();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",vAppId + "/networkConnectionSection").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/getNetworkConnectionSection.xml",VCloudDirectorMediaType.NETWORK_CONNECTION_SECTION).httpResponseBuilder().build());
+  NetworkConnectionSection expected=getNetworkConnectionSection();
   assertEquals(client.getVAppClient().getNetworkConnectionSection(vAppURI),expected);
 }

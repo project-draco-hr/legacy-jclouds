@@ -1,5 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/getProductSections.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/getProductSections.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=getProductSections();
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",vAppId + "/productSections").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/getProductSections.xml",VCloudDirectorMediaType.PRODUCT_SECTION_LIST).httpResponseBuilder().build());
+  ProductSectionList expected=getProductSections();
   assertEquals(client.getVAppClient().getProductSections(vAppURI),expected);
 }

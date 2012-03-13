@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/modifyNetworkConfigSection.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/modifyNetworkConfigSection.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=modifyNetworkConfigSection();
-  assertEquals(client.getVAppClient().modifyNetworkConfigSection(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/networkConfigSection").xmlFilePayload("/vApp/modifyNetworkConfigSection.xml",VCloudDirectorMediaType.NETWORK_CONFIG_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyNetworkConfigSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  NetworkConfigSection section=getNetworkConfigSection().toBuilder().build();
+  Task expected=modifyNetworkConfigSectionTask();
+  assertEquals(client.getVAppClient().modifyNetworkConfigSection(vAppURI,section),expected);
 }

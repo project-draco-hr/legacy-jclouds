@@ -1,5 +1,6 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("","/vapp/e9cd3387-ac57-4d27-a481-9bee75e0690f").xmlFilePayload("/vapp/controlAccess.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/controlAccess.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
-  VApp expected=controlAccess();
-  assertEquals(client.getVAppClient().controlAccess(vAppURI,null),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/controlAccess").xmlFilePayload("/vApp/controlAccessParams.xml",VCloudDirectorMediaType.CONTROL_ACCESS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/controlAccessParams.xml",VCloudDirectorMediaType.CONTROL_ACCESS).httpResponseBuilder().build());
+  ControlAccessParams params=controlAccessParams();
+  ControlAccessParams expected=controlAccessParams();
+  assertEquals(client.getVAppClient().controlAccess(vAppURI,params),expected);
 }
