@@ -1,6 +1,6 @@
 {
   UUID id=UUID.randomUUID();
-  Server serverToConvert=Server.builder().id(id.toString()).name("Test Server " + id).privateAddresses(Address.createV4("10.0.0.1")).publicAddresses(Address.createV4("1.0.1.1")).status(ServerStatus.ACTIVE).build();
+  Server serverToConvert=Server.builder().id(id.toString()).name("Test Server " + id).privateAddresses(Address.createV4("10.0.0.1")).publicAddresses(Address.createV4("1.0.1.1")).status(ServerStatus.ACTIVE).metadata(ImmutableMap.of("test","testing")).build();
   ServerToNodeMetadata converter=new ServerToNodeMetadata();
   NodeMetadata convertedNodeMetadata=converter.apply(serverToConvert);
   assertEquals(serverToConvert.getId(),convertedNodeMetadata.getId());
@@ -13,4 +13,7 @@
   assertNotNull(convertedNodeMetadata.getPublicAddresses());
   assertEquals(convertedNodeMetadata.getPublicAddresses().size(),1);
   assertEquals(convertedNodeMetadata.getPublicAddresses().iterator().next(),"1.0.1.1");
+  assertNotNull(convertedNodeMetadata.getUserMetadata());
+  assertEquals(convertedNodeMetadata.getUserMetadata().size(),1);
+  assertEquals(convertedNodeMetadata.getUserMetadata().get("test"),"testing");
 }
