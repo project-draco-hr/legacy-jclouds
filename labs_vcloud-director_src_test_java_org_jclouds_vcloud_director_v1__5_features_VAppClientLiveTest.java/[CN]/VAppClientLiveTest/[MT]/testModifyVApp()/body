@@ -1,9 +1,8 @@
 {
-  vApp.setName("new-name");
-  vApp.setDescription("New Description");
-  Task modifyVApp=vAppClient.modifyVApp(vApp.getHref(),vApp);
+  VApp newVApp=VApp.builder().name("new-name").description("New Description").build();
+  Task modifyVApp=vAppClient.modifyVApp(vApp.getHref(),newVApp);
   assertTrue(retryTaskSuccess.apply(modifyVApp),String.format(TASK_COMPLETE_TIMELY,"modifyVApp"));
   vApp=vAppClient.getVApp(vApp.getHref());
-  assertEquals(vApp.getName(),"new-name",String.format(OBJ_FIELD_EQ,VAPP,"name","new-name","modified"));
-  assertEquals(vApp.getDescription(),"New Description",String.format(OBJ_FIELD_EQ,VAPP,"description","New Description","modified"));
+  assertEquals(vApp.getName(),newVApp.getName(),String.format(OBJ_FIELD_EQ,VAPP,"Name",newVApp.getName(),vApp.getName()));
+  assertEquals(vApp.getDescription(),newVApp.getDescription(),String.format(OBJ_FIELD_EQ,VAPP,"Description",newVApp.getDescription(),vApp.getDescription()));
 }

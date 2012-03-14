@@ -1,6 +1,5 @@
 {
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/owner").xmlFilePayload("/vApp/modifyOwner.xml",VCloudDirectorMediaType.OWNER).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyOwner.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
-  Owner owner=getOwner().toBuilder().build();
-  Task expected=modifyOwnerTask();
-  assertEquals(client.getVAppClient().modifyOwner(vAppURI,owner),expected);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/owner").xmlFilePayload("/vApp/modifyOwner.xml",VCloudDirectorMediaType.OWNER).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().httpResponseBuilder().statusCode(204).build());
+  Owner owner=Owner.builder().build();
+  client.getVAppClient().modifyOwner(vAppURI,owner);
 }

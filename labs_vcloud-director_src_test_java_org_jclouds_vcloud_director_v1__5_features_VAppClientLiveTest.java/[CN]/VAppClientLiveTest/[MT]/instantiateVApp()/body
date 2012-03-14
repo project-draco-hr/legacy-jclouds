@@ -1,15 +1,6 @@
 {
-  Vdc vdc=vdcClient.getVdc(vdcURI);
-  assertNotNull(vdc,String.format(OBJ_REQ_LIVE,VDC));
-  VAppTemplate vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
-  assertNotNull(vAppTemplate,String.format(OBJ_REQ_LIVE,VAPP_TEMPLATE));
-  InstantiateVAppTemplateParams instantiate=InstantiateVAppTemplateParams.builder().name("test-vapp").notDeploy().notPowerOn().description("Test VApp").instantiationParams(InstantiationParams.builder().sections(ImmutableSet.of(NetworkConfigSection.builder().info("Configuration parameters for logical networks").networkConfigs(ImmutableSet.of(VAppNetworkConfiguration.builder().networkName("vAppNetwork").configuration(NetworkConfiguration.builder().parentNetwork(Iterables.find(vdc.getAvailableNetworks().getNetworks(),new Predicate<Reference>(){
-    @Override public boolean apply(    Reference reference){
-      return reference.getHref().equals(networkURI);
-    }
-  }
-)).fenceMode("bridged").build()).build())).build())).build()).source(Reference.builder().href(vAppTemplateURI).build()).build();
+  InstantiateVAppTemplateParams instantiate=InstantiateVAppTemplateParams.builder().name("test-vapp").notDeploy().notPowerOn().description("Test VApp").instantiationParams(instantiationParams()).source(ReferenceType.<Reference>builder().href(vAppTemplateURI).build()).build();
   VApp vAppInstantiated=vdcClient.instantiateVApp(vdcURI,instantiate);
-  assertNotNull(vAppInstantiated,String.format(VCloudDirectorLiveTestConstants.NOT_NULL_OBJECT_FMT,VAPP));
+  assertNotNull(vAppInstantiated,String.format(ENTITY_NON_NULL,VAPP));
   return vAppInstantiated;
 }

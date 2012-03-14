@@ -1,7 +1,7 @@
 {
-  Owner newOwner=Owner.builder().user(Reference.builder().href(userURI).build()).build();
-  Task modifyOwner=vAppClient.modifyOwner(vApp.getHref(),newOwner);
-  assertTrue(retryTaskSuccess.apply(modifyOwner),String.format(TASK_COMPLETE_TIMELY,"modifyOwner"));
+  Owner newOwner=Owner.builder().user(Reference.builder().href(userURI).type(ADMIN_USER).build()).build();
+  vAppClient.modifyOwner(vApp.getHref(),newOwner);
   Owner modified=vAppClient.getOwner(vApp.getHref());
-  assertEquals(modified,newOwner);
+  checkOwner(modified);
+  assertEquals(modified.getUser().getHref(),newOwner.getUser().getHref());
 }
