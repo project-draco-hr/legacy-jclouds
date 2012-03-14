@@ -1,6 +1,6 @@
 {
   HttpRequest listFloatingIPs=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-floating-ips")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listFloatingIPsResponse=HttpResponse.builder().statusCode(404).build();
-  NovaClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listFloatingIPs,listFloatingIPsResponse);
-  assertTrue(clientWhenNoServersExist.getFloatingIPExtensionForRegion("North").get().listFloatingIPs().isEmpty());
+  NovaAsyncClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listFloatingIPs,listFloatingIPsResponse);
+  assertTrue(clientWhenNoServersExist.getFloatingIPExtensionForRegion("North").get().listFloatingIPs().get().isEmpty());
 }
