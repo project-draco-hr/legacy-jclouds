@@ -1,0 +1,13 @@
+{
+  String networkName="" + random.nextInt();
+  NetworkConfiguration networkConfiguration=NetworkConfiguration.builder().fenceMode("isolated").build();
+  VAppNetworkConfiguration vappNetworkConfiguration=VAppNetworkConfiguration.builder().networkName(networkName).configuration(networkConfiguration).build();
+  Set<VAppNetworkConfiguration> vappNetworkConfigurations=ImmutableSet.of(vappNetworkConfiguration);
+  NetworkConfigSection networkConfigSection=NetworkConfigSection.builder().networkConfigs(vappNetworkConfigurations).build();
+  final Task task=vappTemplateClient.editVAppTemplateNetworkConfigSection(vAppTemplateURI,networkConfigSection);
+  retryTaskSuccess.apply(task);
+  NetworkConfigSection newNetworkConfigSection=vappTemplateClient.getVAppTemplateNetworkConfigSection(vAppTemplateURI);
+  assertEquals(newNetworkConfigSection.getNetworkConfigs().size(),1);
+  VAppNetworkConfiguration newVAppNetworkConfig=Iterables.get(newNetworkConfigSection.getNetworkConfigs(),0);
+  assertEquals(newVAppNetworkConfig.getNetworkName(),networkName);
+}

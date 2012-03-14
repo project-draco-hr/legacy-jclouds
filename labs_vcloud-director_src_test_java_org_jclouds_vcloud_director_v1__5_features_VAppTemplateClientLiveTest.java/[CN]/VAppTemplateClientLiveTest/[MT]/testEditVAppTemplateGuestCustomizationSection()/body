@@ -1,0 +1,8 @@
+{
+  String domainUserName="" + random.nextInt(Integer.MAX_VALUE);
+  GuestCustomizationSection guestCustomizationSection=GuestCustomizationSection.builder().info("my info").domainUserName(domainUserName).enabled(true).build();
+  final Task task=vappTemplateClient.editVAppTemplateGuestCustomizationSection(vAppTemplateURI,guestCustomizationSection);
+  retryTaskSuccess.apply(task);
+  GuestCustomizationSection newGuestCustomizationSection=vappTemplateClient.getVAppTemplateGuestCustomizationSection(vAppTemplateURI);
+  assertEquals(newGuestCustomizationSection.getDomainUserName(),domainUserName);
+}

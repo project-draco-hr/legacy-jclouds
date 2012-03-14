@@ -1,0 +1,11 @@
+{
+  String key="mykey-" + random.nextInt();
+  MetadataValue metadataValue=MetadataValue.builder().value("myval").build();
+  final Task task=vappTemplateClient.editVAppTemplateMetadataValue(vAppTemplateURI,key,metadataValue);
+  retryTaskSuccess.apply(task);
+  final Task deletionTask=vappTemplateClient.deleteVAppTemplateMetadataValue(vAppTemplateURI,key);
+  retryTaskSuccess.apply(deletionTask);
+  Metadata newMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  Map<String,String> newMetadataMap=metadataToMap(newMetadata);
+  assertFalse(newMetadataMap.containsKey(key),"newMetadata=" + newMetadata);
+}

@@ -1,0 +1,11 @@
+{
+  String newVAppTemplateId="something";
+  URI newVAppTemplateURI=URI.create(endpoint + "/vAppTemplate/" + newVAppTemplateId);
+  final Task task=vappTemplateClient.deleteVappTemplate(newVAppTemplateURI);
+  retryTaskSuccess.apply(task);
+  try {
+    vappTemplateClient.getVAppTemplate(newVAppTemplateURI);
+  }
+ catch (  NoSuchElementException e) {
+  }
+}
