@@ -1,0 +1,6 @@
+{
+  HttpRequest getExtension=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/extensions/RS-PIE")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse getExtensionResponse=HttpResponse.builder().statusCode(404).payload(payloadFromResource("/extension_details.json")).build();
+  NovaClient clientWhenNoExtensionsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,getExtension,getExtensionResponse);
+  assertNull(clientWhenNoExtensionsExist.getExtensionClientForRegion("North").getExtensionByAlias("RS-PIE"));
+}

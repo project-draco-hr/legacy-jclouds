@@ -1,0 +1,26 @@
+{
+  if (user.getEmailAddress() != null) {
+    checkEmailAddress(user.getEmailAddress());
+  }
+  if (user.getTelephone() != null) {
+    checkTelephone(user.getTelephone());
+  }
+  if (user.getAlertEmail() != null) {
+    checkEmailAddress(user.getAlertEmail());
+  }
+  if (user.getStoredVmQuota() != null) {
+    assertTrue(user.getStoredVmQuota() >= 0,String.format(OBJ_FIELD_GTE_0,"User","storedVmQuota",user.getStoredVmQuota()));
+  }
+  if (user.getDeployedVmQuota() != null) {
+    assertTrue(user.getDeployedVmQuota() >= 0,String.format(OBJ_FIELD_GTE_0,"User","deployedVmQuota",user.getDeployedVmQuota()));
+  }
+  if (user.getRole() != null) {
+    checkReferenceType(user.getRole());
+  }
+  if (user.getGroups() != null) {
+    for (    Reference group : user.getGroups()) {
+      checkReferenceType(group);
+    }
+  }
+  checkEntityType(user);
+}

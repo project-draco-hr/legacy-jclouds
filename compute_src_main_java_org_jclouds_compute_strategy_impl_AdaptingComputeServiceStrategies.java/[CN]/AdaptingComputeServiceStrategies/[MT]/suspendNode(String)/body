@@ -1,6 +1,6 @@
 {
   NodeMetadata node=getNode(checkNotNull(id,"id"));
-  if (node == null || node.getState() == NodeState.TERMINATED || node.getState() == NodeState.SUSPENDED)   return node;
+  checkStateAvailable(node);
   client.suspendNode(id);
-  return node;
+  return getNode(checkNotNull(id,"id"));
 }
