@@ -1,0 +1,14 @@
+{
+  Optional<Status> found=Iterables.tryFind(Arrays.asList(values()),new Predicate<Status>(){
+    @Override public boolean apply(    Status status){
+      return status.getValue() == value;
+    }
+  }
+);
+  if (found.isPresent()) {
+    return found.get();
+  }
+ else {
+    throw new VCloudDirectorRuntimeException(String.format("Illegal status value '%d'",value));
+  }
+}

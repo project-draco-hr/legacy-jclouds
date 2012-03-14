@@ -1,0 +1,14 @@
+{
+  Optional<Code> found=Iterables.tryFind(Arrays.asList(values()),new Predicate<Code>(){
+    @Override public boolean apply(    Code code){
+      return code.getCode().equals(majorErrorCode);
+    }
+  }
+);
+  if (found.isPresent()) {
+    return found.get();
+  }
+ else {
+    throw new VCloudDirectorRuntimeException(String.format("Illegal major error code '%d'",majorErrorCode));
+  }
+}
