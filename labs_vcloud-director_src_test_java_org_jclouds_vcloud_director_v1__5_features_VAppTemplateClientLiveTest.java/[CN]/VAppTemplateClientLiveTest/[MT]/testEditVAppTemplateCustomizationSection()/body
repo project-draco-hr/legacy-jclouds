@@ -1,0 +1,9 @@
+{
+  boolean oldVal=vappTemplateClient.getVAppTemplateCustomizationSection(vAppTemplateURI).isCustomizeOnInstantiate();
+  boolean newVal=!oldVal;
+  CustomizationSection customizationSection=CustomizationSection.builder().info("my info").customizeOnInstantiate(newVal).build();
+  final Task task=vappTemplateClient.editVAppTemplateCustomizationSection(vAppTemplateURI,customizationSection);
+  retryTaskSuccess.apply(task);
+  CustomizationSection newCustomizationSection=vappTemplateClient.getVAppTemplateCustomizationSection(vAppTemplateURI);
+  assertEquals(newCustomizationSection.isCustomizeOnInstantiate(),newVal);
+}

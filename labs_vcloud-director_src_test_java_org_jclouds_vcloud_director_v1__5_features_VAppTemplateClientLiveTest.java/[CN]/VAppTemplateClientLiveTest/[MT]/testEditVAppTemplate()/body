@@ -1,8 +1,9 @@
 {
-  String uid="" + Math.random();
+  VAppTemplate oldVAppTemplate=vappTemplateClient.getVAppTemplate(vAppTemplateURI);
+  String uid="" + random.nextInt();
   String name="myname-" + uid;
   String description="mydescr-" + uid;
-  VAppTemplate template=VAppTemplate.builder().name(name).description(description).build();
+  VAppTemplate template=oldVAppTemplate.toBuilder().name(name).description(description).build();
   final Task task=vappTemplateClient.editVAppTemplate(vAppTemplateURI,template);
   retryTaskSuccess.apply(task);
   VAppTemplate newTemplate=vappTemplateClient.getVAppTemplate(vAppTemplateURI);
