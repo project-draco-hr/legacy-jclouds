@@ -1,2 +1,22 @@
 {
+  assertNotNull(template.getName(),String.format(NOT_NULL_OBJECT_FMT,"Name","VAppTemplate"));
+  Owner owner=template.getOwner();
+  if (owner != null)   checkOwner(owner);
+  for (  VAppTemplate child : template.getChildren()) {
+    checkVAppTemplate(child);
+  }
+  for (  SectionType<?> section : template.getSections()) {
+    checkSectionType(section);
+  }
+  if (template.getTasks() != null) {
+    for (    Task task : template.getTasks()) {
+      checkTask(task);
+    }
+  }
+  if (template.getFiles() != null) {
+    for (    File file : template.getFiles()) {
+      checkFile(file);
+    }
+  }
+  checkResourceEntityType(template);
 }

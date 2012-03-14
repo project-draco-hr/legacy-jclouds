@@ -1,0 +1,17 @@
+{
+  assertNotNull(val,String.format(NOT_NULL_OBJECT_FMT,"GuestCustomizationSection",""));
+  if (!val.isJoinDomainEnabled()) {
+    assertFalse(val.isUseOrgSettings());
+    assertNull(val.getDomainName());
+    assertNull(val.getDomainUserName());
+    assertNull(val.getDomainUserPassword());
+  }
+  if (!val.isAdminPasswordEnabled()) {
+    assertFalse(val.isAdminPasswordAuto());
+    assertFalse(val.isResetPasswordRequired());
+    if (val.isAdminPasswordAuto()) {
+      assertNull(val.getAdminPassword());
+    }
+  }
+  checkOvfSectionType(val);
+}

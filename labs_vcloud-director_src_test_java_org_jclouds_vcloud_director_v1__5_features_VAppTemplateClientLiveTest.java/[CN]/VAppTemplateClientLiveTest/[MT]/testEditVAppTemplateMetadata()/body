@@ -1,0 +1,12 @@
+{
+  Metadata oldMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  String uid="" + Math.random();
+  String key="mykey-" + uid;
+  String val="myval-" + uid;
+  MetadataEntry metadataEntry=MetadataEntry.builder().entry(key,val).build();
+  Metadata metadata=Metadata.builder().fromMetadata(oldMetadata).entry(metadataEntry).build();
+  final Task task=vappTemplateClient.editVAppTemplateMetadata(vAppTemplateURI,metadata);
+  retryTaskSuccess.apply(task);
+  Metadata newMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  assertTrue(newMetadata.getMetadataEntries().contains(metadataEntry));
+}

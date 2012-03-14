@@ -1,0 +1,6 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/leaseSettingsSection").xmlFilePayload("/vApp/modifyLeaseSettingsSection.xml",VCloudDirectorMediaType.LEASE_SETTINGS_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyLeaseSettingsSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  LeaseSettingsSection section=getLeaseSettingsSection().toBuilder().build();
+  Task expected=modifyLeaseSettingsSectionTask();
+  assertEquals(client.getVAppClient().modifyLeaseSettingsSection(vAppURI,section),expected);
+}

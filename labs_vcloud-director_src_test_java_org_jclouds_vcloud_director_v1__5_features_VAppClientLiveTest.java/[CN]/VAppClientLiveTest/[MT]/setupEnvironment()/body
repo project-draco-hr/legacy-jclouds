@@ -1,0 +1,11 @@
+{
+  vdc=vdcClient.getVdc(vdcURI);
+  assertNotNull(vdc,String.format(ENTITY_NON_NULL,VDC));
+  vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
+  assertNotNull(vAppTemplate,String.format(ENTITY_NON_NULL,VAPP_TEMPLATE));
+  Optional<Reference> testVApp=Iterables.tryFind(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),ReferenceTypePredicates.<Reference>nameEquals("test-vapp")));
+  if (testVApp.isPresent()) {
+    Task deleteTestVApp=vAppClient.deleteVApp(testVApp.get().getHref());
+    retryTaskSuccess.apply(deleteTestVApp);
+  }
+}

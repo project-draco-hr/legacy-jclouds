@@ -1,0 +1,12 @@
+{
+  Task deleteVApp=vAppClient.deleteVApp(vApp.getHref());
+  assertTrue(retryTaskSuccess.apply(deleteVApp),String.format(TASK_COMPLETE_TIMELY,"deleteVApp"));
+  try {
+    vApp=vAppClient.getVApp(vApp.getHref());
+    fail("The VApp should have been deleted");
+  }
+ catch (  VCloudDirectorException vcde) {
+    assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The error code should have been 'Forbidden' (403)");
+    vApp=null;
+  }
+}

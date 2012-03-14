@@ -1,0 +1,5 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/power/action/suspend").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/suspend.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=suspendTask();
+  assertEquals(client.getVAppClient().suspend(vAppURI),expected);
+}

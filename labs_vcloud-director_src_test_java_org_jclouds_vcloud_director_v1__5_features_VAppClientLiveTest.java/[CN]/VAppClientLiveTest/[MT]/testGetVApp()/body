@@ -1,0 +1,10 @@
+{
+  VApp vAppInstantiated=instantiateVApp();
+  vApp=vAppClient.getVApp(vAppInstantiated.getHref());
+  checkVApp(vApp);
+  Integer vAppProgress=Iterables.getOnlyElement(vApp.getTasks()).getProgress();
+  Integer vAppInstantiatedProgress=Iterables.getOnlyElement(vAppInstantiated.getTasks()).getProgress();
+  assertTrue(vAppProgress >= vAppInstantiatedProgress,String.format(ENTITY_CONDITION,VAPP,"have an increasing value in the Progress field",String.format("%d < %d",vAppProgress,vAppInstantiatedProgress)));
+  VApp vAppCopy=vApp.toBuilder().tasks(ImmutableSet.of(Iterables.getOnlyElement(vApp.getTasks()).toBuilder().progress(vAppInstantiatedProgress).build())).build();
+  assertEquals(vAppCopy,vAppInstantiated,String.format(ENTITY_EQUAL,VAPP));
+}

@@ -1,0 +1,16 @@
+{
+  assertNotNull(val,String.format(NOT_NULL_OBJECT_FMT,"NetworkConnection",""));
+  assertNotNull(val.getNetwork(),String.format(NOT_NULL_OBJECT_FMT,"Network","NetworkConnection"));
+  assertNotNull(val.getIpAddressAllocationMode(),String.format(NOT_NULL_OBJECT_FMT,"IpAddressAllocationMode","NetworkConnection"));
+  IpAddressAllocationMode mode=NetworkConnection.IpAddressAllocationMode.valueOf(val.getIpAddressAllocationMode());
+  assertTrue(NetworkConnection.IpAddressAllocationMode.ALL.contains(mode),String.format(REQUIRED_VALUE_OBJECT_FMT,"IpAddressAllocationMode","NetworkConnection",val.getIpAddressAllocationMode(),Iterables.toString(NetworkConnection.IpAddressAllocationMode.ALL)));
+  if (val.getIpAddress() != null) {
+    checkIpAddress(val.getIpAddress());
+  }
+  if (val.getExternalIpAddress() != null) {
+    checkIpAddress(val.getExternalIpAddress());
+  }
+  if (val.getMACAddress() != null) {
+    checkMacAddress(val.getMACAddress());
+  }
+}

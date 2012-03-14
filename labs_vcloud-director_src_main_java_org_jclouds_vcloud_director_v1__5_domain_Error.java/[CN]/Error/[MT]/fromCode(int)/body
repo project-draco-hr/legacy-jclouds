@@ -1,0 +1,15 @@
+{
+  Optional<Code> found=Iterables.tryFind(Arrays.asList(values()),new Predicate<Code>(){
+    @Override public boolean apply(    Code code){
+      return code.getCode().equals(majorErrorCode);
+    }
+  }
+);
+  if (found.isPresent()) {
+    return found.get();
+  }
+ else {
+    logger.warn("Unrecognized major error code '%d'",majorErrorCode);
+    return UNRECOGNIZED;
+  }
+}
