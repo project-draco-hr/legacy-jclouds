@@ -9,9 +9,13 @@
     return this.toString();
   }
  else   if (method.isAnnotationPresent(Delegate.class)) {
-    Class<?> asyncClass=sync2Async.get(method.getReturnType());
-    checkState(asyncClass != null,"please configure corresponding async class for " + method.getReturnType() + " in your RestClientModule");
+    Class<?> syncClass=Optionals2.returnTypeOrTypeOfOptional(method);
+    Class<?> asyncClass=sync2Async.get(syncClass);
+    checkState(asyncClass != null,"please configure corresponding async class for " + syncClass + " in your RestClientModule");
     Object returnVal=delegateMap.get(new ClassMethodArgs(asyncClass,method,args));
+    if (Optionals2.isReturnTypeOptional(method)) {
+      return optionalConverter.apply(returnVal);
+    }
     return returnVal;
   }
  else   if (syncMethodMap.containsKey(method)) {

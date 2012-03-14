@@ -1,2 +1,19 @@
 {
+  Class<?> syncClass=Optionals2.returnTypeOrTypeOfOptional(from.getMethod());
+  Class<?> asyncClass=sync2Async.get(syncClass);
+  checkState(asyncClass != null,"configuration error, sync class " + syncClass + " not mapped to an async class");
+  Object asyncClient=asyncMap.get(from);
+  checkState(asyncClient != null,"configuration error, sync client for " + from + " not found");
+  Function<Object,Optional<Object>> optionalConverter=injector.getInstance(Key.get(new TypeLiteral<Function<Object,Optional<Object>>>(){
+  }
+));
+  Map<String,Long> timeoutsMap=injector.getInstance(Key.get(new TypeLiteral<Map<String,Long>>(){
+  }
+,Names.named("TIMEOUTS")));
+  try {
+    return SyncProxy.proxy(optionalConverter,syncClass,asyncClient,delegateMap.get(),sync2Async,timeoutsMap);
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
 }
