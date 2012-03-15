@@ -14,6 +14,16 @@
       }
 ).toInstance(credentialStore);
       bind(CloudStackClient.class).toInstance(context.getApi());
+      bind(new TypeLiteral<Map<NetworkType,? extends OptionsConverter>>(){
+      }
+).toInstance(new CloudStackComputeServiceContextModule().optionsConverters());
+      bind(Long.class).annotatedWith(Names.named(PROPERTY_SESSION_INTERVAL)).toInstance(60L);
+      bind(new TypeLiteral<CacheLoader<Long,Zone>>(){
+      }
+).to(ZoneIdToZone.class);
+      bind(new TypeLiteral<Supplier<LoadingCache<Long,Zone>>>(){
+      }
+).to(ZoneIdToZoneSupplier.class);
       install(new FactoryModuleBuilder().build(StaticNATVirtualMachineInNetwork.Factory.class));
     }
     @SuppressWarnings("unused") @Provides @Singleton protected Predicate<Long> jobComplete(    JobComplete jobComplete){
@@ -28,6 +38,8 @@
   keyPairName=prefix + "-adapter-test-keypair";
   try {
     keyPair=ComputeTestUtils.setupKeyPair();
+    client.getSSHKeyPairClient().deleteSSHKeyPair(keyPairName);
+    client.getSSHKeyPairClient().registerSSHKeyPair(keyPairName,keyPair.get("public"));
   }
  catch (  IOException e) {
     fail("Unable to create keypair",e);
