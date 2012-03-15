@@ -1,5 +1,12 @@
 {
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/admin/catalog/7212e451-76e1-4631-b2de-ba1dfd8080e4").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/catalog/admin/catalog.xml",VCloudDirectorMediaType.ADMIN_CATALOG).httpResponseBuilder().build());
   AdminCatalog expected=catalog();
-  assertEquals(client.getAdminCatalogClient().getCatalog(catalogRef.getHref()),expected);
+  AdminCatalog actual=client.getAdminCatalogClient().getCatalog(catalogRef.getHref());
+  assertEquals(actual.getHref(),expected.getHref());
+  assertEquals(actual.getLinks(),expected.getLinks());
+  assertEquals(actual.getTasks(),expected.getTasks());
+  System.out.println(actual.getOwner());
+  System.out.println(expected.getOwner());
+  assertEquals(actual.getOwner().getUser(),expected.getOwner().getUser());
+  assertEquals(actual.getOwner(),expected.getOwner());
 }
