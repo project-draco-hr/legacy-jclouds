@@ -1,0 +1,12 @@
+{
+  Metadata oldMetadata=metadataClient.getMetadata(vApp.getHref());
+  Map<String,String> oldMetadataMap=Checks.metadataToMap(oldMetadata);
+  String key="" + random.nextInt();
+  String value="" + random.nextInt();
+  Metadata addedMetadata=Metadata.builder().entry(MetadataEntry.builder().key(key).value(value).build()).build();
+  Task task=metadataClient.mergeMetadata(vApp.getHref(),addedMetadata);
+  retryTaskSuccess.apply(task);
+  Metadata newMetadata=metadataClient.getMetadata(vApp.getHref());
+  Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,value).build();
+  Checks.checkMetadataFor(VAPP,newMetadata,expectedMetadataMap);
+}
