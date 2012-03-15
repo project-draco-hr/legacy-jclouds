@@ -3,6 +3,6 @@
   Task undeploy=vAppClient.undeploy(vApp.getHref(),params);
   assertTrue(retryTaskSuccess.apply(undeploy),String.format(TASK_COMPLETE_TIMELY,"undeploy"));
   vApp=vAppClient.getVApp(vApp.getHref());
-  Integer resolvedStatus=Status.RESOLVED.getValue();
-  assertEquals(vApp.getStatus(),resolvedStatus,String.format(OBJ_FIELD_EQ,VAPP,"status",resolvedStatus,vApp.getStatus()));
+  Status poweredOnStatus=Status.POWERED_ON;
+  assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
 }

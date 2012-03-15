@@ -2,6 +2,6 @@
   Task reset=vAppClient.reset(vApp.getHref());
   assertTrue(retryTaskSuccess.apply(reset),String.format(TASK_COMPLETE_TIMELY,"reset"));
   vApp=vAppClient.getVApp(vApp.getHref());
-  Integer poweredOffStatus=Status.POWERED_ON.getValue();
-  assertEquals(vApp.getStatus(),poweredOffStatus,String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOffStatus,"powered off"));
+  Status poweredOnStatus=Status.POWERED_ON;
+  assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
 }

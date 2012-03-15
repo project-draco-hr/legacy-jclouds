@@ -1,8 +1,9 @@
 {
-  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).forceCustomization().notPowerOn().build();
+  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().notPowerOn().build();
   Task deployVApp=vAppClient.deploy(vApp.getHref(),params);
-  assertTrue(retryTaskSuccess.apply(deployVApp),String.format(TASK_COMPLETE_TIMELY,"deployVApp"));
+  assertTrue(retryTaskSuccessLong.apply(deployVApp),String.format(TASK_COMPLETE_TIMELY,"deployVApp"));
   vApp=vAppClient.getVApp(vApp.getHref());
-  Integer deployedStatus=Status.DEPLOYED.getValue();
-  assertEquals(vApp.getStatus(),deployedStatus,String.format(OBJ_FIELD_EQ,VAPP,"status",deployedStatus,vApp.getStatus()));
+  assertEquals(vApp.isDeployed(),Boolean.TRUE,String.format(OBJ_FIELD_EQ,VAPP,"deployed","TRUE",vApp.isDeployed().toString()));
+  Status deployedStatus=Status.POWERED_OFF;
+  assertEquals(vApp.getStatus(),deployedStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",deployedStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
 }
