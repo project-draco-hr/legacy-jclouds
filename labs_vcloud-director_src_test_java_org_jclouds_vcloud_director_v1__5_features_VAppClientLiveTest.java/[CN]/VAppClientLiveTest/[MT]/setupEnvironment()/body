@@ -3,9 +3,21 @@
   assertNotNull(vdc,String.format(ENTITY_NON_NULL,VDC));
   vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
   assertNotNull(vAppTemplate,String.format(ENTITY_NON_NULL,VAPP_TEMPLATE));
-  Optional<Reference> testVApp=Iterables.tryFind(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),ReferenceTypePredicates.<Reference>nameEquals("test-vapp")));
-  if (testVApp.isPresent()) {
-    Task deleteTestVApp=vAppClient.deleteVApp(testVApp.get().getHref());
-    retryTaskSuccess.apply(deleteTestVApp);
+  Iterable<Reference> vApps=Iterables.filter(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),Predicates.or(ReferenceTypePredicates.<Reference>nameEquals("test-vapp"),ReferenceTypePredicates.<Reference>nameEquals("new-name"))));
+  if (vApps != null && !Iterables.isEmpty(vApps)) {
+    for (    Reference each : vApps) {
+      VApp found=vAppClient.getVApp(each.getHref());
+      if (found.getStatus().equals(Status.POWERED_ON.getValue())) {
+        Task shutdownTask=vAppClient.shutdown(found.getHref());
+        retryTaskSuccess.apply(shutdownTask);
+      }
+      if (found.isDeployed()) {
+        UndeployVAppParams params=UndeployVAppParams.builder().build();
+        Task undeployTask=vAppClient.undeploy(vApp.getHref(),params);
+        retryTaskSuccess.apply(undeployTask);
+      }
+      Task deleteTask=vAppClient.deleteVApp(found.getHref());
+      retryTaskSuccess.apply(deleteTask);
+    }
   }
 }
