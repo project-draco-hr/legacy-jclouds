@@ -1,0 +1,9 @@
+{
+  Properties props=new VirtualBoxPropertiesBuilder().defaultProperties();
+  String preconfigurationUrl=props.getProperty(VirtualBoxConstants.VIRTUALBOX_PRECONFIGURATION_URL);
+  int port=URI.create(preconfigurationUrl).getPort();
+  Server server=new Server(port);
+  StartJettyIfNotAlreadyRunning starter=new StartJettyIfNotAlreadyRunning(preconfigurationUrl,server);
+  starter.load(null);
+  IOUtils.toString(new URL("http://127.0.0.1:" + port + "/preseed.cfg").openStream());
+}

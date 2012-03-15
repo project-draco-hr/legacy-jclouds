@@ -3,20 +3,24 @@
     logger.debug("not starting jetty, as existing host is serving %s",preconfigurationUrl);
   }
  else {
-    logger.debug(">> starting jetty to serve %s",preconfigurationUrl);
-    ResourceHandler resourceHandler=new ResourceHandler();
-    resourceHandler.setDirectoriesListed(true);
-    resourceHandler.setWelcomeFiles(new String[]{"index.html"});
-    resourceHandler.setResourceBase("");
-    HandlerList handlers=new HandlerList();
-    handlers.setHandlers(new Handler[]{resourceHandler,new DefaultHandler()});
-    jetty.setHandler(handlers);
     try {
+      logger.debug(">> starting jetty to serve %s",preconfigurationUrl);
+      Resource resource=Resource.newClassPathResource("preseed.cfg");
+      checkState(resource.getInputStream() != null,"cannot find preseed.cfg");
+      ContextHandler capHandler=new ContextHandler();
+      capHandler.setContextPath("/preseed.cfg");
+      ResourceHandler resourceHandler=new ResourceHandler();
+      resourceHandler.setBaseResource(resource);
+      capHandler.setHandler(resourceHandler);
+      HandlerList handlers=new HandlerList();
+      handlers.setHandlers(new Handler[]{capHandler,new DefaultHandler()});
+      jetty.setHandler(handlers);
       jetty.start();
+      logger.debug("<< serving %s",resourceHandler.getBaseResource());
     }
  catch (    Exception e) {
       logger.error(e,"Server jetty could not be started for %s",preconfigurationUrl);
+      throw Throwables.propagate(e);
     }
-    logger.debug("<< serving %s",resourceHandler.getBaseResource());
   }
 }
