@@ -10,7 +10,8 @@
  catch (    Exception e) {
       throw new RuntimeException("error opening vbox machine session: " + e.getMessage(),e);
     }
-    session.getConsole().deleteSnapshot(master.getMachine().getCurrentSnapshot().getId());
+    IProgress progress=session.getConsole().deleteSnapshot(master.getMachine().getCurrentSnapshot().getId());
+    progress.waitForCompletion(-1);
     session.unlockMachine();
   }
   String masterNameWithoutPrefix=master.getSpec().getVmSpec().getVmName().replace(VIRTUALBOX_IMAGE_PREFIX,"");
@@ -23,7 +24,8 @@
   NetworkSpec networkSpec=createNetworkSpecForHostOnlyNATNICs(natIfaceCard,hostOnlyIfaceCard);
   CloneSpec cloneSpec=CloneSpec.builder().linked(USE_LINKED).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
-  new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,"").apply(cloned);
+  new LaunchMachineIfNotAlreadyRunning(manager.get(),EXECUTION_TYPE,"").apply(cloned);
+  machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new DeleteGShadowLock(),RunScriptOptions.NONE);
   machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);
   NodeAndInitialCredentials<IMachine> nodeAndInitialCredentials=new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
   return nodeAndInitialCredentials;
