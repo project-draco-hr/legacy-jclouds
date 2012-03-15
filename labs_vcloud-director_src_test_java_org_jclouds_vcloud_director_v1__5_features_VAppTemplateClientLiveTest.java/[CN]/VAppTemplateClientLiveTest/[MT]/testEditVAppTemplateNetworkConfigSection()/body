@@ -3,7 +3,7 @@
   NetworkConfiguration networkConfiguration=NetworkConfiguration.builder().fenceMode("isolated").build();
   VAppNetworkConfiguration vappNetworkConfiguration=VAppNetworkConfiguration.builder().networkName(networkName).configuration(networkConfiguration).build();
   Set<VAppNetworkConfiguration> vappNetworkConfigurations=ImmutableSet.of(vappNetworkConfiguration);
-  NetworkConfigSection networkConfigSection=NetworkConfigSection.builder().networkConfigs(vappNetworkConfigurations).build();
+  NetworkConfigSection networkConfigSection=NetworkConfigSection.builder().info("my info").networkConfigs(vappNetworkConfigurations).build();
   final Task task=vappTemplateClient.editVAppTemplateNetworkConfigSection(vAppTemplateURI,networkConfigSection);
   retryTaskSuccess.apply(task);
   NetworkConfigSection newNetworkConfigSection=vappTemplateClient.getVAppTemplateNetworkConfigSection(vAppTemplateURI);
