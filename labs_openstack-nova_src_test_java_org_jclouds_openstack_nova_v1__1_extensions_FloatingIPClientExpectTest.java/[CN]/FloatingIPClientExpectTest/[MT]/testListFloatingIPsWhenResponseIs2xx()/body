@@ -3,5 +3,5 @@
   HttpResponse listFloatingIPsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/floatingip_list.json")).build();
   NovaClient clientWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listFloatingIPs,listFloatingIPsResponse);
   assertEquals(clientWhenFloatingIPsExist.getConfiguredRegions(),ImmutableSet.of("North"));
-  assertEquals(clientWhenFloatingIPsExist.getFloatingIPClientForRegion("North").listFloatingIPs().toString(),new ParseFloatingIPListTest().expected().toString());
+  assertEquals(clientWhenFloatingIPsExist.getFloatingIPExtensionForRegion("North").get().listFloatingIPs().toString(),new ParseFloatingIPListTest().expected().toString());
 }

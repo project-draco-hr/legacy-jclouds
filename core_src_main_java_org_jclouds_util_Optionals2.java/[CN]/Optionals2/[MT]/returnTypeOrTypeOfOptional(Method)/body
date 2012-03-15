@@ -1,0 +1,12 @@
+{
+  boolean optional=isReturnTypeOptional(method);
+  Class<?> syncClass;
+  if (optional) {
+    ParameterizedType futureType=ParameterizedType.class.cast(method.getGenericReturnType());
+    syncClass=Class.class.cast(futureType.getActualTypeArguments()[0]);
+  }
+ else {
+    syncClass=method.getReturnType();
+  }
+  return syncClass;
+}

@@ -10,6 +10,8 @@
   SshClient client=sshClientForIMachine.apply(vm);
   logger.debug(">> awaiting installation to finish node(%s)",vmName);
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
+  logger.debug(">> awaiting installation of guest additions on vm: %s",vmName);
+  checkState(guestAdditionsInstaller.apply(vm));
   logger.debug(">> awaiting post-installation actions on vm: %s",vmName);
   NodeMetadata vmMetadata=imachineToNodeMetadata.apply(vm);
   ListenableFuture<ExecResponse> execFuture=machineUtils.runScriptOnNode(vmMetadata,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);

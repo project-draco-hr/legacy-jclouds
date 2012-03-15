@@ -1,5 +1,5 @@
 {
   LoadingCache<ClassMethodArgs,Object> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.<Object>constant(null)));
-  final SyncClassOverride sync2=SyncProxy.proxy(SyncClassOverride.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of(),ImmutableMap.<String,Long>of("SyncClassOverride",100L));
+  final SyncClassOverride sync2=SyncProxy.proxy(new AlwaysPresentImplicitOptionalConverter(),SyncClassOverride.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of(),ImmutableMap.<String,Long>of("SyncClassOverride",100L));
   assertEquals(sync2.takeXMillisecondsPropOverride(200),"foo");
 }
