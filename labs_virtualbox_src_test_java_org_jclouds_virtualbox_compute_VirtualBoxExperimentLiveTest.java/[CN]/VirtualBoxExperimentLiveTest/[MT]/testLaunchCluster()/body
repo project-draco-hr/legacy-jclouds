@@ -1,7 +1,7 @@
 {
-  int numNodes=4;
+  int numNodes=1;
   final String clusterName="test-launch-cluster";
-  Set<? extends NodeMetadata> nodes=context.getComputeService().createNodesInGroup(clusterName,numNodes);
+  Set<? extends NodeMetadata> nodes=context.getComputeService().createNodesInGroup(clusterName,numNodes,TemplateOptions.Builder.runScript(AdminAccess.standard()));
   assertEquals(numNodes,nodes.size(),"wrong number of nodes");
   for (  NodeMetadata node : nodes) {
     logger.debug("Created Node: %s",node);
