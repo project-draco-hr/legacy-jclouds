@@ -5,5 +5,7 @@
   Server server=new Server(port);
   StartJettyIfNotAlreadyRunning starter=new StartJettyIfNotAlreadyRunning(preconfigurationUrl,server);
   starter.load(null);
-  IOUtils.toString(new URL("http://127.0.0.1:" + port + "/preseed.cfg").openStream());
+  String preseedFileFromJetty=IOUtils.toString(new URL("http://127.0.0.1:" + port + "/preseed.cfg").openStream());
+  String preseedFileFromFile=IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("preseed.cfg")) + "\n";
+  assertEquals(preseedFileFromFile,preseedFileFromJetty);
 }

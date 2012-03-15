@@ -4,19 +4,18 @@
   }
  else {
     try {
-      logger.debug(">> starting jetty to serve %s",preconfigurationUrl);
-      Resource resource=Resource.newClassPathResource("preseed.cfg");
-      checkState(resource.getInputStream() != null,"cannot find preseed.cfg");
-      ContextHandler capHandler=new ContextHandler();
-      capHandler.setContextPath("/preseed.cfg");
-      ResourceHandler resourceHandler=new ResourceHandler();
-      resourceHandler.setBaseResource(resource);
-      capHandler.setHandler(resourceHandler);
-      HandlerList handlers=new HandlerList();
-      handlers.setHandlers(new Handler[]{capHandler,new DefaultHandler()});
-      jetty.setHandler(handlers);
+      final String preseedFile=IOUtils.toString(Resource.newSystemResource("preseed.cfg").getURL().openStream());
+      checkState(preseedFile != null);
+      jetty.setHandler(new AbstractHandler(){
+        @Override public void handle(        String target,        Request baseRequest,        HttpServletRequest request,        HttpServletResponse response) throws IOException, ServletException {
+          response.setContentType("text/plain;charset=utf-8");
+          response.setStatus(HttpServletResponse.SC_OK);
+          baseRequest.setHandled(true);
+          response.getWriter().println(preseedFile);
+        }
+      }
+);
       jetty.start();
-      logger.debug("<< serving %s",resourceHandler.getBaseResource());
     }
  catch (    Exception e) {
       logger.error(e,"Server jetty could not be started for %s",preconfigurationUrl);
