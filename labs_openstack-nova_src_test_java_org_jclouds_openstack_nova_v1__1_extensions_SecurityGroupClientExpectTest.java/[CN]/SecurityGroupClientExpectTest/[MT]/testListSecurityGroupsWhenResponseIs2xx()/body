@@ -3,7 +3,5 @@
   HttpResponse listSecurityGroupsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_list.json")).build();
   NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listSecurityGroups,listSecurityGroupsResponse);
   assertEquals(clientWhenSecurityGroupsExist.getConfiguredRegions(),ImmutableSet.of("North"));
-  Logger.getAnonymousLogger().info("*********EXPECTED*****\n" + clientWhenSecurityGroupsExist.getSecurityGroupClientForRegion("North").listSecurityGroups().toString());
-  Logger.getAnonymousLogger().info("*********WAS*****\n" + new ParseSecurityGroupListTest().expected().toString());
   assertEquals(clientWhenSecurityGroupsExist.getSecurityGroupClientForRegion("North").listSecurityGroups().toString(),new ParseSecurityGroupListTest().expected().toString());
 }
