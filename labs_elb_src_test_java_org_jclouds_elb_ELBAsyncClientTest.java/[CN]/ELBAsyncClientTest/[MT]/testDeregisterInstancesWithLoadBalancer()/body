@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,null,"ReferenceAP1","i-6055fa09");
   assertRequestLineEquals(request,"POST https://elasticloadbalancing.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: elasticloadbalancing.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2010-07-01&Action=DeregisterInstancesFromLoadBalancer&LoadBalancerName=ReferenceAP1&Instances.member.1.InstanceId=i-6055fa09","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,String.format("Version=%s&Action=DeregisterInstancesFromLoadBalancer&LoadBalancerName=ReferenceAP1&Instances.member.1.InstanceId=i-6055fa09",ELBAsyncClient.VERSION),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,null);
