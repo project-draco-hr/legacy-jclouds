@@ -1,10 +1,10 @@
 {
   String key="mykey-" + random.nextInt();
   MetadataValue metadataValue=MetadataValue.builder().value("myval").build();
-  final Task task=vappTemplateClient.editVAppTemplateMetadataValue(vAppTemplateURI,key,metadataValue);
+  final Task task=vAppTemplateClient.editVAppTemplateMetadataValue(vAppTemplateURI,key,metadataValue);
   retryTaskSuccess.apply(task);
-  final Task deletionTask=vappTemplateClient.deleteVAppTemplateMetadataValue(vAppTemplateURI,key);
+  final Task deletionTask=vAppTemplateClient.deleteVAppTemplateMetadataValue(vAppTemplateURI,key);
   retryTaskSuccess.apply(deletionTask);
-  Metadata newMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
-  Checks.checkMetadataKeyAbsentFor("vAppTemplate",newMetadata,key);
+  Metadata newMetadata=vAppTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  checkMetadataKeyAbsentFor("vAppTemplate",newMetadata,key);
 }

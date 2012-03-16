@@ -1,11 +1,11 @@
 {
   VAppTemplate clonedVappTemplate=cloneVAppTemplate(true);
-  VAppTemplate vAppTemplatePreDelete=vappTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
-  Checks.checkVAppTemplate(vAppTemplatePreDelete);
-  final Task task=vappTemplateClient.deleteVappTemplate(clonedVappTemplate.getHref());
+  VAppTemplate vAppTemplatePreDelete=vAppTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
+  checkVAppTemplate(vAppTemplatePreDelete);
+  final Task task=vAppTemplateClient.deleteVappTemplate(clonedVappTemplate.getHref());
   retryTaskSuccess.apply(task);
   try {
-    vappTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
+    vAppTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
   }
  catch (  VCloudDirectorException e) {
   }

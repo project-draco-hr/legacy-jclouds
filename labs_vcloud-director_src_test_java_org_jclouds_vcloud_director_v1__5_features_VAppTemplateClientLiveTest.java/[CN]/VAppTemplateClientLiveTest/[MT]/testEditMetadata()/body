@@ -1,14 +1,14 @@
 {
-  Metadata oldMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
-  Map<String,String> oldMetadataMap=Checks.metadataToMap(oldMetadata);
+  Metadata oldMetadata=vAppTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  Map<String,String> oldMetadataMap=metadataToMap(oldMetadata);
   String uid="" + random.nextInt();
   String key="mykey-" + uid;
   String val="myval-" + uid;
   MetadataEntry metadataEntry=MetadataEntry.builder().entry(key,val).build();
   Metadata metadata=Metadata.builder().fromMetadata(oldMetadata).entry(metadataEntry).build();
-  final Task task=vappTemplateClient.editVAppTemplateMetadata(vAppTemplateURI,metadata);
+  final Task task=vAppTemplateClient.editVAppTemplateMetadata(vAppTemplateURI,metadata);
   retryTaskSuccess.apply(task);
-  Metadata newMetadata=vappTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
+  Metadata newMetadata=vAppTemplateClient.getVAppTemplateMetadata(vAppTemplateURI);
   Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,val).build();
-  Checks.checkMetadataFor("vAppTemplate",newMetadata,expectedMetadataMap);
+  checkMetadataFor("vAppTemplate",newMetadata,expectedMetadataMap);
 }

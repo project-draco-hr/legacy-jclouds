@@ -1,5 +1,8 @@
 {
-  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  GuestCustomizationSection section=vAppClient.getGuestCustomizationSection(vmURI);
-  checkGuestCustomizationSection(section);
+  getGuestCustomizationSection(new Function<URI,GuestCustomizationSection>(){
+    @Override public GuestCustomizationSection apply(    URI uri){
+      return vAppClient.getGuestCustomizationSection(uri);
+    }
+  }
+);
 }

@@ -1,0 +1,19 @@
+{
+  Iterable<Reference> vApps=Iterables.filter(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),Predicates.or(ReferenceTypePredicates.<Reference>nameStartsWith("test-vapp-"),ReferenceTypePredicates.<Reference>nameStartsWith("new-name-"))));
+  if (vApps != null && !Iterables.isEmpty(vApps)) {
+    for (    Reference each : vApps) {
+      VApp found=vAppClient.getVApp(each.getHref());
+      if (found.getStatus().equals(Status.POWERED_ON.getValue())) {
+        Task shutdownTask=vAppClient.shutdown(found.getHref());
+        retryTaskSuccess.apply(shutdownTask);
+      }
+      if (found.isDeployed()) {
+        UndeployVAppParams params=UndeployVAppParams.builder().build();
+        Task undeployTask=vAppClient.undeploy(found.getHref(),params);
+        retryTaskSuccess.apply(undeployTask);
+      }
+      Task deleteTask=vAppClient.deleteVApp(found.getHref());
+      retryTaskSuccess.apply(deleteTask);
+    }
+  }
+}
