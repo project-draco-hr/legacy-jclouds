@@ -1,6 +1,9 @@
 {
-  RASD rasd=vAppClient.getVirtualHardwareSectionMemory(vApp.getHref());
-  Task modifyVirtualHardwareSectionMemory=vAppClient.modifyVirtualHardwareSectionMemory(vApp.getHref(),rasd);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  RASD origSection=vAppClient.getVirtualHardwareSectionMemory(vmURI);
+  RASD newSection=origSection.toBuilder().build();
+  Task modifyVirtualHardwareSectionMemory=vAppClient.modifyVirtualHardwareSectionMemory(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionMemory),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionMemory"));
-  RASD modified=vAppClient.getVirtualHardwareSectionMemory(vApp.getHref());
+  RASD modified=vAppClient.getVirtualHardwareSectionMemory(vmURI);
+  checkRASD(modified);
 }

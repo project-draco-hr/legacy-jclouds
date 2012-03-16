@@ -1,6 +1,8 @@
 {
-  ProductSectionList sectionList=vAppClient.getProductSections(vApp.getHref());
-  Task modifyProductSections=vAppClient.modifyProductSections(vApp.getHref(),sectionList);
+  ProductSectionList origSections=vAppClient.getProductSections(vApp.getHref());
+  ProductSectionList newSections=origSections.toBuilder().build();
+  Task modifyProductSections=vAppClient.modifyProductSections(vApp.getHref(),newSections);
   assertTrue(retryTaskSuccess.apply(modifyProductSections),String.format(TASK_COMPLETE_TIMELY,"modifyProductSections"));
   ProductSectionList modifiedList=vAppClient.getProductSections(vApp.getHref());
+  Checks.checkProductSectionList(modifiedList);
 }

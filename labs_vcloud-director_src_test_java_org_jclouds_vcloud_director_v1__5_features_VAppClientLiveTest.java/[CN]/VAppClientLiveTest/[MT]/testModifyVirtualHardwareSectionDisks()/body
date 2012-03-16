@@ -1,11 +1,9 @@
 {
-  RasdItemsList oldRasdItems=vAppClient.getVirtualHardwareSectionDisks(vApp.getHref());
-  RASD item=RASD.builder().build();
-  RasdItemsList newRasdItems=oldRasdItems.toBuilder().item(item).build();
-  Task modifyVirtualHardwareSectionDisks=vAppClient.modifyVirtualHardwareSectionDisks(vApp.getHref(),newRasdItems);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  RasdItemsList oldSection=vAppClient.getVirtualHardwareSectionDisks(vmURI);
+  RasdItemsList newSection=oldSection.toBuilder().build();
+  Task modifyVirtualHardwareSectionDisks=vAppClient.modifyVirtualHardwareSectionDisks(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionDisks),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionDisks"));
-  RasdItemsList modified=vAppClient.getVirtualHardwareSectionDisks(vApp.getHref());
+  RasdItemsList modified=vAppClient.getVirtualHardwareSectionDisks(vmURI);
   checkRasdItemsList(modified);
-  assertTrue(modified.getItems().contains(item));
-  assertEquals(modified,newRasdItems);
 }
