@@ -1,6 +1,6 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
-  if (qName.equalsIgnoreCase("Task")) {
+  if (equalsOrSuffix(qName,"Task")) {
     if (attributes.get("href") != null && !inOwner)     taskLink=Utils.newReferenceType(attributes);
     status=TaskStatus.fromValue(attributes.get("status"));
     operation=attributes.get("operation");
@@ -8,13 +8,13 @@
     if (attributes.containsKey("endTime"))     endTime=parseDate(attributes.get("endTime"));
     if (attributes.containsKey("expiryTime"))     expiryTime=parseDate(attributes.get("expiryTime"));
   }
- else   if (qName.equals("Owner") || qName.equals("Result")) {
+ else   if (equalsOrSuffix(qName,"Owner") || equalsOrSuffix(qName,"Result")) {
     owner=Utils.newReferenceType(attributes);
   }
- else   if (qName.equals("Link") && "self".equals(attributes.get("rel"))) {
+ else   if (equalsOrSuffix(qName,"Link") && "self".equals(attributes.get("rel"))) {
     taskLink=Utils.newReferenceType(attributes);
   }
- else   if (qName.equals("Error")) {
+ else   if (equalsOrSuffix(qName,"Error")) {
     error=Utils.newError(attributes);
   }
 }
