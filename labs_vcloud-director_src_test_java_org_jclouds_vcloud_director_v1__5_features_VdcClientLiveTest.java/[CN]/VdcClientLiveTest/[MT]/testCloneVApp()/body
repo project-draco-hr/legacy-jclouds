@@ -1,5 +1,8 @@
 {
-  Reference vAppSource=null;
-  VApp vApp=vdcClient.cloneVApp(vdcURI,CloneVAppParams.builder().source(vAppSource).build());
-  Checks.checkVApp(vApp);
+  CloneVAppParams cloneVappParams=CloneVAppParams.builder().source(instantiatedVApp.getHref()).build();
+  clonedVApp=vdcClient.cloneVApp(vdcURI,cloneVappParams);
+  Task task=Iterables.getFirst(clonedVApp.getTasks(),null);
+  assertNotNull(task,"vdcClient.cloneVApp returned VApp that did not contain any tasks");
+  assertTaskSucceedsLong(task);
+  Checks.checkVApp(clonedVApp);
 }

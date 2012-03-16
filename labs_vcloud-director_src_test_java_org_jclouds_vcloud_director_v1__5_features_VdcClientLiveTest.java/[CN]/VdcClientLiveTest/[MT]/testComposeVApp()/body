@@ -1,4 +1,9 @@
 {
-  VApp vApp=vdcClient.composeVApp(vdcURI,ComposeVAppParams.builder().build());
-  Checks.checkVApp(vApp);
+  String name="composed-" + random.nextInt(Integer.MAX_VALUE);
+  composedVApp=vdcClient.composeVApp(vdcURI,ComposeVAppParams.builder().name(name).build());
+  Task task=Iterables.getFirst(composedVApp.getTasks(),null);
+  assertNotNull(task,"vdcClient.composeVApp returned VApp that did not contain any tasks");
+  assertTaskSucceedsLong(task);
+  Checks.checkVApp(composedVApp);
+  assertEquals(composedVApp.getName(),name,String.format(OBJ_FIELD_EQ,"VApp","name",name,composedVApp.getName()));
 }
