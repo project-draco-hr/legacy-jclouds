@@ -1,6 +1,11 @@
 {
-  RasdItemsList rasdItems=vAppClient.getVirtualHardwareSectionSerialPorts(vApp.getHref());
-  Task modifyVirtualHardwareSectionSerialPorts=vAppClient.modifyVirtualHardwareSectionSerialPorts(vApp.getHref(),rasdItems);
+  RasdItemsList oldRasdItems=vAppClient.getVirtualHardwareSectionSerialPorts(vApp.getHref());
+  RASD item=RASD.builder().build();
+  RasdItemsList newRasdItems=oldRasdItems.toBuilder().item(item).build();
+  Task modifyVirtualHardwareSectionSerialPorts=vAppClient.modifyVirtualHardwareSectionSerialPorts(vApp.getHref(),newRasdItems);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionSerialPorts),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionSerialPorts"));
   RasdItemsList modified=vAppClient.getVirtualHardwareSectionSerialPorts(vApp.getHref());
+  checkRasdItemsList(modified);
+  assertTrue(modified.getItems().contains(item));
+  assertEquals(modified,newRasdItems);
 }

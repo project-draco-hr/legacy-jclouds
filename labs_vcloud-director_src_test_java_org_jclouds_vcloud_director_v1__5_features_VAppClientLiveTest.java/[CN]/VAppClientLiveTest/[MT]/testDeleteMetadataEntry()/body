@@ -1,9 +1,9 @@
 {
-  String key="" + random.nextInt();
+  String key=Integer.toString(random.nextInt());
   MetadataValue metadataValue=MetadataValue.builder().value("myval").build();
   metadataClient.setMetadata(vApp.getHref(),key,metadataValue);
   Task task=metadataClient.deleteMetadataEntry(vApp.getHref(),key);
   retryTaskSuccess.apply(task);
   Metadata newMetadata=metadataClient.getMetadata(vApp.getHref());
-  Checks.checkMetadataKeyAbsentFor(VAPP,newMetadata,key);
+  checkMetadataKeyAbsentFor(VAPP,newMetadata,key);
 }

@@ -1,8 +1,10 @@
 {
-  VirtualHardwareSection hardware=vAppClient.getVirtualHardwareSection(vApp.getHref());
-  hardware.setInfo("New Info");
-  Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vApp.getHref(),hardware);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  VirtualHardwareSection oldSection=vAppClient.getVirtualHardwareSection(vmURI);
+  VirtualHardwareSection newSection=oldSection.toBuilder().build();
+  Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
-  VirtualHardwareSection modified=vAppClient.getVirtualHardwareSection(vApp.getHref());
-  assertEquals(modified.getInfo(),"New Info");
+  VirtualHardwareSection modified=vAppClient.getVirtualHardwareSection(vmURI);
+  checkVirtualHardwareSection(modified);
+  assertEquals(modified,newSection);
 }

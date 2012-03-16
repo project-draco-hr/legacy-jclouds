@@ -1,6 +1,11 @@
 {
-  NetworkConnectionSection section=vAppClient.getNetworkConnectionSection(vApp.getHref());
-  Task modifyNetworkConnectionSection=vAppClient.modifyNetworkConnectionSection(vApp.getHref(),section);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  NetworkConnectionSection oldSection=vAppClient.getNetworkConnectionSection(vmURI);
+  NetworkConnectionSection newSection=oldSection.toBuilder().info("Changed NetworkConnectionSection Info").build();
+  Task modifyNetworkConnectionSection=vAppClient.modifyNetworkConnectionSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyNetworkConnectionSection),String.format(TASK_COMPLETE_TIMELY,"modifyNetworkConnectionSection"));
-  NetworkConnectionSection modified=vAppClient.getNetworkConnectionSection(vApp.getHref());
+  NetworkConnectionSection modified=vAppClient.getNetworkConnectionSection(vmURI);
+  checkNetworkConnectionSection(modified);
+  assertEquals(modified.getInfo(),newSection.getInfo());
+  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"NetworkConnectionSection"));
 }
