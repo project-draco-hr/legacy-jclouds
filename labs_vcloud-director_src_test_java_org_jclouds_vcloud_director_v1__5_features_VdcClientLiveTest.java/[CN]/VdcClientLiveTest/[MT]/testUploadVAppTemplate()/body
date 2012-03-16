@@ -1,4 +1,10 @@
 {
-  VAppTemplate template=vdcClient.uploadVAppTemplate(vdcURI,UploadVAppTemplateParams.builder().build());
-  Checks.checkVAppTemplate(template);
+  String name="uploaded-" + random.nextInt(Integer.MAX_VALUE);
+  UploadVAppTemplateParams uploadVAppTemplateParams=UploadVAppTemplateParams.builder().name(name).build();
+  uploadedVAppTemplate=vdcClient.uploadVAppTemplate(vdcURI,uploadVAppTemplateParams);
+  Checks.checkVAppTemplateWhenNotReady(uploadedVAppTemplate);
+  assertEquals(uploadedVAppTemplate.getName(),name,String.format(OBJ_FIELD_EQ,"VAppTemplate","name",name,uploadedVAppTemplate.getName()));
+  ResourceEntityType.Status expectedStatus=ResourceEntityType.Status.NOT_READY;
+  Integer actualStatus=uploadedVAppTemplate.getStatus();
+  assertEquals(actualStatus,expectedStatus.getValue(),String.format(OBJ_FIELD_EQ,"VAppTemplate","status",expectedStatus,actualStatus));
 }

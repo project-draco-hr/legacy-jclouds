@@ -1,4 +1,8 @@
 {
-  MetadataValue metadataValue=vdcClient.getMetadataClient().getMetadataValue(vdcURI,"key");
-  Checks.checkMetadataValueFor(VDC,metadataValue);
+  Metadata metadata=vdcClient.getMetadataClient().getMetadata(vdcURI);
+  Map<String,String> metadataMap=Checks.metadataToMap(metadata);
+  String key=Iterables.getFirst(metadataMap.keySet(),"MadeUpKey!");
+  String value=metadataMap.get(key);
+  MetadataValue metadataValue=vdcClient.getMetadataClient().getMetadataValue(vdcURI,key);
+  Checks.checkMetadataValueFor(VDC,metadataValue,value);
 }
