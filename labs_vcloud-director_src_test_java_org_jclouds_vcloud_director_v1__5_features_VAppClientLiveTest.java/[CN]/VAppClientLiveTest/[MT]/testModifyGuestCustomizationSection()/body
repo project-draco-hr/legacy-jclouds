@@ -1,10 +1,11 @@
 {
-  GuestCustomizationSection oldSection=vAppClient.getGuestCustomizationSection(vApp.getHref());
-  GuestCustomizationSection newSection=oldSection.toBuilder().adminPassword("password").build();
-  Task modifyGuestCustomizationSection=vAppClient.modifyGuestCustomizationSection(vApp.getHref(),newSection);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  GuestCustomizationSection oldSection=vAppClient.getGuestCustomizationSection(vmURI);
+  GuestCustomizationSection newSection=oldSection.toBuilder().computerName("newComputerName").build();
+  Task modifyGuestCustomizationSection=vAppClient.modifyGuestCustomizationSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyGuestCustomizationSection),String.format(TASK_COMPLETE_TIMELY,"modifyGuestCustomizationSection"));
-  GuestCustomizationSection modified=vAppClient.getGuestCustomizationSection(vApp.getHref());
+  GuestCustomizationSection modified=vAppClient.getGuestCustomizationSection(vmURI);
   checkGuestCustomizationSection(modified);
-  assertEquals(modified.getAdminPassword(),"password");
-  assertEquals(modified,newSection);
+  assertEquals(modified.getComputerName(),newSection.getComputerName());
+  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"GuestCustomizationSection"));
 }
