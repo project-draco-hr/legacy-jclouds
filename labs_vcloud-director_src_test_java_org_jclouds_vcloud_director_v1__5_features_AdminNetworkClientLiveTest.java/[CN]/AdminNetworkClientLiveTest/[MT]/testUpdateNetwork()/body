@@ -1,0 +1,25 @@
+{
+  assertTrue(network instanceof OrgNetwork,String.format(REF_REQ_LIVE,"OrgNetwork"));
+  OrgNetwork oldNetwork=Network.<OrgNetwork>toSubType(network).toBuilder().tasks(null).build();
+  OrgNetwork updateNetwork=getMutatedOrgNetwork(oldNetwork);
+  try {
+    Task updateNetworkTask=networkClient.updateNetwork(network.getHref(),updateNetwork);
+    Checks.checkTask(updateNetworkTask);
+    assertTrue(retryTaskSuccess.apply(updateNetworkTask),String.format(TASK_COMPLETE_TIMELY,"updateNetworkTask"));
+    network=networkClient.getNetwork(network.getHref());
+    Checks.checkOrgNetwork(Network.<OrgNetwork>toSubType(network));
+    assertTrue(equal(network.getConfiguration().getIpScope(),updateNetwork.getConfiguration().getIpScope()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","ipScope"));
+    assertTrue(equal(network.getConfiguration().getParentNetwork(),updateNetwork.getConfiguration().getParentNetwork()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","parentNetwork"));
+    assertTrue(equal(network.getConfiguration().getFenceMode(),updateNetwork.getConfiguration().getFenceMode()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","fenceMode"));
+    assertTrue(equal(network.getConfiguration().retainNetInfoAcrossDeployments(),updateNetwork.getConfiguration().retainNetInfoAcrossDeployments()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","retainNetInfoAcrossDeployments"));
+    assertTrue(equal(network.getConfiguration().getNetworkFeatures(),updateNetwork.getConfiguration().getNetworkFeatures()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","networkFeatures"));
+    assertTrue(equal(network.getConfiguration().getSyslogServerSettings(),updateNetwork.getConfiguration().getSyslogServerSettings()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","syslogServerSettings"));
+    assertTrue(equal(network.getConfiguration().getRouterInfo(),updateNetwork.getConfiguration().getRouterInfo()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","routerInfo"));
+  }
+  finally {
+    Task updateNetworkTask=networkClient.updateNetwork(network.getHref(),oldNetwork);
+    Checks.checkTask(updateNetworkTask);
+    assertTrue(retryTaskSuccess.apply(updateNetworkTask),String.format(TASK_COMPLETE_TIMELY,"updateNetworkTask"));
+    network=networkClient.getNetwork(network.getHref());
+  }
+}

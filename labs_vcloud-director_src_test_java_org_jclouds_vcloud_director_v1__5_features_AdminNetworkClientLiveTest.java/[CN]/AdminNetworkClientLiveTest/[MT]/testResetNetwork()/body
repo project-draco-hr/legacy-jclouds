@@ -1,0 +1,7 @@
+{
+  Task resetNetworkTask=networkClient.resetNetwork(network.getHref());
+  Checks.checkTask(resetNetworkTask);
+  assertTrue(retryTaskSuccess.apply(resetNetworkTask),String.format(TASK_COMPLETE_TIMELY,"resetNetworkTask"));
+  network=networkClient.getNetwork(network.getHref());
+  Checks.checkOrgNetwork(Network.<OrgNetwork>toSubType(network));
+}
