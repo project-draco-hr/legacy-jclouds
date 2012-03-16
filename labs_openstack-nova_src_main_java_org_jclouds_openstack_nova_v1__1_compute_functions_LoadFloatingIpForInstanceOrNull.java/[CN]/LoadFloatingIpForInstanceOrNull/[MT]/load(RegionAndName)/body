@@ -1,0 +1,17 @@
+{
+  Optional<FloatingIPClient> ipClientOptional=client.getFloatingIPExtensionForRegion(key.getRegion());
+  if (ipClientOptional.isPresent()) {
+    try {
+      return Iterables.find(ipClientOptional.get().listFloatingIPs(),new Predicate<FloatingIP>(){
+        @Override public boolean apply(        FloatingIP input){
+          return key.getName().equals(input.getInstanceId());
+        }
+      }
+).getIp();
+    }
+ catch (    NoSuchElementException e) {
+      return null;
+    }
+  }
+  return null;
+}
