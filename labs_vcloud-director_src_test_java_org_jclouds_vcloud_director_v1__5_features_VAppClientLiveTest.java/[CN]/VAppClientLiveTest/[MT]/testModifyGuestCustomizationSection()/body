@@ -1,7 +1,7 @@
 {
   URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
   GuestCustomizationSection oldSection=vAppClient.getGuestCustomizationSection(vmURI);
-  GuestCustomizationSection newSection=oldSection.toBuilder().computerName("newComputerName").build();
+  GuestCustomizationSection newSection=oldSection.toBuilder().computerName("newComputerName").adminPassword(null).build();
   Task modifyGuestCustomizationSection=vAppClient.modifyGuestCustomizationSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyGuestCustomizationSection),String.format(TASK_COMPLETE_TIMELY,"modifyGuestCustomizationSection"));
   GuestCustomizationSection modified=vAppClient.getGuestCustomizationSection(vmURI);
