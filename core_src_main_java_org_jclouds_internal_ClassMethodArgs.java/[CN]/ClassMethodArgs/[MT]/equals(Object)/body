@@ -1,16 +1,6 @@
 {
-  if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  ClassMethodArgs other=(ClassMethodArgs)obj;
-  if (!Arrays.equals(args,other.args))   return false;
-  if (asyncClass == null) {
-    if (other.asyncClass != null)     return false;
-  }
- else   if (!asyncClass.equals(other.asyncClass))   return false;
-  if (method == null) {
-    if (other.method != null)     return false;
-  }
- else   if (!method.equals(other.method))   return false;
-  return true;
+  if (this == o)   return true;
+  if (o == null || getClass() != o.getClass())   return false;
+  ClassMethodArgs that=ClassMethodArgs.class.cast(o);
+  return equal(this.clazz,that.clazz) && equal(this.method,that.method) && equal(this.args,that.args);
 }
