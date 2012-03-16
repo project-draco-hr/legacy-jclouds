@@ -1,11 +1,16 @@
 {
-  String newVAppTemplateId="something";
-  URI newVAppTemplateURI=URI.create(endpoint + "/vAppTemplate/" + newVAppTemplateId);
-  final Task task=vappTemplateClient.deleteVappTemplate(newVAppTemplateURI);
+  CloneVAppTemplateParams cloneVAppTemplateParams=CloneVAppTemplateParams.builder().source(Reference.builder().href(vAppTemplateURI).build()).build();
+  VAppTemplate clonedVappTemplate=vdcClient.cloneVAppTemplate(vdcURI,cloneVAppTemplateParams);
+  Task cloneTask=Iterables.getFirst(clonedVappTemplate.getTasks(),null);
+  assertNotNull(cloneTask,"vdcClient.cloneVAppTemplate returned VAppTemplate that did not contain any tasks");
+  retryTaskSuccess.apply(cloneTask);
+  VAppTemplate vAppTemplatePreDelete=vappTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
+  Checks.checkVAppTemplate(vAppTemplatePreDelete);
+  final Task task=vappTemplateClient.deleteVappTemplate(clonedVappTemplate.getHref());
   retryTaskSuccess.apply(task);
   try {
-    vappTemplateClient.getVAppTemplate(newVAppTemplateURI);
+    vappTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
   }
- catch (  NoSuchElementException e) {
+ catch (  VCloudDirectorException e) {
   }
 }
