@@ -1,5 +1,6 @@
 {
   MediaInsertOrEjectParams params=MediaInsertOrEjectParams.builder().media(Reference.builder().href(mediaURI).type(MEDIA).build()).build();
-  Task insertMedia=vAppClient.insertMedia(vApp.getHref(),params);
+  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
+  Task insertMedia=vAppClient.insertMedia(vmURI,params);
   assertTrue(retryTaskSuccess.apply(insertMedia),String.format(TASK_COMPLETE_TIMELY,"insertMedia"));
 }
