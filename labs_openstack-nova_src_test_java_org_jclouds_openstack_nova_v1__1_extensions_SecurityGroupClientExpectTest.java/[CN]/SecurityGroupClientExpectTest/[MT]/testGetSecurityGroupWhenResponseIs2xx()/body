@@ -1,6 +1,6 @@
 {
   HttpRequest getSecurityGroup=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-security-groups/0")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse getSecurityGroupResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_details.json")).build();
-  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,getSecurityGroup,getSecurityGroupResponse);
-  assertEquals(clientWhenSecurityGroupsExist.getSecurityGroupClientForRegion("North").getSecurityGroup("0").toString(),new ParseSecurityGroupTest().expected().toString());
+  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,getSecurityGroup,getSecurityGroupResponse);
+  assertEquals(clientWhenSecurityGroupsExist.getSecurityGroupExtensionForRegion("North").get().getSecurityGroup("0").toString(),new ParseSecurityGroupTest().expected().toString());
 }

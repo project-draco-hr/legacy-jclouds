@@ -1,0 +1,8 @@
+{
+  return CacheBuilder.newBuilder().expireAfterWrite(23,TimeUnit.HOURS).build(new CacheLoader<String,Set<Extension>>(){
+    @Override public Set<Extension> load(    String key) throws Exception {
+      return novaClient.get().getExtensionClientForRegion(key).listExtensions();
+    }
+  }
+);
+}

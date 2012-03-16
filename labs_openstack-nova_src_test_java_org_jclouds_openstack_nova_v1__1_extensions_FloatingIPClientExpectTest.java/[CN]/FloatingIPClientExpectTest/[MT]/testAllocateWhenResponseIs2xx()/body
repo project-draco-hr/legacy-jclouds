@@ -1,6 +1,6 @@
 {
   HttpRequest allocateFloatingIP=HttpRequest.builder().method("POST").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-floating-ips")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{}","application/json")).build();
   HttpResponse allocateFloatingIPResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/floatingip_details.json")).build();
-  NovaClient clientWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,allocateFloatingIP,allocateFloatingIPResponse);
+  NovaClient clientWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,allocateFloatingIP,allocateFloatingIPResponse);
   assertEquals(clientWhenFloatingIPsExist.getFloatingIPExtensionForRegion("North").get().allocate().toString(),new ParseFloatingIPTest().expected().toString());
 }
