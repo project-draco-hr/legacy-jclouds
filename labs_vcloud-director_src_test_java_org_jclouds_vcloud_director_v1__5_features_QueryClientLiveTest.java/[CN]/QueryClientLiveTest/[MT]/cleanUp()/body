@@ -1,0 +1,26 @@
+{
+  if (vApp != null) {
+    vApp=vappClient.getVApp(vApp.getHref());
+    if (vApp.getStatus().equals(Status.POWERED_ON.getValue())) {
+      try {
+        Task shutdownTask=vappClient.shutdown(vApp.getHref());
+        retryTaskSuccess.apply(shutdownTask);
+      }
+ catch (      Exception e) {
+        logger.warn(e,"Continuing cleanup after error shutting down VApp %s",vApp);
+      }
+    }
+    if (vApp.isDeployed()) {
+      try {
+        UndeployVAppParams params=UndeployVAppParams.builder().build();
+        Task undeployTask=vappClient.undeploy(vApp.getHref(),params);
+        retryTaskSuccess.apply(undeployTask);
+      }
+ catch (      Exception e) {
+        logger.warn(e,"Continuing cleanup after error undeploying VApp %s",vApp);
+      }
+    }
+    Task task=vappClient.deleteVApp(vApp.getHref());
+    assertTaskSucceeds(task);
+  }
+}
