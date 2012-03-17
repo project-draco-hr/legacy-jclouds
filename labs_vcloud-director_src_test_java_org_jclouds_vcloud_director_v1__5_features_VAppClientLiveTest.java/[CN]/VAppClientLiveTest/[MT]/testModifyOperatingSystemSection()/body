@@ -1,13 +1,9 @@
 {
   URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  OperatingSystemSection oldSection=vAppClient.getOperatingSystemSection(vmURI);
-  OperatingSystemSection newSection=oldSection.toBuilder().info("Changed OperatingSystemSection Description").description("Changed OperatingSystemSection Description").build();
-  assertNotNull(newSection.getId());
+  OperatingSystemSection newSection=OperatingSystemSection.builder().info("").id(OSType.RHEL_64.getCode()).osType("rhel5_64Guest").build();
   Task modifyOperatingSystemSection=vAppClient.modifyOperatingSystemSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyOperatingSystemSection),String.format(TASK_COMPLETE_TIMELY,"modifyOperatingSystemSection"));
   OperatingSystemSection modified=vAppClient.getOperatingSystemSection(vmURI);
   checkOperatingSystemSection(modified);
-  assertEquals(modified.getInfo(),newSection.getInfo());
-  assertEquals(modified.getDescription(),newSection.getDescription());
-  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"OperatingSystemSection"));
+  assertEquals(modified.getId(),newSection.getId());
 }

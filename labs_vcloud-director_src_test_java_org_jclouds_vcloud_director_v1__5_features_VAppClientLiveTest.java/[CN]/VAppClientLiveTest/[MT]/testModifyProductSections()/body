@@ -1,6 +1,6 @@
 {
   ProductSectionList oldSections=vAppClient.getProductSections(vApp.getHref());
-  ProductSectionList newSections=oldSections.toBuilder().productSection(ProductSection.builder().info("Information about the installed software").required(true).product(MsgType.builder().value("jclouds").build()).vendor(MsgType.builder().value("jclouds Inc.").build()).build()).build();
+  ProductSectionList newSections=oldSections.toBuilder().productSection(ProductSection.builder().info("Information about the installed software").required().product(MsgType.builder().value("jclouds").build()).vendor(MsgType.builder().value("jclouds Inc.").build()).build()).build();
   Task modifyProductSections=vAppClient.modifyProductSections(vApp.getHref(),newSections);
   assertTrue(retryTaskSuccess.apply(modifyProductSections),String.format(TASK_COMPLETE_TIMELY,"modifyProductSections"));
   ProductSectionList modified=vAppClient.getProductSections(vApp.getHref());

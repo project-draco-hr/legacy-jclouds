@@ -1,7 +1,14 @@
 {
   URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
   VirtualHardwareSection oldSection=vAppClient.getVirtualHardwareSection(vmURI);
-  VirtualHardwareSection newSection=oldSection.toBuilder().build();
+  Optional<? extends ResourceAllocationSettingData> memory=Iterables.tryFind(oldSection.getItems(),new Predicate<ResourceAllocationSettingData>(){
+    @Override public boolean apply(    ResourceAllocationSettingData item){
+      return item.getResourceType() == ResourceType.MEMORY;
+    }
+  }
+);
+  if (memory.isPresent())   debug(memory);
+  VirtualHardwareSection newSection=oldSection.toBuilder().item(ResourceAllocationSettingData.builder().elementName(cimString("Memory")).instanceID(cimString(UUID.randomUUID().toString())).allocationUnits(cimString("byte * 2^20")).reservation(cimUnsignedLong(BigInteger.valueOf(0L))).virtualQuantity(cimUnsignedLong(BigInteger.valueOf(1024L))).weight(cimUnsignedInt(0L)).build()).build();
   Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
   VirtualHardwareSection modified=vAppClient.getVirtualHardwareSection(vmURI);
