@@ -1,9 +1,5 @@
 {
-  CloneVAppTemplateParams cloneVAppTemplateParams=CloneVAppTemplateParams.builder().source(Reference.builder().href(vAppTemplateURI).build()).build();
-  VAppTemplate clonedVappTemplate=vdcClient.cloneVAppTemplate(vdcURI,cloneVAppTemplateParams);
-  Task cloneTask=Iterables.getFirst(clonedVappTemplate.getTasks(),null);
-  assertNotNull(cloneTask,"vdcClient.cloneVAppTemplate returned VAppTemplate that did not contain any tasks");
-  retryTaskSuccess.apply(cloneTask);
+  VAppTemplate clonedVappTemplate=cloneVAppTemplate(true);
   VAppTemplate vAppTemplatePreDelete=vappTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
   Checks.checkVAppTemplate(vAppTemplatePreDelete);
   final Task task=vappTemplateClient.deleteVappTemplate(clonedVappTemplate.getHref());

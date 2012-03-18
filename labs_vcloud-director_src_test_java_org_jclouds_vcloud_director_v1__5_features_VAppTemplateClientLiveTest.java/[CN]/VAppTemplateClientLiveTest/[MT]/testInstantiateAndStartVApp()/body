@@ -1,0 +1,13 @@
+{
+  vApp=instantiateVApp();
+  Task instantiateTask=Iterables.getFirst(vApp.getTasks(),null);
+  if (instantiateTask != null) {
+    assertTaskSucceedsLong(instantiateTask);
+  }
+  Task task=vappClient.powerOn(vApp.getHref());
+  assertTaskSucceedsLong(task);
+  vApp=vappClient.getVApp(vApp.getHref());
+  List<Vm> vms=vApp.getChildren().getVms();
+  vm=Iterables.getFirst(vms,null);
+  assertNotNull(vm,"started vApp " + vApp + " must have at least one VM");
+}

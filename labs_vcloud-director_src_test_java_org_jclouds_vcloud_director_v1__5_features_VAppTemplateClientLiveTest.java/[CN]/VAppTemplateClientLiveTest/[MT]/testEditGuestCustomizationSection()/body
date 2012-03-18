@@ -1,0 +1,9 @@
+{
+  String computerName="a" + random.nextInt(Integer.MAX_VALUE);
+  GuestCustomizationSection newSection=GuestCustomizationSection.builder().info("my info").computerName(computerName).build();
+  final Task task=vappTemplateClient.editVAppTemplateGuestCustomizationSection(vm.getHref(),newSection);
+  assertTaskSucceeds(task);
+  GuestCustomizationSection modified=vappTemplateClient.getVAppTemplateGuestCustomizationSection(vm.getHref());
+  Checks.checkGuestCustomizationSection(modified);
+  assertEquals(modified.getComputerName(),computerName);
+}
