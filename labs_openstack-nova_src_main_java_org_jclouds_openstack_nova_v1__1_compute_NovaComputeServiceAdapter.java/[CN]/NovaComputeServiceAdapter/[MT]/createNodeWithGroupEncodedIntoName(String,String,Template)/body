@@ -1,5 +1,23 @@
 {
+  String region=template.getLocation() == null ? defaultRegion : template.getLocation().getId();
   ServerClient serverClient=template.getLocation() != null ? novaClient.getServerClientForRegion(template.getLocation().getId()) : defaultLocationServerClient;
+  NovaTemplateOptions templateOptions=NovaTemplateOptions.class.cast(template.getOptions());
+  boolean autoAllocateFloatingIps=templateOptions.getFloatingIps().isEmpty() && (this.autoAllocateFloatingIps || templateOptions.isAutoAssignFloatingIp());
+  Set<String> floatingIps=templateOptions.getFloatingIps();
+  FloatingIPClient floatingIPClient=null;
+  if (autoAllocateFloatingIps || !templateOptions.getFloatingIps().isEmpty()) {
+    Optional<FloatingIPClient> floatingIPClientWrapper=novaClient.getFloatingIPExtensionForRegion(region);
+    checkArgument(floatingIPClientWrapper.isPresent(),"Floating IP settings are required by configuration, but the extension is not available!");
+    floatingIPClient=floatingIPClientWrapper.get();
+  }
+  if (floatingIPClient != null && autoAllocateFloatingIps) {
+    floatingIps.add(floatingIPClient.allocate().getId());
+  }
   Server server=serverClient.createServer(name,template.getImage().getId(),template.getHardware().getId());
+  if (floatingIPClient != null) {
+    for (    String floatingIp : floatingIps) {
+      floatingIPClient.addFloatingIP(server.getId(),floatingIp);
+    }
+  }
   return new NodeAndInitialCredentials<Server>(server,server.getId() + "",LoginCredentials.builder().password(server.getAdminPass()).build());
 }

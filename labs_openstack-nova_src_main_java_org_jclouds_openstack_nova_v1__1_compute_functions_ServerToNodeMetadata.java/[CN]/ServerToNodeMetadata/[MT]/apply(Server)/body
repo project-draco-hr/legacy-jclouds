@@ -1,3 +1,3 @@
 {
-  return new NodeMetadataBuilder().id(server.getId()).providerId(server.getId()).name(server.getName()).publicAddresses(Iterables.transform(server.getPublicAddresses(),new AddressToStringTransformationFunction())).privateAddresses(Iterables.transform(server.getPrivateAddresses(),new AddressToStringTransformationFunction())).state(server.getStatus().getNodeState()).userMetadata(ImmutableMap.copyOf(server.getMetadata())).build();
+  return new NodeMetadataBuilder().id(server.getId()).providerId(server.getId()).name(server.getName()).publicAddresses(Iterables.concat(Iterables.transform(server.getPublicAddresses(),new AddressToStringTransformationFunction()),floatingIpCache.getUnchecked(new RegionAndName(null,server.getId())))).privateAddresses(Iterables.transform(server.getPrivateAddresses(),new AddressToStringTransformationFunction())).state(server.getStatus().getNodeState()).userMetadata(ImmutableMap.copyOf(server.getMetadata())).build();
 }
