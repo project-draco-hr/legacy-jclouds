@@ -1,11 +1,11 @@
 {
-  if (responses.size() == 0)   return ImmutableMap.of();
+  final ConcurrentMap<T,Exception> errorMap=newConcurrentMap();
+  if (responses.size() == 0)   return errorMap;
   final int total=responses.size();
   final CountDownLatch doneSignal=new CountDownLatch(total);
   final AtomicInteger complete=new AtomicInteger(0);
   final AtomicInteger errors=new AtomicInteger(0);
   final long start=System.currentTimeMillis();
-  final Map<T,Exception> errorMap=newHashMap();
   for (  final java.util.Map.Entry<T,? extends Future<?>> future : responses.entrySet()) {
     Futures.makeListenable(future.getValue(),exec).addListener(new Runnable(){
       @Override public void run(){
