@@ -4,5 +4,7 @@
   if (task == null)   return false;
   logger.trace("%s: looking for status %s: currently: %s",task,Task.Status.SUCCESS,task.getStatus());
   if (task.getStatus().equals(Task.Status.ERROR))   throw new VCloudDirectorException(task);
+  if (task.getStatus().equals(Task.Status.CANCELED))   throw new VCloudDirectorException(task);
+  if (task.getStatus().equals(Task.Status.ABORTED))   throw new VCloudDirectorException(task);
   return task.getStatus().equals(Task.Status.SUCCESS);
 }

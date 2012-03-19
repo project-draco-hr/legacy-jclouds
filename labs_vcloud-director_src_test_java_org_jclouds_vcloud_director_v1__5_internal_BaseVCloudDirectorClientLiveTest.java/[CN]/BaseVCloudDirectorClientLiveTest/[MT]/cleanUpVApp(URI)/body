@@ -1,0 +1,47 @@
+{
+  VAppClient vappClient=context.getApi().getVAppClient();
+  VApp vApp;
+  try {
+    vApp=vappClient.getVApp(vAppUri);
+  }
+ catch (  VCloudDirectorException e) {
+    return;
+  }
+  if (vApp.getTasks() != null) {
+    for (    Task task : vApp.getTasks()) {
+      assertTaskDoneEventually(task);
+    }
+  }
+  if (vApp.getStatus().equals(Status.POWERED_ON.getValue())) {
+    try {
+      Task shutdownTask=vappClient.shutdown(vAppUri);
+      retryTaskSuccess.apply(shutdownTask);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Continuing cleanup after error shutting down VApp %s",vApp);
+    }
+  }
+  if (vApp.isDeployed()) {
+    try {
+      UndeployVAppParams params=UndeployVAppParams.builder().build();
+      Task undeployTask=vappClient.undeploy(vAppUri,params);
+      retryTaskSuccess.apply(undeployTask);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Continuing cleanup after error undeploying VApp %s",vApp);
+    }
+  }
+  try {
+    Task task=vappClient.deleteVApp(vAppUri);
+    assertTaskSucceeds(task);
+  }
+ catch (  Exception e) {
+    try {
+      vApp=vappClient.getVApp(vAppUri);
+    }
+ catch (    Exception e2) {
+    }
+    logger.warn(e,"Deleting vApp failed: vApp=" + vApp);
+    throw e;
+  }
+}
