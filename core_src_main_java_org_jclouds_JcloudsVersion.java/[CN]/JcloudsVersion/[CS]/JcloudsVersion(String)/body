@@ -5,12 +5,25 @@
   majorVersion=Integer.valueOf(versionMatcher.group(1));
   minorVersion=Integer.valueOf(versionMatcher.group(2));
   patchVersion=Integer.valueOf(versionMatcher.group(3));
-  String releaseCandidateVersionIfPresent=versionMatcher.group(4);
-  if (releaseCandidateVersionIfPresent != null) {
-    releaseCandidate=true;
-    releaseCandidateVersion=Integer.valueOf(releaseCandidateVersionIfPresent);
+  String alphaOrReleaseCandidateVersionIfPresent=versionMatcher.group(4);
+  if (alphaOrReleaseCandidateVersionIfPresent != null) {
+    Integer alphaOrReleaseCandidateVersion=Integer.valueOf(versionMatcher.group(5));
+    if (alphaOrReleaseCandidateVersionIfPresent.equals(ALPHA_VERSION_IDENTIFIER)) {
+      alpha=true;
+      alphaVersion=alphaOrReleaseCandidateVersion;
+      releaseCandidate=false;
+      releaseCandidateVersion=null;
+    }
+ else {
+      alpha=false;
+      alphaVersion=null;
+      releaseCandidate=true;
+      releaseCandidateVersion=alphaOrReleaseCandidateVersion;
+    }
   }
  else {
+    alpha=false;
+    alphaVersion=null;
     releaseCandidate=false;
     releaseCandidateVersion=null;
   }
