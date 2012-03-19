@@ -2,6 +2,5 @@
   bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
   bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
   bindClientAndAsyncClient(binder(),ServiceClient.class,ServiceAsyncClient.class);
-  install(new FactoryModuleBuilder().implement(RegionIdToURISupplier.class,RegionIdToURIFromAccessForTypeAndVersionSupplier.class).build(RegionIdToURISupplier.Factory.class));
-  bind(RegionIdsSupplier.class).to(RegionIdsFromRegionIdToURIKeySet.class);
+  install(locationModule);
 }
