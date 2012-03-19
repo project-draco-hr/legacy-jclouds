@@ -1,23 +1,17 @@
 {
   User oldUser=user.toBuilder().build();
   User newUser=user.toBuilder().fullName("new" + oldUser.getFullName()).emailAddress("new" + oldUser.getEmailAddress()).telephone("1-" + oldUser.getTelephone()).isEnabled(true).im("new" + oldUser.getIM()).isAlertEnabled(true).alertEmailPrefix("new" + oldUser.getAlertEmailPrefix()).alertEmail("new" + oldUser.getAlertEmail()).storedVmQuota(1).deployedVmQuota(1).password("newPassword").build();
-  try {
-    userClient.updateUser(user.getHref(),newUser);
-    user=userClient.getUser(user.getHref());
-    Checks.checkUser(user);
-    assertTrue(equal(user.getFullName(),newUser.getFullName()),String.format(OBJ_FIELD_UPDATABLE,USER,"fullName"));
-    assertTrue(equal(user.getEmailAddress(),newUser.getEmailAddress()),String.format(OBJ_FIELD_UPDATABLE,USER,"emailAddress"));
-    assertTrue(equal(user.getTelephone(),newUser.getTelephone()),String.format(OBJ_FIELD_UPDATABLE,USER,"telephone"));
-    assertTrue(equal(user.isEnabled(),newUser.isEnabled()),String.format(OBJ_FIELD_UPDATABLE,USER,"isEnabled"));
-    assertTrue(equal(user.getIM(),newUser.getIM()),String.format(OBJ_FIELD_UPDATABLE,USER,"im"));
-    assertTrue(equal(user.isAlertEnabled(),newUser.isAlertEnabled()),String.format(OBJ_FIELD_UPDATABLE,USER,"isAlertEnabled"));
-    assertTrue(equal(user.getAlertEmailPrefix(),newUser.getAlertEmailPrefix()),String.format(OBJ_FIELD_UPDATABLE,USER,"alertEmailPrefix"));
-    assertTrue(equal(user.getAlertEmail(),newUser.getAlertEmail()),String.format(OBJ_FIELD_UPDATABLE,USER,"alertEmail"));
-    assertTrue(equal(user.getStoredVmQuota(),newUser.getStoredVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"storedVmQuota"));
-    assertTrue(equal(user.getDeployedVmQuota(),newUser.getDeployedVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"deployedVmQuota"));
-  }
-  finally {
-    userClient.updateUser(user.getHref(),oldUser);
-    user=userClient.getUser(user.getHref());
-  }
+  userClient.updateUser(user.getHref(),newUser);
+  user=userClient.getUser(user.getHref());
+  Checks.checkUser(user);
+  assertTrue(equal(user.getFullName(),newUser.getFullName()),String.format(OBJ_FIELD_UPDATABLE,USER,"fullName"));
+  assertTrue(equal(user.getEmailAddress(),newUser.getEmailAddress()),String.format(OBJ_FIELD_UPDATABLE,USER,"emailAddress"));
+  assertTrue(equal(user.getTelephone(),newUser.getTelephone()),String.format(OBJ_FIELD_UPDATABLE,USER,"telephone"));
+  assertTrue(equal(user.isEnabled(),newUser.isEnabled()),String.format(OBJ_FIELD_UPDATABLE,USER,"isEnabled"));
+  assertTrue(equal(user.getIM(),newUser.getIM()),String.format(OBJ_FIELD_UPDATABLE,USER,"im"));
+  assertTrue(equal(user.isAlertEnabled(),newUser.isAlertEnabled()),String.format(OBJ_FIELD_UPDATABLE,USER,"isAlertEnabled"));
+  assertTrue(equal(user.getAlertEmailPrefix(),newUser.getAlertEmailPrefix()),String.format(OBJ_FIELD_UPDATABLE,USER,"alertEmailPrefix"));
+  assertTrue(equal(user.getAlertEmail(),newUser.getAlertEmail()),String.format(OBJ_FIELD_UPDATABLE,USER,"alertEmail"));
+  assertTrue(equal(user.getStoredVmQuota(),newUser.getStoredVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"storedVmQuota"));
+  assertTrue(equal(user.getDeployedVmQuota(),newUser.getDeployedVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"deployedVmQuota"));
 }

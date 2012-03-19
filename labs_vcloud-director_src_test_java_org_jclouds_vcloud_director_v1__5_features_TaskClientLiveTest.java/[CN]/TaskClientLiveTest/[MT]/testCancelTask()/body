@@ -1,3 +1,8 @@
 {
+  vApp=instantiateVApp();
+  Task task=Iterables.getFirst(vApp.getTasks(),null);
+  assertNotNull(task,"instantiateVApp should contain one long-running task");
+  assertTaskStatusEventually(task,Task.Status.RUNNING,ImmutableSet.of(Task.Status.ERROR,Task.Status.ABORTED));
   taskClient.cancelTask(taskURI);
+  assertTaskStatusEventually(task,Task.Status.CANCELED,ImmutableSet.of(Task.Status.ERROR,Task.Status.ABORTED,Task.Status.SUCCESS));
 }
