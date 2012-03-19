@@ -1,0 +1,15 @@
+{
+  Set<Image> images=ImmutableSet.<Image>of();
+  Set<Hardware> hardwares=ImmutableSet.<Hardware>of();
+  Server serverToConvert=new ParseCreatedServerTest().expected();
+  ServerInZone serverInZoneToConvert=new ServerInZone(serverToConvert,"az-1.region-a.geo-1");
+  LoadingCache<ZoneAndId,Iterable<String>> mockLoadingCache=EasyMock.createMock(LoadingCache.class);
+  EasyMock.expect(mockLoadingCache.getUnchecked(serverInZoneToConvert)).andReturn(ImmutableSet.<String>of());
+  EasyMock.replay(mockLoadingCache);
+  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),mockLoadingCache);
+  NodeMetadata convertedNodeMetadata=converter.apply(serverInZoneToConvert);
+  assertEquals(serverInZoneToConvert.slashEncode(),convertedNodeMetadata.getId());
+  assertEquals(serverToConvert.getId(),convertedNodeMetadata.getProviderId());
+  assertEquals(convertedNodeMetadata.getLocation(),zone);
+  EasyMock.verify(mockLoadingCache);
+}
