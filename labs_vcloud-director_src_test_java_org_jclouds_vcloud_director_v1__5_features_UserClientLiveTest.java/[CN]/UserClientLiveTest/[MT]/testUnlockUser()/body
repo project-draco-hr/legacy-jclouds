@@ -1,3 +1,38 @@
 {
-  throw new UnsupportedOperationException("Test not yet implemented; need to first cause account to be locked");
+  AdminOrgClient adminOrgClient=context.getApi().getAdminOrgClient();
+  OrgPasswordPolicySettings settingsToRevertTo=null;
+  SessionClient sessionClient=context.utils().injector().getInstance(SessionClient.class);
+  OrgPasswordPolicySettings settings=adminOrgClient.getSettings(orgRef.getHref()).getPasswordPolicy();
+  assertNotNull(settings);
+  if (!settings.isAccountLockoutEnabled()) {
+    settingsToRevertTo=settings;
+    settings=settings.toBuilder().accountLockoutEnabled(true).invalidLoginsBeforeLockout(5).build();
+    settings=adminOrgClient.updatePasswordPolicy(orgRef.getHref(),settings);
+  }
+  assertTrue(settings.isAccountLockoutEnabled());
+  for (int i=0; i < settings.getInvalidLoginsBeforeLockout() + 1; i++) {
+    try {
+      sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"wrongpassword!");
+      fail("Managed to login using the wrong password!");
+    }
+ catch (    AuthorizationException ex) {
+    }
+  }
+  user=userClient.getUser(user.getHref());
+  assertTrue(user.isLocked());
+  try {
+    sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+    fail("Managed to login to locked account!");
+  }
+ catch (  AuthorizationException ex) {
+  }
+  userClient.unlockUser(user.getHref());
+  user=userClient.getUser(user.getHref());
+  assertFalse(user.isLocked());
+  SessionWithToken sessionWithToken=sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+  assertNotNull(sessionWithToken.getToken());
+  sessionClient.logoutSessionWithToken(sessionWithToken.getSession().getHref(),sessionWithToken.getToken());
+  if (settingsToRevertTo != null) {
+    adminOrgClient.updatePasswordPolicy(orgRef.getHref(),settingsToRevertTo);
+  }
 }

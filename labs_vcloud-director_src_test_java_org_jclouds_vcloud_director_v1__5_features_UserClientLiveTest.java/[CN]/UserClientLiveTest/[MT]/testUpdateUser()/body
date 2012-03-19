@@ -14,4 +14,8 @@
   assertTrue(equal(user.getAlertEmail(),newUser.getAlertEmail()),String.format(OBJ_FIELD_UPDATABLE,USER,"alertEmail"));
   assertTrue(equal(user.getStoredVmQuota(),newUser.getStoredVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"storedVmQuota"));
   assertTrue(equal(user.getDeployedVmQuota(),newUser.getDeployedVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"deployedVmQuota"));
+  SessionClient sessionClient=context.utils().injector().getInstance(SessionClient.class);
+  SessionWithToken sessionWithToken=sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+  assertNotNull(sessionWithToken.getToken());
+  sessionClient.logoutSessionWithToken(sessionWithToken.getSession().getHref(),sessionWithToken.getToken());
 }
