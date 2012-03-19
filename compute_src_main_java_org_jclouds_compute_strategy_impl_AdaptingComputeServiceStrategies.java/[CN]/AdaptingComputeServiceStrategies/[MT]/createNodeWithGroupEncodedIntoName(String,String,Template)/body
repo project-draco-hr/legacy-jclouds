@@ -6,7 +6,18 @@
   NodeAndInitialCredentials<N> from=client.createNodeWithGroupEncodedIntoName(group,name,template);
   LoginCredentials fromNode=from.getCredentials();
   LoginCredentials creds=prioritizeCredentialsFromTemplate.apply(template,fromNode);
-  if (creds != null)   credentialStore.put("node#" + from.getNodeId(),creds);
+  String credsKey="node#" + from.getNodeId();
+  if (creds != null) {
+    credentialStore.put(credsKey,creds);
+  }
+ else {
+    logger.trace("node(%s) creation did not return login credentials",from.getNodeId());
+  }
   NodeMetadata node=nodeMetadataAdapter.apply(from.getNode());
+  checkState(node.getId().equals(from.getNodeId()),"nodeAndInitialCredentials.getNodeId() returned %s, while parsed nodemetadata.getId() returned %s",from.getNodeId(),node.getId());
+  if (creds != null) {
+    Credentials credsFromCache=credentialStore.get(credsKey);
+    checkState(node.getCredentials().equals(credsFromCache),"credentialStore.get(%s): %s does not match node(%s).getCredentials(): %s",credsKey,credsFromCache,node.getId(),node.getCredentials());
+  }
   return node;
 }
