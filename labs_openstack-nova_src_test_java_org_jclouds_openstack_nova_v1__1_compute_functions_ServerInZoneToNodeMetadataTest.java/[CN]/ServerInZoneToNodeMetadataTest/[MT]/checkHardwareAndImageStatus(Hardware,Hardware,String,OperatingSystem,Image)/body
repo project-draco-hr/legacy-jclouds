@@ -1,0 +1,29 @@
+{
+  Set<Image> images=existingImage == null ? ImmutableSet.<Image>of() : ImmutableSet.of(existingImage);
+  Set<Hardware> hardwares=existingHardware == null ? ImmutableSet.<Hardware>of() : ImmutableSet.of(existingHardware);
+  Server serverToConvert=new ParseServerTest().expected();
+  ServerInZone serverInZoneToConvert=new ServerInZone(serverToConvert,"az-1.region-a.geo-1");
+  LoadingCache<ZoneAndId,Iterable<String>> mockLoadingCache=EasyMock.createMock(LoadingCache.class);
+  EasyMock.expect(mockLoadingCache.getUnchecked(serverInZoneToConvert)).andReturn(ImmutableSet.<String>of());
+  EasyMock.replay(mockLoadingCache);
+  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),mockLoadingCache);
+  NodeMetadata convertedNodeMetadata=converter.apply(serverInZoneToConvert);
+  assertEquals(serverInZoneToConvert.slashEncode(),convertedNodeMetadata.getId());
+  assertEquals(serverToConvert.getId(),convertedNodeMetadata.getProviderId());
+  assertEquals(convertedNodeMetadata.getLocation().getScope(),LocationScope.HOST);
+  assertEquals(convertedNodeMetadata.getLocation().getId(),"e4d909c290d0fb1ca068ffaddf22cbd0");
+  assertEquals(convertedNodeMetadata.getLocation().getParent(),locationIndex.get().get("az-1.region-a.geo-1"));
+  assertEquals(serverToConvert.getName(),convertedNodeMetadata.getName());
+  assertEquals(convertedNodeMetadata.getGroup(),"sample");
+  assertEquals(convertedNodeMetadata.getImageId(),expectedImageId);
+  assertEquals(convertedNodeMetadata.getOperatingSystem(),expectedOs);
+  assertEquals(convertedNodeMetadata.getHardware(),expectedHardware);
+  assertEquals(serverToConvert.getStatus().getNodeState(),convertedNodeMetadata.getState());
+  assertNotNull(convertedNodeMetadata.getPrivateAddresses());
+  assertEquals(convertedNodeMetadata.getPrivateAddresses(),ImmutableSet.of("10.176.42.16"));
+  assertNotNull(convertedNodeMetadata.getPublicAddresses());
+  assertEquals(convertedNodeMetadata.getPublicAddresses(),ImmutableSet.of("67.23.10.132","::babe:67.23.10.132","67.23.10.131","::babe:4317:0A83","::babe:10.176.42.16"));
+  assertNotNull(convertedNodeMetadata.getUserMetadata());
+  assertEquals(convertedNodeMetadata.getUserMetadata(),ImmutableMap.<String,String>of("Server Label","Web Head 1","Image Version","2.1"));
+  EasyMock.verify(mockLoadingCache);
+}

@@ -1,0 +1,20 @@
+{
+  Location location=locationIndex.get().get(serverInZone.getZone());
+  checkState(location != null,"location %s not in locationIndex: %s",serverInZone.getZone(),locationIndex.get());
+  Server from=serverInZone.getServer();
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.id(serverInZone.slashEncode());
+  builder.providerId(from.getId());
+  builder.name(from.getName());
+  builder.hostname(from.getName());
+  builder.location(new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId()).description(from.getHostId()).parent(location).build());
+  builder.userMetadata(from.getMetadata());
+  builder.group(parseGroupFromName(from.getName()));
+  builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(),from.getImage().getId()).slashEncode());
+  builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
+  builder.hardware(findHardwareForServerOrNull(serverInZone));
+  builder.state(from.getStatus().getNodeState());
+  builder.publicAddresses(getPublicAddresses(serverInZone));
+  builder.privateAddresses(Iterables.transform(from.getPrivateAddresses(),AddressToStringTransformationFunction.INSTANCE));
+  return builder.build();
+}

@@ -2,5 +2,5 @@
   HttpRequest listExtensions=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/extensions")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listExtensionsResponse=HttpResponse.builder().statusCode(404).build();
   NovaClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listExtensions,listExtensionsResponse);
-  assertTrue(clientWhenNoServersExist.getExtensionClientForRegion("North").listExtensions().isEmpty());
+  assertTrue(clientWhenNoServersExist.getExtensionClientForZone("az-1.region-a.geo-1").listExtensions().isEmpty());
 }

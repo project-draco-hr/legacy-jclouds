@@ -1,25 +1,26 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<Server,Flavor,org.jclouds.openstack.nova.v1_1.domain.Image,Location>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<ServerInZone,FlavorInZone,ImageInZone,Location>>(){
   }
 ).to(NovaComputeServiceAdapter.class);
-  bind(new TypeLiteral<Function<Server,NodeMetadata>>(){
+  bind(new TypeLiteral<Function<ServerInZone,NodeMetadata>>(){
   }
-).to(ServerToNodeMetadata.class);
-  bind(new TypeLiteral<Function<org.jclouds.openstack.nova.v1_1.domain.Image,Image>>(){
+).to(ServerInZoneToNodeMetadata.class);
+  bind(new TypeLiteral<Function<ImageInZone,Image>>(){
   }
-).to(NovaImageToImage.class);
+).to(ImageInZoneToImage.class);
   bind(new TypeLiteral<Function<org.jclouds.openstack.nova.v1_1.domain.Image,OperatingSystem>>(){
   }
 ).to(NovaImageToOperatingSystem.class);
-  bind(new TypeLiteral<Function<Flavor,Hardware>>(){
+  bind(new TypeLiteral<Function<FlavorInZone,Hardware>>(){
   }
-).to(FlavorToHardware.class);
+).to(FlavorInZoneToHardware.class);
   bind(new TypeLiteral<Function<Location,Location>>(){
   }
 ).to((Class)IdentityFunction.class);
   bind(TemplateOptions.class).to(NovaTemplateOptions.class);
-  bind(new TypeLiteral<CacheLoader<RegionAndName,Iterable<String>>>(){
+  bind(new TypeLiteral<CacheLoader<ZoneAndId,Iterable<String>>>(){
   }
 ).annotatedWith(Names.named("FLOATINGIP")).to(LoadFloatingIpsForInstance.class);
+  bind(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class).to(ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
 }

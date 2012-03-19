@@ -2,5 +2,5 @@
   HttpRequest createKeyPair=HttpRequest.builder().method("POST").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-keypairs")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{\"keypair\":{\"name\":\"testkeypair\"}}","application/json")).build();
   HttpResponse createKeyPairResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/keypair_created.json")).build();
   NovaClient clientWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,createKeyPair,createKeyPairResponse);
-  assertEquals(clientWhenServersExist.getKeyPairExtensionForRegion("North").get().createKeyPair("testkeypair").toString(),new ParseKeyPairTest().expected().toString());
+  assertEquals(clientWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().createKeyPair("testkeypair").toString(),new ParseKeyPairTest().expected().toString());
 }

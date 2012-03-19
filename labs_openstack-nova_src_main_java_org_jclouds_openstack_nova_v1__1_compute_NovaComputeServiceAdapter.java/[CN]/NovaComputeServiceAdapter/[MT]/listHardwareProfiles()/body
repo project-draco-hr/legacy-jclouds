@@ -1,3 +1,12 @@
 {
-  return defaultFlavorClient.listFlavorsInDetail();
+  Builder<FlavorInZone> builder=ImmutableSet.<FlavorInZone>builder();
+  for (  final String zoneId : zoneIds.get()) {
+    builder.addAll(Iterables.transform(novaClient.getFlavorClientForZone(zoneId).listFlavorsInDetail(),new Function<Flavor,FlavorInZone>(){
+      @Override public FlavorInZone apply(      Flavor arg0){
+        return new FlavorInZone(arg0,zoneId);
+      }
+    }
+));
+  }
+  return builder.build();
 }

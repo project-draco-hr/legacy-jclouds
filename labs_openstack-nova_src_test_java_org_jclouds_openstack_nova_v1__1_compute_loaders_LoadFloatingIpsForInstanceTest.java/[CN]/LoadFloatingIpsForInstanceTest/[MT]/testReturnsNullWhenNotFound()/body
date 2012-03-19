@@ -1,13 +1,12 @@
 {
   NovaClient client=createMock(NovaClient.class);
   FloatingIPClient ipClient=createMock(FloatingIPClient.class);
-  expect(client.getConfiguredRegions()).andReturn(ImmutableSet.of("region")).atLeastOnce();
-  expect(client.getFloatingIPExtensionForRegion("region")).andReturn(Optional.of(ipClient)).atLeastOnce();
+  expect(client.getFloatingIPExtensionForZone("Zone")).andReturn(Optional.of(ipClient)).atLeastOnce();
   expect(ipClient.listFloatingIPs()).andReturn(ImmutableSet.<FloatingIP>of()).atLeastOnce();
   replay(client);
   replay(ipClient);
   LoadFloatingIpsForInstance parser=new LoadFloatingIpsForInstance(client);
-  assertFalse(parser.load(new RegionAndName("region","i-blah")).iterator().hasNext());
+  assertFalse(parser.load(ZoneAndId.fromZoneAndId("Zone","i-blah")).iterator().hasNext());
   verify(client);
   verify(ipClient);
 }

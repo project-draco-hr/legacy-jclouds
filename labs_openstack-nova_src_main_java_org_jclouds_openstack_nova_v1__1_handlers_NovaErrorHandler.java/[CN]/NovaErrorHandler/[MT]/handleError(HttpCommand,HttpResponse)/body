@@ -4,17 +4,18 @@
   Exception exception=message != null ? new HttpResponseException(command,response,message) : new HttpResponseException(command,response);
   message=message != null ? message : String.format("%s -> %s",command.getCurrentRequest().getRequestLine(),response.getStatusLine());
 switch (response.getStatusCode()) {
+case 400:
+    if (message.indexOf("quota exceeded") != -1)     exception=new InsufficientResourcesException(message,exception);
+ else     if (message.indexOf("has no fixed_ips") != -1)     exception=new IllegalStateException(message,exception);
+  break;
 case 401:
 case 403:
-    exception=new AuthorizationException(message,exception);
-  break;
+exception=new AuthorizationException(message,exception);
+break;
 case 404:
 if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
-  exception=new ResourceNotFoundException(message,exception);
+exception=new ResourceNotFoundException(message,exception);
 }
-break;
-default :
-exception=new HttpResponseException(command,response,message);
 break;
 }
 command.setException(exception);

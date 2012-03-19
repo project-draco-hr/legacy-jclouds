@@ -1,0 +1,28 @@
+{
+  checkState(nodeRunning.apply(input),"node never achieved state running %s",input.get());
+  NodeMetadata node=input.get();
+  String zoneId=node.getLocation().getParent().getId();
+  FloatingIPClient floatingIpClient=novaClient.getFloatingIPExtensionForZone(zoneId).get();
+  FloatingIP ip=null;
+  try {
+    logger.debug(">> allocating or reassigning floating ip for node(%s)",node.getId());
+    ip=floatingIpClient.allocate();
+  }
+ catch (  InsufficientResourcesException e) {
+    logger.trace("<< [%s] allocating a new floating ip for node(%s)",e.getMessage(),node.getId());
+    logger.trace(">> searching for existing, unassigned floating ip for node(%s)",node.getId());
+    ArrayList<FloatingIP> unassignedIps=Lists.newArrayList(Iterables.filter(floatingIpClient.listFloatingIPs(),new Predicate<FloatingIP>(){
+      @Override public boolean apply(      FloatingIP arg0){
+        return arg0.getFixedIp() == null;
+      }
+    }
+));
+    Collections.shuffle(unassignedIps);
+    ip=Iterables.getLast(unassignedIps);
+  }
+  logger.debug(">> adding floatingIp(%s) to node(%s)",ip.getIp(),node.getId());
+  floatingIpClient.addFloatingIPToServer(ip.getIp(),node.getProviderId());
+  input.set(NodeMetadataBuilder.fromNodeMetadata(node).publicAddresses(ImmutableSet.of(ip.getIp())).build());
+  floatingIpCache.invalidate(ZoneAndId.fromSlashEncoded(node.getId()));
+  return input;
+}

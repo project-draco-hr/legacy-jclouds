@@ -1,0 +1,13 @@
+{
+  UUID id=UUID.randomUUID();
+  Image novaImageToConvert=Image.builder().id(id.toString()).name("Test Image " + id).build();
+  OperatingSystem operatingSystem=new OperatingSystem(OsFamily.UBUNTU,"My Test OS","My Test Version","x86","My Test OS",true);
+  ImageInZoneToImage converter=new ImageInZoneToImage(new MockImageToOsConverter(operatingSystem),locationIndex);
+  ImageInZone novaImageInZoneToConvert=new ImageInZone(novaImageToConvert,"az-1.region-a.geo-1");
+  org.jclouds.compute.domain.Image convertedImage=converter.apply(novaImageInZoneToConvert);
+  assertEquals(convertedImage.getId(),novaImageInZoneToConvert.slashEncode());
+  assertEquals(convertedImage.getProviderId(),novaImageToConvert.getId());
+  assertEquals(convertedImage.getLocation(),locationIndex.get().get("az-1.region-a.geo-1"));
+  assertEquals(convertedImage.getName(),novaImageToConvert.getName());
+  assertEquals(convertedImage.getOperatingSystem(),operatingSystem);
+}

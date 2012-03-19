@@ -2,6 +2,6 @@
   HttpRequest listImages=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/images")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listImagesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list.json")).build();
   NovaClient clientWhenImagesExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listImages,listImagesResponse);
-  assertEquals(clientWhenImagesExist.getConfiguredRegions(),ImmutableSet.of("North"));
-  assertEquals(clientWhenImagesExist.getImageClientForRegion("North").listImages().toString(),new ParseImageListTest().expected().toString());
+  assertEquals(clientWhenImagesExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(clientWhenImagesExist.getImageClientForZone("az-1.region-a.geo-1").listImages().toString(),new ParseImageListTest().expected().toString());
 }

@@ -2,5 +2,5 @@
   HttpRequest listFlavors=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/flavors")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listFlavorsResponse=HttpResponse.builder().statusCode(404).build();
   NovaClient clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listFlavors,listFlavorsResponse);
-  assertTrue(clientWhenNoServersExist.getFlavorClientForRegion("North").listFlavors().isEmpty());
+  assertTrue(clientWhenNoServersExist.getFlavorClientForZone("az-1.region-a.geo-1").listFlavors().isEmpty());
 }

@@ -1,3 +1,12 @@
 {
-  defaultLocationServerClient.deleteServer(id);
+  ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(id);
+  if (novaClient.getFloatingIPExtensionForZone(zoneAndId.getZone()).isPresent()) {
+    try {
+      removeFloatingIpFromNodeAndDeallocate.apply(zoneAndId);
+    }
+ catch (    RuntimeException e) {
+      logger.warn(e,"<< error removing and deallocating ip from node(%s): %s",id,e.getMessage());
+    }
+  }
+  novaClient.getServerClientForZone(zoneAndId.getZone()).deleteServer(zoneAndId.getId());
 }

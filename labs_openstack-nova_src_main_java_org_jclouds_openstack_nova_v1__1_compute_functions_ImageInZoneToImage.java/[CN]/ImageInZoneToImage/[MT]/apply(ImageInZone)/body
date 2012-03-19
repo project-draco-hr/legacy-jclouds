@@ -1,0 +1,6 @@
+{
+  Location location=locationIndex.get().get(imageInZone.getZone());
+  checkState(location != null,"location %s not in locationIndex: %s",imageInZone.getZone(),locationIndex.get());
+  org.jclouds.openstack.nova.v1_1.domain.Image image=imageInZone.getImage();
+  return new ImageBuilder().id(imageInZone.slashEncode()).providerId(image.getId()).name(image.getName()).operatingSystem(imageToOs.apply(image)).description(image.getName()).location(location).build();
+}

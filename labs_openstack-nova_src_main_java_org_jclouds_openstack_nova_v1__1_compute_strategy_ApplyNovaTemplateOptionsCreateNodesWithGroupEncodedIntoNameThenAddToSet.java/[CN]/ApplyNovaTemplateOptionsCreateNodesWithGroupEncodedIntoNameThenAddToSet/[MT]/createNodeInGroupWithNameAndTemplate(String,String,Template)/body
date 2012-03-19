@@ -1,0 +1,10 @@
+{
+  Future<AtomicReference<NodeMetadata>> future=super.createNodeInGroupWithNameAndTemplate(group,name,template);
+  NovaTemplateOptions templateOptions=NovaTemplateOptions.class.cast(template.getOptions());
+  if (templateOptions.isAutoAssignFloatingIp()) {
+    return Futures.compose(future,allocateAndAddFloatingIpToNode,executor);
+  }
+ else {
+    return future;
+  }
+}

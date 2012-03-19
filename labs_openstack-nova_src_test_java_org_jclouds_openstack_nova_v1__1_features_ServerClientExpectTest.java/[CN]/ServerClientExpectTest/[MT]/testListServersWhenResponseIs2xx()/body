@@ -2,6 +2,6 @@
   HttpRequest listServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/servers")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_list.json")).build();
   NovaClient clientWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listServers,listServersResponse);
-  assertEquals(clientWhenServersExist.getConfiguredRegions(),ImmutableSet.of("North"));
-  assertEquals(clientWhenServersExist.getServerClientForRegion("North").listServers().toString(),new ParseServerListTest().expected().toString());
+  assertEquals(clientWhenServersExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(clientWhenServersExist.getServerClientForZone("az-1.region-a.geo-1").listServers().toString(),new ParseServerListTest().expected().toString());
 }
