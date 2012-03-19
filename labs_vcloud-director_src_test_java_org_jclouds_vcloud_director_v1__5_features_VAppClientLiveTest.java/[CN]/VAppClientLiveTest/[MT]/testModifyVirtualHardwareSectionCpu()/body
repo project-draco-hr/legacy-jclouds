@@ -1,9 +1,9 @@
 {
   URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  RASD origSection=vAppClient.getVirtualHardwareSectionCpu(vmURI);
-  RASD newSection=origSection.toBuilder().build();
-  Task modifyVirtualHardwareSectionCpu=vAppClient.modifyVirtualHardwareSectionCpu(vmURI,newSection);
+  ResourceAllocationSettingData oldItem=vAppClient.getVirtualHardwareSectionCpu(vmURI);
+  ResourceAllocationSettingData newItem=oldItem.toBuilder().build();
+  Task modifyVirtualHardwareSectionCpu=vAppClient.modifyVirtualHardwareSectionCpu(vmURI,newItem);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionCpu),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionCpu"));
-  RASD modified=vAppClient.getVirtualHardwareSectionCpu(vmURI);
-  checkRASD(modified);
+  ResourceAllocationSettingData modified=vAppClient.getVirtualHardwareSectionCpu(vmURI);
+  checkResourceAllocationSettingData(modified);
 }
