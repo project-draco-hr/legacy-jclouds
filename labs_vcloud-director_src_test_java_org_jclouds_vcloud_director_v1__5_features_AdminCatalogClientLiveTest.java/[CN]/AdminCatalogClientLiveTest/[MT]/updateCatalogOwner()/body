@@ -1,14 +1,18 @@
 {
+  User newOwnerUser=UserClientLiveTest.randomTestUser("testUpdateCatalogOwner");
+  newOwnerUser=context.getApi().getUserClient().createUser(orgRef.getHref(),newOwnerUser);
+  assertNotNull(newOwnerUser,"failed to create temp user to test updateCatalogOwner");
   Owner oldOwner=owner;
-  Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().type("application/vnd.vmware.admin.user+xml").name("adk@cloudsoftcorp.com").href(URI.create("https://vcloudbeta.bluelock.com/api/admin/user/e9eb1b29-0404-4c5e-8ef7-e584acc51da9")).build()).build();
+  Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().fromEntity(newOwnerUser).build()).build();
   try {
     catalogClient.setOwner(catalog.getHref(),newOwner);
     owner=catalogClient.getOwner(catalog.getHref());
     Checks.checkOwner(owner);
-    assertTrue(equal(owner,newOwner),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
+    assertTrue(equal(owner.toBuilder().links(Collections.<Link>emptySet()).build(),newOwner.toBuilder().user(newOwner.getUser().toBuilder().id(null).build()).build()),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
   }
   finally {
     catalogClient.setOwner(catalog.getHref(),oldOwner);
     owner=catalogClient.getOwner(catalog.getHref());
+    context.getApi().getUserClient().deleteUser(newOwnerUser.getHref());
   }
 }
