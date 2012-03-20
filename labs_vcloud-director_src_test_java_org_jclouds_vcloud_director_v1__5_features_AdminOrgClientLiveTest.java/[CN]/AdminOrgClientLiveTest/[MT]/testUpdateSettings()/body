@@ -1,17 +1,28 @@
 {
+  String newFromEmailAddress="test" + random.nextInt(Integer.MAX_VALUE) + "@test.com";
+  Exception exception=null;
   try {
-    newSettings=settings.toBuilder().generalSettings(newGeneralSettings).vAppLeaseSettings(newVAppLeaseSettings).vAppTemplateLeaseSettings(newVAppTemplateLeaseSettings).ldapSettings(newLdapSettings).emailSettings(newEmailSettings).passwordPolicy(newPasswordPolicy).build();
-    settings=orgClient.updateSettings(orgRef.getHref(),newSettings);
-    assertTrue(equal(settings.getGeneralSettings(),newGeneralSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","generalSettings"));
-    assertTrue(equal(settings.getVAppLeaseSettings(),newVAppLeaseSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","vAppLeaseSettings"));
-    assertTrue(equal(settings.getVAppTemplateLeaseSettings(),newVAppTemplateLeaseSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","vAppTemplateLeaseSettings"));
-    assertTrue(equal(settings.getLdapSettings(),newLdapSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","ldapSettings"));
-    assertTrue(equal(settings.getEmailSettings(),newEmailSettings),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","emailSettings"));
-    assertTrue(equal(settings.getPasswordPolicy(),newPasswordPolicy),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","passwordPolicy"));
+    OrgSettings newSettings=OrgSettings.builder().emailSettings(emailSettings.toBuilder().fromEmailAddress(newFromEmailAddress).build()).build();
+    OrgSettings modified=orgClient.updateSettings(orgRef.getHref(),newSettings);
     Checks.checkOrgSettings(settings);
+    assertTrue(equal(modified.getEmailSettings().getFromEmailAddress(),newFromEmailAddress),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","emailSettings"));
   }
-  finally {
-    settings=settings.toBuilder().generalSettings(generalSettings).vAppLeaseSettings(vAppLeaseSettings).vAppTemplateLeaseSettings(vAppTemplateLeaseSettings).ldapSettings(ldapSettings).emailSettings(emailSettings).passwordPolicy(passwordPolicy).build();
-    settings=orgClient.updateSettings(orgRef.getHref(),settings);
+ catch (  Exception e) {
+    exception=e;
+  }
+ finally {
+    try {
+      OrgSettings restorableSettings=OrgSettings.builder().emailSettings(emailSettings).build();
+      settings=orgClient.updateSettings(orgRef.getHref(),restorableSettings);
+    }
+ catch (    Exception e) {
+      if (exception != null) {
+        logger.warn(e,"Error reseting settings; rethrowing origina test exception...");
+        throw exception;
+      }
+ else {
+        throw e;
+      }
+    }
   }
 }

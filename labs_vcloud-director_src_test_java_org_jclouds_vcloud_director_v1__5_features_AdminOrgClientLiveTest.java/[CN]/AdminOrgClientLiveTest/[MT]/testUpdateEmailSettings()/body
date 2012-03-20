@@ -9,7 +9,7 @@
   SmtpServerSettings oldSmtpServerSettings=emailSettings.getSmtpServerSettings();
   SmtpServerSettings newSmtpServerSettings=oldSmtpServerSettings.toBuilder().useAuthentication(!oldSmtpServerSettings.useAuthentication()).host("new" + oldSmtpServerSettings.getHost()).username("new" + oldSmtpServerSettings.getUsername()).password("new" + oldSmtpServerSettings.getPassword()).build();
   try {
-    newEmailSettings=emailSettings.toBuilder().isDefaultSmtpServer(!isDefaultSmtpServer).isDefaultOrgEmail(!isDefaultOrgEmail).fromEmailAddress(newFromEmailAddress).defaultSubjectPrefix(newDefaultSubjectPrefix).isAlertEmailToAllAdmins(!isAlertEmailToAllAdmins).smtpServerSettings(newSmtpServerSettings).build();
+    OrgEmailSettings newEmailSettings=emailSettings.toBuilder().isDefaultSmtpServer(!isDefaultSmtpServer).isDefaultOrgEmail(!isDefaultOrgEmail).fromEmailAddress(newFromEmailAddress).defaultSubjectPrefix(newDefaultSubjectPrefix).isAlertEmailToAllAdmins(!isAlertEmailToAllAdmins).smtpServerSettings(newSmtpServerSettings).build();
     emailSettings=orgClient.updateEmailSettings(orgRef.getHref(),newEmailSettings);
     assertTrue(equal(emailSettings.isDefaultSmtpServer(),!isDefaultSmtpServer),String.format(OBJ_FIELD_UPDATABLE,"emailSettings","isDefaultSmtpServer"));
     assertTrue(equal(emailSettings.isDefaultOrgEmail(),!isDefaultOrgEmail),String.format(OBJ_FIELD_UPDATABLE,"emailSettings","isDefaultOrgEmail"));
