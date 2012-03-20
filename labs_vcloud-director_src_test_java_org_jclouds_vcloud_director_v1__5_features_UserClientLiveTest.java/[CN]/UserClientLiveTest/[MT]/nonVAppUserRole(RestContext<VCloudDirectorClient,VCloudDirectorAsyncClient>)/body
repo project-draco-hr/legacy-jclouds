@@ -1,0 +1,9 @@
+{
+  RoleReferences roles=context.getApi().getAdminQueryClient().roleReferencesQueryAll();
+  for (  Reference role : roles.getReferences()) {
+    if (!equal(role.getName(),"vApp User")) {
+      return Reference.builder().fromReference(role).build();
+    }
+  }
+  return null;
+}
