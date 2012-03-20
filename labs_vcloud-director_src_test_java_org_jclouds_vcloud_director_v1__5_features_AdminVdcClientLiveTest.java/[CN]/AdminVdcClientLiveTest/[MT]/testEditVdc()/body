@@ -1,0 +1,32 @@
+{
+  String origName=vdcClient.getVdc(adminVdcUri).getName();
+  String newName="a" + random.nextInt(Integer.MAX_VALUE);
+  Exception exception=null;
+  AdminVdc vdc=AdminVdc.builder().name(newName).build();
+  try {
+    Task task=vdcClient.editVdc(adminVdcUri,vdc);
+    assertTaskSucceeds(task);
+    AdminVdc modified=vdcClient.getVdc(adminVdcUri);
+    assertEquals(modified.getName(),newName);
+    Checks.checkAdminVdc(vdc);
+  }
+ catch (  Exception e) {
+    exception=e;
+  }
+ finally {
+    try {
+      AdminVdc restorableVdc=AdminVdc.builder().name(origName).build();
+      Task task=vdcClient.editVdc(adminVdcUri,restorableVdc);
+      assertTaskSucceeds(task);
+    }
+ catch (    Exception e) {
+      if (exception != null) {
+        logger.warn(e,"Error resetting adminVdc.name; rethrowing original test exception...");
+        throw exception;
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+}
