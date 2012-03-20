@@ -1,0 +1,9 @@
+{
+  ContainerMetadata to=new ContainerMetadata();
+  to.setName(request.getArgs().get(0).toString());
+  to.setReadACL(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_READ));
+  to.setBytes(new Long(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_BYTES_USED)));
+  to.setCount(new Long(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_OBJECT_COUNT)));
+  addUserMetadataTo(from,to);
+  return to;
+}
