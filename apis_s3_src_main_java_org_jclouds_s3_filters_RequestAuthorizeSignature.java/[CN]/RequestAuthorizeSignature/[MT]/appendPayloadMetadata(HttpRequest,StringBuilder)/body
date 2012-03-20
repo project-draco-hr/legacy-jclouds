@@ -1,5 +1,5 @@
 {
-  buffer.append(request.getPayload() == null ? utils.valueOrEmpty(request.getFirstHeaderOrNull("Content-MD5")) : utils.valueOrEmpty(request.getPayload() == null ? null : request.getPayload().getContentMetadata().getContentMD5())).append("\n");
-  buffer.append(utils.valueOrEmpty(request.getPayload() == null ? request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE) : request.getPayload().getContentMetadata().getContentType())).append("\n");
-  for (  String header : FIRST_HEADERS_TO_SIGN)   buffer.append(valueOrEmpty(request.getHeaders().get(header))).append("\n");
+  buffer.append(request.getPayload() == null ? Strings.nullToEmpty(request.getFirstHeaderOrNull("Content-MD5")) : HttpUtils.nullToEmpty(request.getPayload() == null ? null : request.getPayload().getContentMetadata().getContentMD5())).append("\n");
+  buffer.append(Strings.nullToEmpty(request.getPayload() == null ? request.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE) : request.getPayload().getContentMetadata().getContentType())).append("\n");
+  for (  String header : FIRST_HEADERS_TO_SIGN)   buffer.append(HttpUtils.nullToEmpty(request.getHeaders().get(header))).append("\n");
 }
