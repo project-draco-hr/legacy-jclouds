@@ -1,6 +1,0 @@
-{
-  HttpRequest createSecurityGroupRule=HttpRequest.builder().method("POST").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-security-group-rules")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{\"security_group_rule\":{\"ip_protocol\":\"tcp\",\"from_port\":\"80\",\"to_port\":\"8080\",\"cidr\":\"0.0.0.0/0\",\"group_id\":\"\",\"parent_group_id\":\"161\"}}","application/json")).build();
-  HttpResponse createSecurityGroupRuleResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygrouprule_created.json")).build();
-  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,createSecurityGroupRule,createSecurityGroupRuleResponse);
-  assertEquals(clientWhenSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get().createSecurityGroupRule("tcp","80","8080","0.0.0.0/0","","161").toString(),createSecurityGroupRuleExpected().toString());
-}
