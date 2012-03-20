@@ -1,27 +1,12 @@
 {
-  if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  SecurityGroup other=(SecurityGroup)obj;
-  if (description == null) {
-    if (other.description != null)     return false;
+  if (this == object) {
+    return true;
   }
- else   if (!description.equals(other.description))   return false;
-  if (id == null) {
-    if (other.id != null)     return false;
+  if (object instanceof SecurityGroup) {
+    final SecurityGroup other=SecurityGroup.class.cast(object);
+    return equal(tenantId,other.tenantId) && equal(id,other.id) && equal(name,other.name);
   }
- else   if (!id.equals(other.id))   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
+ else {
+    return false;
   }
- else   if (!name.equals(other.name))   return false;
-  if (rules == null) {
-    if (other.rules != null)     return false;
-  }
- else   if (!rules.equals(other.rules))   return false;
-  if (tenantId == null) {
-    if (other.tenantId != null)     return false;
-  }
- else   if (!tenantId.equals(other.tenantId))   return false;
-  return true;
 }

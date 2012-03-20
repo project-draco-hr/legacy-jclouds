@@ -1,6 +1,8 @@
 {
+  CreateServerOptions options=new CreateServerOptions();
+  options.securityGroupNames(template.getOptions().as(NovaTemplateOptions.class).getSecurityGroupNames());
   String zoneId=template.getLocation().getId();
-  Server server=novaClient.getServerClientForZone(zoneId).createServer(name,template.getImage().getProviderId(),template.getHardware().getProviderId());
+  Server server=novaClient.getServerClientForZone(zoneId).createServer(name,template.getImage().getProviderId(),template.getHardware().getProviderId(),options);
   ServerInZone serverInZone=new ServerInZone(server,zoneId);
   return new NodeAndInitialCredentials<ServerInZone>(serverInZone,serverInZone.slashEncode(),LoginCredentials.builder().password(server.getAdminPass()).build());
 }

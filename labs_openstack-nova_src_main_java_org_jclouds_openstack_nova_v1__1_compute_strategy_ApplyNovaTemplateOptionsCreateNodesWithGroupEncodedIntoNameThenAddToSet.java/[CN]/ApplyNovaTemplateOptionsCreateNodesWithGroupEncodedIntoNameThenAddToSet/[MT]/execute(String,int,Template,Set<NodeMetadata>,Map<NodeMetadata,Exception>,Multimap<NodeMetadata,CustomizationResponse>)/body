@@ -1,8 +1,11 @@
 {
   NovaTemplateOptions templateOptions=NovaTemplateOptions.class.cast(template.getOptions());
   String zone=template.getLocation().getId();
-  if (templateOptions.isAutoAssignFloatingIp()) {
-    checkArgument(novaClient.getFloatingIPExtensionForZone(zone).isPresent(),"Floating IP settings are required by configuration, but the extension is not available!");
+  if (templateOptions.shouldAutoAssignFloatingIp()) {
+    checkArgument(novaClient.getFloatingIPExtensionForZone(zone).isPresent(),"Floating IPs are required by options, but the extension is not available! options: %s",templateOptions);
+  }
+  if (templateOptions.getSecurityGroupNames().size() > 0) {
+    checkArgument(novaClient.getSecurityGroupExtensionForZone(zone).isPresent(),"Security groups are required by options, but the extension is not available! options: %s",templateOptions);
   }
   return super.execute(group,count,template,goodNodes,badNodes,customizationResponses);
 }
