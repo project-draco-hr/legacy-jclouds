@@ -19,8 +19,10 @@
   assertTrue(equal(uploadLink.getRel(),Link.Rel.UPLOAD_DEFAULT),String.format(OBJ_FIELD_REQ,MEDIA,"uploadFile.links.first"));
   context.getApi().getUploadClient().upload(uploadLink.getHref(),Payloads.newByteArrayPayload(iso));
   media=mediaClient.getMedia(media.getHref());
-  Task task=Iterables.getOnlyElement(media.getTasks());
-  assertEquals(task.getStatus(),"running");
+  if (media.getTasks().size() == 1) {
+    Task task=Iterables.getOnlyElement(media.getTasks());
+    assertEquals(task.getStatus(),"running");
+  }
   File file=Iterables.getOnlyElement(media.getFiles());
   assertEquals(file.getSize(),new Long(iso.length));
   assertEquals(file.getBytesTransferred(),new Long(iso.length));
