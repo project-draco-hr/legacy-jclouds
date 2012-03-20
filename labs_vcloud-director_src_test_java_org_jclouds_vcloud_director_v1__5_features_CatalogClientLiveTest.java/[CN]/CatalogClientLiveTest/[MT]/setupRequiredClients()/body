@@ -2,7 +2,7 @@
   if (adminCatalog != null)   return;
   catalogClient=context.getApi().getCatalogClient();
   Reference orgRef=Iterables.getFirst(context.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
-  AdminCatalog newCatalog=AdminCatalog.builder().name("Test Catalog " + random.nextInt()).description("created by CatalogClientLiveTest").build();
+  AdminCatalog newCatalog=AdminCatalog.builder().name(name("Test Catalog ")).description("created by CatalogClientLiveTest").build();
   AdminCatalogClient adminCatalogClient=context.getApi().getAdminCatalogClient();
   adminCatalog=adminCatalogClient.createCatalog(orgRef.getHref(),newCatalog);
   catalogRef=find(adminCatalog.getLinks(),and(relEquals("alternate"),typeEquals(VCloudDirectorMediaType.CATALOG)));

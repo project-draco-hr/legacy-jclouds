@@ -1,8 +1,8 @@
 {
   Metadata oldMetadata=vAppClient.getMetadataClient().getMetadata(vApp.getHref());
   Map<String,String> oldMetadataMap=Checks.metadataToMap(oldMetadata);
-  String key=Integer.toString(random.nextInt(Integer.MAX_VALUE));
-  String value=Integer.toString(random.nextInt(Integer.MAX_VALUE));
+  String key=name("key-");
+  String value=name("value-");
   Metadata addedMetadata=Metadata.builder().entry(MetadataEntry.builder().key(key).value(value).build()).build();
   Task task=vAppClient.getMetadataClient().mergeMetadata(vApp.getHref(),addedMetadata);
   retryTaskSuccess.apply(task);

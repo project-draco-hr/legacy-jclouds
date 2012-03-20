@@ -1,9 +1,8 @@
 {
   Metadata oldMetadata=vAppTemplateClient.getMetadataClient().getMetadata(vAppTemplateURI);
   Map<String,String> oldMetadataMap=metadataToMap(oldMetadata);
-  String uid="" + random.nextInt();
-  String key="mykey-" + uid;
-  String val="myval-" + uid;
+  String key=name("key-");
+  String val=name("value-");
   MetadataEntry metadataEntry=MetadataEntry.builder().entry(key,val).build();
   Metadata metadata=Metadata.builder().fromMetadata(oldMetadata).entry(metadataEntry).build();
   final Task task=vAppTemplateClient.getMetadataClient().mergeMetadata(vAppTemplateURI,metadata);
