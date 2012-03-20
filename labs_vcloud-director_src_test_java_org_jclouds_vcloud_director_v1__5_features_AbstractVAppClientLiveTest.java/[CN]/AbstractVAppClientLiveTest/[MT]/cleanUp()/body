@@ -1,5 +1,6 @@
 {
-  Iterable<Reference> vApps=Iterables.filter(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),Predicates.or(ReferenceTypePredicates.<Reference>nameStartsWith("test-vapp-"),ReferenceTypePredicates.<Reference>nameStartsWith("new-name-"))));
+  Iterable<Reference> vApps=Iterables.filter(vdc.getResourceEntities().getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),ReferenceTypePredicates.<Reference>nameIn(vAppNames)));
+  vAppNames.clear();
   if (vApps != null && !Iterables.isEmpty(vApps)) {
     for (    Reference ref : vApps) {
       cleanUpVApp(ref.getHref());
