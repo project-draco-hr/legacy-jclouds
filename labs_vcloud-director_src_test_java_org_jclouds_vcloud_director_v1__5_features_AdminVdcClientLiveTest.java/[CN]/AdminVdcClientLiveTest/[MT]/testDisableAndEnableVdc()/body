@@ -1,0 +1,23 @@
+{
+  Exception exception=null;
+  try {
+    vdcClient.disableVdc(adminVdcUri);
+  }
+ catch (  Exception e) {
+    exception=e;
+  }
+ finally {
+    try {
+      vdcClient.enableVdc(adminVdcUri);
+    }
+ catch (    Exception e) {
+      if (exception != null) {
+        logger.warn(e,"Error resetting adminVdc.name; rethrowing original test exception...");
+        throw exception;
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+}
