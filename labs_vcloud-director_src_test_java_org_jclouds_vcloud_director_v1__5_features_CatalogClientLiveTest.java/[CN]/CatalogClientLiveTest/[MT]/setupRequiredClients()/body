@@ -1,4 +1,13 @@
 {
+  if (adminCatalog != null)   return;
   catalogClient=context.getApi().getCatalogClient();
-  queryClient=context.getApi().getQueryClient();
+  Reference orgRef=Iterables.getFirst(context.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
+  AdminCatalog newCatalog=AdminCatalog.builder().name("Test Catalog " + random.nextInt()).description("created by CatalogClientLiveTest").build();
+  AdminCatalogClient adminCatalogClient=context.getApi().getAdminCatalogClient();
+  adminCatalog=adminCatalogClient.createCatalog(orgRef.getHref(),newCatalog);
+  catalogRef=find(adminCatalog.getLinks(),and(relEquals("alternate"),typeEquals(VCloudDirectorMediaType.CATALOG)));
+  Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).build();
+  Task mergeCatalogMetadata=adminCatalogClient.getMetadataClient().mergeMetadata(adminCatalog.getHref(),newMetadata);
+  checkTask(mergeCatalogMetadata);
+  assertTrue(retryTaskSuccess.apply(mergeCatalogMetadata),String.format(TASK_COMPLETE_TIMELY,"setupRequiredClients"));
 }

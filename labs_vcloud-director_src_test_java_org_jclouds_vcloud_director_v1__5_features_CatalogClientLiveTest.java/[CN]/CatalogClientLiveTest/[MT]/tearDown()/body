@@ -1,0 +1,15 @@
+{
+  if (catalogItem != null)   catalogClient.deleteCatalogItem(catalogItem.getHref());
+  if (media != null)   context.getApi().getMediaClient().deleteMedia(media.getHref());
+  if (adminCatalog != null) {
+    context.getApi().getAdminCatalogClient().deleteCatalog(adminCatalog.getHref());
+    try {
+      catalogClient.getCatalog(catalogRef.getHref());
+      fail("The Catalog should have been deleted");
+    }
+ catch (    VCloudDirectorException vcde) {
+      checkError(vcde.getError());
+      assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The majorErrorCode should be 403 since the item has been deleted");
+    }
+  }
+}
