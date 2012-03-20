@@ -8,8 +8,8 @@
   vApp=vappClient.getVApp(vApp.getHref());
   List<Vm> vms=vApp.getChildren().getVms();
   Set<URI> vmHrefs=toHrefs(vms);
-  QueryResultRecords queryResult=queryClient.vmsQueryAll();
+  QueryResultRecords<?> queryResult=queryClient.vmsQueryAll();
   Set<URI> hrefs=toHrefs(queryResult);
-  assertRecordTypes(queryResult,Arrays.asList(VCloudDirectorMediaType.VM,null));
+  assertRecordTypes(queryResult,Arrays.asList(VCloudDirectorMediaType.VM,null),QueryResultVMRecord.class);
   assertTrue(hrefs.containsAll(vmHrefs),"VMs query result should include vms " + vmHrefs + "; but only has "+ hrefs);
 }
