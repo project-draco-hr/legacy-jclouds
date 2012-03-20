@@ -1,0 +1,16 @@
+{
+  vdc=vdcClient.getVdc(vdcURI);
+  assertNotNull(vdc,String.format(ENTITY_NON_NULL,VDC));
+  vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
+  assertNotNull(vAppTemplate,String.format(ENTITY_NON_NULL,VAPP_TEMPLATE));
+  cleanUp();
+  VApp vAppInstantiated=instantiateVApp();
+  assertNotNull(vAppInstantiated,String.format(ENTITY_NON_NULL,VAPP));
+  vAppURI=vAppInstantiated.getHref();
+  Task instantiateTask=Iterables.getOnlyElement(vAppInstantiated.getTasks());
+  assertTrue(retryTaskSuccessLong.apply(instantiateTask),String.format(TASK_COMPLETE_TIMELY,"instantiateTask"));
+  vApp=vAppClient.getVApp(vAppURI);
+  List<Vm> vms=vApp.getChildren().getVms();
+  vm=Iterables.getOnlyElement(vms);
+  assertFalse(vms.isEmpty(),"The VApp must have at least one Vm");
+}

@@ -1,10 +1,30 @@
 {
   URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
   VirtualHardwareSection oldSection=vAppClient.getVirtualHardwareSection(vmURI);
-  VirtualHardwareSection newSection=oldSection.toBuilder().build();
+  Set<ResourceAllocationSettingData> oldItems=oldSection.getItems();
+  ResourceAllocationSettingData oldMemory=Iterables.find(oldItems,new Predicate<ResourceAllocationSettingData>(){
+    @Override public boolean apply(    ResourceAllocationSettingData rasd){
+      return rasd.getResourceType() == ResourceAllocationSettingData.ResourceType.MEMORY;
+    }
+  }
+);
+  ResourceAllocationSettingData newMemory=oldMemory.toBuilder().elementName("1024 MB of memory").virtualQuantity(BigInteger.valueOf(1024L)).build();
+  Set<ResourceAllocationSettingData> newItems=Sets.newLinkedHashSet(oldItems);
+  newItems.remove(oldMemory);
+  newItems.add(newMemory);
+  VirtualHardwareSection newSection=oldSection.toBuilder().items(newItems).build();
   Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vmURI,newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
-  VirtualHardwareSection modified=vAppClient.getVirtualHardwareSection(vmURI);
-  checkVirtualHardwareSection(modified);
-  assertEquals(modified,newSection);
+  VirtualHardwareSection modifiedSection=vAppClient.getVirtualHardwareSection(vmURI);
+  checkVirtualHardwareSection(modifiedSection);
+  Set<ResourceAllocationSettingData> modifiedItems=modifiedSection.getItems();
+  ResourceAllocationSettingData modifiedMemory=Iterables.find(modifiedItems,new Predicate<ResourceAllocationSettingData>(){
+    @Override public boolean apply(    ResourceAllocationSettingData rasd){
+      return rasd.getResourceType() == ResourceAllocationSettingData.ResourceType.MEMORY;
+    }
+  }
+);
+  assertEquals(modifiedMemory.getVirtualQuantity(),BigInteger.valueOf(1024L));
+  assertEquals(modifiedMemory,newMemory);
+  assertEquals(modifiedSection,newSection);
 }

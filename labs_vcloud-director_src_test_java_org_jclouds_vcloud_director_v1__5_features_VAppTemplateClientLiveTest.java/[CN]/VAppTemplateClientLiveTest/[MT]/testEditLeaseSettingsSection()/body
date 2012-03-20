@@ -2,9 +2,9 @@
   int storageLeaseInSeconds=random.nextInt(10000) + 1;
   int deploymentLeaseInSeconds=random.nextInt(10000) + 1;
   LeaseSettingsSection leaseSettingSection=LeaseSettingsSection.builder().info("my info").storageLeaseInSeconds(storageLeaseInSeconds).deploymentLeaseInSeconds(deploymentLeaseInSeconds).build();
-  final Task task=vappTemplateClient.editVappTemplateLeaseSettingsSection(vAppTemplateURI,leaseSettingSection);
+  final Task task=vAppTemplateClient.editVappTemplateLeaseSettingsSection(vAppTemplateURI,leaseSettingSection);
   retryTaskSuccess.apply(task);
-  LeaseSettingsSection newLeaseSettingsSection=vappTemplateClient.getVappTemplateLeaseSettingsSection(vAppTemplateURI);
+  LeaseSettingsSection newLeaseSettingsSection=vAppTemplateClient.getVappTemplateLeaseSettingsSection(vAppTemplateURI);
   assertEquals(newLeaseSettingsSection.getStorageLeaseInSeconds(),(Integer)storageLeaseInSeconds);
   assertEquals(newLeaseSettingsSection.getDeploymentLeaseInSeconds(),(Integer)deploymentLeaseInSeconds);
 }
