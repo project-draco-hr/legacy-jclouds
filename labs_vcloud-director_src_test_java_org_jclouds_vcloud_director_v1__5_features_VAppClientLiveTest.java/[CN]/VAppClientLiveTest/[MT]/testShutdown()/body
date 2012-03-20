@@ -1,7 +1,9 @@
 {
-  Task shutdown=vAppClient.shutdown(vApp.getHref());
-  assertTrue(retryTaskSuccess.apply(shutdown),String.format(TASK_COMPLETE_TIMELY,"shutdown"));
-  vApp=vAppClient.getVApp(vApp.getHref());
-  Status poweredOnStatus=Status.POWERED_ON;
-  assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  powerOn();
+  Task shutdown=vAppClient.shutdown(vAppURI);
+  assertTaskSucceedsLong(shutdown);
+  vApp=vAppClient.getVApp(vAppURI);
+  Status poweredOffStatus=Status.POWERED_OFF;
+  assertEquals(vApp.getStatus(),poweredOffStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOffStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  powerOn();
 }
