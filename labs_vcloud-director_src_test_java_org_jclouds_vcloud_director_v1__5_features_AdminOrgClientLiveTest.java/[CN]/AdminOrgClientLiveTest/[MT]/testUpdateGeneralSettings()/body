@@ -1,11 +1,13 @@
 {
+  boolean canPublishCatalogs=generalSettings.canPublishCatalogs();
   Integer deployedVMQuota=generalSettings.getDeployedVMQuota();
   Integer storedVmQuota=generalSettings.getStoredVmQuota();
   boolean useServerBootSequence=generalSettings.useServerBootSequence();
   Integer delayAfterPowerOnSeconds=generalSettings.getDelayAfterPowerOnSeconds();
   try {
-    newGeneralSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota + 1).storedVmQuota(storedVmQuota + 1).useServerBootSequence(!useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds + 1).build();
+    newGeneralSettings=generalSettings.toBuilder().canPublishCatalogs(!canPublishCatalogs).deployedVMQuota(deployedVMQuota + 1).storedVmQuota(storedVmQuota + 1).useServerBootSequence(!useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds + 1).build();
     generalSettings=orgClient.updateGeneralSettings(orgRef.getHref(),newGeneralSettings);
+    assertTrue(equal(generalSettings.canPublishCatalogs(),!canPublishCatalogs),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","canPublishCatalogs"));
     assertTrue(equal(generalSettings.getDeployedVMQuota(),deployedVMQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","deployedVMQuota"));
     assertTrue(equal(generalSettings.getStoredVmQuota(),storedVmQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","storedVmQuota"));
     assertTrue(equal(generalSettings.useServerBootSequence(),!useServerBootSequence),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","useServerBootSequence"));
@@ -13,7 +15,7 @@
     Checks.checkGeneralSettings(generalSettings);
   }
   finally {
-    generalSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota).storedVmQuota(storedVmQuota).useServerBootSequence(useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds).build();
+    generalSettings=generalSettings.toBuilder().canPublishCatalogs(canPublishCatalogs).deployedVMQuota(deployedVMQuota).storedVmQuota(storedVmQuota).useServerBootSequence(useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds).build();
     generalSettings=orgClient.updateGeneralSettings(orgRef.getHref(),generalSettings);
   }
 }
