@@ -17,8 +17,7 @@
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
   VirtualHardwareSection modifiedSection=vAppClient.getVirtualHardwareSection(vmURI);
   checkVirtualHardwareSection(modifiedSection);
-  Set<ResourceAllocationSettingData> modifiedItems=modifiedSection.getItems();
-  ResourceAllocationSettingData modifiedMemory=Iterables.find(modifiedItems,new Predicate<ResourceAllocationSettingData>(){
+  ResourceAllocationSettingData modifiedMemory=Iterables.find(modifiedSection.getItems(),new Predicate<ResourceAllocationSettingData>(){
     @Override public boolean apply(    ResourceAllocationSettingData rasd){
       return rasd.getResourceType() == ResourceAllocationSettingData.ResourceType.MEMORY;
     }
