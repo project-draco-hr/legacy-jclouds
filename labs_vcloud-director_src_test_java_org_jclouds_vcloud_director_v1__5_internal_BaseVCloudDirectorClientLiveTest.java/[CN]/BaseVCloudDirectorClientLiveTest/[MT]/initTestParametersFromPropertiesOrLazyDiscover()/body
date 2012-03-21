@@ -1,5 +1,6 @@
 {
   catalogName=Strings.emptyToNull(System.getProperty("test." + provider + ".catalog-name"));
+  catalogId=Strings.emptyToNull(System.getProperty("test." + provider + ".catalog-id"));
   networkName=Strings.emptyToNull(System.getProperty("test." + provider + ".network-name"));
   String vAppTemplateId=Strings.emptyToNull(System.getProperty("test." + provider + ".vapptemplate-id"));
   if (vAppTemplateId != null)   vAppTemplateURI=URI.create(endpoint + "/vAppTemplate/" + vAppTemplateId);
@@ -15,6 +16,11 @@
     Org thisOrg=context.getApi().getOrgClient().getOrg(Iterables.find(context.getApi().getOrgClient().getOrgList().getOrgs(),ReferenceTypePredicates.<Reference>nameEquals(session.getOrg())).getHref());
     if (vdcURI == null)     vdcURI=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.VDC)).getHref();
     if (networkURI == null)     networkURI=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.ORG_NETWORK)).getHref();
-    if (catalogName == null)     catalogName=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.CATALOG)).getName();
+    if (Strings.isNullOrEmpty(networkName))     networkName=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.ORG_NETWORK)).getName();
+    if (Strings.isNullOrEmpty(catalogName))     catalogName=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.CATALOG)).getName();
+    if (Strings.isNullOrEmpty(catalogId)) {
+      String uri=Iterables.find(thisOrg.getLinks(),ReferenceTypePredicates.<Link>typeEquals(VCloudDirectorMediaType.CATALOG)).getHref().toASCIIString();
+      catalogId=Iterables.getLast(Splitter.on('/').split(uri));
+    }
   }
 }
