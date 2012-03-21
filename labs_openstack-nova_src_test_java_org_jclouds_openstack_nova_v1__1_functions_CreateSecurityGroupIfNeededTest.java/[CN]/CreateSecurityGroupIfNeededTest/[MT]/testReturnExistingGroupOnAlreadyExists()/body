@@ -1,0 +1,13 @@
+{
+  Builder<HttpRequest,HttpResponse> builder=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  builder.put(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess);
+  builder.put(extensionsOfNovaRequest,extensionsOfNovaResponse);
+  HttpResponse createSecurityGroupResponse=HttpResponse.builder().statusCode(400).payload(payloadFromStringWithContentType("{\"badRequest\": {\"message\": \"Security group test already exists\", \"code\": 400}}","application/json; charset=UTF-8")).build();
+  builder.put(createSecurityGroup,createSecurityGroupResponse);
+  HttpRequest listSecurityGroups=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-security-groups")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpResponse listSecurityGroupsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_list_details_computeservice_typical.json")).build();
+  builder.put(listSecurityGroups,listSecurityGroupsResponse);
+  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(builder.build());
+  CreateSecurityGroupIfNeeded fn=new CreateSecurityGroupIfNeeded(clientWhenSecurityGroupsExist);
+  assertEquals(fn.apply(new ZoneSecurityGroupNameAndPorts("az-1.region-a.geo-1","jclouds#mygroup",ImmutableSet.of(22,8080))).toString(),new SecurityGroupInZone(new ParseComputeServiceTypicalSecurityGroupTest().expected(),"az-1.region-a.geo-1").toString());
+}

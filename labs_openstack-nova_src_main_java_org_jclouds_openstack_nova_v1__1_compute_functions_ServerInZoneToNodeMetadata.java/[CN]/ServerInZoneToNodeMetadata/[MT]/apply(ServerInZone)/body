@@ -14,7 +14,7 @@
   builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
   builder.hardware(findHardwareForServerOrNull(serverInZone));
   builder.state(from.getStatus().getNodeState());
-  builder.publicAddresses(getPublicAddresses(serverInZone));
-  builder.privateAddresses(Iterables.transform(from.getPrivateAddresses(),AddressToStringTransformationFunction.INSTANCE));
+  builder.publicAddresses(filter(getPublicAddresses(serverInZone),isInet4Address));
+  builder.privateAddresses(filter(transform(from.getPrivateAddresses(),AddressToStringTransformationFunction.INSTANCE),isInet4Address));
   return builder.build();
 }

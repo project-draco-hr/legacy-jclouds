@@ -1,0 +1,8 @@
+{
+  Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone=Predicates.alwaysFalse();
+  SecurityGroupInZone securityGroupInZone=createMock(SecurityGroupInZone.class);
+  ZoneSecurityGroupNameAndPorts input=new ZoneSecurityGroupNameAndPorts("zone","groupName",ImmutableSet.<Integer>of(22,8080));
+  Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone> groupCreator=Functions.forMap(ImmutableMap.<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone>of(input,securityGroupInZone));
+  FindSecurityGroupOrCreate parser=new FindSecurityGroupOrCreate(returnSecurityGroupExistsInZone,groupCreator);
+  assertEquals(parser.load(input),securityGroupInZone);
+}

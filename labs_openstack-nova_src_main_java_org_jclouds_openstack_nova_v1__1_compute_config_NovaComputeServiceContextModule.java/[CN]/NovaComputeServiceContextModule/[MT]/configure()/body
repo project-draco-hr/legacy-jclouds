@@ -3,9 +3,13 @@
   bind(new TypeLiteral<ComputeServiceAdapter<ServerInZone,FlavorInZone,ImageInZone,Location>>(){
   }
 ).to(NovaComputeServiceAdapter.class);
+  bind(ComputeService.class).to(NovaComputeService.class);
   bind(new TypeLiteral<Function<ServerInZone,NodeMetadata>>(){
   }
 ).to(ServerInZoneToNodeMetadata.class);
+  bind(new TypeLiteral<Function<Set<? extends NodeMetadata>,Multimap<String,String>>>(){
+  }
+).to(OrphanedGroupsByZoneId.class);
   bind(new TypeLiteral<Function<ImageInZone,Image>>(){
   }
 ).to(ImageInZoneToImage.class);
@@ -24,9 +28,9 @@
 ).annotatedWith(Names.named("FLOATINGIP")).to(LoadFloatingIpsForInstance.class);
   bind(new TypeLiteral<Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone>>(){
   }
-).to(CreateSecurityGroupInZone.class);
-  bind(new TypeLiteral<CacheLoader<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone>>(){
+).to(CreateSecurityGroupIfNeeded.class);
+  bind(new TypeLiteral<CacheLoader<ZoneAndName,SecurityGroupInZone>>(){
   }
-).to(CreateOrUpdateSecurityGroupAsNeeded.class);
+).to(FindSecurityGroupOrCreate.class);
   bind(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class).to(ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
 }

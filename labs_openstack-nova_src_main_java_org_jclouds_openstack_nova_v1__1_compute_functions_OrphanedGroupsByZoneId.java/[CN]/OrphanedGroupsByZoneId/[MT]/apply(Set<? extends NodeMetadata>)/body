@@ -1,0 +1,12 @@
+{
+  Iterable<? extends NodeMetadata> nodesWithGroup=filter(deadNodes,NodePredicates.hasGroup());
+  Set<ZoneAndName> zoneAndGroupNames=ImmutableSet.copyOf(filter(transform(nodesWithGroup,new Function<NodeMetadata,ZoneAndName>(){
+    @Override public ZoneAndName apply(    NodeMetadata input){
+      String zoneId=input.getLocation().getScope() == LocationScope.HOST ? input.getLocation().getParent().getId() : input.getLocation().getId();
+      return ZoneAndName.fromZoneAndName(zoneId,input.getGroup());
+    }
+  }
+),allNodesInGroupTerminated));
+  Multimap<String,String> zoneToZoneAndGroupNames=Multimaps.transformValues(Multimaps.index(zoneAndGroupNames,ZoneAndName.ZONE_FUNCTION),ZoneAndName.NAME_FUNCTION);
+  return zoneToZoneAndGroupNames;
+}

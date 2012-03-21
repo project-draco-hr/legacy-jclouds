@@ -1,7 +1,7 @@
 {
   Builder<ImageInZone> builder=ImmutableSet.<ImageInZone>builder();
   for (  final String zoneId : zoneIds.get()) {
-    builder.addAll(Iterables.transform(novaClient.getImageClientForZone(zoneId).listImagesInDetail(),new Function<Image,ImageInZone>(){
+    builder.addAll(transform(filter(novaClient.getImageClientForZone(zoneId).listImagesInDetail(),ImagePredicates.statusEquals(Image.Status.ACTIVE)),new Function<Image,ImageInZone>(){
       @Override public ImageInZone apply(      Image arg0){
         return new ImageInZone(arg0,zoneId);
       }
