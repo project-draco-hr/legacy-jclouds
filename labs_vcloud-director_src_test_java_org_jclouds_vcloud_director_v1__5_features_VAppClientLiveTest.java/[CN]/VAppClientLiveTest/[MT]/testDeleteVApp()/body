@@ -1,15 +1,12 @@
 {
   VApp temp=instantiateVApp();
-  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().notPowerOn().build();
-  Task deployVApp=vAppClient.deploy(temp.getHref(),params);
-  assertTrue(retryTaskSuccessLong.apply(deployVApp),String.format(TASK_COMPLETE_TIMELY,"deployVApp"));
   Task deleteVApp=vAppClient.deleteVApp(temp.getHref());
   assertTrue(retryTaskSuccess.apply(deleteVApp),String.format(TASK_COMPLETE_TIMELY,"deleteVApp"));
   try {
     vAppClient.getVApp(temp.getHref());
-    fail("The VApp should have been deleted");
+    fail("The VApp " + temp + " should have been deleted");
   }
  catch (  VCloudDirectorException vcde) {
-    assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The error code should have been 'Forbidden' (403)");
+    assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The error code for deleted vApp should have been 'Forbidden' (403)");
   }
 }

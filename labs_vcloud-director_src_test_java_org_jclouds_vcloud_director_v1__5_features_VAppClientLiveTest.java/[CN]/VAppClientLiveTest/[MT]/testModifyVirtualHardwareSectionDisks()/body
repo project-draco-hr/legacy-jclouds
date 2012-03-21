@@ -1,9 +1,8 @@
 {
-  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  RasdItemsList oldSection=vAppClient.getVirtualHardwareSectionDisks(vmURI);
+  RasdItemsList oldSection=vAppClient.getVirtualHardwareSectionDisks(vm.getHref());
   RasdItemsList newSection=oldSection.toBuilder().build();
-  Task modifyVirtualHardwareSectionDisks=vAppClient.modifyVirtualHardwareSectionDisks(vmURI,newSection);
+  Task modifyVirtualHardwareSectionDisks=vAppClient.modifyVirtualHardwareSectionDisks(vm.getHref(),newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionDisks),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionDisks"));
-  RasdItemsList modified=vAppClient.getVirtualHardwareSectionDisks(vmURI);
+  RasdItemsList modified=vAppClient.getVirtualHardwareSectionDisks(vm.getHref());
   checkRasdItemsList(modified);
 }

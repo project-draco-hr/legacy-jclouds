@@ -1,0 +1,11 @@
+{
+  VApp testVApp=vAppClient.getVApp(testVAppURI);
+  Vm vm=Iterables.getOnlyElement(testVApp.getChildren().getVms());
+  Status status=Status.fromValue(vm.getStatus());
+  if (status != Status.POWERED_OFF) {
+    Task powerOff=vAppClient.powerOff(vm.getHref());
+    assertTaskSucceedsLong(powerOff);
+  }
+  assertVAppStatus(testVAppURI,Status.POWERED_OFF);
+  return testVApp;
+}

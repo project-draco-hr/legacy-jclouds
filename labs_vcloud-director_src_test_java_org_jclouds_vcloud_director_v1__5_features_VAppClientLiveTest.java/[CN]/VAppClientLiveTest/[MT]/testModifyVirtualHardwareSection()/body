@@ -1,21 +1,21 @@
 {
-  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  VirtualHardwareSection oldSection=vAppClient.getVirtualHardwareSection(vmURI);
+  vApp=powerOff(vApp);
+  VirtualHardwareSection oldSection=vAppClient.getVirtualHardwareSection(vm.getHref());
   Set<ResourceAllocationSettingData> oldItems=oldSection.getItems();
+  Set<ResourceAllocationSettingData> newItems=Sets.newLinkedHashSet(oldItems);
   ResourceAllocationSettingData oldMemory=Iterables.find(oldItems,new Predicate<ResourceAllocationSettingData>(){
     @Override public boolean apply(    ResourceAllocationSettingData rasd){
       return rasd.getResourceType() == ResourceAllocationSettingData.ResourceType.MEMORY;
     }
   }
 );
-  ResourceAllocationSettingData newMemory=oldMemory.toBuilder().elementName("1024 MB of memory").virtualQuantity(BigInteger.valueOf(1024L)).build();
-  Set<ResourceAllocationSettingData> newItems=Sets.newLinkedHashSet(oldItems);
+  ResourceAllocationSettingData newMemory=oldMemory.toBuilder().elementName("1024 MB of memory").virtualQuantity(new BigInteger("1024")).build();
   newItems.remove(oldMemory);
   newItems.add(newMemory);
   VirtualHardwareSection newSection=oldSection.toBuilder().items(newItems).build();
-  Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vmURI,newSection);
+  Task modifyVirtualHardwareSection=vAppClient.modifyVirtualHardwareSection(vm.getHref(),newSection);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSection"));
-  VirtualHardwareSection modifiedSection=vAppClient.getVirtualHardwareSection(vmURI);
+  VirtualHardwareSection modifiedSection=vAppClient.getVirtualHardwareSection(vm.getHref());
   checkVirtualHardwareSection(modifiedSection);
   ResourceAllocationSettingData modifiedMemory=Iterables.find(modifiedSection.getItems(),new Predicate<ResourceAllocationSettingData>(){
     @Override public boolean apply(    ResourceAllocationSettingData rasd){
@@ -23,7 +23,7 @@
     }
   }
 );
-  assertEquals(modifiedMemory.getVirtualQuantity(),BigInteger.valueOf(1024L));
+  assertEquals(modifiedMemory.getVirtualQuantity(),new BigInteger("1024"));
   assertEquals(modifiedMemory,newMemory);
   assertEquals(modifiedSection,newSection);
 }

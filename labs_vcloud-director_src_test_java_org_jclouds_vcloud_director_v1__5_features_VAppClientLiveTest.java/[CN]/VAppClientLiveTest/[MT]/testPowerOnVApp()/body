@@ -1,7 +1,7 @@
 {
+  vApp=powerOff(vApp);
   Task powerOnVApp=vAppClient.powerOn(vApp.getHref());
   assertTaskSucceedsLong(powerOnVApp);
   vApp=vAppClient.getVApp(vApp.getHref());
-  Status poweredOnStatus=Status.POWERED_ON;
-  assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  assertVAppStatus(vAppURI,Status.POWERED_ON);
 }
