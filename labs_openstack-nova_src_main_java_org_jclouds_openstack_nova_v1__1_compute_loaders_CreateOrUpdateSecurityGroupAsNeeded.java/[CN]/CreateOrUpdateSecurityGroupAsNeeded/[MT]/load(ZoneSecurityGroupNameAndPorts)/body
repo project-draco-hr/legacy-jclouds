@@ -1,0 +1,12 @@
+{
+  checkNotNull(zoneSecurityGroupNameAndPorts,"zoneSecurityGroupNameAndPorts");
+  AtomicReference<ZoneAndName> securityGroupInZoneRef=new AtomicReference<ZoneAndName>(zoneSecurityGroupNameAndPorts);
+  if (securityGroupEventualConsistencyDelay.apply(securityGroupInZoneRef)) {
+    ZoneAndName securityGroupInZone=securityGroupInZoneRef.get();
+    checkState(securityGroupInZone instanceof SecurityGroupInZone,"programming error: predicate %s should update the atomic reference to the actual security group found",securityGroupEventualConsistencyDelay);
+    return SecurityGroupInZone.class.cast(securityGroupInZone);
+  }
+ else {
+    return groupCreator.apply(zoneSecurityGroupNameAndPorts);
+  }
+}

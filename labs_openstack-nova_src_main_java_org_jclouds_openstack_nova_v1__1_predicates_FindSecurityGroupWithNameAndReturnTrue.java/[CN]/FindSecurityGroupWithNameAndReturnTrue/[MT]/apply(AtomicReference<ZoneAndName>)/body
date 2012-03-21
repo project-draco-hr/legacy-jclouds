@@ -1,0 +1,23 @@
+{
+  checkNotNull(securityGroupInZoneRef,"securityGroupRef");
+  final ZoneAndName securityGroupInZone=checkNotNull(securityGroupInZoneRef.get(),"securityGroupInZone");
+  Optional<SecurityGroupClient> client=novaClient.getSecurityGroupExtensionForZone(securityGroupInZone.getZone());
+  checkArgument(client.isPresent(),"Security groups are required, but the extension is not available!");
+  logger.trace("looking for security group %s",securityGroupInZone.slashEncode());
+  try {
+    SecurityGroup returnVal=Iterables.find(client.get().listSecurityGroups(),new Predicate<SecurityGroup>(){
+      @Override public boolean apply(      SecurityGroup input){
+        return input.getName().equals(securityGroupInZone.getName());
+      }
+    }
+);
+    securityGroupInZoneRef.set(new SecurityGroupInZone(returnVal,securityGroupInZone.getZone()));
+    return true;
+  }
+ catch (  ResourceNotFoundException e) {
+    return false;
+  }
+catch (  NoSuchElementException e) {
+    return false;
+  }
+}
