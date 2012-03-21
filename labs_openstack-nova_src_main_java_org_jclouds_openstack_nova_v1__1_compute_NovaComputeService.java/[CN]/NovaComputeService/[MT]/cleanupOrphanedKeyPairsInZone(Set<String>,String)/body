@@ -1,0 +1,16 @@
+{
+  Optional<KeyPairClient> keyPairClient=novaClient.getKeyPairExtensionForZone(zoneId);
+  if (keyPairClient.isPresent()) {
+    for (    String group : groups) {
+      for (      Map<String,KeyPair> wrapper : keyPairClient.get().listKeyPairs()) {
+        for (        KeyPair pair : Iterables.filter(wrapper.values(),KeyPairPredicates.nameStartsWith("jclouds#" + group + "#"))) {
+          ZoneAndName zoneAndName=ZoneAndName.fromZoneAndName(zoneId,pair.getName());
+          logger.debug(">> deleting keypair(%s)",zoneAndName);
+          keyPairClient.get().deleteKeyPair(pair.getName());
+          keyPairCache.invalidate(zoneAndName);
+          logger.debug("<< deleted keypair(%s)",zoneAndName);
+        }
+      }
+    }
+  }
+}
