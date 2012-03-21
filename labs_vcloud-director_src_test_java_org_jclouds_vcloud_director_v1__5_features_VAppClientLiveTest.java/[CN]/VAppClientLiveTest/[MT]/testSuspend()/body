@@ -1,7 +1,9 @@
 {
-  Task suspend=vAppClient.suspend(vApp.getHref());
-  assertTrue(retryTaskSuccess.apply(suspend),String.format(TASK_COMPLETE_TIMELY,"suspend"));
+  powerOn();
+  Task suspend=vAppClient.suspend(vAppURI);
+  assertTaskSucceedsLong(suspend);
   vApp=vAppClient.getVApp(vApp.getHref());
-  Status poweredOnStatus=Status.POWERED_ON;
-  assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  Status suspendedStatus=Status.SUSPENDED;
+  assertEquals(vApp.getStatus(),suspendedStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",suspendedStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  powerOn();
 }

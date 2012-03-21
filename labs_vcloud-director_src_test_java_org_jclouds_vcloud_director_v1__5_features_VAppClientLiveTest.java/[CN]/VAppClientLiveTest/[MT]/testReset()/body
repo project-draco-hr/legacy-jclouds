@@ -1,6 +1,7 @@
 {
+  powerOn();
   Task reset=vAppClient.reset(vApp.getHref());
-  assertTrue(retryTaskSuccess.apply(reset),String.format(TASK_COMPLETE_TIMELY,"reset"));
+  assertTaskSucceedsLong(reset);
   vApp=vAppClient.getVApp(vApp.getHref());
   Status poweredOnStatus=Status.POWERED_ON;
   assertEquals(vApp.getStatus(),poweredOnStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",poweredOnStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
