@@ -1,8 +1,18 @@
 {
+  LoginCredentials.Builder credentialsBuilder=LoginCredentials.builder();
+  NovaTemplateOptions templateOptions=template.getOptions().as(NovaTemplateOptions.class);
   CreateServerOptions options=new CreateServerOptions();
-  options.securityGroupNames(template.getOptions().as(NovaTemplateOptions.class).getSecurityGroupNames());
+  options.securityGroupNames(templateOptions.getSecurityGroupNames());
+  String keyName=templateOptions.getKeyPairName();
+  if (keyName != null) {
+    options.withKeyName(keyName);
+    KeyPair keyPair=keyPairCache.getIfPresent(ZoneAndName.fromZoneAndName(template.getLocation().getId(),keyName));
+    if (keyPair != null) {
+      credentialsBuilder.privateKey(keyPair.getPrivateKey());
+    }
+  }
   String zoneId=template.getLocation().getId();
   Server server=novaClient.getServerClientForZone(zoneId).createServer(name,template.getImage().getProviderId(),template.getHardware().getProviderId(),options);
   ServerInZone serverInZone=new ServerInZone(server,zoneId);
-  return new NodeAndInitialCredentials<ServerInZone>(serverInZone,serverInZone.slashEncode(),LoginCredentials.builder().password(server.getAdminPass()).build());
+  return new NodeAndInitialCredentials<ServerInZone>(serverInZone,serverInZone.slashEncode(),credentialsBuilder.password(server.getAdminPass()).build());
 }

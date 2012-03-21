@@ -1,0 +1,17 @@
+{
+  NovaClient client=createMock(NovaClient.class);
+  KeyPairClient keyClient=createMock(KeyPairClient.class);
+  Supplier<String> uniqueIdSupplier=createMock(Supplier.class);
+  KeyPair pair=createMock(KeyPair.class);
+  expect(client.getKeyPairExtensionForZone("zone")).andReturn(Optional.of(keyClient)).atLeastOnce();
+  expect(uniqueIdSupplier.get()).andReturn("1");
+  expect(keyClient.createKeyPair("jclouds#group#1")).andReturn(pair);
+  replay(client);
+  replay(keyClient);
+  replay(uniqueIdSupplier);
+  CreateUniqueKeyPair parser=new CreateUniqueKeyPair(client,uniqueIdSupplier);
+  assertEquals(parser.createNewKeyPairInZone("zone","group"),pair);
+  verify(client);
+  verify(keyClient);
+  verify(uniqueIdSupplier);
+}
