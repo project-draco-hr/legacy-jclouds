@@ -1,8 +1,12 @@
 {
+  vdc=vdcClient.getVdc(vdcURI);
   Iterable<Reference> vApps=Iterables.filter(vdc.getResourceEntities(),Predicates.and(ReferenceTypePredicates.<Reference>typeEquals(VCloudDirectorMediaType.VAPP),ReferenceTypePredicates.<Reference>nameIn(vAppNames)));
   if (!Iterables.isEmpty(vApps)) {
     for (    Reference ref : vApps) {
       cleanUpVApp(ref.getHref());
     }
+  }
+ else {
+    logger.warn("No VApps in list found in Vdc %s (%s)",vdc.getName(),Iterables.toString(vAppNames));
   }
 }
