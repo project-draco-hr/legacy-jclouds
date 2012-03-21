@@ -25,8 +25,9 @@
   CloneSpec cloneSpec=CloneSpec.builder().linked(USE_LINKED).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
   new LaunchMachineIfNotAlreadyRunning(manager.get(),EXECUTION_TYPE,"").apply(cloned);
-  machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new DeleteGShadowLock(),RunScriptOptions.NONE);
-  machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(cloned),new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);
+  NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
+  machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
+  machineUtils.runScriptOnNode(partialNodeMetadata,new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);
   NodeAndInitialCredentials<IMachine> nodeAndInitialCredentials=new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
   return nodeAndInitialCredentials;
 }
