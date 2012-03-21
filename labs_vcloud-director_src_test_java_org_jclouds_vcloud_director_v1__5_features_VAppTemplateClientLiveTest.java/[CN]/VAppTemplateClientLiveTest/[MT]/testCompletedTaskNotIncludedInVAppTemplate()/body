@@ -1,16 +1,14 @@
 {
   vAppTemplateClient.disableDownloadVappTemplate(vAppTemplateURI);
   final Task task=vAppTemplateClient.enableDownloadVappTemplate(vAppTemplateURI);
-  retryTaskSuccess.apply(task);
+  assertTaskDoneEventually(task);
   VAppTemplate vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
   Set<Task> tasks=vAppTemplate.getTasks();
-  if (tasks != null) {
-    for (    Task contender : tasks) {
-      if (task.getId().equals(contender.getId())) {
-        String status=contender.getStatus();
-        if (status.equals(Task.Status.QUEUED) || status.equals(Task.Status.PRE_RUNNING) || status.equals(Task.Status.RUNNING)) {
-          fail("Task " + contender + " reported complete, but is included in VAppTemplate in status "+ status);
-        }
+  for (  Task contender : tasks) {
+    if (task.getId().equals(contender.getId())) {
+      String status=contender.getStatus();
+      if (status.equals(Task.Status.QUEUED) || status.equals(Task.Status.PRE_RUNNING) || status.equals(Task.Status.RUNNING)) {
+        fail("Task " + contender + " reported complete, but is included in VAppTemplate in status "+ status);
       }
     }
   }
