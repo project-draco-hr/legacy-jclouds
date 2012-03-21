@@ -1,0 +1,11 @@
+{
+  VApp testVApp=vAppClient.getVApp(testVAppURI);
+  Vm vm=Iterables.getOnlyElement(testVApp.getChildren().getVms());
+  Status status=Status.fromValue(vm.getStatus());
+  if (status != Status.SUSPENDED) {
+    Task suspend=vAppClient.suspend(vm.getHref());
+    assertTaskSucceedsLong(suspend);
+  }
+  assertVAppStatus(testVAppURI,Status.SUSPENDED);
+  return testVApp;
+}

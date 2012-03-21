@@ -1,9 +1,10 @@
 {
-  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  ResourceAllocationSettingData origSection=vAppClient.getVirtualHardwareSectionMemory(vmURI);
-  ResourceAllocationSettingData newSection=origSection.toBuilder().build();
-  Task modifyVirtualHardwareSectionMemory=vAppClient.modifyVirtualHardwareSectionMemory(vmURI,newSection);
+  ResourceAllocationSettingData origItem=vAppClient.getVirtualHardwareSectionMemory(vm.getHref());
+  ResourceAllocationSettingData newItem=origItem.toBuilder().elementName("1024 MB of memory").virtualQuantity(new BigInteger("1024")).build();
+  Task modifyVirtualHardwareSectionMemory=vAppClient.modifyVirtualHardwareSectionMemory(vm.getHref(),newItem);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionMemory),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionMemory"));
-  ResourceAllocationSettingData modified=vAppClient.getVirtualHardwareSectionMemory(vmURI);
+  ResourceAllocationSettingData modified=vAppClient.getVirtualHardwareSectionMemory(vm.getHref());
   checkResourceAllocationSettingData(modified);
+  assertEquals(modified.getVirtualQuantity(),new BigInteger("1024"),String.format(OBJ_FIELD_EQ,"ResourceAllocationSettingData","VirtualQuantity","1024",modified.getVirtualQuantity().toString()));
+  assertEquals(modified,newItem);
 }

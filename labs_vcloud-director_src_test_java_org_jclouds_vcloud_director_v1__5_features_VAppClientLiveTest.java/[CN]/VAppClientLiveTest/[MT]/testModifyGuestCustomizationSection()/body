@@ -1,10 +1,9 @@
 {
-  URI vmURI=Iterables.getOnlyElement(vApp.getChildren().getVms()).getHref();
-  GuestCustomizationSection oldSection=vAppClient.getGuestCustomizationSection(vmURI);
+  GuestCustomizationSection oldSection=vAppClient.getGuestCustomizationSection(vm.getHref());
   GuestCustomizationSection newSection=oldSection.toBuilder().computerName("newComputerName").enabled(Boolean.FALSE).adminPassword(null).build();
-  Task modifyGuestCustomizationSection=vAppClient.modifyGuestCustomizationSection(vmURI,newSection);
+  Task modifyGuestCustomizationSection=vAppClient.modifyGuestCustomizationSection(vm.getHref(),newSection);
   assertTrue(retryTaskSuccess.apply(modifyGuestCustomizationSection),String.format(TASK_COMPLETE_TIMELY,"modifyGuestCustomizationSection"));
-  GuestCustomizationSection modified=vAppClient.getGuestCustomizationSection(vmURI);
+  GuestCustomizationSection modified=vAppClient.getGuestCustomizationSection(vm.getHref());
   checkGuestCustomizationSection(modified);
   assertEquals(modified.getComputerName(),newSection.getComputerName());
   assertFalse(modified.isEnabled());

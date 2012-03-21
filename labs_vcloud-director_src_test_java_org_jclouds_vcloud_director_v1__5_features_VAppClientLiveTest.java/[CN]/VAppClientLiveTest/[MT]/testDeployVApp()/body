@@ -4,6 +4,5 @@
   assertTrue(retryTaskSuccessLong.apply(deployVApp),String.format(TASK_COMPLETE_TIMELY,"deployVApp"));
   vApp=vAppClient.getVApp(vApp.getHref());
   assertTrue(vApp.isDeployed(),String.format(OBJ_FIELD_EQ,VAPP,"deployed","TRUE",vApp.isDeployed().toString()));
-  Status deployedStatus=Status.POWERED_OFF;
-  assertEquals(vApp.getStatus(),deployedStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",deployedStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
+  assertVAppStatus(vAppURI,Status.POWERED_OFF);
 }

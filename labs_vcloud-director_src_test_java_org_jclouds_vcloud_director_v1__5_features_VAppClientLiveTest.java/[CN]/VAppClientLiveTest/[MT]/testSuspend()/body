@@ -1,9 +1,8 @@
 {
-  powerOn();
+  vApp=powerOn(vApp);
   Task suspend=vAppClient.suspend(vAppURI);
   assertTaskSucceedsLong(suspend);
   vApp=vAppClient.getVApp(vApp.getHref());
-  Status suspendedStatus=Status.SUSPENDED;
-  assertEquals(vApp.getStatus(),suspendedStatus.getValue(),String.format(OBJ_FIELD_EQ,VAPP,"status",suspendedStatus.toString(),Status.fromValue(vApp.getStatus()).toString()));
-  powerOn();
+  assertVAppStatus(vAppURI,Status.SUSPENDED);
+  vApp=powerOn(vApp);
 }
