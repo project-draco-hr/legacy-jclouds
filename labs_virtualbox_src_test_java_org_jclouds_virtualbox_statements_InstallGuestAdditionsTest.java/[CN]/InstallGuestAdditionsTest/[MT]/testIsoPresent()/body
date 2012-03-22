@@ -1,0 +1,7 @@
+{
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(1,0,"VBoxGuestAdditions_").build();
+  VmSpec vmSpecification=VmSpec.builder().id("").name("").memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
+  InstallGuestAdditions installer=new InstallGuestAdditions(vmSpecification,"4.1.8");
+  String scripts=installer.render(OsFamily.UNIX);
+  assertEquals("installModuleAssistantIfNeeded || return 1\n" + "mount -t iso9660 /dev/sr1 /mnt\n" + "/mnt/VBoxLinuxAdditions.run\n"+ "umount /mnt\n",scripts);
+}
