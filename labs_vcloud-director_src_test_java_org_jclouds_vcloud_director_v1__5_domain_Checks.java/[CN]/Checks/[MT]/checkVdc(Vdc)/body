@@ -8,11 +8,11 @@
   assertTrue(vdc.getNicQuota() >= 0,String.format(OBJ_FIELD_GTE_0,"Vdc","nicQuota",vdc.getNicQuota()));
   assertNotNull(vdc.getNetworkQuota(),String.format(OBJ_FIELD_REQ,"Vdc","networkQuota"));
   assertTrue(vdc.getNetworkQuota() >= 0,String.format(OBJ_FIELD_GTE_0,"Vdc","networkQuota",vdc.getNetworkQuota()));
-  if (vdc.getResourceEntities() != null) {
-    checkResourceEntities(vdc.getResourceEntities());
+  for (  Reference resourceEntity : vdc.getResourceEntities()) {
+    checkReferenceType(resourceEntity);
   }
-  if (vdc.getAvailableNetworks() != null) {
-    checkAvailableNetworks(vdc.getAvailableNetworks());
+  for (  Reference availableNetwork : vdc.getAvailableNetworks()) {
+    checkReferenceType(availableNetwork);
   }
   if (vdc.getCapabilities() != null) {
     checkCapabilities(vdc.getCapabilities());
