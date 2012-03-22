@@ -5,14 +5,14 @@
   KeyPair pair=createMock(KeyPair.class);
   expect(client.getKeyPairExtensionForZone("zone")).andReturn(Optional.of(keyClient)).atLeastOnce();
   expect(uniqueIdSupplier.get()).andReturn("1");
-  expect(keyClient.createKeyPair("jclouds#group#1")).andThrow(new IllegalStateException());
+  expect(keyClient.createKeyPair("group_1")).andThrow(new IllegalStateException());
   expect(uniqueIdSupplier.get()).andReturn("2");
-  expect(keyClient.createKeyPair("jclouds#group#2")).andReturn(pair);
+  expect(keyClient.createKeyPair("group_2")).andReturn(pair);
   replay(client);
   replay(keyClient);
   replay(uniqueIdSupplier);
   CreateUniqueKeyPair parser=new CreateUniqueKeyPair(client,uniqueIdSupplier);
-  assertEquals(parser.createNewKeyPairInZone("zone","group"),pair);
+  assertEquals(parser.apply(ZoneAndName.fromZoneAndName("zone","group")),pair);
   verify(client);
   verify(keyClient);
   verify(uniqueIdSupplier);
