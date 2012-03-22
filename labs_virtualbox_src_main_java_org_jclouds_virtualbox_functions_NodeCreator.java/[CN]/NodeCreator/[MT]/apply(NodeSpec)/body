@@ -24,7 +24,7 @@
   NetworkSpec networkSpec=createNetworkSpecForHostOnlyNATNICs(natIfaceCard,hostOnlyIfaceCard);
   CloneSpec cloneSpec=CloneSpec.builder().linked(USE_LINKED).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
-  new LaunchMachineIfNotAlreadyRunning(manager.get(),EXECUTION_TYPE,"").apply(cloned);
+  machineController.ensureMachineIsLaunched(cloneVmSpec.getVmName());
   NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
   machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
   machineUtils.runScriptOnNode(partialNodeMetadata,new SetIpAddress(hostOnlyIfaceCard),RunScriptOptions.NONE);

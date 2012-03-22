@@ -2,11 +2,14 @@
   int retries=5;
   int count=0;
   ISession session;
+  long time=System.currentTimeMillis();
   while (true) {
     try {
-      session=manager.get().getSessionObject();
       IMachine immutableMachine=manager.get().getVBox().findMachine(machineId);
+      session=manager.get().getSessionObject();
       immutableMachine.lockMachine(session,type);
+      System.err.println("ACQUIRED LOCK [" + time + "]");
+      print();
       break;
     }
  catch (    VBoxException e) {
@@ -15,7 +18,7 @@
         return null;
       }
       count++;
-      logger.warn("Could not lock machine (try %i of %i). Error: %s",retries,count,e.getMessage());
+      logger.warn(e,"Could not lock machine (try %d of %d). Error: %s",count,retries,e.getMessage());
       if (count == retries) {
         throw new RuntimeException(String.format("error locking %s with %s lock: %s",machineId,type,e.getMessage()),e);
       }
@@ -34,5 +37,7 @@
   }
  finally {
     session.unlockMachine();
+    System.err.println("RELEASED LOCK [" + time + "]");
+    print();
   }
 }
