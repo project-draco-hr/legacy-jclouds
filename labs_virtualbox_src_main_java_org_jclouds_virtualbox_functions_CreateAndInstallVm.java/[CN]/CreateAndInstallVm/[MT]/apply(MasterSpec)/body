@@ -11,11 +11,13 @@
   logger.debug(">> awaiting installation to finish node(%s)",vmName);
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",vmName);
   logger.debug(">> awaiting installation of guest additions on vm: %s",vmName);
-  checkState(guestAdditionsInstaller.apply(vm));
+  ListenableFuture<ExecResponse> execFuture=machineUtils.runScriptOnNode(imachineToNodeMetadata.apply(vm),new InstallGuestAdditions(vmSpec,version),RunScriptOptions.NONE);
+  ExecResponse execResponse=Futures.getUnchecked(execFuture);
+  checkState(execResponse.getExitStatus() == 0);
   logger.debug(">> awaiting post-installation actions on vm: %s",vmName);
   NodeMetadata vmMetadata=imachineToNodeMetadata.apply(vm);
-  ListenableFuture<ExecResponse> execFuture=machineUtils.runScriptOnNode(vmMetadata,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);
-  ExecResponse execResponse=Futures.getUnchecked(execFuture);
+  execFuture=machineUtils.runScriptOnNode(vmMetadata,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);
+  execResponse=Futures.getUnchecked(execFuture);
   checkState(execResponse.getExitStatus() == 0);
   logger.debug("<< installation of image complete. Powering down node(%s)",vmName);
   machineController.ensureMachineHasPowerDown(vmName);

@@ -1,0 +1,30 @@
+{
+  List<Statement> statements=Lists.newArrayList();
+  statements.add(call("installModuleAssistantIfNeeded"));
+  String mountPoint="/mnt";
+  if (Iterables.tryFind(vmSpecification.getControllers(),new Predicate<StorageController>(){
+    @Override public boolean apply(    StorageController input){
+      if (!input.getIsoImages().isEmpty()) {
+        for (        IsoImage iso : input.getIsoImages()) {
+          if (iso.getSourcePath().contains("VBoxGuestAdditions_")) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  }
+).isPresent()) {
+    statements.add(exec("mount -t iso9660 /dev/sr1 " + mountPoint));
+  }
+ else {
+    String vboxGuestAdditionsIso="VBoxGuestAdditions_" + vboxVersion + ".iso";
+    URI download=URI.create("http://download.virtualbox.org/virtualbox/" + vboxVersion + "/"+ vboxGuestAdditionsIso);
+    statements.add(call("setupPublicCurl"));
+    statements.add(saveHttpResponseTo(download,"{tmp}{fs}",vboxGuestAdditionsIso));
+    statements.add(exec(String.format("mount -o loop {tmp}{fs}%s %s",vboxGuestAdditionsIso,mountPoint)));
+  }
+  statements.add(exec(String.format("%s%s",mountPoint,"/VBoxLinuxAdditions.run")));
+  statements.add(exec(String.format("umount %s",mountPoint)));
+  return statements;
+}
