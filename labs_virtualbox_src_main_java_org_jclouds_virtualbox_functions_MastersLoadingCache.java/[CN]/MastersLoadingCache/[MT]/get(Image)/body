@@ -2,6 +2,9 @@
   if (masters.containsKey(key.getId())) {
     return masters.get(key.getId());
   }
+  YamlImage yamlImage=imageMapping.get(key.getId());
+  checkNotNull(yamlImage,"could not find yaml image for image: " + key);
+  checkState(!yamlImage.id.contains(VIRTUALBOX_NODE_NAME_SEPARATOR),"master image names cannot contain \"" + VIRTUALBOX_NODE_NAME_SEPARATOR + "\"");
   String guestAdditionsFileName=String.format("VBoxGuestAdditions_%s.iso",version);
   String guestAdditionsIso=String.format("%s/%s",isosDir,guestAdditionsFileName);
   String guestAdditionsUri="http://download.virtualbox.org/virtualbox/" + version + "/"+ guestAdditionsFileName;
@@ -9,8 +12,6 @@
     getFilePathOrDownload(guestAdditionsUri);
   }
   checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
-  YamlImage yamlImage=imageMapping.get(key.getId());
-  checkNotNull(yamlImage,"could not find yaml image for image: " + key);
   String localIsoUrl=getFilePathOrDownload(yamlImage.iso);
   String vmName=VIRTUALBOX_IMAGE_PREFIX + yamlImage.id;
   String adminDisk=workingDir + File.separator + vmName+ ".vdi";

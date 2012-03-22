@@ -1,5 +1,7 @@
 {
   try {
+    checkState(!tag.contains(VIRTUALBOX_NODE_NAME_SEPARATOR),"tag names cannot contain \"" + VIRTUALBOX_NODE_NAME_SEPARATOR + "\"");
+    checkState(!name.contains(VIRTUALBOX_NODE_NAME_SEPARATOR),"node names cannot contain \"" + VIRTUALBOX_NODE_NAME_SEPARATOR + "\"");
     Master master=mastersLoader.get(template.getImage());
     checkState(master != null,"could not find a master for image: " + template.getClass());
     NodeSpec nodeSpec=NodeSpec.builder().master(master).name(name).tag(tag).template(template).build();
