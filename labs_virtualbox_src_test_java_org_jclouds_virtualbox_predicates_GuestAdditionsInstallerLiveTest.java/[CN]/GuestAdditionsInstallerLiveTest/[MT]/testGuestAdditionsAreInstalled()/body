@@ -2,7 +2,7 @@
   try {
     IMachine machine=getVmWithGuestAdditionsInstalled();
     machineUtils.applyForMachine(machine.getName(),new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,""));
-    assertTrue(machineUtils.lockSessionOnMachineAndApply(machine.getName(),LockType.Shared,new Function<ISession,Boolean>(){
+    assertTrue(machineUtils.readLockMachineAndApplyToSession(machine.getName(),new Function<ISession,Boolean>(){
       @Override public Boolean apply(      ISession session){
         return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestAdd/Version") != null;
       }

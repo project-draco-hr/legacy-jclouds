@@ -7,7 +7,7 @@
     sshResponds=injector.getInstance(SshResponds.class);
     checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
     String vboxVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
-    assertEquals(vboxVersion,machineUtils.lockSessionOnMachineAndApply(machine.getName(),LockType.Shared,new Function<ISession,String>(){
+    assertEquals(vboxVersion,machineUtils.readLockMachineAndApplyToSession(machine.getName(),new Function<ISession,String>(){
       @Override public String apply(      ISession session){
         return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestAdd/Version");
       }

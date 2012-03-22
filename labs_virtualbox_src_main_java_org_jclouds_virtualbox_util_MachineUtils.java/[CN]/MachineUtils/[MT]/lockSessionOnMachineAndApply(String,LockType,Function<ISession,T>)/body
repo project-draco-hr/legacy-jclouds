@@ -1,6 +1,32 @@
 {
   try {
-    ISession session=lockSessionOnMachine(type,machineId);
+    int retries=5;
+    int count=0;
+    ISession session;
+    while (true) {
+      try {
+        session=manager.get().getSessionObject();
+        IMachine immutableMachine=manager.get().getVBox().findMachine(machineId);
+        immutableMachine.lockMachine(session,type);
+        break;
+      }
+ catch (      VBoxException e) {
+        VBoxException vbex=Throwables2.getFirstThrowableOfType(e,VBoxException.class);
+        if (vbex != null && machineNotFoundException(vbex)) {
+          return null;
+        }
+        count++;
+        logger.warn("Could not lock machine (try %i of %i). Error: %s",retries,count,e.getMessage());
+        if (count == retries) {
+          throw new RuntimeException(String.format("error locking %s with %s lock: %s",machineId,type,e.getMessage()),e);
+        }
+        try {
+          Thread.sleep(1000L);
+        }
+ catch (        InterruptedException e1) {
+        }
+      }
+    }
     try {
       return function.apply(session);
     }
