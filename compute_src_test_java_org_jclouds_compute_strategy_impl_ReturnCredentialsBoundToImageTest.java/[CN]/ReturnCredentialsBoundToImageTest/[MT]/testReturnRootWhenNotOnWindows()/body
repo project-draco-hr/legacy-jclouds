@@ -4,6 +4,6 @@
   expect(image.getOperatingSystem()).andReturn(OperatingSystem.builder().family(OsFamily.LINUX).description("foo").build()).atLeastOnce();
   replay(image);
   Credentials creds=new Credentials("root",null);
-  assertEquals(new ReturnCredentialsBoundToImage(null,ImmutableMap.<String,Credentials>of()).execute(image),creds);
+  assertEquals(new ReturnCredentialsBoundToImage(null,ImmutableMap.<String,Credentials>of(),ImmutableMap.<OsFamily,LoginCredentials>of()).execute(image),creds);
   verify(image);
 }
