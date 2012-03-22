@@ -1,12 +1,7 @@
 {
   ServerInZone withoutHost=new ServerInZone(new ParseCreatedServerTest().expected(),"az-1.region-a.geo-1");
   ServerInZone withHost=new ServerInZone(new ParseServerTest().expected(),"az-1.region-a.geo-1");
-  LoadingCache<ZoneAndId,Iterable<String>> mockLoadingCache=EasyMock.createMock(LoadingCache.class);
-  EasyMock.expect(mockLoadingCache.getUnchecked(withoutHost)).andReturn(ImmutableSet.<String>of());
-  EasyMock.expect(mockLoadingCache.getUnchecked(withHost)).andReturn(ImmutableSet.<String>of());
-  EasyMock.replay(mockLoadingCache);
-  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of()),Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of()),mockLoadingCache);
+  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of()),Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of()));
   Set<? extends NodeMetadata> set=ImmutableSet.of(converter.apply(withHost),converter.apply(withoutHost));
   assertEquals(new OrphanedGroupsByZoneId(Predicates.<ZoneAndName>alwaysFalse()).apply(set),ImmutableMultimap.<String,String>of());
-  EasyMock.verify(mockLoadingCache);
 }

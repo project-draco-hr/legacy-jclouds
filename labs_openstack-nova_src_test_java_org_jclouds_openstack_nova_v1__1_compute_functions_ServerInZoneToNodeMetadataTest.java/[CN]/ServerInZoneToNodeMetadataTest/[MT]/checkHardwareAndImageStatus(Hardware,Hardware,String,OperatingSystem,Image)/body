@@ -3,10 +3,7 @@
   Set<Hardware> hardwares=existingHardware == null ? ImmutableSet.<Hardware>of() : ImmutableSet.of(existingHardware);
   Server serverToConvert=new ParseServerTest().expected();
   ServerInZone serverInZoneToConvert=new ServerInZone(serverToConvert,"az-1.region-a.geo-1");
-  LoadingCache<ZoneAndId,Iterable<String>> mockLoadingCache=EasyMock.createMock(LoadingCache.class);
-  EasyMock.expect(mockLoadingCache.getUnchecked(serverInZoneToConvert)).andReturn(ImmutableSet.<String>of());
-  EasyMock.replay(mockLoadingCache);
-  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),mockLoadingCache);
+  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares));
   NodeMetadata convertedNodeMetadata=converter.apply(serverInZoneToConvert);
   assertEquals(serverInZoneToConvert.slashEncode(),convertedNodeMetadata.getId());
   assertEquals(serverToConvert.getId(),convertedNodeMetadata.getProviderId());
@@ -25,5 +22,4 @@
   assertEquals(convertedNodeMetadata.getPublicAddresses(),ImmutableSet.of("67.23.10.132","67.23.10.131"));
   assertNotNull(convertedNodeMetadata.getUserMetadata());
   assertEquals(convertedNodeMetadata.getUserMetadata(),ImmutableMap.<String,String>of("Server Label","Web Head 1","Image Version","2.1"));
-  EasyMock.verify(mockLoadingCache);
 }
