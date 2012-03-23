@@ -1,0 +1,49 @@
+{
+  OsFamily osFamily=null;
+  String osVersion=null;
+  String imageName=Objects.firstNonNull(from.getName(),"unspecified");
+  boolean is64Bit=true;
+  if (imageName.indexOf("Windows") != -1) {
+    osFamily=OsFamily.WINDOWS;
+    Matcher matcher=WINDOWS_PATTERN.matcher(from.getName());
+    if (matcher.find()) {
+      osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(1),osVersionMap);
+      is64Bit=matcher.group(2).equals("x64");
+    }
+  }
+ else {
+    if (imageName.contains("Red Hat EL")) {
+      osFamily=OsFamily.RHEL;
+    }
+ else     if (imageName.contains("Oracle EL")) {
+      osFamily=OsFamily.OEL;
+    }
+ else {
+      final Iterable<String> imageNameParts=Splitter.on(CharMatcher.WHITESPACE).trimResults().split(imageName.toLowerCase());
+      try {
+        osFamily=find(Arrays.asList(OsFamily.values()),new Predicate<OsFamily>(){
+          @Override public boolean apply(          @Nullable OsFamily osFamily){
+            return any(imageNameParts,equalTo(osFamily.name().toLowerCase()));
+          }
+        }
+);
+      }
+ catch (      NoSuchElementException e) {
+        String ubuntuVersion=startsWithUbuntuVersion(imageNameParts);
+        if (ubuntuVersion != null) {
+          osFamily=OsFamily.UBUNTU;
+          osVersion=ubuntuVersion;
+        }
+ else {
+          logger.trace("could not parse operating system family for image(%s): %s",imageNameParts);
+          osFamily=OsFamily.UNRECOGNIZED;
+        }
+      }
+    }
+    Matcher matcher=DEFAULT_PATTERN.matcher(imageName);
+    if (matcher.find() && matcher.groupCount() >= 3) {
+      osVersion=ComputeServiceUtils.parseVersionOrReturnEmptyString(osFamily,matcher.group(3),osVersionMap);
+    }
+  }
+  return new OperatingSystem(osFamily,imageName,osVersion,null,imageName,is64Bit);
+}

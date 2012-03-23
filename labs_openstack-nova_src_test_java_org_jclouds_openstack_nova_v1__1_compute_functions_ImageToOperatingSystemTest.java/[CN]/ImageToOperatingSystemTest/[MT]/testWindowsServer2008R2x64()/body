@@ -1,0 +1,14 @@
+{
+  String name="Windows Server 2008 R2 x64";
+  Image imageToConvert=Image.builder().id("id-" + name).name(name).build();
+  Map<OsFamily,Map<String,String>> osFamilyMap=new HashMap<OsFamily,Map<String,String>>();
+  osFamilyMap.put(OsFamily.WINDOWS,ImmutableMap.of("Server 2008 R2","Server-2008-R2"));
+  ImageToOperatingSystem converter=new ImageToOperatingSystem(osFamilyMap);
+  OperatingSystem convertedOs=converter.apply(imageToConvert);
+  assertEquals(convertedOs.getName(),imageToConvert.getName());
+  assertEquals(convertedOs.getFamily(),OsFamily.WINDOWS);
+  assertEquals(convertedOs.getDescription(),imageToConvert.getName());
+  assertEquals(convertedOs.getVersion(),"Server-2008-R2");
+  assertEquals(convertedOs.getArch(),null);
+  assertTrue(convertedOs.is64Bit());
+}

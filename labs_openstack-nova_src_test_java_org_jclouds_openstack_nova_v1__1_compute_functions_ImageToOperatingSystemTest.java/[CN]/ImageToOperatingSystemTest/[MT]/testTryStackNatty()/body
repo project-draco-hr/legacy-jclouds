@@ -1,0 +1,11 @@
+{
+  String name="natty-server-cloudimg-amd64";
+  Image imageToConvert=Image.builder().id("id-" + name).name(name).build();
+  OperatingSystem convertedOs=converterForUbuntu.apply(imageToConvert);
+  assertEquals(convertedOs.getName(),imageToConvert.getName());
+  assertEquals(convertedOs.getFamily(),OsFamily.UBUNTU);
+  assertEquals(convertedOs.getDescription(),imageToConvert.getName());
+  assertEquals(convertedOs.getVersion(),"11.04");
+  assertEquals(convertedOs.getArch(),null);
+  assertTrue(convertedOs.is64Bit());
+}

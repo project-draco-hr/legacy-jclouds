@@ -1,0 +1,14 @@
+{
+  String name="Windows 98 x86";
+  Image imageToConvert=Image.builder().id("id-" + name).name(name).build();
+  Map<OsFamily,Map<String,String>> osFamilyMap=new HashMap<OsFamily,Map<String,String>>();
+  osFamilyMap.put(OsFamily.WINDOWS,ImmutableMap.of("98","98"));
+  ImageToOperatingSystem converter=new ImageToOperatingSystem(osFamilyMap);
+  OperatingSystem convertedOs=converter.apply(imageToConvert);
+  assertEquals(convertedOs.getName(),imageToConvert.getName());
+  assertEquals(convertedOs.getFamily(),OsFamily.WINDOWS);
+  assertEquals(convertedOs.getDescription(),imageToConvert.getName());
+  assertEquals(convertedOs.getVersion(),"98");
+  assertEquals(convertedOs.getArch(),null);
+  assertFalse(convertedOs.is64Bit());
+}
