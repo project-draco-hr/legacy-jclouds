@@ -1,5 +1,7 @@
 {
-  URI uri=sync.enableCDN(input);
+  Optional<HPCloudCDNClient> cdnExension=sync.getCDNExtension();
+  checkArgument(cdnExension.isPresent(),"CDN is required, but the extension is not available!");
+  URI uri=cdnExension.get().enableCDN(input);
   cdnContainer.put(input,uri);
   return uri;
 }
