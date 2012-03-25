@@ -1,18 +1,25 @@
 {
+  IMachine machine=null;
   try {
-    IMachine machine=getVmWithGuestAdditionsInstalled();
+    machine=cloneFromMaster();
     machineUtils.applyForMachine(machine.getName(),new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,""));
     assertTrue(machineUtils.sharedLockMachineAndApplyToSession(machine.getName(),new Function<ISession,Boolean>(){
       @Override public Boolean apply(      ISession session){
-        return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestAdd/Version") != null;
+        String s=session.getMachine().getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
+        return isIpv4(s);
+      }
+      private boolean isIpv4(      String s){
+        Pattern pattern=Pattern.compile(machineUtils.IP_V4_ADDRESS_PATTERN);
+        Matcher matcher=pattern.matcher(s);
+        return matcher.matches();
       }
     }
 ));
   }
   finally {
-    for (    VmSpec spec : ImmutableSet.of(sourceMachineSpec.getVmSpec())) {
-      machineController.ensureMachineHasPowerDown(spec.getVmName());
-      undoVm(spec);
+    for (    String vmNameOrId : ImmutableSet.of(machine.getName())) {
+      machineController.ensureMachineHasPowerDown(vmNameOrId);
+      undoVm(vmNameOrId);
     }
   }
 }

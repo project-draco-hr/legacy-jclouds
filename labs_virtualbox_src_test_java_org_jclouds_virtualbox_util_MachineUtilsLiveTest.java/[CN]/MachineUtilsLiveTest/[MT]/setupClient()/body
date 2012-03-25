@@ -1,6 +1,6 @@
 {
   super.setupClient();
-  String instanceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
+  instanceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
   StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk(instanceName)).controllerPort(0).deviceSlot(1).autoDelete(true).build()).attachISO(1,1,guestAdditionsIso).build();
   VmSpec instanceVmSpec=VmSpec.builder().id(instanceName).name(instanceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
   Injector injector=context.utils().injector();

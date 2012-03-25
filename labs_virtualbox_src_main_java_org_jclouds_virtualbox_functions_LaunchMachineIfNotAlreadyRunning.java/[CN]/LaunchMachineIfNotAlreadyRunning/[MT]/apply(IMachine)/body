@@ -1,13 +1,10 @@
 {
+  ISession session=manager.getSessionObject();
   try {
-    final IProgress progress=machine.launchVMProcess(manager.getSessionObject(),type.stringValue(),environment);
+    final IProgress progress=machine.launchVMProcess(session,type.stringValue(),environment);
     progress.waitForCompletion(-1);
-    Thread.sleep(5000);
   }
- catch (  InterruptedException e) {
-    propagate(e);
-  }
-catch (  VBoxException e) {
+ catch (  VBoxException e) {
     ErrorCode errorCode=ErrorCode.valueOf(e);
 switch (errorCode) {
 case VBOX_E_INVALID_OBJECT_STATE:
@@ -18,9 +15,9 @@ default :
 }
 }
  finally {
-if (manager.getSessionObject().getState() == SessionState.Locked) {
-manager.getSessionObject().unlockMachine();
+if (session.getState() == SessionState.Locked) {
+session.unlockMachine();
 }
 }
-return null;
+return session;
 }

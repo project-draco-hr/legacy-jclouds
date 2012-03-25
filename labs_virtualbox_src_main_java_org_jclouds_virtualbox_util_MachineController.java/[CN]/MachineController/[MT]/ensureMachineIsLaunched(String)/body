@@ -1,3 +1,20 @@
 {
-  machineUtils.applyForMachine(vmName,new LaunchMachineIfNotAlreadyRunning(manager.get(),executionType,""));
+  ISession session=null;
+  while (!manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.Running)) {
+    try {
+      session=machineUtils.applyForMachine(vmName,new LaunchMachineIfNotAlreadyRunning(manager.get(),executionType,""));
+    }
+ catch (    RuntimeException e) {
+      if (e.getMessage().contains("org.virtualbox_4_1.VBoxException: VirtualBox error: The given session is busy (0x80BB0007)")) {
+        throw e;
+      }
+ else       if (e.getMessage().contains("VirtualBox error: The object is not ready")) {
+        continue;
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+  return checkNotNull(session,"session");
 }
