@@ -4,15 +4,15 @@
   HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
   HttpResponse orgResponse=HttpResponse.builder().statusCode(403).payload(payloadFromResourceWithContentType("/org/error403-fake.xml",VCloudDirectorMediaType.ERROR + ";version=1.5")).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
-  Error expected=Error.builder().message("No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  String message="No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".";
   try {
     client.getTaskClient().getTaskList(URI.create("https://vcloudbeta.bluelock.com/api/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"));
     fail("Should give HTTP 403 error");
   }
- catch (  VCloudDirectorException vde) {
-    assertEquals(vde.getError(),expected);
+ catch (  ResourceNotFoundException rnfe) {
+    assertEquals(rnfe.getMessage(),message);
   }
 catch (  Exception e) {
-    fail("Should have thrown a VCloudDirectorException");
+    fail("Should have thrown a ResourceNotFoundException");
   }
 }
