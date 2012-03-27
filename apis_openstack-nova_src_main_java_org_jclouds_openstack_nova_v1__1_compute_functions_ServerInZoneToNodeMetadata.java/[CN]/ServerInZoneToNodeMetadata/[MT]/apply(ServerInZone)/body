@@ -9,7 +9,7 @@
   builder.hostname(from.getName());
   builder.location(from.getHostId() != null ? new LocationBuilder().scope(LocationScope.HOST).id(from.getHostId()).description(from.getHostId()).parent(zone).build() : zone);
   builder.userMetadata(from.getMetadata());
-  builder.group(parseGroupFromName(from.getName()));
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
   builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(),from.getImage().getId()).slashEncode());
   builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
   builder.hardware(findHardwareForServerOrNull(serverInZone));

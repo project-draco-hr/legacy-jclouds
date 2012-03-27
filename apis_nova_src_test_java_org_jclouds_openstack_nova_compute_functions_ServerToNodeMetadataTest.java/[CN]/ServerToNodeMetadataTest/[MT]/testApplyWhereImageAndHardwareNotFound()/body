@@ -3,7 +3,7 @@
   Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of();
   Set<org.jclouds.compute.domain.Hardware> hardwares=ImmutableSet.of();
   Server server=ParseServerFromJsonResponseTest.parseServer();
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares));
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
   NodeMetadata metadata=parser.apply(server);
   NodeMetadata constructedMetadata=newNodeMetadataBuilder().build();
   assertEquals(metadata,constructedMetadata);

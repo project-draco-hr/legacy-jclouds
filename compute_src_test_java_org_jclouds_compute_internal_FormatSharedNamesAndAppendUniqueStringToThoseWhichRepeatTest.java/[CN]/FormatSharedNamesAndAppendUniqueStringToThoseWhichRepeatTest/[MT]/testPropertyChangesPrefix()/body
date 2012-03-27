@@ -1,0 +1,12 @@
+{
+  GroupNamingConvention fn=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Names.named(RESOURCENAME_PREFIX)).to("kclouds");
+    }
+  }
+).getInstance(GroupNamingConvention.Factory.class).create();
+  assertEquals(fn.sharedNameForGroup("cluster"),"kclouds-cluster");
+  assertEquals(fn.groupInSharedNameOrNull("kclouds-cluster"),"cluster");
+  assertEquals(fn.groupInUniqueNameOrNull("kclouds-cluster"),null);
+  assertTrue(fn.containsGroup("cluster").apply("kclouds-cluster"));
+}

@@ -3,7 +3,7 @@
   Set<Hardware> hardwares=existingHardware == null ? ImmutableSet.<Hardware>of() : ImmutableSet.of(existingHardware);
   Server serverToConvert=new ParseServerTest().expected();
   ServerInZone serverInZoneToConvert=new ServerInZone(serverToConvert,"az-1.region-a.geo-1");
-  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares));
+  ServerInZoneToNodeMetadata converter=new ServerInZoneToNodeMetadata(locationIndex,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
   NodeMetadata convertedNodeMetadata=converter.apply(serverInZoneToConvert);
   assertEquals(serverInZoneToConvert.slashEncode(),convertedNodeMetadata.getId());
   assertEquals(serverToConvert.getId(),convertedNodeMetadata.getProviderId());

@@ -22,8 +22,7 @@
   builder.state(vAppStatusToNodeState.get(from.getStatus()));
   builder.publicAddresses(computeClient.getPublicAddresses(from.getHref()));
   builder.privateAddresses(computeClient.getPrivateAddresses(from.getHref()));
-  String group=parseGroupFromName(from.getName());
-  builder.group(group);
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
   builder.credentials(LoginCredentials.fromCredentials(credentialStore.get("node#" + from.getHref().toASCIIString())));
   return builder.build();
 }

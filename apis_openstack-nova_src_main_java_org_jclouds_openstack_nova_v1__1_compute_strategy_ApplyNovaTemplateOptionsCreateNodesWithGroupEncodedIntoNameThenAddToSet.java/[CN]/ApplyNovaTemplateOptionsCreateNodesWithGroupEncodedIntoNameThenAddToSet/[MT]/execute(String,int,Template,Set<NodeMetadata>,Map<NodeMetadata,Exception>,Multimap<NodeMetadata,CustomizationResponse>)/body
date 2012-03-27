@@ -8,7 +8,7 @@
   boolean keyPairExensionPresent=novaClient.getKeyPairExtensionForZone(zone).isPresent();
   if (templateOptions.shouldGenerateKeyPair()) {
     checkArgument(keyPairExensionPresent,"Key Pairs are required by options, but the extension is not available! options: %s",templateOptions);
-    KeyPair keyPair=keyPairCache.getUnchecked(ZoneAndName.fromZoneAndName(zone,"jclouds_" + group));
+    KeyPair keyPair=keyPairCache.getUnchecked(ZoneAndName.fromZoneAndName(zone,namingConvention.create().sharedNameForGroup(group)));
     keyPairCache.asMap().put(ZoneAndName.fromZoneAndName(zone,keyPair.getName()),keyPair);
     templateOptions.keyPairName(keyPair.getName());
   }
@@ -26,7 +26,7 @@
     checkArgument(novaClient.getSecurityGroupExtensionForZone(zone).isPresent(),"Security groups are required by options, but the extension is not available! options: %s",templateOptions);
   }
  else   if (securityGroupExensionPresent && inboundPorts.size() > 0) {
-    String securityGroupName="jclouds_" + group;
+    String securityGroupName=namingConvention.create().sharedNameForGroup(group);
     try {
       securityGroupCache.get(new ZoneSecurityGroupNameAndPorts(zone,securityGroupName,inboundPorts));
     }

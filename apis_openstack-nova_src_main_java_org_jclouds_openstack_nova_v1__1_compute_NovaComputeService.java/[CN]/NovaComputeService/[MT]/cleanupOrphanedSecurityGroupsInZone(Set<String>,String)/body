@@ -2,7 +2,7 @@
   Optional<SecurityGroupClient> securityGroupClient=novaClient.getSecurityGroupExtensionForZone(zoneId);
   if (securityGroupClient.isPresent()) {
     for (    String group : groups) {
-      for (      SecurityGroup securityGroup : Iterables.filter(securityGroupClient.get().listSecurityGroups(),SecurityGroupPredicates.nameEquals("jclouds_" + group))) {
+      for (      SecurityGroup securityGroup : Iterables.filter(securityGroupClient.get().listSecurityGroups(),SecurityGroupPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
         ZoneAndName zoneAndName=ZoneAndName.fromZoneAndName(zoneId,securityGroup.getName());
         logger.debug(">> deleting securityGroup(%s)",zoneAndName);
         securityGroupClient.get().deleteSecurityGroup(securityGroup.getId());

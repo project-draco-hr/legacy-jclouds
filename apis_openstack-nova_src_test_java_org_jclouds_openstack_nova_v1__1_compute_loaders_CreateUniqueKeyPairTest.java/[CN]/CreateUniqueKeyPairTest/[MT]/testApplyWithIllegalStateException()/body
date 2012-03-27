@@ -1,0 +1,23 @@
+{
+  final NovaClient client=createMock(NovaClient.class);
+  KeyPairClient keyClient=createMock(KeyPairClient.class);
+  @SuppressWarnings("unchecked") final Supplier<String> uniqueIdSupplier=createMock(Supplier.class);
+  KeyPair pair=createMock(KeyPair.class);
+  expect(client.getKeyPairExtensionForZone("zone")).andReturn(Optional.of(keyClient)).atLeastOnce();
+  expect(uniqueIdSupplier.get()).andReturn("1");
+  expect(keyClient.createKeyPair("group-1")).andThrow(new IllegalStateException());
+  expect(uniqueIdSupplier.get()).andReturn("2");
+  expect(keyClient.createKeyPair("group-2")).andReturn(pair);
+  replay(client,keyClient,uniqueIdSupplier);
+  CreateUniqueKeyPair parser=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bind(new TypeLiteral<Supplier<String>>(){
+      }
+).toInstance(uniqueIdSupplier);
+      bind(NovaClient.class).toInstance(client);
+    }
+  }
+).getInstance(CreateUniqueKeyPair.class);
+  assertEquals(parser.load(ZoneAndName.fromZoneAndName("zone","group")),pair);
+  verify(client,keyClient,uniqueIdSupplier);
+}

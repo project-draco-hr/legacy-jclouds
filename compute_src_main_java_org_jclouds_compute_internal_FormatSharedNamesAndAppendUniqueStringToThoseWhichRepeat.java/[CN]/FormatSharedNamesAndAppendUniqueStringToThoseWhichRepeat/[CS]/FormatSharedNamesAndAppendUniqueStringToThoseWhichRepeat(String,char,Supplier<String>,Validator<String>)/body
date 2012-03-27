@@ -1,0 +1,10 @@
+{
+  this.prefix=checkNotNull(prefix,"prefix");
+  this.delimiter=delimiter;
+  this.suffixSupplier=checkNotNull(suffixSupplier,"suffixSupplier");
+  this.groupValidator=checkNotNull(groupValidator,"groupValidator");
+  this.sharedFormat="".equals(prefix) ? "%s" : new StringBuilder().append(prefix).append(delimiter).append("%s").toString();
+  this.uniqueFormat=new StringBuilder(sharedFormat).append(delimiter).append("%s").toString();
+  this.uniqueGroupPattern=Pattern.compile("^" + ("".equals(prefix) ? "" : (prefix + delimiter)) + "(.+)"+ delimiter+ "[^"+ delimiter+ "]+");
+  this.sharedGroupPattern=Pattern.compile("^" + ("".equals(prefix) ? "" : (prefix + delimiter)) + "(.+)$");
+}
