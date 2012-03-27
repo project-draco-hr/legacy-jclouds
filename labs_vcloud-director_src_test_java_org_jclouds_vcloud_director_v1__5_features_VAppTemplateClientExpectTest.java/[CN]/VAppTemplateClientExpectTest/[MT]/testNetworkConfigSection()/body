@@ -3,8 +3,8 @@
   URI uri=URI.create(endpoint + templateId);
   VAppTemplateClient client=orderedRequestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",templateId + "/networkConfigSection").acceptMedia(NETWORK_CONFIG_SECTION).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vapptemplate/networkConfigSection.xml",NETWORK_CONFIG_SECTION).httpResponseBuilder().build(),new VcloudHttpRequestPrimer().apiCommand("PUT",templateId + "/networkConfigSection").xmlFilePayload("/vapptemplate/networkConfigSection.xml",NETWORK_CONFIG_SECTION).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateClient();
   assertNotNull(client);
-  NetworkConfigSection section=client.getVAppTemplateNetworkConfigSection(uri);
+  NetworkConfigSection section=client.getNetworkConfigSection(uri);
   assertEquals(section,exampleNetworkConfigSection());
-  Task task=client.editVAppTemplateNetworkConfigSection(uri,exampleNetworkConfigSection());
+  Task task=client.modifyNetworkConfigSection(uri,exampleNetworkConfigSection());
   assertNotNull(task);
 }
