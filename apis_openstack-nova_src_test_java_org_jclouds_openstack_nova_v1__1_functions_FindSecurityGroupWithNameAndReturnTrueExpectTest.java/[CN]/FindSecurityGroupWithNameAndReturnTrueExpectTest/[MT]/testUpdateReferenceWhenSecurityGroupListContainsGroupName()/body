@@ -1,7 +1,7 @@
 {
   HttpRequest listSecurityGroups=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-security-groups")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listSecurityGroupsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_list.json")).build();
-  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listSecurityGroups,listSecurityGroupsResponse);
+  NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listSecurityGroups,listSecurityGroupsResponse);
   FindSecurityGroupWithNameAndReturnTrue predicate=new FindSecurityGroupWithNameAndReturnTrue(clientWhenSecurityGroupsExist);
   AtomicReference<ZoneAndName> securityGroupInZoneRef=new AtomicReference<ZoneAndName>(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1","name1"));
   assertTrue(predicate.apply(securityGroupInZoneRef));

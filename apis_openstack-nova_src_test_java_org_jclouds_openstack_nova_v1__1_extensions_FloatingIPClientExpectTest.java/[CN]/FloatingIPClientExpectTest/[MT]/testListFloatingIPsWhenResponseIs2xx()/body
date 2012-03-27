@@ -1,7 +1,7 @@
 {
   HttpRequest listFloatingIPs=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-floating-ips")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listFloatingIPsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/floatingip_list.json")).build();
-  NovaClient clientWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listFloatingIPs,listFloatingIPsResponse);
+  NovaClient clientWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listFloatingIPs,listFloatingIPsResponse);
   assertEquals(clientWhenFloatingIPsExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
   assertEquals(clientWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().listFloatingIPs().toString(),new ParseFloatingIPListTest().expected().toString());
 }

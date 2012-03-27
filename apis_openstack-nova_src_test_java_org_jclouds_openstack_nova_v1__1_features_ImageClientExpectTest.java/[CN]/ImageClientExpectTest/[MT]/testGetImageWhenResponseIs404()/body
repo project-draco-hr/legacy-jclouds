@@ -1,6 +1,6 @@
 {
   HttpRequest getImage=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse getImageResponse=HttpResponse.builder().statusCode(404).build();
-  NovaClient clientWhenNoImagesExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,getImage,getImageResponse);
+  NovaClient clientWhenNoImagesExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,getImage,getImageResponse);
   assertNull(clientWhenNoImagesExist.getImageClientForZone("az-1.region-a.geo-1").getImage("52415800-8b69-11e0-9b19-734f5736d2a2"));
 }

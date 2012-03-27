@@ -1,7 +1,7 @@
 {
   HttpRequest listFlavors=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/flavors")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listFlavorsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build();
-  NovaClient clientWhenFlavorsExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listFlavors,listFlavorsResponse);
+  NovaClient clientWhenFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listFlavors,listFlavorsResponse);
   assertEquals(clientWhenFlavorsExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
   assertEquals(clientWhenFlavorsExist.getFlavorClientForZone("az-1.region-a.geo-1").listFlavors().toString(),new ParseFlavorListTest().expected().toString());
 }

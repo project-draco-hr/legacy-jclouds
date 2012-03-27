@@ -1,7 +1,7 @@
 {
   HttpRequest createServer=HttpRequest.builder().method("POST").endpoint(URI.create("https://compute.north.host/v1.1/3456/servers")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"key_name\":\"foo\"}}","application/json")).build();
   HttpResponse createServerResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
-  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess).put(extensionsOfNovaRequest,extensionsOfNovaResponse).put(listImagesDetail,listImagesDetailResponse).put(listFlavorsDetail,listFlavorsDetailResponse).put(createServer,createServerResponse).build();
+  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess).put(extensionsOfNovaRequest,extensionsOfNovaResponse).put(listImagesDetail,listImagesDetailResponse).put(listFlavorsDetail,listFlavorsDetailResponse).put(createServer,createServerResponse).build();
   Injector forSecurityGroups=requestsSendResponses(requestResponseMap);
   Template template=forSecurityGroups.getInstance(TemplateBuilder.class).build();
   template.getOptions().as(NovaTemplateOptions.class).keyPairName("foo");

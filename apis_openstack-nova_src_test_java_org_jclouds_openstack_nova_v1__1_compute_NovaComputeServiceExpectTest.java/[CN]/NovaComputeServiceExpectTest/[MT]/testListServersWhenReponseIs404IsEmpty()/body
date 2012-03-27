@@ -1,6 +1,6 @@
 {
   HttpRequest listServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/servers/detail")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listServersResponse=HttpResponse.builder().statusCode(404).build();
-  ComputeService clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess,listServers,listServersResponse);
+  ComputeService clientWhenNoServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listServers,listServersResponse);
   assertTrue(clientWhenNoServersExist.listNodes().isEmpty());
 }
