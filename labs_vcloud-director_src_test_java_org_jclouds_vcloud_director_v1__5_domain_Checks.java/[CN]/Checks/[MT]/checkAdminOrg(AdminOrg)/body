@@ -1,16 +1,19 @@
 {
   assertNotNull(org.getSettings(),String.format(NOT_NULL_OBJ_FIELD_FMT,"settings","AdminOrg"));
-  if (org.getGroups() != null) {
-    checkGroupsList(org.getGroups());
+  for (  Reference user : org.getUsers()) {
+    checkReferenceType(user,VCloudDirectorMediaType.ADMIN_USER);
   }
-  if (org.getCatalogs() != null) {
-    checkCatalogsList(org.getCatalogs());
+  for (  Reference group : org.getGroups()) {
+    checkReferenceType(group,VCloudDirectorMediaType.GROUP);
   }
-  if (org.getVdcs() != null) {
-    checkVdcs(org.getVdcs());
+  for (  Reference catalog : org.getCatalogs()) {
+    checkReferenceType(catalog,VCloudDirectorMediaType.ADMIN_CATALOG);
   }
-  if (org.getNetworks() != null) {
-    checkNetworks(org.getNetworks());
+  for (  Reference vdc : org.getVdcs()) {
+    checkReferenceType(vdc,VCloudDirectorMediaType.ADMIN_VDC);
+  }
+  for (  Reference network : org.getNetworks()) {
+    checkReferenceType(network,VCloudDirectorMediaType.ADMIN_NETWORK);
   }
   checkOrg(org);
 }
