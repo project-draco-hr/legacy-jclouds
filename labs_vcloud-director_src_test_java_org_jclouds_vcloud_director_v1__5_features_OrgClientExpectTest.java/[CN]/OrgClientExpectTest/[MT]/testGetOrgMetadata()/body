@@ -1,6 +1,6 @@
 {
   URI orgUri=URI.create(endpoint + "/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0");
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0/metadata").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/org/orgMetadata.xml",VCloudDirectorMediaType.METADATA).httpResponseBuilder().build());
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0/metadata").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/org/orgMetadata.xml",VCloudDirectorMediaType.METADATA).httpResponseBuilder().build());
   Metadata expected=Metadata.builder().type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0/metadata")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.org+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).build()).entries(ImmutableSet.of(metadataEntry())).build();
   assertEquals(client.getOrgClient().getMetadataClient().getMetadata(orgUri),expected);
 }

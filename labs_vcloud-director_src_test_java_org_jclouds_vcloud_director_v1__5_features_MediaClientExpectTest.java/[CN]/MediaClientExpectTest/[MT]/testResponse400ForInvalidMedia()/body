@@ -1,6 +1,6 @@
 {
   URI mediaUri=URI.create(endpoint + "/media/NOTAUUID");
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/media/NOTAUUID").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/error400.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(400).build());
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/media/NOTAUUID").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/error400.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(400).build());
   Error expected=Error.builder().message("validation error on field 'id': String value has invalid format or length").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
   try {
     client.getMediaClient().getMedia(mediaUri);

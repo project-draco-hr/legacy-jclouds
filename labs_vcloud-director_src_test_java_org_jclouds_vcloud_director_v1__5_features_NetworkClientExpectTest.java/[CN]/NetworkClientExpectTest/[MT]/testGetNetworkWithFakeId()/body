@@ -1,6 +1,6 @@
 {
   URI networkUri=URI.create(endpoint + "/network/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/network/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/network/error403-fake.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(403).build());
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/network/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/network/error403-fake.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(403).build());
   Error expected=Error.builder().message("This operation is denied.").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
     client.getNetworkClient().getNetwork(networkUri);

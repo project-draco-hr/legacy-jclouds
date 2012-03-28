@@ -1,6 +1,6 @@
 {
   URI networkUri=URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c");
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata/KEY").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/network/metadataValue.xml",VCloudDirectorMediaType.METADATA_ENTRY).httpResponseBuilder().build());
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata/KEY").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/network/metadataValue.xml",VCloudDirectorMediaType.METADATA_ENTRY).httpResponseBuilder().build());
   MetadataValue expected=MetadataValue.builder().href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata/key")).link(Link.builder().rel("up").type("application/vnd.vmware.vcloud.metadata+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/network/55a677cf-ab3f-48ae-b880-fab90421980c/metadata")).build()).value("value").build();
   assertEquals(client.getNetworkClient().getMetadataClient().getMetadataValue(networkUri,"KEY"),expected);
 }

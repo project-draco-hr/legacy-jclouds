@@ -3,7 +3,7 @@
   HttpResponse taskResponse=HttpResponse.builder().build();
   HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/org/NOTAUUID")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
   HttpResponse orgResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/org/error400.xml",VCloudDirectorMediaType.ERROR + ";version=1.5")).build();
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
   Error expected=Error.builder().message("validation error on field 'id': String value has invalid format or length").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();
   try {
     client.getTaskClient().getTaskList(URI.create("https://vcloudbeta.bluelock.com/api/org/NOTAUUID"));

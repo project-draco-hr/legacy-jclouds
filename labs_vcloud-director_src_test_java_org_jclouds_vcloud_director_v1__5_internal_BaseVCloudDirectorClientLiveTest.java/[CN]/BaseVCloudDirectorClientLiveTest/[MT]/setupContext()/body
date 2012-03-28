@@ -1,13 +1,13 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  RestContext<VCloudDirectorAdminClient,VCloudDirectorAdminAsyncClient> rootContext=new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  VCloudDirectorContext rootContext=VCloudDirectorContext.class.cast(new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides));
   rootContext.utils().injector().injectMembers(this);
   Reference orgRef=Iterables.getFirst(rootContext.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
   assertNotNull(orgRef,String.format(REF_REQ_LIVE,"admin org"));
   String adminIdentity="testAdmin" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
   String adminCredential="testAdminPassword";
-  rootContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(adminIdentity).password(adminCredential).description("test user with user-level privileges").role(getRoleReferenceFor(DefaultRoles.ORG_ADMIN)).deployedVmQuota(REQUIRED_ADMIN_VM_QUOTA).isEnabled(true).build());
+  rootContext.getAdminContext().getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(adminIdentity).password(adminCredential).description("test user with user-level privileges").role(getRoleReferenceFor(DefaultRoles.ORG_ADMIN)).deployedVmQuota(REQUIRED_ADMIN_VM_QUOTA).isEnabled(true).build());
   rootContext.close();
   rootContext=null;
   adminContext=VCloudDirectorContext.class.cast(new RestContextFactory().createContext(provider,adminIdentity,adminCredential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides)).getAdminContext();

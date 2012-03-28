@@ -1,6 +1,6 @@
 {
   URI orgUri=URI.create(endpoint + "/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
-  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/org/error403-fake.xml",VCloudDirectorMediaType.ERROR));
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/org/error403-fake.xml",VCloudDirectorMediaType.ERROR));
   Error expected=Error.builder().message("No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
     client.getOrgClient().getOrg(orgUri);
