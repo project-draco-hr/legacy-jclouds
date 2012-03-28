@@ -1,7 +1,7 @@
 {
   try {
-    IMachine machine=getVmWithGuestAdditionsInstalled();
-    machineUtils.applyForMachine(machine.getName(),new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,""));
+    IMachine machine=cloneFromMaster();
+    machineController.ensureMachineIsLaunched(machine.getName());
     sshClientForIMachine=injector.getInstance(IMachineToSshClient.class);
     SshClient client=sshClientForIMachine.apply(machine);
     sshResponds=injector.getInstance(SshResponds.class);
@@ -15,8 +15,8 @@
 ));
   }
   finally {
-    for (    VmSpec spec : ImmutableSet.of(vmSpecification)) {
-      machineController.ensureMachineHasPowerDown(spec.getVmName());
+    for (    VmSpec spec : ImmutableSet.of(machineSpec.getVmSpec())) {
+      machineController.ensureMachineIsShutdown(spec.getVmName());
     }
   }
 }

@@ -1,0 +1,27 @@
+{
+  String currentIp="", previousIp="1.1.1.1";
+  int attempt=0, count=0;
+  while (count < 5) {
+    currentIp="";
+    attempt=0;
+    while (!isIpv4(currentIp) && attempt < 5) {
+      currentIp=this.lockSessionOnMachineAndApply(machineName,LockType.Shared,new Function<ISession,String>(){
+        @Override public String apply(        ISession session){
+          return session.getMachine().getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
+        }
+      }
+);
+      attempt++;
+    }
+    if (previousIp.equals(currentIp)) {
+      count++;
+      delayer(500l * (count + 1));
+    }
+ else {
+      count=0;
+      delayer(5000l);
+    }
+    previousIp=currentIp;
+  }
+  return currentIp;
+}

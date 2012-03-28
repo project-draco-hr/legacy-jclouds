@@ -1,0 +1,23 @@
+{
+  String ip="";
+  int attempt=0;
+  while (!isIpv4(ip) && attempt < 10) {
+    ip=this.lockSessionOnMachineAndApply(machineName,LockType.Shared,new Function<ISession,String>(){
+      @Override public String apply(      ISession session){
+        String ip=session.getMachine().getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
+        return ip;
+      }
+    }
+);
+    attempt++;
+    long sleepTime=1000 * attempt;
+    logger.debug("Instance %s is still not ready. Attempt n:%d. Sleeping for %d millisec",machineName,attempt,sleepTime);
+    try {
+      Thread.sleep(sleepTime);
+    }
+ catch (    InterruptedException e) {
+      Throwables.propagate(e);
+    }
+  }
+  return ip;
+}

@@ -1,15 +1,13 @@
 {
   super.setupClient();
-  String sourceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
-  String cloneName=VIRTUALBOX_IMAGE_PREFIX + "Clone#" + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
-  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk(sourceName)).controllerPort(0).deviceSlot(1).autoDelete(true).build()).attachISO(1,1,guestAdditionsIso).build();
-  VmSpec sourceVmSpec=VmSpec.builder().id(sourceName).name(sourceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
+  instanceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk(instanceName)).controllerPort(0).deviceSlot(1).autoDelete(true).build()).attachISO(1,1,guestAdditionsIso).build();
+  VmSpec instanceVmSpec=VmSpec.builder().id(instanceName).name(instanceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
   Injector injector=context.utils().injector();
   Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
-  IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",sourceVmSpec.getVmName())).build();
-  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.Bridged).build();
+  IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",instanceVmSpec.getVmName())).build();
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",2222,"",22).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
-  this.cloneNetworkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
-  sourceMachineSpec=MasterSpec.builder().iso(isoSpec).vm(sourceVmSpec).network(cloneNetworkSpec).build();
-  this.clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(mode).forceOverwrite(true).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
+  machineSpec=MasterSpec.builder().iso(isoSpec).vm(instanceVmSpec).network(networkSpec).build();
 }

@@ -2,7 +2,11 @@
   IMachine machine=null;
   try {
     machine=cloneFromMaster();
-    machineUtils.applyForMachine(machine.getName(),new LaunchMachineIfNotAlreadyRunning(manager.get(),ExecutionType.GUI,""));
+    machineController.ensureMachineIsLaunched(machine.getName());
+    sshClientForIMachine=injector.getInstance(IMachineToSshClient.class);
+    SshClient client=sshClientForIMachine.apply(machine);
+    sshResponds=injector.getInstance(SshResponds.class);
+    checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
     assertTrue(machineUtils.sharedLockMachineAndApplyToSession(machine.getName(),new Function<ISession,Boolean>(){
       @Override public Boolean apply(      ISession session){
         String s=session.getMachine().getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");

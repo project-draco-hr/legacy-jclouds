@@ -3,5 +3,5 @@
   VmSpec vmSpecification=VmSpec.builder().id("").name("").memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
   InstallGuestAdditions installer=new InstallGuestAdditions(vmSpecification,"4.1.8");
   String scripts=installer.render(OsFamily.UNIX);
-  assertEquals("installModuleAssistantIfNeeded || return 1\n" + "mount -t iso9660 /dev/sr1 /mnt\n" + "/mnt/VBoxLinuxAdditions.run\n"+ "umount /mnt\n",scripts);
+  assertEquals("installModuleAssistantIfNeeded || return 1\n" + "mount -t iso9660 /dev/sr1 /mnt\n" + "/mnt/VBoxLinuxAdditions.run\n"+ "service vboxadd setup\n"+ "VBoxService\n"+ "echo VBoxService > /etc/rc.local\n"+ "echo exit 0 >> /etc/rc.local\n"+ "umount /mnt\n",scripts);
 }
