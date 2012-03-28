@@ -1,6 +1,6 @@
 {
   URI mediaUri=URI.create(endpoint + "/media/e9cd3387-ac57-4d27-a481-9bee75e0690f");
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/media/e9cd3387-ac57-4d27-a481-9bee75e0690f").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/error403-catalog.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(403).build());
+  VCloudDirectorUserClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET","/media/e9cd3387-ac57-4d27-a481-9bee75e0690f").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/error403-catalog.xml",VCloudDirectorMediaType.ERROR).httpResponseBuilder().statusCode(403).build());
   Error expected=Error.builder().message("No access to entity \"(com.vmware.vcloud.entity.media:e9cd3387-ac57-4d27-a481-9bee75e0690f)\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
   try {
     client.getMediaClient().getMedia(mediaUri);
