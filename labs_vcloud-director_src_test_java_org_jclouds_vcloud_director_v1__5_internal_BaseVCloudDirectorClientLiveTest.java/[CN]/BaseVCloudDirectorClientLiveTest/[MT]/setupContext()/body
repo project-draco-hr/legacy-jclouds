@@ -1,7 +1,22 @@
 {
   setupCredentials();
   Properties overrides=setupProperties();
-  context=new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  RestContext<VCloudDirectorAdminClient,VCloudDirectorAdminAsyncClient> rootContext=new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
+  rootContext.utils().injector().injectMembers(this);
+  Reference orgRef=Iterables.getFirst(rootContext.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
+  assertNotNull(orgRef,String.format(REF_REQ_LIVE,"admin org"));
+  String adminIdentity="testAdmin" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+  String adminCredential="testAdminPassword";
+  rootContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(adminIdentity).password(adminCredential).description("test user with user-level privileges").role(getRoleReferenceFor(DefaultRoles.ORG_ADMIN)).deployedVmQuota(REQUIRED_ADMIN_VM_QUOTA).isEnabled(true).build());
+  rootContext.close();
+  rootContext=null;
+  adminContext=VCloudDirectorContext.class.cast(new RestContextFactory().createContext(provider,adminIdentity,adminCredential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides)).getAdminContext();
+  adminSession=adminContext.getApi().getCurrentSession();
+  adminContext.utils().injector().injectMembers(this);
+  String userIdentity="test" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+  String userCredential="testPassword";
+  adminContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(userIdentity).password(userCredential).description("test user with user-level privileges").role(getRoleReferenceFor(DefaultRoles.USER)).deployedVmQuota(REQUIRED_USER_VM_QUOTA).isEnabled(true).build());
+  context=new RestContextFactory().createContext(provider,userIdentity,userCredential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
   session=context.getApi().getCurrentSession();
   context.utils().injector().injectMembers(this);
   initTestParametersFromPropertiesOrLazyDiscover();
