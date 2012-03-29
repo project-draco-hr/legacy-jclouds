@@ -1,15 +1,5 @@
 {
   URI orgUri=URI.create(endpoint + "/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"),getStandardPayloadResponse(403,"/org/error403-fake.xml",VCloudDirectorMediaType.ERROR));
-  String message="No access to entity \"com.vmware.vcloud.entity.org:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\".";
-  try {
-    client.getOrgClient().getOrg(orgUri);
-    fail("Should give HTTP 403 error");
-  }
- catch (  ResourceNotFoundException rnfe) {
-    assertEquals(rnfe.getMessage(),message);
-  }
-catch (  Exception e) {
-    fail("Should have thrown a ResourceNotFoundException");
-  }
+  assertNull(client.getOrgClient().getOrg(orgUri));
 }
