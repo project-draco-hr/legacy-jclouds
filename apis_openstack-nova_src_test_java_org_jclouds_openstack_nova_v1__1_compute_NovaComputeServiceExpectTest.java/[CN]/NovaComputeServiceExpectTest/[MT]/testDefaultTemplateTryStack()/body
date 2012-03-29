@@ -1,6 +1,5 @@
 {
-  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithUsernameAndPassword,HttpResponse.builder().statusCode(200).message("HTTP/1.1 200").payload(payloadFromResourceWithContentType("/keystoneAuthResponse_trystack.json","application/json")).build()).put(extensionsOfNovaRequest.toBuilder().endpoint(URI.create("https://nova-api.trystack.org:9774/v1.1/3456/extensions")).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/extension_list_trystack.json")).build()).put(listImagesDetail.toBuilder().endpoint(URI.create("https://nova-api.trystack.org:9774/v1.1/3456/images/detail")).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_detail_trystack.json")).build()).put(listServers.toBuilder().endpoint(URI.create("https://nova-api.trystack.org:9774/v1.1/3456/servers/detail")).build(),listServersResponse).put(listFlavorsDetail.toBuilder().endpoint(URI.create("https://nova-api.trystack.org:9774/v1.1/3456/flavors/detail")).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list_detail_trystack.json")).build()).build();
-  ComputeService clientForTryStack=requestsSendResponses(requestResponseMap);
+  ComputeService clientForTryStack=requestsSendResponses(defaultTemplateTryStack);
   Template defaultTemplate=clientForTryStack.templateBuilder().imageId("RegionOne/15").build();
   checkTemplate(defaultTemplate);
   checkTemplate(clientForTryStack.templateBuilder().fromTemplate(defaultTemplate).build());

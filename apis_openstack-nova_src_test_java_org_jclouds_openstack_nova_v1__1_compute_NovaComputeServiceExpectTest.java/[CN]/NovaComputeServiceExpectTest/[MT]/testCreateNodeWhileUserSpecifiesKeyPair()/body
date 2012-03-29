@@ -1,0 +1,26 @@
+{
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().putAll(defaultTemplateTryStack);
+  requestResponseMap.put(listSecurityGroups,notFound);
+  requestResponseMap.put(createSecurityGroupWithPrefixOnGroup,securityGroupCreated);
+  requestResponseMap.put(createSecurityGroupRuleForDefaultPort22,securityGroupRuleCreated);
+  requestResponseMap.put(getSecurityGroup,securityGroupWithPort22);
+  HttpRequest createServerWithSuppliedKeyPair=HttpRequest.builder().method("POST").endpoint(URI.create("https://nova-api.trystack.org:9774/v1.1/3456/servers")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"fooPair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}","application/json")).build();
+  HttpResponse createdServer=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
+  requestResponseMap.put(createServerWithSuppliedKeyPair,createdServer);
+  ComputeService clientThatCreatesNode=requestsSendResponses(requestResponseMap.build(),new AbstractModule(){
+    @Override protected void configure(){
+      final AtomicInteger suffix=new AtomicInteger();
+      bind(new TypeLiteral<Supplier<String>>(){
+      }
+).toInstance(new Supplier<String>(){
+        @Override public String get(){
+          return suffix.getAndIncrement() + "";
+        }
+      }
+);
+    }
+  }
+);
+  NodeMetadata node=Iterables.getOnlyElement(clientThatCreatesNode.createNodesInGroup("test",1,keyPairName("fooPair").blockUntilRunning(false)));
+  assertEquals(node.getCredentials().getPrivateKey(),null);
+}
