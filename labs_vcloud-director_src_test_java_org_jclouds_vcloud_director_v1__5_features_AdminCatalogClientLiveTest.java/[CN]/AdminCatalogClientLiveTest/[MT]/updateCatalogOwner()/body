@@ -1,6 +1,6 @@
 {
-  User newOwnerUser=UserClientLiveTest.randomTestUser("testUpdateCatalogOwner",context);
-  newOwnerUser=context.getApi().getUserClient().createUser(orgRef.getHref(),newOwnerUser);
+  User newOwnerUser=randomTestUser("testUpdateCatalogOwner");
+  newOwnerUser=adminContext.getApi().getUserClient().createUser(orgRef.getHref(),newOwnerUser);
   assertNotNull(newOwnerUser,"failed to create temp user to test updateCatalogOwner");
   Owner oldOwner=owner;
   Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().fromEntity(newOwnerUser).build()).build();
@@ -13,6 +13,6 @@
   finally {
     catalogClient.setOwner(catalog.getHref(),oldOwner);
     owner=catalogClient.getOwner(catalog.getHref());
-    context.getApi().getUserClient().deleteUser(newOwnerUser.getHref());
+    adminContext.getApi().getUserClient().deleteUser(newOwnerUser.getHref());
   }
 }

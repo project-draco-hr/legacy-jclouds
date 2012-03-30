@@ -1,6 +1,11 @@
 {
-  bindClientAndAsyncClient(binder(),SessionClient.class,SessionAsyncClient.class);
+  bind(new TypeLiteral<RestContext<VCloudDirectorAdminClient,VCloudDirectorAdminAsyncClient>>(){
+  }
+).to(new TypeLiteral<RestContextImpl<VCloudDirectorAdminClient,VCloudDirectorAdminAsyncClient>>(){
+  }
+);
   bindClientAndAsyncClient(binder(),OrgClient.class,OrgAsyncClient.class);
+  bindClientAndAsyncClient(binder(),SessionClient.class,SessionAsyncClient.class);
   bindClientAndAsyncClient(binder(),TaskClient.class,TaskAsyncClient.class);
   bindClientAndAsyncClient(binder(),VAppClient.class,VAppAsyncClient.class);
   bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(InvalidateSessionAndRetryOn401AndLogoutOnClose.class);
