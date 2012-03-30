@@ -3,8 +3,8 @@
   URI uri=URI.create(endpoint + templateId);
   VAppTemplateClient client=orderedRequestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",templateId + "/customizationSection").acceptMedia(CUSTOMIZATION_SECTION).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vapptemplate/customizationSection.xml",CUSTOMIZATION_SECTION).httpResponseBuilder().build(),new VcloudHttpRequestPrimer().apiCommand("PUT",templateId + "/customizationSection").xmlFilePayload("/vapptemplate/customizationSection.xml",CUSTOMIZATION_SECTION).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateClient();
   assertNotNull(client);
-  CustomizationSection section=client.getVAppTemplateCustomizationSection(uri);
+  CustomizationSection section=client.getCustomizationSection(uri);
   assertEquals(section,exampleCustomizationSection());
-  Task task=client.editVAppTemplateCustomizationSection(uri,exampleCustomizationSection());
+  Task task=client.modifyCustomizationSection(uri,exampleCustomizationSection());
   assertNotNull(task);
 }

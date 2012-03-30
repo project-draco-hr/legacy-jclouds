@@ -3,8 +3,8 @@
   URI uri=URI.create(endpoint + templateId);
   VAppTemplateClient client=orderedRequestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",templateId + "/leaseSettingsSection").acceptMedia(LEASE_SETTINGS_SECTION).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vapptemplate/leaseSettingsSection.xml",LEASE_SETTINGS_SECTION).httpResponseBuilder().build(),new VcloudHttpRequestPrimer().apiCommand("PUT",templateId + "/leaseSettingsSection").xmlFilePayload("/vapptemplate/leaseSettingsSection.xml",LEASE_SETTINGS_SECTION).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateClient();
   assertNotNull(client);
-  LeaseSettingsSection section=client.getVappTemplateLeaseSettingsSection(uri);
+  LeaseSettingsSection section=client.getLeaseSettingsSection(uri);
   assertEquals(section,exampleLeaseSettingsSection());
-  Task task=client.editVappTemplateLeaseSettingsSection(uri,exampleLeaseSettingsSection());
+  Task task=client.modifyLeaseSettingsSection(uri,exampleLeaseSettingsSection());
   assertNotNull(task);
 }
