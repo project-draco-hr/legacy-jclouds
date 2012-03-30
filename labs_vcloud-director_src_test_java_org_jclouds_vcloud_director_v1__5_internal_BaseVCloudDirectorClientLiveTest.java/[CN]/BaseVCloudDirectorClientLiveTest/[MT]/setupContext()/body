@@ -2,6 +2,7 @@
   setupCredentials();
   Properties overrides=setupProperties();
   VCloudDirectorContext rootContext=VCloudDirectorContext.class.cast(new RestContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides));
+  adminContext=rootContext.getAdminContext();
   rootContext.utils().injector().injectMembers(this);
   Reference orgRef=Iterables.getFirst(rootContext.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
   assertNotNull(orgRef,String.format(REF_REQ_LIVE,"admin org"));
