@@ -1,7 +1,7 @@
 {
   HttpRequest catalogItemRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
   HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/catalogItem.xml",VCloudDirectorMediaType.CATALOG_ITEM)).build();
-  VCloudDirectorAdminClient client=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
   URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
   CatalogItem expected=catalogItem();
   assertEquals(client.getCatalogClient().getCatalogItem(catalogItemURI),expected);
