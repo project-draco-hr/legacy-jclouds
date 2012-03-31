@@ -2,9 +2,9 @@
   if (masters.containsKey(key.getId())) {
     return masters.get(key.getId());
   }
-  YamlImage yamlImage=imageMapping.get(key.getId());
-  checkNotNull(yamlImage,"could not find yaml image for image: " + key);
-  checkState(!yamlImage.id.contains(VIRTUALBOX_NODE_NAME_SEPARATOR),"master image names cannot contain \"" + VIRTUALBOX_NODE_NAME_SEPARATOR + "\"");
+  YamlImage currentImage=imageMapping.get(key.getId());
+  checkNotNull(currentImage,"could not find yaml image for image: " + key);
+  checkState(!currentImage.id.contains(VIRTUALBOX_NODE_NAME_SEPARATOR),"master image names cannot contain \"" + VIRTUALBOX_NODE_NAME_SEPARATOR + "\"");
   String guestAdditionsFileName=String.format("VBoxGuestAdditions_%s.iso",version);
   String guestAdditionsIso=String.format("%s/%s",isosDir,guestAdditionsFileName);
   String guestAdditionsUri="http://download.virtualbox.org/virtualbox/" + version + "/"+ guestAdditionsFileName;
@@ -12,27 +12,32 @@
     getFilePathOrDownload(guestAdditionsUri);
   }
   checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
-  String localIsoUrl=getFilePathOrDownload(yamlImage.iso);
-  String vmName=VIRTUALBOX_IMAGE_PREFIX + yamlImage.id;
+  String localIsoUrl=getFilePathOrDownload(currentImage.iso);
+  String vmName=VIRTUALBOX_IMAGE_PREFIX + currentImage.id;
   String adminDisk=workingDir + File.separator + vmName+ ".vdi";
   HardDisk hardDisk=HardDisk.builder().diskpath(adminDisk).autoDelete(true).controllerPort(0).deviceSlot(1).build();
   StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,localIsoUrl).attachHardDisk(hardDisk).attachISO(1,0,guestAdditionsIso).build();
-  VmSpec vmSpecification=VmSpec.builder().id(yamlImage.id).name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
+  VmSpec vmSpecification=VmSpec.builder().id(currentImage.id).name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",MASTER_PORT,"",22).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).slot(0L).build();
   NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   MasterSpec masterSpec=MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(localIsoUrl).installationScript(installationKeySequence.replace("HOSTNAME",vmSpecification.getVmName())).build()).network(networkSpec).build();
   IMachine masterMachine;
+  PreseedCfgServer server=new PreseedCfgServer();
   try {
     masterMachine=manager.get().getVBox().findMachine(vmName);
   }
  catch (  VBoxException e) {
     if (machineNotFoundException(e)) {
+      server.start(preconfigurationUrl,currentImage.preseed_cfg);
       masterMachine=masterCreatorAndInstaller.apply(masterSpec);
     }
  else {
       throw e;
     }
+  }
+ finally {
+    server.stop();
   }
   Master master=Master.builder().machine(masterMachine).spec(masterSpec).build();
   masters.put(key.getId(),master);

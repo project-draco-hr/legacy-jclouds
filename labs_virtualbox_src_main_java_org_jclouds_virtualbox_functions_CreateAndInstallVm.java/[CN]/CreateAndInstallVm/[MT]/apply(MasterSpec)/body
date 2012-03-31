@@ -4,8 +4,7 @@
   String vmName=vmSpec.getVmName();
   IMachine vm=createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(masterSpec);
   machineController.ensureMachineIsLaunched(vmName);
-  URI uri=preConfiguration.getUnchecked(isoSpec);
-  String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",uri.toASCIIString());
+  String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",preconfigurationUrl);
   configureOsInstallationWithKeyboardSequence(vmName,installationKeySequence);
   try {
     Thread.sleep(30000l);
