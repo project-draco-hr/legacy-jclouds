@@ -1,0 +1,30 @@
+{
+  int count=0;
+  ISession session;
+  while (true) {
+    try {
+      IMachine immutableMachine=manager.get().getVBox().findMachine(machineId);
+      session=manager.get().getSessionObject();
+      immutableMachine.lockMachine(session,type);
+      break;
+    }
+ catch (    VBoxException e) {
+      VBoxException vbex=Throwables2.getFirstThrowableOfType(e,VBoxException.class);
+      if (vbex != null && machineNotFoundException(vbex)) {
+        return null;
+      }
+      count++;
+      logger.warn(e,"Could not lock machine (try %d of %d). Error: %s",count,retries,e.getMessage());
+      if (count == retries) {
+        throw new RuntimeException(String.format("error locking %s with %s lock: %s",machineId,type,e.getMessage()),e);
+      }
+      try {
+        Thread.sleep(1000L);
+      }
+ catch (      InterruptedException e1) {
+      }
+    }
+  }
+  checkState(session.getState().equals(SessionState.Locked));
+  return checkNotNull(session,"session");
+}

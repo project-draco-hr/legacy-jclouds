@@ -1,8 +1,0 @@
-{
-  Injector injector=context.utils().injector();
-  IMachine master=injector.getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(masterMachineSpec);
-  VmSpec clonedVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(512).cleanUpMode(CleanupMode.Full).forceOverwrite(true).build();
-  this.cloneSpec=CloneSpec.builder().vm(clonedVmSpec).network(networkSpec).master(master).linked(true).build();
-  IMachine clone=new CloneAndRegisterMachineFromIMachineIfNotAlreadyExists(manager,workingDir,machineUtils).apply(cloneSpec);
-  assertTrue(isLinkedClone().apply(clone));
-}

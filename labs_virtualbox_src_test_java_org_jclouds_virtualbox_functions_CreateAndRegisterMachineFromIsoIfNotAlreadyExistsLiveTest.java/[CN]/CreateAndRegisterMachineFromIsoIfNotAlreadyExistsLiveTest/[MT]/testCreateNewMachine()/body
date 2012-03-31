@@ -1,5 +1,5 @@
 {
-  String vmName="jclouds-test-create-1-node";
+  vmName="jclouds-test-create-1-node";
   String vmId=UUID.randomUUID().toString();
   StorageController ideController=StorageController.builder().name(ideControllerName).bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk(vmName)).controllerPort(0).deviceSlot(1).build()).attachISO(1,1,guestAdditionsIso).build();
   VmSpec vmSpec=VmSpec.builder().id(vmId).name(vmName).memoryMB(512).controller(ideController).cleanUpMode(mode).osTypeId("Debian").forceOverwrite(true).build();
@@ -7,13 +7,7 @@
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
   NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   MasterSpec machineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript("").build()).vm(vmSpec).network(networkSpec).build();
-  undoVm(vmSpec);
-  try {
-    IMachine debianNode=context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(machineSpec);
-    IMachine machine=manager.get().getVBox().findMachine(vmName);
-    assertEquals(debianNode.getName(),machine.getName());
-  }
-  finally {
-    undoVm(vmSpec);
-  }
+  IMachine debianNode=context.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(machineSpec);
+  IMachine machine=manager.get().getVBox().findMachine(vmName);
+  assertEquals(debianNode.getName(),machine.getName());
 }

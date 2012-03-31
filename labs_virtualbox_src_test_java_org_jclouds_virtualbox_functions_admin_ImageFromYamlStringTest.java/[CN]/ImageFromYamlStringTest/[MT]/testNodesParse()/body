@@ -3,11 +3,6 @@
   for (  Object line : IOUtils.readLines(new InputStreamReader(getClass().getResourceAsStream("/default-images.yaml")))) {
     yamlFileLines.append(line).append("\n");
   }
-  ImagesToYamlImagesFromYamlDescriptor parser=new ImagesToYamlImagesFromYamlDescriptor(new Supplier<String>(){
-    @Override public String get(){
-      return yamlFileLines.toString();
-    }
-  }
-);
+  ImagesToYamlImagesFromYamlDescriptor parser=new ImagesToYamlImagesFromYamlDescriptor(new YamlImagesFromFileConfig("/default-images.yaml"));
   assertEquals(Iterables.getFirst(parser.get().keySet(),null),TEST1);
 }

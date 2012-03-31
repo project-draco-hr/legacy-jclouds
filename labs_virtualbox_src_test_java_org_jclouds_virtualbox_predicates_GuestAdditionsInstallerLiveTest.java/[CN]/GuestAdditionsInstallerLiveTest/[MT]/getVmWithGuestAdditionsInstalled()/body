@@ -1,9 +1,10 @@
 {
+  MasterSpec masterSpecForTest=super.getMasterSpecForTest();
   try {
     Injector injector=context.utils().injector();
-    return injector.getInstance(CreateAndInstallVm.class).apply(sourceMachineSpec);
+    return injector.getInstance(CreateAndInstallVm.class).apply(masterSpecForTest);
   }
  catch (  IllegalStateException e) {
-    return manager.get().getVBox().findMachine(sourceMachineSpec.getVmSpec().getVmId());
+    return manager.get().getVBox().findMachine(masterSpecForTest.getVmSpec().getVmId());
   }
 }

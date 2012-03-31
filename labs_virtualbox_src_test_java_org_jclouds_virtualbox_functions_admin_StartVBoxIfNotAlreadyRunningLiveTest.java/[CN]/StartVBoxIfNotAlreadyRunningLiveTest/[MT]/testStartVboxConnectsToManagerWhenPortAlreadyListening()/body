@@ -6,8 +6,9 @@
   URI provider=URI.create("http://localhost:18083/");
   String identity="adminstrator";
   String credential="12345";
+  expect(client.seconds(3)).andReturn(client);
   expect(client.apply(new IPSocket(provider.getHost(),provider.getPort()))).andReturn(true);
-  manager.connect(provider.toASCIIString(),identity,credential);
+  manager.connect(provider.toASCIIString(),"","");
   replay(manager,runScriptOnNodeFactory,client);
   new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider),identity,credential).start();
   verify(manager,runScriptOnNodeFactory,client);

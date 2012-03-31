@@ -1,0 +1,11 @@
+{
+  IHostNetworkInterface availableHostInterfaceIf=returnExistingHostNetworkInterfaceWithDHCPenabledOrNull(manager.get().getVBox().getHost().getNetworkInterfaces());
+  if (availableHostInterfaceIf == null) {
+    final String hostOnlyIfName=createHostOnlyIf();
+    assignDHCPtoHostOnlyInterface(hostOnlyIfName);
+    return hostOnlyIfName;
+  }
+ else {
+    return availableHostInterfaceIf.getName();
+  }
+}

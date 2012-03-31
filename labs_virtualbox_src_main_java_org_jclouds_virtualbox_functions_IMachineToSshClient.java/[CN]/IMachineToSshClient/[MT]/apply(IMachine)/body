@@ -22,6 +22,9 @@
     String network="1.1.1.1";
     clientIpAddress=getIpAddressFromBridgedNIC(networkAdapter,network);
   }
+ else   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.HostOnly)) {
+    clientIpAddress=machineUtils.getIpAddressFromHostOnlyNIC(vm.getName());
+  }
   checkNotNull(clientIpAddress,"clientIpAddress");
   client=sshClientFactory.create(new IPSocket(clientIpAddress,Integer.parseInt(sshPort)),loginCredentials);
   checkNotNull(client);
