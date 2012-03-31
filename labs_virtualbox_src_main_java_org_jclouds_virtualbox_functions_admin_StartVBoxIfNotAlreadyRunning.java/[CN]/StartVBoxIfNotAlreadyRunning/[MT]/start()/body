@@ -5,7 +5,6 @@
     runScriptOnNodeFactory.create(host.get(),Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false)).init().call();
     logger.debug(">> starting vboxwebsrv");
     String vboxwebsrv="vboxwebsrv -t 10000 -v -b";
-    if (host.get().getOperatingSystem() != null && host.get().getOperatingSystem().getDescription().equals("Mac OS X"))     vboxwebsrv="cd /Applications/VirtualBox.app/Contents/MacOS/ && " + vboxwebsrv;
     runScriptOnNodeFactory.create(host.get(),Statements.exec(vboxwebsrv),runAsRoot(false).wrapInInitScript(false).blockOnComplete(false).nameTask("vboxwebsrv")).init().call();
     if (!socketTester.apply(new IPSocket(provider.getHost(),provider.getPort()))) {
       throw new RuntimeException("could not connect to virtualbox");
