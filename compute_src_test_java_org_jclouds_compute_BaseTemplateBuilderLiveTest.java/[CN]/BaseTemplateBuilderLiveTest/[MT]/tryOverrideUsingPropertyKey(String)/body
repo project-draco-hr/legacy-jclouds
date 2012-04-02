@@ -1,4 +1,5 @@
 {
+  Module credentialStoreModule=new CredentialStoreModule(new CopyInputStreamInputSupplierMap(new ConcurrentHashMap<String,InputSupplier<InputStream>>()));
   ComputeServiceContext context=null;
   try {
     Properties overrides=setupProperties();
@@ -6,7 +7,7 @@
     overrides.setProperty(propertyKey + ".image.login-user",login);
     boolean auth=authenticateSudo != null ? Boolean.valueOf(authenticateSudo) : true;
     overrides.setProperty(propertyKey + ".image.authenticate-sudo",auth + "");
-    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(getLoggingModule()),overrides);
+    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(getLoggingModule(),credentialStoreModule),overrides);
     Iterable<String> userPass=Splitter.on(':').split(login);
     String user=Iterables.get(userPass,0);
     String pass=Iterables.size(userPass) > 1 ? Iterables.get(userPass,1) : null;
@@ -14,7 +15,6 @@
   }
   finally {
     if (context != null) {
-      context.credentialStore().clear();
       context.close();
     }
   }
