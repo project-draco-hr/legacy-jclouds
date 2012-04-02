@@ -1,0 +1,17 @@
+{
+  Iterable<ApiMetadata> apisMetadata=Apis.ofType(ApiType.BLOBSTORE);
+  for (  ApiMetadata apiMetadata : apisMetadata) {
+    assertEquals(testBlobstoreApi,apiMetadata);
+  }
+  apisMetadata=Apis.ofType(ApiType.COMPUTE);
+  for (  ApiMetadata apiMetadata : apisMetadata) {
+    if (apiMetadata.getName().equals(testComputeApi.getName())) {
+      assertEquals(testComputeApi,apiMetadata);
+    }
+ else {
+      assertEquals(testYetAnotherComputeApi,apiMetadata);
+    }
+  }
+  apisMetadata=Apis.ofType(ApiType.UNRECOGNIZED);
+  assertEquals(false,apisMetadata.iterator().hasNext());
+}
