@@ -1,17 +1,17 @@
 {
-  Preconditions.checkNotNull(api,"api must be defined");
+  Preconditions.checkNotNull(apiClass,"api must be defined");
   return new Predicate<ProviderMetadata>(){
     /** 
  * {@inheritDoc}
  */
     @Override public boolean apply(    ProviderMetadata providerMetadata){
-      return providerMetadata.getApi().equals(api);
+      return Predicates.instanceOf(apiClass).apply(providerMetadata.getApi());
     }
     /** 
  * {@inheritDoc}
  */
     @Override public String toString(){
-      return "api(" + api + ")";
+      return "apiInstanceOf(" + apiClass + ")";
     }
   }
 ;
