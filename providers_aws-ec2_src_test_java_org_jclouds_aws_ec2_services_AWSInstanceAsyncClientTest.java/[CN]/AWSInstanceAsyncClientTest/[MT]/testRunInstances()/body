@@ -4,10 +4,10 @@
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
   try {
-    assertPayloadEquals(request,"Version=2011-05-15&Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=1","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=1","application/x-www-form-urlencoded",false);
   }
  catch (  AssertionError e) {
-    assertPayloadEquals(request,"Version=2011-05-15&Action=RunInstances&ImageId=ami-voo&MaxCount=1&MinCount=1","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Action=RunInstances&ImageId=ami-voo&MaxCount=1&MinCount=1","application/x-www-form-urlencoded",false);
   }
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,AWSRunInstancesResponseHandler.class);

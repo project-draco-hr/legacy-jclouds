@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,null,TagFilters.filters().key("one").key("two").build());
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2011-05-15&Action=DescribeTags&Filter.1.Name=key&Filter.1.Value.1=one&Filter.1.Value.2=two","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,"Action=DescribeTags&Filter.1.Name=key&Filter.1.Value.1=one&Filter.1.Value.2=two","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,DescribeTagsResponseHandler.class);
   assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);

@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,null,"1","2");
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2011-05-15&Action=DescribeSecurityGroups&GroupId.1=1&GroupId.2=2","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,"Action=DescribeSecurityGroups&GroupId.1=1&GroupId.2=2","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,DescribeSecurityGroupsResponseHandler.class);
   assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);

@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,null,ownedBy("o1","o2").restorableBy("r1","r2").snapshotIds("s1","s2"));
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2010-06-15&Action=DescribeSnapshots&Owner.1=o1&Owner.2=o2&RestorableBy.1=r1&RestorableBy.2=r2&SnapshotId.1=s1&SnapshotId.2=s2","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,"Action=DescribeSnapshots&Owner.1=o1&Owner.2=o2&RestorableBy.1=r1&RestorableBy.2=r2&SnapshotId.1=s1&SnapshotId.2=s2","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,DescribeSnapshotsResponseHandler.class);
   assertExceptionParserClassEquals(method,ReturnEmptySetOnNotFoundOr404.class);

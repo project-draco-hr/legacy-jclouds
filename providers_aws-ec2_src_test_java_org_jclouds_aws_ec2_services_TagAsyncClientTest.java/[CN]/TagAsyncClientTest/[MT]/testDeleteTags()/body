@@ -3,7 +3,7 @@
   HttpRequest request=processor.createRequest(method,null,ImmutableList.<String>builder().add("xxx").build(),ImmutableMap.<String,String>builder().put("yyy","zzz").build());
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Version=2011-05-15&Action=DeleteTags&Tag.1.Key=yyy&Tag.1.Value=zzz&ResourceId.1=xxx","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,"Action=DeleteTags&Tag.1.Key=yyy&Tag.1.Value=zzz&ResourceId.1=xxx","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertExceptionParserClassEquals(method,ReturnVoidOnNotFoundOr404.class);

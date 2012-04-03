@@ -4,10 +4,10 @@
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
   try {
-    assertPayloadEquals(request,"Version=2010-06-15&Action=RevokeSecurityGroupIngress&CidrIp=0.0.0.0%2F0&IpProtocol=tcp&GroupName=group&FromPort=6000&ToPort=7000","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Action=RevokeSecurityGroupIngress&CidrIp=0.0.0.0%2F0&IpProtocol=tcp&GroupName=group&FromPort=6000&ToPort=7000","application/x-www-form-urlencoded",false);
   }
  catch (  AssertionError e) {
-    assertPayloadEquals(request,"Version=2010-06-15&Action=RevokeSecurityGroupIngress&CidrIp=0.0.0.0%2F0&IpProtocol=tcp&GroupName=group&ToPort=7000&FromPort=6000","application/x-www-form-urlencoded",false);
+    assertPayloadEquals(request,"Action=RevokeSecurityGroupIngress&CidrIp=0.0.0.0%2F0&IpProtocol=tcp&GroupName=group&ToPort=7000&FromPort=6000","application/x-www-form-urlencoded",false);
   }
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
