@@ -3,16 +3,16 @@
   try {
     group=Iterables.getOnlyElement(Iterables.filter(data,new Predicate<String>(){
       @Override public boolean apply(      String input){
-        return input.startsWith("jclouds#") && input.contains("#" + instance.getRegion());
+        return input.startsWith("jclouds" + delimiter) && input.contains(delimiter + instance.getRegion());
       }
     }
-)).split("#")[1];
+)).split(delimiter + "")[1];
   }
  catch (  NoSuchElementException e) {
     logger.debug("no group parsed from %s's data: %s",instance.getId(),data);
   }
 catch (  IllegalArgumentException e) {
-    logger.debug("too many groups match %s; %s's data: %s","jclouds#",instance.getId(),data);
+    logger.debug("too many groups match %s%s; %s's data: %s","jclouds",delimiter,instance.getId(),data);
   }
   return group;
 }
