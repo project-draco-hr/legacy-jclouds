@@ -1,0 +1,13 @@
+{
+  User newUser=randomTestUser("testDeleteUser" + getTestDateTimeStamp());
+  User userToBeDeleted=userClient.createUser(orgRef.getHref(),newUser);
+  userClient.deleteUser(userToBeDeleted.getHref());
+  Error expected=Error.builder().message("No access to entity \"(com.vmware.vcloud.entity.user:" + userToBeDeleted.getId().substring("urn:vcloud:user:".length()) + ")\".").majorErrorCode(403).minorErrorCode("ACCESS_TO_RESOURCE_IS_FORBIDDEN").build();
+  try {
+    userClient.getUser(userToBeDeleted.getHref());
+    fail("Should give HTTP 403 error for accessing user after deleting it (" + userToBeDeleted + ")");
+  }
+ catch (  VCloudDirectorException vde) {
+    assertEquals(vde.getError(),expected);
+  }
+}

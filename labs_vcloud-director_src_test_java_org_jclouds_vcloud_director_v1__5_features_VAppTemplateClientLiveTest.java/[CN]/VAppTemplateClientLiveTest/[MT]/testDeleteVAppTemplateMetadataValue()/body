@@ -1,10 +1,7 @@
 {
-  String key=name("key-");
-  MetadataValue metadataValue=MetadataValue.builder().value("myval").build();
-  final Task task=vAppTemplateClient.getMetadataClient().setMetadata(vAppTemplateURI,key,metadataValue);
-  retryTaskSuccess.apply(task);
   final Task deletionTask=vAppTemplateClient.getMetadataClient().deleteMetadataEntry(vAppTemplateURI,key);
   retryTaskSuccess.apply(deletionTask);
   Metadata newMetadata=vAppTemplateClient.getMetadataClient().getMetadata(vAppTemplateURI);
   checkMetadataKeyAbsentFor("vAppTemplate",newMetadata,key);
+  key=null;
 }
