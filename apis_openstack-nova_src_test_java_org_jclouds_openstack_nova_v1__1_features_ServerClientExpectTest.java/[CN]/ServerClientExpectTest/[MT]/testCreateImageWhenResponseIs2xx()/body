@@ -1,0 +1,9 @@
+{
+  String serverId="123";
+  String imageId="456";
+  String imageName="foo";
+  HttpRequest createImage=HttpRequest.builder().method("POST").endpoint(URI.create("https://compute.north.host/v1.1/3456/servers/" + serverId + "/action")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("{\"createImage\":{\"name\":\"" + imageName + "\", \"metadata\": {}}}","application/json")).build();
+  HttpResponse createImageResponse=HttpResponse.builder().statusCode(200).headers(ImmutableMultimap.<String,String>builder().put("Location","https://compute.north.host/v1.1/3456/images/" + imageId).build()).build();
+  NovaClient clientWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,createImage,createImageResponse);
+  assertEquals(clientWhenServerExists.getServerClientForZone("az-1.region-a.geo-1").createImageFromServer(imageName,serverId),imageId);
+}
