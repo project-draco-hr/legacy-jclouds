@@ -1,7 +1,5 @@
 {
-  Injector injector=createInjector();
-  BlobStoreContext handler=injector.getInstance(BlobStoreContext.class);
-  assertEquals(handler.getClass(),BlobStoreContextImpl.class);
+  Injector injector=BlobStoreContextBuilder.newBuilder(new AzureBlobProviderMetadata()).credentials("foo","bar").buildInjector();
   ContainsValueInListStrategy valueList=injector.getInstance(ContainsValueInListStrategy.class);
   assertEquals(valueList.getClass(),FindMD5InBlobProperties.class);
 }

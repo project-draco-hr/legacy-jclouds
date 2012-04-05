@@ -1,0 +1,10 @@
+{
+  this.apiMetadata=checkNotNull(apiMetadata,"apiMetadata");
+  this.providerMetadata=providerMetadata;
+  if (providerMetadata != null)   this.endpoint=providerMetadata.getEndpoint();
+  if (apiMetadata.getDefaultIdentity().isPresent())   identity=apiMetadata.getDefaultIdentity().get();
+  if (apiMetadata.getDefaultCredential().isPresent())   credential=apiMetadata.getDefaultCredential().get();
+  this.apiVersion=apiMetadata.getVersion();
+  this.buildVersion=apiMetadata.getBuildVersion().or("");
+  if (endpoint == null)   endpoint=apiMetadata.getDefaultEndpoint().orNull();
+}

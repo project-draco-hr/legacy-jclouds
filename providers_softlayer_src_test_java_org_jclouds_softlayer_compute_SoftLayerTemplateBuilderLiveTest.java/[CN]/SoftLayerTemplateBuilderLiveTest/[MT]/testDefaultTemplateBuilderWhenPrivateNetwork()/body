@@ -1,9 +1,9 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<?,?> context=null;
   try {
     Properties overrides=setupProperties();
     overrides.setProperty(PROPERTY_SOFTLAYER_VIRTUALGUEST_CPU_REGEX,"Private [0-9]+ x ([.0-9]+) GHz Core[s]?");
-    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    context=createContext(overrides,setupModules());
     Template template=context.getComputeService().templateBuilder().build();
     assertEquals(getCores(template.getHardware()),1.0d);
     assertEquals(template.getHardware().getRam(),1);

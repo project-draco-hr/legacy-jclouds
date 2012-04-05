@@ -1,7 +1,0 @@
-{
-  setupCredentials();
-  Properties overrides=setupProperties();
-  context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
-  client=AWSEC2Client.class.cast(context.getProviderSpecificContext().getApi());
-  activeTester=new RetryablePredicate<SpotInstanceRequest>(new SpotInstanceRequestActive(client),SPOT_DELAY_SECONDS,1,1,TimeUnit.SECONDS);
-}

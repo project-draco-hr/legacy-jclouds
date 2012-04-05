@@ -1,7 +1,7 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<ServerManager,ServerManager> context=null;
   try {
-    context=new ComputeServiceContextFactory().createContext(new StandaloneComputeServiceContextSpec<ServerManager,Server,Hardware,Image,Datacenter>("servermanager",endpoint,apiVersion,buildVersion,"",identity,credential,ServerManager.class,ServerManagerComputeServiceContextBuilder.class,ImmutableSet.<Module>of()));
+    context=ComputeServiceContextBuilder.newBuilder(new ServerManagerApiMetadata()).build();
     context.getComputeService().listNodes();
   }
   finally {

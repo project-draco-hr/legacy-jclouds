@@ -1,0 +1,23 @@
+{
+  Template defaultTemplate=context.getComputeService().templateBuilder().build();
+  ComputeServiceContext<S,A> context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty("jclouds.image-id",defaultTemplate.getImage().getId());
+    context=createContext(overrides,setupModules());
+    assertEquals(context.getComputeService().templateBuilder().build().toString(),defaultTemplate.toString());
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+  context=null;
+  try {
+    Properties overrides=setupProperties();
+    overrides.setProperty(provider + ".image-id",defaultTemplate.getImage().getId());
+    context=createContext(overrides,setupModules());
+    assertEquals(context.getComputeService().templateBuilder().build().toString(),defaultTemplate.toString());
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

@@ -1,10 +1,10 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<SoftLayerClient,SoftLayerAsyncClient> context=null;
   try {
-    context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()));
+    context=ComputeServiceContextBuilder.newBuilder(new SoftLayerProviderMetadata()).overrides(setupProperties()).modules(setupModules()).build();
     assertEquals(context.getComputeService().listAssignableLocations().size(),6);
   }
   finally {
-    if (context != null)     context.close();
+    Closeables.closeQuietly(context);
   }
 }

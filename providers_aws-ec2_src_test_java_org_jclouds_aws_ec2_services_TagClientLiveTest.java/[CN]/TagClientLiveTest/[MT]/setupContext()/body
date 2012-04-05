@@ -1,0 +1,10 @@
+{
+  super.setupContext();
+  client=context.getProviderSpecificContext().getApi().getTagServices();
+  try {
+    testGroup=context.getProviderSpecificContext().getApi().getSecurityGroupServices().createSecurityGroupInRegionAndReturnId(null,"test-group","test-group");
+  }
+ catch (  IllegalStateException e) {
+    testGroup=Iterables.get(context.getProviderSpecificContext().getApi().getSecurityGroupServices().describeSecurityGroupsInRegion(null,"test-group"),0).getId();
+  }
+}

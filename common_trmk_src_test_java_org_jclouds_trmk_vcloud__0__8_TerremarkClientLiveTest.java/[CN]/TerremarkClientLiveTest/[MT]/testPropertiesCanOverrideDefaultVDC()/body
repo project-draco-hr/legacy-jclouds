@@ -1,9 +1,9 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType vdc : org.getVDCs().values()) {
-      RestContext<TerremarkVCloudClient,TerremarkVCloudAsyncClient> newContext=null;
+      RestContext<S,A> newContext=null;
       try {
-        newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName())));
+        newContext=createContext(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName())),setupModules()).getProviderSpecificContext();
         assertEquals(newContext.getApi().findVDCInOrgNamed(null,null),connection.getVDC(vdc.getHref()));
       }
   finally {

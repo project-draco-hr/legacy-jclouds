@@ -1,0 +1,13 @@
+{
+  super.setupContext();
+  client=gleContext.getApi().getEmailClient();
+  serverId=createServer("test-email-jclouds").getServerId();
+  createDomain(testDomain);
+  emailAccountCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+    public boolean apply(    Integer value){
+      return client.listAccounts(testDomain).size() == value;
+    }
+  }
+,90,5,TimeUnit.SECONDS);
+  assertTrue(emailAccountCounter.apply(0));
+}

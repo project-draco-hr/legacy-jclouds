@@ -1,6 +1,6 @@
 {
   try {
-    client.deleteRootContainer();
+    getApi().deleteRootContainer();
   }
  catch (  ContainerNotFoundException e) {
     Thread.sleep(5000);
@@ -16,7 +16,7 @@ catch (  AzureStorageResponseException htpe) {
   boolean created=false;
   while (!created) {
     try {
-      created=client.createRootContainer();
+      created=getApi().createRootContainer();
     }
  catch (    AzureStorageResponseException htpe) {
       if (htpe.getResponse().getStatusCode() == 409) {
@@ -28,6 +28,6 @@ catch (  AzureStorageResponseException htpe) {
       }
     }
   }
-  ListBlobsResponse list=client.listBlobs();
-  assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/$root",identity)));
+  ListBlobsResponse list=getApi().listBlobs();
+  assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/$root",context.getProviderSpecificContext().getIdentity())));
 }

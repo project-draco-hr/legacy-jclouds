@@ -3,9 +3,9 @@
     for (    ReferenceType vdc : org.getVDCs().values()) {
       VDC response=connection.getVDC(vdc.getHref());
       for (      ReferenceType net : response.getAvailableNetworks().values()) {
-        RestContext<TerremarkVCloudClient,TerremarkVCloudAsyncClient> newContext=null;
+        RestContext<S,A> newContext=null;
         try {
-          newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,net.getName())));
+          newContext=createContext(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,net.getName())),setupModules()).getProviderSpecificContext();
           assertEquals(newContext.getApi().findNetworkInOrgVDCNamed(null,null,net.getName()),connection.getNetwork(net.getHref()));
         }
   finally {

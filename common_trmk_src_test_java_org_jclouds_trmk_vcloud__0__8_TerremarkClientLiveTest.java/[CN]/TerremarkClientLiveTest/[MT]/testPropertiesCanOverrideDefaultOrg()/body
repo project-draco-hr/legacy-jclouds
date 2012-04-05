@@ -1,8 +1,8 @@
 {
   for (  Org org : orgs) {
-    RestContext<TerremarkVCloudClient,TerremarkVCloudAsyncClient> newContext=null;
+    RestContext<S,A> newContext=null;
     try {
-      newContext=createContextWithProperties(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName())));
+      newContext=createContext(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName())),setupModules()).getProviderSpecificContext();
       assertEquals(newContext.getApi().findOrgNamed(null),org);
     }
   finally {

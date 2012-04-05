@@ -1,10 +1,10 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<GleSYSClient,GleSYSAsyncClient> context=null;
   try {
-    context=new ComputeServiceContextFactory().createContext(provider,identity,credential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()));
+    context=ComputeServiceContextBuilder.newBuilder(new GleSYSProviderMetadata()).overrides(setupProperties()).modules(setupModules()).build();
     assertEquals(context.getComputeService().listAssignableLocations().size(),4);
   }
   finally {
-    if (context != null)     context.close();
+    Closeables.closeQuietly(context);
   }
 }

@@ -1,8 +1,7 @@
 {
   return Guice.createInjector(new SaxParserModule(),new AbstractModule(){
     @Override protected void configure(){
-      Properties props=new Properties();
-      Names.bindProperties(binder(),checkNotNull(new VCloudPropertiesBuilder(props).build(),"properties"));
+      Names.bindProperties(binder(),new VCloudApiMetadata().getDefaultProperties());
       bind(new TypeLiteral<Function<ReferenceType,Location>>(){
       }
 ).to(new TypeLiteral<FindLocationForResource>(){

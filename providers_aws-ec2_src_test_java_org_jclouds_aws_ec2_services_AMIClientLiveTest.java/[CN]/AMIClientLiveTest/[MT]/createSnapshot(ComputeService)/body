@@ -3,10 +3,10 @@
   Set<? extends NodeMetadata> nodes=computeService.createNodesInGroup("jcloudstest",1,options);
   try {
     String instanceId=Iterables.getOnlyElement(nodes).getProviderId();
-    Reservation<? extends RunningInstance> reservation=Iterables.getOnlyElement(context.getApi().getInstanceServices().describeInstancesInRegion(null,instanceId));
+    Reservation<? extends RunningInstance> reservation=Iterables.getOnlyElement(context.getProviderSpecificContext().getApi().getInstanceServices().describeInstancesInRegion(null,instanceId));
     RunningInstance instance=Iterables.getOnlyElement(reservation);
     BlockDevice device=instance.getEbsBlockDevices().get("/dev/sda1");
-    Snapshot snapshot=context.getApi().getElasticBlockStoreServices().createSnapshotInRegion(null,device.getVolumeId());
+    Snapshot snapshot=context.getProviderSpecificContext().getApi().getElasticBlockStoreServices().createSnapshotInRegion(null,device.getVolumeId());
     snapshotsToDelete.add(snapshot.getId());
     return snapshot;
   }

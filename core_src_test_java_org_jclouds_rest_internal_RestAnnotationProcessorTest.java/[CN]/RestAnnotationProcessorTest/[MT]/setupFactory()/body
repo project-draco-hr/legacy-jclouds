@@ -1,5 +1,5 @@
 {
-  RestContextSpec<Callee,AsyncCallee> contextSpec=contextSpec("test","http://localhost:9999","1","","","userfoo",null,Callee.class,AsyncCallee.class,ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
+  injector=ContextBuilder.newBuilder(AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Callee.class,AsyncCallee.class,"http://localhost:9999")).modules(ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
     @Override protected void configure(){
       bind(new TypeLiteral<Set<String>>(){
       }
@@ -15,8 +15,7 @@
       throw new AuthorizationException();
     }
   }
-));
-  injector=createContextBuilder(contextSpec).buildInjector();
+)).buildInjector();
   parserFactory=injector.getInstance(ParseSax.Factory.class);
   crypto=injector.getInstance(Crypto.class);
 }

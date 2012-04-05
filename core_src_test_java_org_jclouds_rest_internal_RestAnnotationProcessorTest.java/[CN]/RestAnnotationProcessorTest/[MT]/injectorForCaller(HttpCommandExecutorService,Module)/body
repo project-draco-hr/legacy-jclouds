@@ -1,4 +1,3 @@
 {
-  RestContextSpec<Caller,AsyncCaller> contextSpec=contextSpec("test","http://localhost:9999","1","","","userfoo",null,Caller.class,AsyncCaller.class,ImmutableSet.<Module>builder().add(new MockModule(service)).add(new NullLoggingModule()).add(new CallerModule()).addAll(ImmutableSet.<Module>copyOf(modules)).build());
-  return createContextBuilder(contextSpec).buildInjector();
+  return ContextBuilder.newBuilder(AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Caller.class,AsyncCaller.class,"http://localhost:9999")).modules(ImmutableSet.<Module>builder().add(new MockModule(service)).add(new NullLoggingModule()).add(new CallerModule()).addAll(ImmutableSet.<Module>copyOf(modules)).build()).buildInjector();
 }

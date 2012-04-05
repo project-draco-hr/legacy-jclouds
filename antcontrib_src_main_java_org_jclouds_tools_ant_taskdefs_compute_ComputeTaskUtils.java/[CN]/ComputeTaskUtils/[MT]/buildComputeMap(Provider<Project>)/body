@@ -1,11 +1,11 @@
 {
   return CacheBuilder.newBuilder().build(new CacheLoader<URI,ComputeServiceContext>(){
     @SuppressWarnings("unchecked") @Override public ComputeServiceContext load(    URI from){
-      Properties props=getPropertiesFromResource("/rest.properties");
+      Properties props=new Properties();
       props.putAll(projectProvider.get().getProperties());
       String provider=from.getHost();
       Credentials creds=Credentials.parse(from);
-      return new ComputeServiceContextFactory(props).createContext(provider,creds.identity,creds.credential,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
+      return new ComputeServiceContextFactory().createContext(provider,creds.identity,creds.credential,ImmutableSet.of((Module)new AntLoggingModule(projectProvider.get(),ComputeServiceConstants.COMPUTE_LOGGER),new JschSshClientModule()),props);
     }
   }
 );

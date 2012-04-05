@@ -1,10 +1,8 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<?,?> context=null;
   try {
     String endpoint="file://" + getClass().getResource("/test_location.yaml").getPath();
-    Properties props=new Properties();
-    props.setProperty("byon.endpoint",endpoint);
-    context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(),props);
+    context=ContextBuilder.newBuilder(AnonymousProviderMetadata.forApiWithEndpoint(new BYONApiMetadata(),endpoint)).build();
     assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
     @SuppressWarnings("unchecked") Supplier<LoadingCache<String,Node>> supplier=(Supplier<LoadingCache<String,Node>>)context.getProviderSpecificContext().getApi();
     assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());

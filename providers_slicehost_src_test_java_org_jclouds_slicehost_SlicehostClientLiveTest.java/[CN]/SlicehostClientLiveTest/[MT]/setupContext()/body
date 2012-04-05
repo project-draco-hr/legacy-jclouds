@@ -1,0 +1,9 @@
+{
+  super.setupContext();
+  Injector injector=context.utils().injector();
+  client=injector.getInstance(SlicehostClient.class);
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
+  socketTester=new RetryablePredicate<IPSocket>(socketOpen,120,1,TimeUnit.SECONDS);
+  injector.injectMembers(socketOpen);
+}

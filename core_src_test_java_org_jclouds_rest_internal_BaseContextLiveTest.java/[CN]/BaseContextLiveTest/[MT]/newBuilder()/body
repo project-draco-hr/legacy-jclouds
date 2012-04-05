@@ -1,0 +1,11 @@
+{
+  if (provider != null)   try {
+    return (ContextBuilder<?,?,C,?>)ContextBuilder.newBuilder(provider);
+  }
+ catch (  NoSuchElementException e) {
+    Logger.getAnonymousLogger().warning("provider [" + provider + "] is not setup as META-INF/services/org.jclouds.apis.ApiMetadata or META-INF/services/org.jclouds.providers.ProviderMetadata");
+  }
+  ProviderMetadata<?,?,C,?> pm=createProviderMetadata();
+  ContextBuilder<?,?,C,?> builder=pm != null ? ContextBuilder.newBuilder(pm) : ContextBuilder.newBuilder(ApiMetadata.class.cast(checkNotNull(createApiMetadata(),"either createApiMetadata or createProviderMetadata must be overridden")));
+  return builder;
+}

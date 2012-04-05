@@ -1,0 +1,7 @@
+{
+  super.setupContext();
+  gocontext=context.getProviderSpecificContext();
+  client=gocontext.getApi();
+  serverLatestJobCompleted=new RetryablePredicate<Server>(new ServerLatestJobCompleted(client.getJobServices()),800,20,TimeUnit.SECONDS);
+  loadBalancerLatestJobCompleted=new RetryablePredicate<LoadBalancer>(new LoadBalancerLatestJobCompleted(client.getJobServices()),800,20,TimeUnit.SECONDS);
+}

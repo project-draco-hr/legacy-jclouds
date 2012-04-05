@@ -1,10 +1,10 @@
 {
-  Set<ContainerProperties> response=client.listContainers();
-  response=client.listContainers(ListOptions.Builder.prefix(privateContainer.substring(0,privateContainer.length() - 1)).maxResults(1).includeMetadata());
+  Set<ContainerProperties> response=getApi().listContainers();
+  response=getApi().listContainers(ListOptions.Builder.prefix(privateContainer.substring(0,privateContainer.length() - 1)).maxResults(1).includeMetadata());
   assertEquals(response.size(),1);
   assertEquals(Iterables.getOnlyElement(response).getName(),privateContainer);
   assertEquals(Iterables.getOnlyElement(response).getMetadata(),ImmutableMap.of("foo","bar"));
-  response=client.listContainers(ListOptions.Builder.prefix(publicContainer).maxResults(1));
+  response=getApi().listContainers(ListOptions.Builder.prefix(publicContainer).maxResults(1));
   assertEquals(response.size(),1);
   assertEquals(Iterables.getOnlyElement(response).getName(),publicContainer);
 }

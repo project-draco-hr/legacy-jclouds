@@ -15,5 +15,5 @@
   nodes.append("      username: ").append(System.getProperty("user.name")).append("\n");
   nodes.append("      credential_url: file://").append(System.getProperty("user.home")).append("/.ssh/id_rsa").append("\n");
   contextProperties.setProperty("byon.nodes",nodes.toString());
-  context=new ComputeServiceContextFactory().createContext("byon","foo","bar",ImmutableSet.<Module>of(new SshjSshClientModule(),new Log4JLoggingModule()),contextProperties);
+  context=ContextBuilder.newBuilder(new BYONApiMetadata()).overrides(contextProperties).modules(ImmutableSet.<Module>of(new SshjSshClientModule(),new Log4JLoggingModule())).build();
 }

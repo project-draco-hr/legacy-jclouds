@@ -1,0 +1,13 @@
+{
+  super.setupContext();
+  context.utils().injector().injectMembers(this);
+  YamlImage image=getDefaultImage();
+  imageId=image.id;
+  masterVmName=VIRTUALBOX_IMAGE_PREFIX + image.id;
+  isosDir=workingDir + File.separator + "isos";
+  hostVersion=Iterables.get(Splitter.on('r').split(context.getProviderSpecificContext().getBuildVersion()),0);
+  operatingSystemIso=String.format("%s/%s.iso",isosDir,image.name);
+  guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,hostVersion);
+  Template template=context.getComputeService().templateBuilder().build();
+  checkNotNull(mastersCache.apply(template.getImage()));
+}

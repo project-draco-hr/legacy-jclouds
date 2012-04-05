@@ -1,4 +1,20 @@
 {
-  ComputeServiceContextBuilder<?,?> builder=ComputeServiceContextBuilder.class.cast(contextFactory.createContextBuilder(provider,identity,credential,modules,overrides));
-  return buildContextUnwrappingExceptions(builder);
+  ContextBuilder<?,?,?,?> builder=null;
+  try {
+    ProviderMetadata<?,?,?,?> pm=Providers.withId(providerOrApi);
+    builder=ComputeServiceContextBuilder.newBuilder(pm);
+  }
+ catch (  NoSuchElementException e) {
+    builder=ContextBuilder.newBuilder(Apis.withId(providerOrApi));
+  }
+  builder.modules(Iterable.class.cast(wiring));
+  builder.overrides(overrides);
+  if (identity != null)   builder.credentials(identity,credential);
+  Object context=builder.build();
+  if (context instanceof ComputeServiceContext) {
+    return ComputeServiceContext.class.cast(context);
+  }
+ else {
+    throw new IllegalArgumentException("provider " + providerOrApi + " contains an unknown context type: "+ context.getClass().getSimpleName());
+  }
 }

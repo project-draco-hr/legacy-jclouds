@@ -1,7 +1,7 @@
 {
   Properties prop=new Properties();
   prop.setProperty(FilesystemConstants.PROPERTY_BASEDIR,TestUtils.TARGET_BASE_DIR);
-  context=(BlobStoreContext)new BlobStoreContextFactory().createContext(PROVIDER,"identity","credential",Collections.<Module>emptyList(),prop);
+  context=BlobStoreContextBuilder.newBuilder(PROVIDER).overrides(prop).build();
   blobStore=context.getBlobStore();
   resourcesToBeDeleted.add(new File(TestUtils.TARGET_BASE_DIR));
 }

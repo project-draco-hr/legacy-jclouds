@@ -1,0 +1,17 @@
+{
+  ComputeServiceContext<S,A> context=null;
+  try {
+    context=newBuilder().credentials("MOMMA","MIA").modules(ImmutableSet.of(getLoggingModule(),credentialStoreModule)).overrides(setupProperties()).build();
+    context.getComputeService().listNodes();
+  }
+ catch (  AuthorizationException e) {
+    throw e;
+  }
+catch (  RuntimeException e) {
+    e.printStackTrace();
+    throw e;
+  }
+ finally {
+    if (context != null)     context.close();
+  }
+}

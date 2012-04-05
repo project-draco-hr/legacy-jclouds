@@ -6,8 +6,8 @@
       }
     }
   }
-  int pkgId=Iterables.find(context.getApi().getAccountClient().getActivePackages(),named(ProductPackageClientLiveTest.CLOUD_SERVER_PACKAGE_NAME)).getId();
-  ProductPackage productPackage=context.getApi().getProductPackageClient().getProductPackage(pkgId);
+  int pkgId=Iterables.find(socontext.getApi().getAccountClient().getActivePackages(),named(ProductPackageClientLiveTest.CLOUD_SERVER_PACKAGE_NAME)).getId();
+  ProductPackage productPackage=socontext.getApi().getProductPackageClient().getProductPackage(pkgId);
   Iterable<ProductItem> ramItems=Iterables.filter(productPackage.getItems(),Predicates.and(categoryCode("ram"),capacity(2.0f)));
   Map<Float,ProductItem> ramToProductItem=Maps.uniqueIndex(ramItems,ProductItems.capacity());
   ProductItemPrice ramPrice=ProductItems.price().apply(ramToProductItem.get(2.0f));
@@ -18,7 +18,7 @@
   Map<String,ProductItem> osToProductItem=Maps.uniqueIndex(operatingSystems,ProductItems.description());
   ProductItemPrice osPrice=ProductItems.price().apply(osToProductItem.get("Ubuntu Linux 8 LTS Hardy Heron - Minimal Install (64 bit)"));
   Builder<ProductItemPrice> prices=ImmutableSet.builder();
-  prices.addAll(Guice.createInjector(module).getInstance(Key.get(new TypeLiteral<Iterable<ProductItemPrice>>(){
+  prices.addAll(context.utils().injector().getInstance(Key.get(new TypeLiteral<Iterable<ProductItemPrice>>(){
   }
 )));
   prices.add(ramPrice);
@@ -26,10 +26,10 @@
   prices.add(osPrice);
   VirtualGuest guest=VirtualGuest.builder().domain("jclouds.org").hostname(TEST_HOSTNAME_PREFIX + new Random().nextInt()).build();
   ProductOrder order=ProductOrder.builder().packageId(pkgId).quantity(1).useHourlyPricing(true).prices(prices.build()).virtualGuest(guest).build();
-  ProductOrderReceipt receipt=context.getApi().getVirtualGuestClient().orderVirtualGuest(order);
+  ProductOrderReceipt receipt=socontext.getApi().getVirtualGuestClient().orderVirtualGuest(order);
   ProductOrder order2=receipt.getOrderDetails();
   VirtualGuest result=Iterables.get(order2.getVirtualGuests(),0);
-  ProductOrder order3=context.getApi().getVirtualGuestClient().getOrderTemplate(result.getId());
+  ProductOrder order3=socontext.getApi().getVirtualGuestClient().getOrderTemplate(result.getId());
   assertEquals(order.getPrices(),order3.getPrices());
   assertNotNull(receipt);
 }

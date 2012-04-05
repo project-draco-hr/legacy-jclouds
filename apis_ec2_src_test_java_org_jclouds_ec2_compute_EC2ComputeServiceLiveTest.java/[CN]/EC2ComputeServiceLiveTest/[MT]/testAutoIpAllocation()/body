@@ -1,10 +1,10 @@
 {
-  ComputeServiceContext context=null;
+  ComputeServiceContext<S,A> context=null;
   String group=this.group + "aip";
   try {
     Properties overrides=setupProperties();
     overrides.setProperty(EC2Constants.PROPERTY_EC2_AUTO_ALLOCATE_ELASTIC_IPS,"true");
-    context=new ComputeServiceContextFactory().createContext(provider,ImmutableSet.<Module>of(new Log4JLoggingModule()),overrides);
+    context=createContext(overrides,setupModules());
     Set<? extends NodeMetadata> nodes=context.getComputeService().createNodesInGroup(group,1);
     assertEquals(nodes.size(),1,"One node should have been created");
     NodeMetadata node=Iterables.get(nodes,0);

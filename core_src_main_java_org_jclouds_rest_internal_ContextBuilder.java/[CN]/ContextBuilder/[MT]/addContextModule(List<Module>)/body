@@ -1,0 +1,11 @@
+{
+  modules.add(new AbstractModule(){
+    @SuppressWarnings({"unchecked","rawtypes"}) @Override protected void configure(){
+      bind((TypeLiteral)TypeLiteral.get(newParameterizedType(RestContext.class,providerMetadata.getApiMetadata().getApi(),apiMetadata.getAsyncApi()))).to(TypeLiteral.get(newParameterizedType(RestContextImpl.class,apiMetadata.getApi(),apiMetadata.getAsyncApi()))).in(SINGLETON);
+    }
+    public String toString(){
+      return String.format("configure rest context %s->%s",apiMetadata.getApi().getSimpleName(),apiMetadata.getAsyncApi().getSimpleName());
+    }
+  }
+);
+}

@@ -1,0 +1,18 @@
+{
+  super.setupContext();
+  prefix+="rule";
+  try {
+    network=find(client.getNetworkClient().listNetworks(),Predicates.and(supportsPortForwarding(),new Predicate<Network>(){
+      @Override public boolean apply(      @Nullable Network network){
+        return network.isDefault() && !network.isSecurityGroupEnabled() && network.getAccount().equals(user.getAccount());
+      }
+    }
+));
+    Long defaultTemplate=(imageId != null && !"".equals(imageId)) ? new Long(imageId) : null;
+    vm=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,defaultTemplateOrPreferredInZone(defaultTemplate,client,network.getZoneId()),client,jobComplete,virtualMachineRunning);
+    if (vm.getPassword() != null && !loginCredentials.hasPasswordOption())     loginCredentials=loginCredentials.toBuilder().password(vm.getPassword()).build();
+  }
+ catch (  NoSuchElementException e) {
+    networksDisabled=true;
+  }
+}

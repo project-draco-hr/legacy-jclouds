@@ -1,6 +1,7 @@
 {
+  Injector injector=createInjector(Functions.forMap(ImmutableMap.<HttpRequest,HttpResponse>of()),createModule(),setupProperties());
+  Blob blob=injector.getInstance(BlobBuilder.class).name("test").payload("content").build();
+  BlobToObject blobToObject=injector.getInstance(BlobToObject.class);
   AWSS3Client client=requestSendsResponse(HttpRequest.builder().method("PUT").endpoint(URI.create("https://test.s3.amazonaws.com/test")).headers(ImmutableMultimap.of("x-amz-storage-class","REDUCED_REDUNDANCY","Host","test.s3.amazonaws.com","Date",CONSTANT_DATE,"Authorization","AWS identity:1mJrW85/mqZpYTFIK5Ebtt2MM6E=")).payload(new StringPayload("content")).build(),HttpResponse.builder().statusCode(200).headers(ImmutableMultimap.of("x-amz-id-2","w0rL+9fALQiCOToesVQefs8WalIgn+ZhMD7hHMKYud/xv7MyKkAWQOtFNEfK97Ri","x-amz-request-id","7A84C3CD4437A4C0","Date",CONSTANT_DATE,"ETag","437b930db84b8079c2dd804a71936b5f","Server","AmazonS3")).build());
-  Blob blob=blobStore.blobBuilder("test").payload("content").build();
-  BlobToObject blobToObject=getInstance(BlobToObject.class);
   client.putObject("test",blobToObject.apply(blob),storageClass(StorageClass.REDUCED_REDUNDANCY));
 }

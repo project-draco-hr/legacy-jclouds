@@ -1,4 +1,4 @@
 {
-  Injector injector=new RestContextFactory().createContextBuilder("atmos",UID,KEY,ImmutableSet.<Module>of(new MockModule(),new TestAtmosRestClientModule(),new NullLoggingModule()),new Properties()).buildInjector();
+  Injector injector=BlobStoreContextBuilder.newBuilder("atmos").credentials(UID,KEY).modules(ImmutableSet.<Module>of(new MockModule(),new TestAtmosRestClientModule(),new NullLoggingModule())).buildInjector();
   filter=injector.getInstance(SignRequest.class);
 }
