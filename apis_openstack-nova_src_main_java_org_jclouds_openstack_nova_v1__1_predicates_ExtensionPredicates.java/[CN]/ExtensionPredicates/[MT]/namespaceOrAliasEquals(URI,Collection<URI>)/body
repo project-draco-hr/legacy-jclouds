@@ -1,0 +1,13 @@
+{
+  checkNotNull(namespace,"namespace must be defined");
+  checkNotNull(namespaceAliases,"namespace aliases must be defined");
+  return new Predicate<Extension>(){
+    @Override public boolean apply(    Extension ext){
+      return namespace.toASCIIString().equals(ext.getNamespace().toASCIIString().replace("https","http")) || namespaceAliases.contains(ext.getNamespace());
+    }
+    @Override public String toString(){
+      return "namespaceOrAliasEquals(" + namespace + ")";
+    }
+  }
+;
+}
