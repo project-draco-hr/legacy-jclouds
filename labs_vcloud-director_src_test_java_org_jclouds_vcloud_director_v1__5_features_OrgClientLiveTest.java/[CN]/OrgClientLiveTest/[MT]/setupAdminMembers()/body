@@ -1,0 +1,8 @@
+{
+  adminContext.getApi().getOrgClient().getMetadataClient().setMetadata(toAdminUri(orgURI),"KEY",MetadataValue.builder().value("VALUE").build());
+  AdminCatalog newCatalog=AdminCatalog.builder().name("Test Catalog " + getTestDateTimeStamp()).description("created by testOrg()").build();
+  newCatalog=adminContext.getApi().getCatalogClient().createCatalog(toAdminUri(orgURI),newCatalog);
+  catalogRef=newCatalog.getHref();
+  testCatalogId=newCatalog.getId().substring("urn:vcloud:catalog:".length());
+  adminMembersSet=true;
+}
