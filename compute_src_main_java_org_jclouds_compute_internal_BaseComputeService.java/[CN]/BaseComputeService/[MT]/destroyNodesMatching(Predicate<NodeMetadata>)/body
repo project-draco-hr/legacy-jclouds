@@ -1,9 +1,9 @@
 {
   logger.debug(">> destroying nodes matching(%s)",filter);
-  Set<NodeMetadata> set=newLinkedHashSet(transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<NodeMetadata>>(){
+  Set<NodeMetadata> set=newLinkedHashSet(filter(transformParallel(nodesMatchingFilterAndNotTerminated(filter),new Function<NodeMetadata,Future<NodeMetadata>>(){
     @Override public Future<NodeMetadata> apply(    final NodeMetadata from){
       return executor.submit(new Callable<NodeMetadata>(){
-        @Override public NodeMetadata call() throws Exception {
+        @Nullable @Override public NodeMetadata call() throws Exception {
           doDestroyNode(from.getId());
           return from;
         }
@@ -14,7 +14,7 @@
 );
     }
   }
-,executor,null,logger,"destroyNodesMatching(" + filter + ")"));
+,executor,null,logger,"destroyNodesMatching(" + filter + ")"),notNull()));
   logger.debug("<< destroyed(%d)",set.size());
   cleanUpIncidentalResourcesOfDeadNodes(set);
   return set;
