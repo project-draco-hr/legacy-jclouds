@@ -1,5 +1,8 @@
 {
   this.sharedToEveryone=sharedToEveryone;
   this.everyoneAccessLevel=everyoneAccessLevel;
-  this.accessSettings=accessSettings == null ? Sets.<AccessSetting>newLinkedHashSet() : ImmutableSet.copyOf(accessSettings);
+  if (sharedToEveryone) {
+    checkNotNull(accessSettings,"accessSettings");
+  }
+  this.accessSettings=Iterables.isEmpty(accessSettings) ? null : ImmutableList.copyOf(accessSettings);
 }
