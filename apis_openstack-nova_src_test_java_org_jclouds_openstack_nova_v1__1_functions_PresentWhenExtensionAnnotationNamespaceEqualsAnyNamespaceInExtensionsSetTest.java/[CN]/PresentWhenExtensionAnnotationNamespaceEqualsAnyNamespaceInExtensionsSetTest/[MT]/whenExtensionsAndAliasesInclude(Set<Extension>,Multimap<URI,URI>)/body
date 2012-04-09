@@ -1,5 +1,15 @@
 {
-  LoadingCache<String,Set<Extension>> extensionsForZone=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImmutableMap.of("expectedzone",extensions,"differentzone",ImmutableSet.<Extension>of()))));
-  PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet fn=new PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet(extensionsForZone);
+  final LoadingCache<String,Set<Extension>> extensionsForZone=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImmutableMap.of("expectedzone",extensions,"differentzone",ImmutableSet.<Extension>of()))));
+  PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet fn=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @Provides LoadingCache<String,Set<Extension>> getExtensions(){
+      return extensionsForZone;
+    }
+    @Provides @Named("openstack.nova.extensions") Multimap<URI,URI> getAliases(){
+      return aliases;
+    }
+  }
+).getInstance(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
   return fn;
 }
