@@ -16,7 +16,7 @@
     adminContext=VCloudDirectorContext.class.cast(new RestContextFactory().createContext(provider,adminIdentity,adminCredential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides)).getAdminContext();
     String userIdentity="test" + BaseVCloudDirectorClientLiveTest.getTestDateTimeStamp();
     String userCredential="testPassword";
-    createdUser=adminContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(userIdentity).password(userCredential).description("test user with user-level privileges").role(BaseVCloudDirectorClientLiveTest.getRoleReferenceFor(DefaultRoles.USER,adminContext)).deployedVmQuota(BaseVCloudDirectorClientLiveTest.REQUIRED_USER_VM_QUOTA).isEnabled(true).build());
+    createdUser=adminContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(userIdentity).password(userCredential).description("test user with user-level privileges").role(BaseVCloudDirectorClientLiveTest.getRoleReferenceFor(DefaultRoles.USER.value(),adminContext)).deployedVmQuota(BaseVCloudDirectorClientLiveTest.REQUIRED_USER_VM_QUOTA).isEnabled(true).build());
     userContext=new RestContextFactory().createContext(provider,userIdentity,userCredential,ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule()),overrides);
   }
  else {
