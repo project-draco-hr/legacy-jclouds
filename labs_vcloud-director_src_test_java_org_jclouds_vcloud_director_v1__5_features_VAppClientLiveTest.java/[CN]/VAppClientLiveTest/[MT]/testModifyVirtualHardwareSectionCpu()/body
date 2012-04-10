@@ -1,9 +1,9 @@
 {
-  ResourceAllocationSettingData oldItem=vAppClient.getVirtualHardwareSectionCpu(vm.getHref());
-  ResourceAllocationSettingData newItem=oldItem.toBuilder().elementName("2 virtual CPU(s)").virtualQuantity(new BigInteger("2")).build();
+  RasdItem oldItem=vAppClient.getVirtualHardwareSectionCpu(vm.getHref());
+  RasdItem newItem=oldItem.toBuilder().elementName("2 virtual CPU(s)").virtualQuantity(new BigInteger("2")).build();
   Task modifyVirtualHardwareSectionCpu=vAppClient.modifyVirtualHardwareSectionCpu(vm.getHref(),newItem);
   assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionCpu),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionCpu"));
-  ResourceAllocationSettingData modified=vAppClient.getVirtualHardwareSectionCpu(vm.getHref());
+  RasdItem modified=vAppClient.getVirtualHardwareSectionCpu(vm.getHref());
   checkResourceAllocationSettingData(modified);
   assertEquals(modified.getVirtualQuantity(),new BigInteger("2"),String.format(OBJ_FIELD_EQ,"ResourceAllocationSettingData","VirtualQuantity","2",modified.getVirtualQuantity().toString()));
   assertEquals(modified,newItem);
