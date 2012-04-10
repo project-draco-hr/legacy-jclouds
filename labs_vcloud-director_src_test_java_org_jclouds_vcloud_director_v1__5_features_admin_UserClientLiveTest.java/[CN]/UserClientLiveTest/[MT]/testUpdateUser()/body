@@ -3,7 +3,7 @@
   User newUser=user.toBuilder().fullName("new" + oldUser.getFullName()).emailAddress("new" + oldUser.getEmailAddress()).telephone("1-" + oldUser.getTelephone()).isEnabled(true).im("new" + oldUser.getIM()).isAlertEnabled(true).alertEmailPrefix("new" + oldUser.getAlertEmailPrefix()).alertEmail("new" + oldUser.getAlertEmail()).storedVmQuota(1).deployedVmQuota(1).password("newPassword").role(getRoleReferenceFor(DefaultRoles.AUTHOR.value())).build();
   userClient.updateUser(user.getHref(),newUser);
   user=userClient.getUser(user.getHref());
-  Checks.checkUser(user);
+  checkUser(user);
   assertTrue(equal(user.getFullName(),newUser.getFullName()),String.format(OBJ_FIELD_UPDATABLE,USER,"fullName"));
   assertTrue(equal(user.getEmailAddress(),newUser.getEmailAddress()),String.format(OBJ_FIELD_UPDATABLE,USER,"emailAddress"));
   assertTrue(equal(user.getTelephone(),newUser.getTelephone()),String.format(OBJ_FIELD_UPDATABLE,USER,"telephone"));
