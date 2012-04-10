@@ -1,6 +1,6 @@
 {
   TaskClient taskClient=context.getApi().getTaskClient();
-  TaskStatusEquals predicate=new TaskStatusEquals(taskClient,ImmutableSet.of(Task.Status.ABORTED,Task.Status.CANCELED,Task.Status.ERROR,Task.Status.SUCCESS),Collections.<String>emptySet());
+  TaskStatusEquals predicate=new TaskStatusEquals(taskClient,ImmutableSet.of(Task.Status.ABORTED,Task.Status.CANCELED,Task.Status.ERROR,Task.Status.SUCCESS),Collections.<Task.Status>emptySet());
   RetryablePredicate<Task> retryablePredicate=new RetryablePredicate<Task>(predicate,LONG_TASK_TIMEOUT_SECONDS * 1000L);
   assertTrue(retryablePredicate.apply(task),"Task must be done");
 }
