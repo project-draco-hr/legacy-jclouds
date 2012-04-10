@@ -3,11 +3,11 @@
   final Task task=vAppTemplateClient.enableDownload(vAppTemplateURI);
   assertTaskDoneEventually(task);
   VAppTemplate vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
-  Set<Task> tasks=vAppTemplate.getTasks();
+  List<Task> tasks=vAppTemplate.getTasks();
   for (  Task contender : tasks) {
     if (task.getId().equals(contender.getId())) {
-      String status=contender.getStatus();
-      if (status.equals(Task.Status.QUEUED) || status.equals(Task.Status.PRE_RUNNING) || status.equals(Task.Status.RUNNING)) {
+      Task.Status status=contender.getStatus();
+      if (EnumSet.of(Task.Status.QUEUED,Task.Status.PRE_RUNNING,Task.Status.RUNNING).contains(status)) {
         fail("Task " + contender + " reported complete, but is included in VAppTemplate in status "+ status);
       }
     }

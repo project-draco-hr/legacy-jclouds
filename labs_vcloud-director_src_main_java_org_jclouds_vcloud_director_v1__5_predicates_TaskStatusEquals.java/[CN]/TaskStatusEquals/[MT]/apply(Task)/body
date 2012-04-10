@@ -3,15 +3,11 @@
   task=taskClient.getTask(task.getHref());
   if (task == null)   return false;
   logger.trace("%s: looking for status %s: currently: %s",task,expectedStatuses,task.getStatus());
-  for (  Status failingStatus : failingStatuses) {
-    if (task.getStatus().equals(failingStatus)) {
-      throw new VCloudDirectorException(task);
-    }
+  if (failingStatuses.contains(task.getStatus())) {
+    throw new VCloudDirectorException(task);
   }
-  for (  Status expectedStatus : expectedStatuses) {
-    if (task.getStatus().equals(expectedStatus)) {
-      return true;
-    }
+  if (expectedStatuses.contains(task.getStatus())) {
+    return true;
   }
   return false;
 }

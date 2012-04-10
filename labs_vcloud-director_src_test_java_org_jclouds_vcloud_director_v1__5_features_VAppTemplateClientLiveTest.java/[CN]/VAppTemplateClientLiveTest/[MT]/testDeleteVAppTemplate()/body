@@ -4,9 +4,6 @@
   checkVAppTemplate(vAppTemplatePreDelete);
   final Task task=vAppTemplateClient.deleteVappTemplate(clonedVappTemplate.getHref());
   retryTaskSuccess.apply(task);
-  try {
-    vAppTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
-  }
- catch (  VCloudDirectorException e) {
-  }
+  VAppTemplate deleted=vAppTemplateClient.getVAppTemplate(clonedVappTemplate.getHref());
+  assertNull(deleted);
 }
