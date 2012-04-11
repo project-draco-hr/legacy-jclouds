@@ -1,15 +1,27 @@
 {
-  if (catalogItem != null)   catalogClient.deleteCatalogItem(catalogItem.getHref());
-  if (media != null)   context.getApi().getMediaClient().deleteMedia(media.getHref());
-  if (adminCatalog != null) {
-    adminContext.getApi().getCatalogClient().deleteCatalog(adminCatalog.getHref());
+  if (catalogItem != null) {
     try {
-      catalogClient.getCatalog(catalogRef.getHref());
-      fail("The Catalog should have been deleted");
+      catalogClient.deleteCatalogItem(catalogItem.getHref());
     }
- catch (    VCloudDirectorException vcde) {
-      checkError(vcde.getError());
-      assertEquals(vcde.getError().getMajorErrorCode(),Integer.valueOf(403),"The majorErrorCode should be 403 since the item has been deleted");
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting catalog item '%s'",catalogItem.getName());
+    }
+  }
+  if (media != null) {
+    try {
+      Task delete=context.getApi().getMediaClient().deleteMedia(media.getHref());
+      taskDoneEventually(delete);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting media '%s'",media.getName());
+    }
+  }
+  if (adminContext != null && adminCatalog != null) {
+    try {
+      adminContext.getApi().getCatalogClient().deleteCatalog(adminCatalog.getHref());
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting catalog '%s'",adminCatalog.getName());
     }
   }
 }

@@ -1,5 +1,11 @@
 {
   if (metadataSet) {
-    adminContext.getApi().getNetworkClient().getMetadataClient().deleteMetadataEntry(toAdminUri(networkURI),"key");
+    try {
+      Task delete=adminContext.getApi().getNetworkClient().getMetadataClient().deleteMetadataEntry(toAdminUri(networkURI),"key");
+      taskDoneEventually(delete);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting metadata");
+    }
   }
 }
