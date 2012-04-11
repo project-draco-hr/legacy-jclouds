@@ -15,7 +15,10 @@
       sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"wrongpassword!");
       fail("Managed to login using the wrong password!");
     }
- catch (    AuthorizationException ex) {
+ catch (    AuthorizationException e) {
+    }
+catch (    Exception e) {
+      fail("Expected AuthorizationException",e);
     }
   }
   user=userClient.getUser(user.getHref());
@@ -24,7 +27,10 @@
     sessionClient.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
     fail("Managed to login to locked account!");
   }
- catch (  AuthorizationException ex) {
+ catch (  AuthorizationException e) {
+  }
+catch (  Exception e) {
+    fail("Expected AuthorizationException",e);
   }
   userClient.unlockUser(user.getHref());
   user=userClient.getUser(user.getHref());

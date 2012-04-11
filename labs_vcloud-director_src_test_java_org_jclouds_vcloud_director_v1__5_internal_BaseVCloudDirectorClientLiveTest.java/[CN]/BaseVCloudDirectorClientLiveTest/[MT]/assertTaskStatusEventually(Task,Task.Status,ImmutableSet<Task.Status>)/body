@@ -1,6 +1,3 @@
 {
-  TaskClient taskClient=context.getApi().getTaskClient();
-  TaskStatusEquals predicate=new TaskStatusEquals(taskClient,running,immutableSet);
-  RetryablePredicate<Task> retryablePredicate=new RetryablePredicate<Task>(predicate,TASK_TIMEOUT_SECONDS * 1000L);
-  assertTrue(retryablePredicate.apply(task),"Task must enter status " + running);
+  assertTrue(taskStatusEventually(task,running,immutableSet),String.format("Task '%s' must reach status %s",task.getOperationName(),running));
 }

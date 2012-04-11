@@ -1,10 +1,11 @@
 {
-  logger.trace("looking for status on task %s",task);
+  checkNotNull(task,"task");
+  logger.trace("looking for status on task %s",task.getOperationName());
   task=taskClient.getTask(task.getHref());
   if (task == null)   return false;
-  logger.trace("%s: looking for status %s: currently: %s",task,Task.Status.SUCCESS,task.getStatus());
-  if (task.getStatus().equals(Task.Status.ERROR))   throw new VCloudDirectorException(task);
-  if (task.getStatus().equals(Task.Status.CANCELED))   throw new VCloudDirectorException(task);
-  if (task.getStatus().equals(Task.Status.ABORTED))   throw new VCloudDirectorException(task);
-  return task.getStatus().equals(Task.Status.SUCCESS);
+  logger.trace("%s: looking for status %s: currently: %s",task.getOperationName(),Task.Status.SUCCESS,task.getStatus());
+  if (EnumSet.of(Task.Status.ERROR,Task.Status.CANCELED,Task.Status.ABORTED).contains(task.getStatus())) {
+    throw new VCloudDirectorException(task);
+  }
+ else   return task.getStatus().equals(Task.Status.SUCCESS);
 }

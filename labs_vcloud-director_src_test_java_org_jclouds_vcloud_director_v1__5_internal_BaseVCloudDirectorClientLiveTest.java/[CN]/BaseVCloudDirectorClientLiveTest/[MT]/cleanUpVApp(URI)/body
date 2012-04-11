@@ -11,13 +11,15 @@
   }
   if (vApp.getTasks() != null) {
     for (    Task task : vApp.getTasks()) {
-      assertTaskDoneEventually(task);
+      if (!taskDoneEventually(task)) {
+        logger.warn("Task '%s' did not complete",task.getOperationName());
+      }
     }
   }
   if (vApp.getStatus().equals(Status.POWERED_ON.getValue())) {
     try {
       Task shutdownTask=vAppClient.shutdown(vAppURI);
-      retryTaskSuccess.apply(shutdownTask);
+      taskDoneEventually(shutdownTask);
     }
  catch (    Exception e) {
       logger.warn(e,"Continuing cleanup after error shutting down VApp %s",vApp.getName());
@@ -27,7 +29,7 @@
     try {
       UndeployVAppParams params=UndeployVAppParams.builder().build();
       Task undeployTask=vAppClient.undeploy(vAppURI,params);
-      retryTaskSuccess.apply(undeployTask);
+      taskDoneEventually(undeployTask);
     }
  catch (    Exception e) {
       logger.warn(e,"Continuing cleanup after error undeploying VApp %s",vApp.getName());
@@ -35,7 +37,7 @@
   }
   try {
     Task task=vAppClient.deleteVApp(vAppURI);
-    assertTaskSucceeds(task);
+    taskDoneEventually(task);
     vAppNames.remove(vApp.getName());
     logger.info("Deleted VApp %s",vApp.getName());
   }
