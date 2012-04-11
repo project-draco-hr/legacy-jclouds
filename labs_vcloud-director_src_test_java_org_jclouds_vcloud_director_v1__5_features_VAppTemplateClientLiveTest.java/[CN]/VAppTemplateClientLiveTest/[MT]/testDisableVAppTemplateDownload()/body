@@ -1,3 +1,6 @@
 {
   vAppTemplateClient.disableDownload(vAppTemplateURI);
+  VAppTemplate vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
+  Set<Link> links=vAppTemplate.getLinks();
+  assertTrue(Iterables.all(Iterables.transform(links,rel),Predicates.not(Predicates.in(EnumSet.of(Link.Rel.DOWNLOAD_DEFAULT,Link.Rel.DOWNLOAD_ALTERNATE)))),"Should not offer download link after disabling download: " + vAppTemplate);
 }
