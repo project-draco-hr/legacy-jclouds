@@ -1,0 +1,16 @@
+{
+  LOGGER.trace("About to read properties from '%s'","/WEB-INF/jclouds.properties");
+  Properties props=new Properties();
+  InputStream input=servletConfig.getServletContext().getResourceAsStream("/WEB-INF/jclouds.properties");
+  try {
+    props.load(input);
+  }
+ catch (  IOException e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    Closeables.closeQuietly(input);
+  }
+  LOGGER.trace("Properties successfully read.");
+  return props;
+}

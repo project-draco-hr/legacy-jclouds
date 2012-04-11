@@ -1,0 +1,11 @@
+{
+  Object bean;
+  if (descriptor.getDependencyType().equals(Logger.class)) {
+    Class<?> requestingType=getType(beanName);
+    LOGGER.trace("About to create logger for bean '%s' of type '%s'",beanName,requestingType);
+    bean=LOGGER_FACTORY.getLogger(requestingType.getName());
+    LOGGER.trace("Successfully created logger.");
+    return bean;
+  }
+  return super.resolveDependency(descriptor,beanName,autowiredBeanNames,typeConverter);
+}

@@ -1,0 +1,15 @@
+{
+  File war=zipDir(explodedWar,format("%s-cloudfoundry.war",explodedWar));
+  client.uploadApplication(appName,war);
+  AppState appState=client.getApplication(appName).getState();
+switch (appState) {
+case STOPPED:
+    client.startApplication(appName);
+  break;
+case STARTED:
+client.restartApplication(appName);
+break;
+default :
+throw new IllegalStateException(format("Unexpected application state '%s'",appState));
+}
+}
