@@ -1,7 +1,7 @@
 {
   BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
   Properties props=loadJCloudsProperties();
-  logger.trace("About to initialize members.");
+  LOGGER.trace("About to initialize members.");
   Module googleModule=new GoogleAppEngineConfigurationModule();
   Set<Module> modules=ImmutableSet.<Module>of(googleModule);
   try {
@@ -17,5 +17,5 @@
     providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
   }
   queue=QueueFactory.getQueue("twitter");
-  logger.trace("Members initialized. Twitter: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
+  LOGGER.trace("Members initialized. Twitter: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
 }
