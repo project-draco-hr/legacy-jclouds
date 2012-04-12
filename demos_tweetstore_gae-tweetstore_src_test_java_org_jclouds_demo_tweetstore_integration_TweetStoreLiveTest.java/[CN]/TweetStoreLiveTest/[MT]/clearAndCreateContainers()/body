@@ -4,18 +4,17 @@
   props.setProperty(GuiceServletConfig.PROPERTY_BLOBSTORE_CONTEXTS,Joiner.on(',').join(blobstores));
   addCredentialsForBlobStores(props);
   addConfigurationForTwitter(props);
-  final BlobStoreContextFactory factory=new BlobStoreContextFactory();
   final Set<Module> wiring=ImmutableSet.<Module>of(new Log4JLoggingModule());
   this.contexts=Maps.newConcurrentMap();
   for (  String provider : blobstores) {
-    contexts.put(provider,factory.createContext(provider,wiring,props));
+    contexts.put(provider,BlobStoreContextBuilder.newBuilder(provider).modules(wiring).overrides(props).build());
   }
   Configuration conf=new ConfigurationBuilder().setOAuthConsumerKey(props.getProperty(PROPERTY_TWITTER_CONSUMER_KEY)).setOAuthConsumerSecret(props.getProperty(PROPERTY_TWITTER_CONSUMER_SECRET)).setOAuthAccessToken(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN)).setOAuthAccessTokenSecret(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN_SECRET)).build();
   Twitter client=new TwitterFactory(conf).getInstance();
   StoreTweetsController controller=new StoreTweetsController(contexts,container,client);
   ResponseList<Status> statuses=client.getMentions();
   boolean deleted=false;
-  for (  BlobStoreContext context : contexts.values()) {
+  for (  BlobStoreContext<?,?> context : contexts.values()) {
     try {
       if (context.getBlobStore().containerExists(container)) {
         System.err.printf("deleting container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
@@ -31,7 +30,7 @@
     System.err.println("sleeping 60 seconds to allow containers to clear");
     Thread.sleep(60000);
   }
-  for (  BlobStoreContext context : contexts.values()) {
+  for (  BlobStoreContext<?,?> context : contexts.values()) {
     System.err.printf("creating container %s at %s%n",container,context.getProviderSpecificContext().getEndpoint());
     context.getBlobStore().createContainerInLocation(null,container);
   }
@@ -39,7 +38,7 @@
     System.err.println("sleeping 5 seconds to allow containers to create");
     Thread.sleep(5000);
   }
-  for (  Entry<String,BlobStoreContext> entry : contexts.entrySet()) {
+  for (  Entry<String,BlobStoreContext<?,?>> entry : contexts.entrySet()) {
     System.err.printf("filling container %s at %s%n",container,entry.getKey());
     controller.addMyTweets(entry.getKey(),statuses);
   }
