@@ -1,5 +1,5 @@
 {
-  Map<String,BlobStoreContext> stores=createBlobStores();
+  Map<String,BlobStoreContext<?,?>> stores=createBlobStores();
   StoreTweetsController function=new StoreTweetsController(stores,"favo",createTwitter());
   User frank=createMock(User.class);
   expect(frank.getScreenName()).andReturn("frank").atLeastOnce();
@@ -23,7 +23,7 @@
   verify(frankStatus);
   verify(jimmy);
   verify(jimmyStatus);
-  for (  Entry<String,BlobStoreContext> entry : stores.entrySet()) {
+  for (  Entry<String,BlobStoreContext<?,?>> entry : stores.entrySet()) {
     BlobMap map=entry.getValue().createBlobMap("favo");
     Blob frankBlob=map.get("1");
     assertEquals(frankBlob.getMetadata().getName(),"1");

@@ -1,6 +1,7 @@
 {
-  Map<String,BlobStoreContext> contexts=ImmutableMap.<String,BlobStoreContext>of("test1",new BlobStoreContextFactory().createContext("transient","dummy","dummy"),"test2",new BlobStoreContextFactory().createContext("transient","dummy","dummy"));
-  for (  BlobStoreContext blobstore : contexts.values()) {
+  TransientApiMetadata transientApiMetadata=TransientApiMetadata.builder().build();
+  Map<String,BlobStoreContext<?,?>> contexts=ImmutableMap.<String,BlobStoreContext<?,?>>of("test1",BlobStoreContextBuilder.newBuilder(transientApiMetadata).build(),"test2",BlobStoreContextBuilder.newBuilder(transientApiMetadata).build());
+  for (  BlobStoreContext<?,?> blobstore : contexts.values()) {
     blobstore.getAsyncBlobStore().createContainerInLocation(null,"favo").get();
   }
   return contexts;

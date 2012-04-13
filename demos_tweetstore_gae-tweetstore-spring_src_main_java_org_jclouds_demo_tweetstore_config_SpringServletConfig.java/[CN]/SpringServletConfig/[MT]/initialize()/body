@@ -1,5 +1,4 @@
 {
-  BlobStoreContextFactory blobStoreContextFactory=new BlobStoreContextFactory();
   Properties props=loadJCloudsProperties();
   LOGGER.trace("About to initialize members.");
   Module googleModule=new GoogleAppEngineConfigurationModule();
@@ -14,7 +13,7 @@
   container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
   providerTypeToBlobStoreMap=Maps.newHashMap();
   for (  String hint : getBlobstoreContexts(props)) {
-    providerTypeToBlobStoreMap.put(hint,blobStoreContextFactory.createContext(hint,modules,props));
+    providerTypeToBlobStoreMap.put(hint,BlobStoreContextBuilder.newBuilder(hint).modules(modules).overrides(props).build());
   }
   queue=QueueFactory.getQueue("twitter");
   LOGGER.trace("Members initialized. Twitter: '%s', container: '%s', provider types: '%s'",twitterClient,container,providerTypeToBlobStoreMap.keySet());
