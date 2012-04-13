@@ -1,27 +1,13 @@
 {
   ContextBuilder builder=ContextBuilder.newBuilder(provider).credentials(identity,credential).endpoint(endpoint).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule())).overrides(overrides);
-  VCloudDirectorContext rootContext=VCloudDirectorContext.class.cast(builder.build());
-  if (rootContext.getApi().getCurrentSession().getLinks().contains(Link.builder().rel("down").type("application/vnd.vmware.admin.vcloud+xml").href(URI.create(endpoint + "/admin/")).build())) {
-    adminContext=rootContext.getAdminContext();
-    Reference orgRef=Iterables.getFirst(rootContext.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
-    assertNotNull(orgRef,String.format(REF_REQ_LIVE,"admin org"));
+  userContext=VCloudDirectorContext.class.cast(builder.build());
+  Link admin=Iterables.tryFind(userContext.getApi().getCurrentSession().getLinks(),Predicates.and(LinkPredicates.relEquals(Link.Rel.DOWN),ReferencePredicates.typeEquals(VCloudDirectorMediaType.ADMIN))).orNull();
+  if (admin != null) {
+    adminContext=userContext.getAdminContext();
+    Reference orgRef=Iterables.getFirst(userContext.getApi().getOrgClient().getOrgList().getOrgs(),null).toAdminReference(endpoint);
     Reference userRef=Iterables.find(adminContext.getApi().getOrgClient().getOrg(orgRef.getHref()).getUsers(),ReferencePredicates.nameEquals(adminContext.getApi().getCurrentSession().getUser()));
     User user=adminContext.getApi().getUserClient().getUser(userRef.getHref());
-    Reference orgAdmin=user.getRole();
-    assertTrue(equal(orgAdmin.getName(),DefaultRoles.ORG_ADMIN.value()),"must give org admin or user-only credentials");
-    String adminIdentity="testAdmin" + BaseVCloudDirectorClientLiveTest.getTestDateTimeStamp();
-    String adminCredential="testAdminPassword";
-    createdAdminUser=rootContext.getAdminContext().getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(adminIdentity).password(adminCredential).description("test user with user-level privileges").role(orgAdmin).deployedVmQuota(BaseVCloudDirectorClientLiveTest.REQUIRED_ADMIN_VM_QUOTA).isEnabled(true).build());
-    Closeables.closeQuietly(rootContext);
-    builder.credentials(adminIdentity,adminCredential);
-    adminContext=VCloudDirectorContext.class.cast(builder.build()).getAdminContext();
-    String userIdentity="test" + BaseVCloudDirectorClientLiveTest.getTestDateTimeStamp();
-    String userCredential="testPassword";
-    createdUser=adminContext.getApi().getUserClient().createUser(orgRef.getHref(),User.builder().name(userIdentity).password(userCredential).description("test user with user-level privileges").role(BaseVCloudDirectorClientLiveTest.getRoleReferenceFor(DefaultRoles.USER.value(),adminContext)).deployedVmQuota(BaseVCloudDirectorClientLiveTest.REQUIRED_USER_VM_QUOTA).isEnabled(true).build());
-    builder.credentials(userIdentity,userCredential);
-    userContext=VCloudDirectorContext.class.cast(builder.build());
-  }
- else {
-    userContext=rootContext;
+    Reference userRole=user.getRole();
+    assertEquals(userRole.getName(),DefaultRoles.ORG_ADMIN.value());
   }
 }
