@@ -1,4 +1,5 @@
 {
   ApplicationInstanceInfo instanceInfo=new CloudEnvironment().getInstanceInfo();
-  return "http://" + checkNotNull(instanceInfo.getHost(),"instanceInfo.getHost()") + ":"+ instanceInfo.getPort()+ context.getContextPath();
+  checkState(!instanceInfo.getUris().isEmpty(),"instanceInfo.getUris() is empty");
+  return "http://" + checkNotNull(instanceInfo.getUris().get(0),"instanceInfo.getUris().get(0)") + context.getContextPath();
 }
