@@ -1,8 +1,8 @@
 {
-  return transformParallel(client.getServerClient().listServers(),new Function<Server,Future<ServerDetails>>(){
+  return Iterables2.concreteCopy(transformParallel(client.getServerClient().listServers(),new Function<Server,Future<? extends ServerDetails>>(){
     @Override public Future<ServerDetails> apply(    Server from){
       return aclient.getServerClient().getServerDetails(from.getId());
     }
   }
-,userThreads,null,logger,"server details");
+,userThreads,null,logger,"server details"));
 }

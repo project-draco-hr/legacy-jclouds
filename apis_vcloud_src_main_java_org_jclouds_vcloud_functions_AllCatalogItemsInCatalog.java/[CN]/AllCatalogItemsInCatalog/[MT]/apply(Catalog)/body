@@ -1,14 +1,14 @@
 {
-  Iterable<CatalogItem> catalogItems=transformParallel(filter(from.values(),new Predicate<ReferenceType>(){
+  Iterable<? extends CatalogItem> catalogItems=transformParallel(filter(from.values(),new Predicate<ReferenceType>(){
     @Override public boolean apply(    ReferenceType input){
       return input.getType().equals(VCloudMediaType.CATALOGITEM_XML);
     }
   }
-),new Function<ReferenceType,Future<CatalogItem>>(){
+),new Function<ReferenceType,Future<? extends CatalogItem>>(){
     @Override public Future<CatalogItem> apply(    ReferenceType from){
       return aclient.getCatalogClient().getCatalogItem(from.getHref());
     }
   }
 ,executor,null,logger,"catalogItems in " + from.getHref());
-  return catalogItems;
+  return Iterables2.concreteCopy(catalogItems);
 }

@@ -1,5 +1,5 @@
 {
-  return transformParallel(Sets.newLinkedHashSet(transform(filter(from,new Predicate<Location>(){
+  return Iterables2.concreteCopy(transformParallel(Sets.newLinkedHashSet(transform(filter(from,new Predicate<Location>(){
     @Override public boolean apply(    Location input){
       return input.getScope() == LocationScope.ZONE;
     }
@@ -9,10 +9,10 @@
       return URI.create(from.getParent().getId());
     }
   }
-)),new Function<URI,Future<Org>>(){
+)),new Function<URI,Future<? extends Org>>(){
     @Override public Future<Org> apply(    URI from){
       return aclient.getOrgClient().getOrg(from);
     }
   }
-,executor,null,logger,"organizations for uris");
+,executor,null,logger,"organizations for uris"));
 }

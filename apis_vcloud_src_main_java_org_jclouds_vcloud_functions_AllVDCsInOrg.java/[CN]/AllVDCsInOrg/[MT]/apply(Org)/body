@@ -1,9 +1,9 @@
 {
-  Iterable<VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<org.jclouds.vcloud.domain.VDC>>(){
-    @Override public Future<VDC> apply(    ReferenceType from){
+  Iterable<VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<? extends VDC>>(){
+    @Override public Future<? extends VDC> apply(    ReferenceType from){
       return aclient.getVDCClient().getVDC(from.getHref());
     }
   }
 ,executor,null,logger,"vdcs in org " + org.getName());
-  return catalogItems;
+  return Iterables2.concreteCopy(catalogItems);
 }

@@ -1,6 +1,6 @@
 {
-  Iterable<DriveInfo> drives=transformParallel(preinstalledImages.keySet(),new Function<String,Future<DriveInfo>>(){
-    @Override public Future<DriveInfo> apply(    String input){
+  Iterable<? extends DriveInfo> drives=transformParallel(preinstalledImages.keySet(),new Function<String,Future<? extends DriveInfo>>(){
+    @Override public Future<? extends DriveInfo> apply(    String input){
       try {
         return Futures.immediateFuture(cache.getUnchecked(input));
       }
@@ -17,5 +17,5 @@ catch (      UncheckedExecutionException e) {
     }
   }
 ,executor,null,logger,"drives");
-  return filter(drives,notNull());
+  return Iterables2.concreteCopy(filter(drives,notNull()));
 }
