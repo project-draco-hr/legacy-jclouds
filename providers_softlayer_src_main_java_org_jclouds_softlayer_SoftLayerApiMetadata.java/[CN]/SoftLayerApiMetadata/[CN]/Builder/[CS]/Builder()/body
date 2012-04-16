@@ -1,3 +1,4 @@
 {
-  id("softlayer").type(ApiType.COMPUTE).name("SoftLayer API").identityName("API Username").credentialName("API Key").documentation(URI.create("http://sldn.softlayer.com/article/REST")).version("3").defaultEndpoint("https://api.softlayer.com/rest").defaultProperties(SoftLayerApiMetadata.defaultProperties()).javaApi(SoftLayerClient.class,SoftLayerAsyncClient.class).contextBuilder(TypeToken.of(SoftLayerContextBuilder.class));
+  super(SoftLayerClient.class,SoftLayerAsyncClient.class);
+  id("softlayer").name("SoftLayer API").identityName("API Username").credentialName("API Key").documentation(URI.create("http://sldn.softlayer.com/article/REST")).version("3").defaultEndpoint("https://api.softlayer.com/rest").defaultProperties(SoftLayerApiMetadata.defaultProperties()).wrapper(TypeToken.of(ComputeServiceContext.class)).defaultModules(ImmutableSet.<Class<? extends Module>>of(SoftLayerRestClientModule.class,SoftLayerComputeServiceContextModule.class));
 }

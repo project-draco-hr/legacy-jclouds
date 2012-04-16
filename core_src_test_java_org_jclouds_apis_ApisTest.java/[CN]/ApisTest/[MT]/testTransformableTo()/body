@@ -1,0 +1,17 @@
+{
+  Iterable<ApiMetadata> apisMetadata=Apis.contextWrappableAs(Storage.class);
+  for (  ApiMetadata apiMetadata : apisMetadata) {
+    assertEquals(testBlobstoreApi,apiMetadata);
+  }
+  apisMetadata=Apis.contextWrappableAs(Compute.class);
+  for (  ApiMetadata apiMetadata : apisMetadata) {
+    if (apiMetadata.getName().equals(testComputeApi.getName())) {
+      assertEquals(testComputeApi,apiMetadata);
+    }
+ else {
+      assertEquals(testYetAnotherComputeApi,apiMetadata);
+    }
+  }
+  apisMetadata=Apis.contextWrappableAs(Balancer.class);
+  assertEquals(false,apisMetadata.iterator().hasNext());
+}

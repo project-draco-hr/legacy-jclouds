@@ -1,10 +1,9 @@
 {
-  ComputeServiceContext<?,?> context=null;
+  ComputeServiceContext context=null;
   try {
     String endpoint="file://" + getClass().getResource("/test_location.yaml").getPath();
-    context=ContextBuilder.newBuilder(AnonymousProviderMetadata.forApiWithEndpoint(new BYONApiMetadata(),endpoint)).build();
-    assertEquals(context.getProviderSpecificContext().getEndpoint(),URI.create(endpoint));
-    @SuppressWarnings("unchecked") Supplier<LoadingCache<String,Node>> supplier=(Supplier<LoadingCache<String,Node>>)context.getProviderSpecificContext().getApi();
+    context=ContextBuilder.newBuilder(new BYONApiMetadata()).endpoint(endpoint).build(ComputeServiceContext.class);
+    Supplier<LoadingCache<String,Node>> supplier=supplier(context);
     assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());
     assertEquals(supplier.get().asMap(),ImmutableMap.<String,Node>of(NodesFromYamlTest.TEST2.getId(),NodesFromYamlTest.TEST2,NodesFromYamlTest.TEST3.getId(),NodesFromYamlTest.TEST3));
     Location providerLocation=expectedProviderLocationFromResource(endpoint);

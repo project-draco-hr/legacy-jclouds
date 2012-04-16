@@ -1,0 +1,13 @@
+{
+  try {
+    Location providerLocation=expectedProviderLocationFromResource(endpoint);
+    Supplier<LoadingCache<String,Node>> supplier=supplier(context);
+    assertEquals(supplier.get().size(),context.getComputeService().listNodes().size());
+    assertEquals(supplier.get().asMap(),ImmutableMap.<String,Node>of(NodesFromYamlTest.TEST1.getId(),NodesFromYamlTest.TEST1));
+    assertEquals(context.getComputeService().listNodes().toString(),ImmutableSet.of(expectedNodeMetadataFromResource(endpoint)).toString());
+    assertEquals(context.getComputeService().listAssignableLocations(),ImmutableSet.of(providerLocation));
+  }
+  finally {
+    if (context != null)     context.close();
+  }
+}

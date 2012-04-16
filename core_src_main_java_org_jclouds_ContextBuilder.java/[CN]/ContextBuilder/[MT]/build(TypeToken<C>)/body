@@ -1,0 +1,11 @@
+{
+  TypeToken<C> returnType=null;
+  if (contextType.isAssignableFrom(apiMetadata.getContext()))   returnType=(TypeToken<C>)apiMetadata.getContext();
+ else   try {
+    returnType=(TypeToken<C>)Apis.findWrapper(apiMetadata,contextType);
+  }
+ catch (  NoSuchElementException e) {
+    throw new IllegalArgumentException(String.format("api %s not assignable from or transformable to %s; context: %s, wrappers: %s",apiMetadata,contextType,apiMetadata.getContext(),apiMetadata.getWrappers()));
+  }
+  return (C)buildInjector().getInstance(Key.get(TypeLiteral.get(returnType.getType())));
+}

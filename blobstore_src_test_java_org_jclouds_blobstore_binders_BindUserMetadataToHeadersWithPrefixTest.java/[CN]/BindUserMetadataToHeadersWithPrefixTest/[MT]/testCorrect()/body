@@ -1,7 +1,7 @@
 {
   HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).build();
   BindUserMetadataToHeadersWithPrefix binder=new BindUserMetadataToHeadersWithPrefix(new BindMapToHeadersWithPrefix("prefix:"));
-  Blob blob=BlobStoreContextBuilder.forTests().buildInjector().getInstance(Blob.Factory.class).create(null);
+  Blob blob=ContextBuilder.newBuilder("transient").buildInjector().getInstance(Blob.Factory.class).create(null);
   blob.getMetadata().setUserMetadata(ImmutableMap.of("imageName","foo","serverId","2"));
   assertEquals(binder.bindToRequest(request,blob),HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).headers(ImmutableMultimap.of("prefix:imagename","foo","prefix:serverid","2")).build());
 }

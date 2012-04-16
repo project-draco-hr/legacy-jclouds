@@ -1,9 +1,6 @@
 {
-  bind(new TypeLiteral<BlobStoreContext>(){
-  }
-).to(new TypeLiteral<BlobStoreContextImpl<TransientBlobStore,AsyncBlobStore>>(){
-  }
-).in(Scopes.SINGLETON);
+  bind(AsyncBlobStore.class).to(TransientAsyncBlobStore.class).asEagerSingleton();
+  BinderUtils.bindClient(binder(),TransientBlobStore.class,AsyncBlobStore.class,ImmutableMap.<Class<?>,Class<?>>of());
   bind(new TypeLiteral<ConcurrentMap<String,ConcurrentMap<String,Blob>>>(){
   }
 ).toInstance(map);

@@ -1,9 +1,7 @@
 {
-  bind(new TypeLiteral<BlobStoreContext>(){
-  }
-).to(new TypeLiteral<BlobStoreContextImpl<FilesystemBlobStore,AsyncBlobStore>>(){
-  }
-).in(Scopes.SINGLETON);
+  bind(AsyncBlobStore.class).to(FilesystemAsyncBlobStore.class).asEagerSingleton();
+  BinderUtils.bindClient(binder(),FilesystemBlobStore.class,AsyncBlobStore.class,ImmutableMap.<Class<?>,Class<?>>of());
+  bind(BlobStore.class).to(FilesystemBlobStore.class);
   install(new BlobStoreObjectModule());
   install(new BlobStoreMapModule());
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);

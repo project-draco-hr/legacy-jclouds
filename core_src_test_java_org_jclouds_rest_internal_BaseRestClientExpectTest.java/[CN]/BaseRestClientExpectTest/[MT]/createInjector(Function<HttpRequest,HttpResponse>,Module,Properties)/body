@@ -1,5 +1,5 @@
 {
-  ContextBuilder<?,?,?,?> builder=null;
+  ContextBuilder builder=null;
   if (provider != null)   try {
     builder=ContextBuilder.newBuilder(provider).credentials(identity,credential);
   }
@@ -7,10 +7,10 @@
     Logger.getAnonymousLogger().warning("provider [" + provider + "] is not setup as META-INF/services/org.jclouds.apis.ApiMetadata or META-INF/services/org.jclouds.providers.ProviderMetadata");
   }
   if (builder == null) {
-    ProviderMetadata<?,?,?,?> pm=createProviderMetadata();
-    ApiMetadata<?,?,?,?> am=(pm != null) ? pm.getApiMetadata() : checkNotNull(createApiMetadata(),"either createApiMetadata or createProviderMetadata must be overridden");
-    builder=pm != null ? ContextBuilder.newBuilder(pm) : ContextBuilder.newBuilder(ApiMetadata.class.cast(am));
+    ProviderMetadata pm=createProviderMetadata();
+    ApiMetadata am=(pm != null) ? pm.getApiMetadata() : checkNotNull(createApiMetadata(),"either createApiMetadata or createProviderMetadata must be overridden");
+    builder=pm != null ? ContextBuilder.newBuilder(pm) : ContextBuilder.newBuilder(RestApiMetadata.class.cast(am));
   }
-  this.api=builder.getApiMetadata().getApi();
+  this.api=RestApiMetadata.class.cast(builder.getApiMetadata()).getApi();
   return builder.credentials(identity,credential).modules(ImmutableSet.of(new ExpectModule(fn),new NullLoggingModule(),module)).overrides(setupProperties()).buildInjector();
 }

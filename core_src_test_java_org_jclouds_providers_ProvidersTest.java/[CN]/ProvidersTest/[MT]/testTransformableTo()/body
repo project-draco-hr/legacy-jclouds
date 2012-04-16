@@ -1,0 +1,17 @@
+{
+  Iterable<ProviderMetadata> providersMetadata=Providers.contextWrappableAs(Storage.class);
+  for (  ProviderMetadata providerMetadata : providersMetadata) {
+    assertEquals(testBlobstoreProvider,providerMetadata);
+  }
+  providersMetadata=Providers.contextWrappableAs(Compute.class);
+  for (  ProviderMetadata providerMetadata : providersMetadata) {
+    if (providerMetadata.getName().equals(testComputeProvider.getName())) {
+      assertEquals(testComputeProvider,providerMetadata);
+    }
+ else {
+      assertEquals(testYetAnotherComputeProvider,providerMetadata);
+    }
+  }
+  providersMetadata=Providers.contextWrappableAs(Balancer.class);
+  assertEquals(false,providersMetadata.iterator().hasNext());
+}

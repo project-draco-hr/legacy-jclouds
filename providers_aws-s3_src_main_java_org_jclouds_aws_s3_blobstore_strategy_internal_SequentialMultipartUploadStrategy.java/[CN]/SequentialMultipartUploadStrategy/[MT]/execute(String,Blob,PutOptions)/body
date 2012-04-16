@@ -6,7 +6,7 @@
   int parts=algorithm.getParts();
   long chunkSize=algorithm.getChunkSize();
   if (parts > 0) {
-    AWSS3Client client=(AWSS3Client)ablobstore.getContext().getProviderSpecificContext().getApi();
+    AWSS3Client client=(AWSS3Client)ablobstore.getContext().unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi();
     String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
     try {
       SortedMap<Integer,String> etags=Maps.newTreeMap();

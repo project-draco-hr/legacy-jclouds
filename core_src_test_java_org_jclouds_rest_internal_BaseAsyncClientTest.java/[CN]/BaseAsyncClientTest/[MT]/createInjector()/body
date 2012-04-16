@@ -1,5 +1,5 @@
 {
-  ProviderMetadata<?,?,?,?> pm=createProviderMetadata();
-  @SuppressWarnings("unchecked") ContextBuilder<?,?,?,?> builder=pm != null ? ContextBuilder.newBuilder(pm) : ContextBuilder.newBuilder(ApiMetadata.class.cast(checkNotNull(createApiMetadata(),"either createApiMetadata or createProviderMetadata must be overridden")));
+  ProviderMetadata pm=createProviderMetadata();
+  ContextBuilder builder=pm != null ? ContextBuilder.newBuilder(pm) : ContextBuilder.newBuilder(ApiMetadata.class.cast(checkNotNull(createApiMetadata(),"either createApiMetadata or createProviderMetadata must be overridden")));
   return builder.credentials(identity,credential).modules(ImmutableSet.of(new MockModule(),new NullLoggingModule(),createModule())).overrides(setupProperties()).buildInjector();
 }

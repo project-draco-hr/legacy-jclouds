@@ -1,9 +1,9 @@
 {
-  for (  ReferenceType response : getApi().listOrgs().values()) {
-    ECloudOrg org=getApi().getOrg(response.getHref());
+  for (  ReferenceType response : connection.listOrgs().values()) {
+    ECloudOrg org=connection.getOrg(response.getHref());
     assertNotNull(response);
     assertNotNull(response.getName());
     assertNotNull(response.getHref());
-    assertEquals(getApi().getDataCenterOperationsClient().listDataCentersInOrg(org.getHref()),getApi().getDataCenterOperationsClient().listDataCenters(org.getDataCenters().getHref()));
+    assertEquals(connection.getDataCenterOperationsClient().listDataCentersInOrg(org.getHref()),connection.getDataCenterOperationsClient().listDataCenters(org.getDataCenters().getHref()));
   }
 }

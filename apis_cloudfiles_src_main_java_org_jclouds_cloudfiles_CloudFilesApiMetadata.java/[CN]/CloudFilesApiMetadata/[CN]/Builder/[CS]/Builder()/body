@@ -1,3 +1,4 @@
 {
-  id("cloudfiles").name("Rackspace Cloud Files API").identityName("Username").credentialName("API Key").documentation(URI.create("http://docs.rackspacecloud.com/files/api/v1/cfdevguide_d5/content/ch01.html")).version(OpenStackAuthAsyncClient.VERSION).contextBuilder(TypeToken.of(CloudFilesContextBuilder.class)).defaultProperties(CloudFilesApiMetadata.defaultProperties()).javaApi(CloudFilesClient.class,CloudFilesAsyncClient.class);
+  super(CloudFilesClient.class,CloudFilesAsyncClient.class);
+  id("cloudfiles").name("Rackspace Cloud Files API").identityName("Username").credentialName("API Key").documentation(URI.create("http://docs.rackspacecloud.com/files/api/v1/cfdevguide_d5/content/ch01.html")).version(OpenStackAuthAsyncClient.VERSION).defaultProperties(CloudFilesApiMetadata.defaultProperties()).wrapper(TypeToken.of(BlobStoreContext.class)).defaultModules(ImmutableSet.<Class<? extends Module>>of(CloudFilesRestClientModule.class,CloudFilesBlobStoreContextModule.class));
 }

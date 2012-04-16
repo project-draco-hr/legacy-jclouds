@@ -1,10 +1,10 @@
 {
   super.setupContext();
-  client=context.getProviderSpecificContext().getApi().getTagServices();
+  client=context.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi().getTagServices();
   try {
-    testGroup=context.getProviderSpecificContext().getApi().getSecurityGroupServices().createSecurityGroupInRegionAndReturnId(null,"test-group","test-group");
+    testGroup=context.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi().getSecurityGroupServices().createSecurityGroupInRegionAndReturnId(null,"test-group","test-group");
   }
  catch (  IllegalStateException e) {
-    testGroup=Iterables.get(context.getProviderSpecificContext().getApi().getSecurityGroupServices().describeSecurityGroupsInRegion(null,"test-group"),0).getId();
+    testGroup=Iterables.get(context.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi().getSecurityGroupServices().describeSecurityGroupsInRegion(null,"test-group"),0).getId();
   }
 }

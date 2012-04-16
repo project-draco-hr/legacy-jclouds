@@ -1,7 +1,7 @@
 {
-  ContextBuilder<?,?,?,?> builder=null;
+  ContextBuilder builder=null;
   try {
-    ProviderMetadata<?,?,?,?> pm=Providers.withId(providerOrApi);
+    ProviderMetadata pm=Providers.withId(providerOrApi);
     builder=ContextBuilder.newBuilder(pm);
   }
  catch (  NoSuchElementException e) {
@@ -14,8 +14,9 @@
   if (context instanceof RestContext) {
     return RestContext.class.cast(context);
   }
- else   if (context instanceof BackedByRestContext) {
-    return BackedByRestContext.class.cast(context).getProviderSpecificContext();
+ else   if (context instanceof Wrapper) {
+    Wrapper tctx=Wrapper.class.cast(context);
+    return (RestContext<S,A>)tctx.unwrap(TypeToken.of(RestContext.class));
   }
  else {
     throw new IllegalArgumentException("provider " + providerOrApi + " contains an unknown context type: "+ context.getClass().getSimpleName());

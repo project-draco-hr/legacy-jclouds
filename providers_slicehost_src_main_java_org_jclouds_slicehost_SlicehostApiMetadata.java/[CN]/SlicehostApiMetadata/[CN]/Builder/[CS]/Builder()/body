@@ -1,3 +1,4 @@
 {
-  id("slicehost").type(ApiType.COMPUTE).name("Slicehost API").identityName("API password").documentation(URI.create("http://articles.slicehost.com/api")).version("https://api.slicehost.com").defaultEndpoint("https://api.slicehost.com").javaApi(SlicehostClient.class,SlicehostAsyncClient.class).defaultProperties(SlicehostApiMetadata.defaultProperties()).contextBuilder(TypeToken.of(SlicehostContextBuilder.class));
+  super(SlicehostClient.class,SlicehostAsyncClient.class);
+  id("slicehost").name("Slicehost API").identityName("API password").documentation(URI.create("http://articles.slicehost.com/api")).version("https://api.slicehost.com").defaultEndpoint("https://api.slicehost.com").defaultProperties(SlicehostApiMetadata.defaultProperties()).wrapper(TypeToken.of(ComputeServiceContext.class)).defaultModules(ImmutableSet.<Class<? extends Module>>of(SlicehostRestClientModule.class,SlicehostComputeServiceContextModule.class));
 }

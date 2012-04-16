@@ -8,7 +8,7 @@
     options.as(VCloudTemplateOptions.class).customizationScript(script);
     options.as(VCloudTemplateOptions.class).description(group);
     node=getOnlyElement(client.createNodesInGroup(group,1,options));
-    VApp vapp=((VCloudClient)client.getContext().getProviderSpecificContext().getApi()).getVAppClient().getVApp(node.getUri());
+    VApp vapp=client.getContext().unwrap(VCloudApiMetadata.CONTEXT_TOKEN).getApi().getVAppClient().getVApp(node.getUri());
     assertEquals(vapp.getDescription(),group);
     Vm vm=Iterables.get(vapp.getChildren(),0);
     String apiOutput=vm.getGuestCustomizationSection().getCustomizationScript();

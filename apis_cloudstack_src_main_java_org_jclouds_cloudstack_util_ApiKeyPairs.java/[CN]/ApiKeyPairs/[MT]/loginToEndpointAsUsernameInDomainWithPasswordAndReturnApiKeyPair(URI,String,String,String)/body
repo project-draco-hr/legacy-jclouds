@@ -5,8 +5,8 @@
     overrides.put(Constants.PROPERTY_TRUST_ALL_CERTS,"true");
     overrides.put(Constants.PROPERTY_RELAX_HOSTNAME,"true");
     overrides.put("jclouds.cloudstack.credential-type","passwordCredentials");
-    context=ComputeServiceContextBuilder.newBuilder(new CloudStackApiMetadata()).endpoint(checkNotNull(endpoint,"endpoint").toASCIIString()).credentials(String.format("%s/%s",checkNotNull(domain,"domain"),checkNotNull(username,"username")),password).overrides(overrides).build();
-    CloudStackClient client=CloudStackClient.class.cast(context.getProviderSpecificContext().getApi());
+    context=ContextBuilder.newBuilder(new CloudStackApiMetadata()).endpoint(checkNotNull(endpoint,"endpoint").toASCIIString()).credentials(String.format("%s/%s",checkNotNull(domain,"domain"),checkNotNull(username,"username")),password).overrides(overrides).build(CloudStackContext.class);
+    CloudStackClient client=context.getProviderSpecificContext().getApi();
     Set<Account> listOfAccounts=client.getAccountClient().listAccounts();
     domain=(domain.equals("") || domain.equals("/")) ? "ROOT" : domain;
     for (    Account account : listOfAccounts) {

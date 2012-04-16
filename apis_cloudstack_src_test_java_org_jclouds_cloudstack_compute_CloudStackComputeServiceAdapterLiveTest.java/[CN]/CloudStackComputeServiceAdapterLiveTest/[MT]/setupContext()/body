@@ -3,7 +3,7 @@
   Module module=new AbstractModule(){
     @Override protected void configure(){
       bindProperties(binder(),setupProperties());
-      bind(String.class).annotatedWith(Identity.class).toInstance(context.getProviderSpecificContext().getIdentity());
+      bind(String.class).annotatedWith(Identity.class).toInstance(identity);
       bind(new TypeLiteral<Supplier<User>>(){
       }
 ).annotatedWith(Memoized.class).to(GetCurrentUser.class).in(Scopes.SINGLETON);

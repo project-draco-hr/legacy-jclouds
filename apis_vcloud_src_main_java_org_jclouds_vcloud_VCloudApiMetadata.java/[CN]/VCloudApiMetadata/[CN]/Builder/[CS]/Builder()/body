@@ -1,3 +1,4 @@
 {
-  id("vcloud").name("VCloud 1.0 API").identityName("User at Organization (user@org)").credentialName("Password").documentation(URI.create("http://www.vmware.com/support/pubs/vcd_pubs.html")).version("1.0").javaApi(VCloudClient.class,VCloudAsyncClient.class).defaultProperties(VCloudApiMetadata.defaultProperties()).contextBuilder(TypeToken.of(VCloudContextBuilder.class));
+  super(VCloudClient.class,VCloudAsyncClient.class);
+  id("vcloud").name("VCloud 1.0 API").identityName("User at Organization (user@org)").credentialName("Password").documentation(URI.create("http://www.vmware.com/support/pubs/vcd_pubs.html")).version("1.0").defaultProperties(VCloudApiMetadata.defaultProperties()).wrapper(TypeToken.of(ComputeServiceContext.class)).defaultModules(ImmutableSet.<Class<? extends Module>>of(VCloudRestClientModule.class,VCloudComputeServiceContextModule.class));
 }

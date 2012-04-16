@@ -1,7 +1,7 @@
 {
-  ComputeServiceContext<SoftLayerClient,SoftLayerAsyncClient> context=null;
+  ComputeServiceContext context=null;
   try {
-    context=ComputeServiceContextBuilder.newBuilder(new SoftLayerProviderMetadata()).overrides(setupProperties()).modules(setupModules()).build();
+    context=ContextBuilder.newBuilder(new SoftLayerProviderMetadata()).overrides(setupProperties()).modules(setupModules()).build(ComputeServiceContext.class);
     assertEquals(context.getComputeService().listAssignableLocations().size(),6);
   }
   finally {

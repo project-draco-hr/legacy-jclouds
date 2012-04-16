@@ -1,5 +1,5 @@
 {
-  ContextBuilder<?,?,?,?> builder=ContextBuilder.newBuilder(provider).credentials(identity,credential).endpoint(endpoint).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule())).overrides(overrides);
+  ContextBuilder builder=ContextBuilder.newBuilder(provider).credentials(identity,credential).endpoint(endpoint).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule())).overrides(overrides);
   VCloudDirectorContext rootContext=VCloudDirectorContext.class.cast(builder.build());
   if (rootContext.getApi().getCurrentSession().getLinks().contains(Link.builder().rel("down").type("application/vnd.vmware.admin.vcloud+xml").href(URI.create(endpoint + "/admin/")).build())) {
     adminContext=rootContext.getAdminContext();

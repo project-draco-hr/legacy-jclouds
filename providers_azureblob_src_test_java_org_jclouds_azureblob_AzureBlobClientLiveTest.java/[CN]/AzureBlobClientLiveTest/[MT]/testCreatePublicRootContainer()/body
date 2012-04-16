@@ -29,5 +29,5 @@ catch (  AzureStorageResponseException htpe) {
     }
   }
   ListBlobsResponse list=getApi().listBlobs();
-  assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/$root",context.getProviderSpecificContext().getIdentity())));
+  assertEquals(list.getUrl(),URI.create(String.format("https://%s.blob.core.windows.net/$root",context.unwrap(AzureBlobApiMetadata.CONTEXT_TOKEN).getIdentity())));
 }

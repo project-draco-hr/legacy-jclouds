@@ -1,5 +1,5 @@
 {
-  ComputeServiceContext<S,A> context=null;
+  ComputeServiceContext context=null;
   String group=this.group + "aip";
   try {
     Properties overrides=setupProperties();
@@ -16,7 +16,7 @@
     assertFalse(InetAddresses2.isPrivateIPAddress(ip));
     IPSocket socket=new IPSocket(ip,22);
     assertTrue(socketTester.apply(socket),String.format("failed to open socket %s on node %s",socket,node));
-    EC2Client ec2=EC2Client.class.cast(context.getProviderSpecificContext().getApi());
+    EC2Client ec2=EC2Client.class.cast(context.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi());
     Set<PublicIpInstanceIdPair> ipidpairs=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,publicIps.toArray(new String[0]));
     assertEquals(ipidpairs.size(),1,String.format("there should only be one address pair (%s)",Iterables.toString(ipidpairs)));
     PublicIpInstanceIdPair ipidpair=Iterables.get(ipidpairs,0);
