@@ -1,0 +1,10 @@
+{
+  Injector i=Guice.createInjector();
+  Closer closer=i.getInstance(Closer.class);
+  ScheduledExecutorService executor=EasyMock.createMock(ScheduledExecutorService.class);
+  ExecutorServiceModule.shutdownOnClose(executor,closer);
+  expect(executor.shutdownNow()).andReturn(ImmutableList.<Runnable>of()).atLeastOnce();
+  replay(executor);
+  closer.close();
+  verify(executor);
+}
