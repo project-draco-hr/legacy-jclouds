@@ -1,4 +1,4 @@
 {
-  injector=ContextBuilder.newBuilder(AnonymousRestApiMetadata.forClientMappedToAsyncClient(IntegrationTestClient.class,IntegrationTestAsyncClient.class).toBuilder().build()).endpoint("https://${jclouds.identity}.blob.core.windows.net").credentials(ACCOUNT,"credential").modules(ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AzureStorageRestClientModule<IntegrationTestClient,IntegrationTestAsyncClient>(IntegrationTestClient.class,IntegrationTestAsyncClient.class))).buildInjector();
+  injector=ContextBuilder.newBuilder(AnonymousRestApiMetadata.forClientMappedToAsyncClient(IntegrationTestClient.class,IntegrationTestAsyncClient.class).toBuilder().build()).endpoint("https://${jclouds.identity}.blob.core.windows.net").credentials(ACCOUNT,"credential").modules(ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AzureStorageRestClientModule<IntegrationTestClient,IntegrationTestAsyncClient>(TypeToken.of(IntegrationTestClient.class),TypeToken.of(IntegrationTestAsyncClient.class)))).buildInjector();
   filter=injector.getInstance(SharedKeyLiteAuthentication.class);
 }
