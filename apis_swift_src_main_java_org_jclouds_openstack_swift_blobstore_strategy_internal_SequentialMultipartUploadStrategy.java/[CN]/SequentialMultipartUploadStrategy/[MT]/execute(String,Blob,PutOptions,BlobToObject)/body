@@ -1,5 +1,4 @@
 {
-  System.out.println("here we go");
   String key=blob.getMetadata().getName();
   Payload payload=blob.getPayload();
   MultipartUploadSlicingAlgorithm algorithm=new MultipartUploadSlicingAlgorithm();
@@ -9,17 +8,14 @@
   if (parts > 0) {
     CommonSwiftClient client=(CommonSwiftClient)ablobstore.getContext().getProviderSpecificContext().getApi();
     try {
-      SortedMap<Integer,String> etags=Maps.newTreeMap();
       int part;
       while ((part=algorithm.getNextPart()) <= parts) {
-        System.out.println("Uploading part " + part);
         Payload chunkedPart=slicer.slice(payload,algorithm.getNextChunkOffset(),chunkSize);
         Blob blobPart=ablobstore.blobBuilder(blob.getMetadata().getName() + PART_SEPARATOR + String.valueOf(part)).payload(chunkedPart).contentDisposition(blob.getMetadata().getName() + PART_SEPARATOR + String.valueOf(part)).build();
         client.putObject(container,blob2Object.apply(blobPart));
       }
       long remaining=algorithm.getRemaining();
       if (remaining > 0) {
-        System.out.println("Uploading tail.");
         Payload chunkedPart=slicer.slice(payload,algorithm.getNextChunkOffset(),remaining);
         Blob blobPart=ablobstore.blobBuilder(blob.getMetadata().getName() + PART_SEPARATOR + String.valueOf(part)).payload(chunkedPart).contentDisposition(blob.getMetadata().getName() + PART_SEPARATOR + String.valueOf(part)).build();
         client.putObject(container,blob2Object.apply(blobPart));
@@ -34,5 +30,7 @@
       throw rtex;
     }
   }
-  return "NOT IMPLEMENTED";
+ else {
+    return ablobstore.putBlob(container,blob,PutOptions.NONE);
+  }
 }
