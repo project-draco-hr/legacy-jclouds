@@ -1,9 +1,10 @@
 {
   Map<F,Exception> exceptions=newHashMap();
-  Map<F,Future<T>> responses=newHashMap();
+  Map<F,Future<? extends T>> responses=newHashMap();
   for (int i=0; i < maxRetries; i++) {
     for (    F from : fromIterable) {
-      responses.put(from,function.apply(from));
+      Future<? extends T> to=function.apply(from);
+      responses.put(from,to);
     }
     exceptions=awaitCompletion(responses,exec,maxTime,logger,logPrefix);
     if (exceptions.size() > 0 && !any(exceptions.values(),containsThrowable(AuthorizationException.class))) {

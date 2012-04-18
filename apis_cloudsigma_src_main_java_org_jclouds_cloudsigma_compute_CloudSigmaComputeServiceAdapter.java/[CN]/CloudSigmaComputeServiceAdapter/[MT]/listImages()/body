@@ -1,5 +1,5 @@
 {
-  Iterable<DriveInfo> drives=transformParallel(client.listStandardDrives(),new Function<String,Future<DriveInfo>>(){
+  Iterable<? extends DriveInfo> drives=transformParallel(client.listStandardDrives(),new Function<String,Future<? extends DriveInfo>>(){
     @Override public Future<DriveInfo> apply(    String input){
       try {
         return Futures.immediateFuture(cache.getUnchecked(input));
@@ -17,5 +17,5 @@ catch (      UncheckedExecutionException e) {
     }
   }
 ,executor,null,logger,"drives");
-  return filter(drives,PREINSTALLED_DISK);
+  return Iterables2.concreteCopy(filter(drives,PREINSTALLED_DISK));
 }

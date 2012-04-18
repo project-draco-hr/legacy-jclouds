@@ -1,7 +1,7 @@
 {
-  return transformValues(transformValues(orgSupplier.get(),allVDCsInOrg),new Function<Iterable<org.jclouds.vcloud.domain.VDC>,Map<String,org.jclouds.vcloud.domain.VDC>>(){
-    @Override public Map<String,org.jclouds.vcloud.domain.VDC> apply(    Iterable<org.jclouds.vcloud.domain.VDC> from){
-      return uniqueIndex(from,name);
+  return transformValues(transformValues(orgSupplier.get(),allVDCsInOrg),new Function<Iterable<? extends VDC>,Map<String,VDC>>(){
+    @Override public Map<String,VDC> apply(    Iterable<? extends VDC> from){
+      return uniqueIndex(Lists.newArrayList(from),name);
     }
   }
 );
