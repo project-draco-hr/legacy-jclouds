@@ -1,0 +1,18 @@
+{
+  if (qName.equals("status")) {
+    String statusString=currentText.toString().trim();
+    if (statusString.contains(" ")) {
+      statusString=statusString.substring(0,statusString.indexOf(' '));
+    }
+    if (inAttachmentSet) {
+      attachmentStatus=Attachment.Status.fromValue(statusString);
+    }
+ else {
+      volumeStatus=Volume.Status.fromValue(statusString);
+    }
+    currentText=new StringBuilder();
+  }
+ else {
+    super.endElement(uri,name,qName);
+  }
+}
