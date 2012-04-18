@@ -1,0 +1,7 @@
+{
+  ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(id);
+  Server server=novaClient.getServerClientForZone(zoneAndId.getZone()).getServer(zoneAndId.getId());
+  if (server == null)   throw new NoSuchElementException("Cannot find server with id: " + zoneAndId);
+  CloneImageTemplate template=new ImageTemplateBuilder.CloneImageTemplateBuilder().nodeId(id).name(name).build();
+  return template;
+}

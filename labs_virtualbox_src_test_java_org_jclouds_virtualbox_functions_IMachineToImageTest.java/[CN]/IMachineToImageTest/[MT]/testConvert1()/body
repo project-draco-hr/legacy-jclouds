@@ -6,6 +6,7 @@
   String guestOsDescription="ubuntu 11.04 server (i386)";
   String vmDescription="ubuntu-11.04-server-i386";
   expect(vbm.getVBox()).andReturn(vBox).anyTimes();
+  expect(vm.getName()).andReturn(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX + "my-vm-id").anyTimes();
   expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
   expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
   expect(vm.getDescription()).andReturn(vmDescription).anyTimes();
@@ -19,4 +20,5 @@
   assertTrue(image.getOperatingSystem().is64Bit());
   assertEquals(image.getOperatingSystem().getFamily(),OsFamily.UBUNTU);
   assertEquals(image.getOperatingSystem().getVersion(),"11.04");
+  assertEquals(image.getId(),"my-vm-id");
 }

@@ -1,0 +1,18 @@
+{
+  String guestAdditionsFileName=String.format("VBoxGuestAdditions_%s.iso",version);
+  String guestAdditionsIso=String.format("%s/%s",isosDir,guestAdditionsFileName);
+  String guestAdditionsUri="http://download.virtualbox.org/virtualbox/" + version + "/"+ guestAdditionsFileName;
+  if (!new File(guestAdditionsIso).exists()) {
+    getFilePathOrDownload(guestAdditionsUri);
+  }
+  checkState(new File(guestAdditionsIso).exists(),"guest additions iso does not exist at: " + guestAdditionsIso);
+  String localIsoUrl=getFilePathOrDownload(currentImage.iso);
+  String adminDisk=workingDir + File.separator + vmName+ ".vdi";
+  HardDisk hardDisk=HardDisk.builder().diskpath(adminDisk).autoDelete(true).controllerPort(0).deviceSlot(1).build();
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,localIsoUrl).attachHardDisk(hardDisk).attachISO(1,0,guestAdditionsIso).build();
+  VmSpec vmSpecification=VmSpec.builder().id(currentImage.id).name(vmName).memoryMB(512).osTypeId("").controller(ideController).forceOverwrite(true).cleanUpMode(CleanupMode.Full).build();
+  NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule("127.0.0.1",MASTER_PORT,"",22).build();
+  NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).slot(0L).build();
+  NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
+  return MasterSpec.builder().vm(vmSpecification).iso(IsoSpec.builder().sourcePath(localIsoUrl).installationScript(installationKeySequence.replace("HOSTNAME",vmSpecification.getVmName())).build()).network(networkSpec).build();
+}

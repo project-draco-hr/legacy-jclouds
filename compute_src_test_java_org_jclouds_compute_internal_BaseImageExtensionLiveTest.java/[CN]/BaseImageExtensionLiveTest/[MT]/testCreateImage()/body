@@ -1,0 +1,13 @@
+{
+  ComputeService computeService=context.getComputeService();
+  Optional<ImageExtension> imageExtension=computeService.getImageExtension();
+  assertTrue("image extension was not present",imageExtension.isPresent());
+  Set<? extends Image> imagesBefore=computeService.listImages();
+  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,getNodeTemplate()));
+  ImageTemplate newImageTemplate=imageExtension.get().buildImageTemplateFromNode("test-create-image",node.getId());
+  Image image=imageExtension.get().createImage(newImageTemplate);
+  assertEquals("test-create-image",image.getName());
+  computeService.destroyNode(node.getId());
+  Set<? extends Image> imagesAfter=computeService.listImages();
+  assertTrue(imagesBefore.size() == imagesAfter.size() - 1);
+}

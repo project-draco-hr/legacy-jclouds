@@ -4,6 +4,7 @@
   IMachine vm=createNiceMock(IMachine.class);
   IGuestOSType guestOsType=createNiceMock(IGuestOSType.class);
   expect(vbm.getVBox()).andReturn(vBox).anyTimes();
+  expect(vm.getName()).andReturn(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX + "my-vm-id").anyTimes();
   String unknownOsDescription="SomeOtherOs 2.04";
   expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
   expect(vm.getDescription()).andReturn("my-unknown-machine").anyTimes();
@@ -15,4 +16,5 @@
   Image image=fn.apply(vm);
   assertEquals(image.getOperatingSystem().getDescription(),"SomeOtherOs 2.04");
   assertEquals(image.getOperatingSystem().getVersion(),"");
+  assertEquals(image.getId(),"my-vm-id");
 }

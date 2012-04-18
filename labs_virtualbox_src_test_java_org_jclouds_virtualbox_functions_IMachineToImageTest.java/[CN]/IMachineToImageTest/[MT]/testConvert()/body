@@ -6,6 +6,7 @@
   String linuxDescription="Ubuntu 10.04";
   expect(vbm.getVBox()).andReturn(vBox).anyTimes();
   expect(vm.getOSTypeId()).andReturn("os-type").anyTimes();
+  expect(vm.getName()).andReturn(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX + "my-vm-id").anyTimes();
   expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
   expect(vm.getDescription()).andReturn("my-ubuntu-machine").anyTimes();
   expect(guestOsType.getDescription()).andReturn(linuxDescription).anyTimes();
@@ -18,4 +19,5 @@
   assertTrue(image.getOperatingSystem().is64Bit());
   assertEquals(image.getOperatingSystem().getFamily(),OsFamily.UBUNTU);
   assertEquals(image.getOperatingSystem().getVersion(),"10.04");
+  assertEquals(image.getId(),"my-vm-id");
 }
