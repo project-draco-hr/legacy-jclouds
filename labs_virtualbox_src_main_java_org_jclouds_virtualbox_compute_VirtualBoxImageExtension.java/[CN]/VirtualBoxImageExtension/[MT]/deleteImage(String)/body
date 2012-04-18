@@ -1,0 +1,11 @@
+{
+  try {
+    IMachine machine=manager.get().getVBox().findMachine(VIRTUALBOX_IMAGE_PREFIX + id);
+    machineUtils.applyForMachine(machine.getId(),new UnregisterMachineIfExistsAndDeleteItsMedia(new IMachineToVmSpec().apply(machine)));
+  }
+ catch (  Exception e) {
+    logger.error(e,"Could not delete machine with id %s ",id);
+    return false;
+  }
+  return true;
+}

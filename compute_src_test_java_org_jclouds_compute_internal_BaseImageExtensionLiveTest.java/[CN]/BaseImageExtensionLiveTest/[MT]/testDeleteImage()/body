@@ -1,0 +1,9 @@
+{
+  ComputeService computeService=context.getComputeService();
+  Optional<ImageExtension> imageExtension=computeService.getImageExtension();
+  assertTrue("image extension was not present",imageExtension.isPresent());
+  Optional<? extends Image> optImage=getImage();
+  assertTrue(optImage.isPresent());
+  Image image=optImage.get();
+  assertTrue(imageExtension.get().deleteImage(image.getId()));
+}

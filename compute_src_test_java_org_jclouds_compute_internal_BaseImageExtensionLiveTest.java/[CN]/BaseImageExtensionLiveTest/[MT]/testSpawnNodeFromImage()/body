@@ -1,0 +1,10 @@
+{
+  ComputeService computeService=context.getComputeService();
+  Template template=computeService.templateBuilder().fromImage(getImage().get()).build();
+  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,template));
+  SshClient client=context.utils().sshForNode().apply(node);
+  client.connect();
+  ExecResponse hello=client.exec("echo hello");
+  assertEquals(hello.getOutput().trim(),"hello");
+  context.getComputeService().destroyNode(node.getId());
+}

@@ -1,12 +1,15 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,IMachine,Image,Location>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<IMachine,Hardware,Image,Location>>(){
   }
 ).to(VirtualBoxComputeServiceAdapter.class);
   bind(new TypeLiteral<Function<IMachine,NodeMetadata>>(){
   }
 ).to(IMachineToNodeMetadata.class);
   bind(new TypeLiteral<Function<Location,Location>>(){
+  }
+).to((Class)IdentityFunction.class);
+  bind(new TypeLiteral<Function<Hardware,Hardware>>(){
   }
 ).to((Class)IdentityFunction.class);
   bind(new TypeLiteral<Function<Image,Image>>(){
@@ -34,6 +37,9 @@
   bind(new TypeLiteral<LoadingCache<Image,Master>>(){
   }
 ).to(MastersLoadingCache.class);
+  bind(new TypeLiteral<ImageExtension>(){
+  }
+).to(VirtualBoxImageExtension.class);
   bind(new TypeLiteral<Function<MasterSpec,IMachine>>(){
   }
 ).to((Class)CreateAndInstallVm.class);

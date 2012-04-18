@@ -1,0 +1,8 @@
+{
+  checkState(template instanceof CloneImageTemplate," openstack-nova only supports creating images through cloning.");
+  CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
+  ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
+  String newImageId=novaClient.getServerClientForZone(zoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),zoneAndId.getId());
+  org.jclouds.openstack.nova.v1_1.domain.Image newImage=checkNotNull(findImage(ZoneAndId.fromZoneAndId(zoneAndId.getZone(),newImageId)));
+  return imageInZoneToImage.apply(new ImageInZone(newImage,zoneAndId.getZone()));
+}

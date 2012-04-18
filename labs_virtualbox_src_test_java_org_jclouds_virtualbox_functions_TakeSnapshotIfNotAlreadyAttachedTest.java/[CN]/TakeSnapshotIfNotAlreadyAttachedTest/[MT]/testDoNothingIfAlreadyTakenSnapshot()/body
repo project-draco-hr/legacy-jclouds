@@ -10,11 +10,12 @@
   expect(progress.getCompleted()).andReturn(true);
   expect(machine.getCurrentSnapshot()).andReturn(null).anyTimes();
   expect(manager.openMachineSession(machine)).andReturn(session);
+  expect(machine.getState()).andReturn(MachineState.PoweredOff).anyTimes();
   expect(machine.getName()).andReturn("machine").anyTimes();
   expect(session.getConsole()).andReturn(console);
   expect(console.takeSnapshot(snapshotName,snapshotDesc)).andReturn(progress);
   session.unlockMachine();
   replay(manager,machine,vBox,session,console,progress);
-  new TakeSnapshotIfNotAlreadyAttached(Suppliers.ofInstance(manager),snapshotName,snapshotDesc).apply(machine);
+  new TakeSnapshotIfNotAlreadyAttached(Suppliers.ofInstance(manager),snapshotName,snapshotDesc,Logger.CONSOLE).apply(machine);
   verify(machine);
 }
