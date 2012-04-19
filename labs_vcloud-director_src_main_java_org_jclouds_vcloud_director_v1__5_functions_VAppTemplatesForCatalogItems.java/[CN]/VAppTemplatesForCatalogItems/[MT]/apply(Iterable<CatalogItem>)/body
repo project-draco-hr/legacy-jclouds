@@ -1,0 +1,13 @@
+{
+  return transformParallel(filter(from,new Predicate<CatalogItem>(){
+    @Override public boolean apply(    CatalogItem input){
+      return input.getEntity().getType().equals(VCloudDirectorMediaType.VAPP_TEMPLATE);
+    }
+  }
+),new Function<CatalogItem,Future<? extends VAppTemplate>>(){
+    @Override public Future<? extends VAppTemplate> apply(    CatalogItem from){
+      return new ExceptionParsingListenableFuture<VAppTemplate>(Futures.makeListenable(VCloudDirectorAsyncClient.class.cast(aclient).getVAppTemplateClient().getVAppTemplate(from.getEntity().getHref()),executor),returnNullOnAuthorizationException);
+    }
+  }
+,executor,null,logger,"vappTemplates in");
+}
