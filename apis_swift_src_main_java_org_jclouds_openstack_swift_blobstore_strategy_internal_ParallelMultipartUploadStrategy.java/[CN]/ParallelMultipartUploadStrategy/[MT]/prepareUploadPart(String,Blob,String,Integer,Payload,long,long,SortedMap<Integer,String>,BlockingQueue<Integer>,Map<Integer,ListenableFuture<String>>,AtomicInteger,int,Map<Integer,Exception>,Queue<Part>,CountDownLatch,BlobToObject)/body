@@ -1,0 +1,40 @@
+{
+  if (errors.get() > maxRetries) {
+    activeParts.remove(part);
+    latch.countDown();
+    return;
+  }
+  final CommonSwiftAsyncClient client=(CommonSwiftAsyncClient)ablobstore.getContext().getProviderSpecificContext().getAsyncApi();
+  Payload chunkedPart=slicer.slice(payload,offset,size);
+  logger.debug(String.format("async uploading part %s of %s to container %s",part,key,container));
+  final long start=System.currentTimeMillis();
+  String blobPartName=blob.getMetadata().getName() + PART_SEPARATOR + String.valueOf(part);
+  Blob blobPart=ablobstore.blobBuilder(blobPartName).payload(chunkedPart).contentDisposition(blobPartName).build();
+  final ListenableFuture<String> futureETag=client.putObject(container,blob2Object.apply(blobPart));
+  futureETag.addListener(new Runnable(){
+    @Override public void run(){
+      try {
+        etags.put(part,futureETag.get());
+        logger.debug(String.format("async uploaded part %s of %s to container %s in %sms",part,key,container,(System.currentTimeMillis() - start)));
+      }
+ catch (      CancellationException e) {
+        errorMap.put(part,e);
+        String message=String.format("%s while uploading part %s - [%s,%s] to container %s with running since %dms",e.getMessage(),part,offset,size,container,(System.currentTimeMillis() - start));
+        logger.debug(message);
+      }
+catch (      Exception e) {
+        errorMap.put(part,e);
+        String message=String.format("%s while uploading part %s - [%s,%s] to container %s running since %dms",e.getMessage(),part,offset,size,container,(System.currentTimeMillis() - start));
+        logger.error(message,e);
+        if (errors.incrementAndGet() <= maxRetries)         toRetry.add(new Part(part,offset,size));
+      }
+ finally {
+        activeParts.remove(part);
+        futureParts.remove(part);
+        latch.countDown();
+      }
+    }
+  }
+,ioWorkerExecutor);
+  futureParts.put(part,futureETag);
+}

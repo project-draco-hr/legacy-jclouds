@@ -1,0 +1,38 @@
+{
+  long unitPartSize=defaultPartSize;
+  int parts=(int)(length / unitPartSize);
+  long partSize=unitPartSize;
+  int magnitude=(int)(parts / magnitudeBase);
+  if (magnitude > 0) {
+    partSize=magnitude * unitPartSize;
+    if (partSize > MultipartUpload.MAX_PART_SIZE) {
+      partSize=MultipartUpload.MAX_PART_SIZE;
+      unitPartSize=MultipartUpload.MAX_PART_SIZE;
+    }
+    parts=(int)(length / partSize);
+    if (parts * partSize < length) {
+      partSize=(magnitude + 1) * unitPartSize;
+      if (partSize > MultipartUpload.MAX_PART_SIZE) {
+        partSize=MultipartUpload.MAX_PART_SIZE;
+        unitPartSize=MultipartUpload.MAX_PART_SIZE;
+      }
+      parts=(int)(length / partSize);
+    }
+  }
+  if (parts > MultipartUpload.MAX_NUMBER_OF_PARTS) {
+    unitPartSize=MultipartUpload.MIN_PART_SIZE;
+    parts=(int)(length / unitPartSize);
+  }
+  if (parts > MultipartUpload.MAX_NUMBER_OF_PARTS) {
+    parts=MultipartUpload.MAX_NUMBER_OF_PARTS - 1;
+  }
+  long remainder=length % unitPartSize;
+  if (remainder == 0 && parts > 0) {
+    parts-=1;
+  }
+  this.chunkSize=partSize;
+  this.parts=parts;
+  this.remaining=length - partSize * parts;
+  logger.debug(" %d bytes partitioned in %d parts of part size: %d, remaining: %d%s",length,parts,chunkSize,remaining,(remaining > MultipartUpload.MAX_PART_SIZE ? " overflow!" : ""));
+  return this.chunkSize;
+}

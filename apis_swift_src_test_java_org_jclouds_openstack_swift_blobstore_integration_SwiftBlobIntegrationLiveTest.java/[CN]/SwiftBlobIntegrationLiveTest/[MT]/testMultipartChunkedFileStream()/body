@@ -1,0 +1,16 @@
+{
+  FileOutputStream fous=new FileOutputStream(new File("target/const.txt"));
+  ByteStreams.copy(oneHundredOneConstitutions.getInput(),fous);
+  fous.flush();
+  fous.close();
+  String containerName=getContainerName();
+  try {
+    BlobStore blobStore=context.getBlobStore();
+    blobStore.createContainerInLocation(null,containerName);
+    Blob blob=blobStore.blobBuilder("const.txt").payload(new File("target/const.txt")).build();
+    blobStore.putBlob(containerName,blob,PutOptions.Builder.multipart());
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}
