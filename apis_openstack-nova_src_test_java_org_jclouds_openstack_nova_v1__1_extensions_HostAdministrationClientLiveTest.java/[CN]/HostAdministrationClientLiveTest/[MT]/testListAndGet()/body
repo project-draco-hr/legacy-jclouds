@@ -1,0 +1,13 @@
+{
+  for (  String zoneId : novaContext.getApi().getConfiguredZones()) {
+    Optional<HostAdministrationClient> optClient=novaContext.getApi().getHostAdministrationExtensionForZone(zoneId);
+    if (optClient.isPresent()) {
+      HostAdministrationClient client=optClient.get();
+      Set<Host> hosts=client.listHosts();
+      assertNotNull(hosts);
+      for (      Host host : hosts) {
+        client.getHostResourceUsage(host.getName());
+      }
+    }
+  }
+}
