@@ -1,5 +1,10 @@
 {
   URI endpoint=URI.create("https://compute.north.host/v1.1/3456/os-hosts");
-  HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
-  client.listHosts();
+  HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/hosts_list.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+  Host expected=Host.builder().name("ubuntu").service("compute").build();
+  Set<Host> result=client.listHosts();
+  Host host=Iterables.getOnlyElement(result);
+  assertEquals(host.getName(),"ubuntu");
+  assertEquals(host.getService(),"compute");
+  assertEquals(host,expected);
 }
