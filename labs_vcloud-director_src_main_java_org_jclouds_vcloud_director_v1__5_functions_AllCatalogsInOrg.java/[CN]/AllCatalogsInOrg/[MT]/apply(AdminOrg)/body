@@ -1,0 +1,9 @@
+{
+  Iterable<? extends Catalog> catalogs=FutureIterables.<Reference,Catalog>transformParallel(org.getCatalogs(),new Function<Reference,Future<? extends Catalog>>(){
+    @Override public Future<? extends Catalog> apply(    Reference from){
+      return aclient.getCatalogClient().getCatalog(from.getHref());
+    }
+  }
+,executor,null,logger,"catalogs in " + org.getName());
+  return catalogs;
+}

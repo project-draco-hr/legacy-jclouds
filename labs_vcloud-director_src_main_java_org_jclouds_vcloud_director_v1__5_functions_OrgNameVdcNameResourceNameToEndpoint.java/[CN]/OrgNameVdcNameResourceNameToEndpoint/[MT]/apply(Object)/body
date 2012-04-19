@@ -1,0 +1,15 @@
+{
+  Iterable<Object> orgVdc=(Iterable<Object>)checkNotNull(from,"args");
+  Object org=Iterables.get(orgVdc,0);
+  Object Vdc=Iterables.get(orgVdc,1);
+  Object resource=Iterables.get(orgVdc,2);
+  if (org == null)   org=defaultOrg.get().getName();
+  if (Vdc == null)   Vdc=defaultVdc.get().getName();
+  Map<String,Map<String,org.jclouds.vcloud.director.v1_5.domain.Vdc>> orgToVdcs=orgVdcMap.get();
+  checkState(orgToVdcs != null,"could not get map of org name to Vdcs!");
+  Map<String,org.jclouds.vcloud.director.v1_5.domain.Vdc> Vdcs=orgToVdcs.get(org);
+  if (Vdcs == null)   throw new NoSuchElementException("org " + org + " not found in "+ orgToVdcs.keySet());
+  org.jclouds.vcloud.director.v1_5.domain.Vdc VdcObject=Vdcs.get(Vdc);
+  if (VdcObject == null)   throw new NoSuchElementException("Vdc " + Vdc + " in org "+ org+ " not found in "+ Vdcs.keySet());
+  return getEndpointOfResourceInVdc(org,Vdc,resource,VdcObject);
+}
