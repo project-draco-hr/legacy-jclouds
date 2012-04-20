@@ -1,0 +1,6 @@
+{
+  HttpRequest getAccountMetadata=HttpRequest.builder().method("HEAD").endpoint(URI.create("https://objects.jclouds.org/v1.0/40806637803162/")).headers(ImmutableMultimap.<String,String>builder().put("X-Auth-Token",authToken).build()).build();
+  HttpResponse listContainersResponse=HttpResponse.builder().statusCode(204).headers(ImmutableMultimap.of("X-Account-Container-Count","3","X-Account-Bytes-Used","323479")).build();
+  SwiftClient clientWhenContainersExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,getAccountMetadata,listContainersResponse);
+  assertEquals(clientWhenContainersExist.getAccountClientForRegion("region-a.geo-1").getAccountMetadata(),AccountMetadata.builder().containerCount(3).bytesUsed(323479).build());
+}
