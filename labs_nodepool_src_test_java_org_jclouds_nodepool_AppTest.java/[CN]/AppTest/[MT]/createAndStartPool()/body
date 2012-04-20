@@ -1,0 +1,38 @@
+{
+  LOGGER.info("creating jclouds nodepool");
+  ImmutableMap<String,String> userMetadata=ImmutableMap.of("Name",name);
+  TemplateBuilder templateBuilder=compute.templateBuilder();
+  if (!Strings.isNullOrEmpty(imageId)) {
+    LOGGER.info("Setting image id to " + imageId);
+    templateBuilder.imageId(imageId);
+  }
+ else {
+    if (!Strings.isNullOrEmpty(osFamily)) {
+      LOGGER.info("Setting osFamily to " + osFamily);
+      templateBuilder.osFamily(OsFamily.valueOf(osFamily));
+    }
+    if (!Strings.isNullOrEmpty(osVersion)) {
+      LOGGER.info("Setting osVersion to " + osVersion);
+      templateBuilder.osVersionMatches(osVersion);
+    }
+  }
+  if (!Strings.isNullOrEmpty((hardwareId))) {
+    LOGGER.info("Setting hardware Id to " + hardwareId);
+  }
+ else {
+    LOGGER.info("Setting minRam " + ram + " and minCores "+ cores);
+    templateBuilder.minCores(cores).minRam(ram);
+  }
+  Template template=templateBuilder.build();
+  AdminAccess adminAccess=AdminAccess.builder().adminUsername("jenkins").installAdminPrivateKey(false).grantSudoToAdminUser(false).adminPrivateKey(getCloud().privateKey).authorizeAdminPublicKey(true).adminPublicKey(getCloud().publicKey).build();
+  Statement jenkinsDirStatement=Statements.newStatementList(Statements.exec("mkdir /jenkins"),Statements.exec("chown jenkins /jenkins"));
+  Statement bootstrap=newStatementList(adminAccess,jenkinsDirStatement,Statements.exec(this.initScript),InstallJDK.fromOpenJDK());
+  template.getOptions().inboundPorts(22).userMetadata(userMetadata).runScript(bootstrap);
+  pooledCompute=new BasePooledComputeService(compute,"jenkins-pool",template,10);
+  try {
+    pooledCompute.startPool();
+  }
+ catch (  RunNodesException e) {
+    destroyBadNodesAndPropagate(e);
+  }
+}
