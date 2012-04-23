@@ -1,9 +1,9 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,Blob> map=createMap(context,bucketName);
+    Map<String,Blob> map=createMap(wrapper,bucketName);
     putStringWithMD5(map,"one","apple");
-    Blob blob=context.getBlobStore().blobBuilder("one").payload("apple").calculateMD5().build();
+    Blob blob=wrapper.getBlobStore().blobBuilder("one").payload("apple").calculateMD5().build();
     assertConsistencyAwareContainsValue(map,blob);
   }
   finally {

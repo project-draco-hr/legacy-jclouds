@@ -3,10 +3,10 @@
   try {
     String name="apples";
     String goodETag=addObjectAndValidateContent(container,name);
-    context.getBlobStore().getBlob(container,name,ifETagDoesntMatch("powerfrisbee"));
+    wrapper.getBlobStore().getBlob(container,name,ifETagDoesntMatch("powerfrisbee"));
     validateContent(container,name);
     try {
-      context.getBlobStore().getBlob(container,name,ifETagDoesntMatch(goodETag));
+      wrapper.getBlobStore().getBlob(container,name,ifETagDoesntMatch(goodETag));
     }
  catch (    HttpResponseException ex) {
       assertEquals(ex.getResponse().getStatusCode(),304);

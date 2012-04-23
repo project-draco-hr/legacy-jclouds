@@ -1,0 +1,10 @@
+{
+  Properties input=new Properties();
+  input.setProperty("id","1234");
+  input.setProperty("path","path:${id}");
+  Properties output=Guice.createInjector(new BindPropertiesToExpandedValues(input)).getInstance(Properties.class);
+  Properties expected=new Properties();
+  expected.setProperty("id","1234");
+  expected.setProperty("path","path:1234");
+  assertEquals(output,expected);
+}

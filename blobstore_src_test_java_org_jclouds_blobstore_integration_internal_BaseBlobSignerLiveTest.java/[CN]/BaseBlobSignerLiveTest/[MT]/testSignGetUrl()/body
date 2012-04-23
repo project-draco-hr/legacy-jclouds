@@ -1,14 +1,14 @@
 {
   String name="hello";
   String text="fooooooooooooooooooooooo";
-  Blob blob=context.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
+  Blob blob=wrapper.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
   String container=getContainerName();
   try {
-    context.getBlobStore().putBlob(container,blob);
+    wrapper.getBlobStore().putBlob(container,blob);
     assertConsistencyAwareContainerSize(container,1);
-    HttpRequest request=context.getSigner().signGetBlob(container,name);
+    HttpRequest request=wrapper.getSigner().signGetBlob(container,name);
     assertEquals(request.getFilters().size(),0);
-    assertEquals(Strings2.toStringAndClose(context.utils().http().invoke(request).getPayload().getInput()),text);
+    assertEquals(Strings2.toStringAndClose(wrapper.utils().http().invoke(request).getPayload().getInput()),text);
   }
   finally {
     returnContainer(container);

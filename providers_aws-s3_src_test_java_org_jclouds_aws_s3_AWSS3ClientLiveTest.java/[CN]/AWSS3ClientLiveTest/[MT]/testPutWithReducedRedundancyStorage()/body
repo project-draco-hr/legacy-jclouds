@@ -2,11 +2,11 @@
   String containerName=getContainerName();
   try {
     String blobName="test-rrs";
-    BlobStore blobStore=context.getBlobStore();
+    BlobStore blobStore=wrapper.getBlobStore();
     blobStore.createContainerInLocation(null,containerName);
     Blob blob=blobStore.blobBuilder(blobName).payload("something").build();
     blobStore.putBlob(containerName,blob,storageClass(StorageClass.REDUCED_REDUNDANCY));
-    S3Client s3Client=S3Client.class.cast(context.unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi());
+    S3Client s3Client=S3Client.class.cast(wrapper.unwrap(AWSS3ApiMetadata.CONTEXT_TOKEN).getApi());
     ListBucketResponse response=s3Client.listBucket(containerName,withPrefix(blobName));
     ObjectMetadata metadata=response.iterator().next();
     assertEquals(metadata.getStorageClass(),StorageClass.REDUCED_REDUNDANCY);

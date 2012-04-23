@@ -28,7 +28,7 @@
     if (InetAddresses.isInetAddress(nodeIp)) {
       getAnonymousLogger().info(format("<< location of node(%s) from perspective of amazonaws: %s",nodeId,getLocationForIp(nodeIp)));
     }
-    trackAvailabilityOfProcessOnNode(context.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    trackAvailabilityOfProcessOnNode(wrapper.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
         return client.runScriptOnNode(nodeId,startJBoss(configuration),runAsRoot(false).blockOnComplete(false).nameTask("jboss"));
       }
@@ -38,7 +38,7 @@
     }
 ),"jboss",node,JBOSS_PATTERN);
     client.runScriptOnNode(nodeId,"/tmp/init-jboss stop",runAsRoot(false).wrapInInitScript(false));
-    trackAvailabilityOfProcessOnNode(context.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    trackAvailabilityOfProcessOnNode(wrapper.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
         return client.runScriptOnNode(nodeId,"/tmp/init-jboss start",runAsRoot(false).wrapInInitScript(false));
       }

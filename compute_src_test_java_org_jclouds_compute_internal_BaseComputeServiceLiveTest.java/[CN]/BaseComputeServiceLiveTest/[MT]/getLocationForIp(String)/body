@@ -1,8 +1,8 @@
 {
-  InputStream json=context.utils().http().get(URI.create("http://freegeoip.appspot.com/" + ip));
+  InputStream json=wrapper.utils().http().get(URI.create("http://freegeoip.appspot.com/" + ip));
   String text=null;
   if (json != null && (text=Strings2.toStringAndClose(json)).indexOf("}") != -1) {
-    return context.utils().json().fromJson(text,FreeGeoIPLocation.class).toString();
+    return wrapper.utils().json().fromJson(text,FreeGeoIPLocation.class).toString();
   }
  else {
     getAnonymousLogger().warning("could not get info on ip " + ip + "; check freegeoip");

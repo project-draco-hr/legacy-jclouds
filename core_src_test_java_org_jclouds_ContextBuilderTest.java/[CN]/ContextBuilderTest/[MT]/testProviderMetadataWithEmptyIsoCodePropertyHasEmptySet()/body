@@ -1,0 +1,7 @@
+{
+  Properties overrides=new Properties();
+  overrides.setProperty(Constants.PROPERTY_ISO3166_CODES,"");
+  ContextBuilder withVariablesToReplace=testContextBuilder().overrides(overrides).credentials("foo","bar");
+  Set<String> codes=withVariablesToReplace.buildInjector().getInstance(ProviderMetadata.class).getIso3166Codes();
+  assertEquals(codes,ImmutableSet.<String>of());
+}

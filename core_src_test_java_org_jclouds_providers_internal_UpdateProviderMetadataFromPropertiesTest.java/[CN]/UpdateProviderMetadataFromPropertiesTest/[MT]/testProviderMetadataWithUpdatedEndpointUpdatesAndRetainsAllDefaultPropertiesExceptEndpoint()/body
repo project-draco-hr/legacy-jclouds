@@ -1,0 +1,9 @@
+{
+  ProviderMetadata md=AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,IntegrationTestAsyncClient.class,"http://localhost");
+  Properties props=new Properties();
+  props.putAll(md.getDefaultProperties());
+  props.setProperty(Constants.PROPERTY_ENDPOINT,"http://nonlocal");
+  ProviderMetadata newMd=new UpdateProviderMetadataFromProperties(md).apply(props);
+  assertEquals(newMd.getEndpoint(),"http://nonlocal");
+  assertEquals(newMd.getDefaultProperties(),md.getDefaultProperties());
+}

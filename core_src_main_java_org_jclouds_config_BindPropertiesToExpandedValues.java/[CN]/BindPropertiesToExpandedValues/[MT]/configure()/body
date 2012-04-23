@@ -1,0 +1,13 @@
+{
+  install(Rocoto.expandVariables(new ConfigurationModule(){
+    @Override protected void bindConfigurations(){
+      bindProperties(resolved);
+    }
+    @SuppressWarnings("unused") @Provides @Singleton protected Properties expanded(    FilterStringsBoundToInjectorByName filterStringsBoundByName){
+      Properties props=new Properties();
+      props.putAll(filterStringsBoundByName.apply(Predicates.<String>alwaysTrue()));
+      return props;
+    }
+  }
+));
+}

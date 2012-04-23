@@ -1,0 +1,9 @@
+{
+  ProviderMetadata md=AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,IntegrationTestAsyncClient.class,"http://localhost");
+  Properties props=new Properties();
+  props.putAll(md.getDefaultProperties());
+  props.setProperty(PROPERTY_ISO3166_CODES,"US-CA");
+  ProviderMetadata newMd=new UpdateProviderMetadataFromProperties(md).apply(props);
+  assertEquals(newMd.getIso3166Codes(),ImmutableSet.of("US-CA"));
+  assertEquals(newMd.getDefaultProperties(),md.getDefaultProperties());
+}

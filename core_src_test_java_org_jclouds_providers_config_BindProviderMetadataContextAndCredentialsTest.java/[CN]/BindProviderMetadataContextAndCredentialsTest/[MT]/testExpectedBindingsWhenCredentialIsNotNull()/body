@@ -1,0 +1,7 @@
+{
+  ProviderMetadata md=AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,IntegrationTestAsyncClient.class,"http://localhost");
+  Credentials creds=LoginCredentials.builder().user("user").password("password").build();
+  ExpectedBindings bindings=Guice.createInjector(new BindProviderMetadataContextAndCredentials(md,creds)).getInstance(ExpectedBindings.class);
+  assertEquals(bindings.identity,"user");
+  assertEquals(bindings.credential,"password");
+}

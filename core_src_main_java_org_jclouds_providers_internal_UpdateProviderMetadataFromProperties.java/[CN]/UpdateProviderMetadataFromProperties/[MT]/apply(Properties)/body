@@ -1,0 +1,10 @@
+{
+  Properties mutable=new Properties();
+  mutable.putAll(input);
+  ApiMetadata apiMetadata=this.apiMetadata.toBuilder().name(getAndRemove(mutable,PROPERTY_API,this.apiMetadata.getName())).version(getAndRemove(mutable,PROPERTY_API_VERSION,this.apiMetadata.getVersion())).buildVersion(getAndRemove(mutable,PROPERTY_BUILD_VERSION,this.apiMetadata.getBuildVersion().orNull())).build();
+  String endpoint=getAndRemove(mutable,PROPERTY_ENDPOINT,providerMetadata.isPresent() ? providerMetadata.get().getEndpoint() : null);
+  String providerId=getAndRemove(mutable,PROPERTY_PROVIDER,providerMetadata.isPresent() ? providerMetadata.get().getId() : apiMetadata.getId());
+  String isoCodes=getAndRemove(mutable,PROPERTY_ISO3166_CODES,providerMetadata.isPresent() ? Joiner.on(',').join(providerMetadata.get().getIso3166Codes()) : "");
+  ProviderMetadata providerMetadata=this.providerMetadata.or(AnonymousProviderMetadata.forApiWithEndpoint(apiMetadata,checkNotNull(endpoint,PROPERTY_ENDPOINT))).toBuilder().apiMetadata(apiMetadata).id(providerId).iso3166Codes(filter(Splitter.on(',').split(isoCodes),not(equalTo("")))).endpoint(endpoint).defaultProperties(mutable).build();
+  return providerMetadata;
+}

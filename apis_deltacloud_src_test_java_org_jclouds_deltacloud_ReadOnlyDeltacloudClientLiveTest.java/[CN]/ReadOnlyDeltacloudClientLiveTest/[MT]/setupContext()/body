@@ -1,6 +1,6 @@
 {
   super.setupContext();
-  client=context.unwrap(DeltacloudApiMetadata.CONTEXT_TOKEN).getApi();
+  client=wrapper.unwrap(DeltacloudApiMetadata.CONTEXT_TOKEN).getApi();
   socketTester=new RetryablePredicate<IPSocket>(new InetSocketAddressConnect(),180,1,TimeUnit.SECONDS);
   stateChanges=ImmutableMap.<Instance.State,Predicate<Instance>>of(Instance.State.RUNNING,new RetryablePredicate<Instance>(new InstanceRunning(client),600,1,TimeUnit.SECONDS),Instance.State.FINISH,new RetryablePredicate<Instance>(new InstanceFinished(client),30,1,TimeUnit.SECONDS));
 }

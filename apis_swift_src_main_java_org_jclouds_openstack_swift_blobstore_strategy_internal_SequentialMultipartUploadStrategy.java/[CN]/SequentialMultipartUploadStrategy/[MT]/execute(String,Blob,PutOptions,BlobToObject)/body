@@ -6,7 +6,7 @@
   int parts=algorithm.getParts();
   long chunkSize=algorithm.getChunkSize();
   if (parts > 0) {
-    CommonSwiftClient client=(CommonSwiftClient)ablobstore.getContext().getProviderSpecificContext().getApi();
+    CommonSwiftClient client=ablobstore.getContext().unwrap(SwiftApiMetadata.CONTEXT_TOKEN).getApi();
     try {
       int part;
       while ((part=algorithm.getNextPart()) <= parts) {

@@ -1,0 +1,7 @@
+{
+  ContextBuilder withVariablesToReplace=testContextBuilder().endpoint("http://${jclouds.identity}.service.com").credentials("foo","bar");
+  URI endpoint=withVariablesToReplace.buildInjector().getInstance(Key.get(new TypeLiteral<Supplier<URI>>(){
+  }
+,Provider.class)).get();
+  assertEquals(endpoint,URI.create("http://foo.service.com"));
+}

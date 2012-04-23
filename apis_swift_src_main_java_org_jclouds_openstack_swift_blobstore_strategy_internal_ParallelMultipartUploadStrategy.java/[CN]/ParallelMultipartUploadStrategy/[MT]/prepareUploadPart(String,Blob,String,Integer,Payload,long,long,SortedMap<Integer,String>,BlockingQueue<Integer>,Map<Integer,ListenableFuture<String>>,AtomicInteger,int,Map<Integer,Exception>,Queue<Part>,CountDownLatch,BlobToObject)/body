@@ -4,7 +4,7 @@
     latch.countDown();
     return;
   }
-  final CommonSwiftAsyncClient client=(CommonSwiftAsyncClient)ablobstore.getContext().getProviderSpecificContext().getAsyncApi();
+  final CommonSwiftAsyncClient client=ablobstore.getContext().unwrap(SwiftApiMetadata.CONTEXT_TOKEN).getAsyncApi();
   Payload chunkedPart=slicer.slice(payload,offset,size);
   logger.debug(String.format("async uploading part %s of %s to container %s",part,key,container));
   final long start=System.currentTimeMillis();

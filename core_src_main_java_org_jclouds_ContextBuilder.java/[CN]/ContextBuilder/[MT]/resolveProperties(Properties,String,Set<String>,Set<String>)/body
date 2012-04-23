@@ -1,0 +1,12 @@
+{
+  for (  String key : keys) {
+    try {
+      String scopedProperty=ImmutableList.copyOf(Splitter.on('.').split(key)).get(1);
+      mutable.setProperty(key,searchPropertiesForProviderScopedProperty(mutable,providerId,scopedProperty));
+    }
+ catch (    NoSuchElementException e) {
+      if (!optionalKeys.contains(key))       throw e;
+    }
+  }
+  return mutable;
+}

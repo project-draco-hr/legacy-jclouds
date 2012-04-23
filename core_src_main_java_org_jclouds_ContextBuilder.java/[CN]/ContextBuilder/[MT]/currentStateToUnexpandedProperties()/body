@@ -1,0 +1,18 @@
+{
+  Properties defaults=new Properties();
+  defaults.putAll(apiMetadata.getDefaultProperties());
+  defaults.setProperty(PROPERTY_PROVIDER,providerId);
+  if (providerMetadata.isPresent()) {
+    defaults.putAll(providerMetadata.get().getDefaultProperties());
+    defaults.setProperty(PROPERTY_ISO3166_CODES,Joiner.on(',').join(providerMetadata.get().getIso3166Codes()));
+  }
+  if (endpoint.isPresent())   defaults.setProperty(PROPERTY_ENDPOINT,endpoint.get());
+  defaults.setProperty(PROPERTY_API,apiMetadata.getName());
+  defaults.setProperty(PROPERTY_API_VERSION,apiVersion);
+  defaults.setProperty(PROPERTY_BUILD_VERSION,buildVersion);
+  if (identity.isPresent())   defaults.setProperty(PROPERTY_IDENTITY,identity.get());
+  if (credential != null)   defaults.setProperty(PROPERTY_CREDENTIAL,credential);
+  if (overrides.isPresent())   defaults.putAll(checkNotNull(overrides.get(),"overrides"));
+  defaults.putAll(propertiesPrefixedWithJcloudsApiOrProviderId(getSystemProperties(),apiMetadata.getId(),providerId));
+  return defaults;
+}

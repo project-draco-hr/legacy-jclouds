@@ -1,0 +1,9 @@
+{
+  ProviderMetadata md=AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,IntegrationTestAsyncClient.class,"http://localhost");
+  Properties defaultProps=md.getDefaultProperties();
+  defaultProps.setProperty(Constants.PROPERTY_SESSION_INTERVAL,Integer.MAX_VALUE + "");
+  md=md.toBuilder().defaultProperties(defaultProps).build();
+  Credentials creds=LoginCredentials.builder().user("user").build();
+  int session=Guice.createInjector(new BindProviderMetadataContextAndCredentials(md,creds)).getInstance(Key.get(int.class,Names.named(Constants.PROPERTY_SESSION_INTERVAL)));
+  assertEquals(session,Integer.MAX_VALUE);
+}

@@ -1,0 +1,10 @@
+{
+  TypeToken<W> returnType;
+  try {
+    returnType=(TypeToken<W>)Apis.findWrapper(apiMetadata,checkNotNull(wrapperType,"wrapperType"));
+  }
+ catch (  NoSuchElementException e) {
+    throw new IllegalArgumentException(String.format("api %s not wrappable as %s; context: %s, wrappers: %s",apiMetadata,wrapperType,apiMetadata.getContext(),apiMetadata.getWrappers()));
+  }
+  return (W)buildInjector().getInstance(Key.get(TypeLiteral.get(returnType.getType())));
+}

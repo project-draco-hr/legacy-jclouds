@@ -1,0 +1,20 @@
+{
+  bind(ProviderMetadata.class).toInstance(providerMetadata);
+  Properties toBind=new Properties();
+  toBind.putAll(providerMetadata.getApiMetadata().getDefaultProperties());
+  toBind.putAll(providerMetadata.getDefaultProperties());
+  Names.bindProperties(binder(),toBind);
+  bind(Credentials.class).annotatedWith(Provider.class).toInstance(creds);
+  bindConstant().annotatedWith(Identity.class).to(creds.identity);
+  bind(String.class).annotatedWith(Credential.class).toProvider(com.google.inject.util.Providers.of(creds.credential));
+  bindConstant().annotatedWith(Provider.class).to(providerMetadata.getId());
+  bind(new TypeLiteral<Set<String>>(){
+  }
+).annotatedWith(Iso3166.class).toInstance(providerMetadata.getIso3166Codes());
+  bindConstant().annotatedWith(Api.class).to(providerMetadata.getApiMetadata().getId());
+  bindConstant().annotatedWith(ApiVersion.class).to(providerMetadata.getApiMetadata().getVersion());
+  bind(String.class).annotatedWith(BuildVersion.class).toProvider(com.google.inject.util.Providers.of(providerMetadata.getApiMetadata().getBuildVersion().orNull()));
+  bind(new TypeLiteral<TypeToken<? extends Context>>(){
+  }
+).annotatedWith(Provider.class).toInstance(providerMetadata.getApiMetadata().getContext());
+}

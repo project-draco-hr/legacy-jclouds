@@ -9,7 +9,7 @@
       long chunkSize=algorithm.getChunkSize();
       long remaining=algorithm.getRemaining();
       if (parts > 0) {
-        CommonSwiftClient client=(CommonSwiftClient)ablobstore.getContext().getProviderSpecificContext().getApi();
+        CommonSwiftClient client=ablobstore.getContext().unwrap(SwiftApiMetadata.CONTEXT_TOKEN).getApi();
         final Map<Integer,ListenableFuture<String>> futureParts=new ConcurrentHashMap<Integer,ListenableFuture<String>>();
         final Map<Integer,Exception> errorMap=Maps.newHashMap();
         AtomicInteger errors=new AtomicInteger(0);
