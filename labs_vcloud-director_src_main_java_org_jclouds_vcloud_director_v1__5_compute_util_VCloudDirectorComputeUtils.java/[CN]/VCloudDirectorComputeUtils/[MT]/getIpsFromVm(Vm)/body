@@ -1,8 +1,6 @@
 {
-  if (vApp.getChildren().getVms().size() == 0)   return ImmutableSet.of();
   Builder<String> ips=ImmutableSet.builder();
-  Vm vm=Iterables.get(vApp.getChildren().getVms(),0);
-  NetworkConnectionSection networkConnectionSection=findNetworkConnectionSectionForVApp.apply(vApp);
+  NetworkConnectionSection networkConnectionSection=findNetworkConnectionSectionForVApp.apply(vm);
   if (networkConnectionSection != null) {
     for (    NetworkConnection connection : networkConnectionSection.getNetworkConnections()) {
       if (connection.getIpAddress() != null)       ips.add(connection.getIpAddress());
@@ -10,7 +8,7 @@
     }
   }
  else {
-    for (    ResourceAllocationSettingData net : filter(findVirtualHardwareSectionForVApp.apply(vApp).getItems(),CIMPredicates.resourceTypeIn(ResourceType.ETHERNET_ADAPTER))) {
+    for (    ResourceAllocationSettingData net : filter(findVirtualHardwareSectionForVApp.apply(vm).getItems(),CIMPredicates.resourceTypeIn(ResourceType.ETHERNET_ADAPTER))) {
     }
   }
   return ips.build();

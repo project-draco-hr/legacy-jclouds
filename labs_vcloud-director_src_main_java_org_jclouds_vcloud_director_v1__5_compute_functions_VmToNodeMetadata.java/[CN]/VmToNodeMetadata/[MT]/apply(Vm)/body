@@ -6,10 +6,10 @@
   builder.hostname(from.getName());
   builder.location(findLocationForResourceInVDC.apply(Iterables.find(from.getLinks(),LinkPredicates.typeEquals(VCloudDirectorMediaType.VDC))));
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
-  builder.operatingSystem(toComputeOs(from,null));
-  builder.hardware(hardwareForVApp.apply(from));
+  builder.operatingSystem(toComputeOs(from));
+  builder.hardware(hardwareForVm.apply(from));
   builder.state(vAppStatusToNodeState.get(from.getStatus()));
-  Set<String> addresses=getIpsFromVApp(from);
+  Set<String> addresses=getIpsFromVm(from);
   builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
   builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
   Credentials fromApi=getCredentialsFrom(from);
