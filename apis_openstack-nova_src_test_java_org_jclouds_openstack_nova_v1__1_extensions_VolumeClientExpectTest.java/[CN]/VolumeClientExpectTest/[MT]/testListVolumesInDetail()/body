@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/os-volumes/detail");
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_list_detail.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  Set<Volume> volumes=client.listVolumesInDetail();
+  assertEquals(volumes,ImmutableSet.of(testVolume()));
+}

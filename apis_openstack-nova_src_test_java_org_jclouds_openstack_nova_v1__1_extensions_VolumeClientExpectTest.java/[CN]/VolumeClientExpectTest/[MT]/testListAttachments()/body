@@ -1,0 +1,11 @@
+{
+  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/servers/instance-1/os-volume_attachments");
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/attachment_list.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  Set<Attachment> attachments=client.listAttachments("instance-1");
+  assertEquals(attachments,ImmutableSet.of(testAttachment()));
+  Attachment attachment=Iterables.getOnlyElement(attachments);
+  assertEquals(attachment.getDevice(),"/dev/vdc");
+  assertEquals(attachment.getServerId(),"b4785058-cb80-491b-baa3-e4ee6546450e");
+  assertEquals(attachment.getId(),"1");
+  assertEquals(attachment.getVolumeId(),"1");
+}

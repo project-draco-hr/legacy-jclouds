@@ -1,0 +1,15 @@
+{
+  if (client != null) {
+    Set<Volume> volumes=client.listVolumesInDetail();
+    assertNotNull(volumes);
+    for (    Volume vol : volumes) {
+      Volume details=client.getVolume(vol.getId());
+      assertNotNull(details);
+      assertEquals(details,vol);
+      assertNotNull(details.getId());
+      assertNotNull(details.getStatus());
+      assertTrue(details.getSize() > -1);
+      assertNotNull(details.getCreated());
+    }
+  }
+}
