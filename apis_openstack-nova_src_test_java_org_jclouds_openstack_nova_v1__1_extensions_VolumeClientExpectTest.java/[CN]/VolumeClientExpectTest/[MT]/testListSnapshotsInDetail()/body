@@ -1,0 +1,13 @@
+{
+  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/os-snapshots/detail");
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/snapshot_list_detail.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  Set<VolumeSnapshot> snapshots=client.listSnapshotsInDetail();
+  assertEquals(snapshots,ImmutableSet.of(testSnapshot()));
+  VolumeSnapshot snappy=Iterables.getOnlyElement(snapshots);
+  assertEquals(snappy.getId(),"7");
+  assertEquals(snappy.getVolumeId(),"9");
+  assertEquals(snappy.getStatus(),Volume.Status.AVAILABLE);
+  assertEquals(snappy.getDescription(),"jclouds live test snapshot");
+  assertEquals(snappy.getName(),"jclouds-live-test");
+  assertEquals(snappy.getSize(),1);
+}
