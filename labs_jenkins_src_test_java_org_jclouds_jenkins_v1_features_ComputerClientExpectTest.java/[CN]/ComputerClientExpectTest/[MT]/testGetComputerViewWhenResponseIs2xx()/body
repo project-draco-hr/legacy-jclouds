@@ -1,0 +1,6 @@
+{
+  HttpRequest getComputerView=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/computer/api/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build();
+  HttpResponse getComputerViewResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/computerview.json")).build();
+  JenkinsClient clientWhenServersExist=requestSendsResponse(getComputerView,getComputerViewResponse);
+  assertEquals(clientWhenServersExist.getComputerClient().getComputerView().toString(),new ParseComputerViewTest().expected().toString());
+}
