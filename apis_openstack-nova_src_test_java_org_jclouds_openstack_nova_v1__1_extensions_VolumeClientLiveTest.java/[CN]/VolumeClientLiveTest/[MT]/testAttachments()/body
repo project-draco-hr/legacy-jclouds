@@ -1,0 +1,45 @@
+{
+  if (client != null) {
+    Set<Resource> servers=novaContext.getApi().getServerClientForZone(zone).listServers();
+    if (!servers.isEmpty()) {
+      final String serverId=Iterables.getFirst(servers,null).getId();
+      Set<VolumeAttachment> attachments=client.listAttachmentsOnServer(serverId);
+      assertNotNull(attachments);
+      final int before=attachments.size();
+      VolumeAttachment testAttachment=client.attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
+      assertNotNull(testAttachment.getId());
+      assertEquals(testAttachment.getVolumeId(),testVolume.getId());
+      assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
+        @Override public boolean apply(        VolumeClient volumeClient){
+          return client.listAttachmentsOnServer(serverId).size() == before + 1;
+        }
+      }
+,60 * 1000L).apply(client));
+      attachments=client.listAttachmentsOnServer(serverId);
+      assertNotNull(attachments);
+      assertEquals(attachments.size(),before + 1);
+      assertEquals(client.getVolume(testVolume.getId()).getStatus(),Volume.Status.IN_USE);
+      boolean foundIt=false;
+      for (      VolumeAttachment att : attachments) {
+        VolumeAttachment details=client.getAttachmentForVolumeOnServer(att.getVolumeId(),serverId);
+        assertNotNull(details);
+        assertNotNull(details.getId());
+        assertNotNull(details.getServerId());
+        assertNotNull(details.getVolumeId());
+        if (Objects.equal(details.getVolumeId(),testVolume.getId())) {
+          foundIt=true;
+          assertEquals(details.getDevice(),"/dev/vdf");
+          assertEquals(details.getServerId(),serverId);
+        }
+      }
+      assertTrue(foundIt,"Failed to find the attachment we created in listAttachments() response");
+      client.detachVolumeFromServer(testVolume.getId(),serverId);
+      assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
+        @Override public boolean apply(        VolumeClient volumeClient){
+          return client.listAttachmentsOnServer(serverId).size() == before;
+        }
+      }
+,60 * 1000L).apply(client));
+    }
+  }
+}

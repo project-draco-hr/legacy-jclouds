@@ -1,0 +1,25 @@
+{
+  if (client != null) {
+    if (testSnapshot != null) {
+      final String snapshotId=testSnapshot.getId();
+      assertTrue(client.deleteSnapshot(snapshotId));
+      assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
+        @Override public boolean apply(        VolumeClient volumeClient){
+          return client.getSnapshot(snapshotId) == null;
+        }
+      }
+,30 * 1000L).apply(client));
+    }
+    if (testVolume != null) {
+      final String volumeId=testVolume.getId();
+      assertTrue(client.deleteVolume(volumeId));
+      assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
+        @Override public boolean apply(        VolumeClient volumeClient){
+          return client.getVolume(volumeId) == null;
+        }
+      }
+,180 * 1000L).apply(client));
+    }
+  }
+  super.tearDown();
+}
