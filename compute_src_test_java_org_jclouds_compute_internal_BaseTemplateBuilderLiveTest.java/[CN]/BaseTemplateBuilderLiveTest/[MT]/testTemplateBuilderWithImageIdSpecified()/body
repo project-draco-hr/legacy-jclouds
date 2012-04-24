@@ -1,10 +1,10 @@
 {
-  Template defaultTemplate=wrapper.getComputeService().templateBuilder().build();
+  Template defaultTemplate=view.getComputeService().templateBuilder().build();
   ComputeServiceContext context=null;
   try {
     Properties overrides=setupProperties();
     overrides.setProperty("jclouds.image-id",defaultTemplate.getImage().getId());
-    context=createWrapper(overrides,setupModules());
+    context=createView(overrides,setupModules());
     assertEquals(context.getComputeService().templateBuilder().build().toString(),defaultTemplate.toString());
   }
   finally {
@@ -14,7 +14,7 @@
   try {
     Properties overrides=setupProperties();
     overrides.setProperty(provider + ".image-id",defaultTemplate.getImage().getId());
-    context=createWrapper(overrides,setupModules());
+    context=createView(overrides,setupModules());
     assertEquals(context.getComputeService().templateBuilder().build().toString(),defaultTemplate.toString());
   }
   finally {

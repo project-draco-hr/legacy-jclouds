@@ -1,10 +1,10 @@
 {
-  ComputeService computeService=wrapper.getComputeService();
+  ComputeService computeService=view.getComputeService();
   Template template=computeService.templateBuilder().fromImage(getImage().get()).build();
   NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,template));
-  SshClient client=wrapper.utils().sshForNode().apply(node);
+  SshClient client=view.utils().sshForNode().apply(node);
   client.connect();
   ExecResponse hello=client.exec("echo hello");
   assertEquals(hello.getOutput().trim(),"hello");
-  wrapper.getComputeService().destroyNode(node.getId());
+  view.getComputeService().destroyNode(node.getId());
 }

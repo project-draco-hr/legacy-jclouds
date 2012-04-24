@@ -1,12 +1,12 @@
 {
   String containerName=getContainerName();
   String directory="apps";
-  Map<String,V> rootMap=createMap(wrapper,containerName);
-  Map<String,V> rootRecursiveMap=createMap(wrapper,containerName,recursive());
-  Map<String,V> inDirectoryMap=createMap(wrapper,containerName,inDirectory(directory));
-  Map<String,V> inDirectoryRecursiveMap=createMap(wrapper,containerName,inDirectory(directory).recursive());
+  Map<String,V> rootMap=createMap(view,containerName);
+  Map<String,V> rootRecursiveMap=createMap(view,containerName,recursive());
+  Map<String,V> inDirectoryMap=createMap(view,containerName,inDirectory(directory));
+  Map<String,V> inDirectoryRecursiveMap=createMap(view,containerName,inDirectory(directory).recursive());
   try {
-    wrapper.getBlobStore().createDirectory(containerName,directory);
+    view.getBlobStore().createDirectory(containerName,directory);
     addTenObjectsUnderRoot(containerName);
     assertEquals(rootMap.size(),10);
     assertEquals(ImmutableSortedSet.copyOf(rootMap.keySet()),ImmutableSortedSet.of("0","1","2","3","4","5","6","7","8","9"));
@@ -23,7 +23,7 @@
     assertEquals(ImmutableSortedSet.copyOf(inDirectoryMap.keySet()),ImmutableSortedSet.of("0","1","2","3","4","5","6","7","8","9"));
     assertEquals(inDirectoryRecursiveMap.size(),10);
     assertEquals(ImmutableSortedSet.copyOf(inDirectoryRecursiveMap.keySet()),ImmutableSortedSet.of("0","1","2","3","4","5","6","7","8","9"));
-    wrapper.getBlobStore().createDirectory(containerName,directory + "/" + directory);
+    view.getBlobStore().createDirectory(containerName,directory + "/" + directory);
     assertEquals(rootMap.size(),10);
     assertEquals(rootRecursiveMap.size(),20);
     assertEquals(inDirectoryMap.size(),10);

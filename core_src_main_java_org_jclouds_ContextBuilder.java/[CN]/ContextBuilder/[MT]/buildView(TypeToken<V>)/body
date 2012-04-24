@@ -1,0 +1,10 @@
+{
+  TypeToken<V> returnType;
+  try {
+    returnType=(TypeToken<V>)Apis.findView(apiMetadata,checkNotNull(viewType,"viewType"));
+  }
+ catch (  NoSuchElementException e) {
+    throw new IllegalArgumentException(String.format("api %s not wrappable as %s; context: %s, views: %s",apiMetadata,viewType,apiMetadata.getContext(),apiMetadata.getViews()));
+  }
+  return (V)buildInjector().getInstance(Key.get(TypeLiteral.get(returnType.getType())));
+}

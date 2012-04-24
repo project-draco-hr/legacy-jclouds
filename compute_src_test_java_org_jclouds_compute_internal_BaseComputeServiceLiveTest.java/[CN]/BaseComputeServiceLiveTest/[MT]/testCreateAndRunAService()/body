@@ -18,7 +18,7 @@
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
     long configureSeconds=watch.elapsedTime(TimeUnit.SECONDS);
     getAnonymousLogger().info(format("<< configured node(%s) with %s and JBoss %s in %ss",nodeId,exec(nodeId,"java -fullversion"),exec(nodeId,format("ls %s/bundles/org/jboss/as/osgi/configadmin/main|sed -e 's/.*-//g' -e 's/.jar//g'",JBOSS_HOME)),configureSeconds));
-    trackAvailabilityOfProcessOnNode(wrapper.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    trackAvailabilityOfProcessOnNode(view.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
         return client.runScriptOnNode(nodeId,startJBoss(configuration),runAsRoot(false).blockOnComplete(false).nameTask("jboss"));
       }
@@ -28,7 +28,7 @@
     }
 ),"jboss",node,JBOSS_PATTERN);
     client.runScriptOnNode(nodeId,"/tmp/init-jboss stop",runAsRoot(false).wrapInInitScript(false));
-    trackAvailabilityOfProcessOnNode(wrapper.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    trackAvailabilityOfProcessOnNode(view.utils().userExecutor().submit(new Callable<ExecResponse>(){
       @Override public ExecResponse call(){
         return client.runScriptOnNode(nodeId,"/tmp/init-jboss start",runAsRoot(false).wrapInInitScript(false));
       }

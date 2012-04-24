@@ -3,7 +3,7 @@
     for (    ReferenceType cat : org.getCatalogs().values()) {
       RestContext<S,A> newContext=null;
       try {
-        newContext=createWrapper(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_CATALOG,cat.getName())),setupModules()).unwrap();
+        newContext=createView(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_CATALOG,cat.getName())),setupModules()).unwrap();
         assertEquals(newContext.getApi().findCatalogInOrgNamed(null,null),connection.getCatalog(cat.getHref()));
       }
   finally {

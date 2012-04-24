@@ -1,0 +1,19 @@
+{
+  checkNotNull(type,"context must be defined");
+  return new Predicate<ApiMetadata>(){
+    /** 
+ * {@inheritDoc}
+ */
+    @Override public boolean apply(    ApiMetadata apiMetadata){
+      for (      TypeToken<? extends View> to : apiMetadata.getViews())       if (type.isAssignableFrom(to))       return true;
+      return false;
+    }
+    /** 
+ * {@inheritDoc}
+ */
+    @Override public String toString(){
+      return "viewableAs(" + type + ")";
+    }
+  }
+;
+}

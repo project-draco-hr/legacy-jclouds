@@ -1,11 +1,11 @@
 {
   String key="hello";
-  Blob object=wrapper.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).build();
+  Blob object=view.getBlobStore().blobBuilder(key).userMetadata(ImmutableMap.of("Adrian","powderpuff")).payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN).build();
   String containerName=getContainerName();
   try {
     addBlobToContainer(containerName,object);
     validateContent(containerName,key);
-    PageSet<? extends StorageMetadata> container=wrapper.getBlobStore().list(containerName,maxResults(1));
+    PageSet<? extends StorageMetadata> container=view.getBlobStore().list(containerName,maxResults(1));
     BlobMetadata metadata=(BlobMetadata)Iterables.getOnlyElement(container);
     assertEquals(metadata.getUserMetadata().size(),0);
   }

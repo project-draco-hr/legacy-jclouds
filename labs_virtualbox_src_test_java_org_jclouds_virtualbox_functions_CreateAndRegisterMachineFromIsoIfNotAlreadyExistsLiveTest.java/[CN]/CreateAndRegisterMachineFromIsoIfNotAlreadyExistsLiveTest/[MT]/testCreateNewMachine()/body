@@ -7,7 +7,7 @@
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).build();
   NetworkSpec networkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
   MasterSpec machineSpec=MasterSpec.builder().iso(IsoSpec.builder().sourcePath(operatingSystemIso).installationScript("").build()).vm(vmSpec).network(networkSpec).build();
-  IMachine debianNode=wrapper.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(machineSpec);
+  IMachine debianNode=view.utils().injector().getInstance(CreateAndRegisterMachineFromIsoIfNotAlreadyExists.class).apply(machineSpec);
   IMachine machine=manager.get().getVBox().findMachine(vmName);
   assertEquals(debianNode.getName(),machine.getName());
 }

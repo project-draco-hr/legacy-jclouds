@@ -1,10 +1,10 @@
 {
   String bucketName=getContainerName();
   try {
-    Map<String,Blob> map=createMap(wrapper,bucketName);
+    Map<String,Blob> map=createMap(view,bucketName);
     ImmutableMap.Builder<String,Blob> newMap=ImmutableMap.builder();
     for (    String key : fiveInputs.keySet()) {
-      newMap.put(key,wrapper.getBlobStore().blobBuilder(key).payload(fiveInputs.get(key)).contentLength((long)fiveBytes.get(key).length).build());
+      newMap.put(key,view.getBlobStore().blobBuilder(key).payload(fiveInputs.get(key)).contentLength((long)fiveBytes.get(key).length).build());
     }
     map.putAll(newMap.build());
     assertConsistencyAwareMapSize(map,5);

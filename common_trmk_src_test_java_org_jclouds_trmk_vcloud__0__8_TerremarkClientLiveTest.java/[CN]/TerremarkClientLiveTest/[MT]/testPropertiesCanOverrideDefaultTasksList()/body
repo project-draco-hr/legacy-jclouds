@@ -3,7 +3,7 @@
     for (    ReferenceType tasksList : org.getTasksLists().values()) {
       RestContext<S,A> newContext=null;
       try {
-        newContext=createWrapper(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_TASKSLIST,tasksList.getName())),setupModules()).unwrap();
+        newContext=createView(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_TASKSLIST,tasksList.getName())),setupModules()).unwrap();
         assertEquals(newContext.getApi().findTasksListInOrgNamed(null,null),connection.getTasksList(tasksList.getHref()));
       }
   finally {

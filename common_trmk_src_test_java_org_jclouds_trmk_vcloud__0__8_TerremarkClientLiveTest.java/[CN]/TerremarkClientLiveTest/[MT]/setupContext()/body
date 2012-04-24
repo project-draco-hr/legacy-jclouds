@@ -1,9 +1,9 @@
 {
   super.setupContext();
-  injector=wrapper.utils().injector();
+  injector=view.utils().injector();
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<IPSocket>(injector.getInstance(SocketOpen.class),300,10,TimeUnit.SECONDS);
   successTester=new RetryablePredicate<URI>(injector.getInstance(TaskSuccess.class),650,10,TimeUnit.SECONDS);
-  connection=(S)RestContext.class.cast(wrapper.unwrap()).getApi();
+  connection=(S)RestContext.class.cast(view.unwrap()).getApi();
   orgs=listOrgs();
 }
