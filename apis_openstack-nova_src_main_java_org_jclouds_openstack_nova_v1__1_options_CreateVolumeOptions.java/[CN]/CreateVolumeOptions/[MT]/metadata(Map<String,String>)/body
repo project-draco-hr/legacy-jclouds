@@ -1,0 +1,10 @@
+{
+  checkNotNull(metadata,"metadata");
+  checkArgument(metadata.size() <= 5,"you cannot have more then 5 metadata values.  You specified: " + metadata.size());
+  for (  Entry<String,String> entry : metadata.entrySet()) {
+    checkArgument(entry.getKey().getBytes().length < 255,String.format("maximum length of metadata key is 255 bytes.  Key specified %s is %d bytes",entry.getKey(),entry.getKey().getBytes().length));
+    checkArgument(entry.getKey().getBytes().length < 255,String.format("maximum length of metadata value is 255 bytes.  Value specified for %s (%s) is %d bytes",entry.getKey(),entry.getValue(),entry.getValue().getBytes().length));
+  }
+  this.metadata=ImmutableMap.copyOf(metadata);
+  return this;
+}

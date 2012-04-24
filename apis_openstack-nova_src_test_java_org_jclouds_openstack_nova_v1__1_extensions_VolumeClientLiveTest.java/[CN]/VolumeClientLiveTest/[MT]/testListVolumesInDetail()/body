@@ -2,14 +2,23 @@
   if (client != null) {
     Set<Volume> volumes=client.listVolumesInDetail();
     assertNotNull(volumes);
+    assertTrue(volumes.contains(testVolume));
+    boolean foundIt=false;
     for (    Volume vol : volumes) {
       Volume details=client.getVolume(vol.getId());
       assertNotNull(details);
-      assertEquals(details,vol);
       assertNotNull(details.getId());
-      assertNotNull(details.getStatus());
-      assertTrue(details.getSize() > -1);
       assertNotNull(details.getCreated());
+      assertTrue(details.getSize() > -1);
+      assertEquals(details.getId(),vol.getId());
+      assertEquals(details.getSize(),vol.getSize());
+      assertEquals(details.getName(),vol.getName());
+      assertEquals(details.getDescription(),vol.getDescription());
+      assertEquals(details.getCreated(),vol.getCreated());
+      if (Objects.equal(details.getId(),testVolume.getId())) {
+        foundIt=true;
+      }
     }
+    assertTrue(foundIt,"Failed to find the volume we previously created in listVolumesInDetail() response");
   }
 }

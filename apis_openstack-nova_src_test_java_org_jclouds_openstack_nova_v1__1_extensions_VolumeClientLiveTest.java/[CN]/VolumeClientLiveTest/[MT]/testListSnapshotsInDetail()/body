@@ -1,11 +1,16 @@
 {
   if (client != null) {
-    Set<Snapshot> snapshots=client.listSnapshotsInDetail();
+    Set<VolumeSnapshot> snapshots=client.listSnapshotsInDetail();
     assertNotNull(snapshots);
-    for (    Snapshot snap : snapshots) {
-      Snapshot details=client.getSnapshot(snap.getId());
-      assertNotNull(details);
-      assertEquals(details,snap);
+    boolean foundIt=false;
+    for (    VolumeSnapshot snap : snapshots) {
+      VolumeSnapshot details=client.getSnapshot(snap.getId());
+      if (Objects.equal(snap.getVolumeId(),testVolume.getId())) {
+        foundIt=true;
+        assertSame(details,testSnapshot);
+      }
+      assertSame(details,snap);
     }
+    assertTrue(foundIt,"Failed to find the snapshot we created in listSnapshotsInDetail() response");
   }
 }

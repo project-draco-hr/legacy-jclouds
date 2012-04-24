@@ -2,9 +2,14 @@
   if (client != null) {
     Set<Volume> volumes=client.listVolumes();
     assertNotNull(volumes);
+    boolean foundIt=false;
     for (    Volume vol : volumes) {
       Volume details=client.getVolume(vol.getId());
       assertNotNull(details);
+      if (Objects.equal(details.getId(),testVolume.getId())) {
+        foundIt=true;
+      }
     }
+    assertTrue(foundIt,"Failed to find the volume we created in listVolumes() response");
   }
 }

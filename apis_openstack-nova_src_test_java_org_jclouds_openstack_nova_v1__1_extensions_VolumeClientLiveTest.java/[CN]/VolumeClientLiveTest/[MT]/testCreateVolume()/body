@@ -1,0 +1,8 @@
+{
+  testVolume=client.createVolume(1,CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume").availabilityZone(zone));
+  for (int i=0; i < 100 && testVolume.getStatus() == Volume.Status.CREATING; i++) {
+    Thread.sleep(100);
+    testVolume=client.getVolume(testVolume.getId());
+  }
+  assertEquals(testVolume.getStatus(),Volume.Status.AVAILABLE);
+}
