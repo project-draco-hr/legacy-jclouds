@@ -1,11 +1,11 @@
 {
-  if (client != null) {
-    Set<Volume> volumes=client.listVolumesInDetail();
+  if (volumeOption.isPresent()) {
+    Set<Volume> volumes=volumeOption.get().listVolumesInDetail();
     assertNotNull(volumes);
     assertTrue(volumes.contains(testVolume));
     boolean foundIt=false;
     for (    Volume vol : volumes) {
-      Volume details=client.getVolume(vol.getId());
+      Volume details=volumeOption.get().getVolume(vol.getId());
       assertNotNull(details);
       assertNotNull(details.getId());
       assertNotNull(details.getCreated());

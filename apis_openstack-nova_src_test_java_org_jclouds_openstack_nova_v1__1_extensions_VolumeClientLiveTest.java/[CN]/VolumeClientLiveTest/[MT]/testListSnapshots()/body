@@ -1,10 +1,10 @@
 {
-  if (client != null) {
-    Set<VolumeSnapshot> snapshots=client.listSnapshots();
+  if (volumeOption.isPresent()) {
+    Set<VolumeSnapshot> snapshots=volumeOption.get().listSnapshots();
     assertNotNull(snapshots);
     boolean foundIt=false;
     for (    VolumeSnapshot snap : snapshots) {
-      VolumeSnapshot details=client.getSnapshot(snap.getId());
+      VolumeSnapshot details=volumeOption.get().getSnapshot(snap.getId());
       if (Objects.equal(snap.getVolumeId(),testVolume.getId())) {
         foundIt=true;
       }

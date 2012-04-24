@@ -1,27 +1,27 @@
 {
-  if (client != null) {
-    Set<Resource> servers=novaContext.getApi().getServerClientForZone(zone).listServers();
-    if (!servers.isEmpty()) {
-      final String serverId=Iterables.getFirst(servers,null).getId();
-      Set<VolumeAttachment> attachments=client.listAttachmentsOnServer(serverId);
+  if (volumeOption.isPresent()) {
+    String server_id=null;
+    try {
+      final String serverId=server_id=createServerInZone(zone).getId();
+      Set<VolumeAttachment> attachments=volumeOption.get().listAttachmentsOnServer(serverId);
       assertNotNull(attachments);
       final int before=attachments.size();
-      VolumeAttachment testAttachment=client.attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
+      VolumeAttachment testAttachment=volumeOption.get().attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
       assertNotNull(testAttachment.getId());
       assertEquals(testAttachment.getVolumeId(),testVolume.getId());
       assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
         @Override public boolean apply(        VolumeClient volumeClient){
-          return client.listAttachmentsOnServer(serverId).size() == before + 1;
+          return volumeOption.get().listAttachmentsOnServer(serverId).size() == before + 1;
         }
       }
-,60 * 1000L).apply(client));
-      attachments=client.listAttachmentsOnServer(serverId);
+,60 * 1000L).apply(volumeOption.get()));
+      attachments=volumeOption.get().listAttachmentsOnServer(serverId);
       assertNotNull(attachments);
       assertEquals(attachments.size(),before + 1);
-      assertEquals(client.getVolume(testVolume.getId()).getStatus(),Volume.Status.IN_USE);
+      assertEquals(volumeOption.get().getVolume(testVolume.getId()).getStatus(),Volume.Status.IN_USE);
       boolean foundIt=false;
       for (      VolumeAttachment att : attachments) {
-        VolumeAttachment details=client.getAttachmentForVolumeOnServer(att.getVolumeId(),serverId);
+        VolumeAttachment details=volumeOption.get().getAttachmentForVolumeOnServer(att.getVolumeId(),serverId);
         assertNotNull(details);
         assertNotNull(details.getId());
         assertNotNull(details.getServerId());
@@ -33,13 +33,16 @@
         }
       }
       assertTrue(foundIt,"Failed to find the attachment we created in listAttachments() response");
-      client.detachVolumeFromServer(testVolume.getId(),serverId);
+      volumeOption.get().detachVolumeFromServer(testVolume.getId(),serverId);
       assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
         @Override public boolean apply(        VolumeClient volumeClient){
-          return client.listAttachmentsOnServer(serverId).size() == before;
+          return volumeOption.get().listAttachmentsOnServer(serverId).size() == before;
         }
       }
-,60 * 1000L).apply(client));
+,60 * 1000L).apply(volumeOption.get()));
+    }
+  finally {
+      if (server_id != null)       novaContext.getApi().getServerClientForZone(zone).deleteServer(server_id);
     }
   }
 }

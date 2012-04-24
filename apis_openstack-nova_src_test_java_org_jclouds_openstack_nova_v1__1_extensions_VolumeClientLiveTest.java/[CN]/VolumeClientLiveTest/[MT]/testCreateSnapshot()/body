@@ -1,6 +1,6 @@
 {
-  if (client != null) {
-    testSnapshot=client.createSnapshot(testVolume.getId(),CreateVolumeSnapshotOptions.Builder.name("jclouds-live-test").description("jclouds live test snapshot").force());
+  if (volumeOption.isPresent()) {
+    testSnapshot=volumeOption.get().createSnapshot(testVolume.getId(),CreateVolumeSnapshotOptions.Builder.name("jclouds-live-test").description("jclouds live test snapshot").force());
     assertNotNull(testSnapshot);
     assertNotNull(testSnapshot.getId());
     final String snapshotId=testSnapshot.getId();
@@ -9,9 +9,9 @@
     assertNotNull(testSnapshot.getCreated());
     assertTrue(new RetryablePredicate<VolumeClient>(new Predicate<VolumeClient>(){
       @Override public boolean apply(      VolumeClient volumeClient){
-        return client.getSnapshot(snapshotId).getStatus() == Volume.Status.AVAILABLE;
+        return volumeOption.get().getSnapshot(snapshotId).getStatus() == Volume.Status.AVAILABLE;
       }
     }
-,30 * 1000L).apply(client));
+,30 * 1000L).apply(volumeOption.get()));
   }
 }
