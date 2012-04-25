@@ -1,0 +1,6 @@
+{
+  HttpRequest getMaster=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/api/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build();
+  HttpResponse getMasterResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/master.json")).build();
+  JenkinsClient clientWhenMasterExists=requestSendsResponse(getMaster,getMasterResponse);
+  assertEquals(clientWhenMasterExists.getMaster().toString(),new ParseNodeTest().expected().toString());
+}
