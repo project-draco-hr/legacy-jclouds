@@ -50,10 +50,10 @@
     SshClient.Factory factory=i.getInstance(SshClient.Factory.class);
     SshClient connection;
     if (Strings.emptyToNull(sshKeyFile) != null) {
-      connection=factory.create(new IPSocket(sshHost,port),LoginCredentials.builder().user(sshUser).privateKey(Strings2.toStringAndClose(new FileInputStream(sshKeyFile))).build());
+      connection=factory.create(HostAndPort.fromParts(sshHost,port),LoginCredentials.builder().user(sshUser).privateKey(Strings2.toStringAndClose(new FileInputStream(sshKeyFile))).build());
     }
  else {
-      connection=factory.create(new IPSocket(sshHost,port),LoginCredentials.builder().user(sshUser).password(sshPass).build());
+      connection=factory.create(HostAndPort.fromParts(sshHost,port),LoginCredentials.builder().user(sshUser).password(sshPass).build());
     }
     connection.connect();
     return connection;

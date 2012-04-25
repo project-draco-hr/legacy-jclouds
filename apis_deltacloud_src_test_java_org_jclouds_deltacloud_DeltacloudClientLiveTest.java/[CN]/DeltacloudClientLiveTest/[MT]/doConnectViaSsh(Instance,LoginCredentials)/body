@@ -1,5 +1,5 @@
 {
-  SshClient ssh=Guice.createInjector(new SshjSshClientModule()).getInstance(SshClient.Factory.class).create(new IPSocket(Iterables.get(instance.getPublicAddresses(),0),22),creds);
+  SshClient ssh=Guice.createInjector(new SshjSshClientModule()).getInstance(SshClient.Factory.class).create(HostAndPort.fromParts(Iterables.get(instance.getPublicAddresses(),0),22),creds);
   try {
     ssh.connect();
     ExecResponse hello=ssh.exec("echo hello");
