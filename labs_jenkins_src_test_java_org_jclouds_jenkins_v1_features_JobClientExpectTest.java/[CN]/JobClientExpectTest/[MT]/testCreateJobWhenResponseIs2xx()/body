@@ -1,0 +1,6 @@
+{
+  HttpRequest createJob=HttpRequest.builder().method("POST").endpoint(URI.create("http://localhost:8080/createItem?name=blagoo")).headers(ImmutableMultimap.<String,String>builder().put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(payloadFromResourceWithContentType("/sample_job.xml","text/xml")).build();
+  HttpResponse createJobResponse=HttpResponse.builder().statusCode(200).build();
+  JenkinsClient createJobWhenCreated=requestSendsResponse(createJob,createJobResponse);
+  createJobWhenCreated.getJobClient().createFromXML("blagoo",payloadFromResource("/sample_job.xml"));
+}

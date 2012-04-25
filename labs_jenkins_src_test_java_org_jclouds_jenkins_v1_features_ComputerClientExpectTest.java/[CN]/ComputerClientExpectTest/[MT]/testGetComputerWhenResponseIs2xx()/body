@@ -2,5 +2,5 @@
   HttpRequest getComputer=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/computer/Ruboto/api/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build();
   HttpResponse getComputerResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/computer.json")).build();
   JenkinsClient clientWhenServersExist=requestSendsResponse(getComputer,getComputerResponse);
-  assertEquals(clientWhenServersExist.getComputerClient().getComputer("Ruboto").toString(),new ParseComputerTest().expected().toString());
+  assertEquals(clientWhenServersExist.getComputerClient().get("Ruboto").toString(),new ParseComputerTest().expected().toString());
 }
