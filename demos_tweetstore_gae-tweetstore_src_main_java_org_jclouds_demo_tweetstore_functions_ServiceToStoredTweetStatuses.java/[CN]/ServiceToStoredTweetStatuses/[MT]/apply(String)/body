@@ -1,6 +1,6 @@
 {
-  BlobStoreContext<?,?> context=contexts.get(service);
-  String host=context.getProviderSpecificContext().getEndpoint().getHost();
+  BlobStoreContext context=contexts.get(service);
+  String host=URI.create(context.unwrap(Context.class).getProviderMetadata().getEndpoint()).getHost();
   try {
     BlobMap blobMap=context.createBlobMap(container);
     Set<String> blobs=blobMap.keySet();
