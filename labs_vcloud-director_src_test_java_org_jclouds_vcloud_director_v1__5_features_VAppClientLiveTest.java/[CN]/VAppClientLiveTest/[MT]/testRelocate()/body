@@ -1,7 +1,0 @@
-{
-  QueryResultRecords records=context.getApi().getQueryClient().queryAll("datastore");
-  QueryResultRecordType datastore=Iterables.getLast(records.getRecords());
-  RelocateParams params=RelocateParams.builder().datastore(Reference.builder().href(datastore.getHref()).build()).build();
-  Task relocate=vAppClient.relocateVm(vApp.getHref(),params);
-  assertTrue(retryTaskSuccess.apply(relocate),String.format(TASK_COMPLETE_TIMELY,"relocate"));
-}

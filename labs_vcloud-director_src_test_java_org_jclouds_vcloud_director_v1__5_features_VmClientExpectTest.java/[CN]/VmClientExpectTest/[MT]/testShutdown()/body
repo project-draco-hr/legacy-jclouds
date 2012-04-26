@@ -1,0 +1,5 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/power/action/shutdown").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/shutdownTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=shutdownTask();
+  assertEquals(client.getVmClient().shutdown(vmURI),expected);
+}

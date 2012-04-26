@@ -1,0 +1,5 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/screen/action/acquireTicket").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/getScreenTicket.xml",VCloudDirectorMediaType.SCREEN_TICKET).httpResponseBuilder().build());
+  ScreenTicket expected=getScreenTicket();
+  assertEquals(client.getVmClient().getScreenTicket(vmURI),expected);
+}

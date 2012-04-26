@@ -1,0 +1,11 @@
+{
+  Vm test=vmClient.getVm(testVmURI);
+  Status status=test.getStatus();
+  if (status != Status.SUSPENDED) {
+    Task suspend=vmClient.suspend(vm.getHref());
+    assertTaskSucceedsLong(suspend);
+  }
+  test=vmClient.getVm(testVmURI);
+  assertStatus(VM,test,Status.SUSPENDED);
+  return test;
+}

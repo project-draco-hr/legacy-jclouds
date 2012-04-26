@@ -1,0 +1,8 @@
+{
+  RasdItemsList oldSection=vmClient.getVirtualHardwareSectionDisks(vm.getHref());
+  RasdItemsList newSection=oldSection.toBuilder().build();
+  Task modifyVirtualHardwareSectionDisks=vmClient.modifyVirtualHardwareSectionDisks(vm.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionDisks),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionDisks"));
+  RasdItemsList modified=vmClient.getVirtualHardwareSectionDisks(vm.getHref());
+  checkRasdItemsList(modified);
+}

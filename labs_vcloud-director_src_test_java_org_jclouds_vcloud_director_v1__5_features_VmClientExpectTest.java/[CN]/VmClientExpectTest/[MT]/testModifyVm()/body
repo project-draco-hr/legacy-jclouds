@@ -1,0 +1,8 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId).xmlFilePayload("/vm/modifyVm.xml",VCloudDirectorMediaType.VM).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vm/modifiedVm.xml",VCloudDirectorMediaType.VM).httpResponseBuilder().build());
+  Vm modified=getVm();
+  modified.setName("new-name");
+  modified.setDescription("New Description");
+  Task expected=modifyVmTask();
+  assertEquals(client.getVmClient().modifyVm(vmURI,modified),expected);
+}

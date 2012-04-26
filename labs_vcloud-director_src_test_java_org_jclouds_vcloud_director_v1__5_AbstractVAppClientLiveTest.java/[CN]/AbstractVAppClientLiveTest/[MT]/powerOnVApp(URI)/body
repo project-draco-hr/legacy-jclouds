@@ -1,0 +1,11 @@
+{
+  VApp test=vAppClient.getVApp(testVAppURI);
+  Status status=test.getStatus();
+  if (status != Status.POWERED_ON) {
+    Task powerOn=vAppClient.powerOn(vm.getHref());
+    assertTaskSucceedsLong(powerOn);
+  }
+  test=vAppClient.getVApp(testVAppURI);
+  assertStatus(VAPP,test,Status.POWERED_ON);
+  return test;
+}

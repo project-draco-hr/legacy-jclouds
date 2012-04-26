@@ -1,0 +1,5 @@
+{
+  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/power/action/powerOff").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/powerOffTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=powerOffTask();
+  assertEquals(client.getVmClient().powerOff(vmURI),expected);
+}
