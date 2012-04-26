@@ -1,14 +1,11 @@
 {
   VAppClient vAppClient=context.getApi().getVAppClient();
-  VApp vApp;
-  try {
-    vApp=vAppClient.getVApp(vAppURI);
-    logger.debug("Deleting VApp %s (%s)",vApp.getName(),vAppURI.getPath());
-  }
- catch (  VCloudDirectorException e) {
+  VApp vApp=vAppClient.getVApp(vAppURI);
+  if (vApp == null) {
     logger.info("Cannot find VApp at %s",vAppURI.getPath());
     return;
   }
+  logger.debug("Deleting VApp %s (%s)",vApp.getName(),vAppURI.getPath());
   if (vApp.getTasks() != null) {
     for (    Task task : vApp.getTasks()) {
       if (!taskDoneEventually(task)) {
@@ -27,7 +24,7 @@
   }
   if (vApp.isDeployed()) {
     try {
-      UndeployVAppParams params=UndeployVAppParams.builder().build();
+      UndeployVAppParams params=UndeployVAppParams.builder().undeployPowerAction(UndeployVAppParams.PowerAction.SHUTDOWN).build();
       Task undeployTask=vAppClient.undeploy(vAppURI,params);
       taskDoneEventually(undeployTask);
     }
@@ -42,11 +39,7 @@
     logger.info("Deleted VApp %s",vApp.getName());
   }
  catch (  Exception e) {
-    try {
-      vApp=vAppClient.getVApp(vAppURI);
-    }
- catch (    Exception e2) {
-    }
+    vApp=vAppClient.getVApp(vAppURI);
     logger.warn(e,"Deleting VApp %s failed (%s)",vApp.getName(),vAppURI.getPath());
   }
 }
