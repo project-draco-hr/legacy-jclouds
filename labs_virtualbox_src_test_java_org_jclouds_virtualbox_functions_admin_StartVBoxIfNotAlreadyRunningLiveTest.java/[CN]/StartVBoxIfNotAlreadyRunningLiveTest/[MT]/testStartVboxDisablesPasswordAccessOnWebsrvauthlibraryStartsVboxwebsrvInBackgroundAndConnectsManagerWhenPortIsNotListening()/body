@@ -8,7 +8,7 @@
   String identity="adminstrator";
   String credential="12345";
   expect(client.seconds(3)).andReturn(client);
-  expect(client.apply(new IPSocket(provider.getHost(),provider.getPort()))).andReturn(false).once().andReturn(true).once();
+  expect(client.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))).andReturn(false).once().andReturn(true).once();
   expect(runScriptOnNodeFactory.create(host,Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false))).andReturn(runScriptOnNode);
   expect(runScriptOnNode.init()).andReturn(runScriptOnNode);
   expect(runScriptOnNode.call()).andReturn(new ExecResponse("","",0));

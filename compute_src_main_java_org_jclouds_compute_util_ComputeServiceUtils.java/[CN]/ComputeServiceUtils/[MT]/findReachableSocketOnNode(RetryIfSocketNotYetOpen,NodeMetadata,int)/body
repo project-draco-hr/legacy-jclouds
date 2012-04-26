@@ -1,10 +1,10 @@
 {
   checkNodeHasIps(node);
-  IPSocket socket=null;
+  HostAndPort socket=null;
   try {
-    socket=find(transform(concat(node.getPublicAddresses(),node.getPrivateAddresses()),new Function<String,IPSocket>(){
-      @Override public IPSocket apply(      String from){
-        return new IPSocket(from,port);
+    socket=find(transform(concat(node.getPublicAddresses(),node.getPrivateAddresses()),new Function<String,HostAndPort>(){
+      @Override public HostAndPort apply(      String from){
+        return HostAndPort.fromParts(from,port);
       }
     }
 ),socketTester);

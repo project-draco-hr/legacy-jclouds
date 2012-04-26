@@ -14,7 +14,7 @@
     assertEquals(Iterables.size(publicIps),1);
     String ip=Iterables.getOnlyElement(publicIps);
     assertFalse(InetAddresses2.isPrivateIPAddress(ip));
-    IPSocket socket=new IPSocket(ip,22);
+    HostAndPort socket=HostAndPort.fromParts(ip,22);
     assertTrue(socketTester.apply(socket),String.format("failed to open socket %s on node %s",socket,node));
     EC2Client ec2=EC2Client.class.cast(context.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi());
     Set<PublicIpInstanceIdPair> ipidpairs=ec2.getElasticIPAddressServices().describeAddressesInRegion(region,publicIps.toArray(new String[0]));

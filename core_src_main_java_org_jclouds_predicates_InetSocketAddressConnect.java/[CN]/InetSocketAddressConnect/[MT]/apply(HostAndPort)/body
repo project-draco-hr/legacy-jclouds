@@ -1,0 +1,25 @@
+{
+  InetSocketAddress socketAddress=new InetSocketAddress(socketA.getHostText(),socketA.getPort());
+  Socket socket=null;
+  try {
+    logger.trace("testing socket %s",socketAddress);
+    socket=new Socket();
+    socket.setReuseAddress(false);
+    socket.setSoLinger(false,1);
+    socket.setSoTimeout(timeout);
+    socket.connect(socketAddress,timeout);
+  }
+ catch (  IOException e) {
+    return false;
+  }
+ finally {
+    if (socket != null) {
+      try {
+        socket.close();
+      }
+ catch (      IOException ioe) {
+      }
+    }
+  }
+  return true;
+}
