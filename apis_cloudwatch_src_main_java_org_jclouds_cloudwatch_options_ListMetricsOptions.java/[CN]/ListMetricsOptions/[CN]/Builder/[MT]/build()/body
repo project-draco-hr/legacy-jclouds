@@ -1,0 +1,19 @@
+{
+  ListMetricsOptions lmo=new ListMetricsOptions(namespace,metricName,dimensions,nextToken);
+  int dimensionIndex=1;
+  if (this.namespace != null) {
+    lmo.formParameters.put("Namespace",this.namespace);
+  }
+  if (this.metricName != null) {
+    lmo.formParameters.put("MetricName",this.metricName);
+  }
+  for (  Dimension dimension : this.dimensions) {
+    lmo.formParameters.put("Dimensions.member." + dimensionIndex + ".Name",dimension.getName());
+    lmo.formParameters.put("Dimensions.member." + dimensionIndex + ".Value",dimension.getValue());
+    dimensionIndex++;
+  }
+  if (this.nextToken != null) {
+    lmo.formParameters.put("NextToken",this.nextToken);
+  }
+  return lmo;
+}
