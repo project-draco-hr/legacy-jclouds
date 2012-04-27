@@ -1,0 +1,17 @@
+{
+  if (inMetrics) {
+    if (qName.equals("Metrics")) {
+      inMetrics=false;
+    }
+ else     if (qName.equals("member") && !metricHandler.inDimensions()) {
+      metrics.add(metricHandler.getResult());
+    }
+ else {
+      metricHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("NextToken")) {
+    nextToken=SaxUtils.currentOrNull(currentText);
+  }
+  currentText=new StringBuilder();
+}

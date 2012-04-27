@@ -1,0 +1,32 @@
+{
+  return new Iterable<Metric>(){
+    public Iterator<Metric> iterator(){
+      return new AbstractIterator<Metric>(){
+        private ListMetricsOptions lastOptions=options;
+        private ListMetricsResponse response=cloudWatchClient.listMetrics(lastOptions);
+        private Iterator<Metric> iterator=response.getMetrics().iterator();
+        /** 
+ * {@inheritDoc}
+ */
+        @Override protected Metric computeNext(){
+          while (true) {
+            if (iterator == null) {
+              lastOptions=ListMetricsOptions.builder().dimensions(lastOptions.getDimensions()).metricName(lastOptions.getMetricName()).namespace(lastOptions.getNamespace()).nextToken(response.getNextToken()).build();
+              response=cloudWatchClient.listMetrics(lastOptions);
+              iterator=response.getMetrics().iterator();
+            }
+            if (iterator.hasNext()) {
+              return iterator.next();
+            }
+            if (response.getNextToken() == null) {
+              return endOfData();
+            }
+            iterator=null;
+          }
+        }
+      }
+;
+    }
+  }
+;
+}
