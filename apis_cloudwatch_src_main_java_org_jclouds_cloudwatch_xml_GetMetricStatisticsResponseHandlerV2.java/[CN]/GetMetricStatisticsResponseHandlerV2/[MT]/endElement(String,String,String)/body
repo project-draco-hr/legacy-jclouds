@@ -1,0 +1,17 @@
+{
+  if (inDatapoints) {
+    if (qName.equals("Datapoints")) {
+      inDatapoints=false;
+    }
+ else {
+      datapointHandler.endElement(uri,localName,qName);
+      if (qName.equals("member")) {
+        this.datapoints.add(datapointHandler.getResult());
+      }
+    }
+  }
+ else   if (qName.equals("Label")) {
+    label=SaxUtils.currentOrNull(currentText);
+  }
+  currentText=new StringBuilder();
+}
