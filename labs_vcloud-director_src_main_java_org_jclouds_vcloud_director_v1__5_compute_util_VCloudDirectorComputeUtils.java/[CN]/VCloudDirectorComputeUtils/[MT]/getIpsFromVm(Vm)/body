@@ -1,0 +1,15 @@
+{
+  Builder<String> ips=ImmutableSet.builder();
+  NetworkConnectionSection networkConnectionSection=findNetworkConnectionSectionForVApp.apply(vm);
+  if (networkConnectionSection != null) {
+    for (    NetworkConnection connection : networkConnectionSection.getNetworkConnections()) {
+      if (connection.getIpAddress() != null)       ips.add(connection.getIpAddress());
+      if (connection.getExternalIpAddress() != null)       ips.add(connection.getExternalIpAddress());
+    }
+  }
+ else {
+    for (    ResourceAllocationSettingData net : filter(findVirtualHardwareSectionForVApp.apply(vm).getItems(),CIMPredicates.resourceTypeIn(ResourceType.ETHERNET_ADAPTER))) {
+    }
+  }
+  return ips.build();
+}
