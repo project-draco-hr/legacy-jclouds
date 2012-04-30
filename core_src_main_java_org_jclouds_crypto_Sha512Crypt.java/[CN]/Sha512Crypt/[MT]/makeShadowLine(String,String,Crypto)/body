@@ -7,7 +7,7 @@
   byte[] s_bytes=null;
   int cnt, cnt2;
   int rounds=ROUNDS_DEFAULT;
-  StringBuffer buffer;
+  StringBuilder buffer;
   if (shadowPrefix != null) {
     if (shadowPrefix.startsWith(sha512_salt_prefix)) {
       shadowPrefix=shadowPrefix.substring(sha512_salt_prefix.length());
@@ -24,7 +24,7 @@
   }
  else {
     java.util.Random randgen=new java.util.Random();
-    StringBuffer saltBuf=new StringBuffer();
+    StringBuilder saltBuf=new StringBuilder();
     while (saltBuf.length() < 16) {
       int index=(int)(randgen.nextFloat() * SALTCHARS.length());
       saltBuf.append(SALTCHARS.substring(index,index + 1));
@@ -98,7 +98,7 @@
     }
     alt_result=ctx.digest();
   }
-  buffer=new StringBuffer(sha512_salt_prefix);
+  buffer=new StringBuilder(sha512_salt_prefix);
   if (rounds != 5000) {
     buffer.append(sha512_rounds_prefix);
     buffer.append(rounds);
