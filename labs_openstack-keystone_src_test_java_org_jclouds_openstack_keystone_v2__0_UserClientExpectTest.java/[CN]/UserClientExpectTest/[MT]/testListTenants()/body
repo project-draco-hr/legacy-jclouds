@@ -1,5 +1,5 @@
 {
-  UserClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/v2.0/tenants")).headers(ImmutableMultimap.of("Accept",APPLICATION_JSON,"X-Auth-Token",authToken)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/tenant_list.json",APPLICATION_JSON)).build()).getUserClientForRegion("region-a.geo-1");
+  ServiceClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/v2.0/tenants")).headers(ImmutableMultimap.of("Accept",APPLICATION_JSON,"X-Auth-Token",authToken)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/tenant_list.json",APPLICATION_JSON)).build()).getServiceClientForRegion("region-a.geo-1");
   Set<Tenant> tenants=client.listTenants();
   assertNotNull(tenants);
   assertFalse(tenants.isEmpty());
