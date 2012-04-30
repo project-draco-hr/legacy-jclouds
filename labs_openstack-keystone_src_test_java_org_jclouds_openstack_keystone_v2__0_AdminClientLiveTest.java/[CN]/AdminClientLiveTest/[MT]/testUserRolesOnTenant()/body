@@ -1,0 +1,15 @@
+{
+  for (  String regionId : keystoneContext.getApi().getConfiguredRegions()) {
+    AdminClient client=keystoneContext.getApi().getAdminClientForRegion(regionId);
+    Set<User> users=client.listUsers();
+    Set<Tenant> tenants=client.listTenants();
+    for (    User user : users) {
+      for (      Tenant tenant : tenants) {
+        Set<Role> roles=client.listRolesOfUserOnTenant(user.getId(),tenant.getId());
+        for (        Role role : roles) {
+          assertNotNull(role.getId());
+        }
+      }
+    }
+  }
+}

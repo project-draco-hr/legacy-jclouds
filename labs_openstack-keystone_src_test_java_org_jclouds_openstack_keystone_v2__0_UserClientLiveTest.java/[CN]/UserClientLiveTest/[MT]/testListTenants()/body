@@ -1,0 +1,10 @@
+{
+  for (  String regionId : keystoneContext.getApi().getConfiguredRegions()) {
+    Set<Tenant> result=keystoneContext.getApi().getUserClientForRegion(regionId).listTenants();
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    for (    Tenant tenant : result) {
+      assertNotNull(tenant.getId());
+    }
+  }
+}
