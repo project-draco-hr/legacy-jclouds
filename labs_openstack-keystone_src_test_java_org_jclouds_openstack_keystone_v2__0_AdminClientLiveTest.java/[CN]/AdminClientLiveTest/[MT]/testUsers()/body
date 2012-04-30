@@ -1,0 +1,12 @@
+{
+  for (  String regionId : keystoneContext.getApi().getConfiguredRegions()) {
+    AdminClient client=keystoneContext.getApi().getAdminClientForRegion(regionId);
+    Set<User> users=client.listUsers();
+    assertNotNull(users);
+    assertFalse(users.isEmpty());
+    for (    User user : users) {
+      User aUser=client.getUser(user.getId());
+      assertEquals(aUser,user);
+    }
+  }
+}

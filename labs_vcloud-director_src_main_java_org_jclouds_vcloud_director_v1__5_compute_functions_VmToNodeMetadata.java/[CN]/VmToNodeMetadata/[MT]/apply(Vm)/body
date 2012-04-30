@@ -1,0 +1,18 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getHref().toASCIIString());
+  builder.uri(from.getHref());
+  builder.name(from.getName());
+  builder.hostname(from.getName());
+  builder.location(findLocationForResourceInVDC.apply(Iterables.find(from.getLinks(),LinkPredicates.typeEquals(VCloudDirectorMediaType.VDC))));
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
+  builder.operatingSystem(toComputeOs(from));
+  builder.hardware(hardwareForVm.apply(from));
+  builder.state(vAppStatusToNodeState.get(from.getStatus()));
+  Set<String> addresses=getIpsFromVm(from);
+  builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
+  Credentials fromApi=getCredentialsFrom(from);
+  if (fromApi != null && !credentialStore.containsKey("node#" + from.getHref().toASCIIString()))   credentialStore.put("node#" + from.getHref().toASCIIString(),fromApi);
+  return builder.build();
+}

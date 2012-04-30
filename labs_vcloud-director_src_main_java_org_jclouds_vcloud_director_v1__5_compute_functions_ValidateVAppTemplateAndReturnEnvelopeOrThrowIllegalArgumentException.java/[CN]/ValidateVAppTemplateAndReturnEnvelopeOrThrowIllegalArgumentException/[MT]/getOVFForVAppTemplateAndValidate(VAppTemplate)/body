@@ -1,0 +1,11 @@
+{
+  Envelope ovf;
+  try {
+    ovf=envelopes.get(from.getHref());
+    checkArgument(ovf.getVirtualSystem().getVirtualHardwareSections().size() > 0,"no hardware sections exist in ovf %s",ovf);
+  }
+ catch (  ExecutionException e) {
+    throw new IllegalArgumentException("no ovf envelope found for: " + from,e);
+  }
+  return ovf;
+}
