@@ -2,7 +2,7 @@
   CloudWatchClient client=createMock(CloudWatchClient.class);
   ListMetricsOptions options=ListMetricsOptions.builder().build();
   ListMetricsResponse response=new ListMetricsResponse(ImmutableSet.of(createMock(Metric.class)),null);
-  expect(client.listMetrics(options)).andReturn(response).once();
+  expect(client.listMetrics(null,options)).andReturn(response).once();
   EasyMock.replay(client);
-  Assert.assertEquals(1,Iterables.size(CloudWatch.listMetrics(client,options)));
+  Assert.assertEquals(1,Iterables.size(CloudWatch.listMetrics(client,null,options)));
 }
