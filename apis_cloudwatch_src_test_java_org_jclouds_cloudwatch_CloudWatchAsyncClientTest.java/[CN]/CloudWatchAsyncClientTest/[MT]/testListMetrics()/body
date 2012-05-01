@@ -1,7 +1,7 @@
 {
-  Method method=CloudWatchAsyncClient.class.getMethod("listMetrics",ListMetricsOptions.class);
+  Method method=CloudWatchAsyncClient.class.getMethod("listMetrics",String.class,ListMetricsOptions.class);
   HttpRequest request;
-  request=processor.createRequest(method,ListMetricsOptions.builder().build());
+  request=processor.createRequest(method,null,ListMetricsOptions.builder().build());
   assertRequestLineEquals(request,"POST https://monitoring.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: monitoring.us-east-1.amazonaws.com\n");
   assertPayloadEquals(request,"Action=ListMetrics","application/x-www-form-urlencoded",false);
@@ -9,12 +9,12 @@
   String metricName=EC2Constants.MetricName.CPU_UTILIZATION;
   String nextToken="SOMENEXTTOKEN";
   String namespace=Namespaces.EC2;
-  request=processor.createRequest(method,ListMetricsOptions.builder().dimension(dimension1).metricName(metricName).namespace(namespace).nextToken(nextToken).build());
+  request=processor.createRequest(method,null,ListMetricsOptions.builder().dimension(dimension1).metricName(metricName).namespace(namespace).nextToken(nextToken).build());
   assertRequestLineEquals(request,"POST https://monitoring.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: monitoring.us-east-1.amazonaws.com\n");
   assertPayloadEquals(request,"Action=ListMetrics" + "&Namespace=" + URLEncoder.encode(namespace,"UTF-8") + "&MetricName="+ metricName+ "&Dimensions.member.1.Name="+ dimension1.getName()+ "&Dimensions.member.1.Value="+ dimension1.getValue()+ "&NextToken="+ nextToken,"application/x-www-form-urlencoded",false);
   Dimension dimension2=new Dimension(EC2Constants.Dimension.INSTANCE_TYPE,"t1.micro");
-  request=processor.createRequest(method,ListMetricsOptions.builder().dimension(dimension1).dimension(dimension2).metricName(metricName).namespace(namespace).build());
+  request=processor.createRequest(method,null,ListMetricsOptions.builder().dimension(dimension1).dimension(dimension2).metricName(metricName).namespace(namespace).build());
   assertRequestLineEquals(request,"POST https://monitoring.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: monitoring.us-east-1.amazonaws.com\n");
   assertPayloadEquals(request,"Action=ListMetrics" + "&Namespace=" + URLEncoder.encode(namespace,"UTF-8") + "&MetricName="+ metricName+ "&Dimensions.member.1.Name="+ dimension1.getName()+ "&Dimensions.member.1.Value="+ dimension1.getValue()+ "&Dimensions.member.2.Name="+ dimension2.getName()+ "&Dimensions.member.2.Value="+ dimension2.getValue(),"application/x-www-form-urlencoded",false);

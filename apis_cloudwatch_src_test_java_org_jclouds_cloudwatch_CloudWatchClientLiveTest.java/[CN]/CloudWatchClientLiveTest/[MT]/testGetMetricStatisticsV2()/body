@@ -1,5 +1,5 @@
 {
-  ListMetricsResponse metricsResponse=client.listMetrics(ListMetricsOptions.builder().build());
+  ListMetricsResponse metricsResponse=client.listMetrics(null,ListMetricsOptions.builder().build());
   if (metricsResponse.getMetrics().size() > 0) {
     for (    Metric metric : metricsResponse.getMetrics()) {
       Set<Dimension> dimensions=metric.getDimensions();
@@ -9,7 +9,7 @@
         Calendar cal=Calendar.getInstance();
         cal.add(Calendar.MINUTE,-60 * 24);
         GetMetricStatisticsOptionsV2 options=GetMetricStatisticsOptionsV2.builder().dimension(dimension).endTime(endTime).metricName(metric.getMetricName()).namespace(metric.getNamespace()).period(300).startTime(cal.getTime()).statistics(ImmutableSet.of(Statistics.MAXIMUM,Statistics.MINIMUM)).unit(Unit.PERCENT).build();
-        GetMetricStatisticsResponse response=client.getMetricStatistics(options);
+        GetMetricStatisticsResponse response=client.getMetricStatistics(null,options);
         if (response.getDatapoints().size() > 0) {
           checkNotNull(response.getLabel());
           for (          Datapoint datapoint : response.getDatapoints()) {
