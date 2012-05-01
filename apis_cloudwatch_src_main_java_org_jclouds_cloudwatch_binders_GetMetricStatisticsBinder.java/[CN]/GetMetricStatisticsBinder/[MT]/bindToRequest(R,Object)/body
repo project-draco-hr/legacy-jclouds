@@ -1,0 +1,22 @@
+{
+  GetMetricStatistics getRequest=GetMetricStatistics.class.cast(payload);
+  int dimensionIndex=1;
+  int statisticIndex=1;
+  ImmutableMultimap.Builder<String,String> formParameters=ImmutableMultimap.<String,String>builder();
+  for (  Dimension dimension : getRequest.getDimensions()) {
+    formParameters.put("Dimensions.member." + dimensionIndex + ".Name",dimension.getName());
+    formParameters.put("Dimensions.member." + dimensionIndex + ".Value",dimension.getValue());
+    dimensionIndex++;
+  }
+  formParameters.put("EndTime",dateService.iso8601SecondsDateFormat(getRequest.getEndTime()));
+  formParameters.put("MetricName",getRequest.getMetricName());
+  formParameters.put("Namespace",getRequest.getNamespace());
+  formParameters.put("Period",Integer.toString(getRequest.getPeriod()));
+  formParameters.put("StartTime",dateService.iso8601SecondsDateFormat(getRequest.getStartTime()));
+  for (  Statistics statistic : getRequest.getStatistics()) {
+    formParameters.put("Statistics.member." + statisticIndex,statistic.toString());
+    statisticIndex++;
+  }
+  formParameters.put("Unit",getRequest.getUnit().toString());
+  return ModifyRequest.putFormParams(request,formParameters.build());
+}
