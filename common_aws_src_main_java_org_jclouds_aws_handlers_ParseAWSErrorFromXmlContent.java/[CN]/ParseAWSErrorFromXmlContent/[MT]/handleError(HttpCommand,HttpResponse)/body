@@ -2,7 +2,8 @@
   Exception exception=new HttpResponseException(command,response);
   try {
     AWSError error=null;
-    String message=null;
+    byte[] data=closeClientButKeepContentStream(response);
+    String message=data != null ? new String(data) : null;
     if (response.getPayload() != null) {
       String contentType=response.getPayload().getContentMetadata().getContentType();
       if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1)) {
