@@ -1,0 +1,15 @@
+{
+  blobstore.createContainerInLocation(null,"foo");
+  for (int i=0; i < 1001; i++) {
+    blobstore.putBlob("foo",blobstore.blobBuilder(i + "").payload(i + "").build());
+  }
+  for (int i=0; i < 1001; i++) {
+    blobstore.putBlob("foo",blobstore.blobBuilder("dir/" + i + "").payload(i + "").build());
+  }
+  Iterable<? extends StorageMetadata> listing=concatter.execute("foo",new ListContainerOptions());
+  assertEquals(Iterables.size(listing),1003);
+  listing=concatter.execute("foo",ListContainerOptions.Builder.inDirectory("dir"));
+  assertEquals(Iterables.size(listing),1001);
+  listing=concatter.execute("foo",ListContainerOptions.Builder.recursive());
+  assertEquals(Iterables.size(listing),2002);
+}
