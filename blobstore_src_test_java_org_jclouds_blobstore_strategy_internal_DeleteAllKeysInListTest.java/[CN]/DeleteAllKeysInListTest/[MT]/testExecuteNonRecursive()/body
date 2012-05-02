@@ -1,12 +1,4 @@
 {
-  blobstore.createContainerInLocation(null,"foo");
-  for (int i=0; i < 1001; i++) {
-    blobstore.putBlob("foo",blobstore.blobBuilder(i + "").payload(i + "").build());
-  }
-  for (int i=0; i < 1001; i++) {
-    blobstore.putBlob("foo",blobstore.blobBuilder("dir/" + i + "").payload(i + "").build());
-  }
-  assertEquals(blobstore.countBlobs("foo"),2002);
-  deleter.execute("foo",ListContainerOptions.Builder.inDirectory("dir"));
-  assertEquals(blobstore.countBlobs("foo"),1001);
+  deleter.execute(containerName,ListContainerOptions.NONE);
+  assertEquals(blobstore.countBlobs(containerName),2222);
 }

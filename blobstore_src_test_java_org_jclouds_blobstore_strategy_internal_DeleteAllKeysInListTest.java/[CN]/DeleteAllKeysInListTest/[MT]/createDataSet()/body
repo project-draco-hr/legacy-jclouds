@@ -1,0 +1,14 @@
+{
+  String blobNameFmt="blob-%d";
+  String directoryBlobNameFmt="%s/blob-%d";
+  blobstore.createContainerInLocation(null,containerName);
+  for (int i=0; i < 1111; i++) {
+    String blobName=String.format(blobNameFmt,i);
+    blobstore.putBlob(containerName,blobstore.blobBuilder(blobName).payload(blobName).build());
+  }
+  for (int i=0; i < 2222; i++) {
+    String directoryBlobName=String.format(directoryBlobNameFmt,directoryName,i);
+    blobstore.putBlob(containerName,blobstore.blobBuilder(directoryBlobName).payload(directoryBlobName).build());
+  }
+  assertEquals(blobstore.countBlobs(containerName),3333);
+}
