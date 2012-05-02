@@ -11,7 +11,7 @@
   future=new ExceptionParsingListenableFuture(future,new Function<Exception,String>(){
     public String apply(    Exception from){
       if (Iterables.size(Iterables.filter(Throwables.getCausalChain(from),RuntimeException.class)) >= 1)       return from.getMessage();
-      return String.class.cast(propagateOrNull(from));
+      throw Throwables.propagate(from);
     }
   }
 );
