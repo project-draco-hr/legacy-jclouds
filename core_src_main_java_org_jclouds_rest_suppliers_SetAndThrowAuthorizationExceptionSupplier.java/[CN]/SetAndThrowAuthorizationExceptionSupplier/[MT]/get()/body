@@ -1,2 +1,18 @@
 {
+  if (authException.get() != null)   throw authException.get();
+  try {
+    return delegate.get();
+  }
+ catch (  AuthorizationException e) {
+    authException.set(e);
+    throw e;
+  }
+catch (  Exception e) {
+    AuthorizationException aex=getFirstThrowableOfType(e,AuthorizationException.class);
+    if (aex != null) {
+      authException.set(aex);
+      throw aex;
+    }
+    throw propagate(e);
+  }
 }

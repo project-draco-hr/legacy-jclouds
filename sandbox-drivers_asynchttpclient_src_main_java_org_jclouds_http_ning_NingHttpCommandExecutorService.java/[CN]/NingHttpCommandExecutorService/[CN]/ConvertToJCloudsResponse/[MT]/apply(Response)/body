@@ -1,2 +1,17 @@
 {
+  InputStream in=null;
+  try {
+    in=BaseHttpCommandExecutorService.consumeOnClose(nativeResponse.getResponseBodyAsStream());
+  }
+ catch (  IOException e) {
+    Closeables.closeQuietly(in);
+    throw propagate(e);
+  }
+  Payload payload=in != null ? Payloads.newInputStreamPayload(in) : null;
+  Multimap<String,String> headers=LinkedHashMultimap.create();
+  for (  Entry<String,List<String>> header : nativeResponse.getHeaders()) {
+    headers.putAll(header.getKey(),header.getValue());
+  }
+  if (payload != null)   payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+  return new HttpResponse(nativeResponse.getStatusCode(),nativeResponse.getStatusText(),payload,RestAnnotationProcessor.filterOutContentHeaders(headers));
 }

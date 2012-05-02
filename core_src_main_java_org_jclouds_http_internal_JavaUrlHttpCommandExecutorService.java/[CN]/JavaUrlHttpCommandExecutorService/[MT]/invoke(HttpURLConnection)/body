@@ -1,2 +1,34 @@
 {
+  HttpResponse.Builder builder=HttpResponse.builder();
+  InputStream in=null;
+  try {
+    in=consumeOnClose(connection.getInputStream());
+  }
+ catch (  IOException e) {
+    in=bufferAndCloseStream(connection.getErrorStream());
+  }
+catch (  RuntimeException e) {
+    closeQuietly(in);
+    throw propagate(e);
+  }
+  int responseCode=connection.getResponseCode();
+  if (responseCode == 204) {
+    closeQuietly(in);
+    in=null;
+  }
+  builder.statusCode(responseCode);
+  builder.message(connection.getResponseMessage());
+  Builder<String,String> headerBuilder=ImmutableMultimap.builder();
+  for (  Map.Entry<String,List<String>> entry : connection.getHeaderFields().entrySet()) {
+    String header=entry.getKey();
+    if (header != null)     headerBuilder.putAll(header,entry.getValue());
+  }
+  ImmutableMultimap<String,String> headers=headerBuilder.build();
+  if (in != null) {
+    Payload payload=newInputStreamPayload(in);
+    payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+    builder.payload(payload);
+  }
+  builder.headers(RestAnnotationProcessor.filterOutContentHeaders(headers));
+  return builder.build();
 }
