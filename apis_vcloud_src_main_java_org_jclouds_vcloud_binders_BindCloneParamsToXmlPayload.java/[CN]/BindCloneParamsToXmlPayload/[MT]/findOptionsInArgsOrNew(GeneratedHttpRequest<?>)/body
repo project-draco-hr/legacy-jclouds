@@ -1,2 +1,17 @@
 {
+  for (  Object arg : gRequest.getArgs()) {
+    if (getOptionClass().isInstance(arg)) {
+      return (O)arg;
+    }
+ else     if (arg.getClass().isArray()) {
+      Object[] array=(Object[])arg;
+      if (array.length > 0 && getOptionClass().isInstance(array[0]))       return (O)array[0];
+    }
+  }
+  try {
+    return getOptionClass().newInstance();
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
 }
