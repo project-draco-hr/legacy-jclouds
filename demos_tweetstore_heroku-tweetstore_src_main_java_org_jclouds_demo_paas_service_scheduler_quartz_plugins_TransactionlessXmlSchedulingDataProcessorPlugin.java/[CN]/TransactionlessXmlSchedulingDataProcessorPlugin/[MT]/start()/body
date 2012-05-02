@@ -1,0 +1,31 @@
+{
+  try {
+    if (jobFiles.isEmpty() == false) {
+      if (scanInterval > 0) {
+        scheduler.getContext().put(JOB_INITIALIZATION_PLUGIN_NAME + '_' + name,this);
+      }
+      Iterator<JobFile> iterator=jobFiles.values().iterator();
+      while (iterator.hasNext()) {
+        JobFile jobFile=iterator.next();
+        if (scanInterval > 0) {
+          String jobTriggerName=buildJobTriggerName(jobFile.getFileBasename());
+          TriggerKey tKey=new TriggerKey(jobTriggerName,JOB_INITIALIZATION_PLUGIN_NAME);
+          scheduler.unscheduleJob(tKey);
+          SimpleTrigger trig=newTrigger().withIdentity(jobTriggerName,JOB_INITIALIZATION_PLUGIN_NAME).startNow().endAt(null).withSchedule(simpleSchedule().repeatForever().withIntervalInMilliseconds(scanInterval)).build();
+          JobDetail job=JobBuilder.newJob(FileScanJob.class).withIdentity(jobTriggerName,JOB_INITIALIZATION_PLUGIN_NAME).build();
+          job.getJobDataMap().put(FileScanJob.FILE_NAME,jobFile.getFileName());
+          job.getJobDataMap().put(FileScanJob.FILE_SCAN_LISTENER_NAME,JOB_INITIALIZATION_PLUGIN_NAME + '_' + name);
+          scheduler.scheduleJob(job,trig);
+          log.debug("Scheduled file scan job for data file: {}, at interval: {}",jobFile.getFileName(),scanInterval);
+        }
+        processFile(jobFile);
+      }
+    }
+  }
+ catch (  SchedulerException se) {
+    log.error("Error starting background-task for watching jobs file.",se);
+  }
+ finally {
+    started=true;
+  }
+}

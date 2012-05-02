@@ -1,0 +1,21 @@
+{
+  ServletContext servletContext=servletContextEvent.getServletContext();
+  Properties props=new PropertiesLoader(servletContext).get();
+  Set<Module> modules=ImmutableSet.<Module>of();
+  try {
+    Configuration twitterConf=new ConfigurationBuilder().setOAuthConsumerKey(props.getProperty(PROPERTY_TWITTER_CONSUMER_KEY)).setOAuthConsumerSecret(props.getProperty(PROPERTY_TWITTER_CONSUMER_SECRET)).setOAuthAccessToken(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN)).setOAuthAccessTokenSecret(props.getProperty(PROPERTY_TWITTER_ACCESSTOKEN_SECRET)).build();
+    twitterClient=new TwitterFactory(twitterConf).getInstance();
+  }
+ catch (  IllegalArgumentException e) {
+    throw new IllegalArgumentException("properties for twitter not configured properly in " + props.toString(),e);
+  }
+  container=checkNotNull(props.getProperty(PROPERTY_TWEETSTORE_CONTAINER),PROPERTY_TWEETSTORE_CONTAINER);
+  providerTypeToBlobStoreMap=Maps.newHashMap();
+  for (  String hint : getBlobstoreContexts(props)) {
+    providerTypeToBlobStoreMap.put(hint,ContextBuilder.newBuilder(hint).modules(modules).overrides(props).build(BlobStoreContext.class));
+  }
+  PlatformServices platform=PlatformServices.get(servletContext);
+  queue=platform.getTaskQueue("twitter");
+  baseUrl=platform.getBaseUrl();
+  super.contextInitialized(servletContextEvent);
+}

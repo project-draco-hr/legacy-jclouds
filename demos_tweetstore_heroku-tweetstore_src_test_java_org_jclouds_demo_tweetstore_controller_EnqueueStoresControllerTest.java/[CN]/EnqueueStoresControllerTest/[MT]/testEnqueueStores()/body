@@ -1,0 +1,20 @@
+{
+  Map<String,BlobStoreContext> stores=createBlobStores();
+  TaskQueue taskQueue=createMock(TaskQueue.class);
+  Factory httpRequestFactory=createMock(Factory.class);
+  EnqueueStoresController function=new EnqueueStoresController(stores,taskQueue,"http://localhost:8080");
+  expect(taskQueue.getHttpRequestFactory()).andStubReturn(httpRequestFactory);
+  HttpRequest storeInTest1Request=HttpRequest.builder().endpoint(URI.create("http://localhost:8080/store/do")).headers(ImmutableMultimap.of("context","test1")).method("GET").build();
+  RunnableHttpRequest storeInTest1Task=null;
+  expect(httpRequestFactory.create(eq(storeInTest1Request))).andReturn(storeInTest1Task);
+  HttpRequest storeInTest2Request=HttpRequest.builder().endpoint(URI.create("http://localhost:8080/store/do")).headers(ImmutableMultimap.of("context","test2")).method("GET").build();
+  RunnableHttpRequest storeInTest2Task=null;
+  expect(httpRequestFactory.create(eq(storeInTest2Request))).andReturn(storeInTest2Task);
+  taskQueue.add(storeInTest1Task);
+  expectLastCall();
+  taskQueue.add(storeInTest2Task);
+  expectLastCall();
+  replay(httpRequestFactory,taskQueue);
+  function.enqueueStoreTweetTasks();
+  verify(taskQueue);
+}
