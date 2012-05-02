@@ -1,9 +1,0 @@
-{
-  ConcurrentMap<String,Blob> container=getContainerToBlobs().get(containerName);
-  if (container == null) {
-    return Futures.immediateFailedFuture(new IllegalStateException("containerName not found: " + containerName));
-  }
-  Blob blob=createUpdatedCopyOfBlobInContainer(containerName,in);
-  Blob old=container.put(blob.getMetadata().getName(),blob);
-  return immediateFuture(old);
-}
