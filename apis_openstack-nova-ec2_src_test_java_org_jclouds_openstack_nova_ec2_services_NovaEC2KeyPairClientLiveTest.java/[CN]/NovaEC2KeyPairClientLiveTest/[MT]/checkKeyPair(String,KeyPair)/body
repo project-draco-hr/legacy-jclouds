@@ -1,0 +1,11 @@
+{
+  assertNotNull(keyPair);
+  assertNotNull(keyPair.getSha1OfPrivateKey());
+  assertEquals(keyPair.getKeyName(),keyName);
+  Set<KeyPair> twoResults=client.describeKeyPairsInRegion(null,keyName);
+  assertNotNull(twoResults);
+  assertEquals(twoResults.size(),1);
+  KeyPair listPair=twoResults.iterator().next();
+  assertEquals(listPair.getKeyName(),keyPair.getKeyName());
+  assertEquals(listPair.getSha1OfPrivateKey(),keyPair.getSha1OfPrivateKey());
+}

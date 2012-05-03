@@ -1,0 +1,13 @@
+{
+  for (  String region : regions) {
+    SortedSet<KeyPair> allResults=newTreeSet(client.describeKeyPairsInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      KeyPair pair=allResults.last();
+      SortedSet<KeyPair> result=newTreeSet(client.describeKeyPairsInRegion(region,pair.getKeyName()));
+      assertNotNull(result);
+      KeyPair compare=result.last();
+      assertEquals(compare,pair);
+    }
+  }
+}
