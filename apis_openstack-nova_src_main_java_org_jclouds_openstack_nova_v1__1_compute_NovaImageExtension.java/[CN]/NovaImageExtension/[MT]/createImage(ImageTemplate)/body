@@ -1,8 +1,38 @@
 {
   checkState(template instanceof CloneImageTemplate," openstack-nova only supports creating images through cloning.");
   CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
-  ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
-  String newImageId=novaClient.getServerClientForZone(zoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),zoneAndId.getId());
-  org.jclouds.openstack.nova.v1_1.domain.Image newImage=checkNotNull(findImage(ZoneAndId.fromZoneAndId(zoneAndId.getZone(),newImageId)));
-  return imageInZoneToImage.apply(new ImageInZone(newImage,zoneAndId.getZone()));
+  final ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
+  final String newImageId=novaClient.getServerClientForZone(zoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),zoneAndId.getId());
+  logger.info(">> Registered new Image %s, waiting for it to become available.",newImageId);
+  return Futures.makeListenable(executor.submit(new Callable<Image>(){
+    @Override public Image call() throws Exception {
+      return Retryables.retryGettingResultOrFailing(new PredicateWithResult<String,Image>(){
+        org.jclouds.openstack.nova.v1_1.domain.Image result;
+        RuntimeException lastFailure;
+        @Override public boolean apply(        String input){
+          result=checkNotNull(findImage(ZoneAndId.fromZoneAndId(zoneAndId.getZone(),newImageId)));
+switch (result.getStatus()) {
+case ACTIVE:
+            logger.info("<< Image %s is available for use.",newImageId);
+          return true;
+case UNKNOWN:
+case SAVING:
+        logger.debug("<< Image %s is not available yet.",newImageId);
+      return false;
+default :
+    lastFailure=new IllegalStateException("Image was not created: " + newImageId);
+  throw lastFailure;
+}
+}
+@Override public Image getResult(){
+return imageInZoneToImage.apply(new ImageInZone(result,zoneAndId.getZone()));
+}
+@Override public Throwable getLastFailure(){
+return lastFailure;
+}
+}
+,newImageId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
+}
+}
+),executor);
 }

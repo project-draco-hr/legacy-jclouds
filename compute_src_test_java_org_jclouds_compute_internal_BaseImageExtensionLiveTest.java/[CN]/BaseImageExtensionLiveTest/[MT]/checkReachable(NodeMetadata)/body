@@ -1,0 +1,13 @@
+{
+  SshClient client=view.utils().sshForNode().apply(node);
+  assertTrue(new RetryablePredicate<SshClient>(new Predicate<SshClient>(){
+    @Override public boolean apply(    SshClient input){
+      input.connect();
+      if (input.exec("id").getExitStatus() == 0) {
+        return true;
+      }
+      return false;
+    }
+  }
+,getSpawnNodeMaxWait(),1l,TimeUnit.SECONDS).apply(client));
+}

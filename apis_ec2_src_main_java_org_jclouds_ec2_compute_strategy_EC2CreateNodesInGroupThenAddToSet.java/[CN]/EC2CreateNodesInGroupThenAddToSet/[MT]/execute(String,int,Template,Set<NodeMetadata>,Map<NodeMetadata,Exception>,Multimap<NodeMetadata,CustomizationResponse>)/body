@@ -1,7 +1,13 @@
 {
-  template=templateBuilderProvider.get().fromTemplate(template).build();
+  Template mutableTemplate;
+  if (template.getImage() != null && template.getImage().getId() != null) {
+    mutableTemplate=templateBuilderProvider.get().imageId(template.getImage().getId()).fromTemplate(template).build();
+  }
+ else {
+    mutableTemplate=templateBuilderProvider.get().fromTemplate(template).build();
+  }
   Iterable<String> ips=allocateElasticIpsInRegion(count,template);
-  Iterable<? extends RunningInstance> started=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group,count,template);
+  Iterable<? extends RunningInstance> started=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group,count,mutableTemplate);
   Iterable<RegionAndName> ids=transform(started,instanceToRegionAndName);
   String idsString=Joiner.on(',').join(ids);
   if (Iterables.size(ids) > 0) {
@@ -11,5 +17,5 @@
     populateCredentials(started);
   }
   assignElasticIpsToInstances(ips,started);
-  return utils.customizeNodesAndAddToGoodMapOrPutExceptionIntoBadMap(template.getOptions(),transform(started,runningInstanceToNodeMetadata),goodNodes,badNodes,customizationResponses);
+  return utils.customizeNodesAndAddToGoodMapOrPutExceptionIntoBadMap(mutableTemplate.getOptions(),transform(started,runningInstanceToNodeMetadata),goodNodes,badNodes,customizationResponses);
 }

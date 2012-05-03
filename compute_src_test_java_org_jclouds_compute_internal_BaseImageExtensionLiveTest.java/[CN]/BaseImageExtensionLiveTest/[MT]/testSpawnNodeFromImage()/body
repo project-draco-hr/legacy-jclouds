@@ -1,10 +1,8 @@
 {
   ComputeService computeService=view.getComputeService();
-  Template template=computeService.templateBuilder().fromImage(getImage().get()).build();
-  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,template));
-  SshClient client=view.utils().sshForNode().apply(node);
-  client.connect();
-  ExecResponse hello=client.exec("echo hello");
-  assertEquals(hello.getOutput().trim(),"hello");
+  Optional<? extends Image> optImage=getImage();
+  assertTrue(optImage.isPresent());
+  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,view.getComputeService().templateBuilder().imageId(optImage.get().getId()).fromImage(optImage.get()).build()));
+  checkReachable(node);
   view.getComputeService().destroyNode(node.getId());
 }

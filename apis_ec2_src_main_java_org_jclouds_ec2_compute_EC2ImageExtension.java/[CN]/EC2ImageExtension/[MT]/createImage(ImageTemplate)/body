@@ -1,0 +1,38 @@
+{
+  checkState(template instanceof CloneImageTemplate," ec2 only supports creating images through cloning.");
+  CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
+  String[] parts=AWSUtils.parseHandle(cloneTemplate.getSourceNodeId());
+  final String region=parts[0];
+  String instanceId=parts[1];
+  final String imageId=ec2Client.getAMIServices().createImageInRegion(region,cloneTemplate.getName(),instanceId,CreateImageOptions.NONE);
+  return Futures.makeListenable(executor.submit(new Callable<Image>(){
+    @Override public Image call() throws Exception {
+      return Retryables.retryGettingResultOrFailing(new PredicateWithResult<String,Image>(){
+        org.jclouds.ec2.domain.Image result;
+        RuntimeException lastFailure;
+        @Override public boolean apply(        String input){
+          result=checkNotNull(findImage(region,input));
+switch (result.getImageState()) {
+case AVAILABLE:
+            logger.info("<< Image %s is available for use.",input);
+          return true;
+case UNRECOGNIZED:
+        logger.debug("<< Image %s is not available yet.",input);
+      return false;
+default :
+    lastFailure=new IllegalStateException("Image was not created: " + input);
+  throw lastFailure;
+}
+}
+@Override public Image getResult(){
+return ecImageToImage.apply(result);
+}
+@Override public Throwable getLastFailure(){
+return lastFailure;
+}
+}
+,imageId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
+}
+}
+),executor);
+}
