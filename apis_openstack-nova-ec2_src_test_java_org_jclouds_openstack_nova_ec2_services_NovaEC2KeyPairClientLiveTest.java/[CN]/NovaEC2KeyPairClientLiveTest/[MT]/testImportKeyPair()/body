@@ -1,0 +1,19 @@
+{
+  String keyName=PREFIX + "2";
+  cleanupKeyPair(keyName);
+  Map<String,String> myKey=ComputeTestUtils.setupKeyPair();
+  try {
+    KeyPair keyPair=client.importKeyPairInRegion(null,keyName,myKey.get("public"));
+    checkKeyPair(keyName,keyPair);
+    assertEquals(keyPair.getSha1OfPrivateKey(),SshKeys.fingerprintPublicKey(myKey.get("public")));
+    try {
+      client.importKeyPairInRegion(null,keyName,myKey.get("public"));
+      fail("Duplicate call importKeyPairInRegion should have failed!");
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  finally {
+    cleanupKeyPair(keyName);
+  }
+}
