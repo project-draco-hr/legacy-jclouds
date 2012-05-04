@@ -1,0 +1,12 @@
+{
+  if (clientOption.isPresent()) {
+    backupImageId=clientOption.get().createBackupOfServer(testServerId,"jclouds-test-backup",BackupType.DAILY,0,CreateBackupOfServerOptions.Builder.metadata(ImmutableMap.of("test","metadata")));
+    assertNotNull(backupImageId);
+    if (extensionClient.getExtensionByAlias("OS-EXT-STS") == null) {
+      Thread.sleep(30000);
+    }
+    blockUntilServerInState(testServerId,serverClient,Server.Status.ACTIVE);
+    Image backupImage=imageClient.getImage(backupImageId);
+    assertEquals(backupImage.getId(),backupImageId);
+  }
+}

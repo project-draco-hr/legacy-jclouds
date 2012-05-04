@@ -1,0 +1,27 @@
+{
+  if (clientOption.isPresent()) {
+    AdminActionsClient client=clientOption.get();
+    try {
+      client.unpauseServer(testServerId);
+      fail("Unpaused active server!");
+    }
+ catch (    HttpResponseException e) {
+    }
+    assertTrue(client.pauseServer(testServerId));
+    blockUntilServerInState(testServerId,serverClient,Server.Status.PAUSED);
+    try {
+      client.pauseServer(testServerId);
+      fail("paused a paused server!");
+    }
+ catch (    HttpResponseException e) {
+    }
+    assertTrue(client.unpauseServer(testServerId));
+    blockUntilServerInState(testServerId,serverClient,Server.Status.ACTIVE);
+    try {
+      client.unpauseServer(testServerId);
+      fail("Unpaused a server we just unpaused!");
+    }
+ catch (    HttpResponseException e) {
+    }
+  }
+}
