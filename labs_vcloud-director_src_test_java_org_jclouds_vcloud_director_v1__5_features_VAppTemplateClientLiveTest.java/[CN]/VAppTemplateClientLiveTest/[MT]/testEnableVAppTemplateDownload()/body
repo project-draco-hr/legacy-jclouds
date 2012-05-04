@@ -1,7 +1,7 @@
 {
   vAppTemplateClient.disableDownload(vAppTemplateURI);
   final Task task=vAppTemplateClient.enableDownload(vAppTemplateURI);
-  retryTaskSuccess.apply(task);
+  assertTaskSucceeds(task);
   VAppTemplate vAppTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
   Set<Link> links=vAppTemplate.getLinks();
   assertTrue(Iterables.any(Iterables.transform(links,rel),Predicates.in(EnumSet.of(Link.Rel.DOWNLOAD_DEFAULT,Link.Rel.DOWNLOAD_ALTERNATE))),"Should offer download link after enabling download: " + vAppTemplate);

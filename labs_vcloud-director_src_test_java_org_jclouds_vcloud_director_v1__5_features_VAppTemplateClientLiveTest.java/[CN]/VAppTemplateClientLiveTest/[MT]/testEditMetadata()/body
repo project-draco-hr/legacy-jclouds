@@ -6,7 +6,7 @@
   MetadataEntry metadataEntry=MetadataEntry.builder().entry(key,val).build();
   Metadata metadata=Metadata.builder().fromMetadata(oldMetadata).entry(metadataEntry).build();
   final Task task=vAppTemplateClient.getMetadataClient().mergeMetadata(vAppTemplateURI,metadata);
-  retryTaskSuccess.apply(task);
+  assertTaskSucceeds(task);
   Metadata newMetadata=vAppTemplateClient.getMetadataClient().getMetadata(vAppTemplateURI);
   Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,val).build();
   checkMetadataFor("vAppTemplate",newMetadata,expectedMetadataMap);

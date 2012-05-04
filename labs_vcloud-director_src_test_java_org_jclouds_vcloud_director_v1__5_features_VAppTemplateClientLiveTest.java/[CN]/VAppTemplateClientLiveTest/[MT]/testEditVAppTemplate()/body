@@ -3,7 +3,7 @@
   String description=name("Description ");
   VAppTemplate template=VAppTemplate.builder().name(name).description(description).build();
   final Task task=vAppTemplateClient.modifyVAppTemplate(vAppTemplateURI,template);
-  retryTaskSuccess.apply(task);
+  assertTaskSucceeds(task);
   VAppTemplate newTemplate=vAppTemplateClient.getVAppTemplate(vAppTemplateURI);
   assertEquals(newTemplate.getName(),name);
   assertEquals(newTemplate.getDescription(),description);
