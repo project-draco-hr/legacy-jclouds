@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+  ServerWithSecurityGroupsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/server_with_security_groups.json")).build()).getServerWithSecurityGroupsExtensionForZone("az-1.region-a.geo-1").get();
+  ServerWithSecurityGroups server=client.getServer("8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+  assertEquals(server.getId(),"8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
+  assertEquals(server.getSecurityGroupNames(),ImmutableSet.of("default","group1"));
+}

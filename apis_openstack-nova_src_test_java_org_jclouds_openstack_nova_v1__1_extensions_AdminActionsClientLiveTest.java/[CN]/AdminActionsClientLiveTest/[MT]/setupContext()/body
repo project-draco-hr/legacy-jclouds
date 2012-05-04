@@ -1,0 +1,11 @@
+{
+  super.setupContext();
+  zone=Iterables.getLast(novaContext.getApi().getConfiguredZones(),"nova");
+  serverClient=novaContext.getApi().getServerClientForZone(zone);
+  extensionClient=novaContext.getApi().getExtensionClientForZone(zone);
+  imageClient=novaContext.getApi().getImageClientForZone(zone);
+  clientOption=novaContext.getApi().getAdminActionsExtensionForZone(zone);
+  if (clientOption.isPresent()) {
+    testServerId=createServerInZone(zone).getId();
+  }
+}
