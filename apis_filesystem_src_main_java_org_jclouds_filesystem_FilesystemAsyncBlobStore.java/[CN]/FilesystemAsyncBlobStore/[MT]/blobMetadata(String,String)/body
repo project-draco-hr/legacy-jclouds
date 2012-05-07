@@ -1,7 +1,7 @@
 {
   try {
     Blob blob=getBlob(container,key).get();
-    return Futures.<BlobMetadata>immediateFuture(blob != null ? blob.getMetadata() : null);
+    return immediateFuture(blob != null ? (BlobMetadata)blob.getMetadata() : null);
   }
  catch (  Exception e) {
     if (size(filter(getCausalChain(e),KeyNotFoundException.class)) >= 1)     return immediateFuture(null);

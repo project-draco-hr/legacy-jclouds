@@ -1,11 +1,13 @@
 {
-  checkArgument(containerName != null,"containerName must be set");
-  checkArgument(in != null,"blob must be set");
+  checkNotNull(containerName,"containerName must be set");
+  checkNotNull(blob,"blob must be set");
   ConcurrentMap<String,Blob> container=getContainerToBlobs().get(containerName);
+  String blobKey=blob.getMetadata().getName();
+  logger.debug("Put blob with key [%s] to container [%s]",blobKey,containerName);
   if (container == null) {
     return Futures.immediateFailedFuture(new IllegalStateException("containerName not found: " + containerName));
   }
-  Blob blob=createUpdatedCopyOfBlobInContainer(containerName,in);
+  blob=createUpdatedCopyOfBlobInContainer(containerName,blob);
   container.put(blob.getMetadata().getName(),blob);
   return immediateFuture(Iterables.getOnlyElement(blob.getAllHeaders().get(HttpHeaders.ETAG)));
 }
