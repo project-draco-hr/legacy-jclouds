@@ -1,0 +1,9 @@
+{
+  return new Supplier<NodeMetadata>(){
+    @Override public NodeMetadata get(){
+      String privateKey=readRsaIdentity();
+      return new NodeMetadataBuilder().id(HOST_ID).name("host installing virtualbox").hostname(HOSTNAME).operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description(System.getProperty("os.name")).arch(System.getProperty("os.arch")).version(System.getProperty("os.version")).build()).state(NodeState.RUNNING).location(new LocationBuilder().id(HOST_ID).scope(LocationScope.HOST).description(HOSTNAME).build()).credentials(LoginCredentials.builder().user(System.getProperty("user.name")).privateKey(privateKey).build()).build();
+    }
+  }
+;
+}
