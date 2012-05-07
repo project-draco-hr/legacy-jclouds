@@ -1,12 +1,14 @@
 {
-  String blobKey=object.getMetadata().getName();
-  logger.debug("Put object with key [%s] to container [%s]",blobKey,containerName);
-  String eTag=getEtag(object);
+  checkNotNull(containerName,"containerName must be set");
+  checkNotNull(blob,"blob must be set");
+  String blobKey=blob.getMetadata().getName();
+  logger.debug("Put blob with key [%s] to container [%s]",blobKey,containerName);
+  String eTag=getEtag(blob);
   try {
-    storageStrategy.writePayloadOnFile(containerName,blobKey,object.getPayload());
+    storageStrategy.writePayloadOnFile(containerName,blobKey,blob.getPayload());
   }
  catch (  IOException e) {
-    logger.error(e,"An error occurred storing the new object with name [%s] to container [%s].",blobKey,containerName);
+    logger.error(e,"An error occurred storing the new blob with name [%s] to container [%s].",blobKey,containerName);
     Throwables.propagate(e);
   }
   return immediateFuture(eTag);

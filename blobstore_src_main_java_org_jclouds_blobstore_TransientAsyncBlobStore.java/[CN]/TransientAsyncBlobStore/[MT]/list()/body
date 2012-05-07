@@ -1,5 +1,6 @@
 {
-  return Futures.<PageSet<? extends StorageMetadata>>immediateFuture(new PageSetImpl<StorageMetadata>(transform(getContainerToBlobs().keySet(),new Function<String,StorageMetadata>(){
+  Iterable<String> containers=getContainerToBlobs().keySet();
+  return Futures.<PageSet<? extends StorageMetadata>>immediateFuture(new PageSetImpl<StorageMetadata>(transform(containers,new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String name){
       MutableStorageMetadata cmd=create();
       cmd.setName(name);
