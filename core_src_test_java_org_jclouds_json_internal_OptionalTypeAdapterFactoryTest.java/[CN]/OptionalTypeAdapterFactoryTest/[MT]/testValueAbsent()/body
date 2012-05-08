@@ -1,0 +1,9 @@
+{
+  String json="{\"someOtherValue\":\"testvalue\"}";
+  SimpleBean expected=new SimpleBean(Optional.<String>absent(),"testvalue");
+  SimpleBean actual=gsonAdapter.fromJson(json,SimpleBean.class);
+  assertFalse(actual.value.isPresent());
+  assertEquals(actual.getSomeOtherValue(),"testvalue");
+  assertEquals(actual,expected);
+  assertEquals(gsonAdapter.toJson(actual),json);
+}

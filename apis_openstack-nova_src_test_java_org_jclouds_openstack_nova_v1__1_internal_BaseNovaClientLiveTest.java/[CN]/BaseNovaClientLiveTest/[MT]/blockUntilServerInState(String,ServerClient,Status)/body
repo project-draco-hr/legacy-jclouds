@@ -1,6 +1,6 @@
 {
   Server currentDetails=null;
-  for (currentDetails=client.getServer(serverId); currentDetails.getStatus() != status || currentDetails.getTaskState() != null; currentDetails=client.getServer(serverId)) {
+  for (currentDetails=client.getServer(serverId); currentDetails.getStatus() != status || (currentDetails.getExtendedStatus().isPresent() && currentDetails.getExtendedStatus().get().getTaskState() != null); currentDetails=client.getServer(serverId)) {
     System.out.printf("blocking on status %s%n%s%n",status,currentDetails);
     try {
       Thread.sleep(5 * 1000);

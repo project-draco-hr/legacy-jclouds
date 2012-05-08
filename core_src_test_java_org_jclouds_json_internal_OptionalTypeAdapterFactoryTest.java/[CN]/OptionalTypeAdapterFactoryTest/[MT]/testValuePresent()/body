@@ -1,0 +1,10 @@
+{
+  String json="{\"value\":\"a test string!\"}";
+  SimpleBean expected=new SimpleBean(Optional.of("a test string!"),null);
+  SimpleBean actual=gsonAdapter.fromJson(json,SimpleBean.class);
+  assertTrue(actual.value.isPresent());
+  assertEquals(actual.getValue().get(),"a test string!");
+  assertNull(actual.getSomeOtherValue());
+  assertEquals(actual,expected);
+  assertEquals(gsonAdapter.toJson(actual),json);
+}

@@ -1,0 +1,13 @@
+{
+  Server serverBase=apply((ServerInternal)context.deserialize(jsonElement,ServerInternal.class));
+  Server.Builder result=Server.builder().fromServer(serverBase);
+  ServerExtendedStatus extendedStatus=context.deserialize(jsonElement,ServerExtendedStatus.class);
+  if (!Objects.equal(extendedStatus,ServerExtendedStatus.builder().build())) {
+    result.extendedStatus(extendedStatus);
+  }
+  ServerExtendedAttributes extraAttributes=context.deserialize(jsonElement,ServerExtendedAttributes.class);
+  if (!Objects.equal(extraAttributes,ServerExtendedAttributes.builder().build())) {
+    result.extraAttributes(extraAttributes);
+  }
+  return result.build();
+}
