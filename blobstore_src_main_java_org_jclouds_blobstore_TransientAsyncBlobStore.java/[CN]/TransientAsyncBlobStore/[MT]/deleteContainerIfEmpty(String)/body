@@ -1,7 +1,7 @@
 {
   Boolean returnVal=true;
-  if (getContainerToBlobs().containsKey(container)) {
-    if (getContainerToBlobs().get(container).size() == 0)     getContainerToBlobs().remove(container);
+  if (storageStrategy.containerExists(container)) {
+    if (getContainerToBlobs().get(container).size() == 0)     storageStrategy.deleteContainer(container);
  else     returnVal=false;
   }
   return immediateFuture(returnVal);

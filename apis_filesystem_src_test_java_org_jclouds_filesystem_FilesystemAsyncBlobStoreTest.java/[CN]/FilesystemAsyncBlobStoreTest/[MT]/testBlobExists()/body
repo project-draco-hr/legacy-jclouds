@@ -2,8 +2,12 @@
   boolean result;
   String blobKey;
   blobKey=TestUtils.createRandomBlobKey();
-  result=blobStore.blobExists(CONTAINER_NAME,blobKey);
-  assertFalse(result,"Blob exists");
+  try {
+    blobStore.blobExists(CONTAINER_NAME,blobKey);
+    fail();
+  }
+ catch (  ContainerNotFoundException cnfe) {
+  }
   blobStore.createContainerInLocation(null,CONTAINER_NAME);
   result=blobStore.blobExists(CONTAINER_NAME,blobKey);
   assertFalse(result,"Blob exists");
