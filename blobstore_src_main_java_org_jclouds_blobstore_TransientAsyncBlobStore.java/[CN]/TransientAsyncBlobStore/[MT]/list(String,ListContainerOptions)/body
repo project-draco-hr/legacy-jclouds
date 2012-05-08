@@ -1,9 +1,9 @@
 {
-  final Map<String,Blob> realContents=getContainerToBlobs().get(container);
-  if (realContents == null)   return immediateFailedFuture(cnfe(container));
-  SortedSet<StorageMetadata> contents=newTreeSet(transform(realContents.keySet(),new Function<String,StorageMetadata>(){
+  if (!storageStrategy.containerExists(container))   return immediateFailedFuture(cnfe(container));
+  Iterable<String> blobBelongingToContainer=storageStrategy.getBlobKeysInsideContainer(container);
+  SortedSet<StorageMetadata> contents=newTreeSet(transform(blobBelongingToContainer,new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String key){
-      Blob oldBlob=realContents.get(key);
+      Blob oldBlob=loadBlob(container,key);
       checkState(oldBlob != null,"blob " + key + " is not present although it was in the list of "+ container);
       checkState(oldBlob.getMetadata() != null,"blob " + container + "/"+ key+ " has no metadata");
       MutableBlobMetadata md=copy(oldBlob.getMetadata());

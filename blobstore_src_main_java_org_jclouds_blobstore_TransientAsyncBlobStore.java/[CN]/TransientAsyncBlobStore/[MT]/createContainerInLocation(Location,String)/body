@@ -1,8 +1,4 @@
 {
-  if (storageStrategy.containerExists(name)) {
-    return immediateFuture(Boolean.FALSE);
-  }
-  getContainerToBlobs().put(name,new ConcurrentHashMap<String,Blob>());
-  getContainerToLocation().put(name,location != null ? location : defaultLocation.get());
-  return immediateFuture(Boolean.TRUE);
+  boolean result=storageStrategy.createContainerInLocation(name,location);
+  return immediateFuture(result);
 }
