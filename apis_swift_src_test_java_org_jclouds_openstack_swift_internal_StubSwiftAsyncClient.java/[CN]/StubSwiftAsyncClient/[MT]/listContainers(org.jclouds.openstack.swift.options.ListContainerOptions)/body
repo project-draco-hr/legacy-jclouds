@@ -1,7 +1,17 @@
 {
-  return immediateFuture(Sets.newHashSet(Iterables.transform(blobStore.getContainerToBlobs().keySet(),new Function<String,ContainerMetadata>(){
-    public ContainerMetadata apply(    String name){
-      return new ContainerMetadata(name,-1,-1,null,new HashMap<String,String>());
+  PageSet<? extends StorageMetadata> listing;
+  try {
+    listing=blobStore.list().get();
+  }
+ catch (  ExecutionException ee) {
+    throw Throwables.propagate(ee);
+  }
+catch (  InterruptedException ie) {
+    throw Throwables.propagate(ie);
+  }
+  return immediateFuture(Sets.newHashSet(Iterables.transform(listing,new Function<StorageMetadata,ContainerMetadata>(){
+    public ContainerMetadata apply(    StorageMetadata md){
+      return new ContainerMetadata(md.getName(),-1,-1,null,new HashMap<String,String>());
     }
   }
 )));

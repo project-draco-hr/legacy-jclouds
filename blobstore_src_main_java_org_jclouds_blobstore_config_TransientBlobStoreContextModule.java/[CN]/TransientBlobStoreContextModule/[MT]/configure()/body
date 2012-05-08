@@ -1,12 +1,6 @@
 {
   bind(AsyncBlobStore.class).to(TransientAsyncBlobStore.class).asEagerSingleton();
   BinderUtils.bindClient(binder(),TransientBlobStore.class,AsyncBlobStore.class,ImmutableMap.<Class<?>,Class<?>>of());
-  bind(new TypeLiteral<ConcurrentMap<String,ConcurrentMap<String,Blob>>>(){
-  }
-).toInstance(map);
-  bind(new TypeLiteral<ConcurrentMap<String,Location>>(){
-  }
-).toInstance(containerToLocation);
   install(new BlobStoreObjectModule());
   install(new BlobStoreMapModule());
   bind(BlobStore.class).to(TransientBlobStore.class);

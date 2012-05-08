@@ -1,0 +1,8 @@
+{
+  ConcurrentMap<String,Blob> origValue=containerToBlobs.putIfAbsent(containerName,new ConcurrentHashMap<String,Blob>());
+  if (origValue != null) {
+    return false;
+  }
+  containerToLocation.put(containerName,location != null ? location : defaultLocation.get());
+  return true;
+}

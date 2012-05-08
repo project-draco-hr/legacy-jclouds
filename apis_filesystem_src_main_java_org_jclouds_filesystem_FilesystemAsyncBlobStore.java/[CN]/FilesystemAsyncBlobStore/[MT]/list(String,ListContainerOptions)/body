@@ -10,7 +10,7 @@
   }
   SortedSet<StorageMetadata> contents=newTreeSet(transform(blobBelongingToContainer,new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String key){
-      Blob oldBlob=loadFileBlob(container,key);
+      Blob oldBlob=loadBlob(container,key);
       checkState(oldBlob != null,"blob " + key + " is not present although it was in the list of "+ container);
       checkState(oldBlob.getMetadata() != null,"blob " + container + "/"+ key+ " has no metadata");
       MutableBlobMetadata md=copy(oldBlob.getMetadata());
