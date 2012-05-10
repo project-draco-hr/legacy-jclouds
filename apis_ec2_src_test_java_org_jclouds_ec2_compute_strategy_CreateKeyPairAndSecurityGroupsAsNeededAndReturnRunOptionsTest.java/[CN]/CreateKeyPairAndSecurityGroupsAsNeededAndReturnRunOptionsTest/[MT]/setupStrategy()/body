@@ -2,5 +2,11 @@
   Function<RegionAndName,KeyPair> makeKeyPair=createMock(Function.class);
   ConcurrentMap<RegionAndName,KeyPair> credentialsMap=createMock(ConcurrentMap.class);
   LoadingCache<RegionAndName,String> securityGroupMap=createMock(LoadingCache.class);
-  return new CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair,credentialsMap,securityGroupMap,OPTIONS_PROVIDER);
+  GroupNamingConvention.Factory namingConventionFactory=createMock(GroupNamingConvention.Factory.class);
+  GroupNamingConvention namingConvention=createMock(GroupNamingConvention.class);
+  expect(namingConventionFactory.create()).andReturn(namingConvention).anyTimes();
+  expect(namingConvention.sharedNameForGroup("group")).andReturn("jclouds#group").anyTimes();
+  replay(namingConventionFactory);
+  replay(namingConvention);
+  return new CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair,credentialsMap,securityGroupMap,OPTIONS_PROVIDER,namingConventionFactory);
 }

@@ -5,5 +5,11 @@
   LoadingCache<RegionAndName,String> placementGroupMap=createMock(LoadingCache.class);
   Function<RegionNameAndPublicKeyMaterial,KeyPair> importExistingKeyPair=createMock(Function.class);
   CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded=createMock(CreatePlacementGroupIfNeeded.class);
-  return new CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair,credentialsMap,securityGroupMap,OPTIONS_PROVIDER,placementGroupMap,createPlacementGroupIfNeeded,importExistingKeyPair);
+  GroupNamingConvention.Factory namingConventionFactory=createMock(GroupNamingConvention.Factory.class);
+  GroupNamingConvention namingConvention=createMock(GroupNamingConvention.class);
+  expect(namingConventionFactory.create()).andReturn(namingConvention).anyTimes();
+  expect(namingConvention.sharedNameForGroup("group")).andReturn("jclouds#group").anyTimes();
+  replay(namingConventionFactory);
+  replay(namingConvention);
+  return new CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair,credentialsMap,securityGroupMap,OPTIONS_PROVIDER,placementGroupMap,createPlacementGroupIfNeeded,importExistingKeyPair,namingConventionFactory);
 }

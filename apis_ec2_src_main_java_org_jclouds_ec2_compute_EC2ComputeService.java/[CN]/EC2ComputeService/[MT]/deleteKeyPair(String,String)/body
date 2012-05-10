@@ -1,6 +1,9 @@
 {
   for (  KeyPair keyPair : ec2Client.getKeyPairServices().describeKeyPairsInRegion(region)) {
-    if (keyPair.getKeyName().equals("jclouds" + delimiter + group) || keyPair.getKeyName().matches(String.format("jclouds#%s#%s",group,"[0-9a-f]+").replace('#',delimiter)) || keyPair.getKeyName().matches(String.format("jclouds#%s#%s#%s",group,region,"[0-9a-f]+").replace('#',delimiter))) {
+    String keyName=keyPair.getKeyName();
+    Predicate<String> keyNameMatcher=namingConvention.create().containsGroup(group);
+    String oldKeyNameRegex=String.format("jclouds#%s#%s#%s",group,region,"[0-9a-f]+").replace('#',delimiter);
+    if (keyNameMatcher.apply(keyName) || keyName.matches(oldKeyNameRegex)) {
       Set<String> instancesUsingKeyPair=extractIdsFromInstances(filter(concat(ec2Client.getInstanceServices().describeInstancesInRegion(region)),usingKeyPairAndNotDead(keyPair)));
       if (instancesUsingKeyPair.size() > 0) {
         logger.debug("<< inUse keyPair(%s), by (%s)",keyPair.getKeyName(),instancesUsingKeyPair);
