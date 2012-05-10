@@ -11,6 +11,12 @@
     }
   }
 ;
-  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(instanceToNodeState,credentialStore,Suppliers.<LoadingCache<RegionAndName,? extends Image>>ofInstance(instanceToImage),locationSupplier,hardwareSupplier);
+  GroupNamingConvention.Factory namingConvention=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      Names.bindProperties(binder(),new EC2ApiMetadata().getDefaultProperties());
+    }
+  }
+).getInstance(GroupNamingConvention.Factory.class);
+  RunningInstanceToNodeMetadata parser=new RunningInstanceToNodeMetadata(instanceToNodeState,credentialStore,Suppliers.<LoadingCache<RegionAndName,? extends Image>>ofInstance(instanceToImage),locationSupplier,hardwareSupplier,namingConvention);
   return parser;
 }

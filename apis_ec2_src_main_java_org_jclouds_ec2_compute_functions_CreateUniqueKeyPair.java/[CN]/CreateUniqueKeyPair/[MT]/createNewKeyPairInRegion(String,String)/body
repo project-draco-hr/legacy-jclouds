@@ -3,13 +3,16 @@
   checkNotNull(group,"group");
   logger.debug(">> creating keyPair region(%s) group(%s)",region,group);
   KeyPair keyPair=null;
+  String prefix=group;
   while (keyPair == null) {
+    String keyName=namingConvention.create().uniqueNameForGroup(prefix);
     try {
-      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,getNextName(region,group));
-      logger.debug("<< created keyPair(%s)",keyPair);
+      keyPair=ec2Client.getKeyPairServices().createKeyPairInRegion(region,keyName);
     }
  catch (    IllegalStateException e) {
+      logger.trace("   invalid keyname (%s in %s); retrying",keyName,region);
     }
   }
+  logger.debug("<< created keyPair(%s)",keyPair);
   return keyPair;
 }
