@@ -1,0 +1,14 @@
+{
+  result=checkNotNull(findImage(input));
+switch (result.getImageState()) {
+case AVAILABLE:
+    logger.info("<< Image %s is available for use.",input);
+  return true;
+case UNRECOGNIZED:
+logger.debug("<< Image %s is not available yet.",input);
+return false;
+default :
+lastFailure=new IllegalStateException("Image was not created: " + input);
+throw lastFailure;
+}
+}
