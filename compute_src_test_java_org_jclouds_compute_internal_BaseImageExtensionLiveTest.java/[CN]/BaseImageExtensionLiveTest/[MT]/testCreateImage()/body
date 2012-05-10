@@ -2,12 +2,16 @@
   ComputeService computeService=view.getComputeService();
   Optional<ImageExtension> imageExtension=computeService.getImageExtension();
   assertTrue("image extension was not present",imageExtension.isPresent());
-  Set<? extends Image> imagesBefore=computeService.listImages();
-  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,getNodeTemplate()));
+  Template template=getNodeTemplate();
+  NodeMetadata node=Iterables.getOnlyElement(computeService.createNodesInGroup("test-create-image",1,template));
+  checkReachable(node);
+  logger.info("Creating image from node %s, started with template: %s",node,template);
   ImageTemplate newImageTemplate=imageExtension.get().buildImageTemplateFromNode("test-create-image",node.getId());
-  Image image=imageExtension.get().createImage(newImageTemplate);
+  Image image=imageExtension.get().createImage(newImageTemplate).get();
+  logger.info("Image created: %s",image);
   assertEquals("test-create-image",image.getName());
+  imageId=image.getId();
   computeService.destroyNode(node.getId());
-  Set<? extends Image> imagesAfter=computeService.listImages();
-  assertTrue(imagesBefore.size() == imagesAfter.size() - 1);
+  Optional<? extends Image> optImage=getImage();
+  assertTrue(optImage.isPresent());
 }

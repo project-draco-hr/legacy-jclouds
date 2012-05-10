@@ -1,8 +1,14 @@
 {
   checkState(template instanceof CloneImageTemplate," openstack-nova only supports creating images through cloning.");
   CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
-  ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
-  String newImageId=novaClient.getServerClientForZone(zoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),zoneAndId.getId());
-  org.jclouds.openstack.nova.v1_1.domain.Image newImage=checkNotNull(findImage(ZoneAndId.fromZoneAndId(zoneAndId.getZone(),newImageId)));
-  return imageInZoneToImage.apply(new ImageInZone(newImage,zoneAndId.getZone()));
+  ZoneAndId sourceImageZoneAndId=ZoneAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
+  String newImageId=novaClient.getServerClientForZone(sourceImageZoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),sourceImageZoneAndId.getId());
+  final ZoneAndId targetImageZoneAndId=ZoneAndId.fromZoneAndId(sourceImageZoneAndId.getZone(),newImageId);
+  logger.info(">> Registered new Image %s, waiting for it to become available.",newImageId);
+  return Futures.makeListenable(executor.submit(new Callable<Image>(){
+    @Override public Image call() throws Exception {
+      return Retryables.retryGettingResultOrFailing(imageReadyPredicate,targetImageZoneAndId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
+    }
+  }
+),executor);
 }
