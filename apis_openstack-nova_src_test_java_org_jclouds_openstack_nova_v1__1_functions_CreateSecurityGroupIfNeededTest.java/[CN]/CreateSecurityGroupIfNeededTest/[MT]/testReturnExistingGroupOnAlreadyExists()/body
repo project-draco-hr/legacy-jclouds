@@ -4,7 +4,7 @@
   builder.put(extensionsOfNovaRequest,extensionsOfNovaResponse);
   HttpResponse createSecurityGroupResponse=HttpResponse.builder().statusCode(400).payload(payloadFromStringWithContentType("{\"badRequest\": {\"message\": \"Security group test already exists\", \"code\": 400}}","application/json; charset=UTF-8")).build();
   builder.put(createSecurityGroup,createSecurityGroupResponse);
-  HttpRequest listSecurityGroups=HttpRequest.builder().method("GET").endpoint(URI.create("https://compute.north.host/v1.1/3456/os-security-groups")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpRequest listSecurityGroups=HttpRequest.builder().method("GET").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listSecurityGroupsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_list_details_computeservice_typical.json")).build();
   builder.put(listSecurityGroups,listSecurityGroupsResponse);
   NovaClient clientWhenSecurityGroupsExist=requestsSendResponses(builder.build());

@@ -1,5 +1,5 @@
 {
-  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/servers/1/action");
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
   AdminActionsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"createBackup\":{\"backup_type\":\"weekly\",\"rotation\":\"3\",\"name\":\"mybackup\",\"metadata\":{\"some\":\"data or other\"}}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(202).headers(ImmutableMultimap.of("Location","http://172.16.89.149:8774/v2/images/1976b3b3-409a-468d-b16c-a9172c341b46")).build()).getAdminActionsExtensionForZone("az-1.region-a.geo-1").get();
   String imageId=client.createBackupOfServer("1","mybackup",BackupType.WEEKLY,3,CreateBackupOfServerOptions.Builder.metadata(ImmutableMap.of("some","data or other")));
   assertEquals(imageId,"1976b3b3-409a-468d-b16c-a9172c341b46");

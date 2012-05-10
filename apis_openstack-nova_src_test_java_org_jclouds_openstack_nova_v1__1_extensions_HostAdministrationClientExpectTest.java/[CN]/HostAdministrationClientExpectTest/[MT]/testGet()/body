@@ -1,5 +1,5 @@
 {
-  URI endpoint=URI.create("https://compute.north.host/v1.1/3456/os-hosts/xyz");
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/xyz");
   HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
   Set<HostResourceUsage> expected=ImmutableSet.of(HostResourceUsage.builder().memoryMb(16083).project("(total)").cpu(4).diskGb(181).host("ubuntu").build(),HostResourceUsage.builder().memoryMb(3396).project("(used_now)").cpu(3).diskGb(5).host("ubuntu").build(),HostResourceUsage.builder().memoryMb(6144).project("(used_max)").cpu(3).diskGb(80).host("ubuntu").build(),HostResourceUsage.builder().memoryMb(6144).project("f8535069c3fb404cb61c873b1a0b4921").cpu(3).diskGb(80).host("ubuntu").build());
   assertEquals(client.getHostResourceUsage("xyz"),expected);
