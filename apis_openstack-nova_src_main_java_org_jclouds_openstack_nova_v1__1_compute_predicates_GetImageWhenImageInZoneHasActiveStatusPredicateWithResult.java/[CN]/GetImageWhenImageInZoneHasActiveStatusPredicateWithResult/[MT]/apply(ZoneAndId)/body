@@ -1,0 +1,15 @@
+{
+  result=checkNotNull(NovaImageExtension.findImage(client,ZoneAndId.fromZoneAndId(input.getZone(),input.getId())));
+  resultZoneAndId=input;
+switch (result.getStatus()) {
+case ACTIVE:
+    logger.info("<< Image %s is available for use.",input.getId());
+  return true;
+case SAVING:
+logger.debug("<< Image %s is not available yet.",input.getId());
+return false;
+default :
+lastFailure=new IllegalStateException("Image was not created: " + input.getId());
+throw lastFailure;
+}
+}

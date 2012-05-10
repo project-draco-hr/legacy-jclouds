@@ -1,0 +1,9 @@
+{
+  Injector injector=requestsSendResponses(requestResponseMap);
+  PredicateWithResult<ZoneAndId,Image> predicate=injector.getInstance(GetImageWhenImageInZoneHasActiveStatusPredicateWithResult.class);
+  ZoneAndId zoneAdnId0=ZoneAndId.fromZoneAndId("az-1.region-a.geo-1","13");
+  ZoneAndId zoneAdnId1=ZoneAndId.fromZoneAndId("az-1.region-a.geo-1","12");
+  assertTrue(!predicate.apply(zoneAdnId1));
+  assertTrue(predicate.apply(zoneAdnId0));
+  assertEquals("natty-server-cloudimg-amd64",predicate.getResult().getName());
+}
