@@ -1,0 +1,11 @@
+{
+  Set<String> regionIds=ImmutableSet.of("us-east-1","eu-west-1");
+  RegionIdFilter filter=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Provider.class).to("aws-ec2");
+      bindConstant().annotatedWith(Names.named("jclouds.regions")).to("us-east-1,unknown-1");
+    }
+  }
+).getInstance(AnyOrConfiguredRegionId.class);
+  assertEquals(Sets.filter(regionIds,filter),ImmutableSet.of("us-east-1"));
+}

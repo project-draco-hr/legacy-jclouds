@@ -1,0 +1,10 @@
+{
+  Set<String> zoneIds=ImmutableSet.of("us-east-1a","us-east-1b");
+  ZoneIdFilter filter=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(Provider.class).to("aws-ec2");
+    }
+  }
+).getInstance(AnyOrConfiguredZoneId.class);
+  assertEquals(Sets.filter(zoneIds,filter),ImmutableSet.of("us-east-1a","us-east-1b"));
+}
