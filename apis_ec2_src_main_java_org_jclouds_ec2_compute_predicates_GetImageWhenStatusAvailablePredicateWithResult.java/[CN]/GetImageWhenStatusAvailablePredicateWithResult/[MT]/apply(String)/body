@@ -1,5 +1,8 @@
 {
-  result=checkNotNull(findImage(input));
+  String[] parts=AWSUtils.parseHandle(input);
+  String region=parts[0];
+  String imageId=parts[1];
+  result=checkNotNull(findImage(imageId,region));
 switch (result.getImageState()) {
 case AVAILABLE:
     logger.info("<< Image %s is available for use.",input);
