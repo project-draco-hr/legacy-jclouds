@@ -1,0 +1,12 @@
+{
+  Builder<String,Object> payload=ImmutableMap.builder();
+  payload.putAll(postParams);
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest<?>,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest<?> gRequest=(GeneratedHttpRequest<?>)request;
+  T specs=(T)Iterables.find(gRequest.getArgs(),Predicates.instanceOf(type.getRawType()));
+  payload.put(fieldName,specs);
+  if (wrapperName != null) {
+    return super.bindToRequest(request,ImmutableMap.of(wrapperName,payload.build()));
+  }
+  return super.bindToRequest(request,payload.build());
+}

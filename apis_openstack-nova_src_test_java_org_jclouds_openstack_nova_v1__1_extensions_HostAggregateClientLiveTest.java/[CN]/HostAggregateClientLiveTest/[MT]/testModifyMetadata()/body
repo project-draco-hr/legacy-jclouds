@@ -1,0 +1,15 @@
+{
+  if (clientOption.isPresent()) {
+    HostAggregateClient client=clientOption.get();
+    for (    Map<String,String> theMetaData : ImmutableSet.of(ImmutableMap.of("somekey","somevalue"),ImmutableMap.of("somekey","some other value","anotherkey","another val"))) {
+      HostAggregate details=client.setMetadata(testAggregate.getId(),theMetaData);
+      for (      String key : theMetaData.keySet()) {
+        assertEquals(details.getMetadata().get(key),theMetaData.get(key));
+      }
+      details=client.getAggregate(testAggregate.getId());
+      for (      String key : theMetaData.keySet()) {
+        assertEquals(details.getMetadata().get(key),theMetaData.get(key));
+      }
+    }
+  }
+}

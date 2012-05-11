@@ -1,0 +1,16 @@
+{
+  if (clientOption.isPresent()) {
+    HostAggregateClient client=clientOption.get();
+    Set<HostAggregate> aggregates=client.listAggregates();
+    for (    HostAggregate aggregate : aggregates) {
+      assertNotNull(aggregate.getId());
+      assertNotNull(aggregate.getName());
+      assertNotNull(aggregate.getAvailabilityZone());
+      HostAggregate details=client.getAggregate(aggregate.getId());
+      assertEquals(details.getId(),aggregate.getId());
+      assertEquals(details.getName(),aggregate.getName());
+      assertEquals(details.getAvailabilityZone(),aggregate.getAvailabilityZone());
+      assertEquals(details.getHosts(),aggregate.getHosts());
+    }
+  }
+}
