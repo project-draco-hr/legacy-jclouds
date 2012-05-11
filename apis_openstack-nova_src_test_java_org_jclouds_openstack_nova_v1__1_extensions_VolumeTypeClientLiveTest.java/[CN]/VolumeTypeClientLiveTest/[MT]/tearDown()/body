@@ -1,0 +1,15 @@
+{
+  if (volumeTypeOption.isPresent()) {
+    if (testVolumeType != null) {
+      final String id=testVolumeType.getId();
+      assertTrue(volumeTypeOption.get().deleteVolumeType(id));
+      assertTrue(new RetryablePredicate<VolumeTypeClient>(new Predicate<VolumeTypeClient>(){
+        @Override public boolean apply(        VolumeTypeClient volumeClient){
+          return volumeClient.getVolumeType(id) == null;
+        }
+      }
+,5 * 1000L).apply(volumeTypeOption.get()));
+    }
+  }
+  super.tearDown();
+}
