@@ -1,0 +1,27 @@
+{
+  final long SLOW_GRACE=500;
+  SocketOpen socketTester=SocketOpenPredicates.alwaysFail;
+  NodeMetadata node=createMock(NodeMetadata.class);
+  expect(node.getPublicAddresses()).andReturn(ImmutableSet.of("1.2.3.4")).atLeastOnce();
+  expect(node.getPrivateAddresses()).andReturn(ImmutableSet.of("1.2.3.5")).atLeastOnce();
+  expect(node.getId()).andReturn("myid").atLeastOnce();
+  Predicate<AtomicReference<NodeMetadata>> nodeRunning=createMock(Predicate.class);
+  expect(nodeRunning.apply(EasyMock.<AtomicReference<NodeMetadata>>anyObject())).andReturn(false);
+  replay(node);
+  replay(nodeRunning);
+  Stopwatch stopwatch=new Stopwatch();
+  stopwatch.start();
+  try {
+    ComputeServiceUtils.findReachableSocketOnNode(socketTester,nodeRunning,node,22,2000000,TimeUnit.MILLISECONDS,Logger.CONSOLE);
+    fail();
+  }
+ catch (  RuntimeException e) {
+    if (!e.getMessage().contains("no longer running")) {
+      throw e;
+    }
+  }
+  long timetaken=stopwatch.elapsedMillis();
+  assertTrue(timetaken <= SLOW_GRACE,"timetaken=" + timetaken);
+  verify(node);
+  verify(nodeRunning);
+}

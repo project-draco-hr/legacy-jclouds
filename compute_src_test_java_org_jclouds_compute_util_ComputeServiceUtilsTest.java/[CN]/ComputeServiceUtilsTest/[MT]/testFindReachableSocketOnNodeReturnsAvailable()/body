@@ -1,0 +1,14 @@
+{
+  SocketOpen socketTester=createMock(SocketOpen.class);
+  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.4",22))).andReturn(false);
+  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.5",22))).andReturn(true);
+  NodeMetadata node=createMock(NodeMetadata.class);
+  expect(node.getPublicAddresses()).andReturn(ImmutableSet.of("1.2.3.4")).atLeastOnce();
+  expect(node.getPrivateAddresses()).andReturn(ImmutableSet.of("1.2.3.5")).atLeastOnce();
+  replay(socketTester);
+  replay(node);
+  HostAndPort result=ComputeServiceUtils.findReachableSocketOnNode(socketTester,node,22,2000,TimeUnit.MILLISECONDS,Logger.CONSOLE);
+  assertEquals(result,HostAndPort.fromParts("1.2.3.5",22));
+  verify(socketTester);
+  verify(node);
+}
