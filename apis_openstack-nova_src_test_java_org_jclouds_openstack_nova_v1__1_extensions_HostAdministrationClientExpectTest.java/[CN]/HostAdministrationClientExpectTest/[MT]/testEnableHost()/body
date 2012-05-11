@@ -1,0 +1,5 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+  HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("PUT").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).payload(payloadFromStringWithContentType("{\"status\":\"enable\"}",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"status\":\"enabled\"}",MediaType.APPLICATION_JSON)).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+  assertTrue(client.enableHost("ubuntu"));
+}
