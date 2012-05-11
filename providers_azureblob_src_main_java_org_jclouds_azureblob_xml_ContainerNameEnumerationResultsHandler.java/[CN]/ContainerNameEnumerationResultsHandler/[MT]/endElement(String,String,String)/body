@@ -31,7 +31,7 @@
     currentLeaseStatus=LeaseStatus.fromValue(currentText.toString().trim());
   }
  else   if (qName.equals("Blob")) {
-    BlobProperties md=new BlobPropertiesImpl(currentBlobType,currentName,containerUrl.getPath().replace("/",""),currentUrl,currentLastModified,currentETag,currentSize,currentContentType,currentContentMD5,currentContentEncoding,currentContentLanguage,currentLeaseStatus,currentMetadata);
+    BlobProperties md=new BlobPropertiesImpl(currentBlobType,currentName,containerUrl.getPath().replace("/",""),currentUrl,currentLastModified,currentETag,currentSize,currentContentType,currentContentMD5,currentContentEncoding,currentContentLanguage,currentExpires,currentLeaseStatus,currentMetadata);
     blobMetadata.add(md);
     currentBlobType=null;
     currentName=null;
@@ -44,6 +44,7 @@
     currentContentLanguage=null;
     currentContentMD5=null;
     currentLeaseStatus=null;
+    currentExpires=null;
     currentMetadata=Maps.newHashMap();
   }
  else   if (qName.equals("Url")) {
@@ -75,6 +76,10 @@
  else   if (qName.equals("Content-Language")) {
     currentContentLanguage=currentText.toString().trim();
     if (currentContentLanguage.equals(""))     currentContentLanguage=null;
+  }
+ else   if (qName.equals("Expires")) {
+    currentExpires=currentText.toString().trim();
+    if (currentExpires.equals(""))     currentExpires=null;
   }
   currentText=new StringBuilder();
 }
