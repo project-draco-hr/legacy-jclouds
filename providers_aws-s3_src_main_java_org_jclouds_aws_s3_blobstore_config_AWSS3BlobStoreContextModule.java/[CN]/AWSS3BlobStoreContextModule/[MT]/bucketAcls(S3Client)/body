@@ -1,0 +1,12 @@
+{
+  CacheLoader<String,AccessControlList> loader=RetryingCacheLoaderDecorator.newDecorator().on(ResourceNotFoundException.class).exponentiallyBackoff().decorate(new CacheLoader<String,AccessControlList>(){
+    @Override public AccessControlList load(    String bucketName){
+      return client.getBucketACL(bucketName);
+    }
+    @Override public String toString(){
+      return "getBucketAcl()";
+    }
+  }
+);
+  return CacheBuilder.newBuilder().expireAfterWrite(30,TimeUnit.SECONDS).build(loader);
+}

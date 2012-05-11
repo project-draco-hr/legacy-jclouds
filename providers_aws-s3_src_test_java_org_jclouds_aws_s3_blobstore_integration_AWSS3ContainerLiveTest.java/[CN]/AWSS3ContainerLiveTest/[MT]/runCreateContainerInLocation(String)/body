@@ -1,0 +1,18 @@
+{
+  String blobName="hello";
+  BlobStore blobStore=view.getBlobStore();
+  final String containerName=getScratchContainerName();
+  try {
+    String locationId="EU";
+    Location location=findLocation(blobStore,locationId);
+    blobStore.createContainerInLocation(location,containerName,publicRead());
+    blobStore.putBlob(containerName,blobStore.blobBuilder(blobName).payload(payload).build());
+    assertConsistencyAwareContainerSize(containerName,1);
+    BlobMetadata metadata=view.getBlobStore().blobMetadata(containerName,blobName);
+    assertEquals(Strings2.toStringAndClose(view.utils().http().get(metadata.getPublicUri())),payload);
+    assertConsistencyAwareBlobInLocation(containerName,blobName,location);
+  }
+  finally {
+    recycleContainer(containerName);
+  }
+}
