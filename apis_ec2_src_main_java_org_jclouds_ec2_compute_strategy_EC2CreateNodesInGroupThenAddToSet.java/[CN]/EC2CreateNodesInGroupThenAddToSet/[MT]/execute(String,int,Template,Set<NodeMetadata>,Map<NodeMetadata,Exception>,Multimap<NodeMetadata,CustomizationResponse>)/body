@@ -1,11 +1,5 @@
 {
-  Template mutableTemplate;
-  if (template.getImage() != null && template.getImage().getId() != null) {
-    mutableTemplate=templateBuilderProvider.get().imageId(template.getImage().getId()).fromTemplate(template).build();
-  }
- else {
-    mutableTemplate=templateBuilderProvider.get().fromTemplate(template).build();
-  }
+  Template mutableTemplate=templateBuilderProvider.get().imageId(template.getImage().getId()).fromTemplate(template).build();
   Iterable<String> ips=allocateElasticIpsInRegion(count,template);
   Iterable<? extends RunningInstance> started=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group,count,mutableTemplate);
   Iterable<RegionAndName> ids=transform(started,instanceToRegionAndName);

@@ -14,6 +14,7 @@
   RunningInstance instance=createMock(RunningInstance.class);
   Reservation<? extends RunningInstance> reservation=new Reservation<RunningInstance>(region,ImmutableSet.<String>of(),ImmutableSet.<RunningInstance>of(instance),"ownerId","requesterId","reservationId");
   strategy.autoAllocateElasticIps=true;
+  expect(templateBuilder.imageId(region + "/" + imageId)).andReturn(templateBuilder);
   expect(templateBuilder.fromTemplate(input.template)).andReturn(templateBuilder);
   expect(templateBuilder.build()).andReturn(input.template);
   expect(strategy.client.getInstanceServices()).andReturn(instanceClient).atLeastOnce();
@@ -21,6 +22,7 @@
   expect(strategy.client.getElasticIPAddressServices()).andReturn(ipClient).atLeastOnce();
   expect(input.template.getLocation()).andReturn(input.location).atLeastOnce();
   expect(input.template.getImage()).andReturn(input.image).atLeastOnce();
+  expect(input.image.getId()).andReturn(region + "/" + imageId).atLeastOnce();
   expect(input.image.getProviderId()).andReturn(imageId).atLeastOnce();
   expect(ipClient.allocateAddressInRegion(region)).andReturn("1.1.1.1");
   expect(strategy.runningInstanceToNodeMetadata.apply(instance)).andReturn(nodeMetadata).atLeastOnce();
