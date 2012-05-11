@@ -1,0 +1,18 @@
+{
+  if (clientOption.isPresent()) {
+    FlavorExtraSpecsClient client=clientOption.get();
+    for (    String key : testSpecs.keySet()) {
+      assertTrue(client.setExtraSpec(testFlavor.getId(),key,"new value"));
+    }
+    for (    String key : testSpecs.keySet()) {
+      assertEquals(client.getExtraSpec(testFlavor.getId(),key),"new value");
+    }
+    for (    Resource flavor : flavorClient.listFlavors()) {
+      Map<String,String> specs=client.getAllExtraSpecs(flavor.getId());
+      assertNotNull(specs);
+      for (      Map.Entry<String,String> entry : specs.entrySet()) {
+        assertEquals(client.getExtraSpec(flavor.getId(),entry.getKey()),entry.getValue());
+      }
+    }
+  }
+}
