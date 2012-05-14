@@ -1,0 +1,12 @@
+{
+  ServerRequest server=new ServerRequest(checkNotNull(postParams.get("name"),"name parameter not present").toString(),Integer.parseInt(checkNotNull(postParams.get("imageId"),"imageId parameter not present").toString()),Integer.parseInt(checkNotNull(postParams.get("flavorId"),"flavorId parameter not present").toString()));
+  if (metadata.size() > 0)   server.metadata=metadata;
+  if (files.size() > 0)   server.personality=files;
+  if (sharedIpGroupId != null)   server.sharedIpGroupId=this.sharedIpGroupId;
+  if (publicIp != null) {
+    server.addresses=new Addresses();
+    server.addresses.getPublicAddresses().add(publicIp);
+    server.addresses.setPrivateAddresses(null);
+  }
+  return bindToRequest(request,ImmutableMap.of("server",server));
+}

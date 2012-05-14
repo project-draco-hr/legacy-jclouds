@@ -1,0 +1,18 @@
+{
+  ServerRequest server=new ServerRequest(checkNotNull(postParams.get("name"),"name parameter not present").toString(),checkNotNull(postParams.get("imageRef"),"imageRef parameter not present").toString(),checkNotNull(postParams.get("flavorRef"),"flavorRef parameter not present").toString());
+  if (metadata.size() > 0)   server.metadata=metadata;
+  if (files.size() > 0)   server.personality=files;
+  if (keyName != null)   server.key_name=keyName;
+  if (securityGroups.size() > 0) {
+    server.securityGroups=Sets.newHashSet();
+    for (    String groupName : securityGroups) {
+      SecurityGroup group=new SecurityGroup();
+      group.setName(groupName);
+      server.securityGroups.add(group);
+    }
+  }
+  if (adminPass != null) {
+    server.adminPass=adminPass;
+  }
+  return bindToRequest(request,ImmutableMap.of("server",server));
+}

@@ -1,0 +1,17 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
+  @SuppressWarnings("unchecked") GeneratedHttpRequest<CloudSigmaAsyncClient> gRequest=(GeneratedHttpRequest<CloudSigmaAsyncClient>)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  CloneDriveOptions options=findOptionsInArgsOrNull(gRequest);
+  if (options != null) {
+    postParams=ImmutableMap.<String,Object>builder().putAll(postParams).putAll(options.getOptions()).build();
+  }
+  request.setPayload(listOfMapsToListOfKeyValuesDelimitedByBlankLines.apply(ImmutableSet.of(Maps.transformValues(postParams,new Function<Object,String>(){
+    @Override public String apply(    @Nullable Object input){
+      return input == null ? null : input.toString();
+    }
+  }
+))));
+  request.getPayload().getContentMetadata().setContentType(MediaType.TEXT_PLAIN);
+  return request;
+}

@@ -1,0 +1,23 @@
+{
+  checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest<?>,"this binder is only valid for GeneratedHttpRequests!");
+  GeneratedHttpRequest<?> gRequest=(GeneratedHttpRequest<?>)request;
+  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  String templateName=checkNotNull(postParams.remove("templateName"),"templateName").toString();
+  String vApp=checkNotNull(postParams.remove("vApp"),"vApp").toString();
+  CaptureVAppOptions options=findOptionsInArgsOrNull(gRequest);
+  if (options == null) {
+    options=new CaptureVAppOptions();
+  }
+  try {
+    return stringBinder.bindToRequest(request,generateXml(templateName,vApp,options));
+  }
+ catch (  ParserConfigurationException e) {
+    throw new RuntimeException(e);
+  }
+catch (  FactoryConfigurationError e) {
+    throw new RuntimeException(e);
+  }
+catch (  TransformerException e) {
+    throw new RuntimeException(e);
+  }
+}

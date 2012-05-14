@@ -1,0 +1,12 @@
+{
+  String sliceId=checkNotNull(postParams.get("slice_id"),"slice_id").toString();
+  String name=checkNotNull(postParams.get("name"),"name").toString();
+  StringBuilder builder=new StringBuilder();
+  builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><backup>");
+  builder.append("<slice-id type=\"integer\">").append(sliceId).append("</slice-id>");
+  builder.append("<name>").append(name).append("</name>");
+  builder.append("</backup>");
+  request=binder.bindToRequest(request,builder.toString());
+  request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_XML);
+  return request;
+}

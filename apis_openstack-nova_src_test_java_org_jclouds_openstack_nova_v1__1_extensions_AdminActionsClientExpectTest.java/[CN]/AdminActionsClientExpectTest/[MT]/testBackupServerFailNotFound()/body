@@ -1,5 +1,5 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/1/action");
-  AdminActionsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"createBackup\":{\"backup_type\":\"weekly\",\"rotation\":\"3\",\"name\":\"mybackup\",\"metadata\":{\"some\":\"data or other\"}}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(404).build()).getAdminActionsExtensionForZone("az-1.region-a.geo-1").get();
+  AdminActionsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"createBackup\":{\"backup_type\":\"weekly\",\"rotation\":3,\"name\":\"mybackup\",\"metadata\":{\"some\":\"data or other\"}}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(404).build()).getAdminActionsExtensionForZone("az-1.region-a.geo-1").get();
   client.createBackupOfServer("1","mybackup",BackupType.WEEKLY,3,CreateBackupOfServerOptions.Builder.metadata(ImmutableMap.of("some","data or other")));
 }
