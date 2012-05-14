@@ -1,0 +1,20 @@
+{
+  expect(socketTester.apply(EasyMock.<HostAndPort>anyObject())).andReturn(false);
+  expect(nodeRunning.apply(EasyMock.<AtomicReference<NodeMetadata>>anyObject())).andReturn(false);
+  replay(socketTester);
+  replay(nodeRunning);
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,nodeRunning,MoreExecutors.sameThreadExecutor());
+  Stopwatch stopwatch=new Stopwatch();
+  stopwatch.start();
+  try {
+    finder.findOpenSocketOnNode(node,22,2000,TimeUnit.MILLISECONDS);
+    fail();
+  }
+ catch (  NoSuchElementException e) {
+  }
+  long timetaken=stopwatch.elapsedMillis();
+  assertTrue(timetaken <= SLOW_GRACE,"timetaken=" + timetaken);
+  verify(node);
+  verify(socketTester);
+  verify(nodeRunning);
+}

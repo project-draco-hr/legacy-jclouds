@@ -1,0 +1,10 @@
+{
+  node=createMock(NodeMetadata.class);
+  expect(node.getPublicAddresses()).andReturn(ImmutableSet.of("1.2.3.4")).atLeastOnce();
+  expect(node.getPrivateAddresses()).andReturn(ImmutableSet.of("1.2.3.5")).atLeastOnce();
+  expect(node.getId()).andReturn("myid").anyTimes();
+  socketTester=createMock(SocketOpen.class);
+  nodeRunning=createMock(Predicate.class);
+  replay(node);
+  threadPool=Executors.newCachedThreadPool();
+}

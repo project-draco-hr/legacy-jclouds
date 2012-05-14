@@ -1,0 +1,37 @@
+{
+  final AtomicReference<HostAndPort> result=new AtomicReference<HostAndPort>();
+  final CountDownLatch latch=new CountDownLatch(1);
+  final AtomicInteger completeCount=new AtomicInteger();
+  for (  final HostAndPort socket : sockets) {
+    final ListenableFuture<?> future=executor.submit(new Runnable(){
+      @Override public void run(){
+        try {
+          if (socketTester.apply(socket)) {
+            result.compareAndSet(null,socket);
+            latch.countDown();
+          }
+        }
+ catch (        RuntimeException e) {
+          logger.warn(e,"Error checking reachability of ip:port %s",socket);
+        }
+      }
+    }
+);
+    future.addListener(new Runnable(){
+      @Override public void run(){
+        if (completeCount.incrementAndGet() >= sockets.size()) {
+          latch.countDown();
+        }
+      }
+    }
+,MoreExecutors.sameThreadExecutor());
+  }
+  try {
+    latch.await();
+  }
+ catch (  InterruptedException e) {
+    Thread.currentThread().interrupt();
+    throw Throwables.propagate(e);
+  }
+  return result.get();
+}
