@@ -1,16 +1,4 @@
 {
   logger.debug("Opening blob in container: %s - %s",container,key);
-  BlobBuilder builder=blobUtils.blobBuilder();
-  builder.name(key);
-  File file=storageStrategy.getFileForBlobKey(container,key);
-  try {
-    builder.payload(file).calculateMD5();
-  }
- catch (  IOException e) {
-    logger.error("An error occurred calculating MD5 for blob %s from container ",key,container);
-    Throwables.propagateIfPossible(e);
-  }
-  Blob blob=builder.build();
-  if (blob.getPayload().getContentMetadata().getContentMD5() != null)   blob.getMetadata().setETag(CryptoStreams.hex(blob.getPayload().getContentMetadata().getContentMD5()));
-  return blob;
+  return storageStrategy.getBlob(container,key);
 }
