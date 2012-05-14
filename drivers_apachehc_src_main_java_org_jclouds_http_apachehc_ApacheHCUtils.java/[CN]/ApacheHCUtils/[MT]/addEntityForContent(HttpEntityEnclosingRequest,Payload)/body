@@ -22,13 +22,16 @@
  else {
     InputStream inputStream=payload.getInput();
     if (payload.getContentMetadata().getContentLength() == null)     throw new IllegalArgumentException("you must specify size when content is an InputStream");
-    InputStreamEntity Entity=new InputStreamEntity(inputStream,payload.getContentMetadata().getContentLength());
-    Entity.setContentType(payload.getContentMetadata().getContentType());
-    apacheRequest.setEntity(Entity);
+    InputStreamEntity entity=new InputStreamEntity(inputStream,payload.getContentMetadata().getContentLength());
+    entity.setContentType(payload.getContentMetadata().getContentType());
+    apacheRequest.setEntity(entity);
   }
-  if (payload.getContentMetadata().getContentDisposition() != null)   apacheRequest.addHeader("Content-Disposition",payload.getContentMetadata().getContentDisposition());
-  if (payload.getContentMetadata().getContentEncoding() != null)   apacheRequest.addHeader("Content-Encoding",payload.getContentMetadata().getContentEncoding());
-  if (payload.getContentMetadata().getContentLanguage() != null)   apacheRequest.addHeader("Content-Language",payload.getContentMetadata().getContentLanguage());
-  if (payload.getContentMetadata().getExpires() != null)   apacheRequest.addHeader("Expires",payload.getContentMetadata().getExpires());
+  Set<String> desiredHeaders=ImmutableSet.of("Content-Disposition","Content-Encoding","Content-Language","Expires");
+  MutableContentMetadata md=payload.getContentMetadata();
+  for (  Map.Entry<String,String> entry : contentMetadataCodec.toHeaders(md).entries()) {
+    if (desiredHeaders.contains(entry.getKey())) {
+      apacheRequest.addHeader(entry.getKey(),entry.getValue());
+    }
+  }
   assert(apacheRequest.getEntity() != null);
 }

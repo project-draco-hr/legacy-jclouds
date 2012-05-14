@@ -78,8 +78,13 @@
     if (currentContentLanguage.equals(""))     currentContentLanguage=null;
   }
  else   if (qName.equals("Expires")) {
-    currentExpires=currentText.toString().trim();
-    if (currentExpires.equals(""))     currentExpires=null;
+    String trimmedCurrentText=currentText.toString().trim();
+    if (trimmedCurrentText.equals("")) {
+      currentExpires=null;
+    }
+ else {
+      currentExpires=contentMetadataCodec.parseExpires(trimmedCurrentText);
+    }
   }
   currentText=new StringBuilder();
 }

@@ -52,12 +52,9 @@
   connection.setRequestProperty(HttpHeaders.USER_AGENT,USER_AGENT);
   if (request.getPayload() != null) {
     MutableContentMetadata md=request.getPayload().getContentMetadata();
-    if (md.getContentMD5() != null)     connection.setRequestProperty("Content-MD5",CryptoStreams.base64(md.getContentMD5()));
-    if (md.getContentType() != null)     connection.setRequestProperty(HttpHeaders.CONTENT_TYPE,md.getContentType());
-    if (md.getContentDisposition() != null)     connection.setRequestProperty("Content-Disposition",md.getContentDisposition());
-    if (md.getContentEncoding() != null)     connection.setRequestProperty("Content-Encoding",md.getContentEncoding());
-    if (md.getContentLanguage() != null)     connection.setRequestProperty("Content-Language",md.getContentLanguage());
-    if (md.getExpires() != null)     connection.setRequestProperty("Expires",md.getExpires());
+    for (    Map.Entry<String,String> entry : contentMetadataCodec.toHeaders(md).entries()) {
+      connection.setRequestProperty(entry.getKey(),entry.getValue());
+    }
     if (chunked) {
       connection.setChunkedStreamingMode(8196);
     }

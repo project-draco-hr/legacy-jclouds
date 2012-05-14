@@ -26,7 +26,7 @@ catch (  RuntimeException e) {
   ImmutableMultimap<String,String> headers=headerBuilder.build();
   if (in != null) {
     Payload payload=newInputStreamPayload(in);
-    payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+    contentMetadataCodec.fromHeaders(payload.getContentMetadata(),headers);
     builder.payload(payload);
   }
   builder.headers(RestAnnotationProcessor.filterOutContentHeaders(headers));

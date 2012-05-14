@@ -1,4 +1,4 @@
 {
-  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create(String.format("%s/%s/%s",endpoint.get(),container,blob.getMetadata().getName()))).payload(blob.getPayload()).headers(HttpUtils.getContentHeadersFromMetadata(blob.getMetadata().getContentMetadata())).build();
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create(String.format("%s/%s/%s",endpoint.get(),container,blob.getMetadata().getName()))).payload(blob.getPayload()).headers(contentMetadataCodec.toHeaders(blob.getMetadata().getContentMetadata())).build();
   return basicAuth.filter(request);
 }

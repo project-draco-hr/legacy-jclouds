@@ -4,7 +4,7 @@
     builder.append(header.getKey()).append(": ").append(header.getValue()).append('\n');
   }
   if (request.getPayload() != null) {
-    for (    Entry<String,String> header : HttpUtils.getContentHeadersFromMetadata(request.getPayload().getContentMetadata()).entries()) {
+    for (    Entry<String,String> header : contentMetadataCodec.toHeaders(request.getPayload().getContentMetadata()).entries()) {
       builder.append(header.getKey()).append(": ").append(header.getValue()).append('\n');
     }
     try {

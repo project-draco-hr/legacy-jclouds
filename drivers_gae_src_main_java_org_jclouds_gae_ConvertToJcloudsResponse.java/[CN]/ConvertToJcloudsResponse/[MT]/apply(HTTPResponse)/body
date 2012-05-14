@@ -6,6 +6,8 @@
     if (header.getName() == null)     message=header.getValue();
  else     headers.put(header.getName(),header.getValue());
   }
-  if (payload != null)   payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+  if (payload != null) {
+    contentMetadataCodec.fromHeaders(payload.getContentMetadata(),headers);
+  }
   return new HttpResponse(gaeResponse.getResponseCode(),message,payload,RestAnnotationProcessor.filterOutContentHeaders(headers));
 }
