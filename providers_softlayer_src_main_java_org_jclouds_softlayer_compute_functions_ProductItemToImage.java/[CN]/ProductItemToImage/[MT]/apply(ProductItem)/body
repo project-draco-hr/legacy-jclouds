@@ -1,7 +1,18 @@
 {
   checkNotNull(productItem,"productItem");
-  OsFamily family=osFamily().apply(productItem);
-  Integer bits=osBits().apply(productItem);
-  OperatingSystem os=OperatingSystem.builder().description(productItem.getDescription()).family(family).version(osVersion().apply(productItem)).is64Bit(bits.equals(64)).build();
-  return new ImageBuilder().ids(imageId().apply(productItem)).description(productItem.getDescription()).operatingSystem(os).build();
+  String description=checkNotNull(productItem.getDescription(),"productItem.description");
+  OsFamily osFamily=osFamily().apply(description);
+  if (osFamily == OsFamily.UNRECOGNIZED) {
+    logger.debug("Cannot determine os family for item: %s",productItem);
+  }
+  Integer bits=osBits().apply(description);
+  if (bits == null) {
+    logger.debug("Cannot determine os bits for item: %s",productItem);
+  }
+  String osVersion=osVersion().apply(description);
+  if (osVersion == null) {
+    logger.debug("Cannot determine os version for item: %s",productItem);
+  }
+  OperatingSystem os=OperatingSystem.builder().description(description).family(osFamily).version(osVersion).is64Bit(Objects.equal(bits,64)).build();
+  return new ImageBuilder().ids(imageId().apply(productItem)).description(description).operatingSystem(os).build();
 }
