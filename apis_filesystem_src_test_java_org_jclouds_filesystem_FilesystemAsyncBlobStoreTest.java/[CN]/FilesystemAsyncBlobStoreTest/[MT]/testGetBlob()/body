@@ -8,9 +8,9 @@
   TestUtils.createBlobsInContainer(CONTAINER_NAME,blobKey);
   resultBlob=blobStore.getBlob(CONTAINER_NAME,blobKey,options);
   assertNotNull(resultBlob,"Blob exists");
-  InputStream expectedFile=new FileInputStream(TARGET_CONTAINER_NAME + File.separator + blobKey);
-  InputStream currentFile=resultBlob.getPayload().getInput();
-  assertTrue(TestUtils.isSame(expectedFile,currentFile),"Blob payload differs from file content");
+  InputSupplier<FileInputStream> expectedFile=Files.newInputStreamSupplier(new File(TARGET_CONTAINER_NAME,blobKey));
+  InputSupplier<? extends InputStream> actualFile=InputSuppliers.of(resultBlob.getPayload().getInput());
+  assertTrue(ByteStreams.equal(expectedFile,actualFile),"Blob payload differs from file content");
   assertNotNull(resultBlob.getMetadata(),"Metadata null");
   MutableBlobMetadata metadata=resultBlob.getMetadata();
   assertEquals(blobKey,metadata.getName(),"Wrong blob metadata");
