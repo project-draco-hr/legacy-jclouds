@@ -1,5 +1,5 @@
 {
-  String host=in.getProviderSpecificContext().getEndpoint().getHost();
+  String host=URI.create(in.unwrap().getProviderMetadata().getEndpoint()).getHost();
   String status;
   String name="not found";
   try {
@@ -11,5 +11,5 @@
     logger.error(e,"Error listing context %s",in);
     status=(e.getMessage());
   }
-  return new StatusResult(in.getProviderSpecificContext().getId(),host,name,status);
+  return new StatusResult(in.unwrap().getId(),host,name,status);
 }

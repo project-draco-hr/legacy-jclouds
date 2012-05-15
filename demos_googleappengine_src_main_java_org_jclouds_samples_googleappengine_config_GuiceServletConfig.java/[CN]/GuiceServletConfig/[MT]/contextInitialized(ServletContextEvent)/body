@@ -1,11 +1,11 @@
 {
-  Properties props=loadJCloudsProperties(servletContextEvent);
-  props.setProperty(PROPERTY_TIMEOUT_NODE_TERMINATED,"25000");
-  props.setProperty(PROPERTY_TIMEOUT_NODE_RUNNING,"25000");
-  props.setProperty(PROPERTY_TIMEOUT_SCRIPT_COMPLETE,"25000");
-  props.setProperty(PROPERTY_TIMEOUT_PORT_OPEN,"25000");
+  Properties overrides=loadJCloudsProperties(servletContextEvent);
+  overrides.setProperty(TIMEOUT_NODE_TERMINATED,"25000");
+  overrides.setProperty(TIMEOUT_NODE_RUNNING,"25000");
+  overrides.setProperty(TIMEOUT_SCRIPT_COMPLETE,"25000");
+  overrides.setProperty(TIMEOUT_PORT_OPEN,"25000");
   ImmutableSet<Module> modules=ImmutableSet.<Module>of(new AsyncGoogleAppEngineConfigurationModule());
-  blobsStoreContexts=ImmutableSet.<BlobStoreContext>of(new BlobStoreContextFactory().createContext("aws-s3",modules,props));
-  computeServiceContexts=ImmutableSet.<ComputeServiceContext>of(new ComputeServiceContextFactory().createContext("aws-ec2",modules,props));
+  blobsStoreContexts=ImmutableSet.of(ContextBuilder.newBuilder("hpcloud-objectstorage").modules(modules).overrides(overrides).buildView(BlobStoreContext.class));
+  computeServiceContexts=ImmutableSet.of(ContextBuilder.newBuilder("hpcloud-compute").modules(modules).overrides(overrides).buildView(ComputeServiceContext.class));
   super.contextInitialized(servletContextEvent);
 }
