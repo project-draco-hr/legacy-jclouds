@@ -1,0 +1,9 @@
+{
+  int attempts=3;
+  BackoffExponentiallyAndRetryOnThrowableCacheLoader<String,Boolean> backoff=new BackoffExponentiallyAndRetryOnThrowableCacheLoader<String,Boolean>(ResourceNotFoundException.class,50l,500l,attempts,mock);
+  expect(mock.load("foo")).andThrow(new ResourceNotFoundException()).times(attempts - 1);
+  expect(mock.load("foo")).andReturn(Boolean.TRUE);
+  replay(mock);
+  assertSame(backoff.load("foo"),Boolean.TRUE);
+  verify(mock);
+}

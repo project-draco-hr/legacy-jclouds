@@ -1,0 +1,9 @@
+{
+  int attempts=3;
+  BackoffExponentiallyAndRetryOnThrowableCallable<String> backoff=new BackoffExponentiallyAndRetryOnThrowableCallable<String>(ResourceNotFoundException.class,50l,500l,attempts,mock);
+  expect(mock.call()).andThrow(new ResourceNotFoundException()).times(attempts - 1);
+  expect(mock.call()).andReturn("foo");
+  replay(mock);
+  assertEquals(backoff.call(),"foo");
+  verify(mock);
+}

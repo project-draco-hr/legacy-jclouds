@@ -1,0 +1,18 @@
+{
+  Exception currentException=null;
+  for (int currentTries=0; currentTries < maxTries; currentTries++) {
+    try {
+      return delegate().call();
+    }
+ catch (    Exception e) {
+      currentException=e;
+      if (Throwables2.getFirstThrowableOfType(e,retryableThrowable) != null) {
+        imposeBackoffExponentialDelay(periodMs,maxPeriodMs,2,currentTries,maxTries);
+      }
+ else {
+        throw e;
+      }
+    }
+  }
+  throw currentException;
+}
