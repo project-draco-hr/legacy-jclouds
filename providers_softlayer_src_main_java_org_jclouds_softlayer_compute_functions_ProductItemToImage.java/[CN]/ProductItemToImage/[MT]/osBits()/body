@@ -1,14 +1,13 @@
 {
-  return new Function<ProductItem,Integer>(){
-    @Override public Integer apply(    ProductItem productItem){
-      checkNotNull(productItem,"productItem");
-      Matcher m=OS_BITS_PATTERN.matcher(productItem.getDescription());
-      if (m.matches()) {
-        return Integer.parseInt(m.group(1));
+  return new Function<String,Integer>(){
+    @Override public Integer apply(    String description){
+      if (description != null) {
+        Matcher m=OS_BITS_PATTERN.matcher(description);
+        if (m.matches()) {
+          return Integer.parseInt(m.group(1));
+        }
       }
- else {
-        throw new NoSuchElementException("Cannot determine os-bits for item:" + productItem);
-      }
+      return null;
     }
   }
 ;

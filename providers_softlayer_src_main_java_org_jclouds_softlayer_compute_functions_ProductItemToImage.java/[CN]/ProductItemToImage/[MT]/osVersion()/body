@@ -1,17 +1,15 @@
 {
-  return new Function<ProductItem,String>(){
-    @Override public String apply(    ProductItem productItem){
-      checkNotNull(productItem,"productItem");
-      final String description=productItem.getDescription();
-      OsFamily family=osFamily().apply(productItem);
-      if (family.equals(OsFamily.CENTOS))       return parseVersion(description,CENTOS);
- else       if (family.equals(OsFamily.DEBIAN))       return parseVersion(description,DEBIAN);
- else       if (family.equals(OsFamily.FEDORA))       return parseVersion(description,FEDORA);
- else       if (family.equals(OsFamily.RHEL))       return parseVersion(description,RHEL);
- else       if (family.equals(OsFamily.UBUNTU))       return parseVersion(description,UBUNTU);
- else       if (family.equals(OsFamily.WINDOWS))       return parseVersion(description,WINDOWS);
- else       if (family.equals(OsFamily.CLOUD_LINUX))       return parseVersion(description,CLOUD_LINUX);
- else       throw new NoSuchElementException("No os version for item:" + productItem);
+  return new Function<String,String>(){
+    @Override public String apply(    final String description){
+      OsFamily family=osFamily().apply(description);
+      if (Objects.equal(family,OsFamily.CENTOS))       return parseVersion(description,CENTOS);
+ else       if (Objects.equal(family,OsFamily.DEBIAN))       return parseVersion(description,DEBIAN);
+ else       if (Objects.equal(family,OsFamily.FEDORA))       return parseVersion(description,FEDORA);
+ else       if (Objects.equal(family,OsFamily.RHEL))       return parseVersion(description,RHEL);
+ else       if (Objects.equal(family,OsFamily.UBUNTU))       return parseVersion(description,UBUNTU);
+ else       if (Objects.equal(family,OsFamily.WINDOWS))       return parseVersion(description,WINDOWS);
+ else       if (Objects.equal(family,OsFamily.CLOUD_LINUX))       return parseVersion(description,CLOUD_LINUX);
+      return null;
     }
   }
 ;
