@@ -1,0 +1,17 @@
+{
+  List<ListenableFuture<? extends Iterable<? extends ResourceMetadata<?>>>> remaining=Lists.newArrayList(asyncResources);
+  while (remaining.size() > 0) {
+    ListenableFuture<?> resource=remaining.remove(0);
+    if (remainingMillis.get() <= 0) {
+      if (!resource.isDone())       resource.cancel(true);
+      continue;
+    }
+    try {
+      resource.get(remainingMillis.get(),TimeUnit.MILLISECONDS);
+    }
+ catch (    Exception e) {
+      logger.info("exception getting resource %s: %s",resource,e.getMessage());
+      if (!resource.isDone())       resource.cancel(true);
+    }
+  }
+}

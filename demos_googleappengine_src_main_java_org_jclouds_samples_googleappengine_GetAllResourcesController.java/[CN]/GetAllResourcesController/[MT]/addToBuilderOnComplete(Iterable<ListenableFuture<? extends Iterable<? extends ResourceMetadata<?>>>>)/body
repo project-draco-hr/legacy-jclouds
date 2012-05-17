@@ -1,0 +1,15 @@
+{
+  final Builder<Iterable<? extends ResourceMetadata<?>>> resourcesWeCanList=ImmutableSet.<Iterable<? extends ResourceMetadata<?>>>builder();
+  for (  final ListenableFuture<? extends Iterable<? extends ResourceMetadata<?>>> asyncResource : asyncResources) {
+    Futures.addCallback(asyncResource,new FutureCallback<Iterable<? extends ResourceMetadata<?>>>(){
+      public void onSuccess(      Iterable<? extends ResourceMetadata<?>> result){
+        if (result != null)         resourcesWeCanList.add(result);
+      }
+      public void onFailure(      Throwable t){
+        if (!(t instanceof CancellationException))         logger.info("exception getting resource %s: %s",asyncResource,t.getMessage());
+      }
+    }
+,currentRequestExecutorService);
+  }
+  return resourcesWeCanList;
+}

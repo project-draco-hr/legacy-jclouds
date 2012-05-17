@@ -1,0 +1,11 @@
+{
+  Stopwatch watch=new Stopwatch().start();
+  logger.info("ready to list views: %s",transform(views,ViewToId.INSTANCE));
+  Iterable<ListenableFuture<? extends Iterable<? extends ResourceMetadata<?>>>> asyncResources=transform(views,viewToAsyncResources);
+  logger.info("launched %s tasks with %sms remaining",size(asyncResources),remainingMillis.get());
+  Set<Iterable<? extends ResourceMetadata<?>>> done=allResourcesWithinDeadline(asyncResources);
+  logger.info("%s tasks completed in %sms with %sms remaining",size(done),watch.stop().elapsedMillis(),remainingMillis.get());
+  Iterable<ResourceMetadata<?>> flattened=concat(done);
+  Set<ResourceResult> results=FluentIterable.from(flattened).transform(resourceMetadataToStatusResult).toImmutableSet();
+  request.setAttribute("resources",results);
+}

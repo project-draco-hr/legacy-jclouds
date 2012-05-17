@@ -1,14 +1,18 @@
 {
-  return Guice.createInjector(new ServletModule(){
+  return Guice.createInjector(new JDKLoggingModule(),new ServletModule(){
     @Override protected void configureServlets(){
-      bind(new TypeLiteral<Iterable<BlobStoreContext>>(){
+      bind(new TypeLiteral<Iterable<View>>(){
       }
-).toInstance(GuiceServletConfig.this.blobsStoreContexts);
-      bind(new TypeLiteral<Iterable<ComputeServiceContext>>(){
-      }
-).toInstance(GuiceServletConfig.this.computeServiceContexts);
-      serve("*.check").with(GetAllStatusController.class);
+).toInstance(GuiceServletConfig.this.views);
+      serve("*.check").with(GetAllResourcesController.class);
       requestInjection(this);
+    }
+    @SuppressWarnings("unused") @Provides long remainingMillis(){
+      return ApiProxy.getCurrentEnvironment().getRemainingMillis() - 100;
+    }
+    @SuppressWarnings("unused") @Provides @Singleton ListeningExecutorService currentRequestExecutorService(){
+      ThreadFactory factory=checkNotNull(ThreadManager.currentRequestThreadFactory(),"ThreadManager.currentRequestThreadFactory()");
+      return MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(factory));
     }
   }
 );
