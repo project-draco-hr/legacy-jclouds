@@ -14,6 +14,8 @@
   for (  Header header : apacheResponse.getAllHeaders()) {
     headers.put(header.getName(),header.getValue());
   }
-  if (payload != null)   payload.getContentMetadata().setPropertiesFromHttpHeaders(headers);
+  if (payload != null) {
+    contentMetadataCodec.fromHeaders(payload.getContentMetadata(),headers);
+  }
   return new HttpResponse(apacheResponse.getStatusLine().getStatusCode(),apacheResponse.getStatusLine().getReasonPhrase(),payload,RestAnnotationProcessor.filterOutContentHeaders(headers));
 }

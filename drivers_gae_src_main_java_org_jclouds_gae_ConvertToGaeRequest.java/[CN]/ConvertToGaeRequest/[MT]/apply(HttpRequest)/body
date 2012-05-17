@@ -39,7 +39,7 @@
  finally {
       Closeables.closeQuietly(input);
     }
-    for (    Entry<String,String> header : HttpUtils.getContentHeadersFromMetadata(request.getPayload().getContentMetadata()).entries()) {
+    for (    Entry<String,String> header : contentMetadataCodec.toHeaders(request.getPayload().getContentMetadata()).entries()) {
       if (!prohibitedHeaders.contains(header.getKey()))       gaeRequest.setHeader(new HTTPHeader(header.getKey(),header.getValue()));
     }
   }

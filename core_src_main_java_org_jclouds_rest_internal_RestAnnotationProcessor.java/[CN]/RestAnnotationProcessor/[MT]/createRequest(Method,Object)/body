@@ -114,7 +114,9 @@ catch (    UriBuilderException e) {
  else {
       request=decorateRequest(request);
     }
-    if (request.getPayload() != null)     request.getPayload().getContentMetadata().setPropertiesFromHttpHeaders(headers);
+    if (request.getPayload() != null) {
+      contentMetadataCodec.fromHeaders(request.getPayload().getContentMetadata(),headers);
+    }
     utils.checkRequestHasRequiredProperties(request);
     return request;
   }
