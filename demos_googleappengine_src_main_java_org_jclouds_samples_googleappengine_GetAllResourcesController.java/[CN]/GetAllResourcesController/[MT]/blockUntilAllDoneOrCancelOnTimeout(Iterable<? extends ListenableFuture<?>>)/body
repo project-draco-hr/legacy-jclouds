@@ -1,0 +1,21 @@
+{
+  try {
+    for (    ListenableFuture<?> asyncResource : asyncResources) {
+      if (remainingMillis.get() > 0) {
+        try {
+          asyncResource.get(remainingMillis.get(),TimeUnit.MILLISECONDS);
+        }
+ catch (        Exception e) {
+          logger.info("exception getting resource %s: %s",asyncResource,e.getMessage());
+        }
+      }
+    }
+  }
+  finally {
+    if (remainingMillis.get() < 0) {
+      for (      ListenableFuture<?> asyncResource : asyncResources) {
+        if (!asyncResource.isDone())         asyncResource.cancel(true);
+      }
+    }
+  }
+}

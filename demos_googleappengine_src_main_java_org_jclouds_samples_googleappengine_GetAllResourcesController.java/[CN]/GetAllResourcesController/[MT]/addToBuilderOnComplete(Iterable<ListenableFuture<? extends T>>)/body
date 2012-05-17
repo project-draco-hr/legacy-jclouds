@@ -1,0 +1,15 @@
+{
+  final Builder<T> resourcesWeCanList=ImmutableSet.<T>builder();
+  for (  final ListenableFuture<? extends T> asyncResource : asyncResources) {
+    Futures.addCallback(asyncResource,new FutureCallback<T>(){
+      public void onSuccess(      T result){
+        if (result != null)         resourcesWeCanList.add(result);
+      }
+      public void onFailure(      Throwable t){
+        if (!(t instanceof CancellationException))         logger.error(t,"exception getting resource %s: %s",asyncResource,t.getMessage());
+      }
+    }
+,currentRequestExecutorService);
+  }
+  return resourcesWeCanList;
+}
