@@ -1,6 +1,6 @@
 {
   InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory=createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
-  RetryIfSocketNotYetOpen socketTester=createMock(RetryIfSocketNotYetOpen.class);
+  OpenSocketFinder openSocketFinder=createMock(OpenSocketFinder.class);
   Timeouts timeouts=new Timeouts();
   Function<TemplateOptions,Statement> templateOptionsToStatement=new TemplateOptionsToStatement();
   @SuppressWarnings("unused") Statement statement=null;
@@ -17,13 +17,13 @@
     }
   }
 ;
-  replay(initScriptRunnerFactory,socketTester);
+  replay(initScriptRunnerFactory,openSocketFinder);
   AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(node);
-  new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(new AtomicNodeRunning(nodeRunning),socketTester,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,atomicNode,goodNodes,badNodes,customizationResponses).apply(atomicNode);
+  new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(new AtomicNodeRunning(nodeRunning),openSocketFinder,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,atomicNode,goodNodes,badNodes,customizationResponses).apply(atomicNode);
   assertEquals(goodNodes.size(),0);
   assertEquals(badNodes.keySet(),ImmutableSet.of(node));
   badNodes.get(node).printStackTrace();
   assertEquals(badNodes.get(node).getMessage(),"node(id) terminated before we could customize");
   assertEquals(customizationResponses.size(),0);
-  verify(initScriptRunnerFactory,socketTester);
+  verify(initScriptRunnerFactory,openSocketFinder);
 }

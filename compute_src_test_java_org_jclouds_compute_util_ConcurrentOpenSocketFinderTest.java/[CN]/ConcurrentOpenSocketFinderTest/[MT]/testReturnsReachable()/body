@@ -1,0 +1,12 @@
+{
+  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.4",22))).andReturn(false).once();
+  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.5",22))).andReturn(true).once();
+  expect(nodeRunning.apply(EasyMock.<AtomicReference<NodeMetadata>>anyObject())).andReturn(true);
+  replay(socketTester);
+  replay(nodeRunning);
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,null,MoreExecutors.sameThreadExecutor());
+  HostAndPort result=finder.findOpenSocketOnNode(node,22,2000,TimeUnit.MILLISECONDS);
+  assertEquals(result,HostAndPort.fromParts("1.2.3.5",22));
+  verify(node);
+  verify(socketTester);
+}
