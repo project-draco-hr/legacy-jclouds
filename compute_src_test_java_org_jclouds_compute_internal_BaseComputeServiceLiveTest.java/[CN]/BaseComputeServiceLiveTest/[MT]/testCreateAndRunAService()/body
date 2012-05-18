@@ -8,11 +8,13 @@
   }
   try {
     ImmutableMap<String,String> userMetadata=ImmutableMap.<String,String>of("Name",group);
+    ImmutableSet<String> tags=ImmutableSet.of(group);
     Stopwatch watch=new Stopwatch().start();
-    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300).userMetadata(userMetadata)));
+    NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300).userMetadata(userMetadata).tags(tags)));
     long createSeconds=watch.elapsedTime(TimeUnit.SECONDS);
     final String nodeId=node.getId();
     checkUserMetadataInNodeEquals(node,userMetadata);
+    checkTagsInNodeEquals(node,tags);
     getAnonymousLogger().info(format("<< available node(%s) os(%s) in %ss",node.getId(),node.getOperatingSystem(),createSeconds));
     watch.reset().start();
     client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
