@@ -1,9 +1,9 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Map<Long,OSType>>(authException,seconds,new Supplier<Map<Long,OSType>>(){
-    @Override public Map<Long,OSType> get(){
+  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Map<String,OSType>>(authException,seconds,new Supplier<Map<String,OSType>>(){
+    @Override public Map<String,OSType> get(){
       GuestOSClient guestOSClient=client.getGuestOSClient();
-      return Maps.uniqueIndex(guestOSClient.listOSTypes(),new Function<OSType,Long>(){
-        @Override public Long apply(        OSType arg0){
+      return Maps.uniqueIndex(guestOSClient.listOSTypes(),new Function<OSType,String>(){
+        @Override public String apply(        OSType arg0){
           return arg0.getId();
         }
       }

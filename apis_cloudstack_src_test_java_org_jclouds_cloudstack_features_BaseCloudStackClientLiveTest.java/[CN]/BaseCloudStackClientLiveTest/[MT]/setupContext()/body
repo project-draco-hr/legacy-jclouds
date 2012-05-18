@@ -24,9 +24,9 @@
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
   injector.injectMembers(socketTester);
-  jobComplete=new RetryablePredicate<Long>(new JobComplete(client),1200,1,5,TimeUnit.SECONDS);
+  jobComplete=new RetryablePredicate<String>(new JobComplete(client),1200,1,5,TimeUnit.SECONDS);
   injector.injectMembers(jobComplete);
-  adminJobComplete=new RetryablePredicate<Long>(new JobComplete(adminClient),1200,1,5,TimeUnit.SECONDS);
+  adminJobComplete=new RetryablePredicate<String>(new JobComplete(adminClient),1200,1,5,TimeUnit.SECONDS);
   injector.injectMembers(adminJobComplete);
   virtualMachineRunning=new RetryablePredicate<VirtualMachine>(new VirtualMachineRunning(client),600,5,5,TimeUnit.SECONDS);
   injector.injectMembers(virtualMachineRunning);

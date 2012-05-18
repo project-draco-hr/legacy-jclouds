@@ -1,0 +1,16 @@
+{
+  Set<Network> networks=client.getNetworkClient().listNetworks(isDefault(true));
+  if (networks.size() > 0) {
+    Network network=get(networks,0);
+    return createVirtualMachineInNetwork(network,defaultTemplateOrPreferredInZone(defaultTemplate,client,network.getZoneId()),client,jobComplete,virtualMachineRunning);
+  }
+ else {
+    String zoneId=find(client.getZoneClient().listZones(),new Predicate<Zone>(){
+      @Override public boolean apply(      Zone arg0){
+        return arg0.isSecurityGroupsEnabled();
+      }
+    }
+).getId();
+    return createVirtualMachineWithSecurityGroupInZone(zoneId,defaultTemplateOrPreferredInZone(defaultTemplate,client,zoneId),get(client.getSecurityGroupClient().listSecurityGroups(),0).getId(),client,jobComplete,virtualMachineRunning);
+  }
+}

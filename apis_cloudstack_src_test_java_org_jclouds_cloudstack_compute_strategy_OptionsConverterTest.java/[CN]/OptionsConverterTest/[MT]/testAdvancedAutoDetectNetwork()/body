@@ -1,7 +1,7 @@
 {
   AdvancedNetworkOptionsConverter converter=new AdvancedNetworkOptionsConverter();
-  Network eligibleNetwork=Network.builder().id(25).zoneId(ZONE_ID).isDefault(true).services(ImmutableSet.of(firewallServiceWithStaticNat)).build();
+  Network eligibleNetwork=Network.builder().id("25").zoneId(ZONE_ID).isDefault(true).services(ImmutableSet.of(firewallServiceWithStaticNat)).build();
   DeployVirtualMachineOptions optionsActual=converter.apply(CloudStackTemplateOptions.NONE,ImmutableMap.of(eligibleNetwork.getId(),eligibleNetwork),ZONE_ID,DeployVirtualMachineOptions.NONE);
-  DeployVirtualMachineOptions optionsExpected=DeployVirtualMachineOptions.Builder.networkId(25);
+  DeployVirtualMachineOptions optionsExpected=DeployVirtualMachineOptions.Builder.networkId("25");
   assertEquals(optionsActual,optionsExpected);
 }

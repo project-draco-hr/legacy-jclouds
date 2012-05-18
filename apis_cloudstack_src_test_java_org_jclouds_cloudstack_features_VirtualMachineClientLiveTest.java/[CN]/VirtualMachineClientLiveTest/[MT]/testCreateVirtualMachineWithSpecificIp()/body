@@ -1,5 +1,5 @@
 {
-  Long templateId=(imageId != null && !"".equals(imageId)) ? new Long(imageId) : null;
+  String templateId=(imageId != null && !"".equals(imageId)) ? imageId : null;
   Network network=null;
   try {
     Template template=getOnlyElement(client.getTemplateClient().listTemplates(ListTemplatesOptions.Builder.id(templateId)));
@@ -31,7 +31,7 @@
 ));
     logger.info("Required network: " + requiredNetwork);
     String ipAddress="192.168.0.4";
-    Map<String,Long> ipsToNetworks=Maps.newHashMap();
+    Map<String,String> ipsToNetworks=Maps.newHashMap();
     ipsToNetworks.put(ipAddress,network.getId());
     vm=createVirtualMachineInNetworkWithIp(adminClient,templateId,ImmutableSet.of(requiredNetwork,network),ipsToNetworks,adminJobComplete,adminVirtualMachineRunning);
     logger.info("Created VM: " + vm);
@@ -51,7 +51,7 @@
       vm=null;
     }
     if (network != null) {
-      long jobId=adminClient.getNetworkClient().deleteNetwork(network.getId());
+      String jobId=adminClient.getNetworkClient().deleteNetwork(network.getId());
       adminJobComplete.apply(jobId);
       network=null;
     }

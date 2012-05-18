@@ -1,5 +1,5 @@
 {
-  CloudStackContext context=requestsSendResponses(loginRequest,loginResponse,HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listAccounts&sessionkey=" + URLEncoder.encode(sessionKey))).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put(HttpHeaders.COOKIE,"JSESSIONID=" + jSessionId).build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/listaccountsresponse.json")).build(),logoutRequest,logoutResponse);
+  CloudStackContext context=requestsSendResponses(loginRequest,loginResponse,HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listAccounts&listAll=true&sessionkey=" + URLEncoder.encode(sessionKey))).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put(HttpHeaders.COOKIE,"JSESSIONID=" + jSessionId).build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/listaccountsresponse.json")).build(),logoutRequest,logoutResponse);
   AccountClient client=context.getProviderSpecificContext().getApi().getAccountClient();
   assertNotNull(client.listAccounts());
   context.close();

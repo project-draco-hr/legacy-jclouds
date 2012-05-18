@@ -2,7 +2,7 @@
   if (networksDisabled)   return;
   BlockUntilJobCompletesAndReturnResult blocker=new BlockUntilJobCompletesAndReturnResult(client,jobComplete);
   StaticNATVirtualMachineInNetwork fn=new StaticNATVirtualMachineInNetwork(client,reuseOrAssociate,network);
-  CreatePortForwardingRulesForIP createPortForwardingRulesForIP=new CreatePortForwardingRulesForIP(client,blocker,CacheBuilder.newBuilder().<Long,Set<IPForwardingRule>>build(new GetIPForwardingRulesByVirtualMachine(client)));
+  CreatePortForwardingRulesForIP createPortForwardingRulesForIP=new CreatePortForwardingRulesForIP(client,blocker,CacheBuilder.newBuilder().<String,Set<IPForwardingRule>>build(new GetIPForwardingRulesByVirtualMachine(client)));
   injector.injectMembers(blocker);
   injector.injectMembers(fn);
   injector.injectMembers(createPortForwardingRulesForIP);

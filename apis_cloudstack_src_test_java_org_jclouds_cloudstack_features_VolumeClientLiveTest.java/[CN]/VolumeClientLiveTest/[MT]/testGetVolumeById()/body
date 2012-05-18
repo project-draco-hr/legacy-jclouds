@@ -1,16 +1,16 @@
 {
-  Iterable<Long> volumeIds=Iterables.transform(client.getVolumeClient().listVolumes(),new Function<Volume,Long>(){
-    public Long apply(    Volume input){
+  Iterable<String> volumeIds=Iterables.transform(client.getVolumeClient().listVolumes(),new Function<Volume,String>(){
+    public String apply(    Volume input){
       return input.getId();
     }
   }
 );
   assertNotNull(volumeIds);
   assertFalse(Iterables.isEmpty(volumeIds));
-  for (  Long id : volumeIds) {
+  for (  String id : volumeIds) {
     Volume found=client.getVolumeClient().getVolume(id);
     assertNotNull(found);
-    assertEquals(id.longValue(),found.getId());
+    assertEquals(id,found.getId());
     checkVolume(found);
   }
 }

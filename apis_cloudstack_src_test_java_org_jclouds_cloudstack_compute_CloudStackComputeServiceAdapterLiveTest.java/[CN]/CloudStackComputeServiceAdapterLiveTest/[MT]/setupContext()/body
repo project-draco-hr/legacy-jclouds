@@ -7,7 +7,7 @@
       bind(new TypeLiteral<Supplier<User>>(){
       }
 ).annotatedWith(Memoized.class).to(GetCurrentUser.class).in(Scopes.SINGLETON);
-      bind(new TypeLiteral<Supplier<Map<Long,Network>>>(){
+      bind(new TypeLiteral<Supplier<Map<String,Network>>>(){
       }
 ).annotatedWith(Memoized.class).to(NetworksForCurrentUser.class).in(Scopes.SINGLETON);
       bind(new TypeLiteral<Map<String,Credentials>>(){
@@ -17,19 +17,19 @@
       bind(new TypeLiteral<Map<NetworkType,? extends OptionsConverter>>(){
       }
 ).toInstance(new CloudStackComputeServiceContextModule().optionsConverters());
-      bind(Long.class).annotatedWith(Names.named(PROPERTY_SESSION_INTERVAL)).toInstance(60L);
-      bind(new TypeLiteral<CacheLoader<Long,Zone>>(){
+      bind(String.class).annotatedWith(Names.named(PROPERTY_SESSION_INTERVAL)).toInstance("60");
+      bind(new TypeLiteral<CacheLoader<String,Zone>>(){
       }
 ).to(ZoneIdToZone.class);
-      bind(new TypeLiteral<Supplier<LoadingCache<Long,Zone>>>(){
+      bind(new TypeLiteral<Supplier<LoadingCache<String,Zone>>>(){
       }
 ).to(ZoneIdToZoneSupplier.class);
       install(new FactoryModuleBuilder().build(StaticNATVirtualMachineInNetwork.Factory.class));
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected Predicate<Long> jobComplete(    JobComplete jobComplete){
-      return new RetryablePredicate<Long>(jobComplete,1200,1,5,TimeUnit.SECONDS);
+    @SuppressWarnings("unused") @Provides @Singleton protected Predicate<String> jobComplete(    JobComplete jobComplete){
+      return new RetryablePredicate<String>(jobComplete,1200,1,5,TimeUnit.SECONDS);
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected LoadingCache<Long,Set<IPForwardingRule>> getIPForwardingRuleByVirtualMachine(    GetIPForwardingRulesByVirtualMachine getIPForwardingRule){
+    @SuppressWarnings("unused") @Provides @Singleton protected LoadingCache<String,Set<IPForwardingRule>> getIPForwardingRuleByVirtualMachine(    GetIPForwardingRulesByVirtualMachine getIPForwardingRule){
       return CacheBuilder.newBuilder().build(getIPForwardingRule);
     }
   }

@@ -1,7 +1,7 @@
 {
   HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/listsshkeypairsresponse.json")).build();
-  SSHKeyPairClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&" + "command=listSSHKeyPairs&apiKey=identity&signature=9Mz1e7xf3vdH3QrDrvWm5eiRsjc%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),response);
+  SSHKeyPairClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&" + "command=listSSHKeyPairs&listAll=true&apiKey=identity&signature=5d2J9u%2BdKpkQsadDbl9i9OcUSLQ%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),response);
   assertEquals(client.listSSHKeyPairs(),ImmutableSet.of(SshKeyPair.builder().name("jclouds-keypair").fingerprint("1c:06:74:52:3b:99:1c:95:5c:04:c2:f4:ba:77:6e:7b").build()));
-  client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listSSHKeyPairs&" + "name=jclouds-keypair&apiKey=identity&signature=vYFm%2BwYIxwpjyk3xLjjGBzSkLRc%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),response);
+  client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listSSHKeyPairs&listAll=true&" + "name=jclouds-keypair&apiKey=identity&signature=hJIVCFOHhdOww3aq19tFHpeD2HI%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),response);
   assertEquals(client.getSSHKeyPair("jclouds-keypair"),SshKeyPair.builder().name("jclouds-keypair").fingerprint("1c:06:74:52:3b:99:1c:95:5c:04:c2:f4:ba:77:6e:7b").build());
 }

@@ -1,0 +1,12 @@
+{
+  DeployVirtualMachineOptions options=new DeployVirtualMachineOptions();
+  String zoneId=getFirst(networks,null).getZoneId();
+  options.networkIds(Iterables.transform(networks,new Function<Network,String>(){
+    @Override public String apply(    @Nullable Network network){
+      return network.getId();
+    }
+  }
+));
+  options.ipsToNetworks(ipToNetwork);
+  return createVirtualMachineWithOptionsInZone(options,zoneId,templateId,client,jobComplete,virtualMachineRunning);
+}

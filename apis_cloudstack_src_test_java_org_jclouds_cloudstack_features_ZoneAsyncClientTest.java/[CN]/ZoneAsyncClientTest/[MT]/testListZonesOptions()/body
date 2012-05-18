@@ -1,7 +1,7 @@
 {
   Method method=ZoneAsyncClient.class.getMethod("listZones",ListZonesOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,ListZonesOptions.Builder.available(true).domainId(5).id(6));
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listZones&available=true&domainid=5&id=6 HTTP/1.1");
+  HttpRequest httpRequest=processor.createRequest(method,ListZonesOptions.Builder.available(true).domainId("5").id("6"));
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listZones&listAll=true&available=true&domainid=5&id=6 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);

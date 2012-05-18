@@ -1,6 +1,6 @@
 {
   String input="{ \"queryasyncjobresultresponse\" : {\"jobid\":860,\"jobstatus\":0,\"jobprocstatus\":0,\"jobresultcode\":0} }";
-  AsyncJob<PublicIPAddress> expects=AsyncJob.<PublicIPAddress>builder().id(860).status(Status.IN_PROGRESS).progress(0).resultCode(ResultCode.SUCCESS).build();
+  AsyncJob<PublicIPAddress> expects=AsyncJob.<PublicIPAddress>builder().id("860").status(Status.IN_PROGRESS).progress(0).resultCode(ResultCode.SUCCESS).build();
   ParseAsyncJobFromHttpResponse parser=i.getInstance(ParseAsyncJobFromHttpResponse.class);
   @SuppressWarnings("unchecked") AsyncJob<PublicIPAddress> response=(AsyncJob<PublicIPAddress>)parser.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(input)));
   assertEquals(response,expects);
