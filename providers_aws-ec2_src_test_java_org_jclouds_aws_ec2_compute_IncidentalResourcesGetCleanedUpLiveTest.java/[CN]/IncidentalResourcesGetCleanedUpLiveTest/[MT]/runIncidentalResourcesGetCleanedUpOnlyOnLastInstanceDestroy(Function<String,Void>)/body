@@ -2,17 +2,17 @@
   AWSSecurityGroupClient securityGroupClient=AWSEC2Client.class.cast(view.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi()).getSecurityGroupServices();
   KeyPairClient keyPairClient=EC2Client.class.cast(view.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi()).getKeyPairServices();
   InstanceClient instanceClient=EC2Client.class.cast(view.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi()).getInstanceServices();
-  String group=this.group + "incidental";
+  String group="aws-ec2-incidental";
   String region=null;
   try {
-    Template template=client.templateBuilder().build();
-    Set<? extends NodeMetadata> nodes=client.createNodesInGroup(group,2,template);
+    Template template=view.getComputeService().templateBuilder().build();
+    Set<? extends NodeMetadata> nodes=view.getComputeService().createNodesInGroup(group,2,template);
     NodeMetadata first=Iterables.get(nodes,0);
     NodeMetadata second=Iterables.get(nodes,1);
     String instanceId1=Iterables.get(nodes,0).getProviderId();
     String instanceId2=Iterables.get(nodes,1).getProviderId();
-    AWSRunningInstance instance1=AWSRunningInstance.class.cast(getInstance(instanceClient,instanceId1));
-    AWSRunningInstance instance2=AWSRunningInstance.class.cast(getInstance(instanceClient,instanceId2));
+    AWSRunningInstance instance1=AWSRunningInstance.class.cast(EC2ComputeServiceLiveTest.getInstance(instanceClient,instanceId1));
+    AWSRunningInstance instance2=AWSRunningInstance.class.cast(EC2ComputeServiceLiveTest.getInstance(instanceClient,instanceId2));
     region=instance1.getRegion();
     String expectedSecurityGroupName="jclouds#" + group;
     assertEquals(instance1.getRegion(),region);
@@ -53,7 +53,7 @@
     assertEquals(keyPairsAfterDestroyAll,Collections.emptySet());
   }
   finally {
-    client.destroyNodesMatching(NodePredicates.inGroup(group));
-    if (region != null)     cleanupExtendedStuffInRegion(region,securityGroupClient,keyPairClient,group);
+    view.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
+    if (region != null)     EC2ComputeServiceLiveTest.cleanupExtendedStuffInRegion(region,securityGroupClient,keyPairClient,group);
   }
 }
