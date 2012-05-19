@@ -1,5 +1,6 @@
 {
   AWSRunningInstance awsInstance=AWSRunningInstance.class.cast(instance);
-  Map<String,String> tags=awsInstance.getTags();
-  return super.buildInstance(instance,builder).name(tags.get("Name")).tags(filterValues(tags,equalTo("")).keySet()).userMetadata(filterValues(tags,not(equalTo(""))));
+  builder.name(awsInstance.getTags().get("Name"));
+  addMetadataAndParseTagsFromValuesOfEmptyString(builder,awsInstance.getTags());
+  return super.buildInstance(instance,builder);
 }
