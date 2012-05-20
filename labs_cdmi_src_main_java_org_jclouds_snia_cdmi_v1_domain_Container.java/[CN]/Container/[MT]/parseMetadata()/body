@@ -1,0 +1,34 @@
+{
+  userMetaDataIn=new HashMap<String,String>();
+  systemMetaDataIn=new HashMap<String,String>();
+  aclMetaDataIn=new ArrayList<Map<String,String>>();
+  Iterator<String> keys=metadata.keySet().iterator();
+  while (keys.hasNext()) {
+    String key=keys.next();
+    JsonBall value=metadata.get(key);
+    if (key.startsWith("cdmi")) {
+      if (key.matches("cdmi_acl")) {
+        String[] cdmi_acl_array=value.toString().split("[{}]");
+        for (int i=0; i < cdmi_acl_array.length; i++) {
+          if (!(cdmi_acl_array[i].startsWith("[") || cdmi_acl_array[i].startsWith("]") || cdmi_acl_array[i].startsWith(","))) {
+            HashMap<String,String> aclMap=new HashMap<String,String>();
+            String[] cdmi_acl_member=cdmi_acl_array[i].split(",");
+            for (            String s : cdmi_acl_member) {
+              String cdmi_acl_key=s.substring(0,s.indexOf(":"));
+              String cdmi_acl_value=s.substring(s.indexOf(":") + 1);
+              cdmi_acl_value.replace('"',' ').trim();
+              aclMap.put(cdmi_acl_key,cdmi_acl_value);
+            }
+            aclMetaDataIn.add(aclMap);
+          }
+        }
+      }
+ else {
+        systemMetaDataIn.put(key,value.toString().replace('"',' ').trim());
+      }
+    }
+ else {
+      userMetaDataIn.put(key,value.toString().replace('"',' ').trim());
+    }
+  }
+}
