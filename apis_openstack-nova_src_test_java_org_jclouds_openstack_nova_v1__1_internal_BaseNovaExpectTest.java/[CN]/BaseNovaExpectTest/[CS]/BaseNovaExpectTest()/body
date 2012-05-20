@@ -2,8 +2,10 @@
   provider="openstack-nova";
   keystoneAuthWithUsernameAndPassword=KeystoneFixture.INSTANCE.initialAuthWithUsernameAndPassword(identity,credential);
   keystoneAuthWithAccessKeyAndSecretKey=KeystoneFixture.INSTANCE.initialAuthWithAccessKeyAndSecretKey(identity,credential);
+  keystoneAuthWithAccessKeyAndSecretKeyAndTenantId=KeystoneFixture.INSTANCE.initialAuthWithAccessKeyAndSecretKeyAndTenantId(identity,credential);
   authToken=KeystoneFixture.INSTANCE.getAuthToken();
   responseWithKeystoneAccess=KeystoneFixture.INSTANCE.responseWithAccess();
+  identityWithTenantId=KeystoneFixture.INSTANCE.getTenantId() + ":" + identity;
   identity=KeystoneFixture.INSTANCE.getTenantName() + ":" + identity;
   extensionsOfNovaRequest=HttpRequest.builder().method("GET").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   extensionsOfNovaResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/extension_list_full.json")).build();
