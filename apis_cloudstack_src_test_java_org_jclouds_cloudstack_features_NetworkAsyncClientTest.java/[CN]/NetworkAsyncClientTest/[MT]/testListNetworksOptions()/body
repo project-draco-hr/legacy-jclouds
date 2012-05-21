@@ -1,7 +1,7 @@
 {
   Method method=NetworkAsyncClient.class.getMethod("listNetworks",ListNetworksOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,ListNetworksOptions.Builder.type(NetworkType.ADVANCED).domainId(6).id(5));
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listNetworks&type=Advanced&domainid=6&id=5 HTTP/1.1");
+  HttpRequest httpRequest=processor.createRequest(method,ListNetworksOptions.Builder.type(NetworkType.ADVANCED).domainId("6").id("5"));
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listNetworks&listAll=true&type=Advanced&domainid=6&id=5 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);

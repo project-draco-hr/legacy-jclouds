@@ -1,6 +1,6 @@
 {
   FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=createPortForwardingRule&" + "ipaddressid=2&publicport=22&protocol=tcp&virtualmachineid=1234&privateport=22&" + "apiKey=identity&signature=84dtGzQp0G6k3z3Gkc3F%2FHBNS2Y%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/createportforwardingrulesresponse.json")).build());
-  AsyncCreateResponse response=client.createPortForwardingRuleForVirtualMachine(2,PortForwardingRule.Protocol.TCP,22,1234,22);
-  assertEquals(response.getJobId(),2035);
-  assertEquals(response.getId(),2015);
+  AsyncCreateResponse response=client.createPortForwardingRuleForVirtualMachine("2",PortForwardingRule.Protocol.TCP,22,"1234",22);
+  assertEquals(response.getJobId(),"2035");
+  assertEquals(response.getId(),"2015");
 }

@@ -1,7 +1,7 @@
 {
   HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=updateZone&" + "id=6&name=test-zone&dns1=8.8.8.8&apiKey=identity&signature=v19FdHKHztdT0IRloYFFn0eNbWM%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build();
   GlobalZoneClient client=requestSendsResponse(request,HttpResponse.builder().statusCode(200).payload(payloadFromResource("/updatezoneresponse.json")).build());
-  assertEquals(client.updateZone(6,name("test-zone").externalDns(ImmutableList.of("8.8.8.8"))),Zone.builder().id(6).name("test-zone").DNS(ImmutableList.of("8.8.8.8")).internalDNS(ImmutableList.of("10.10.10.10")).networkType(NetworkType.BASIC).securityGroupsEnabled(true).allocationState(AllocationState.ENABLED).zoneToken("7b6e27df-30a6-3024-9d8b-7971a3127f64").dhcpProvider("DhcpServer").build());
+  assertEquals(client.updateZone("6",name("test-zone").externalDns(ImmutableList.of("8.8.8.8"))),Zone.builder().id("6").name("test-zone").DNS(ImmutableList.of("8.8.8.8")).internalDNS(ImmutableList.of("10.10.10.10")).networkType(NetworkType.BASIC).securityGroupsEnabled(true).allocationState(AllocationState.ENABLED).zoneToken("7b6e27df-30a6-3024-9d8b-7971a3127f64").dhcpProvider("DhcpServer").build());
   client=requestSendsResponse(request,HttpResponse.builder().statusCode(404).build());
-  assertNull(client.updateZone(6,name("test-zone").externalDns(ImmutableList.of("8.8.8.8"))));
+  assertNull(client.updateZone("6",name("test-zone").externalDns(ImmutableList.of("8.8.8.8"))));
 }

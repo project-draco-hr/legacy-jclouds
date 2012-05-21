@@ -7,7 +7,7 @@
   NodeMetadata node=null;
   try {
     node=getOnlyElement(view.getComputeService().createNodesInGroup(group,1,template));
-    String encryptedPassword=client.getVirtualMachineClient().getEncryptedPasswordForVirtualMachine(Long.parseLong(node.getId()));
+    String encryptedPassword=client.getVirtualMachineClient().getEncryptedPasswordForVirtualMachine(node.getId());
     Crypto crypto=new BouncyCastleCrypto();
     WindowsLoginCredentialsFromEncryptedData passwordDecrypt=new WindowsLoginCredentialsFromEncryptedData(crypto);
     assertEquals(passwordDecrypt.apply(new EncryptedPasswordAndPrivateKey(encryptedPassword,keyPair.getPrivateKey())).getPassword(),"bX7vvptvw");

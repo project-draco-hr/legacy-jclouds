@@ -1,9 +1,9 @@
 {
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listClusters&apiKey=identity&signature=MWOOe7bm1J14DIfLjAGqsSVb8oo%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build();
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listClusters&listAll=true&apiKey=identity&signature=lbimqg0OKIq8sgQBpNmi4oQNFog%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build();
   HttpResponse response=HttpResponse.builder().payload(payloadFromResource("/listclustersresponse.json")).statusCode(200).build();
   Set<Cluster> actual=requestSendsResponse(request,response).listClusters();
-  Cluster cluster1=Cluster.builder().id(1).name("Xen Clust 1").podId(1).podName("Dev Pod 1").zoneId(1).zoneName("Dev Zone 1").hypervisor("XenServer").clusterType(Host.ClusterType.CLOUD_MANAGED).allocationState(AllocationState.ENABLED).managedState(Cluster.ManagedState.MANAGED).build();
-  Cluster cluster2=Cluster.builder().id(2).name("Xen Clust 1").podId(2).podName("Dev Pod 2").zoneId(2).zoneName("Dev Zone 2").hypervisor("XenServer").clusterType(Host.ClusterType.CLOUD_MANAGED).allocationState(AllocationState.ENABLED).managedState(Cluster.ManagedState.MANAGED).build();
+  Cluster cluster1=Cluster.builder().id("1").name("Xen Clust 1").podId("1").podName("Dev Pod 1").zoneId("1").zoneName("Dev Zone 1").hypervisor("XenServer").clusterType(Host.ClusterType.CLOUD_MANAGED).allocationState(AllocationState.ENABLED).managedState(Cluster.ManagedState.MANAGED).build();
+  Cluster cluster2=Cluster.builder().id("2").name("Xen Clust 1").podId("2").podName("Dev Pod 2").zoneId("2").zoneName("Dev Zone 2").hypervisor("XenServer").clusterType(Host.ClusterType.CLOUD_MANAGED).allocationState(AllocationState.ENABLED).managedState(Cluster.ManagedState.MANAGED).build();
   ImmutableSet<Cluster> expected=ImmutableSet.of(cluster1,cluster2);
   assertEquals(actual,expected);
 }

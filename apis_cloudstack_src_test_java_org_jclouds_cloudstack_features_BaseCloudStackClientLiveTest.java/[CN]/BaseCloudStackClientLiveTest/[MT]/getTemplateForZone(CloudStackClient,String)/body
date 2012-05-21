@@ -1,0 +1,15 @@
+{
+  Set<String> acceptableCategories=ImmutableSet.of("Ubuntu","CentOS");
+  final Predicate<Template> hypervisorPredicate=new CorrectHypervisorForZone(client).apply(zoneId);
+  final Predicate<Template> osTypePredicate=new OSCategoryIn(client).apply(acceptableCategories);
+  @SuppressWarnings("unchecked") Predicate<Template> templatePredicate=Predicates.<Template>and(TemplatePredicates.isReady(),hypervisorPredicate,osTypePredicate);
+  Iterable<Template> templates=filter(client.getTemplateClient().listTemplates(ListTemplatesOptions.Builder.zoneId(zoneId)),templatePredicate);
+  if (Iterables.any(templates,TemplatePredicates.isPasswordEnabled())) {
+    templates=filter(templates,TemplatePredicates.isPasswordEnabled());
+  }
+  if (Iterables.size(templates) == 0) {
+    throw new NoSuchElementException(templatePredicate.toString());
+  }
+  String templateId=get(templates,0).getId();
+  return templateId;
+}

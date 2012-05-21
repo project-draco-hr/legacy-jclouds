@@ -1,7 +1,7 @@
 {
-  Method method=SecurityGroupAsyncClient.class.getMethod("getSecurityGroup",long.class);
+  Method method=SecurityGroupAsyncClient.class.getMethod("getSecurityGroup",String.class);
   HttpRequest httpRequest=processor.createRequest(method,5);
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listSecurityGroups&id=5 HTTP/1.1");
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=listSecurityGroups&listAll=true&id=5 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,Functions.compose(IdentityFunction.INSTANCE,IdentityFunction.INSTANCE).getClass());
