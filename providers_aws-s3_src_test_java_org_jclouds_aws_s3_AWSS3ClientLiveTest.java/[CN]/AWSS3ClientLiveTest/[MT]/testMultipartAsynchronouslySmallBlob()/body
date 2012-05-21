@@ -1,0 +1,12 @@
+{
+  String containerName=getContainerName();
+  try {
+    AsyncBlobStore asyncBlobStore=view.getAsyncBlobStore();
+    asyncBlobStore.createContainerInLocation(null,containerName).get();
+    Blob blob=asyncBlobStore.blobBuilder("small").payload("small").build();
+    asyncBlobStore.putBlob(containerName,blob,PutOptions.Builder.multipart()).get();
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}

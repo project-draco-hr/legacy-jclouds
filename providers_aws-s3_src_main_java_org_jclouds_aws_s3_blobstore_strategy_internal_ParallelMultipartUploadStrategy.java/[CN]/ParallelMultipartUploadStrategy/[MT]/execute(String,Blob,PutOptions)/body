@@ -68,7 +68,8 @@
         }
       }
  else {
-        ListenableFuture<String> futureETag=ablobstore.putBlob(container,blob,options);
+        PutOptions nonMultipartOptions=PutOptions.Builder.multipart(false);
+        ListenableFuture<String> futureETag=ablobstore.putBlob(container,blob,nonMultipartOptions);
         return maxTime != null ? futureETag.get(maxTime,TimeUnit.SECONDS) : futureETag.get();
       }
     }
