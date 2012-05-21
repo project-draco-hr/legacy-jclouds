@@ -1,0 +1,19 @@
+{
+  TemplateBuilderSpec spec=parse(" minRam=10,\nosFamily=UBUNTU");
+  assertNull(spec.hardwareId);
+  assertNull(spec.minCores);
+  assertEquals(spec.minRam.intValue(),10);
+  assertNull(spec.hypervisorMatches);
+  assertNull(spec.imageId);
+  assertNull(spec.imageNameMatches);
+  assertEquals(spec.osFamily,OsFamily.UBUNTU);
+  assertNull(spec.osVersionMatches);
+  assertNull(spec.os64Bit);
+  assertNull(spec.osArchMatches);
+  assertNull(spec.osDescriptionMatches);
+  assertNull(spec.loginUser);
+  assertNull(spec.authenticateSudo);
+  assertNull(spec.locationId);
+  TemplateBuilder expected=templateBuilders.get().minRam(10).osFamily(OsFamily.UBUNTU);
+  assertTemplateBuilderEquivalence(expected,templateBuilders.get().from(spec));
+}

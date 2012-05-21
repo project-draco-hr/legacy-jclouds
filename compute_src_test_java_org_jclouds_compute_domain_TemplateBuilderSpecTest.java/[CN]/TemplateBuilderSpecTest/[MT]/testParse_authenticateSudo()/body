@@ -1,0 +1,18 @@
+{
+  TemplateBuilderSpec spec=parse("loginUser=root:toor,authenticateSudo=true");
+  assertNull(spec.hardwareId);
+  assertNull(spec.minCores);
+  assertNull(spec.minRam);
+  assertNull(spec.imageId);
+  assertNull(spec.imageNameMatches);
+  assertNull(spec.hypervisorMatches);
+  assertNull(spec.osFamily);
+  assertNull(spec.osVersionMatches);
+  assertNull(spec.os64Bit);
+  assertNull(spec.osArchMatches);
+  assertNull(spec.osDescriptionMatches);
+  assertEquals(spec.loginUser,"root:toor");
+  assertEquals(spec.authenticateSudo.booleanValue(),true);
+  assertNull(spec.locationId);
+  assertTemplateBuilderEquivalence(templateBuilders.get().options(overrideLoginCredentials(LoginCredentials.builder().user("root").password("toor").authenticateSudo(true).build())),templateBuilders.get().from(spec));
+}

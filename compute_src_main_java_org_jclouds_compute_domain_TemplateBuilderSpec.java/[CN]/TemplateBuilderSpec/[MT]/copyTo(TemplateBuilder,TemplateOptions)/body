@@ -1,0 +1,52 @@
+{
+  if (hardwareId != null) {
+    builder.hardwareId(hardwareId);
+  }
+  if (minCores != null) {
+    builder.minCores(minCores);
+  }
+  if (minRam != null) {
+    builder.minRam(minRam);
+  }
+  if (hypervisorMatches != null) {
+    builder.hypervisorMatches(hypervisorMatches);
+  }
+  if (imageId != null) {
+    builder.imageId(imageId);
+  }
+  if (imageNameMatches != null) {
+    builder.imageNameMatches(imageNameMatches);
+  }
+  if (osFamily != null) {
+    builder.osFamily(osFamily);
+  }
+  if (osVersionMatches != null) {
+    builder.osVersionMatches(osVersionMatches);
+  }
+  if (os64Bit != null) {
+    builder.os64Bit(os64Bit);
+  }
+  if (osArchMatches != null) {
+    builder.osArchMatches(osArchMatches);
+  }
+  if (osDescriptionMatches != null) {
+    builder.osArchMatches(osDescriptionMatches);
+  }
+  if (loginUser != null) {
+    Builder loginBuilder=LoginCredentials.builder();
+    int pos=loginUser.indexOf(':');
+    if (pos != -1) {
+      loginBuilder.user(loginUser.substring(0,pos)).password(loginUser.substring(pos + 1));
+    }
+ else     loginBuilder.user(loginUser);
+    if (authenticateSudo != null) {
+      loginBuilder.authenticateSudo(authenticateSudo);
+    }
+    LoginCredentials creds=loginBuilder.build();
+    templateOptions.overrideLoginCredentials(creds);
+  }
+  if (locationId != null) {
+    builder.locationId(locationId);
+  }
+  return builder;
+}
