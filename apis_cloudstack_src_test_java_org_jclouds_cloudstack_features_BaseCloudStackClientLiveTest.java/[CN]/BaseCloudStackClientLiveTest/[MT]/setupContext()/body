@@ -20,7 +20,7 @@
     globalAdminUser=verifyCurrentUserIsOfType(globalAdminContext,Account.Type.ADMIN);
     adminClient=globalAdminContext.getApi();
   }
-  injector=Guice.createInjector(setupModules());
+  injector=cloudStackContext.utils().injector();
   sshFactory=injector.getInstance(SshClient.Factory.class);
   socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
   injector.injectMembers(socketTester);
