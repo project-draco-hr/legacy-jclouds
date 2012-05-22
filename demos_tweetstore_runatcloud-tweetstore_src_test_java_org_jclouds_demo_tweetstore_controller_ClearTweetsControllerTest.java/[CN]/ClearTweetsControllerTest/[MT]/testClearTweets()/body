@@ -1,0 +1,10 @@
+{
+  String container=ClearTweetsControllerTest.class.getName() + "#container";
+  Map<String,BlobStoreContext> contexts=createBlobStores(container);
+  ClearTweetsController controller=new ClearTweetsController(contexts,container);
+  controller.clearContainer("test1");
+  controller.clearContainer("test2");
+  for (  BlobStoreContext context : contexts.values()) {
+    assertEquals(context.getBlobStore().countBlobs(container),0,context.toString());
+  }
+}
