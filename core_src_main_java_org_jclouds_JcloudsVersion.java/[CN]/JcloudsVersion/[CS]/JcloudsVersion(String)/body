@@ -5,18 +5,30 @@
   majorVersion=Integer.valueOf(versionMatcher.group(1));
   minorVersion=Integer.valueOf(versionMatcher.group(2));
   patchVersion=Integer.valueOf(versionMatcher.group(3));
-  String alphaOrReleaseCandidateVersionIfPresent=versionMatcher.group(4);
-  if (alphaOrReleaseCandidateVersionIfPresent != null) {
+  String alphaOrBetaOrReleaseCandidateVersionIfPresent=versionMatcher.group(4);
+  if (alphaOrBetaOrReleaseCandidateVersionIfPresent != null) {
     Integer alphaOrReleaseCandidateVersion=Integer.valueOf(versionMatcher.group(5));
-    if (alphaOrReleaseCandidateVersionIfPresent.equals(ALPHA_VERSION_IDENTIFIER)) {
+    if (alphaOrBetaOrReleaseCandidateVersionIfPresent.equals(ALPHA_VERSION_IDENTIFIER)) {
       alpha=true;
       alphaVersion=alphaOrReleaseCandidateVersion;
+      beta=false;
+      betaVersion=null;
+      releaseCandidate=false;
+      releaseCandidateVersion=null;
+    }
+ else     if (alphaOrBetaOrReleaseCandidateVersionIfPresent.equals(BETA_VERSION_IDENTIFIER)) {
+      alpha=false;
+      alphaVersion=null;
+      beta=true;
+      betaVersion=alphaOrReleaseCandidateVersion;
       releaseCandidate=false;
       releaseCandidateVersion=null;
     }
  else {
       alpha=false;
       alphaVersion=null;
+      beta=false;
+      betaVersion=null;
       releaseCandidate=true;
       releaseCandidateVersion=alphaOrReleaseCandidateVersion;
     }
@@ -24,6 +36,8 @@
  else {
     alpha=false;
     alphaVersion=null;
+    beta=false;
+    betaVersion=null;
     releaseCandidate=false;
     releaseCandidateVersion=null;
   }
