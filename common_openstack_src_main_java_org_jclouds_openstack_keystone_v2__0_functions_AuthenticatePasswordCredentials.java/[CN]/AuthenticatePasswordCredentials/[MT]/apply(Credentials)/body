@@ -6,5 +6,12 @@
   String usernameOrAccessKey=input.identity.substring(input.identity.indexOf(':') + 1);
   String passwordOrSecretKey=input.credential;
   PasswordCredentials passwordCredentials=PasswordCredentials.createWithUsernameAndPassword(usernameOrAccessKey,passwordOrSecretKey);
-  return client.authenticateTenantWithCredentials(tenantId,passwordCredentials);
+  Access access;
+  if (tenantId.matches("^[0-9]+$")) {
+    access=client.authenticateWithTenantIdAndCredentials(tenantId,passwordCredentials);
+  }
+ else {
+    access=client.authenticateWithTenantNameAndCredentials(tenantId,passwordCredentials);
+  }
+  return access;
 }
