@@ -1,4 +1,5 @@
 {
+  if (toParse.length() < 10)   throw new IllegalArgumentException("incorrect date format " + toParse);
   String tz=findTZ(toParse);
   toParse=trimToMillis(toParse);
   toParse=trimTZ(toParse);
@@ -9,7 +10,7 @@ synchronized (iso8601SimpleDateFormat) {
       return iso8601SimpleDateFormat.parse(toParse);
     }
  catch (    ParseException pe) {
-      throw new RuntimeException("Error parsing data at " + pe.getErrorOffset(),pe);
+      throw new IllegalArgumentException("Error parsing data at " + pe.getErrorOffset(),pe);
     }
   }
 }
