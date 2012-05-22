@@ -1,6 +1,7 @@
 {
   String virtualMachineId=id;
   Set<String> ipAddresses=deleteIPForwardingRulesForVMAndReturnDistinctIPs(virtualMachineId);
+  ipAddresses.addAll(deleteFirewallRulesForVMAndReturnDistinctIPs(virtualMachineId));
   disableStaticNATOnIPAddresses(ipAddresses);
   disassociateIPAddresses(ipAddresses);
   destroyVirtualMachine(virtualMachineId);
