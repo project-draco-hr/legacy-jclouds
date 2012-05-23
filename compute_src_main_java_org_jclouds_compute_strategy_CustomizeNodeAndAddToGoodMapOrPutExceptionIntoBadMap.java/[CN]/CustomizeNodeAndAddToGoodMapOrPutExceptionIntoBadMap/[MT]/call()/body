@@ -6,12 +6,20 @@
   try {
     if (options.shouldBlockUntilRunning()) {
       try {
+        Stopwatch stopwatch=new Stopwatch().start();
         if (!nodeRunning.apply(node)) {
+          long timeWaited=stopwatch.elapsedMillis();
+          long earlyReturnGrace=10;
           if (node.get() == null) {
             node.set(originalNode);
             throw new IllegalStateException(format("api response for node(%s) was null, so we can't customize",originalId));
           }
-          throw new IllegalStateException(format("node(%s) didn't achieve the state running within %d seconds, so we couldn't customize; final state: %s",originalId,timeouts.nodeRunning / 1000,node.get().getState()));
+ else           if (timeWaited < (timeouts.nodeRunning - earlyReturnGrace)) {
+            throw new IllegalStateException(format("node(%s) didn't achieve the state running, so we couldn't customize; aborting prematurely after %d seconds with final state: %s",originalId,timeWaited / 1000,node.get().getState()));
+          }
+ else {
+            throw new IllegalStateException(format("node(%s) didn't achieve the state running within %d seconds, so we couldn't customize; final state: %s",originalId,timeouts.nodeRunning / 1000,node.get().getState()));
+          }
         }
       }
  catch (      IllegalStateException e) {
