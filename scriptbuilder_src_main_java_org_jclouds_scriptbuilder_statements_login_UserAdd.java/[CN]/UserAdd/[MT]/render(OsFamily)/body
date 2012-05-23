@@ -1,9 +1,9 @@
 {
   checkNotNull(family,"family");
   if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
-  String homeDir=(home != null) ? home : (defaultHome + "{fs}" + login);
+  String homeDir=(home != null) ? home : (defaultHome + '/' + login);
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
-  statements.add(Statements.exec("{md} " + homeDir));
+  statements.add(Statements.exec("{md} " + homeDir.substring(0,homeDir.lastIndexOf('/'))));
   ImmutableMap.Builder<String,String> userAddOptions=ImmutableMap.builder();
   userAddOptions.put("-s",shell);
   if (groups.size() > 0) {
