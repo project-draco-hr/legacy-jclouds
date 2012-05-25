@@ -1,0 +1,6 @@
+{
+  MetricDatum metricDatum=MetricDatum.builder().metricName("TestMetricName").dimension(new Dimension("TestDimension","FAKE")).dimension(new Dimension("TestDimension2","FAKE2")).unit(Unit.COUNT).timestamp(new Date(10000000l)).value(5.0).build();
+  PutMetricData pmd=PutMetricData.builder().metricDatum(metricDatum).namespace("JCLOUDS/Test").build();
+  request=binder.bindToRequest(request,pmd);
+  Assert.assertEquals(request.getPayload().getRawContent(),new StringBuilder().append("Namespace=JCLOUDS%2FTest").append("&MetricData.member.1.Dimensions.member.1.Name=TestDimension").append("&MetricData.member.1.Dimensions.member.1.Value=FAKE").append("&MetricData.member.1.Dimensions.member.2.Name=TestDimension2").append("&MetricData.member.1.Dimensions.member.2.Value=FAKE2").append("&MetricData.member.1.MetricName=TestMetricName").append("&MetricData.member.1.Timestamp=1970-01-01T02%3A46%3A40Z").append("&MetricData.member.1.Unit=").append(Unit.COUNT.toString()).append("&MetricData.member.1.Value=5.0").toString());
+}

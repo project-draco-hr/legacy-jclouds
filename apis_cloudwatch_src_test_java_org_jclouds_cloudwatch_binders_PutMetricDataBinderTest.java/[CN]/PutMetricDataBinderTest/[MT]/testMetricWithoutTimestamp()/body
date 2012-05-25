@@ -1,0 +1,7 @@
+{
+  StatisticSet ss=StatisticSet.builder().maximum(4.0).minimum(1.0).sampleCount(4.0).sum(10.0).build();
+  MetricDatum metricDatum=MetricDatum.builder().metricName("TestMetricName").statisticSet(ss).dimension(new Dimension("TestDimension","FAKE")).unit(Unit.COUNT).build();
+  PutMetricData pmd=PutMetricData.builder().metricDatum(metricDatum).namespace("JCLOUDS/Test").build();
+  request=binder.bindToRequest(request,pmd);
+  Assert.assertEquals(request.getPayload().getRawContent(),new StringBuilder().append("Namespace=JCLOUDS%2FTest").append("&MetricData.member.1.Dimensions.member.1.Name=TestDimension").append("&MetricData.member.1.Dimensions.member.1.Value=FAKE").append("&MetricData.member.1.MetricName=TestMetricName").append("&MetricData.member.1.StatisticValues.Maximum=4.0").append("&MetricData.member.1.StatisticValues.Minimum=1.0").append("&MetricData.member.1.StatisticValues.SampleCount=4.0").append("&MetricData.member.1.StatisticValues.Sum=10.0").append("&MetricData.member.1.Unit=").append(Unit.COUNT.toString()).toString());
+}
