@@ -1,0 +1,33 @@
+{
+  Iterable<MetricDatum> metrics=input != null ? (Iterable<MetricDatum>)input : new HashSet<MetricDatum>();
+  ImmutableMultimap.Builder<String,String> formParameters=ImmutableMultimap.builder();
+  int metricDatumIndex=1;
+  for (  MetricDatum metricDatum : metrics) {
+    int dimensionIndex=1;
+    StatisticSet statisticSet=metricDatum.getStatisticSet();
+    Set<Dimension> dimensions=metricDatum.getDimensions() != null ? metricDatum.getDimensions() : new HashSet<Dimension>();
+    for (    Dimension dimension : dimensions) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Dimensions.member."+ dimensionIndex+ ".Name",dimension.getName());
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Dimensions.member."+ dimensionIndex+ ".Value",dimension.getValue());
+      dimensionIndex++;
+    }
+    formParameters.put("MetricData.member." + metricDatumIndex + ".MetricName",metricDatum.getMetricName());
+    if (statisticSet != null) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".StatisticValues.Maximum",String.valueOf(statisticSet.getMaximum()));
+      formParameters.put("MetricData.member." + metricDatumIndex + ".StatisticValues.Minimum",String.valueOf(statisticSet.getMinimum()));
+      formParameters.put("MetricData.member." + metricDatumIndex + ".StatisticValues.SampleCount",String.valueOf(statisticSet.getSampleCount()));
+      formParameters.put("MetricData.member." + metricDatumIndex + ".StatisticValues.Sum",String.valueOf(statisticSet.getSum()));
+    }
+    if (metricDatum.getTimestamp() != null) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Timestamp",dateService.iso8601SecondsDateFormat(metricDatum.getTimestamp()));
+    }
+    if (metricDatum.getUnit() != null) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Unit",String.valueOf(metricDatum.getUnit()));
+    }
+    if (metricDatum.getValue() != null) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Value",String.valueOf(metricDatum.getValue()));
+    }
+    metricDatumIndex++;
+  }
+  return ModifyRequest.putFormParams(request,formParameters.build());
+}

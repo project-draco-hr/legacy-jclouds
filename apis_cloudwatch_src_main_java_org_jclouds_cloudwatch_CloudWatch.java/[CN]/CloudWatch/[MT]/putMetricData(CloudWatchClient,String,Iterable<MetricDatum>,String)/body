@@ -1,0 +1,14 @@
+{
+  MetricClient metricClient=cloudWatchClient.getMetricClientForRegion(region);
+  Iterator<MetricDatum> mIterator=metrics.iterator();
+  Set<MetricDatum> metricsData=Sets.newLinkedHashSet();
+  while (mIterator.hasNext()) {
+    metricsData.add(mIterator.next());
+    if (metricsData.size() == 10 || !mIterator.hasNext()) {
+      metricClient.putMetricData(metrics,namespace);
+      if (mIterator.hasNext()) {
+        metricsData=Sets.newLinkedHashSet();
+      }
+    }
+  }
+}
