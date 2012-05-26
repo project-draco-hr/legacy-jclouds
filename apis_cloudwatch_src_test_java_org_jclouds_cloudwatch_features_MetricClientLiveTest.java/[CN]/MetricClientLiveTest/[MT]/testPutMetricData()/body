@@ -3,8 +3,8 @@
   String namespace="JCLOUDS/Test";
   Date metricTimestamp=new Date();
   Date metricTimestampInCloudWatch=new Date(metricTimestamp.getTime() - (metricTimestamp.getTime() % (60 * 1000)));
-  StatisticSet ss=StatisticSet.builder().maximum(4.0).minimum(1.0).sampleCount(4.0).sum(10.0).build();
-  MetricDatum metricDatum=MetricDatum.builder().metricName(metricName + "_1").statisticSet(ss).dimension(new Dimension("BaseMetricName",metricName)).dimension(new Dimension("TestDimension2","TEST2")).unit(Unit.COUNT).timestamp(metricTimestamp).build();
+  StatisticValues ss=StatisticValues.builder().maximum(4.0).minimum(1.0).sampleCount(4.0).sum(10.0).build();
+  MetricDatum metricDatum=MetricDatum.builder().metricName(metricName + "_1").statisticValues(ss).dimension(new Dimension("BaseMetricName",metricName)).dimension(new Dimension("TestDimension2","TEST2")).unit(Unit.COUNT).timestamp(metricTimestamp).build();
   MetricDatum metricDatum2=MetricDatum.builder().metricName(metricName + "_2").dimension(new Dimension("BaseMetricName",metricName)).unit(Unit.COUNT).timestamp(metricTimestamp).value(10.0).build();
   client().putMetricData(ImmutableSet.of(metricDatum,metricDatum2),namespace);
   ListMetricsOptions lmo=ListMetricsOptions.builder().namespace(namespace).dimension(new Dimension("BaseMetricName",metricName)).build();
