@@ -1,9 +1,9 @@
 {
-  Map<ServerStatus,NodeState> serverStateToNodeState=CloudServersComputeServiceContextModule.serverToNodeState;
+  Map<ServerStatus,Status> serverStateToNodeStatus=CloudServersComputeServiceContextModule.serverToNodeStatus;
   Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of();
   Set<org.jclouds.compute.domain.Hardware> hardwares=ImmutableSet.of();
   Server server=ParseServerFromJsonResponseTest.parseServer();
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeStatus,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
   NodeMetadata metadata=parser.apply(server);
-  assertEquals(metadata,new NodeMetadataBuilder().state(NodeState.PENDING).publicAddresses(ImmutableSet.of("67.23.10.132","67.23.10.131")).privateAddresses(ImmutableSet.of("10.176.42.16")).imageId("2").id("1234").providerId("1234").name("sample-server").group("sample").hostname("sample-server").location(new LocationBuilder().scope(LocationScope.HOST).id("e4d909c290d0fb1ca068ffaddf22cbd0").description("e4d909c290d0fb1ca068ffaddf22cbd0").parent(provider).build()).userMetadata(ImmutableMap.of("Server Label","Web Head 1","Image Version","2.1")).build());
+  assertEquals(metadata,new NodeMetadataBuilder().status(Status.PENDING).publicAddresses(ImmutableSet.of("67.23.10.132","67.23.10.131")).privateAddresses(ImmutableSet.of("10.176.42.16")).imageId("2").id("1234").providerId("1234").name("sample-server").group("sample").hostname("sample-server").location(new LocationBuilder().scope(LocationScope.HOST).id("e4d909c290d0fb1ca068ffaddf22cbd0").description("e4d909c290d0fb1ca068ffaddf22cbd0").parent(provider).build()).userMetadata(ImmutableMap.of("Server Label","Web Head 1","Image Version","2.1")).build());
 }

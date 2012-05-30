@@ -6,7 +6,7 @@
   expect(strategy.nodeToOrgAndName.apply(nodeMetadata)).andReturn(orgTag).atLeastOnce();
   expect((Object)strategy.listNodes.listDetailsOnNodesMatching(parentLocationId(orgTag.getOrg().toASCIIString()))).andReturn(ImmutableSet.of(nodeMetadata));
   expect(nodeMetadata.getGroup()).andReturn(orgTag.getName()).atLeastOnce();
-  expect(nodeMetadata.getState()).andReturn(NodeState.TERMINATED).atLeastOnce();
+  expect(nodeMetadata.getStatus()).andReturn(Status.TERMINATED).atLeastOnce();
   strategy.deleteKeyPair.execute(orgTag);
   expectCleanupCredentialStore(strategy,nodeMetadata);
   replay(nodeMetadata);

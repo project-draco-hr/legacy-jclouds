@@ -8,8 +8,8 @@
   Set<NodeMetadata> goodNodes=Sets.newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
-  final NodeMetadata pendingNode=new NodeMetadataBuilder().ids("id").state(NodeState.PENDING).build();
-  final NodeMetadata runningNode=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).build();
+  final NodeMetadata pendingNode=new NodeMetadataBuilder().ids("id").status(Status.PENDING).build();
+  final NodeMetadata runningNode=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).build();
   expect(openSocketFinder.findOpenSocketOnNode(runningNode,22,portTimeoutSecs,TimeUnit.SECONDS)).andThrow(new NoSuchElementException("could not connect to any ip address port")).once();
   GetNodeMetadataStrategy nodeRunning=new GetNodeMetadataStrategy(){
     @Override public NodeMetadata getNode(    String input){

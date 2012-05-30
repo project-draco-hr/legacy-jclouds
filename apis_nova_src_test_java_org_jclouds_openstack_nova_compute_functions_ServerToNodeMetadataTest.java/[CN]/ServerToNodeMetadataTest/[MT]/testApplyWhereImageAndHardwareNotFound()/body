@@ -1,9 +1,9 @@
 {
-  Map<ServerStatus,NodeState> serverStateToNodeState=NovaComputeServiceContextModule.serverToNodeState;
+  Map<ServerStatus,Status> serverStateToNodeStatus=NovaComputeServiceContextModule.serverToNodeStatus;
   Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of();
   Set<org.jclouds.compute.domain.Hardware> hardwares=ImmutableSet.of();
   Server server=ParseServerFromJsonResponseTest.parseServer();
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeStatus,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
   NodeMetadata metadata=parser.apply(server);
   NodeMetadata constructedMetadata=newNodeMetadataBuilder().build();
   assertEquals(metadata,constructedMetadata);

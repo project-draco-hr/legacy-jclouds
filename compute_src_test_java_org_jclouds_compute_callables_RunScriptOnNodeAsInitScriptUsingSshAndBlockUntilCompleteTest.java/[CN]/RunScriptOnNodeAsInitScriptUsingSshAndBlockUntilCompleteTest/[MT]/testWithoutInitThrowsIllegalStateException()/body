@@ -1,6 +1,6 @@
 {
   Statement command=exec("doFoo");
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).credentials(new LoginCredentials("tester","testpassword!",null,false)).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(new LoginCredentials("tester","testpassword!",null,false)).build();
   SshClient sshClient=createMock(SshClient.class);
   replay(sshClient);
   RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete testMe=new RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete(statusFactory,timeouts,Functions.forMap(ImmutableMap.of(node,sshClient)),eventBus,InitScriptConfigurationForTasks.create().appendIncrementingNumberToAnonymousTaskNames(),node,command,new RunScriptOptions());

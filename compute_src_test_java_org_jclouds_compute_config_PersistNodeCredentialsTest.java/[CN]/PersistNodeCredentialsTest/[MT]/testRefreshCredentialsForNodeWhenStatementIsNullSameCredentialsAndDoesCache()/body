@@ -3,7 +3,7 @@
   LoginCredentials credentials=createMock(LoginCredentials.class);
   expect(credstore.put("node#id",credentials)).andReturn(null);
   replay(credstore);
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).credentials(credentials).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(credentials).build();
   RefreshCredentialsForNode fn=new PersistNodeCredentialsModule.RefreshCredentialsForNode(credstore,null);
   assertEquals(node,fn.apply(node));
   verify(credstore);

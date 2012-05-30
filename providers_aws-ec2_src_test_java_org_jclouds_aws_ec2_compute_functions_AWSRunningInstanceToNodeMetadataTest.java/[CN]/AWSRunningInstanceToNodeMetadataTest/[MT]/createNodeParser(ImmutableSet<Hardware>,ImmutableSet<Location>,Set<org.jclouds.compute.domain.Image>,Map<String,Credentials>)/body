@@ -1,5 +1,5 @@
 {
-  Map<InstanceState,NodeState> instanceToNodeState=EC2ComputeServiceDependenciesModule.instanceToNodeState;
+  Map<InstanceState,Status> instanceToNodeStatus=EC2ComputeServiceDependenciesModule.instanceToNodeStatus;
   final Map<RegionAndName,? extends Image> backing=ImagesToRegionAndIdMap.imagesToMap(images);
   LoadingCache<RegionAndName,Image> instanceToImage=CacheBuilder.newBuilder().build(new CacheLoader<RegionAndName,Image>(){
     @Override public Image load(    RegionAndName key) throws Exception {
@@ -7,5 +7,5 @@
     }
   }
 );
-  return createNodeParser(hardware,locations,credentialStore,instanceToNodeState,instanceToImage);
+  return createNodeParser(hardware,locations,credentialStore,instanceToNodeStatus,instanceToImage);
 }

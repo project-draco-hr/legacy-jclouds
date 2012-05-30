@@ -18,9 +18,9 @@
   nodeMetadataBuilder.location(locationBuilder.build());
   nodeMetadataBuilder.hostname(vm.getName());
   MachineState vmState=vm.getState();
-  NodeState nodeState=machineToNodeState.get(vmState);
-  if (nodeState == null)   nodeState=NodeState.UNRECOGNIZED;
-  nodeMetadataBuilder.state(nodeState);
+  NodeMetadata.Status nodeState=machineToNodeStatus.get(vmState);
+  if (nodeState == null)   nodeState=Status.UNRECOGNIZED;
+  nodeMetadataBuilder.status(nodeState);
   nodeMetadataBuilder=getIpAddresses(vm,nodeMetadataBuilder);
   LoginCredentials loginCredentials=new LoginCredentials("toor","password",null,true);
   nodeMetadataBuilder.credentials(loginCredentials);

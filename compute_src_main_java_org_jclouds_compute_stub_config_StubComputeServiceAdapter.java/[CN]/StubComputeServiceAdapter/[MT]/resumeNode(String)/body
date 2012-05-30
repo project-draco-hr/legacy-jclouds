@@ -1,8 +1,8 @@
 {
   NodeMetadata node=nodes.get(id);
   if (node == null)   throw new ResourceNotFoundException("node not found: " + id);
-  if (node.getState() == NodeState.RUNNING)   return;
-  if (node.getState() != NodeState.SUSPENDED)   throw new IllegalStateException("to resume a node, it must be in suspended state, not: " + node.getState());
-  setStateOnNode(NodeState.PENDING,node);
-  setStateOnNodeAfterDelay(NodeState.RUNNING,node,50);
+  if (node.getStatus() == Status.RUNNING)   return;
+  if (node.getStatus() != Status.SUSPENDED)   throw new IllegalStateException("to resume a node, it must be in suspended status, not: " + node.getStatus());
+  setStateOnNode(Status.PENDING,node);
+  setStateOnNodeAfterDelay(Status.RUNNING,node,50);
 }

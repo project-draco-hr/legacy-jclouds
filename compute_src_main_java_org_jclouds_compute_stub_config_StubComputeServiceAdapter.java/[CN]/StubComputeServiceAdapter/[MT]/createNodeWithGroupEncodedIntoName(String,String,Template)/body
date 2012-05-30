@@ -10,12 +10,12 @@
   builder.location(location.get());
   builder.imageId(template.getImage().getId());
   builder.operatingSystem(template.getImage().getOperatingSystem());
-  builder.state(NodeState.PENDING);
+  builder.status(Status.PENDING);
   builder.publicAddresses(ImmutableSet.<String>of(publicIpPrefix + id));
   builder.privateAddresses(ImmutableSet.<String>of(privateIpPrefix + id));
   builder.credentials(LoginCredentials.builder().user("root").password(passwordPrefix + id).build());
   NodeMetadata node=builder.build();
   nodes.put(node.getId(),node);
-  setStateOnNodeAfterDelay(NodeState.RUNNING,node,100);
+  setStateOnNodeAfterDelay(Status.RUNNING,node,100);
   return new NodeWithInitialCredentials(node);
 }

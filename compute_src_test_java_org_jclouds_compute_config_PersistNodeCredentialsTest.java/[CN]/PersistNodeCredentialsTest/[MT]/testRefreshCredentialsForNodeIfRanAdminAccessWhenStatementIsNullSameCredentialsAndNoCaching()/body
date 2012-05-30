@@ -1,7 +1,7 @@
 {
   @SuppressWarnings("unchecked") Map<String,Credentials> credstore=createMock(Map.class);
   replay(credstore);
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).build();
   RefreshCredentialsForNodeIfRanAdminAccess fn=new PersistNodeCredentialsModule.RefreshCredentialsForNodeIfRanAdminAccess(credstore,null);
   assertEquals(node,fn.apply(node));
   verify(credstore);

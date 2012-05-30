@@ -1,5 +1,5 @@
 {
-  Map<ServerState,NodeState> serverStateToNodeState=createMock(Map.class);
+  Map<ServerState,Status> serverStateToNodeStatus=createMock(Map.class);
   org.jclouds.compute.domain.Image jcImage=createMock(org.jclouds.compute.domain.Image.class);
   Option dc=new Option(1l,"US-West-1","US West 1 Datacenter");
   Option ram=new Option(1l,"512MB","Server with 512MB RAM");
@@ -8,7 +8,7 @@
   expect(server.getId()).andReturn(1000l).atLeastOnce();
   expect(server.getName()).andReturn("group-ff").atLeastOnce();
   expect(server.getState()).andReturn(ServerState.ON).atLeastOnce();
-  expect(serverStateToNodeState.get(ServerState.ON)).andReturn(NodeState.RUNNING);
+  expect(serverStateToNodeStatus.get(ServerState.ON)).andReturn(Status.RUNNING);
   Location location=new LocationBuilder().scope(LocationScope.ZONE).id("1").description("US-West-1").build();
   Set<? extends Location> locations=ImmutableSet.<Location>of(location);
   expect(server.getIp()).andReturn(new Ip("127.0.0.1"));
@@ -20,16 +20,16 @@
   expect(jcImage.getProviderId()).andReturn("2000").atLeastOnce();
   expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
   expect(jcImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();
-  replay(serverStateToNodeState);
+  replay(serverStateToNodeStatus);
   replay(server);
   replay(image);
   replay(jcImage);
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(GoGridHardwareSupplier.H_ALL),Suppliers.<Set<? extends Location>>ofInstance(locations),namingConvention);
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeStatus,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.<Set<? extends Hardware>>ofInstance(GoGridHardwareSupplier.H_ALL),Suppliers.<Set<? extends Location>>ofInstance(locations),namingConvention);
   NodeMetadata metadata=parser.apply(server);
   assertEquals(metadata.getLocation(),location);
   assertEquals(metadata.getImageId(),"2000");
   assertEquals(metadata.getGroup(),"group");
-  verify(serverStateToNodeState);
+  verify(serverStateToNodeStatus);
   verify(image);
   verify(server);
   verify(jcImage);

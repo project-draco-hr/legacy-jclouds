@@ -1,10 +1,10 @@
 {
-  Map<ServerStatus,NodeState> serverStateToNodeState=NovaComputeServiceContextModule.serverToNodeState;
+  Map<ServerStatus,Status> serverStateToNodeStatus=NovaComputeServiceContextModule.serverToNodeStatus;
   org.jclouds.compute.domain.Image jcImage=NovaImageToImageTest.convertImage();
   Set<org.jclouds.compute.domain.Image> images=ImmutableSet.of(jcImage);
   Set<org.jclouds.compute.domain.Hardware> hardwares=ImmutableSet.of();
   Server server=ParseServerFromJsonResponseTest.parseServer();
-  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeState,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
+  ServerToNodeMetadata parser=new ServerToNodeMetadata(serverStateToNodeStatus,Suppliers.<Set<? extends Image>>ofInstance(images),Suppliers.ofInstance(provider),Suppliers.<Set<? extends Hardware>>ofInstance(hardwares),namingConvention);
   NodeMetadata metadata=parser.apply(server);
   NodeMetadata constructedMetadata=newNodeMetadataBuilder().imageId("2").operatingSystem(new OperatingSystem.Builder().family(OsFamily.CENTOS).description("CentOS 5.2").version("5.2").is64Bit(true).build()).build();
   assertEquals(metadata,constructedMetadata);

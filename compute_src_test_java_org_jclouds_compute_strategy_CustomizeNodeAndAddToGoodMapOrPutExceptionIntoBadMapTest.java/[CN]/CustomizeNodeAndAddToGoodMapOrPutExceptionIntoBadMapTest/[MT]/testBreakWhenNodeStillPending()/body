@@ -8,7 +8,7 @@
   Set<NodeMetadata> goodNodes=Sets.newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
   Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
-  final NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.PENDING).build();
+  final NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.PENDING).build();
   GetNodeMetadataStrategy nodeRunning=new GetNodeMetadataStrategy(){
     @Override public NodeMetadata getNode(    String input){
       Assert.assertEquals(input,node.getId());
@@ -21,7 +21,7 @@
   new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(new AtomicNodeRunning(nodeRunning),openSocketFinder,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,atomicNode,goodNodes,badNodes,customizationResponses).apply(atomicNode);
   assertEquals(goodNodes.size(),0);
   assertEquals(badNodes.keySet(),ImmutableSet.of(node));
-  assertTrue(badNodes.get(node).getMessage() != null && badNodes.get(node).getMessage().matches("node\\(id\\) didn't achieve the state running, so we couldn't customize; aborting prematurely after .* seconds with final state: PENDING"),badNodes.get(node).getMessage());
+  assertTrue(badNodes.get(node).getMessage() != null && badNodes.get(node).getMessage().matches("node\\(id\\) didn't achieve the status running, so we couldn't customize; aborting prematurely after .* seconds with final status: PENDING"),badNodes.get(node).getMessage());
   assertEquals(customizationResponses.size(),0);
   verify(initScriptRunnerFactory,openSocketFinder);
 }

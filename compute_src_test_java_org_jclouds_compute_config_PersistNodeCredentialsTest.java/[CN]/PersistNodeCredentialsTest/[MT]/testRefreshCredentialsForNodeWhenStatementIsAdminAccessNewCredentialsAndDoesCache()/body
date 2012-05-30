@@ -7,7 +7,7 @@
   expect(credstore.put("node#id",credentials)).andReturn(null);
   replay(statement);
   replay(credstore);
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").state(NodeState.RUNNING).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).build();
   RefreshCredentialsForNode fn=new PersistNodeCredentialsModule.RefreshCredentialsForNode(credstore,statement);
   assertEquals(fn.apply(node).getCredentials(),credentials);
   verify(statement);

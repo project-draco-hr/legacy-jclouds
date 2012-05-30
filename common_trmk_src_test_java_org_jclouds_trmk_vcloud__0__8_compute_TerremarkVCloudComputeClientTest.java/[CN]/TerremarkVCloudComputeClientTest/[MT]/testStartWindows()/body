@@ -23,13 +23,13 @@
   expect(successTester.apply(taskLocation)).andReturn(true).atLeastOnce();
   expect(client.powerOnVApp(vappLocation)).andReturn(task);
   Predicate<VApp> notFoundTester=createMock(Predicate.class);
-  Map<Status,NodeState> vAppStatusToNodeState=createMock(Map.class);
+  Map<Status,NodeMetadata.Status> vAppStatusToNodeStatus=createMock(Map.class);
   TerremarkVCloudComputeClient computeClient=new TerremarkVCloudComputeClient(client,new Provider<String>(){
     @Override public String get(){
       return "password";
     }
   }
-,successTester,vAppStatusToNodeState,credentialStore,supplier);
+,successTester,vAppStatusToNodeStatus,credentialStore,supplier);
   replay(vdc);
   replay(template);
   replay(vApp);
@@ -37,7 +37,7 @@
   replay(client);
   replay(successTester);
   replay(notFoundTester);
-  replay(vAppStatusToNodeState);
+  replay(vAppStatusToNodeStatus);
   NodeAndInitialCredentials<VApp> response=computeClient.startAndReturnCredentials(vdcURI,templateURI,"name",new InstantiateVAppTemplateOptions());
   assertEquals(response.getNodeId(),"vapp");
   assertEquals(response.getNode(),vApp);
@@ -49,5 +49,5 @@
   verify(client);
   verify(successTester);
   verify(notFoundTester);
-  verify(vAppStatusToNodeState);
+  verify(vAppStatusToNodeStatus);
 }
