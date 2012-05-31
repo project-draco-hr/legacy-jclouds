@@ -1,27 +1,22 @@
 {
+  ImmutableSet.Builder<HttpRequestOptions> result=ImmutableSet.builder();
   for (  int index : methodToIndexesOfOptions.get(method)) {
     if (args.length >= index + 1) {
       if (args[index] instanceof Object[]) {
-        Object[] options=(Object[])args[index];
-        if (options.length == 0) {
-        }
- else         if (options.length == 1) {
-          if (options[0] instanceof HttpRequestOptions) {
-            HttpRequestOptions binder=(HttpRequestOptions)options[0];
-            injector.injectMembers(binder);
-            return binder;
-          }
-        }
- else {
-          if (options[0] instanceof HttpRequestOptions) {
-            throw new IllegalArgumentException("we currently do not support multiple varargs options in: " + method.getName());
+        for (        Object option : (Object[])args[index]) {
+          if (option instanceof HttpRequestOptions) {
+            result.add((HttpRequestOptions)option);
           }
         }
       }
  else {
-        return (HttpRequestOptions)args[index];
+        for (; index < args.length; index++) {
+          if (args[index] instanceof HttpRequestOptions) {
+            result.add((HttpRequestOptions)args[index]);
+          }
+        }
       }
     }
   }
-  return null;
+  return result.build();
 }
