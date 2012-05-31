@@ -1,0 +1,7 @@
+{
+  HttpRequest get=HttpRequest.builder().method("POST").endpoint(URI.create("https://glance.jclouds.org:9292/v1.0/images")).headers(ImmutableMultimap.<String,String>builder().put("x-image-meta-name","test").put("Accept",MediaType.APPLICATION_JSON).put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("somedata",MediaType.APPLICATION_OCTET_STREAM)).build();
+  HttpResponse createResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image.json")).build();
+  GlanceClient clientWhenExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,get,createResponse);
+  assertEquals(clientWhenExist.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(clientWhenExist.getImageClientForRegion("az-1.region-a.geo-1").create("test",new StringPayload("somedata")),new ParseImageDetailsTest().expected());
+}

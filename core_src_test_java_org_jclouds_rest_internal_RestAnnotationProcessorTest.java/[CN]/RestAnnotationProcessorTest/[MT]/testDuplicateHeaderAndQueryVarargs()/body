@@ -1,0 +1,7 @@
+{
+  Method method=TestPayloadParamVarargs.class.getMethod("varargs",Array.newInstance(HttpRequestOptions.class,0).getClass());
+  HttpRequest request=factory(TestPayloadParamVarargs.class).createRequest(method,new TestHttpRequestOptions().queryParams(ImmutableMultimap.of("key","value")),new TestHttpRequestOptions().payload("fooya"),new TestHttpRequestOptions().headerParams(ImmutableMultimap.of("X-header-1","fooya")),new TestHttpRequestOptions().queryParams(ImmutableMultimap.of("key","anothervalue")),new TestHttpRequestOptions().headerParams(ImmutableMultimap.of("X-header-1","fooya again!")),new TestHttpRequestOptions().payload("last_payload_wins!"));
+  assertRequestLineEquals(request,"POST http://localhost:9999?key=value&key=anothervalue HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"X-header-1: fooya\nX-header-1: fooya again!\n");
+  assertPayloadEquals(request,"last_payload_wins!","application/unknown",false);
+}

@@ -45,8 +45,7 @@
       headers.put(HOST,hostHeader.toString());
     }
     Payload payload=null;
-    HttpRequestOptions options=findOptionsIn(method,args);
-    if (options != null) {
+    for (    HttpRequestOptions options : findOptionsIn(method,args)) {
       injector.injectMembers(options);
       for (      Entry<String,String> header : options.buildRequestHeaders().entries()) {
         headers.put(header.getKey(),Strings2.replaceTokens(header.getValue(),tokenValues.entries()));
