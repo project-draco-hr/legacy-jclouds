@@ -2,7 +2,7 @@
   UUID id=UUID.randomUUID();
   Image novaImageToConvert=Image.builder().id(id.toString()).name("Test Image " + id).build();
   OperatingSystem operatingSystem=new OperatingSystem(OsFamily.UBUNTU,"My Test OS","My Test Version","x86","My Test OS",true);
-  ImageInZoneToImage converter=new ImageInZoneToImage(new MockImageToOsConverter(operatingSystem),locationIndex);
+  ImageInZoneToImage converter=new ImageInZoneToImage(NovaComputeServiceContextModule.toPortableImageStatus,constant(operatingSystem),locationIndex);
   ImageInZone novaImageInZoneToConvert=new ImageInZone(novaImageToConvert,"South");
   converter.apply(novaImageInZoneToConvert);
 }

@@ -11,8 +11,9 @@
   expect(guestOsType.getDescription()).andReturn(unknownOsDescription).anyTimes();
   expect(guestOsType.getIs64Bit()).andReturn(true);
   expect(vBox.getGuestOSType(eq("os-type"))).andReturn(guestOsType);
+  expect(vm.getState()).andReturn(MachineState.PoweredOff);
   replay(vbm,vBox,vm,guestOsType);
-  IMachineToImage fn=new IMachineToImage(Suppliers.ofInstance(vbm),map);
+  IMachineToImage fn=new IMachineToImage(VirtualBoxComputeServiceContextModule.toPortableImageStatus,Suppliers.ofInstance(vbm),map);
   Image image=fn.apply(vm);
   assertEquals(image.getOperatingSystem().getDescription(),"SomeOtherOs 2.04");
   assertEquals(image.getOperatingSystem().getVersion(),"");

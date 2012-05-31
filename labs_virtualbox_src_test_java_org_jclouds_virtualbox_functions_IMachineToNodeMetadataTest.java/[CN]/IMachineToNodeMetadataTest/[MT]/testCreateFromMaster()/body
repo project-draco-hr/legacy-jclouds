@@ -13,7 +13,7 @@
   INetworkAdapter hostOnly=createNiceMock(INetworkAdapter.class);
   MachineUtils machineUtils=createNiceMock(MachineUtils.class);
   replay(vm,nat,natEng,hostOnly,machineUtils);
-  NodeMetadata node=new IMachineToNodeMetadata(machineUtils).apply(vm);
+  NodeMetadata node=new IMachineToNodeMetadata(VirtualBoxComputeServiceContextModule.toPortableNodeStatus,machineUtils).apply(vm);
   assertEquals(MASTER_NAME,node.getName());
   assertEquals(1,node.getPrivateAddresses().size());
   assertEquals(1,node.getPublicAddresses().size());

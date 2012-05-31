@@ -3,6 +3,6 @@
   }
 .provideOsVersionMap(new ComputeServiceConstants.ReferenceData(),Guice.createInjector(new GsonModule()).getInstance(Json.class));
   Set<Image> result=DescribeImagesResponseHandlerTest.parseImages(resource);
-  EC2ImageParser parser=new EC2ImageParser(new EC2PopulateDefaultLoginCredentialsForImageStrategy(),map,Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation),new NovaReviseParsedImage(new ImageToOperatingSystem(map)));
+  EC2ImageParser parser=new EC2ImageParser(EC2ComputeServiceDependenciesModule.toPortableImageStatus,new EC2PopulateDefaultLoginCredentialsForImageStrategy(),map,Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(defaultLocation)),Suppliers.ofInstance(defaultLocation),new NovaReviseParsedImage(new ImageToOperatingSystem(map)));
   return Sets.newLinkedHashSet(Iterables.filter(Iterables.transform(result,parser),Predicates.notNull()));
 }

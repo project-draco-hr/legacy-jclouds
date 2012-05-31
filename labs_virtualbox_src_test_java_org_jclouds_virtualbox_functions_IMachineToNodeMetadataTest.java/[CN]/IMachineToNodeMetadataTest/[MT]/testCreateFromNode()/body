@@ -15,7 +15,7 @@
   expect(natEng.getRedirects()).andReturn(ImmutableList.of("0,1,127.0.0.1,3000,,22"));
   MachineUtils machineUtils=createNiceMock(MachineUtils.class);
   replay(vm,nat,natEng,hostOnly,machineUtils);
-  NodeMetadata node=new IMachineToNodeMetadata(machineUtils).apply(vm);
+  NodeMetadata node=new IMachineToNodeMetadata(VirtualBoxComputeServiceContextModule.toPortableNodeStatus,machineUtils).apply(vm);
   assertEquals(name,node.getName());
   assertEquals(group,node.getGroup());
   assertEquals(1,node.getPublicAddresses().size());

@@ -11,8 +11,9 @@
   expect(vm.getDescription()).andReturn("my-ubuntu-machine").anyTimes();
   expect(guestOsType.getDescription()).andReturn(linuxDescription).anyTimes();
   expect(guestOsType.getIs64Bit()).andReturn(true);
+  expect(vm.getState()).andReturn(MachineState.PoweredOff);
   replay(vbm,vBox,vm,guestOsType);
-  IMachineToImage fn=new IMachineToImage(Suppliers.ofInstance(vbm),map);
+  IMachineToImage fn=new IMachineToImage(VirtualBoxComputeServiceContextModule.toPortableImageStatus,Suppliers.ofInstance(vbm),map);
   Image image=fn.apply(vm);
   assertEquals(image.getDescription(),"my-ubuntu-machine");
   assertEquals(image.getOperatingSystem().getDescription(),linuxDescription);
@@ -20,4 +21,5 @@
   assertEquals(image.getOperatingSystem().getFamily(),OsFamily.UBUNTU);
   assertEquals(image.getOperatingSystem().getVersion(),"10.04");
   assertEquals(image.getId(),"my-vm-id");
+  assertEquals(image.getStatus(),Image.Status.AVAILABLE);
 }

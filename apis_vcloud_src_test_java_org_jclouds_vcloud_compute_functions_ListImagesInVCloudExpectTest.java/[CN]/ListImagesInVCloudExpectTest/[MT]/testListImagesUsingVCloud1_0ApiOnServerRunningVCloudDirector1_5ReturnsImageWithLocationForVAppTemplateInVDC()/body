@@ -6,6 +6,7 @@
   Set<? extends Image> currentImages=compute.listImages();
   assertEquals(compute.listImages().size(),1);
   Image onlyImage=Iterables.get(currentImages,0);
-  Image expectedImage=new ImageBuilder().ids(ENDPOINT + "/v1.0/vAppTemplate/" + templateId).uri(URI.create(ENDPOINT + "/v1.0/vAppTemplate/" + templateId)).name("UbuntuServer-x64-2GB").operatingSystem(new CIMOperatingSystem(OSType.UBUNTU_64,"",null,"Ubuntu Linux (64-bit)")).description("This is a special place-holder used for disconnected network interfaces.").defaultCredentials(LoginCredentials.builder().identity("root").build()).location(vdcLocation).build();
+  Image expectedImage=new ImageBuilder().ids(ENDPOINT + "/v1.0/vAppTemplate/" + templateId).uri(URI.create(ENDPOINT + "/v1.0/vAppTemplate/" + templateId)).name("UbuntuServer-x64-2GB").operatingSystem(new CIMOperatingSystem(OSType.UBUNTU_64,"",null,"Ubuntu Linux (64-bit)")).description("This is a special place-holder used for disconnected network interfaces.").defaultCredentials(LoginCredentials.builder().identity("root").build()).status(Image.Status.AVAILABLE).location(vdcLocation).build();
   assertEquals(onlyImage,expectedImage);
+  assertEquals(onlyImage.getStatus(),Image.Status.AVAILABLE);
 }

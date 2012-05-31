@@ -13,7 +13,7 @@
   builder.imageId(ZoneAndId.fromZoneAndId(serverInZone.getZone(),from.getImage().getId()).slashEncode());
   builder.operatingSystem(findOperatingSystemForServerOrNull(serverInZone));
   builder.hardware(findHardwareForServerOrNull(serverInZone));
-  builder.status(from.getStatus().getNodeStatus());
+  builder.status(toPortableNodeStatus.get(from.getStatus()));
   builder.publicAddresses(filter(transform(filter(from.getAddresses().values(),Predicates.not(isPrivateAddress)),AddressToStringTransformationFunction.INSTANCE),isInet4Address));
   builder.privateAddresses(filter(transform(filter(from.getAddresses().values(),isPrivateAddress),AddressToStringTransformationFunction.INSTANCE),isInet4Address));
   return builder.build();

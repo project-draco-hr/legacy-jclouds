@@ -4,5 +4,5 @@
   OsFamily family=parseOsFamilyOrUnrecognized(guestOSType.getDescription());
   String version=parseVersionOrReturnEmptyString(family,guestOSType.getDescription(),osVersionMap);
   OperatingSystem os=OperatingSystem.builder().description(guestOSType.getDescription()).family(family).version(version).is64Bit(guestOSType.getIs64Bit()).build();
-  return new ImageBuilder().id(from.getName().substring(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX.length(),from.getName().length())).name(from.getName()).description(from.getDescription()).operatingSystem(os).build();
+  return new ImageBuilder().id(from.getName().substring(VirtualBoxConstants.VIRTUALBOX_IMAGE_PREFIX.length(),from.getName().length())).name(from.getName()).description(from.getDescription()).operatingSystem(os).status(toPortableImageStatus.get(from.getState())).build();
 }
