@@ -1,0 +1,12 @@
+{
+  for (  String regionId : quantumContext.getApi().getConfiguredRegions()) {
+    Set<Reference> ids=quantumContext.getApi().getNetworkClientForRegion(regionId).listReferences();
+    Set<Network> networks=quantumContext.getApi().getNetworkClientForRegion(regionId).list();
+    assertNotNull(ids);
+    assertEquals(ids.size(),networks.size());
+    for (    Network network : networks) {
+      assertNotNull(network.getName());
+      assertTrue(ids.contains(Reference.builder().id(network.getId()).build()));
+    }
+  }
+}

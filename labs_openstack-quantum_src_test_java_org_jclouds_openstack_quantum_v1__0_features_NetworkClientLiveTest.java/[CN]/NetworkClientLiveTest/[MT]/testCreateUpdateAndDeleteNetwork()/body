@@ -1,0 +1,26 @@
+{
+  for (  String regionId : quantumContext.getApi().getConfiguredRegions()) {
+    NetworkClient client=quantumContext.getApi().getNetworkClientForRegion(regionId);
+    Reference net=client.create("jclouds-test");
+    assertNotNull(net);
+    Network network=client.get(net.getId());
+    NetworkDetails details=client.getDetails(net.getId());
+    for (    Network checkme : ImmutableList.of(network,details)) {
+      assertEquals(checkme.getId(),net.getId());
+      assertEquals(checkme.getName(),"jclouds-test");
+    }
+    assertTrue(details.getPorts().isEmpty());
+    assertTrue(client.rename(net.getId(),"jclouds-live-test"));
+    network=client.get(net.getId());
+    details=client.getDetails(net.getId());
+    for (    Network checkme : ImmutableList.of(network,details)) {
+      assertEquals(checkme.getId(),net.getId());
+      assertEquals(checkme.getName(),"jclouds-live-test");
+    }
+    assertTrue(details.getPorts().isEmpty());
+    Reference net2=client.create("jclouds-test2");
+    assertNotNull(net2);
+    assertTrue(client.delete(net.getId()));
+    assertTrue(client.delete(net2.getId()));
+  }
+}

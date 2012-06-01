@@ -1,0 +1,15 @@
+{
+  for (  String regionId : quantumContext.getApi().getConfiguredRegions()) {
+    NetworkClient netClient=quantumContext.getApi().getNetworkClientForRegion(regionId);
+    Set<Reference> nets=netClient.listReferences();
+    for (    Reference net : nets) {
+      PortClient portClient=quantumContext.getApi().getPortClientForRegionAndNetwork(regionId,net.getId());
+      Set<Reference> portRefs=portClient.listReferences();
+      Set<Port> ports=portClient.list();
+      assertEquals(portRefs.size(),ports.size());
+      for (      Port port : ports) {
+        assertTrue(portRefs.contains(Reference.builder().id(port.getId()).build()));
+      }
+    }
+  }
+}
