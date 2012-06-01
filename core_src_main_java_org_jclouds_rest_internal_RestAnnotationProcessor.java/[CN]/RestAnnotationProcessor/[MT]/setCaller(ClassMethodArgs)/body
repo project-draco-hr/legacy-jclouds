@@ -7,7 +7,9 @@
   }
   this.caller=caller;
   try {
-    callerEndpoint=getEndpointFor(caller.getMethod(),caller.getArgs(),injector);
+    UriBuilder builder=uriBuilderProvider.get().uri(getEndpointFor(caller.getMethod(),caller.getArgs(),injector));
+    Multimap<String,String> tokenValues=addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),builder);
+    callerEndpoint=builder.buildFromEncodedMap(Maps2.convertUnsafe(tokenValues));
   }
  catch (  IllegalStateException e) {
   }
