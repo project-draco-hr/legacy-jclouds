@@ -1,0 +1,5 @@
+{
+  PortClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/tenants/3456/networks/1a104cf5-cb18-4d35-9407-2fd2646d9d0b/ports/detail").build(),standardResponseBuilder(200).payload(payloadFromStringWithContentType("{\"ports\": [{\"state\": \"DOWN\", \"id\": \"814ae4bb-33d9-425f-8ee2-13a5c90b1465\"}]}",APPLICATION_JSON)).build()).getPortClientForRegion("region-a.geo-1");
+  Set<Port> nets=client.list("1a104cf5-cb18-4d35-9407-2fd2646d9d0b");
+  assertEquals(nets,ImmutableSet.of(Port.builder().state(Port.State.DOWN).id("814ae4bb-33d9-425f-8ee2-13a5c90b1465").build()));
+}

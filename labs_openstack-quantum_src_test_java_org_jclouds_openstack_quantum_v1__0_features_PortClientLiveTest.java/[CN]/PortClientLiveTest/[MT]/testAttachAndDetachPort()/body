@@ -1,0 +1,20 @@
+{
+  for (  String regionId : quantumContext.getApi().getConfiguredRegions()) {
+    NetworkClient netClient=quantumContext.getApi().getNetworkClientForRegion(regionId);
+    PortClient portClient=quantumContext.getApi().getPortClientForRegion(regionId);
+    Reference net=netClient.create("jclouds-attach-test");
+    assertNotNull(net);
+    Reference port=portClient.create(net.getId());
+    assertNotNull(port);
+    assertTrue(portClient.plugAttachment(net.getId(),port.getId(),"jclouds-live-test"));
+    Attachment attachment=portClient.showAttachment(net.getId(),port.getId());
+    PortDetails portDetails=portClient.showDetails(net.getId(),port.getId());
+    for (    Attachment checkme : ImmutableList.of(attachment,portDetails.getAttachment())) {
+      assertNotNull(checkme);
+      assertEquals(checkme.getId(),"jclouds-live-test");
+    }
+    assertTrue(portClient.unplugAttachment(net.getId(),port.getId()));
+    assertTrue(portClient.delete(net.getId(),port.getId()));
+    assertTrue(netClient.delete(net.getId()));
+  }
+}
