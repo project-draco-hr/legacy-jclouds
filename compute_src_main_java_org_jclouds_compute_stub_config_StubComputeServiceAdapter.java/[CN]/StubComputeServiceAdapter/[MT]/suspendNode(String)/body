@@ -2,7 +2,7 @@
   NodeMetadata node=nodes.get(id);
   if (node == null)   throw new ResourceNotFoundException("node not found: " + id);
   if (node.getStatus() == Status.SUSPENDED)   return;
-  if (node.getStatus() != Status.RUNNING)   throw new IllegalStateException("to suspend a node, it must be in running status, not: " + node.getStatus());
+  if (node.getStatus() != Status.RUNNING)   throw new IllegalStateException("to suspend a node, it must be in running status, not: " + formatStatus(node));
   setStateOnNode(Status.PENDING,node);
   setStateOnNodeAfterDelay(Status.SUSPENDED,node,50);
 }

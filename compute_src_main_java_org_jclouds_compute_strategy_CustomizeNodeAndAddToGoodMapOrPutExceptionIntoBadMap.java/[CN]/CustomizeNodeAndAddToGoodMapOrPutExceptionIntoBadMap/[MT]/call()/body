@@ -15,10 +15,10 @@
             throw new IllegalStateException(format("api response for node(%s) was null, so we can't customize",originalId));
           }
  else           if (timeWaited < (timeouts.nodeRunning - earlyReturnGrace)) {
-            throw new IllegalStateException(format("node(%s) didn't achieve the status running, so we couldn't customize; aborting prematurely after %d seconds with final status: %s",originalId,timeWaited / 1000,node.get().getStatus()));
+            throw new IllegalStateException(format("node(%s) didn't achieve the status running, so we couldn't customize; aborting prematurely after %d seconds with final status: %s",originalId,timeWaited / 1000,formatStatus(node.get())));
           }
  else {
-            throw new IllegalStateException(format("node(%s) didn't achieve the status running within %d seconds, so we couldn't customize; final status: %s",originalId,timeouts.nodeRunning / 1000,node.get().getStatus()));
+            throw new IllegalStateException(format("node(%s) didn't achieve the status running within %d seconds, so we couldn't customize; final status: %s",originalId,timeouts.nodeRunning / 1000,formatStatus(node.get())));
           }
         }
       }

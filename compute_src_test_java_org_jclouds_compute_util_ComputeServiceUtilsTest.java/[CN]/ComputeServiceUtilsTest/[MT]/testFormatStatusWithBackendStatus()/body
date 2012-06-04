@@ -1,0 +1,8 @@
+{
+  ComputeMetadataIncludingStatus<Image.Status> resource=createMock(ComputeMetadataIncludingStatus.class);
+  expect(resource.getStatus()).andReturn(Image.Status.PENDING);
+  expect(resource.getBackendStatus()).andReturn("queued").anyTimes();
+  replay(resource);
+  assertEquals(formatStatus(resource),"PENDING[queued]");
+  verify(resource);
+}

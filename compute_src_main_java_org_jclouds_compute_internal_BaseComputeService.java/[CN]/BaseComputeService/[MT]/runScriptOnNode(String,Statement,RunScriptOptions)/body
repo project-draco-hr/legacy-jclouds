@@ -1,7 +1,7 @@
 {
   NodeMetadata node=this.getNodeMetadata(id);
   if (node == null)   throw new NoSuchElementException(id);
-  if (node.getStatus() != Status.RUNNING)   throw new IllegalStateException("node " + id + " needs to be running before executing a script on it. current state: "+ node.getStatus());
+  if (node.getStatus() != Status.RUNNING)   throw new IllegalStateException("node " + id + " needs to be running before executing a script on it. current state: "+ formatStatus(node));
   initAdminAccess.visit(runScript);
   node=updateNodeWithCredentialsIfPresent(node,options);
   ExecResponse response=runScriptOnNodeFactory.create(node,runScript,options).init().call();
