@@ -1,0 +1,13 @@
+{
+  checkNotNull(id,"id");
+  String[] parts=AWSUtils.parseHandle(id);
+  String region=parts[0];
+  String instanceId=parts[1];
+  try {
+    Image image=getImageInRegion(region,instanceId);
+    return imageToImage.apply(image);
+  }
+ catch (  NoSuchElementException e) {
+    return null;
+  }
+}
