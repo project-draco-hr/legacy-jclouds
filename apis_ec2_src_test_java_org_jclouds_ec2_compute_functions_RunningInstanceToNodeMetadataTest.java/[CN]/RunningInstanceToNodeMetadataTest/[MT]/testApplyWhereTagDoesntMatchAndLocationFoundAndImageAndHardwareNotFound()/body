@@ -1,6 +1,6 @@
 {
   RunningInstanceToNodeMetadata parser=createNodeParser(ImmutableSet.<Hardware>of(),ImmutableSet.of(provider),ImmutableSet.<Image>of(),ImmutableMap.<String,Credentials>of());
   RunningInstance server=firstInstanceFromResource("/describe_instances_running.xml");
-  NodeMetadata expected=new NodeMetadataBuilder().hostname("ip-10-243-42-70").status(Status.RUNNING).privateAddresses(ImmutableSet.of("10.243.42.70")).publicAddresses(ImmutableSet.of("174.129.81.68")).imageId("us-east-1/ami-82e4b5c7").id("us-east-1/i-0799056f").providerId("i-0799056f").location(provider).build();
-  assertEquals(parser.apply(server),expected);
+  NodeMetadata expected=new NodeMetadataBuilder().hostname("ip-10-243-42-70").status(Status.RUNNING).backendStatus("running").privateAddresses(ImmutableSet.of("10.243.42.70")).publicAddresses(ImmutableSet.of("174.129.81.68")).imageId("us-east-1/ami-82e4b5c7").id("us-east-1/i-0799056f").providerId("i-0799056f").location(provider).build();
+  assertEquals(parser.apply(server).toString(),expected.toString());
 }

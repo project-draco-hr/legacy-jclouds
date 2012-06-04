@@ -1,5 +1,7 @@
 {
-  Set<Image> contents=ImmutableSet.of(new Image("us-east-1",Architecture.I386,null,null,"ami-be3adfd7","ec2-public-images/fedora-8-i386-base-v1.04.manifest.xml","206029621532",ImageState.AVAILABLE,ImageType.MACHINE,false,Sets.<String>newHashSet("9961934F"),"aki-4438dd2d",null,"ari-4538dd2c",RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of(),VirtualizationType.PARAVIRTUAL,Hypervisor.XEN));
+  Set<Image> contents=ImmutableSet.of(new Image("us-east-1",Architecture.I386,null,null,"ami-be3adfd7","ec2-public-images/fedora-8-i386-base-v1.04.manifest.xml","206029621532",ImageState.AVAILABLE,"available",ImageType.MACHINE,false,Sets.<String>newHashSet("9961934F"),"aki-4438dd2d",null,"ari-4538dd2c",RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of(),VirtualizationType.PARAVIRTUAL,Hypervisor.XEN));
   Set<Image> result=parseImages("/describe_images.xml");
-  assertEquals(result,contents);
+  assertEquals(result.toString(),contents.toString());
+  assertEquals(get(result,0).getImageState(),ImageState.AVAILABLE);
+  assertEquals(get(result,0).getRawState(),"available");
 }

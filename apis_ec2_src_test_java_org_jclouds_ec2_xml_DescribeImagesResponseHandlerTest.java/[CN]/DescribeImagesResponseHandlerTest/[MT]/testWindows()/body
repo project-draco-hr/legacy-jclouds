@@ -1,5 +1,7 @@
 {
-  Set<Image> contents=ImmutableSet.of(new Image("us-east-1",Architecture.X86_64,null,null,"ami-02eb086b","aws-solutions-amis/SqlSvrStd2003r2-x86_64-Win_SFWBasic5.1-v1.0.manifest.xml","771350841976",ImageState.AVAILABLE,ImageType.MACHINE,true,Sets.<String>newHashSet("5771E9A6"),null,"windows",null,RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of(),VirtualizationType.PARAVIRTUAL,Hypervisor.XEN));
+  Set<Image> contents=ImmutableSet.of(new Image("us-east-1",Architecture.X86_64,null,null,"ami-02eb086b","aws-solutions-amis/SqlSvrStd2003r2-x86_64-Win_SFWBasic5.1-v1.0.manifest.xml","771350841976",ImageState.AVAILABLE,"available",ImageType.MACHINE,true,Sets.<String>newHashSet("5771E9A6"),null,"windows",null,RootDeviceType.INSTANCE_STORE,null,ImmutableMap.<String,EbsBlockDevice>of(),VirtualizationType.PARAVIRTUAL,Hypervisor.XEN));
   Set<Image> result=parseImages("/describe_images_windows.xml");
-  assertEquals(result,contents);
+  assertEquals(result.toString(),contents.toString());
+  assertEquals(get(result,0).getImageState(),ImageState.AVAILABLE);
+  assertEquals(get(result,0).getRawState(),"available");
 }
