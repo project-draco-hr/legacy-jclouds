@@ -1,10 +1,5 @@
 {
-  try {
-    String toReturn=CharStreams.toString(Resources.newReaderSupplier(ClassLoadingUtils.loadResource(Utils.class,String.format("/functions/%s.%s",function,ShellToken.SH.to(family))),Charsets.UTF_8));
-    String lf=ShellToken.LF.to(family);
-    return toReturn.endsWith(lf) ? toReturn : new StringBuilder(toReturn).append(lf).toString();
-  }
- catch (  IOException e) {
-    throw new FunctionNotFoundException(function,family,e);
-  }
+  String toReturn=functionLoader.loadFunction(function,family);
+  String lf=ShellToken.LF.to(family);
+  return toReturn.endsWith(lf) ? toReturn : new StringBuilder(toReturn).append(lf).toString();
 }
