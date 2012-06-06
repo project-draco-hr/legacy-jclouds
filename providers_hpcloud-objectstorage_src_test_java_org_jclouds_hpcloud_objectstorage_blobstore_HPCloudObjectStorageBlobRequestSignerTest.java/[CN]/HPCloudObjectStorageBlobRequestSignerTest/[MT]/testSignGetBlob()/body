@@ -1,0 +1,6 @@
+{
+  BlobRequestSigner signGetBlob=requestsSendResponses(requestResponseMap).getContext().getSigner();
+  HttpRequest request=signGetBlob.signGetBlob("container","name");
+  assertEquals(request.getRequestLine(),"GET https://objects.jclouds.org/v1.0/40806637803162/container/name HTTP/1.1");
+  assertEquals(request.getHeaders(),ImmutableMultimap.of("X-Auth-Token","Auth_4f173437e4b013bee56d1007"));
+}
