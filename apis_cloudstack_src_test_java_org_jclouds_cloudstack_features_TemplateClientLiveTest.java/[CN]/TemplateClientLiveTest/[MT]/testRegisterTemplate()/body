@@ -4,7 +4,7 @@
   Iterable<Network> networks=client.getNetworkClient().listNetworks(ListNetworksOptions.Builder.zoneId(zone.getId()).isDefault(true));
   networks=Iterables.filter(networks,new Predicate<Network>(){
     @Override public boolean apply(    @Nullable Network network){
-      return network != null && network.getState().equals("Implemented");
+      return network != null && network.getName().equals("Virtual Network");
     }
   }
 );
@@ -24,7 +24,7 @@
       if (template == null)       return false;
       Template t2=client.getTemplateClient().getTemplateInZone(template.getId(),zoneId);
       Logger.CONSOLE.info("%s",t2.getStatus());
-      return "Download Complete".equals(t2.getStatus());
+      return t2.getStatus() == Template.Status.DOWNLOADED;
     }
   }
 ;

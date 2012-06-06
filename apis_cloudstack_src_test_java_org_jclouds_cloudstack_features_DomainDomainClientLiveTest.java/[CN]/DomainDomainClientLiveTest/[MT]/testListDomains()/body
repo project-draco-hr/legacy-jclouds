@@ -1,15 +1,7 @@
 {
   skipIfNotDomainAdmin();
-  Set<Domain> allDomains=domainAdminClient.getDomainClient().listDomains();
-  Domain root=find(allDomains,withName("ROOT"));
-  assertEquals(root,domainAdminClient.getDomainClient().getDomainById(root.getId()));
-  assertEquals(root.getLevel(),0);
-  assertEquals(root.getParentDomainId(),0);
-  assertNull(root.getParentDomainName());
-  if (allDomains.size() > 1) {
-    assertTrue(root.hasChild());
-  }
-  for (  Domain domain : allDomains) {
-    checkDomain(domain,allDomains);
+  Set<Domain> domains=domainAdminClient.getDomainClient().listDomains();
+  for (  Domain candidate : domains) {
+    checkDomain(candidate);
   }
 }

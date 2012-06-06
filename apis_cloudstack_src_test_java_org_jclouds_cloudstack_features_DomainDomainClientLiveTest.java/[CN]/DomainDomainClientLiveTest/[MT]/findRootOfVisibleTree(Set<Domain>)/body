@@ -1,0 +1,14 @@
+{
+  final Set<String> names=newHashSet(Iterables.transform(domains,new Function<Domain,String>(){
+    @Override public String apply(    Domain domain){
+      return domain.getName();
+    }
+  }
+));
+  for (  Domain candidate : domains) {
+    if (candidate.getParentDomainId() == null || !names.contains(candidate.getParentDomainName())) {
+      return candidate;
+    }
+  }
+  throw new NoSuchElementException("No root node found in this tree");
+}
