@@ -1,2 +1,27 @@
 {
+  skipIfNotDomainAdmin();
+  skipIfNotDomainAdmin();
+  Account testAccount=null;
+  User testUser=null;
+  try {
+    testAccount=createTestAccount(globalAdminClient,prefix);
+    testUser=createTestUser(globalAdminClient,testAccount,prefix);
+    AsyncCreateResponse response=domainAdminClient.getUserClient().disableUser(testUser.getId());
+    assertNotNull(response);
+    assertTrue(jobComplete.apply(response.getJobId()));
+    AsyncJob<User> job=domainAdminClient.getAsyncJobClient().getAsyncJob(response.getJobId());
+    assertNotNull(job);
+    assertEquals(job.getResult().getState(),User.State.DISABLED);
+    User updated=domainAdminClient.getUserClient().enableUser(testUser.getId());
+    assertNotNull(updated);
+    assertEquals(updated.getState(),User.State.ENABLED);
+  }
+  finally {
+    if (testUser != null) {
+      globalAdminClient.getUserClient().deleteUser(testUser.getId());
+    }
+    if (testAccount != null) {
+      globalAdminClient.getAccountClient().deleteAccount(testAccount.getId());
+    }
+  }
 }

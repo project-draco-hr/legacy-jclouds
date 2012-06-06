@@ -3,7 +3,7 @@
   final NetworkOffering offering=find(client.getOfferingClient().listNetworkOfferings(),NetworkOfferingPredicates.supportsGuestVirtualNetworks());
   Set<Network> suitableNetworks=Sets.filter(client.getNetworkClient().listNetworks(zoneId(zone.getId()).isSystem(false).trafficType(TrafficType.GUEST)),new Predicate<Network>(){
     @Override public boolean apply(    Network network){
-      return network.getNetworkOfferingId() == offering.getId();
+      return network.getNetworkOfferingId().equals(offering.getId());
     }
   }
 );
