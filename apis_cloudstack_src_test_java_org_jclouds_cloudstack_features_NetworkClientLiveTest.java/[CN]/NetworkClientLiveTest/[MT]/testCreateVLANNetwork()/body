@@ -1,9 +1,6 @@
 {
+  skipIfNotDomainAdmin();
   if (!networksSupported)   return;
-  if (!domainAdminEnabled) {
-    Logger.getAnonymousLogger().log(Level.SEVERE,"domainAdmin credentials not present, skipping test");
-    return;
-  }
   final NetworkOffering offering;
   try {
     offering=get(cloudStackContext.getApi().getOfferingClient().listNetworkOfferings(specifyVLAN(true).zoneId(zone.getId())),0);
