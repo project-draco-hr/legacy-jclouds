@@ -1,7 +1,7 @@
 {
-  UserClient client=keystoneContext.getApi().getUserClient();
+  UserClient client=keystoneContext.getApi().getUserClient().get();
   Set<User> users=client.list();
-  Set<Tenant> tenants=keystoneContext.getApi().getTenantClient().list();
+  Set<Tenant> tenants=keystoneContext.getApi().getTenantClient().get().list();
   for (  User user : users) {
     for (    Tenant tenant : tenants) {
       Set<Role> roles=client.listRolesOfUserOnTenant(user.getId(),tenant.getId());

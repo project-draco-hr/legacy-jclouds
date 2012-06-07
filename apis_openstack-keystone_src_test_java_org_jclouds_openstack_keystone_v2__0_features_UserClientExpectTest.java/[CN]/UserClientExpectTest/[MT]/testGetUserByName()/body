@@ -1,5 +1,5 @@
 {
-  UserClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/users?name=nova").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/user_details.json",APPLICATION_JSON)).build()).getUserClient();
+  UserClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/users?name=nova").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/user_details.json",APPLICATION_JSON)).build()).getUserClient().get();
   User user=client.getByName("nova");
   assertNotNull(user);
   assertEquals(user,User.builder().name("nova").id("e021dfd758eb44a89f1c57c8ef3be8e2").build());
