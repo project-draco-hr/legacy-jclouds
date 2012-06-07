@@ -1,0 +1,8 @@
+{
+  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithAccessKeyAndSecretKey,responseWithKeystoneAccess).build();
+  BlobStore clientWhenLocationsExist=requestsSendResponses(requestResponseMap);
+  Set<? extends Location> locations=clientWhenLocationsExist.listAssignableLocations();
+  assertNotNull(locations);
+  assertEquals(locations.size(),1);
+  assertEquals(locations.iterator().next().getId(),"hpcloud-objectstorage");
+}

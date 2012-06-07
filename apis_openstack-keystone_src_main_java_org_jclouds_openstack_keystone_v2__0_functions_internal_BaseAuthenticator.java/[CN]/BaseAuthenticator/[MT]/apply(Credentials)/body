@@ -1,0 +1,21 @@
+{
+  String tenantId=null;
+  String usernameOrAccessKey=input.identity;
+  if (input.identity.indexOf(':') == -1) {
+    logger.debug("Identity %s does not match format tenantName:accessKey",input.identity);
+  }
+ else {
+    tenantId=input.identity.substring(0,input.identity.indexOf(':'));
+    usernameOrAccessKey=input.identity.substring(input.identity.indexOf(':') + 1);
+  }
+  String passwordOrSecretKey=input.credential;
+  C creds=createCredentials(usernameOrAccessKey,passwordOrSecretKey);
+  Access access;
+  if (tenantId != null && tenantId.matches("^[0-9]+$")) {
+    access=authenticateWithTenantId(tenantId,creds);
+  }
+ else {
+    access=authenticateWithTenantNameOrNull(tenantId,creds);
+  }
+  return access;
+}

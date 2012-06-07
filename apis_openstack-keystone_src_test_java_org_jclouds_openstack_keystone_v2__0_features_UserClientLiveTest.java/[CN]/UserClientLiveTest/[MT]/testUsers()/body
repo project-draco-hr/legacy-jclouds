@@ -1,0 +1,10 @@
+{
+  UserClient client=keystoneContext.getApi().getUserClient();
+  Set<User> users=client.list();
+  assertNotNull(users);
+  assertFalse(users.isEmpty());
+  for (  User user : users) {
+    User aUser=client.get(user.getId());
+    assertEquals(aUser,user);
+  }
+}

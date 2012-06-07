@@ -1,0 +1,28 @@
+{
+  boolean retry=false;
+  try {
+switch (response.getStatusCode()) {
+case 401:
+      Multimap<String,String> headers=command.getCurrentRequest().getHeaders();
+    if (headers != null && headers.containsKey("X-Auth-User") && headers.containsKey("X-Auth-Key") && !headers.containsKey("X-Auth-Token")) {
+      retry=false;
+    }
+ else {
+      byte[] content=closeClientButKeepContentStream(response);
+      if (content != null && new String(content).contains("lease renew")) {
+        logger.debug("invalidating authentication token");
+        authenticationResponseCache.invalidateAll();
+        retry=true;
+      }
+ else {
+        retry=false;
+      }
+    }
+  break;
+}
+return retry;
+}
+  finally {
+releasePayload(response);
+}
+}
