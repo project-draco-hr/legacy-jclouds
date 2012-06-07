@@ -1,10 +1,7 @@
 {
-  for (  Object arg : gRequest.getArgs()) {
-    if (arg instanceof PasswordCredentials) {
-      builder.put("passwordCredentials",PasswordCredentials.class.cast(arg));
-    }
- else     if (arg instanceof ApiAccessKeyCredentials) {
-      builder.put("apiAccessKeyCredentials",ApiAccessKeyCredentials.class.cast(arg));
+  for (  Object arg : Iterables.filter(gRequest.getArgs(),Predicates.notNull())) {
+    if (arg.getClass().isAnnotationPresent(CredentialType.class)) {
+      builder.put(arg.getClass().getAnnotation(CredentialType.class).value(),arg);
     }
   }
 }

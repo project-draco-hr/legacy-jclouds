@@ -1,8 +1,0 @@
-{
-  AdminClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/tenants").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/tenant_list.json",APPLICATION_JSON)).build()).getAdminClientForRegion("region-a.geo-1");
-  Set<Tenant> tenants=client.listTenants();
-  assertNotNull(tenants);
-  assertFalse(tenants.isEmpty());
-  Set<Tenant> expected=ImmutableSet.of(Tenant.builder().name("demo").id("05d1dc7af71646deba64cfc17b81bec0").build(),Tenant.builder().name("admin").id("7aa2e17ec29f44d193c48feaba0852cc").build());
-  assertEquals(tenants,expected);
-}
