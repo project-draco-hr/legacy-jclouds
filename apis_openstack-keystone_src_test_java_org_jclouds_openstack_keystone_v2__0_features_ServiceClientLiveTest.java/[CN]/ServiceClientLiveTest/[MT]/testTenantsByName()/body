@@ -1,0 +1,8 @@
+{
+  ServiceClient client=keystoneContext.getApi().getServiceClient();
+  for (  Tenant tenant : client.listTenants()) {
+    Tenant aTenant=client.getTenantByName(tenant.getName());
+    assertNotNull(aTenant,"get returned null for tenant: " + tenant);
+    assertEquals(aTenant,tenant);
+  }
+}
