@@ -1,4 +1,5 @@
 {
+  skipIfNotGlobalAdmin();
   final Zone zone=Iterables.find(client.getZoneClient().listZones(),ZonePredicates.supportsAdvancedNetworks());
   final NetworkOffering offering=find(client.getOfferingClient().listNetworkOfferings(),NetworkOfferingPredicates.supportsGuestVirtualNetworks());
   Set<Network> suitableNetworks=Sets.filter(client.getNetworkClient().listNetworks(zoneId(zone.getId()).isSystem(false).trafficType(TrafficType.GUEST)),new Predicate<Network>(){
