@@ -18,6 +18,12 @@
       }
 ).toInstance(new CloudStackComputeServiceContextModule().optionsConverters());
       bind(String.class).annotatedWith(Names.named(PROPERTY_SESSION_INTERVAL)).toInstance("60");
+      bind(new TypeLiteral<CacheLoader<String,Set<IPForwardingRule>>>(){
+      }
+).to(GetIPForwardingRulesByVirtualMachine.class);
+      bind(new TypeLiteral<CacheLoader<String,Set<FirewallRule>>>(){
+      }
+).to(GetFirewallRulesByVirtualMachine.class);
       bind(new TypeLiteral<CacheLoader<String,Zone>>(){
       }
 ).to(ZoneIdToZone.class);
@@ -29,8 +35,11 @@
     @SuppressWarnings("unused") @Provides @Singleton protected Predicate<String> jobComplete(    JobComplete jobComplete){
       return new RetryablePredicate<String>(jobComplete,1200,1,5,TimeUnit.SECONDS);
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected LoadingCache<String,Set<IPForwardingRule>> getIPForwardingRuleByVirtualMachine(    GetIPForwardingRulesByVirtualMachine getIPForwardingRule){
-      return CacheBuilder.newBuilder().build(getIPForwardingRule);
+    @Provides @Singleton protected LoadingCache<String,Set<IPForwardingRule>> getIPForwardingRulesByVirtualMachine(    GetIPForwardingRulesByVirtualMachine getIPForwardingRules){
+      return CacheBuilder.newBuilder().build(getIPForwardingRules);
+    }
+    @Provides @Singleton protected LoadingCache<String,Set<FirewallRule>> getFirewallRulesByVirtualMachine(    GetFirewallRulesByVirtualMachine getFirewallRules){
+      return CacheBuilder.newBuilder().build(getFirewallRules);
     }
   }
 ;
