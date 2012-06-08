@@ -1,10 +1,11 @@
 {
-  assert domainAdminEnabled;
-  Set<Domain> allDomains=domainAdminClient.getDomainClient().listDomains();
-  Domain root=find(allDomains,withName("ROOT"));
-  Set<Domain> children=domainAdminClient.getDomainClient().listDomainChildren(parentDomainId(root.getId()).isRecursive(true));
-  assertEquals(allDomains.size() - 1,children.size());
-  for (  Domain domain : children) {
-    checkDomain(domain,allDomains);
+  skipIfNotDomainAdmin();
+  Set<Domain> domains=domainAdminClient.getDomainClient().listDomains();
+  Domain root=findRootOfVisibleTree(domains);
+  if (domains.size() > 1) {
+    assertTrue(root.hasChild());
   }
+  Set<Domain> children=domainAdminClient.getDomainClient().listDomainChildren(parentDomainId(root.getId()).isRecursive(true));
+  assertEquals(domains.size() - 1,children.size());
+  assertTrue(Sets.difference(domains,children).contains(root));
 }

@@ -1,0 +1,17 @@
+{
+  checkState(ip.getVirtualMachineId() != null,"ip %s should be static NATed to a virtual machine before applying rules",ip);
+  if (Iterables.size(ports) == 0)   return ImmutableSet.<FirewallRule>of();
+  Builder<AsyncCreateResponse> responses=ImmutableSet.builder();
+  for (  int port : ports) {
+    AsyncCreateResponse response=client.getFirewallClient().createFirewallRuleForIpAndProtocol(ip.getId(),FirewallRule.Protocol.fromValue(protocol),CreateFirewallRuleOptions.Builder.startPort(port).endPort(port));
+    logger.debug(">> creating firewall rule IPAddress(%s) for protocol(%s), port(%s); response(%s)",ip.getId(),protocol,port,response);
+    responses.add(response);
+  }
+  Builder<FirewallRule> rules=ImmutableSet.builder();
+  for (  AsyncCreateResponse response : responses.build()) {
+    FirewallRule rule=blockUntilJobCompletesAndReturnResult.<FirewallRule>apply(response);
+    rules.add(rule);
+    getFirewallRulesByVirtualMachine.asMap().put(ip.getVirtualMachineId(),ImmutableSet.of(rule));
+  }
+  return rules.build();
+}
