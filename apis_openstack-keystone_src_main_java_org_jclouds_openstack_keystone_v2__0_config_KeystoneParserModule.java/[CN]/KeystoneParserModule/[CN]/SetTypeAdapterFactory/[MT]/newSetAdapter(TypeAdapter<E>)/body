@@ -1,0 +1,43 @@
+{
+  return new TypeAdapter<Set<E>>(){
+    public void write(    JsonWriter out,    Set<E> value) throws IOException {
+      out.beginArray();
+      for (      E element : value) {
+        elementAdapter.write(out,element);
+      }
+      out.endArray();
+    }
+    public Set<E> read(    JsonReader in) throws IOException {
+      Set<E> result=Sets.newLinkedHashSet();
+      if (in.peek() == JsonToken.BEGIN_OBJECT) {
+        boolean foundValues=false;
+        in.beginObject();
+        while (in.hasNext()) {
+          String name=in.nextName();
+          if (Objects.equal("values",name)) {
+            foundValues=true;
+            readArray(in,result);
+          }
+ else {
+            in.skipValue();
+          }
+        }
+        checkState(foundValues,"Expected BEGIN_ARRAY or the object to contain an array called 'values'");
+        in.endObject();
+      }
+ else {
+        readArray(in,result);
+      }
+      return result;
+    }
+    private void readArray(    JsonReader in,    Set<E> result) throws IOException {
+      in.beginArray();
+      while (in.hasNext()) {
+        E element=elementAdapter.read(in);
+        result.add(element);
+      }
+      in.endArray();
+    }
+  }
+.nullSafe();
+}
