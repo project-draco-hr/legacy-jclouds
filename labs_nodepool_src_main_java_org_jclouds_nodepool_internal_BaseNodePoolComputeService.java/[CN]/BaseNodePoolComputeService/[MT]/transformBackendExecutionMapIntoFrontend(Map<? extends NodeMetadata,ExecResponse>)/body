@@ -1,0 +1,8 @@
+{
+  Map<NodeMetadata,ExecResponse> frontendMap=Maps.newHashMapWithExpectedSize(backendMap.size());
+  for (  Map.Entry<? extends NodeMetadata,ExecResponse> entry : backendMap.entrySet()) {
+    Map.Entry<String,NodeMetadata> assignmentEntry=findAssigmentEntry(entry.getKey().getId());
+    frontendMap.put(toFrontendNodemetadata(assignmentEntry.getValue(),assignmentEntry.getKey()),entry.getValue());
+  }
+  return frontendMap;
+}

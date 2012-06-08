@@ -1,0 +1,8 @@
+{
+  if (started.compareAndSet(true,false)) {
+    logger.info("Closing pooled compute service with {} nodes",size());
+    available.clear();
+    assignments.clear();
+    backingComputeService.destroyNodesMatching(NodePredicates.inGroup(poolGroupName));
+  }
+}

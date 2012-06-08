@@ -1,0 +1,25 @@
+{
+  Map.Entry<String,NodeMetadata> entry=findAssigmentEntry(nodeId);
+  assignments.remove(entry.getKey(),entry.getValue());
+  if (reuseDestroyed) {
+    available.add(entry.getValue());
+    return entry.getValue();
+  }
+  lock.lock();
+  try {
+    backingComputeService.destroyNode(nodeId);
+    removeIf(poolNodes,new Predicate<NodeMetadata>(){
+      @Override public boolean apply(      NodeMetadata input){
+        return input.getId().equals(nodeId);
+      }
+    }
+);
+    if (poolNodes.size() < minSize) {
+      increasePoolSize(1);
+    }
+  }
+  finally {
+    lock.unlock();
+  }
+  return entry.getValue();
+}
