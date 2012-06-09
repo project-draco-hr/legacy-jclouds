@@ -1,0 +1,8 @@
+{
+  SudoAwareInitManager commandRunner=createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction").createStrictMock();
+  expect(commandRunner.runAction("status")).andReturn(new ExecResponse("","",0));
+  replay(commandRunner);
+  Predicate<String> pred=new ExitStatusOfCommandGreaterThanZero(commandRunner);
+  assertEquals(pred.apply("status"),false);
+  verify(commandRunner);
+}

@@ -1,0 +1,18 @@
+{
+  ExecutorService userThreads=MoreExecutors.sameThreadExecutor();
+  Predicate<String> notRunningAnymore=Predicates.alwaysTrue();
+  SudoAwareInitManager commandRunner=createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction").addMockedMethod("getStatement").addMockedMethod("getNode").addMockedMethod("toString").createStrictMock();
+  InitScript initScript=createMockBuilder(InitScript.class).addMockedMethod("getInstanceName").createStrictMock();
+  expect(commandRunner.runAction("stdout")).andReturn(new ExecResponse("","",0));
+  expect(commandRunner.runAction("stderr")).andReturn(new ExecResponse("","",0));
+  expect(commandRunner.runAction("exitstatus")).andReturn(new ExecResponse("","",1));
+  expect(commandRunner.runAction("stdout")).andReturn(new ExecResponse("stdout","",0));
+  expect(commandRunner.runAction("stderr")).andReturn(new ExecResponse("stderr","",0));
+  expect(commandRunner.runAction("exitstatus")).andReturn(new ExecResponse("444\n","",0));
+  toStringAndEventBusExpectations(commandRunner,initScript);
+  replay(commandRunner,initScript);
+  BlockUntilInitScriptStatusIsZeroThenReturnOutput future=new BlockUntilInitScriptStatusIsZeroThenReturnOutput(userThreads,eventBus,notRunningAnymore,commandRunner);
+  future.run();
+  assertEquals(future.get(),new ExecResponse("stdout","stderr",444));
+  verify(commandRunner,initScript);
+}

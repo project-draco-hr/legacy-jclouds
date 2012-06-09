@@ -1,6 +1,6 @@
 {
   Statement command=exec("doFoo");
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(LoginCredentials.builder().user("tester").password("testpassword!").build()).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(new LoginCredentials("tester","testpassword!",null,true)).build();
   SshClient sshClient=createMock(SshClient.class);
   InitScript init=InitScript.builder().name("jclouds-script-0").home("/tmp/jclouds-script-0").run(command).build();
   sshClient.connect();
@@ -10,13 +10,9 @@
   expect(sshClient.exec("chmod 755 /tmp/init-jclouds-script-0")).andReturn(new ExecResponse("","",0));
   expect(sshClient.exec("ln -fs /tmp/init-jclouds-script-0 jclouds-script-0")).andReturn(new ExecResponse("","",0));
   expect(sshClient.exec("/tmp/init-jclouds-script-0 init")).andReturn(new ExecResponse("","",0));
-  expect(sshClient.exec("sudo /tmp/init-jclouds-script-0 start")).andReturn(new ExecResponse("","",0));
-  if (answerForScriptStatus == null) {
-    expect(sshClient.exec("/tmp/init-jclouds-script-0 status")).andReturn(new ExecResponse("","",1)).times(1);
-  }
- else {
-    expect(sshClient.exec("/tmp/init-jclouds-script-0 status")).andAnswer(answerForScriptStatus).times(timesForScriptStatus);
-  }
+  expect(sshClient.exec("echo 'testpassword!'|sudo -S /tmp/init-jclouds-script-0 start")).andReturn(new ExecResponse("","",0));
+  expect(sshClient.exec("/tmp/init-jclouds-script-0 status")).andReturn(new ExecResponse("8001","",0));
+  expect(sshClient.exec("/tmp/init-jclouds-script-0 status")).andReturn(new ExecResponse("","",1));
   expect(sshClient.exec("/tmp/init-jclouds-script-0 stdout")).andReturn(new ExecResponse("out","",0));
   expect(sshClient.exec("/tmp/init-jclouds-script-0 stderr")).andReturn(new ExecResponse("err","",0));
   expect(sshClient.exec("/tmp/init-jclouds-script-0 exitstatus")).andReturn(new ExecResponse("0","",0));

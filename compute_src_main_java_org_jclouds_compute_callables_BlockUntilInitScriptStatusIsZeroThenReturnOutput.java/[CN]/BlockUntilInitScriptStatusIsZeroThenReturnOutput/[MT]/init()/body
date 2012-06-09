@@ -1,26 +1,4 @@
 {
-  userThreads.submit(new Runnable(){
-    @Override public void run(){
-      try {
-        notRunningAnymore.apply("status");
-        String stdout=commandRunner.runAction("stdout").getOutput();
-        String stderr=commandRunner.runAction("stderr").getOutput();
-        Integer exitStatus=Ints.tryParse(commandRunner.runAction("exitstatus").getOutput().trim());
-        ExecResponse exec=new ExecResponse(stdout,stderr,exitStatus == null ? -1 : exitStatus);
-        if (exitStatus == null) {
-          Integer pid=Ints.tryParse(commandRunner.runAction("status").getOutput().trim());
-          throw new ScriptStillRunningException(String.format("%s still running: pid(%s), last status: %s",BlockUntilInitScriptStatusIsZeroThenReturnOutput.this,pid,exec),BlockUntilInitScriptStatusIsZeroThenReturnOutput.this);
-        }
-        logger.debug("<< complete(%s) status(%s)",commandRunner.getStatement().getInstanceName(),exitStatus);
-        set(exec);
-      }
- catch (      CancellationException e) {
-      }
-catch (      Exception e) {
-        setException(e);
-      }
-    }
-  }
-);
+  userThreads.submit(this);
   return this;
 }
