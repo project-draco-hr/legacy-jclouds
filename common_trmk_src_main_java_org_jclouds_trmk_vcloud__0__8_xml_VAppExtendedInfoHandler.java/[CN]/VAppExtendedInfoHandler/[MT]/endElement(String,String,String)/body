@@ -1,52 +1,61 @@
 {
-  String current=currentOrNull();
+  String current=currentOrNull(currentText);
   if (current != null) {
     if (qName.equals("Id")) {
-      this.id=current;
+      builder.id(current);
     }
  else     if (qName.equals("Tags")) {
-      this.tags=Arrays.asList(current.split(","));
+      builder.tags(ImmutableList.copyOf(Splitter.on(',').split(current)));
     }
  else     if (qName.equals("LongName")) {
-      this.longName=current;
+      builder.longName(current);
     }
  else     if (qName.equals("Href")) {
+      URI href=URI.create(current);
       if (inSubnet) {
-        this.subnetLocation=URI.create(current);
+        subnetBuilder.href(href);
+      }
+ else       if (inComputePool) {
+        poolBuilder.href(href);
       }
  else {
-        this.href=URI.create(current);
+        builder.href(href);
       }
     }
  else     if (qName.equals("Name")) {
       if (inSubnet) {
-        this.subnetName=current;
+        subnetBuilder.name(current);
       }
  else       if (inAdapters) {
-        this.adapterName=current;
+        adapterBuilder.name(current);
+      }
+ else       if (inComputePool) {
+        poolBuilder.name(current);
       }
  else {
-        this.name=current;
+        builder.name(current);
       }
     }
- else     if (qName.equals("NetworkAdapters")) {
-      inAdapters=false;
-    }
- else     if (qName.equals("NetworkAdapter")) {
-      networkAdapters.add(new NetworkAdapter(macAddress,adapterName,subnet));
-      macAddress=null;
-      adapterName=null;
-      subnet=null;
-    }
  else     if (qName.equals("MacAddress")) {
-      macAddress=current;
+      adapterBuilder.macAddress(current);
     }
- else     if (qName.equals("Subnet")) {
-      subnet=new Subnet(subnetLocation,subnetName);
-      subnetLocation=null;
-      subnetName=null;
-      inSubnet=false;
-    }
+  }
+ else   if (qName.equals("NetworkAdapters")) {
+    inAdapters=false;
+  }
+ else   if (qName.equals("NetworkAdapter")) {
+    builder.networkAdapter(adapterBuilder.build());
+    adapterBuilder=NetworkAdapter.builder();
+  }
+ else   if (qName.equals("Subnet")) {
+    adapterBuilder.subnet(subnetBuilder.build());
+    subnetBuilder=Subnet.builder();
+    inSubnet=false;
+  }
+ else   if (qName.equals("ComputePoolReference")) {
+    builder.computePoolReference(poolBuilder.build());
+    poolBuilder=ComputePoolReference.builder();
+    inComputePool=false;
   }
   currentText=new StringBuilder();
 }
