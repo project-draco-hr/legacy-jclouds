@@ -1,0 +1,19 @@
+{
+  ProviderMetadata metadata;
+switch (event.getType()) {
+case BundleEvent.STARTED:
+    metadata=getProviderMetadata(event.getBundle());
+  if (metadata != null) {
+    ProviderRegistry.registerProvider(metadata);
+    bundleMetadataMap.put(event.getBundle().getBundleId(),metadata);
+  }
+break;
+case BundleEvent.STOPPING:
+case BundleEvent.STOPPED:
+metadata=bundleMetadataMap.get(event.getBundle().getBundleId());
+if (metadata != null) {
+ProviderRegistry.uRegisterProvider(metadata);
+}
+break;
+}
+}

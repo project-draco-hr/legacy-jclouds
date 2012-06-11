@@ -1,0 +1,36 @@
+{
+  URL resource=bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata");
+  InputStream is=null;
+  InputStreamReader reader=null;
+  BufferedReader bufferedReader=null;
+  StringBuilder sb=new StringBuilder();
+  try {
+    is=resource.openStream();
+    reader=new InputStreamReader(is,"UTF-8");
+    bufferedReader=new BufferedReader(reader);
+    String line;
+    while ((line=bufferedReader.readLine()) != null) {
+      sb.append(line).append("\n");
+    }
+  }
+ catch (  Throwable e) {
+  }
+ finally {
+    try {
+      if (reader != null)       reader.close();
+    }
+ catch (    Throwable e) {
+    }
+    try {
+      if (bufferedReader != null)       bufferedReader.close();
+    }
+ catch (    Throwable e) {
+    }
+    try {
+      is.close();
+    }
+ catch (    Throwable e) {
+    }
+  }
+  return sb.toString().trim();
+}
