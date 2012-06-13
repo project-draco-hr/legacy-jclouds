@@ -8,8 +8,7 @@
   builder.append(createOrOverwriteFile(runScript,beginningOfFile.build(),DELIMETER).render(OsFamily.UNIX));
   builder.append(AppendFile.builder().path(runScript).delimeter(DELIMETER).expandVariables(true).lines(Iterables.transform(exports,new Function<String,String>(){
     @Override public String apply(    String export){
-      String variableNameInUpper=CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,export);
-      return new StringBuilder().append("export ").append(variableNameInUpper).append("='$").append(variableNameInUpper).append("'").toString();
+      return new StringBuilder().append("export ").append(export).append("='$").append(export).append("'").toString();
     }
   }
 )).build().render(OsFamily.UNIX));

@@ -1,0 +1,15 @@
+{
+  variablesToUnset=Iterables.transform(variablesToUnset,new VariableNameForOsFamily(family));
+switch (family) {
+case UNIX:
+    return String.format("unset %s\n",Joiner.on(' ').join(variablesToUnset));
+case WINDOWS:
+  StringBuilder initializers=new StringBuilder();
+for (String variableToUnset : variablesToUnset) {
+  initializers.append(replaceTokens(OS_TO_LOCAL_VAR_PATTERN.get(family),ImmutableMap.of("key",variableToUnset,"value","")));
+}
+return initializers.toString();
+default :
+throw new UnsupportedOperationException("unsupported os: " + family);
+}
+}

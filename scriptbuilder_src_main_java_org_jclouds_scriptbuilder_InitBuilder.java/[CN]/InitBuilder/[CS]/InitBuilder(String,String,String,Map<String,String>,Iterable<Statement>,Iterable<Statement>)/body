@@ -1,9 +1,9 @@
 {
-  Map<String,String> defaultVariables=ImmutableMap.of("instanceName",instanceName,"instanceHome",instanceHome,"logDir",logDir);
+  Map<String,String> defaultVariables=ImmutableMap.of("INSTANCE_NAME",instanceName,"INSTANCE_HOME",instanceHome,"LOG_DIR",logDir);
   this.initStatement=new StatementList(initStatements);
   this.createRunScript=createRunScript(instanceName,Iterables.concat(variables.keySet(),defaultVariables.keySet()),"{varl}INSTANCE_HOME{varr}",statements);
-  this.instanceName=checkNotNull(instanceName,"instanceName");
-  this.instanceHome=checkNotNull(instanceHome,"instanceHome");
-  this.logDir=checkNotNull(logDir,"logDir");
+  this.instanceName=checkNotNull(instanceName,"INSTANCE_NAME");
+  this.instanceHome=checkNotNull(instanceHome,"INSTANCE_HOME");
+  this.logDir=checkNotNull(logDir,"LOG_DIR");
   addEnvironmentVariableScope("default",defaultVariables).addEnvironmentVariableScope(instanceName,variables).addStatement(switchArg(1,new ImmutableMap.Builder<String,Statement>().put("init",newStatementList(call("default"),call(instanceName),initStatement,createRunScript)).put("status",newStatementList(call("default"),findPid("{varl}INSTANCE_NAME{varr}"),interpret("echo {varl}FOUND_PID{varr}{lf}"))).put("stop",newStatementList(call("default"),findPid("{varl}INSTANCE_NAME{varr}"),kill())).put("start",newStatementList(call("default"),forget("{varl}INSTANCE_NAME{varr}","{varl}INSTANCE_HOME{varr}{fs}{varl}INSTANCE_NAME{varr}.{sh}","{varl}LOG_DIR{varr}"))).put("tail",newStatementList(call("default"),interpret("tail {varl}LOG_DIR{varr}{fs}stdout.log{lf}"))).put("tailerr",newStatementList(call("default"),interpret("tail {varl}LOG_DIR{varr}{fs}stderr.log{lf}"))).put("run",newStatementList(call("default"),interpret("{varl}INSTANCE_HOME{varr}{fs}{varl}INSTANCE_NAME{varr}.{sh}{lf}"))).build()));
 }
