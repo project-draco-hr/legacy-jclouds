@@ -1,0 +1,29 @@
+{
+  ProviderMetadata providerMetadata;
+  ApiMetadata apiMetadata;
+switch (event.getType()) {
+case BundleEvent.STARTED:
+    providerMetadata=getProviderMetadata(event.getBundle());
+  apiMetadata=getApiMetadata(event.getBundle());
+if (providerMetadata != null) {
+  ProviderRegistry.registerProvider(providerMetadata);
+  providerMetadataMap.put(event.getBundle().getBundleId(),providerMetadata);
+}
+if (apiMetadata != null) {
+ApiRegistry.registerApi(apiMetadata);
+apiMetadataMap.put(event.getBundle().getBundleId(),apiMetadata);
+}
+break;
+case BundleEvent.STOPPING:
+case BundleEvent.STOPPED:
+providerMetadata=providerMetadataMap.get(event.getBundle().getBundleId());
+apiMetadata=apiMetadataMap.get(event.getBundle().getBundleId());
+if (providerMetadata != null) {
+ProviderRegistry.uRegisterProvider(providerMetadata);
+}
+if (apiMetadata != null) {
+ApiRegistry.unRegisterApi(apiMetadata);
+}
+break;
+}
+}
