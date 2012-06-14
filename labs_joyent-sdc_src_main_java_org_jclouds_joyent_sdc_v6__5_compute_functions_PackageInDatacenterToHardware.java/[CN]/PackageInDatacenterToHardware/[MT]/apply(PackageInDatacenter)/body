@@ -1,0 +1,6 @@
+{
+  Location location=locationIndex.get().get(pkgInDatacenter.getDatacenter());
+  checkState(location != null,"location %s not in locationIndex: %s",pkgInDatacenter.getDatacenter(),locationIndex.get());
+  org.jclouds.joyent.sdc.v6_5.domain.Package pkg=pkgInDatacenter.getPackage();
+  return new HardwareBuilder().id(pkgInDatacenter.slashEncode()).providerId(pkg.getName()).name(pkg.getName()).ram(pkg.getMemorySizeMb()).processor(new Processor(1,1.0)).volume(new VolumeImpl(Float.valueOf(pkg.getDiskSizeGb()),true,true)).location(location).build();
+}

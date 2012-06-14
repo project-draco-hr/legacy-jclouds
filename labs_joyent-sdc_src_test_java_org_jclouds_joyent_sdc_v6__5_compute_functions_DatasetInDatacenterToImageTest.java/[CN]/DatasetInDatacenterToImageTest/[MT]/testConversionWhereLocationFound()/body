@@ -1,0 +1,12 @@
+{
+  OperatingSystem operatingSystem=new OperatingSystem(OsFamily.UBUNTU,"My Test OS","My Test Version","x86","My Test OS",true);
+  DatasetInDatacenterToImage converter=new DatasetInDatacenterToImage(constant(operatingSystem),locationIndex);
+  DatasetInDatacenter datasetInZoneToConvert=new DatasetInDatacenter(datasetToConvert,"us-sw-1");
+  org.jclouds.compute.domain.Image convertedImage=converter.apply(datasetInZoneToConvert);
+  assertEquals(convertedImage.getId(),datasetInZoneToConvert.slashEncode());
+  assertEquals(convertedImage.getProviderId(),datasetToConvert.getId());
+  assertEquals(convertedImage.getLocation(),locationIndex.get().get("us-sw-1"));
+  assertEquals(convertedImage.getName(),datasetToConvert.getName());
+  assertEquals(convertedImage.getStatus(),org.jclouds.compute.domain.Image.Status.AVAILABLE);
+  assertEquals(convertedImage.getOperatingSystem(),operatingSystem);
+}

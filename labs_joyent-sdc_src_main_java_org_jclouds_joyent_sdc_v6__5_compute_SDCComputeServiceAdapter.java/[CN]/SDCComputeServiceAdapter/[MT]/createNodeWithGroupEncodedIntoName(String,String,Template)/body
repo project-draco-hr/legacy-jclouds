@@ -1,0 +1,12 @@
+{
+  LoginCredentials.Builder credentialsBuilder=LoginCredentials.builder();
+  CreateMachineOptions options=new CreateMachineOptions();
+  String datacenterId=template.getLocation().getId();
+  String datasetId=template.getImage().getProviderId();
+  String packageId=template.getHardware().getProviderId();
+  logger.debug(">> creating new machine datacenter(%s) name(%s) package(%s) dataset(%s) options(%s)",datacenterId,name,packageId,datasetId,options);
+  Machine machine=sdcClient.getMachineClientForDatacenter(datacenterId).createMachine(name,packageId,datasetId,options);
+  logger.trace("<< machine(%s)",machine.getId());
+  MachineInDatacenter machineInDatacenter=new MachineInDatacenter(machine,datacenterId);
+  return new NodeAndInitialCredentials<MachineInDatacenter>(machineInDatacenter,machineInDatacenter.slashEncode(),credentialsBuilder.build());
+}

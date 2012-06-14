@@ -1,0 +1,12 @@
+{
+  PackageInDatacenter packageInZoneToConvert=new PackageInDatacenter(packageToConvert,"us-sw-1");
+  Hardware converted=new PackageInDatacenterToHardware(locationIndex).apply(packageInZoneToConvert);
+  assertEquals(converted.getName(),packageToConvert.getName());
+  assertEquals(converted.getId(),packageInZoneToConvert.slashEncode());
+  assertEquals(converted.getProviderId(),packageToConvert.getName());
+  assertEquals(converted.getLocation(),locationIndex.get().get("us-sw-1"));
+  assertEquals(converted.getRam(),packageToConvert.getMemorySizeMb());
+  assertNotNull(converted.getVolumes());
+  assertFalse(converted.getVolumes().isEmpty());
+  assertEquals(converted.getVolumes().iterator().next().getSize(),Float.valueOf(packageToConvert.getDiskSizeGb()));
+}

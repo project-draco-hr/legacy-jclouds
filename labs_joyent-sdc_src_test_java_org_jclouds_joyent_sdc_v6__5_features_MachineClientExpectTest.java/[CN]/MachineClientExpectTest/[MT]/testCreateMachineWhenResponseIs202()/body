@@ -1,6 +1,6 @@
 {
-  HttpRequest createMachine=HttpRequest.builder().method("POST").endpoint(URI.create("https://us-sw-1.api.joyentcloud.com/my/machines")).headers(ImmutableMultimap.<String,String>builder().put("X-Api-Version","~6.5").put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(payloadFromStringWithContentType("{\"name\":\"testJClouds\",\"package\":\"Small 1GB\",\"dataset\":\"sdc:sdc:centos-5.7:1.2.1\"}","application/json")).build();
+  HttpRequest createMachine=HttpRequest.builder().method("POST").endpoint(URI.create("https://us-sw-1.api.joyentcloud.com/my/machines")).headers(ImmutableMultimap.<String,String>builder().put("X-Api-Version","~6.5").put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(payloadFromStringWithContentType("{\"name\":\"sample-e92\",\"package\":\"Small 1GB\",\"dataset\":\"sdc:sdc:centos-5.7:1.2.1\"}","application/json")).build();
   HttpResponse createMachineResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_machine.json","application/json; charset=UTF-8")).build();
   SDCClient clientWithNewMachine=requestsSendResponses(getDatacenters,getDatacentersResponse,createMachine,createMachineResponse);
-  assertEquals(clientWithNewMachine.getMachineClientForDatacenter("us-sw-1").createMachine("testJClouds","Small 1GB","sdc:sdc:centos-5.7:1.2.1").toString(),new ParseCreatedMachineTest().expected().toString());
+  assertEquals(clientWithNewMachine.getMachineClientForDatacenter("us-sw-1").createMachine("sample-e92","Small 1GB","sdc:sdc:centos-5.7:1.2.1").toString(),new ParseCreatedMachineTest().expected().toString());
 }

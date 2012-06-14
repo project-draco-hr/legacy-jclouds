@@ -1,0 +1,20 @@
+{
+  Location zone=locationIndex.get().get(machineInDatacenter.getDatacenter());
+  checkState(zone != null,"location %s not in locationIndex: %s",machineInDatacenter.getDatacenter(),locationIndex.get());
+  Machine from=machineInDatacenter.getMachine();
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.id(machineInDatacenter.slashEncode());
+  builder.providerId(from.getId());
+  builder.name(from.getName());
+  builder.hostname(from.getName());
+  builder.location(zone);
+  addMetadataAndParseTagsFromCommaDelimitedValue(builder,from.getMetadata());
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
+  builder.imageId(DatacenterAndName.fromDatacenterAndName(machineInDatacenter.getDatacenter(),from.getDataset()).slashEncode());
+  builder.operatingSystem(findOperatingSystemForMachineOrNull(machineInDatacenter));
+  builder.hardware(findHardwareForMachineOrNull(machineInDatacenter));
+  builder.status(toPortableNodeStatus.get(from.getState()));
+  builder.publicAddresses(filter(from.getIps(),Predicates.not(InetAddresses2.IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(filter(from.getIps(),InetAddresses2.IsPrivateIPAddress.INSTANCE));
+  return builder.build();
+}
