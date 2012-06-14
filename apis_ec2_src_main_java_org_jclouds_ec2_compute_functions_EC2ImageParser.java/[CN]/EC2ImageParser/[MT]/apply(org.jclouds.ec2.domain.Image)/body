@@ -10,7 +10,7 @@
   builder.userMetadata(ImmutableMap.<String,String>builder().put("owner",from.getImageOwnerId()).put("rootDeviceType",from.getRootDeviceType().value()).put("virtualizationType",from.getVirtualizationType().value()).put("hypervisor",from.getHypervisor().value()).build());
   OperatingSystem.Builder osBuilder=OperatingSystem.builder();
   osBuilder.is64Bit(from.getArchitecture() == Architecture.X86_64);
-  OsFamily family=parseOsFamilyOrUnrecognized(from.getImageLocation());
+  OsFamily family=parseOsFamily(from);
   osBuilder.family(family);
   osBuilder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(family,from.getImageLocation(),osVersionMap));
   osBuilder.description(from.getImageLocation());
