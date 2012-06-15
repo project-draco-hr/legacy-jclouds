@@ -1,0 +1,10 @@
+{
+  if (from.getPlatform() != null && from.getPlatform().equalsIgnoreCase("windows")) {
+    return OsFamily.WINDOWS;
+  }
+  OsFamily family=parseOsFamilyOrUnrecognized(from.getImageLocation());
+  if (family == OsFamily.UNRECOGNIZED && from.getPlatform() != null) {
+    family=parseOsFamilyOrUnrecognized(from.getPlatform());
+  }
+  return family;
+}
