@@ -1,7 +1,7 @@
 {
   Builder<PackageInDatacenter> builder=ImmutableSet.builder();
   for (  final String datacenterId : datacenterIds.get()) {
-    builder.addAll(transform(sdcClient.getPackageClientForDatacenter(datacenterId).listPackages(),new Function<org.jclouds.joyent.sdc.v6_5.domain.Package,PackageInDatacenter>(){
+    builder.addAll(transform(sdcClient.getPackageClientForDatacenter(datacenterId).list(),new Function<org.jclouds.joyent.sdc.v6_5.domain.Package,PackageInDatacenter>(){
       @Override public PackageInDatacenter apply(      org.jclouds.joyent.sdc.v6_5.domain.Package arg0){
         return new PackageInDatacenter(arg0,datacenterId);
       }

@@ -1,0 +1,12 @@
+{
+  Multimap<String,String> params=super.buildQueryParameters();
+  if (name != null)   params.put("name",name);
+  if (pkg != null)   params.put("package",pkg);
+  params.putAll(Multimaps.forMap(Maps2.transformKeys(metadata,new Function<String,String>(){
+    @Override public String apply(    String input){
+      return "metadata." + input;
+    }
+  }
+)));
+  return params;
+}

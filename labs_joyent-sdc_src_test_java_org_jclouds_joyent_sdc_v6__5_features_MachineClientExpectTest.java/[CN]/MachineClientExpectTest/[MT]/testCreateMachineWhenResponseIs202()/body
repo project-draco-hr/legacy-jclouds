@@ -1,6 +1,6 @@
 {
-  HttpRequest createMachine=HttpRequest.builder().method("POST").endpoint(URI.create("https://us-sw-1.api.joyentcloud.com/my/machines")).headers(ImmutableMultimap.<String,String>builder().put("X-Api-Version","~6.5").put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(payloadFromStringWithContentType("{\"name\":\"sample-e92\",\"package\":\"Small 1GB\",\"dataset\":\"sdc:sdc:centos-5.7:1.2.1\"}","application/json")).build();
-  HttpResponse createMachineResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_machine.json","application/json; charset=UTF-8")).build();
-  SDCClient clientWithNewMachine=requestsSendResponses(getDatacenters,getDatacentersResponse,createMachine,createMachineResponse);
-  assertEquals(clientWithNewMachine.getMachineClientForDatacenter("us-sw-1").createMachine("sample-e92","Small 1GB","sdc:sdc:centos-5.7:1.2.1").toString(),new ParseCreatedMachineTest().expected().toString());
+  HttpRequest createWithDataset=HttpRequest.builder().method("POST").endpoint(URI.create("https://us-sw-1.api.joyentcloud.com/my/machines?dataset=sdc%3Asdc%3Acentos-5.7%3A1.2.1&name=sample-e92&package=Small%201GB")).headers(ImmutableMultimap.<String,String>builder().put("X-Api-Version","~6.5").put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build();
+  HttpResponse createWithDatasetResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_machine.json","application/json; charset=UTF-8")).build();
+  SDCClient clientWithNewMachine=requestsSendResponses(getDatacenters,getDatacentersResponse,createWithDataset,createWithDatasetResponse);
+  assertEquals(clientWithNewMachine.getMachineClientForDatacenter("us-sw-1").createWithDataset("sdc:sdc:centos-5.7:1.2.1",CreateMachineOptions.Builder.name("sample-e92").packageName("Small 1GB")).toString(),new ParseCreatedMachineTest().expected().toString());
 }

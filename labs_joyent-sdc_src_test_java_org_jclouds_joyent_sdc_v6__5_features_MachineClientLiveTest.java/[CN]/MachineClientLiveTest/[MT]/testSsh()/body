@@ -1,0 +1,15 @@
+{
+  String publicAddress=Iterables.find(machine.getIps(),not(InetAddresses2.IsPrivateIPAddress.INSTANCE));
+  HostAndPort socket=HostAndPort.fromParts(publicAddress,22);
+  assertTrue(socketTester.apply(socket),socket.toString());
+  SshClient client=context.utils().injector().getInstance(SshClient.Factory.class).create(socket,LoginCredentials.builder().user("root").privateKey(keypair.get("private")).build());
+  try {
+    client.connect();
+    ExecResponse exec=client.exec("echo hello");
+    System.out.println(exec);
+    assertEquals(exec.getOutput().trim(),"hello");
+  }
+  finally {
+    if (client != null)     client.disconnect();
+  }
+}
