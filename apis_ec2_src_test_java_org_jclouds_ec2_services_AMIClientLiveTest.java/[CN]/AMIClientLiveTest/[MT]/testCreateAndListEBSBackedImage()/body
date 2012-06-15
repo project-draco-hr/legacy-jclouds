@@ -1,0 +1,19 @@
+{
+  ComputeService computeService=view.getComputeService();
+  Snapshot snapshot=createSnapshot(computeService);
+  int sizeBefore=computeService.listImages().size();
+  ebsBackedImageId=client.registerUnixImageBackedByEbsInRegion(regionId,ebsBackedImageName,snapshot.getId(),addNewBlockDevice("/dev/sda2","myvirtual",1).withDescription("adrian"));
+  imagesToDeregister.add(ebsBackedImageId);
+  final Image ebsBackedImage=Iterables.getOnlyElement(client.describeImagesInRegion(regionId,imageIds(ebsBackedImageId)));
+  assertEquals(ebsBackedImage.getName(),ebsBackedImageName);
+  assertEquals(ebsBackedImage.getImageType(),ImageType.MACHINE);
+  assertEquals(ebsBackedImage.getRootDeviceType(),RootDeviceType.EBS);
+  assertEquals(ebsBackedImage.getRootDeviceName(),"/dev/sda1");
+  assertEquals(ebsBackedImage.getDescription(),"adrian");
+  assertEquals(ebsBackedImage.getEbsBlockDevices().entrySet(),ImmutableMap.of("/dev/sda1",new Image.EbsBlockDevice(snapshot.getId(),snapshot.getVolumeSize(),true),"/dev/sda2",new Image.EbsBlockDevice(null,1,false)).entrySet());
+  computeService.templateBuilder().imageId(ebsBackedImage.getRegion() + "/" + ebsBackedImageId).build();
+  Set<? extends org.jclouds.compute.domain.Image> after=computeService.listImages();
+  assertEquals(after.size(),sizeBefore + 1);
+  Iterable<? extends org.jclouds.compute.domain.Image> filtered=Iterables.filter(after,ImagePredicates.idEquals(ebsBackedImage.getRegion() + "/" + ebsBackedImageId));
+  assertEquals(Iterables.size(filtered),1);
+}

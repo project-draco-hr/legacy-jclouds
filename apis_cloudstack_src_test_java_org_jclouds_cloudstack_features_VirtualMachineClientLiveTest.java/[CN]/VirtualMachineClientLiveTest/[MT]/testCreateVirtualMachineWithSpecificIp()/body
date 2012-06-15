@@ -1,9 +1,9 @@
 {
   skipIfNotGlobalAdmin();
-  String templateId=(imageId != null && !"".equals(imageId)) ? imageId : null;
+  String defaultTemplate=template != null ? template.getImageId() : null;
   Network network=null;
   try {
-    Template template=getOnlyElement(client.getTemplateClient().listTemplates(ListTemplatesOptions.Builder.id(templateId)));
+    Template template=getOnlyElement(client.getTemplateClient().listTemplates(ListTemplatesOptions.Builder.id(defaultTemplate)));
     logger.info("Using template: " + template);
     Set<Network> allSafeNetworksInZone=adminClient.getNetworkClient().listNetworks(ListNetworksOptions.Builder.zoneId(template.getZoneId()).isSystem(false));
     for (    Network net : allSafeNetworksInZone) {
@@ -34,7 +34,7 @@
     String ipAddress="192.168.0.4";
     Map<String,String> ipsToNetworks=Maps.newHashMap();
     ipsToNetworks.put(ipAddress,network.getId());
-    vm=createVirtualMachineInNetworkWithIp(adminClient,templateId,ImmutableSet.of(requiredNetwork,network),ipsToNetworks,adminJobComplete,adminVirtualMachineRunning);
+    vm=createVirtualMachineInNetworkWithIp(adminClient,defaultTemplate,ImmutableSet.of(requiredNetwork,network),ipsToNetworks,adminJobComplete,adminVirtualMachineRunning);
     logger.info("Created VM: " + vm);
     boolean hasStaticIpNic=false;
     for (    NIC nic : vm.getNICs()) {

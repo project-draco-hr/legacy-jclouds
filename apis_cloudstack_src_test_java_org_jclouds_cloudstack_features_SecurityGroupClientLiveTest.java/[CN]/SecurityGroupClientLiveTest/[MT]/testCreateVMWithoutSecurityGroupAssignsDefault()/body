@@ -1,6 +1,6 @@
 {
   if (!securityGroupsSupported)   return;
-  String defaultTemplate=(imageId != null && !"".equals(imageId)) ? imageId : null;
+  String defaultTemplate=template != null ? template.getImageId() : null;
   VirtualMachine newVm=VirtualMachineClientLiveTest.createVirtualMachineWithOptionsInZone(DeployVirtualMachineOptions.NONE,zone.getId(),defaultTemplateOrPreferredInZone(defaultTemplate,client,zone.getId()),client,jobComplete,virtualMachineRunning);
   try {
     VirtualMachine runningVm=client.getVirtualMachineClient().getVirtualMachine(newVm.getId());

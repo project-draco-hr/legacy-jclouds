@@ -11,8 +11,8 @@
   assertTrue(Iterables.size(networks) >= 1);
   Network network=Iterables.get(networks,0);
   assertNotNull(network);
-  String templateId=(imageId != null && !"".equals(imageId)) ? imageId : null;
-  vmForCreation=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,templateId,client,jobComplete,virtualMachineRunning);
+  String defaultTemplate=template != null ? template.getImageId() : null;
+  vmForCreation=VirtualMachineClientLiveTest.createVirtualMachineInNetwork(network,defaultTemplate,client,jobComplete,virtualMachineRunning);
   assertTrue(jobComplete.apply(client.getVirtualMachineClient().stopVirtualMachine(vmForCreation.getId())),vmForCreation.toString());
   Set<Volume> volumes=client.getVolumeClient().listVolumes(ListVolumesOptions.Builder.virtualMachineId(vmForCreation.getId()));
   assertEquals(volumes.size(),1);

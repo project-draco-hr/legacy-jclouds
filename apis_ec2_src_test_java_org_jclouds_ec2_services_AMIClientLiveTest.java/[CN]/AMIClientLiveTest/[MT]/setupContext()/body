@@ -1,0 +1,11 @@
+{
+  super.setupContext();
+  client=view.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi().getAMIServices();
+  if (ebsTemplate != null) {
+    Template template=view.getComputeService().templateBuilder().from(ebsTemplate).build();
+    regionId=template.getLocation().getId();
+    for (    Image image : client.describeImagesInRegion(regionId)) {
+      if (ebsBackedImageName.equals(image.getName()))       client.deregisterImageInRegion(regionId,image.getId());
+    }
+  }
+}
