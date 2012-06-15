@@ -1,0 +1,9 @@
+{
+  Builder<String,Supplier<URI>> builder=ImmutableMap.<String,Supplier<URI>>builder();
+  for (  Entry<String,Supplier<URI>> regionToURI : regionIdToURISupplier.get().entrySet()) {
+    for (    String zone : regionIdToZoneIdsSupplier.get().get(regionToURI.getKey()).get()) {
+      builder.put(zone,regionToURI.getValue());
+    }
+  }
+  return builder.build();
+}
