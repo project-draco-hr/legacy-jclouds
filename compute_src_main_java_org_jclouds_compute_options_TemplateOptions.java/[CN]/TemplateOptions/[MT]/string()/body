@@ -1,3 +1,11 @@
 {
-  return super.string().add("inboundPorts",inboundPorts).add("scriptPresent",script != null).add("publicKeyPresent",publicKey != null).add("privateKeyPresent",privateKey != null).add("tags",tags).add("blockUntilRunning",blockUntilRunning).add("tags",tags).add("userMetadata",userMetadata);
+  ToStringHelper toString=super.string();
+  if (!DEFAULT_INBOUND_PORTS.equals(inboundPorts))   toString.add("inboundPorts",inboundPorts);
+  if (script != null)   toString.add("scriptPresent",true);
+  if (publicKey != null)   toString.add("publicKeyPresent",true);
+  if (privateKey != null)   toString.add("privateKeyPresent",true);
+  if (!blockUntilRunning)   toString.add("blockUntilRunning",blockUntilRunning);
+  if (tags.size() != 0)   toString.add("tags",tags);
+  if (userMetadata.size() != 0)   toString.add("userMetadata",userMetadata);
+  return toString;
 }

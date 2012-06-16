@@ -1,3 +1,10 @@
 {
-  return toStringHelper("").add("keyName",keyName).add("securityGroupNames",securityGroupNames).add("metadata",metadata).add("personality",personality).add("adminPassPresent",adminPass != null).add("userData",userData == null ? null : new String(userData));
+  ToStringHelper toString=Objects.toStringHelper("").omitNullValues();
+  toString.add("keyName",keyName);
+  if (securityGroupNames.size() > 0)   toString.add("securityGroupNames",securityGroupNames);
+  if (metadata.size() > 0)   toString.add("metadata",metadata);
+  if (personality.size() > 0)   toString.add("personality",personality);
+  if (adminPass != null)   toString.add("adminPassPresent",true);
+  toString.add("userData",userData == null ? null : new String(userData));
+  return toString;
 }
