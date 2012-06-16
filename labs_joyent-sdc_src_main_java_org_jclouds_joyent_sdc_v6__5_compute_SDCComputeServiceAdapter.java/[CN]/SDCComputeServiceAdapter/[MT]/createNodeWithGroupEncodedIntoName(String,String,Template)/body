@@ -10,5 +10,8 @@
   Machine machine=sdcClient.getMachineClientForDatacenter(datacenterId).createWithDataset(datasetURN,options);
   logger.trace("<< machine(%s)",machine.getId());
   MachineInDatacenter machineInDatacenter=new MachineInDatacenter(machine,datacenterId);
+  if (template.getOptions().getLoginPrivateKey() != null) {
+    credentialsBuilder.privateKey(template.getOptions().getLoginPrivateKey());
+  }
   return new NodeAndInitialCredentials<MachineInDatacenter>(machineInDatacenter,machineInDatacenter.slashEncode(),credentialsBuilder.build());
 }

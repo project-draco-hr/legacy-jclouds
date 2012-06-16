@@ -1,0 +1,13 @@
+{
+  KeyClient keyClient=novaClient.getKeyClient();
+  for (  String group : groups) {
+    for (    Key key : Iterables.filter(keyClient.list(),KeyPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
+      DatacenterAndName datacenterAndName=DatacenterAndName.fromDatacenterAndName(datacenterId,key.getName());
+      logger.debug(">> deleting key(%s)",datacenterAndName);
+      keyClient.delete(key.getName());
+      keyCache.invalidate(datacenterAndName);
+      logger.debug("<< deleted key(%s)",datacenterAndName);
+    }
+    keyCache.invalidate(DatacenterAndName.fromDatacenterAndName(datacenterId,namingConvention.create().sharedNameForGroup(group)));
+  }
+}

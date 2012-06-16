@@ -1,0 +1,5 @@
+{
+  MachineInDatacenterToNodeMetadata converter=new MachineInDatacenterToNodeMetadata(SDCComputeServiceContextModule.toPortableNodeStatus,locationIndex,Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of()),Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of()),namingConvention);
+  Set<? extends NodeMetadata> set=ImmutableSet.of(converter.apply(machine2),converter.apply(machine1));
+  assertEquals(new OrphanedGroupsByDatacenterId(Predicates.<DatacenterAndName>alwaysTrue()).apply(set),ImmutableMultimap.<String,String>builder().putAll("us-east-1","sample","test").build());
+}

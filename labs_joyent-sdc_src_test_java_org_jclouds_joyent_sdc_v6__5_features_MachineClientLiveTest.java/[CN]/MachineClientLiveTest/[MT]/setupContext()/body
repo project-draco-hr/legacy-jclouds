@@ -1,8 +1,8 @@
 {
   super.setupContext();
-  keypair=SshKeys.generate();
-  fingerprint=SshKeys.fingerprintPublicKey(keypair.get("public"));
-  sdcContext.getApi().getKeyClient().create(Key.builder().name(fingerprint).key(keypair.get("public")).build());
+  key=SshKeys.generate();
+  fingerprint=SshKeys.fingerprintPublicKey(key.get("public"));
+  sdcContext.getApi().getKeyClient().create(Key.builder().name(fingerprint).key(key.get("public")).build());
   client=sdcContext.getApi().getMachineClientForDatacenter(Iterables.get(sdcContext.getApi().getConfiguredDatacenters(),0));
   socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
   machineRunning=new RetryablePredicate<Machine>(new Predicate<Machine>(){

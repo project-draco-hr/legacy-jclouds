@@ -17,5 +17,14 @@
 ).to(PackageInDatacenterToHardware.class);
   bind(new TypeLiteral<Function<Location,Location>>(){
   }
-).to((Class)IdentityFunction.class);
+).to(Class.class.cast(IdentityFunction.class));
+  bind(new TypeLiteral<Function<Set<? extends NodeMetadata>,Multimap<String,String>>>(){
+  }
+).to(OrphanedGroupsByDatacenterId.class);
+  bind(ComputeService.class).to(SDCComputeService.class);
+  bind(TemplateOptions.class).to(SDCTemplateOptions.class);
+  bind(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class).to(ApplySDCTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
+  bind(new TypeLiteral<CacheLoader<DatacenterAndName,KeyAndPrivateKey>>(){
+  }
+).to(CreateUniqueKey.class);
 }
