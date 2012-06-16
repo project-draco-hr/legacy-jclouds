@@ -1,39 +1,34 @@
 {
   List<Predicate<Image>> predicates=newArrayList();
-  if (imageId != null) {
-    predicates.add(idPredicate);
-  }
- else {
-    if (location != null)     predicates.add(new Predicate<Image>(){
-      @Override public boolean apply(      Image input){
-        return locationPredicate.apply(input);
-      }
-      @Override public String toString(){
-        return locationPredicate.toString();
-      }
+  if (location != null)   predicates.add(new Predicate<Image>(){
+    @Override public boolean apply(    Image input){
+      return locationPredicate.apply(input);
     }
-);
-    final List<Predicate<OperatingSystem>> osPredicates=newArrayList();
-    if (osFamily != null)     osPredicates.add(osFamilyPredicate);
-    if (osName != null)     osPredicates.add(osNamePredicate);
-    if (osDescription != null)     osPredicates.add(osDescriptionPredicate);
-    if (osVersion != null)     osPredicates.add(osVersionPredicate);
-    if (os64Bit != null)     osPredicates.add(os64BitPredicate);
-    if (osArch != null)     osPredicates.add(osArchPredicate);
-    if (osPredicates.size() > 0)     predicates.add(new Predicate<Image>(){
-      @Override public boolean apply(      Image input){
-        return and(osPredicates).apply(input.getOperatingSystem());
-      }
-      @Override public String toString(){
-        return and(osPredicates).toString();
-      }
+    @Override public String toString(){
+      return locationPredicate.toString();
     }
-);
-    if (imageVersion != null)     predicates.add(imageVersionPredicate);
-    if (imageName != null)     predicates.add(imageNamePredicate);
-    if (imageDescription != null)     predicates.add(imageDescriptionPredicate);
-    if (imagePredicate != null)     predicates.add(imagePredicate);
   }
+);
+  final List<Predicate<OperatingSystem>> osPredicates=newArrayList();
+  if (osFamily != null)   osPredicates.add(osFamilyPredicate);
+  if (osName != null)   osPredicates.add(osNamePredicate);
+  if (osDescription != null)   osPredicates.add(osDescriptionPredicate);
+  if (osVersion != null)   osPredicates.add(osVersionPredicate);
+  if (os64Bit != null)   osPredicates.add(os64BitPredicate);
+  if (osArch != null)   osPredicates.add(osArchPredicate);
+  if (osPredicates.size() > 0)   predicates.add(new Predicate<Image>(){
+    @Override public boolean apply(    Image input){
+      return and(osPredicates).apply(input.getOperatingSystem());
+    }
+    @Override public String toString(){
+      return and(osPredicates).toString();
+    }
+  }
+);
+  if (imageVersion != null)   predicates.add(imageVersionPredicate);
+  if (imageName != null)   predicates.add(imageNamePredicate);
+  if (imageDescription != null)   predicates.add(imageDescriptionPredicate);
+  if (imagePredicate != null)   predicates.add(imagePredicate);
   Predicate<Image> imagePredicate=predicates.size() == 1 ? Iterables.<Predicate<Image>>get(predicates,0) : Predicates.<Image>and(predicates);
   return imagePredicate;
 }

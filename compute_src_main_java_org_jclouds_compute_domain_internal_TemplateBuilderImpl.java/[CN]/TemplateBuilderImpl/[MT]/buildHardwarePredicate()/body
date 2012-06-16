@@ -1,22 +1,17 @@
 {
   List<Predicate<Hardware>> predicates=newArrayList();
-  if (hardwareId != null) {
-    predicates.add(hardwareIdPredicate);
-  }
- else {
-    if (location != null)     predicates.add(new Predicate<Hardware>(){
-      @Override public boolean apply(      Hardware input){
-        return locationPredicate.apply(input);
-      }
-      @Override public String toString(){
-        return locationPredicate.toString();
-      }
+  if (location != null)   predicates.add(new Predicate<Hardware>(){
+    @Override public boolean apply(    Hardware input){
+      return locationPredicate.apply(input);
     }
-);
-    if (hypervisor != null)     predicates.add(hypervisorPredicate);
-    predicates.add(hardwareCoresPredicate);
-    predicates.add(hardwareRamPredicate);
+    @Override public String toString(){
+      return locationPredicate.toString();
+    }
   }
+);
+  if (hypervisor != null)   predicates.add(hypervisorPredicate);
+  predicates.add(hardwareCoresPredicate);
+  predicates.add(hardwareRamPredicate);
   Predicate<Hardware> hardwarePredicate=predicates.size() == 1 ? Iterables.<Predicate<Hardware>>get(predicates,0) : Predicates.<Hardware>and(predicates);
   return hardwarePredicate;
 }

@@ -7,19 +7,26 @@
   if (options == null)   options=optionsProvider.get();
   logger.debug(">> searching params(%s)",this);
   Set<? extends Image> images=getImages();
-  if (location == null)   location=defaultLocation.get();
-  Predicate<Image> imagePredicate=buildImagePredicate();
-  Iterable<? extends Image> supportedImages=filter(images,imagePredicate);
-  if (size(supportedImages) == 0) {
-    if (imagePredicate == idPredicate) {
-      throwNoSuchElementExceptionAfterLoggingImageIds(format("%s not found",idPredicate),images);
-    }
- else {
-      throwNoSuchElementExceptionAfterLoggingImageIds(format("no image matched predicate: %s",imagePredicate),images);
-    }
+  Set<? extends Hardware> hardwaresToSearch=hardwares.get();
+  Image image=null;
+  if (imageId != null) {
+    image=findImageWithId(images);
+    if (currentLocationWiderThan(image.getLocation()))     this.location=image.getLocation();
   }
-  Hardware hardware=resolveHardware(hardwareSorter(),supportedImages);
-  Image image=resolveImage(hardware,supportedImages);
-  logger.debug("<<   matched image(%s)",image.getId());
+  Hardware hardware=null;
+  if (hardwareId != null) {
+    hardware=findHardwareWithId(hardwaresToSearch);
+    if (currentLocationWiderThan(hardware.getLocation()))     this.location=hardware.getLocation();
+  }
+  if (location == null)   location=defaultLocation.get();
+  if (image == null) {
+    Iterable<? extends Image> supportedImages=findSupportedImages(images);
+    if (hardware == null)     hardware=resolveHardware(hardwaresToSearch,supportedImages);
+    image=resolveImage(hardware,supportedImages);
+  }
+ else {
+    if (hardware == null)     hardware=resolveHardware(hardwaresToSearch,ImmutableSet.of(image));
+  }
+  logger.debug("<<   matched image(%s) hardware(%s) location(%s)",image.getId(),hardware.getId(),location.getId());
   return new TemplateImpl(image,hardware,location,options);
 }
