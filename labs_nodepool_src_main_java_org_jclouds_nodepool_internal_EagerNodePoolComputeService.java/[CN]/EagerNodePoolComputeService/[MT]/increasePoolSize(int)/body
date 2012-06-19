@@ -1,22 +1,14 @@
 {
   lock.lock();
   logger.debug(">> increasing pool size,  available: %s total: %s min; %s max: %s increasing to: %s",available.size(),poolNodes.size(),minSize,maxSize,size);
-  return Futures.makeListenable(executor.submit(new Callable<Void>(){
-    @Override public Void call() throws Exception {
-      try {
-        Set<? extends NodeMetadata> original=backingComputeService.createNodesInGroup(poolGroupName,size,template);
-        poolNodes.addAll(original);
-        available.addAll(original);
-        logger.debug("<< pool size increased, available: %s total: %s min; %s max: %s increasing to: %s",available.size(),poolNodes.size(),minSize,maxSize,size);
-        if (started.compareAndSet(false,true)) {
-          logger.info("pool started, status: %s min; %s max: %s",available.size(),minSize,maxSize);
-        }
-        return null;
-      }
-  finally {
-        lock.unlock();
-      }
-    }
+  try {
+    Set<? extends NodeMetadata> original=backingComputeService.createNodesInGroup(poolGroupName,size,template);
+    poolNodes.addAll(original);
+    available.addAll(original);
+    logger.debug("<< pool size increased, available: %s total: %s min; %s max: %s increasing to: %s",available.size(),poolNodes.size(),minSize,maxSize,size);
+    logger.info("pool started, status: %s min; %s max: %s",available.size(),minSize,maxSize);
   }
-),executor);
+  finally {
+    lock.unlock();
+  }
 }

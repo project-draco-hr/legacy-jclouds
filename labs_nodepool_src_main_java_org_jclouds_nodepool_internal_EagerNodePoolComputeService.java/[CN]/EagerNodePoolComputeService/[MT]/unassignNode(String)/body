@@ -15,7 +15,12 @@
     }
 );
     if (poolNodes.size() < minSize) {
-      increasePoolSize(1);
+      try {
+        increasePoolSize(1);
+      }
+ catch (      RunNodesException e) {
+        throw Throwables.propagate(e);
+      }
     }
   }
   finally {
