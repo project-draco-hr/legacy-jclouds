@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments");
-  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/attachment_list.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/attachment_list.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
   Set<VolumeAttachment> attachments=client.listAttachmentsOnServer("instance-1");
   assertEquals(attachments,ImmutableSet.of(testAttachment()));
   VolumeAttachment attachment=Iterables.getOnlyElement(attachments);

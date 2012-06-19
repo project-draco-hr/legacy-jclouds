@@ -1,6 +1,6 @@
 {
   HttpRequest getFlavor=HttpRequest.builder().method("GET").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/123")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse getFlavorResponse=HttpResponse.builder().statusCode(404).payload(payloadFromResource("/flavor_details.json")).build();
-  NovaClient clientWhenNoFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,getFlavor,getFlavorResponse);
+  NovaClient clientWhenNoFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getFlavor,getFlavorResponse);
   assertNull(clientWhenNoFlavorsExist.getFlavorClientForZone("az-1.region-a.geo-1").getFlavor("123"));
 }

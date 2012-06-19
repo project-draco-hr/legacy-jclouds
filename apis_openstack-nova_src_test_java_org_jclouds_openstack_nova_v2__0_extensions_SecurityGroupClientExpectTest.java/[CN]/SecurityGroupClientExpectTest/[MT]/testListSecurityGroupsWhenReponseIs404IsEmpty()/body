@@ -1,6 +1,6 @@
 {
   HttpRequest listListSecurityGroups=HttpRequest.builder().method("GET").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse listListSecurityGroupsResponse=HttpResponse.builder().statusCode(404).build();
-  NovaClient clientWhenNoSecurityGroupsExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listListSecurityGroups,listListSecurityGroupsResponse);
+  NovaClient clientWhenNoSecurityGroupsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listListSecurityGroups,listListSecurityGroupsResponse);
   assertTrue(clientWhenNoSecurityGroupsExist.getSecurityGroupExtensionForZone("az-1.region-a.geo-1").get().listSecurityGroups().isEmpty());
 }

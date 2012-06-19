@@ -1,5 +1,5 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-quota-class-sets/myclass");
-  QuotaClassClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().endpoint(endpoint).method("PUT").headers(ImmutableMultimap.of("X-Auth-Token",authToken)).payload(payloadFromResourceWithContentType("/quota_class.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).build()).getQuotaClassExtensionForZone("az-1.region-a.geo-1").get();
+  QuotaClassClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().endpoint(endpoint).method("PUT").headers(ImmutableMultimap.of("X-Auth-Token",authToken)).payload(payloadFromResourceWithContentType("/quota_class.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).build()).getQuotaClassExtensionForZone("az-1.region-a.geo-1").get();
   assertTrue(client.updateQuotaClass("myclass",getTestQuotas()));
 }

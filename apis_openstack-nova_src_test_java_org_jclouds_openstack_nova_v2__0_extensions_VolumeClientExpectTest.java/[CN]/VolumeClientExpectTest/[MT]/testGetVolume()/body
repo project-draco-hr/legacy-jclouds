@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volumes/1");
-  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/volume_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/volume_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
   Volume volume=client.getVolume("1");
   assertEquals(volume,testVolume());
   assertEquals(volume.getStatus(),Volume.Status.IN_USE);

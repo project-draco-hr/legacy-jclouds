@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volumes");
-  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"volume\":{\"display_name\":\"jclouds-test-volume\",\"display_description\":\"description of test volume\",\"size\":1}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(200).payload(payloadFromResource("/volume_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"volume\":{\"display_name\":\"jclouds-test-volume\",\"display_description\":\"description of test volume\",\"size\":1}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(200).payload(payloadFromResource("/volume_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
   Volume volume=client.createVolume(1,CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume"));
   assertEquals(volume,testVolume());
 }
