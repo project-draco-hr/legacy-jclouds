@@ -1,0 +1,16 @@
+{
+  NameExtractor extractor=new ExtractNamed();
+  try {
+    extractor.extractName(SimpleTest.class.getDeclaredField("a").getAnnotation(Named.class));
+  }
+ catch (  NullPointerException e) {
+  }
+  try {
+    extractor.extractName(SimpleTest.class.getDeclaredField("b").getAnnotation(Named.class));
+    fail();
+  }
+ catch (  NullPointerException e) {
+  }
+  assertEquals(extractor.extractName(SimpleTest.class.getDeclaredField("c").getAnnotation(Named.class)),"cat");
+  assertEquals(extractor.extractName(SimpleTest.class.getDeclaredField("d").getAnnotation(Named.class)),"dog");
+}

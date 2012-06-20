@@ -1,0 +1,11 @@
+{
+  TypeAdapter<ValidatedConstructor> adapter=parameterizedCtorFactory.create(gson,TypeToken.get(ValidatedConstructor.class));
+  assertEquals(new ValidatedConstructor(0,1),adapter.fromJson("{\"foo\":0,\"bar\":1}"));
+  try {
+    adapter.fromJson("{\"foo\":-1,\"bar\":1}");
+    fail();
+  }
+ catch (  IllegalArgumentException expected) {
+    assertEquals("negative!",expected.getMessage());
+  }
+}
