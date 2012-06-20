@@ -1,0 +1,11 @@
+{
+  Class<? super T> raw=type.getRawType();
+  Constructor<? super T> deserializationCtor=constructorFieldNamingPolicy.getDeserializationConstructor(raw);
+  if (deserializationCtor == null) {
+    return null;
+  }
+ else {
+    deserializationCtor.setAccessible(true);
+    return new DeserializeWithParameterizedConstructorSerializeWithDelegate<T>(delegateFactory.create(gson,type),deserializationCtor,getParameterReaders(gson,type,deserializationCtor));
+  }
+}
