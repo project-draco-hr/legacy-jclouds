@@ -8,6 +8,16 @@
         logger.warn("Unsupported: " + e.getMessage());
         return false;
       }
+catch (      RuntimeException e) {
+        IllegalArgumentException e2=Throwables2.getFirstThrowableOfType(e,IllegalArgumentException.class);
+        if (e2 != null) {
+          logger.warn("Unsupported: " + e2.getMessage());
+          return false;
+        }
+ else {
+          throw e;
+        }
+      }
       return true;
     }
   }
