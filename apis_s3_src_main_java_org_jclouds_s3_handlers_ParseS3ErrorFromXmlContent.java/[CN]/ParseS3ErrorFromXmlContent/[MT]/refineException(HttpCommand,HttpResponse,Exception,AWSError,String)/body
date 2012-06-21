@@ -2,8 +2,11 @@
 switch (response.getStatusCode()) {
 case 404:
     if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
+      URI defaultS3Endpoint=URI.create(new S3ApiMetadata().getDefaultEndpoint().get());
+      URI requestEndpoint=command.getCurrentRequest().getEndpoint();
+      boolean wasPathBasedRequest=requestEndpoint.getHost().contains(defaultS3Endpoint.getHost()) && requestEndpoint.getHost().equals(defaultS3Endpoint.getHost());
       exception=new ResourceNotFoundException(message,exception);
-      if (isVhostStyle) {
+      if (isVhostStyle && !wasPathBasedRequest) {
         String container=command.getCurrentRequest().getEndpoint().getHost();
         String key=command.getCurrentRequest().getEndpoint().getPath();
         if (key == null || key.equals("/"))         exception=new ContainerNotFoundException(container,message);

@@ -1,0 +1,37 @@
+{
+  String bucketName=CONTAINER_PREFIX + "-TestBucket";
+  String blobName="TestBlob.txt";
+  StorageMetadata container=null;
+  BlobStore store=view.getBlobStore();
+  try {
+    store.createContainerInLocation(null,bucketName);
+    for (    StorageMetadata metadata : store.list()) {
+      if (metadata.getName().equals(bucketName)) {
+        container=metadata;
+        break;
+      }
+    }
+    assertNotNull(container);
+    store.putBlob(bucketName,store.blobBuilder(blobName).payload("This is a test!").contentType("text/plain").build());
+    assertNotNull(store.getBlob(bucketName,blobName));
+  }
+  finally {
+    if (container != null) {
+      store.deleteContainer(bucketName);
+    }
+  }
+  Location location=null;
+  for (  Location pLocation : store.listAssignableLocations()) {
+    if (!ImmutableSet.of(Region.US_STANDARD,Region.US_EAST_1,Region.US_WEST_1,Region.US_WEST_2).contains(pLocation.getId())) {
+      location=pLocation;
+      break;
+    }
+  }
+  try {
+    store.createContainerInLocation(location,bucketName);
+    fail("Should had failed because in non-US regions, mixed-case bucket names are invalid.");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("InvalidBucketName",e.getError().getCode());
+  }
+}
