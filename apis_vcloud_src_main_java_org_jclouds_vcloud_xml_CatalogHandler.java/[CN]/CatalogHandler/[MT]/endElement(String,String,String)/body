@@ -1,12 +1,12 @@
 {
   taskHandler.endElement(uri,name,qName);
-  if (qName.equals("Task")) {
+  if (SaxUtils.equalsOrSuffix(qName,"Task")) {
     this.tasks.add(taskHandler.getResult());
   }
- else   if (qName.equals("Description")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Description")) {
     description=currentOrNull();
   }
- else   if (qName.equals("IsPublished")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"IsPublished")) {
     published=Boolean.parseBoolean(currentOrNull());
   }
   currentText=new StringBuilder();
