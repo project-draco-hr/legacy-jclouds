@@ -1,9 +1,8 @@
 {
-  Set<String> openVzIps=client.listFree("4","Falkenberg","OpenVZ");
-  assertTrue(openVzIps.size() >= 1);
+  Set<String> openVzIps=client.listFree(4,"Falkenberg","OpenVZ");
+  assertFalse(openVzIps.isEmpty());
   String openVzIp=openVzIps.iterator().next();
-  IpDetails ipDetails=client.getIpDetails(openVzIp);
-  assertEquals(ipDetails.getDatacenter(),"Falkenberg");
-  assertEquals(ipDetails.getPlatform(),"OpenVZ");
-  assertEquals(ipDetails.getIpversion(),"4");
+  IpDetails ipDetails=client.getIp(openVzIp);
+  checkOpenVZDefailsInFalkenberg(ipDetails);
+  assertEquals(ipDetails.getAddress(),openVzIp);
 }

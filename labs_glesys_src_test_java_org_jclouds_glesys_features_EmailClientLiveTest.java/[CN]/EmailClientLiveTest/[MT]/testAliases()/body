@@ -1,10 +1,17 @@
 {
-  client.createAlias("test2@" + testDomain,"test@" + testDomain);
+  assertTrue(client.listAliases(testDomain).isEmpty());
+  EmailAlias alias=client.createAlias("test2@" + testDomain,"test@" + testDomain);
+  assertEquals(alias.getAlias(),"test2@" + testDomain);
+  assertEquals(alias.getForwardTo(),"test@" + testDomain);
+  EmailAlias aliasFromList=Iterables.getOnlyElement(client.listAliases(testDomain));
+  assertEquals(aliasFromList,alias);
   EmailOverview overview=client.getEmailOverview();
   assertTrue(overview.getSummary().getAliases() == 1);
-  client.editAlias("test2@" + testDomain,"test1@" + testDomain);
+  alias=client.editAlias("test2@" + testDomain,"test1@" + testDomain);
   overview=client.getEmailOverview();
   assertTrue(overview.getSummary().getAliases() == 1);
+  aliasFromList=Iterables.getOnlyElement(client.listAliases(testDomain));
+  assertEquals(aliasFromList,alias);
   client.delete("test2@" + testDomain);
   overview=client.getEmailOverview();
   assertTrue(overview.getSummary().getAliases() == 0);

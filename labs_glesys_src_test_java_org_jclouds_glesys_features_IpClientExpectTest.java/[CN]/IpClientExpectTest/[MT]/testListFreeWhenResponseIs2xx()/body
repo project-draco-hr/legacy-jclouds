@@ -1,6 +1,4 @@
 {
   IpClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("https://api.glesys.com/ip/listfree/ipversion/4/datacenter/Falkenberg/platform/OpenVZ/format/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ip_list_free.json")).build()).getIpClient();
-  Set<Object> expectedIps=newHashSet();
-  expectedIps.addAll(asList("31.192.226.131","31.192.226.133"));
-  assertEquals(client.listFree("4","Falkenberg","OpenVZ"),expectedIps);
+  assertEquals(client.listFree(4,"Falkenberg","OpenVZ"),ParseIpAddressFromResponseTest.EXPECTED_IPS);
 }

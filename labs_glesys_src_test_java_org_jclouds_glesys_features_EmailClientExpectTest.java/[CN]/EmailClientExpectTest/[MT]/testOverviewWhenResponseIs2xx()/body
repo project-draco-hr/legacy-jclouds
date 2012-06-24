@@ -1,7 +1,7 @@
 {
   EmailClient client=requestSendsResponse(HttpRequest.builder().method("POST").endpoint(URI.create("https://api.glesys.com/email/overview/format/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/email_overview.json")).build()).getEmailClient();
-  EmailOverviewSummary summary=EmailOverviewSummary.builder().accounts(2).maxAccounts(50).aliases(0).maxAliases(1000).build();
-  EmailOverviewDomain domain=EmailOverviewDomain.builder().domain("adamlowe.net").accounts(2).aliases(0).build();
+  EmailOverviewSummary summary=EmailOverviewSummary.builder().accounts(2).maxAccounts(50).aliases(1).maxAliases(1000).build();
+  EmailOverviewDomain domain=EmailOverviewDomain.builder().domain("cl13016.test.jclouds.org").accounts(2).aliases(0).build();
   EmailOverview expected=EmailOverview.builder().summary(summary).domains(domain).build();
   assertEquals(client.getEmailOverview(),expected);
 }
