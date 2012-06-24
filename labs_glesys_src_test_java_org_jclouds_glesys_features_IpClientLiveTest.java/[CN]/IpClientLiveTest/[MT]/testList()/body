@@ -1,0 +1,14 @@
+{
+  Set<IpDetails> ownIps=client.listIps();
+  assertTrue(ownIps.contains(reservedIp));
+  ownIps=client.listIps(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()));
+  assertTrue(ownIps.contains(reservedIp));
+  ownIps=client.listIps(ListIpOptions.Builder.platform(reservedIp.getPlatform()));
+  assertTrue(ownIps.contains(reservedIp));
+  ownIps=client.listIps(ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
+  assertTrue(ownIps.contains(reservedIp));
+  ownIps=client.listIps(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()),ListIpOptions.Builder.platform(reservedIp.getPlatform()),ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
+  assertTrue(ownIps.contains(reservedIp));
+  ownIps=client.listIps(ListIpOptions.Builder.serverId("xmthisisnotaserverid"));
+  assertTrue(ownIps.isEmpty());
+}

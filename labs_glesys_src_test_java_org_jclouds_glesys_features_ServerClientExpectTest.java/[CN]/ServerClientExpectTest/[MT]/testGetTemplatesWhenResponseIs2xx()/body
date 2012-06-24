@@ -2,13 +2,13 @@
   ServerClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("https://api.glesys.com/server/templates/format/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_templates.json")).build()).getServerClient();
   ImmutableSet.Builder<OSTemplate> expectedBuilder=ImmutableSet.builder();
   for (  String name : new String[]{"Centos 5","Centos 5 64-bit","Centos 6 32-bit","Centos 6 64-bit","Debian 5.0 32-bit","Debian 5.0 64-bit","Debian 6.0 32-bit","Debian 6.0 64-bit","Fedora Core 11","Fedora Core 11 64-bit","Gentoo","Gentoo 64-bit","Scientific Linux 6","Scientific Linux 6 64-bit","Slackware 12","Ubuntu 10.04 LTS 32-bit","Ubuntu 10.04 LTS 64-bit","Ubuntu 11.04 64-bit"}) {
-    expectedBuilder.add(new OSTemplate(name,5,128,"linux","OpenVZ"));
+    expectedBuilder.add(OSTemplate.builder().name(name).minDiskSize(5).minMemSize(128).os("linux").platform("OpenVZ").build());
   }
   for (  String name : new String[]{"CentOS 5.5 x64","CentOS 5.5 x86","Centos 6 x64","Centos 6 x86","Debian-6 x64","Debian 5.0.1 x64","FreeBSD 8.2","Gentoo 10.1 x64","Ubuntu 8.04 x64","Ubuntu 10.04 LTS 64-bit","Ubuntu 10.10 x64","Ubuntu 11.04 x64"}) {
-    expectedBuilder.add(new OSTemplate(name,5,512,name.startsWith("FreeBSD") ? "freebsd" : "linux","Xen"));
+    expectedBuilder.add(OSTemplate.builder().name(name).minDiskSize(5).minMemSize(512).os(name.startsWith("FreeBSD") ? "freebsd" : "linux").platform("Xen").build());
   }
   for (  String name : new String[]{"Windows Server 2008 R2 x64 std","Windows Server 2008 R2 x64 web","Windows Server 2008 x64 web","Windows Server 2008 x86 web"}) {
-    expectedBuilder.add(new OSTemplate(name,20,1024,"windows","Xen"));
+    expectedBuilder.add(OSTemplate.builder().name(name).minDiskSize(20).minMemSize(1024).os("windows").platform("Xen").build());
   }
   assertEquals(client.listTemplates(),expectedBuilder.build());
 }
