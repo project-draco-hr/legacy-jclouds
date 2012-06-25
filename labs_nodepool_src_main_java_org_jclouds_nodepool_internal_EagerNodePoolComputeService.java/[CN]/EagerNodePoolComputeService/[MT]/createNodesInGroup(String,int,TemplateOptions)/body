@@ -1,0 +1,12 @@
+{
+  Set<NodeMetadata> backendNodes=getBackendNodes();
+  Set<NodeMetadata> frontendNodes=metadataStore.loadAll(backendNodes);
+  checkState(frontendNodes.size() + count < maxSize,"cannot add more nodes to pool [requested: %s, current: %s, max: %s]",count,frontendNodes.size(),maxSize);
+  SetView<NodeMetadata> availableNodes=Sets.difference(backendNodes,frontendNodes);
+  Set<NodeMetadata> newFrontEndAssignments=Sets.newHashSet();
+  int i=0;
+  for (Iterator<NodeMetadata> iter=availableNodes.iterator(); iter.hasNext() && i < count; i++) {
+    newFrontEndAssignments.add(metadataStore.store(iter.next(),templateOptions,group));
+  }
+  return newFrontEndAssignments;
+}

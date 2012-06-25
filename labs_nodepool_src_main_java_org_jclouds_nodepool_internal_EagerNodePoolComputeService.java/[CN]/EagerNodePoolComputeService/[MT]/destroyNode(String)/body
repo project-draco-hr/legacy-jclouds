@@ -1,3 +1,8 @@
 {
-  unassignNode(id);
+  checkState(getNodeMetadata(id) != null);
+  metadataStore.deleteMapping(id);
+  if (!reuseDestroyed) {
+    backingComputeService.destroyNode(id);
+    addToPool(1);
+  }
 }

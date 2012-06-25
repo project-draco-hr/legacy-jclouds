@@ -1,13 +1,4 @@
 {
-  lock.lock();
-  try {
-    logger.info("Closing pooled compute service with {} nodes",currentSize());
-    available.clear();
-    assignments.clear();
-    poolNodes.clear();
-    backingComputeService.destroyNodesMatching(NodePredicates.inGroup(poolGroupName));
-  }
- catch (  Exception e) {
-    lock.unlock();
-  }
+  metadataStore.deleteAllMappings();
+  backingComputeService.destroyNodesMatching(NodePredicates.inGroup(poolGroupName));
 }
