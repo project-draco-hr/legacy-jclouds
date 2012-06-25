@@ -1,0 +1,16 @@
+{
+  String name=null;
+  if (markers.contains(ConstructorProperties.class) && c.getAnnotation(ConstructorProperties.class) != null) {
+    String[] names=c.getAnnotation(ConstructorProperties.class).value();
+    if (names != null && names.length > index) {
+      name=names[index];
+    }
+  }
+  for (  Annotation annotation : c.getParameterAnnotations()[index]) {
+    if (annotationToNameExtractor.containsKey(annotation.annotationType())) {
+      name=annotationToNameExtractor.get(annotation.annotationType()).extractName(annotation);
+      break;
+    }
+  }
+  return name;
+}

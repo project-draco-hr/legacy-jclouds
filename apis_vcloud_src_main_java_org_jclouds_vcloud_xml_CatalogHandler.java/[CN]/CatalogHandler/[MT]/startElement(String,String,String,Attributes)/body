@@ -1,15 +1,15 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
-  if (qName.equals("Catalog")) {
+  if (SaxUtils.equalsOrSuffix(qName,"Catalog")) {
     catalog=newReferenceType(attributes,VCloudMediaType.CATALOG_XML);
   }
- else   if (qName.equals("CatalogItem")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"CatalogItem")) {
     putReferenceType(contents,attributes);
   }
- else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Link") && "up".equals(attributes.get("rel"))) {
     org=newReferenceType(attributes);
   }
- else   if (qName.equals("Link") && "add".equals(attributes.get("rel"))) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Link") && "add".equals(attributes.get("rel"))) {
     readOnly=false;
   }
  else {

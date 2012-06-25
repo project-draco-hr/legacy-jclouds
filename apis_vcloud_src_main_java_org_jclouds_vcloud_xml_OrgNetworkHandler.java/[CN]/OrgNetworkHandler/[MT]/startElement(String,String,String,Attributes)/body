@@ -1,15 +1,15 @@
 {
   Map<String,String> attributes=SaxUtils.cleanseAttributes(attrs);
-  if (qName.equals("OrgNetwork")) {
+  if (SaxUtils.equalsOrSuffix(qName,"OrgNetwork")) {
     network=newReferenceType(attributes);
   }
- else   if (qName.equals("FirewallRule")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"FirewallRule")) {
     this.inFirewallRule=true;
   }
- else   if (qName.equals("ParentNetwork")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"ParentNetwork")) {
     parentNetwork=newReferenceType(attributes);
   }
- else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Link") && "up".equals(attributes.get("rel"))) {
     org=newReferenceType(attributes);
   }
  else {

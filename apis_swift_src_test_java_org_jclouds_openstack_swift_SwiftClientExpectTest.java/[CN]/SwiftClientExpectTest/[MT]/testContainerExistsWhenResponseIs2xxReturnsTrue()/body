@@ -1,0 +1,6 @@
+{
+  HttpRequest headContainer=HttpRequest.builder().method("HEAD").endpoint(URI.create(swiftEndpointWithHostReplaced + "/foo")).headers(ImmutableMultimap.<String,String>builder().put("X-Auth-Token",authToken).build()).build();
+  HttpResponse headContainerResponse=HttpResponse.builder().statusCode(200).build();
+  SwiftClient clientWhenContainerExists=requestsSendResponses(authRequest,authResponse,headContainer,headContainerResponse);
+  assertTrue(clientWhenContainerExists.containerExists("foo"));
+}

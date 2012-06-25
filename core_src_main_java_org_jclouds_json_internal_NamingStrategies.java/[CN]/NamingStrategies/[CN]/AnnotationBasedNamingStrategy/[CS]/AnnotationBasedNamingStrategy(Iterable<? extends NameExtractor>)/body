@@ -1,0 +1,15 @@
+{
+  checkNotNull(extractors,"means to extract names by annotations");
+  this.annotationToNameExtractor=Maps.uniqueIndex(extractors,new Function<NameExtractor,Class<? extends Annotation>>(){
+    @Override public Class<? extends Annotation> apply(    NameExtractor input){
+      return input.annotationType();
+    }
+  }
+);
+  this.forToString=Joiner.on(",").join(Iterables.transform(extractors,new Function<NameExtractor,String>(){
+    @Override public String apply(    NameExtractor input){
+      return input.annotationType().getName();
+    }
+  }
+));
+}

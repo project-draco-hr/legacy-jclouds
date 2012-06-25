@@ -30,12 +30,12 @@
  else   if (inTasks) {
     taskHandler.startElement(uri,localName,qName,attrs);
   }
- else   if (qName.equals("Vm")) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Vm")) {
     vm=newReferenceType(attributes);
     String status=attributes.get("status");
     if (status != null)     this.status=Status.fromValue(Integer.parseInt(status));
   }
- else   if (qName.equals("Link") && "up".equals(attributes.get("rel"))) {
+ else   if (SaxUtils.equalsOrSuffix(qName,"Link") && "up".equals(attributes.get("rel"))) {
     vdc=newReferenceType(attributes);
   }
 }

@@ -1,0 +1,34 @@
+{
+  if (initial.getNextMarker() == null)   return initial;
+  return new Iterable<T>(){
+    @Override public Iterator<T> iterator(){
+      return new AbstractIterator<T>(){
+        private PaginatedSet<T> response=initial;
+        private Iterator<T> iterator=response.iterator();
+        /** 
+ * {@inheritDoc}
+ */
+        @Override protected T computeNext(){
+          while (true) {
+            if (iterator == null) {
+              response=markerToNext.apply(response.getNextMarker());
+              iterator=response.iterator();
+            }
+            if (iterator.hasNext()) {
+              return iterator.next();
+            }
+            if (response.getNextMarker() == null) {
+              return endOfData();
+            }
+            iterator=null;
+          }
+        }
+      }
+;
+    }
+    @Override public String toString(){
+      return "lazyContinue(" + markerToNext.toString() + ")";
+    }
+  }
+;
+}

@@ -1,0 +1,10 @@
+{
+  UserClient userClient=createMock(UserClient.class);
+  ListUsersOptions options=new ListUsersOptions();
+  PaginatedSet<User> response1=PaginatedSet.copyOfWithMarker(ImmutableSet.of(createMock(User.class)),"NEXTTOKEN");
+  PaginatedSet<User> response2=PaginatedSet.copyOf(ImmutableSet.of(createMock(User.class)));
+  expect(userClient.list(anyObject(ListUsersOptions.class))).andReturn(response1).once();
+  expect(userClient.list(anyObject(ListUsersOptions.class))).andReturn(response2).once();
+  EasyMock.replay(userClient);
+  Assert.assertEquals(2,Iterables.size(IAM.list(userClient,options)));
+}

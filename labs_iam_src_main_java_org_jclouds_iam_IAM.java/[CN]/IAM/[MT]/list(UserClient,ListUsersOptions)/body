@@ -1,0 +1,11 @@
+{
+  return PaginatedSets.lazyContinue(userClient.list(options),new Function<String,PaginatedSet<User>>(){
+    @Override public PaginatedSet<User> apply(    String input){
+      return userClient.list(options.clone().marker(input));
+    }
+    @Override public String toString(){
+      return "listUsers(" + options + ")";
+    }
+  }
+);
+}

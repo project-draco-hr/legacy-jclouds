@@ -1,16 +1,15 @@
 {
-  Set<String> xenVzIps=client.listFree("4","Falkenberg","Xen");
-  assertTrue(xenVzIps.size() >= 1);
+  Set<String> xenVzIps=client.listFree(4,"Falkenberg","Xen");
+  assertFalse(xenVzIps.isEmpty());
   String xenIp=xenVzIps.iterator().next();
-  IpDetails ipDetails=client.getIpDetails(xenIp);
+  IpDetails ipDetails=client.getIp(xenIp);
   assertEquals(ipDetails.getDatacenter(),"Falkenberg");
   assertEquals(ipDetails.getPlatform(),"Xen");
-  assertEquals(ipDetails.getIpversion(),"4");
+  assertEquals(ipDetails.getVersion(),4);
   assertEquals(ipDetails.getAddress(),xenIp);
-  assertNotNull(ipDetails.getPtr());
+  assertFalse(ipDetails.getPtr().isEmpty());
   assertNotNull(ipDetails.getBroadcast());
   assertNotNull(ipDetails.getGateway());
   assertNotNull(ipDetails.getNetmask());
-  List<String> nameServers=ipDetails.getNameServers();
-  assertNotNull(nameServers);
+  assertFalse(ipDetails.getNameServers().isEmpty());
 }
