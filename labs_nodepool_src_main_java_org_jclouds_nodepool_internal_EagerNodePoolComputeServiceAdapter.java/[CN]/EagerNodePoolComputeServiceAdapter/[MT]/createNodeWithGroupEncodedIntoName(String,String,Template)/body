@@ -1,0 +1,11 @@
+{
+  int count=1;
+synchronized (this) {
+    Set<NodeMetadata> backendNodes=getBackendNodes();
+    Set<NodeMetadata> frontendNodes=metadataStore.loadAll(backendNodes);
+    checkState(frontendNodes.size() + count < maxSize,"cannot add more nodes to pool [requested: %s, current: %s, max: %s]",count,frontendNodes.size(),maxSize);
+    SetView<NodeMetadata> availableNodes=Sets.difference(backendNodes,frontendNodes);
+    NodeMetadata node=metadataStore.store(Iterables.get(availableNodes,0),template.getOptions(),group);
+    return new NodeWithInitialCredentials(node);
+  }
+}

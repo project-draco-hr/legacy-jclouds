@@ -1,0 +1,15 @@
+{
+  checkNotNull(backendNodeMetadata);
+  checkNotNull(userGroup);
+  checkNotNull(userOptions);
+  JsonUserNodeMetadata jsonMetadata=new JsonUserNodeMetadata();
+  jsonMetadata.user=userOptions.getLoginUser();
+  jsonMetadata.password=userOptions.getLoginPassword();
+  jsonMetadata.privateKey=userOptions.getLoginPrivateKey();
+  jsonMetadata.authenticateSudo=userOptions.shouldAuthenticateSudo();
+  jsonMetadata.userMetadata=userOptions.getUserMetadata();
+  jsonMetadata.userTags=userOptions.getTags();
+  jsonMetadata.userGroup=userGroup;
+  storage.get().put(backendNodeMetadata.getId(),Strings2.toInputStream(json.toJson(jsonMetadata)));
+  return buildFromJsonAndBackendMetadata(backendNodeMetadata,jsonMetadata);
+}

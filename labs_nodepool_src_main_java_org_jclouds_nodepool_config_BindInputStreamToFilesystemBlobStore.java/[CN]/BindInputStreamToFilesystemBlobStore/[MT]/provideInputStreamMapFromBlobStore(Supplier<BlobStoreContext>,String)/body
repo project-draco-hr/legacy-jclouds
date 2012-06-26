@@ -1,0 +1,9 @@
+{
+  return Suppliers.memoize(Suppliers.compose(new Function<BlobStoreContext,Map<String,InputStream>>(){
+    @Override public Map<String,InputStream> apply(    BlobStoreContext input){
+      input.getBlobStore().createContainerInLocation(null,container);
+      return input.createInputStreamMap(container);
+    }
+  }
+,in));
+}
