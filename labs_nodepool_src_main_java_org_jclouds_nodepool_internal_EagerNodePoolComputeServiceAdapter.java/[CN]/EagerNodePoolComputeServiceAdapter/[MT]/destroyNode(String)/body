@@ -1,0 +1,8 @@
+{
+  checkState(getNode(id) != null);
+  metadataStore.deleteMapping(id);
+  if (!reuseDestroyed) {
+    backendComputeService.get().destroyNode(id);
+    addToPool(1);
+  }
+}
