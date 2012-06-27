@@ -1,0 +1,31 @@
+{
+  if (equalsOrSuffix(qName,"member")) {
+    endMember(uri,name,qName);
+    memberDepth--;
+  }
+ else   if (equalsOrSuffix(qName,"ListenerDescriptions")) {
+    inListeners=false;
+  }
+ else   if (equalsOrSuffix(qName,"LoadBalancerName")) {
+    builder.name(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"CreatedTime")) {
+    builder.createdTime(dateService.iso8601DateParse(currentOrNull(currentText)));
+  }
+ else   if (equalsOrSuffix(qName,"DNSName")) {
+    builder.dnsName(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"InstanceId")) {
+    builder.instanceId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"Scheme")) {
+    builder.scheme(Scheme.fromValue(currentOrNull(currentText)));
+  }
+ else   if (equalsOrSuffix(qName,"VPCId")) {
+    builder.VPCId(currentOrNull(currentText));
+  }
+ else   if (inListeners) {
+    listenerHandler.endElement(uri,name,qName);
+  }
+  currentText=new StringBuilder();
+}

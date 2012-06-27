@@ -1,0 +1,11 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_loadbalancers.xml");
+  LoadBalancer expected=expected();
+  LoadBalancerHandler handler=injector.getInstance(LoadBalancerHandler.class);
+  LoadBalancer result=factory.create(handler).parse(is);
+  assertEquals(result,expected);
+  assertEquals(result.getCreatedTime(),expected.getCreatedTime());
+  assertEquals(result.getDnsName(),expected.getDnsName());
+  assertEquals(result.getScheme(),expected.getScheme());
+  assertEquals(result.getVPCId(),expected.getVPCId());
+}

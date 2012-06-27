@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_loadbalancers.xml","text/xml")).build();
+  ELBClient clientWhenExist=requestSendsResponse(list,listResponse);
+  assertEquals(clientWhenExist.getLoadBalancerClientForRegion(null).list().toString(),new DescribeLoadBalancersResponseTest().expected().toString());
+}

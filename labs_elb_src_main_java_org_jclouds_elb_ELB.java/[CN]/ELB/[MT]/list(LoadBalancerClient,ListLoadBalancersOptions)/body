@@ -1,0 +1,11 @@
+{
+  return PaginatedSets.lazyContinue(loadBalancerClient.list(options),new Function<String,PaginatedSet<LoadBalancer>>(){
+    @Override public PaginatedSet<LoadBalancer> apply(    String input){
+      return loadBalancerClient.list(options.clone().marker(input));
+    }
+    @Override public String toString(){
+      return "listLoadBalancers(" + options + ")";
+    }
+  }
+);
+}
