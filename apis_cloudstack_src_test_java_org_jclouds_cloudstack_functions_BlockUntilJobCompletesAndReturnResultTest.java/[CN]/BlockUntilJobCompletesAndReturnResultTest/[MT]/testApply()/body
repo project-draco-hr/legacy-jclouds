@@ -8,7 +8,7 @@
   expect(jobClient.getAsyncJob(jobId)).andReturn(AsyncJob.builder().id(jobId).result("foo").build()).atLeastOnce();
   replay(client);
   replay(jobClient);
-  assertEquals(new BlockUntilJobCompletesAndReturnResult(client,jobComplete).<String>apply(new AsyncCreateResponse(id,jobId)),"foo");
+  assertEquals(new BlockUntilJobCompletesAndReturnResult(client,jobComplete).<String>apply(AsyncCreateResponse.builder().id(id).jobId(jobId).build()),"foo");
   verify(client);
   verify(jobClient);
 }

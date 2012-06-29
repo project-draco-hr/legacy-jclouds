@@ -1,12 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  Capabilities that=(Capabilities)obj;
-  if (!Objects.equal(canShareTemplates,that.canShareTemplates))   return false;
-  if (!Objects.equal(cloudStackVersion,that.cloudStackVersion))   return false;
-  if (!Objects.equal(securityGroupsEnabled,that.securityGroupsEnabled))   return false;
-  if (!Objects.equal(firewallRuleUiEnabled,that.firewallRuleUiEnabled))   return false;
-  if (!Objects.equal(supportELB,that.supportELB))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  Capabilities that=Capabilities.class.cast(obj);
+  return Objects.equal(this.cloudStackVersion,that.cloudStackVersion) && Objects.equal(this.securityGroupsEnabled,that.securityGroupsEnabled) && Objects.equal(this.canShareTemplates,that.canShareTemplates)&& Objects.equal(this.firewallRuleUiEnabled,that.firewallRuleUiEnabled)&& Objects.equal(this.supportELB,that.supportELB);
 }

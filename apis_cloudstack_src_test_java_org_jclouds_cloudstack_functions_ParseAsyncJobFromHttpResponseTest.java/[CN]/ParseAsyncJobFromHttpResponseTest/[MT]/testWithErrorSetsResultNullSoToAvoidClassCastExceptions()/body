@@ -1,6 +1,6 @@
 {
   String input="{ \"queryasyncjobresultresponse\" : {\"jobid\":1103,\"jobstatus\":2,\"jobprocstatus\":0,\"jobresultcode\":530,\"jobresulttype\":\"object\",\"jobresult\":{\"errorcode\":530,\"errortext\":\"Internal error executing command, please contact your system administrator\"}} }";
-  AsyncJob<PublicIPAddress> expects=AsyncJob.<PublicIPAddress>builder().id("1103").status(Status.FAILED).progress(0).resultType("object").error(new AsyncJobError(ErrorCode.INTERNAL_ERROR,"Internal error executing " + "command, please contact your system administrator")).resultCode(ResultCode.FAIL).build();
+  AsyncJob<PublicIPAddress> expects=AsyncJob.<PublicIPAddress>builder().id("1103").status(Status.FAILED).progress(0).resultType("object").error(AsyncJobError.builder().errorCode(ErrorCode.INTERNAL_ERROR).errorText("Internal error executing " + "command, please contact your system administrator").build()).resultCode(ResultCode.FAIL).build();
   ParseAsyncJobFromHttpResponse parser=i.getInstance(ParseAsyncJobFromHttpResponse.class);
   @SuppressWarnings("unchecked") AsyncJob<PublicIPAddress> response=(AsyncJob<PublicIPAddress>)parser.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(input)));
   assertEquals(response,expects);

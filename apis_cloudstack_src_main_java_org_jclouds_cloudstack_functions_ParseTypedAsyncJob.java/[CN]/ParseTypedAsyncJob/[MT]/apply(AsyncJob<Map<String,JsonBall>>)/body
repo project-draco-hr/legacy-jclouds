@@ -2,7 +2,7 @@
   AsyncJob<?> result=toParse;
   if (toParse.getResult() != null) {
     if (toParse.getResult().size() == 1) {
-      @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
+      @SuppressWarnings({"unchecked","rawtypes"}) Builder<?,Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
       if (toParse.getResult().containsKey("success")) {
         builder.result(null);
       }
@@ -25,9 +25,9 @@
       result=builder.build();
     }
  else     if (toParse.getResult().containsKey("errorcode")) {
-      @SuppressWarnings({"unchecked","rawtypes"}) Builder<Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
+      @SuppressWarnings({"unchecked","rawtypes"}) Builder<?,Object> builder=AsyncJob.Builder.fromAsyncJobUntyped((AsyncJob)toParse);
       builder.result(null);
-      builder.error(new AsyncJobError(ErrorCode.fromValue(toParse.getResult().get("errorcode").toString()),toParse.getResult().containsKey("errortext") ? toParse.getResult().get("errortext").toString().replace("\"","") : null));
+      builder.error(AsyncJobError.builder().errorCode(ErrorCode.fromValue(toParse.getResult().get("errorcode").toString())).errorText(toParse.getResult().containsKey("errortext") ? toParse.getResult().get("errortext").toString().replace("\"","") : null).build());
       result=builder.build();
     }
  else     if (toParse.getResult().size() > 1) {
