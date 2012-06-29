@@ -4,7 +4,7 @@
   AddressClient addressClient=createMock(AddressClient.class);
   expect(client.getAddressClient()).andReturn(addressClient).atLeastOnce();
   expect(addressClient.listPublicIPAddresses(allocatedOnly(true).networkId(networkId))).andReturn(ImmutableSet.<PublicIPAddress>of());
-  AsyncCreateResponse job=new AsyncCreateResponse("1","2");
+  AsyncCreateResponse job=AsyncCreateResponse.builder().id("1").jobId("2").build();
   expect(addressClient.associateIPAddressInZone(zoneId,networkId(networkId))).andReturn(job);
   expect(blockUntilJobCompletesAndReturnResult.apply(job)).andReturn(address);
   replay(client);

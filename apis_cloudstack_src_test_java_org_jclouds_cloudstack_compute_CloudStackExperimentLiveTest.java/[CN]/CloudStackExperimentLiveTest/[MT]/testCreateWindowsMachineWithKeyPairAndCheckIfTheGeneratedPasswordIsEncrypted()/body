@@ -10,7 +10,7 @@
     String encryptedPassword=client.getVirtualMachineClient().getEncryptedPasswordForVirtualMachine(node.getId());
     Crypto crypto=new BouncyCastleCrypto();
     WindowsLoginCredentialsFromEncryptedData passwordDecrypt=new WindowsLoginCredentialsFromEncryptedData(crypto);
-    assertEquals(passwordDecrypt.apply(new EncryptedPasswordAndPrivateKey(encryptedPassword,keyPair.getPrivateKey())).getPassword(),"bX7vvptvw");
+    assertEquals(passwordDecrypt.apply(EncryptedPasswordAndPrivateKey.builder().encryptedPassword(encryptedPassword).privateKey(keyPair.getPrivateKey()).build()).getPassword(),"bX7vvptvw");
   }
   finally {
     if (node != null) {
