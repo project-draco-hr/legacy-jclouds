@@ -6,6 +6,10 @@
  else   if (equalsOrSuffix(qName,"ListenerDescriptions")) {
     inListeners=false;
   }
+ else   if (equalsOrSuffix(qName,"HealthCheck")) {
+    builder.healthCheck(healthCheckHandler.getResult());
+    inHealthCheck=false;
+  }
  else   if (equalsOrSuffix(qName,"LoadBalancerName")) {
     builder.name(currentOrNull(currentText));
   }
@@ -23,6 +27,9 @@
   }
  else   if (equalsOrSuffix(qName,"VPCId")) {
     builder.VPCId(currentOrNull(currentText));
+  }
+ else   if (inHealthCheck) {
+    healthCheckHandler.endElement(uri,name,qName);
   }
  else   if (inListeners) {
     listenerHandler.endElement(uri,name,qName);
