@@ -1,26 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  SecurityGroupRule other=(SecurityGroupRule)obj;
-  if (fromPort != other.fromPort)   return false;
-  if (group == null) {
-    if (other.group != null)     return false;
-  }
- else   if (!group.equals(other.group))   return false;
-  if (id == null) {
-    if (other.id != null)     return false;
-  }
- else   if (!id.equals(other.id))   return false;
-  if (ipProtocol != other.ipProtocol)   return false;
-  if (ipRange == null) {
-    if (other.ipRange != null)     return false;
-  }
- else   if (!ipRange.equals(other.ipRange))   return false;
-  if (parentGroupId == null) {
-    if (other.parentGroupId != null)     return false;
-  }
- else   if (!parentGroupId.equals(other.parentGroupId))   return false;
-  if (toPort != other.toPort)   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  SecurityGroupRule that=SecurityGroupRule.class.cast(obj);
+  return super.equals(that) && Objects.equal(this.id,that.id) && Objects.equal(this.group,that.group)&& Objects.equal(this.parentGroupId,that.parentGroupId)&& Objects.equal(this.ipRange,that.ipRange);
 }
