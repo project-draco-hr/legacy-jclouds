@@ -1,0 +1,13 @@
+{
+  Builder<Location> locations=ImmutableSet.builder();
+  Location provider=Iterables.getOnlyElement(justProvider.get());
+  Set<String> regions=regionsSupplier.get();
+  checkState(regions.size() > 0,"no regions found for provider %s, using supplier %s",provider,regionsSupplier);
+  Map<String,Supplier<Set<String>>> isoCodesById=isoCodesByIdSupplier.get();
+  for (  String region : regions) {
+    LocationBuilder builder=new LocationBuilder().scope(LocationScope.REGION).id(region).description(region).parent(provider);
+    if (isoCodesById.containsKey(region))     builder.iso3166Codes(isoCodesById.get(region).get());
+    locations.add(builder.build());
+  }
+  return locations.build();
+}

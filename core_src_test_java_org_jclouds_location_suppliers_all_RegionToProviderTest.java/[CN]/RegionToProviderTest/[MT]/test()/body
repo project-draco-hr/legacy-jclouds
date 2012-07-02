@@ -1,0 +1,6 @@
+{
+  Supplier<Set<String>> regionIdsSupplier=Suppliers.<Set<String>>ofInstance(ImmutableSet.of("region1","region2"));
+  Supplier<Map<String,Supplier<Set<String>>>> locationToIsoCodes=Suppliers.<Map<String,Supplier<Set<String>>>>ofInstance(ImmutableMap.of("servo",Suppliers.<Set<String>>ofInstance(ImmutableSet.of("US")),"region1",Suppliers.<Set<String>>ofInstance(ImmutableSet.of("US-CA")),"region2",Suppliers.<Set<String>>ofInstance(ImmutableSet.of("US-VA"))));
+  RegionToProvider fn=new RegionToProvider(justProvider,regionIdsSupplier,locationToIsoCodes);
+  assertEquals(fn.get(),ImmutableSet.of(new LocationBuilder().scope(LocationScope.REGION).id("region1").description("region1").iso3166Codes(ImmutableSet.of("US-CA")).parent(provider).build(),new LocationBuilder().scope(LocationScope.REGION).id("region2").description("region2").iso3166Codes(ImmutableSet.of("US-VA")).parent(provider).build()));
+}
