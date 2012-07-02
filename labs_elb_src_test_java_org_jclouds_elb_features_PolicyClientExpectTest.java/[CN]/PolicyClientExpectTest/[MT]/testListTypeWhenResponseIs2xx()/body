@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_policy_types.xml","text/xml")).build();
+  ELBClient clientWhenExist=requestSendsResponse(listTypes,listResponse);
+  assertEquals(clientWhenExist.getPolicyClientForRegion(null).listTypes().toString(),new DescribeLoadBalancerPolicyTypesResponseTest().expected().toString());
+}

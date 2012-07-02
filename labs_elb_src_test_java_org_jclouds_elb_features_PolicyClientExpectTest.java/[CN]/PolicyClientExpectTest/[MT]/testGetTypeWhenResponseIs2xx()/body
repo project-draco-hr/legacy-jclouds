@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_policy_type.xml","text/xml")).build();
+  ELBClient clientWhenExist=requestSendsResponse(getType,getResponse);
+  assertEquals(clientWhenExist.getPolicyClientForRegion(null).getType("name").toString(),new GetPolicyTypeResponseTest().expected().toString());
+}
