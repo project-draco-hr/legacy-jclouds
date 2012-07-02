@@ -1,8 +1,4 @@
 {
-  Image image=createMock(Image.class);
-  Image image2=createMock(Image.class);
-  OperatingSystem os=createMock(OperatingSystem.class);
-  OperatingSystem os2=createMock(OperatingSystem.class);
   Hardware hardware=new HardwareBuilder().id("hardwareId").build();
   Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(region));
   Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(image,image2));
@@ -11,29 +7,8 @@
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
   TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
   expect(optionsProvider.get()).andReturn(new TemplateOptions());
-  expect(image.getLocation()).andReturn(region).atLeastOnce();
-  expect(image2.getLocation()).andReturn(region).atLeastOnce();
-  expect(image.getOperatingSystem()).andReturn(os).atLeastOnce();
-  expect(image2.getOperatingSystem()).andReturn(os2).atLeastOnce();
-  expect(image.getId()).andReturn("us-east-1/1").atLeastOnce();
-  expect(image.getProviderId()).andReturn("1").anyTimes();
-  expect(image2.getProviderId()).andReturn("2").anyTimes();
-  expect(os.getArch()).andReturn("X86_32").atLeastOnce();
-  expect(os2.getArch()).andReturn("X86_64").atLeastOnce();
-  replay(image);
-  replay(image2);
-  replay(os);
-  replay(os2);
-  replay(defaultTemplate);
-  replay(optionsProvider);
-  replay(templateBuilderProvider);
+  replay(defaultTemplate,optionsProvider,templateBuilderProvider);
   TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,hardwares,region,optionsProvider,templateBuilderProvider);
   assertEquals(template.smallest().osArchMatches("X86_32").build().getImage(),image);
-  verify(image);
-  verify(image2);
-  verify(os);
-  verify(os2);
-  verify(defaultTemplate);
-  verify(optionsProvider);
-  verify(templateBuilderProvider);
+  verify(defaultTemplate,optionsProvider,templateBuilderProvider);
 }

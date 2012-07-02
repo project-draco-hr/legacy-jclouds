@@ -1,6 +1,7 @@
 {
   return uniqueIndex(input,new Function<Image,RegionAndName>(){
     @Override public RegionAndName apply(    Image from){
+      checkState(from.getLocation() != null,"in ec2, image locations cannot be null; typically, they are Region-scoped");
       return new RegionAndName(from.getLocation().getId(),from.getProviderId());
     }
   }

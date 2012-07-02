@@ -1,6 +1,4 @@
 {
-  Image image=createMock(Image.class);
-  OperatingSystem os=createMock(OperatingSystem.class);
   Hardware hardware=new HardwareBuilder().id("hardwareId").supportsImage(ImagePredicates.idEquals("us-east-1/imageId")).build();
   Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(region));
   Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(image));
@@ -9,28 +7,11 @@
   Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
   TemplateBuilder defaultTemplate=createMock(TemplateBuilder.class);
   expect(optionsProvider.get()).andReturn(new TemplateOptions());
-  expect(image.getId()).andReturn("us-east-1/imageId").atLeastOnce();
-  expect(image.getLocation()).andReturn(region).atLeastOnce();
-  expect(image.getName()).andReturn(null).atLeastOnce();
-  expect(image.getDescription()).andReturn(null).atLeastOnce();
-  expect(image.getVersion()).andReturn(null).atLeastOnce();
-  expect(image.getOperatingSystem()).andReturn(os).atLeastOnce();
-  expect(image.getProviderId()).andReturn("imageId").anyTimes();
-  expect(os.getName()).andReturn(null).atLeastOnce();
-  expect(os.getVersion()).andReturn(null).atLeastOnce();
-  expect(os.getFamily()).andReturn(null).atLeastOnce();
-  expect(os.getDescription()).andReturn(null).atLeastOnce();
-  expect(os.getArch()).andReturn(null).atLeastOnce();
-  expect(os.is64Bit()).andReturn(false).atLeastOnce();
-  replay(image);
-  replay(os);
   replay(defaultTemplate);
   replay(optionsProvider);
   replay(templateBuilderProvider);
   TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,hardwares,region,optionsProvider,templateBuilderProvider);
   template.imageId("us-east-1/imageId").build();
-  verify(image);
-  verify(os);
   verify(defaultTemplate);
   verify(optionsProvider);
   verify(templateBuilderProvider);
