@@ -1,7 +1,22 @@
 {
   Builder<ImageInZone> builder=ImmutableSet.builder();
   for (  final String zoneId : zoneIds.get()) {
-    builder.addAll(transform(filter(novaClient.getImageClientForZone(zoneId).listImagesInDetail(),ImagePredicates.statusEquals(Image.Status.ACTIVE)),new Function<Image,ImageInZone>(){
+    Set<Image> images=novaClient.getImageClientForZone(zoneId).listImagesInDetail();
+    if (images.size() == 0) {
+      logger.debug("no images found in zone %s",zoneId);
+      continue;
+    }
+    Iterable<Image> active=filter(images,ImagePredicates.statusEquals(Image.Status.ACTIVE));
+    if (images.size() == 0) {
+      logger.debug("no images with status active in zone %s; non-active: %s",zoneId,transform(active,new Function<Image,String>(){
+        @Override public String apply(        Image input){
+          return Objects.toStringHelper("").add("id",input.getId()).add("status",input.getStatus()).toString();
+        }
+      }
+));
+      continue;
+    }
+    builder.addAll(transform(active,new Function<Image,ImageInZone>(){
       @Override public ImageInZone apply(      Image arg0){
         return new ImageInZone(arg0,zoneId);
       }
