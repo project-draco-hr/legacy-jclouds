@@ -2,4 +2,6 @@
   install(new FactoryModuleBuilder().implement(RegionIdToURISupplier.class,RegionIdToURIFromAccessForTypeAndVersion.class).build(RegionIdToURISupplier.Factory.class));
   install(new FactoryModuleBuilder().implement(RegionIdToAdminURISupplier.class,RegionIdToAdminURIFromAccessForTypeAndVersion.class).build(RegionIdToAdminURISupplier.Factory.class));
   bind(RegionIdsSupplier.class).to(RegionIdsFromRegionIdToURIKeySet.class);
+  bind(ImplicitLocationSupplier.class).to(FirstRegion.class).in(Scopes.SINGLETON);
+  bind(LocationsSupplier.class).to(RegionToProvider.class).in(Scopes.SINGLETON);
 }

@@ -1,0 +1,16 @@
+{
+  if (authException.get() != null)   throw authException.get();
+  try {
+    V value=delegate.get();
+    if (value == null)     throw new NullValueException();
+    return value;
+  }
+ catch (  Exception e) {
+    AuthorizationException aex=getFirstThrowableOfType(e,AuthorizationException.class);
+    if (aex != null) {
+      authException.set(aex);
+      throw aex;
+    }
+    throw propagate(e);
+  }
+}

@@ -1,9 +1,12 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Map<String,String>>(authException,seconds,new Supplier<Map<String,String>>(){
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,new Supplier<Map<String,String>>(){
     @Override public Map<String,String> get(){
       GuestOSClient guestOSClient=client.getGuestOSClient();
       return guestOSClient.listOSCategories();
     }
+    @Override public String toString(){
+      return Objects.toStringHelper(client.getGuestOSClient()).add("method","listOSCategories").toString();
+    }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }

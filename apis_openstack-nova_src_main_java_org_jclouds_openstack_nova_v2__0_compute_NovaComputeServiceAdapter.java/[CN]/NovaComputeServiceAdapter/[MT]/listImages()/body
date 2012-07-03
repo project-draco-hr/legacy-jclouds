@@ -1,6 +1,8 @@
 {
   Builder<ImageInZone> builder=ImmutableSet.builder();
-  for (  final String zoneId : zoneIds.get()) {
+  Set<String> zones=zoneIds.get();
+  checkState(zones.size() > 0,"no zones found in supplier %s",zoneIds);
+  for (  final String zoneId : zones) {
     Set<Image> images=novaClient.getImageClientForZone(zoneId).listImagesInDetail();
     if (images.size() == 0) {
       logger.debug("no images found in zone %s",zoneId);

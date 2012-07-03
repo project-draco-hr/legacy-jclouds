@@ -1,11 +1,14 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<ProductPackage>(authException,seconds,new Supplier<ProductPackage>(){
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,new Supplier<ProductPackage>(){
     @Override public ProductPackage get(){
       AccountClient accountClient=client.getAccountClient();
       ProductPackageClient productPackageClient=client.getProductPackageClient();
       ProductPackage p=find(accountClient.getActivePackages(),named(virtualGuestPackageName));
       return productPackageClient.getProductPackage(p.getId());
     }
+    @Override public String toString(){
+      return Objects.toStringHelper(client).add("method","accountClient.getActivePackages").add("method","productPackageClient.getProductPackage").toString();
+    }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }

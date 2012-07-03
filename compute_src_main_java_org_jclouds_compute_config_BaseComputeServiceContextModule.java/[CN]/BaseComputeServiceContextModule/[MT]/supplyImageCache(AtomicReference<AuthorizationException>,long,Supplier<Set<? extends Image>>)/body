@@ -1,8 +1,3 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Set<? extends Image>>(authException,seconds,new Supplier<Set<? extends Image>>(){
-    @Override public Set<? extends Image> get(){
-      return imageSupplier.get();
-    }
-  }
-);
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,imageSupplier,seconds,TimeUnit.SECONDS);
 }

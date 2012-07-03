@@ -1,8 +1,11 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<Set<? extends DeltacloudCollection>>(authException,seconds,new Supplier<Set<? extends DeltacloudCollection>>(){
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,new Supplier<Set<? extends DeltacloudCollection>>(){
     @Override public Set<? extends DeltacloudCollection> get(){
       return client.getCollections();
     }
+    @Override public String toString(){
+      return Objects.toStringHelper(client).add("method","getCollections").toString();
+    }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }

@@ -1,8 +1,11 @@
 {
-  return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<VCloudSession>(authException,seconds,new Supplier<VCloudSession>(){
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,new Supplier<VCloudSession>(){
     @Override public VCloudSession get(){
       return login.login();
     }
+    @Override public String toString(){
+      return Objects.toStringHelper(login).add("method","login").toString();
+    }
   }
-);
+,seconds,TimeUnit.SECONDS);
 }
