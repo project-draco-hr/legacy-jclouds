@@ -1,18 +1,13 @@
 {
   Access accessResponse=access.get();
-  Service service=null;
-  try {
-    service=Iterables.find(accessResponse.getServiceCatalog(),new Predicate<Service>(){
-      @Override public boolean apply(      Service input){
-        return input.getType().equals(apiType);
-      }
+  Set<Service> services=Sets.filter(accessResponse.getServiceCatalog(),new Predicate<Service>(){
+    @Override public boolean apply(    Service input){
+      return input.getType().equals(apiType);
     }
+  }
 );
-  }
- catch (  NoSuchElementException e) {
-    throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,accessResponse.getServiceCatalog()));
-  }
-  Map<String,Endpoint> locationIdToEndpoint=Maps.uniqueIndex(Iterables.filter(service.getEndpoints(),new Predicate<Endpoint>(){
+  if (services.size() == 0)   throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,accessResponse.getServiceCatalog()));
+  Iterable<Endpoint> endpoints=Iterables.filter(Iterables.concat(services),new Predicate<Endpoint>(){
     @Override public boolean apply(    Endpoint input){
       if (input.getVersionId() == null) {
         return true;
@@ -20,6 +15,8 @@
       return input.getVersionId().equals(apiVersion);
     }
   }
-),endpointToLocationId);
+);
+  if (Iterables.size(endpoints) == 0)   throw new NoSuchElementException(String.format("no endpoints for apiType %s are of version %s, or version agnostic: %s",apiType,apiVersion,services));
+  Map<String,Endpoint> locationIdToEndpoint=Maps.uniqueIndex(endpoints,endpointToLocationId);
   return Maps.transformValues(locationIdToEndpoint,endpointToSupplierURI);
 }
