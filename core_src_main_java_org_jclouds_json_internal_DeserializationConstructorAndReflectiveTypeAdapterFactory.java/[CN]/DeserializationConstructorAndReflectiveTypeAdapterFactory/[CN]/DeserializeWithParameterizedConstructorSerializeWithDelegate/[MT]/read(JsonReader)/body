@@ -5,6 +5,7 @@
   }
   Class<?>[] paramTypes=parameterizedCtor.getParameterTypes();
   Object[] ctorParams=new Object[paramTypes.length];
+  boolean empty=true;
   for (int i=0; i < paramTypes.length; i++) {
     if (paramTypes[i] == boolean.class) {
       ctorParams[i]=Boolean.FALSE;
@@ -16,6 +17,7 @@
   try {
     in.beginObject();
     while (in.hasNext()) {
+      empty=false;
       String name=in.nextName();
       ParameterReader parameter=parameterReaders.get(name);
       if (parameter == null) {
@@ -32,9 +34,17 @@
   }
   for (int i=0; i < paramTypes.length; i++) {
     if (paramTypes[i].isPrimitive()) {
-      checkArgument(ctorParams[i] != null,"Primative param[" + i + "] in constructor "+ parameterizedCtor+ " cannot be absent!");
+      checkArgument(ctorParams[i] != null,"Primitive param[" + i + "] in constructor "+ parameterizedCtor+ " cannot be absent!");
     }
   }
   in.endObject();
-  return newInstance(ctorParams);
+  try {
+    return newInstance(ctorParams);
+  }
+ catch (  NullPointerException ex) {
+    if (empty && paramTypes.length > 0) {
+      return null;
+    }
+    throw ex;
+  }
 }

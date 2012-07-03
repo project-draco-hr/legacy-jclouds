@@ -1,0 +1,25 @@
+{
+  return new TypeAdapter<Map<K,V>>(){
+    public void write(    JsonWriter out,    Map<K,V> value) throws IOException {
+      out.beginObject();
+      for (      Map.Entry<K,V> element : value.entrySet()) {
+        out.name(String.valueOf(element.getKey()));
+        valueAdapter.write(out,element.getValue());
+      }
+      out.endObject();
+    }
+    public Map<K,V> read(    JsonReader in) throws IOException {
+      Map<K,V> result=Maps.newLinkedHashMap();
+      in.beginObject();
+      while (in.hasNext()) {
+        JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
+        K name=keyAdapter.read(in);
+        V value=valueAdapter.read(in);
+        if (value != null)         result.put(name,value);
+      }
+      in.endObject();
+      return result;
+    }
+  }
+.nullSafe();
+}
