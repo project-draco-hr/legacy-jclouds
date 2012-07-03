@@ -1,0 +1,33 @@
+{
+  return new TypeAdapter<Multimap<K,V>>(){
+    public void write(    JsonWriter out,    Multimap<K,V> map) throws IOException {
+      out.beginObject();
+      for (      K key : map.keySet()) {
+        out.name(keyAdapter.toJson(key));
+        out.beginArray();
+        for (        V value : map.get(key)) {
+          valueAdapter.write(out,value);
+        }
+        out.endArray();
+      }
+      out.endObject();
+    }
+    public Multimap<K,V> read(    JsonReader in) throws IOException {
+      ImmutableMultimap.Builder<K,V> result=ImmutableListMultimap.builder();
+      in.beginObject();
+      while (in.hasNext()) {
+        JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
+        K name=keyAdapter.read(in);
+        in.beginArray();
+        while (in.hasNext()) {
+          V value=valueAdapter.read(in);
+          if (value != null)           result.put(name,value);
+        }
+        in.endArray();
+      }
+      in.endObject();
+      return result.build();
+    }
+  }
+.nullSafe();
+}
