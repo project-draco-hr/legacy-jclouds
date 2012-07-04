@@ -2,14 +2,9 @@
   String zone=key.getZone();
   Optional<FloatingIPClient> ipClientOptional=client.getFloatingIPExtensionForZone(zone);
   if (ipClientOptional.isPresent()) {
-    return Iterables.transform(Iterables.filter(ipClientOptional.get().listFloatingIPs(),new Predicate<FloatingIP>(){
+    return Iterables.filter(ipClientOptional.get().listFloatingIPs(),new Predicate<FloatingIP>(){
       @Override public boolean apply(      FloatingIP input){
         return key.getId().equals(input.getInstanceId());
-      }
-    }
-),new Function<FloatingIP,String>(){
-      @Override public String apply(      FloatingIP input){
-        return input.getIp();
       }
     }
 );
