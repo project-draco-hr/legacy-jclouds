@@ -1,6 +1,8 @@
 {
   try {
-    nodes=computeContext.getComputeService().createNodesInGroup(group,2);
+    TemplateBuilder builder=computeContext.getComputeService().templateBuilder();
+    if (template != null)     builder.from(template);
+    nodes=computeContext.getComputeService().createNodesInGroup(group,2,builder.build());
   }
  catch (  RunNodesException e) {
     nodes=e.getSuccessfulNodes();

@@ -2,10 +2,6 @@
   String[] parts=parseHandle(id);
   String region=parts[0];
   String name=parts[1];
-  try {
-    return converter.apply(getOnlyElement(client.describeLoadBalancersInRegion(region,name)));
-  }
- catch (  NoSuchElementException e) {
-    return null;
-  }
+  LoadBalancer input=client.getLoadBalancerClientForRegion(region).get(name);
+  return input != null ? converter.apply(new LoadBalancerInRegion(input,region)) : null;
 }

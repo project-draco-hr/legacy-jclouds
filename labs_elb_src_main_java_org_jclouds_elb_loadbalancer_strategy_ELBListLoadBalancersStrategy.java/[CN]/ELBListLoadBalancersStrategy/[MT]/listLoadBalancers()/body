@@ -1,12 +1,19 @@
 {
-  Iterable<? extends CrappyLoadBalancer> loadBalancers;
-  Set<String> regions=this.regions.get();
-  if (regions.size() > 0)   loadBalancers=concat(transformParallel(regions,new Function<String,Future<? extends Set<? extends CrappyLoadBalancer>>>(){
-    @Override public ListenableFuture<Set<? extends CrappyLoadBalancer>> apply(    String from){
-      return aclient.describeLoadBalancersInRegion(from);
+  Iterable<LoadBalancerInRegion> loadBalancers=concat(transformParallel(regions.get(),new Function<String,Future<? extends Iterable<LoadBalancerInRegion>>>(){
+    @Override public ListenableFuture<? extends Iterable<LoadBalancerInRegion>> apply(    final String from){
+      return Futures.compose(aclient.getLoadBalancerClientForRegion(from).list(),new Function<Iterable<LoadBalancer>,Iterable<LoadBalancerInRegion>>(){
+        @Override public Iterable<LoadBalancerInRegion> apply(        Iterable<LoadBalancer> input){
+          return Iterables.transform(input,new Function<LoadBalancer,LoadBalancerInRegion>(){
+            @Override public LoadBalancerInRegion apply(            LoadBalancer lb){
+              return new LoadBalancerInRegion(lb,from);
+            }
+          }
+);
+        }
+      }
+,executor);
     }
   }
 ,executor,null,logger,"loadbalancers"));
- else   loadBalancers=client.describeLoadBalancersInRegion(null);
   return transform(loadBalancers,converter);
 }

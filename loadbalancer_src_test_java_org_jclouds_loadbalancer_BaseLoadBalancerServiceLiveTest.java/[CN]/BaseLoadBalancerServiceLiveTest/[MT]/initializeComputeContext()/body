@@ -1,4 +1,8 @@
 {
   if (computeContext != null)   computeContext.close();
-  computeContext=ContextBuilder.newBuilder(computeProvider).modules(setupModules()).overrides(setupComputeProperties()).build(ComputeServiceContext.class);
+  Properties overrides=setupComputeProperties();
+  ContextBuilder builder=ContextBuilder.newBuilder(computeProvider).credentials(computeIdentity,computeCredential).overrides(overrides).modules(setupModules());
+  if (computeApiversion != null)   builder.apiVersion(computeApiversion);
+  if (computeBuildversion != null)   builder.buildVersion(computeBuildversion);
+  computeContext=builder.buildView(ComputeServiceContext.class);
 }

@@ -1,0 +1,12 @@
+{
+  for (  LoadBalancer loadBalancer : context.getApi().getLoadBalancerClientForRegion(null).list()) {
+    Set<InstanceState> response=client().listInstanceStatesOfLoadBalancer(loadBalancer.getName());
+    for (    InstanceState instanceState : response) {
+      checkInstanceState(instanceState);
+    }
+    if (response.size() > 0) {
+      InstanceState instanceState=response.iterator().next();
+      Assert.assertEquals(client().listInstanceStatesOfLoadBalancer(ImmutableSet.of(instanceState.getInstanceId()),loadBalancer.getName()),instanceState);
+    }
+  }
+}

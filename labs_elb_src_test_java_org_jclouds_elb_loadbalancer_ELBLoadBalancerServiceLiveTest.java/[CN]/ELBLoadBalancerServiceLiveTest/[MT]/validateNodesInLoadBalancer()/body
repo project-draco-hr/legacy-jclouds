@@ -1,13 +1,12 @@
 {
-  RestContext<ELBClient,ELBAsyncClient> elbContext=context.unwrap();
+  RestContext<ELBClient,ELBAsyncClient> elbContext=view.unwrap();
   ELBClient elbClient=elbContext.getApi();
-  Set<String> instanceIds=new HashSet<String>();
+  Builder<String> instanceIds=ImmutableSet.<String>builder();
   for (  NodeMetadata node : nodes) {
     instanceIds.add(node.getProviderId());
   }
-  Set<? extends CrappyLoadBalancer> elbs=elbClient.describeLoadBalancersInRegion(null);
-  assertNotNull(elbs);
-  for (  CrappyLoadBalancer elb : elbs) {
-    if (elb.getName().equals(group))     assertEquals(elb.getInstanceIds(),instanceIds);
+  PaginatedSet<LoadBalancer> elbs=elbClient.getLoadBalancerClientForRegion(null).list();
+  for (  LoadBalancer elb : elbs) {
+    if (elb.getName().equals(group))     assertEquals(elb.getInstanceIds(),instanceIds.build());
   }
 }

@@ -1,29 +1,33 @@
 {
   checkNotNull(location,"location");
   String region=getRegionFromLocationOrNull(location);
-  List<String> availabilityZones=Lists.newArrayList(Iterables.transform(nodes,new Function<NodeMetadata,String>(){
+  Set<String> availabilityZones=ImmutableSet.copyOf(transform(nodes,new Function<NodeMetadata,String>(){
     @Override public String apply(    NodeMetadata from){
       return from.getLocation().getId();
     }
   }
 ));
-  client.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,availabilityZones.toArray(new String[]{}));
-  List<String> instanceIds=Lists.newArrayList(Iterables.transform(nodes,new Function<NodeMetadata,String>(){
+  logger.debug(">> creating loadBalancer(%s)",name);
+  try {
+    String dnsName=client.createLoadBalancerInRegion(region,name,protocol,loadBalancerPort,instancePort,availabilityZones.toArray(new String[]{}));
+    logger.debug("<< created loadBalancer(%s) dnsName(%s)",name,dnsName);
+  }
+ catch (  IllegalStateException e) {
+    logger.debug("<< reusing loadBalancer(%s)",name);
+  }
+  Set<String> instanceIds=ImmutableSet.copyOf(transform(nodes,new Function<NodeMetadata,String>(){
     @Override public String apply(    NodeMetadata from){
       return from.getProviderId();
     }
   }
 ));
-  String[] instanceIdArray=instanceIds.toArray(new String[]{});
-  Set<String> registeredInstanceIds=client.registerInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
-  boolean changed=registeredInstanceIds.removeAll(instanceIds);
-  if (changed) {
-    List<String> list=new ArrayList<String>(registeredInstanceIds);
-    instanceIdArray=new String[list.size()];
-    for (int i=0; i < list.size(); i++) {
-      instanceIdArray[i]=list.get(i);
-    }
-    if (instanceIdArray.length > 0)     client.deregisterInstancesWithLoadBalancerInRegion(region,name,instanceIdArray);
+  logger.debug(">> converging loadBalancer(%s) to instances(%s)",name,instanceIds);
+  Set<String> registeredInstanceIds=client.getInstanceClientForRegion(region).registerInstancesWithLoadBalancer(instanceIds,name);
+  Set<String> instancesToRemove=filter(registeredInstanceIds,not(in(instanceIds)));
+  if (instancesToRemove.size() > 0) {
+    logger.debug(">> deregistering instances(%s) from loadBalancer(%s)",instancesToRemove,name);
+    client.getInstanceClientForRegion(region).deregisterInstancesFromLoadBalancer(instancesToRemove,name);
   }
-  return converter.apply(Iterables.getOnlyElement(client.describeLoadBalancersInRegion(region,name)));
+  logger.debug("<< converged loadBalancer(%s) ",name);
+  return converter.apply(new LoadBalancerInRegion(client.getLoadBalancerClientForRegion(region).get(name),region));
 }
