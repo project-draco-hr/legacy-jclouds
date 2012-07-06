@@ -1,13 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  BillingToken other=(BillingToken)obj;
-  if (id != other.id)   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  BillingToken that=BillingToken.class.cast(obj);
+  return Objects.equal(this.id,that.id) && Objects.equal(this.name,that.name) && Objects.equal(this.price,that.price);
 }

@@ -1,6 +1,6 @@
 {
   Method method=GridLoadBalancerAsyncClient.class.getMethod("addLoadBalancer",String.class,IpPortPair.class,List.class,AddLoadBalancerOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,"BalanceIt",new IpPortPair(new Ip("127.0.0.1"),80),Arrays.asList(new IpPortPair(new Ip("127.0.0.1"),8080),new IpPortPair(new Ip("127.0.0.1"),9090)),new AddLoadBalancerOptions.Builder().create(LoadBalancerType.LEAST_CONNECTED,LoadBalancerPersistenceType.SSL_STICKY));
+  HttpRequest httpRequest=processor.createRequest(method,"BalanceIt",IpPortPair.builder().ip(Ip.builder().ip("127.0.0.1").build()).port(80).build(),ImmutableList.of(IpPortPair.builder().ip(Ip.builder().ip("127.0.0.1").build()).port(8080).build(),IpPortPair.builder().ip(Ip.builder().ip("127.0.0.1").build()).port(9090).build()),new AddLoadBalancerOptions.Builder().create(LoadBalancerType.LEAST_CONNECTED,LoadBalancerPersistenceType.SSL_STICKY));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/loadbalancer/" + "add?v=1.5&name=BalanceIt&loadbalancer.type=Least%20Connect&" + "loadbalancer.persistence=SSL%20Sticky&realiplist.0.ip=127.0.0.1&"+ "realiplist.0.port=8080&realiplist.1.ip=127.0.0.1&realiplist.1.port=9090&"+ "virtualip.ip=127.0.0.1&virtualip.port=80 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
