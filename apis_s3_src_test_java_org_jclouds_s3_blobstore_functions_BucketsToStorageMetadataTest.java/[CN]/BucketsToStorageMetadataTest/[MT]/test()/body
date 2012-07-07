@@ -1,0 +1,8 @@
+{
+  BucketsToStorageMetadata fn=new BucketsToStorageMetadata(MoreExecutors.sameThreadExecutor(),new BucketToResourceMetadata(Functions.forMap(ImmutableMap.<String,Location>of("mycontainer",region))));
+  MutableStorageMetadata expected=new MutableStorageMetadataImpl();
+  expected.setName("mycontainer");
+  expected.setType(StorageType.CONTAINER);
+  expected.setLocation(region);
+  assertEquals(fn.apply(ImmutableSet.of(new BucketMetadata("mycontainer",null,null))).toString(),new PageSetImpl<StorageMetadata>(ImmutableSet.<StorageMetadata>of(expected),null).toString());
+}

@@ -1,0 +1,17 @@
+{
+  Set<? extends Location> locations=this.locations.get();
+  if (locations.size() == 1)   return get(locations,0);
+  final Optional<String> region=bucketToRegion.apply(bucket);
+  if (region.isPresent()) {
+    try {
+      return find(locations,idEquals(region.get()));
+    }
+ catch (    NoSuchElementException e) {
+      logger.debug("could not get location for region %s in %s",region,locations);
+    }
+  }
+ else {
+    logger.debug("could not get region for %s",bucket);
+  }
+  return null;
+}

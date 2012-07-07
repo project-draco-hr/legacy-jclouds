@@ -1,0 +1,43 @@
+{
+  Set<String> regions=regionSupplier.get();
+  if (regions.size() == 0) {
+    return new CacheLoader<String,Optional<String>>(){
+      @Override public Optional<String> load(      String bucket){
+        return Optional.absent();
+      }
+      @Override public String toString(){
+        return "noRegions()";
+      }
+    }
+;
+  }
+ else   if (regions.size() == 1) {
+    final String onlyRegion=Iterables.getOnlyElement(regions);
+    return new CacheLoader<String,Optional<String>>(){
+      Optional<String> onlyRegionOption=Optional.of(onlyRegion);
+      @Override public Optional<String> load(      String bucket){
+        return onlyRegionOption;
+      }
+      @Override public String toString(){
+        return "onlyRegion(" + onlyRegion + ")";
+      }
+    }
+;
+  }
+ else {
+    return new CacheLoader<String,Optional<String>>(){
+      @Override public Optional<String> load(      String bucket){
+        try {
+          return Optional.fromNullable(client.getBucketLocation(bucket));
+        }
+ catch (        ContainerNotFoundException e) {
+          return null;
+        }
+      }
+      @Override public String toString(){
+        return "bucketToRegion()";
+      }
+    }
+;
+  }
+}

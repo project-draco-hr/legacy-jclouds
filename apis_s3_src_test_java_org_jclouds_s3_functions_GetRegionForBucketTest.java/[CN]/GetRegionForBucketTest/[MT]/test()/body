@@ -1,0 +1,8 @@
+{
+  LoadingCache<String,Optional<String>> bucketToRegionCache=createMock(LoadingCache.class);
+  expect(bucketToRegionCache.get("bucket")).andReturn(Optional.of("us-east-1"));
+  replay(bucketToRegionCache);
+  GetRegionForBucket fn=new GetRegionForBucket(bucketToRegionCache);
+  assertEquals(fn.apply("bucket"),Optional.of("us-east-1"));
+  verify(bucketToRegionCache);
+}

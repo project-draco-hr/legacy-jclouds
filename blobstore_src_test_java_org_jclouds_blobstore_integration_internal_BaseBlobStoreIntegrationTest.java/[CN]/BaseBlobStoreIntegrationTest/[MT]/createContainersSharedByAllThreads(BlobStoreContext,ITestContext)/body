@@ -11,7 +11,11 @@ synchronized (BaseBlobStoreIntegrationTest.class) {
  else {
             try {
               createContainerAndEnsureEmpty(context,containerName);
-              containerNames.put(containerName);
+              if (context.getBlobStore().containerExists(containerName))               containerNames.put(containerName);
+ else {
+                deleteContainerOrWarnIfUnable(context,containerName);
+                containerCount++;
+              }
             }
  catch (            Throwable e) {
               e.printStackTrace();

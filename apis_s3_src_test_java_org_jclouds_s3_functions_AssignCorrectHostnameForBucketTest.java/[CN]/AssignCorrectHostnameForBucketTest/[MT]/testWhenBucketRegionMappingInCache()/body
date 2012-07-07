@@ -1,0 +1,4 @@
+{
+  AssignCorrectHostnameForBucket fn=new AssignCorrectHostnameForBucket(new RegionToEndpointOrProviderIfNull("aws-s3",Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")),Suppliers.<Map<String,Supplier<URI>>>ofInstance(ImmutableMap.of("us-standard",Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")),"us-west-1",Suppliers.ofInstance(URI.create("https://s3-us-west-1.amazonaws.com"))))),Functions.forMap(ImmutableMap.<String,Optional<String>>of("bucket",Optional.of("us-west-1"))));
+  assertEquals(fn.apply("bucket"),URI.create("https://s3-us-west-1.amazonaws.com"));
+}

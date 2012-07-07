@@ -2,8 +2,13 @@
   try {
     if (!Assertions.eventuallyTrue(new Supplier<Boolean>(){
       public Boolean get(){
-        clearContainer(container);
-        return sync.deleteBucketIfEmpty(container);
+        try {
+          clearContainer(container);
+          return sync.deleteBucketIfEmpty(container);
+        }
+ catch (        ContainerNotFoundException e) {
+          return true;
+        }
       }
     }
 ,30000)) {

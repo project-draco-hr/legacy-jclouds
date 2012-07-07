@@ -1,0 +1,6 @@
+{
+  List<? extends Location> locs=Lists.newArrayList(Iterables.filter(blobStore.listAssignableLocations(),Predicates.not(Predicates.equalTo(defaultLocation))));
+  if (locs.size() == 0)   throw new SkipException("No non-default location found in " + locs);
+  Collections.shuffle(locs);
+  return locs.get(0);
+}

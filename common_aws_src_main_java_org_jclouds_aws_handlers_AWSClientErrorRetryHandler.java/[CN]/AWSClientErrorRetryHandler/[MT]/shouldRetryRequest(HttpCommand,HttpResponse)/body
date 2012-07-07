@@ -1,12 +1,10 @@
 {
-  if (command.getFailureCount() > retryCountLimit)   return false;
   if (response.getStatusCode() == 400 || response.getStatusCode() == 403 || response.getStatusCode() == 409) {
-    command.incrementFailureCount();
     if (response.getPayload() != null) {
       closeClientButKeepContentStream(response);
       AWSError error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
-      if (error != null && ("RequestTimeout".equals(error.getCode()) || "OperationAborted".equals(error.getCode()) || "SignatureDoesNotMatch".equals(error.getCode()))) {
-        return true;
+      if (error != null && ImmutableSet.of("RequestTimeout","OperationAborted","SignatureDoesNotMatch").contains(error.getCode())) {
+        return backoffLimitedRetryHandler.shouldRetryRequest(command,response);
       }
     }
   }

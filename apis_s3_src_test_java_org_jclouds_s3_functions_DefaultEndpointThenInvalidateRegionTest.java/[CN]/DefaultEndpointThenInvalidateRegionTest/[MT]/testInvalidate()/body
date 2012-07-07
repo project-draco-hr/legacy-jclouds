@@ -1,0 +1,9 @@
+{
+  RegionToEndpointOrProviderIfNull r2=createMock(RegionToEndpointOrProviderIfNull.class);
+  LoadingCache<String,Optional<String>> bucketToRegionCache=createMock(LoadingCache.class);
+  expect(r2.apply(null)).andReturn(URI.create("http://east-url"));
+  bucketToRegionCache.invalidate("mybucket");
+  replay(r2,bucketToRegionCache);
+  new DefaultEndpointThenInvalidateRegion(r2,bucketToRegionCache).apply("mybucket");
+  verify(r2,bucketToRegionCache);
+}

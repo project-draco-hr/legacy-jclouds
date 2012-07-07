@@ -1,0 +1,8 @@
+{
+  LoadingCache<String,Optional<String>> bucketToRegionCache=createMock(LoadingCache.class);
+  expect(bucketToRegionCache.get("bucket")).andThrow(exception);
+  replay(bucketToRegionCache);
+  GetRegionForBucket fn=new GetRegionForBucket(bucketToRegionCache);
+  assertEquals(fn.apply("bucket"),Optional.absent());
+  verify(bucketToRegionCache);
+}

@@ -1,0 +1,13 @@
+{
+  String container=getContainerName();
+  BlobStore blobStore=view.getBlobStore();
+  try {
+    final String blobName="hello";
+    final Date expires=new Date((System.currentTimeMillis() / 1000) * 1000 + 60 * 1000);
+    blobStore.putBlob(container,blobStore.blobBuilder(blobName).payload(TEST_STRING).expires(expires).build());
+    assertConsistencyAwareBlobExpiryMetadata(container,blobName,expires);
+  }
+  finally {
+    returnContainer(container);
+  }
+}

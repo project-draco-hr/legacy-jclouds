@@ -1,0 +1,17 @@
+{
+  Iterable<? extends StorageMetadata> buckets=FutureIterables.<BucketMetadata,StorageMetadata>transformParallel(input,new Function<BucketMetadata,Future<? extends StorageMetadata>>(){
+    @Override public Future<? extends StorageMetadata> apply(    final BucketMetadata from){
+      return userExecutor.submit(new Callable<StorageMetadata>(){
+        @Override public StorageMetadata call() throws Exception {
+          return bucket2ResourceMd.apply(from);
+        }
+        @Override public String toString(){
+          return "bucket2ResourceMd.apply(" + from + ")";
+        }
+      }
+);
+    }
+  }
+,userExecutor,null,logger,"my buckets");
+  return new PageSetImpl<StorageMetadata>(buckets,null);
+}

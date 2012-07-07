@@ -4,5 +4,7 @@
   bind(AsyncBlobStore.class).to(S3AsyncBlobStore.class).in(Scopes.SINGLETON);
   bind(BlobStore.class).to(S3BlobStore.class).in(Scopes.SINGLETON);
   bind(BlobRequestSigner.class).to(S3BlobRequestSigner.class);
-  bindBucketLocationStrategy();
+  bind(new TypeLiteral<Function<String,Location>>(){
+  }
+).to(LocationFromBucketName.class);
 }

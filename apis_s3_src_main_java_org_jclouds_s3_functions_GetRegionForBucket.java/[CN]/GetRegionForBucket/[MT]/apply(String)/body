@@ -1,0 +1,15 @@
+{
+  try {
+    return bucketToRegion.get(bucket);
+  }
+ catch (  ExecutionException e) {
+    logger.debug("error looking up region for bucket %s: %s",bucket,e);
+  }
+catch (  UncheckedExecutionException e) {
+    logger.debug("error looking up region for bucket %s: %s",bucket,e);
+  }
+catch (  InvalidCacheLoadException e) {
+    logger.trace("bucket %s not found: %s",bucket,e);
+  }
+  return Optional.absent();
+}

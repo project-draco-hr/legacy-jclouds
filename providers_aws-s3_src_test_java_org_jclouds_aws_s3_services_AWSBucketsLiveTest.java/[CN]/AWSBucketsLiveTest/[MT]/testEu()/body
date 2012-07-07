@@ -1,0 +1,22 @@
+{
+  final String bucketName=getScratchContainerName();
+  try {
+    getApi().putBucketInRegion(Region.EU_WEST_1,bucketName + "eu",withBucketAcl(CannedAccessPolicy.PUBLIC_READ));
+    assertConsistencyAware(new Runnable(){
+      public void run(){
+        try {
+          AccessControlList acl=getApi().getBucketACL(bucketName + "eu");
+          assertTrue(acl.hasPermission(GroupGranteeURI.ALL_USERS,Permission.READ),acl.toString());
+        }
+ catch (        Exception e) {
+          Throwables.propagateIfPossible(e);
+        }
+      }
+    }
+);
+    assertEquals(Region.EU_WEST_1,getApi().getBucketLocation(bucketName + "eu"));
+  }
+  finally {
+    destroyContainer(bucketName + "eu");
+  }
+}

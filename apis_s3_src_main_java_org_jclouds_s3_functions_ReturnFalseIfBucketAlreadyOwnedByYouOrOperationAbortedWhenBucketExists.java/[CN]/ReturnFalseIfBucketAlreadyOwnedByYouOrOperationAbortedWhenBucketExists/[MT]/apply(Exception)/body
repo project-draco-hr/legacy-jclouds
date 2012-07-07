@@ -1,0 +1,9 @@
+{
+  AWSResponseException exception=Throwables2.getFirstThrowableOfType(from,AWSResponseException.class);
+  if (exception != null && exception.getError() != null && exception.getError().getCode() != null) {
+    String code=exception.getError().getCode();
+    if (code.equals("BucketAlreadyOwnedByYou"))     return false;
+ else     if (code.equals("OperationAborted") && bucket != null && client.bucketExists(bucket))     return false;
+  }
+  throw Throwables.propagate(from);
+}
