@@ -83,7 +83,7 @@ builder.kernelId(currentOrNull(currentText));
 builder.keyName(currentOrNull(currentText));
 }
  else if (equalsOrSuffix(qName,"launchTime")) {
-builder.launchTime(parseDate());
+builder.launchTime(dateCodec.toDate(currentOrNull(currentText)));
 }
  else if (equalsOrSuffix(qName,"availabilityZone")) {
 builder.availabilityZone(currentOrNull(currentText));
@@ -122,7 +122,7 @@ volumeId=currentOrNull(currentText);
 attachmentStatus=Attachment.Status.fromValue(currentText.toString().trim());
 }
  else if (equalsOrSuffix(qName,"attachTime")) {
-attachTime=dateService.iso8601DateParse(currentText.toString().trim());
+attachTime=dateCodec.toDate(currentOrNull(currentText));
 }
  else if (equalsOrSuffix(qName,"deleteOnTermination")) {
 deleteOnTermination=Boolean.parseBoolean(currentText.toString().trim());
