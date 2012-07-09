@@ -1,8 +1,15 @@
 {
   if (inListeners) {
-    builder.listener(listenerHandler.getResult());
+    if (memberDepth == 2)     builder.listener(listenerHandler.getResult());
+ else     listenerHandler.endElement(uri,name,qName);
   }
  else   if (inAvailabilityZones) {
     builder.availabilityZone(currentOrNull(currentText));
+  }
+ else   if (inSecurityGroups) {
+    builder.securityGroup(currentOrNull(currentText));
+  }
+ else   if (inSubnets) {
+    builder.subnet(currentOrNull(currentText));
   }
 }

@@ -9,9 +9,19 @@
  else   if (equalsOrSuffix(qName,"AvailabilityZones")) {
     inAvailabilityZones=false;
   }
+ else   if (equalsOrSuffix(qName,"SecurityGroups")) {
+    inSecurityGroups=false;
+  }
+ else   if (equalsOrSuffix(qName,"Subnets")) {
+    inSubnets=false;
+  }
  else   if (equalsOrSuffix(qName,"HealthCheck")) {
     builder.healthCheck(healthCheckHandler.getResult());
     inHealthCheck=false;
+  }
+ else   if (equalsOrSuffix(qName,"SourceSecurityGroup")) {
+    if (sourceSecurityGroupBuilder != null)     builder.sourceSecurityGroup(sourceSecurityGroupBuilder.build());
+    sourceSecurityGroupBuilder=null;
   }
  else   if (equalsOrSuffix(qName,"LoadBalancerName")) {
     builder.name(currentOrNull(currentText));
@@ -25,11 +35,23 @@
  else   if (equalsOrSuffix(qName,"InstanceId")) {
     builder.instanceId(currentOrNull(currentText));
   }
+ else   if (equalsOrSuffix(qName,"GroupName")) {
+    sourceSecurityGroupBuilder.name(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"OwnerAlias")) {
+    sourceSecurityGroupBuilder.owner(currentOrNull(currentText));
+  }
  else   if (equalsOrSuffix(qName,"Scheme")) {
     builder.scheme(Scheme.fromValue(currentOrNull(currentText)));
   }
  else   if (equalsOrSuffix(qName,"VPCId")) {
     builder.VPCId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"CanonicalHostedZoneName")) {
+    builder.hostedZoneName(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"CanonicalHostedZoneNameID")) {
+    builder.hostedZoneId(currentOrNull(currentText));
   }
  else   if (inHealthCheck) {
     healthCheckHandler.endElement(uri,name,qName);
