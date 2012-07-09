@@ -1,10 +1,10 @@
 {
-  ListMetricsResponse response;
+  PaginatedSet<Metric> response;
   String testNamespace=Namespaces.EC2;
   String testMetricName=EC2Constants.MetricName.CPU_UTILIZATION;
   String testDimensionName=EC2Constants.Dimension.INSTANCE_TYPE;
   String testDimensionValue="t1.micro";
-  response=client().listMetrics();
+  response=client().list();
   performDefaultMetricsTests(response);
   if (response.size() > 0) {
     Metric metric=response.iterator().next();
@@ -27,21 +27,21 @@
       }
     }
   }
-  response=client().listMetrics(ListMetricsOptions.builder().nextToken(response.getNextToken()).build());
+  response=client().list(ListMetricsOptions.Builder.nextMarker(response.getNextMarker()));
   performDefaultMetricsTests(response);
-  response=client().listMetrics(ListMetricsOptions.builder().namespace(testNamespace).build());
+  response=client().list(ListMetricsOptions.Builder.namespace(testNamespace));
   performDefaultMetricsTests(response);
   for (  Metric metric : response) {
     checkArgument(metric.getNamespace().equals(testNamespace),"All metrics should have the " + testNamespace + " Namespace.");
   }
-  response=client().listMetrics(ListMetricsOptions.builder().metricName(testMetricName).build());
+  response=client().list(ListMetricsOptions.Builder.metricName(testMetricName));
   performDefaultMetricsTests(response);
   for (  Metric metric : response) {
     checkArgument(metric.getMetricName().equals(testMetricName),"All metrics should have the " + testMetricName + " MetricName.");
   }
   if (testDimensionName != null) {
     Dimension testDimension=new Dimension(testDimensionName,testDimensionValue);
-    response=client().listMetrics(ListMetricsOptions.builder().dimension(testDimension).build());
+    response=client().list(ListMetricsOptions.Builder.dimension(testDimension));
     performDefaultMetricsTests(response);
     for (    Metric metric : response) {
       Set<Dimension> dimensions=metric.getDimensions();

@@ -7,7 +7,7 @@
     metrics.add(MetricDatum.builder().metricName(metricName + "_" + i).dimension(new Dimension("BaseMetricName",metricName)).unit(Unit.COUNT).timestamp(metricTimestamp).value((double)i).build());
   }
   CloudWatch.putMetricData(client,null,metrics,namespace);
-  ListMetricsOptions lmo=ListMetricsOptions.builder().namespace(namespace).dimension(new Dimension("BaseMetricName",metricName)).build();
+  ListMetricsOptions lmo=ListMetricsOptions.Builder.namespace(namespace).dimension(new Dimension("BaseMetricName",metricName));
   boolean success=new RetryablePredicate<ListMetricsOptions>(new Predicate<ListMetricsOptions>(){
     @Override public boolean apply(    ListMetricsOptions options){
       return Iterables.size(CloudWatch.listMetrics(client,null,options)) == 11;

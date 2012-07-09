@@ -1,0 +1,21 @@
+{
+  ImmutableMultimap.Builder<String,String> formParameters=ImmutableMultimap.<String,String>builder();
+  int dimensionIndex=1;
+  if (namespace != null) {
+    formParameters.put("Namespace",namespace);
+  }
+  if (metricName != null) {
+    formParameters.put("MetricName",metricName);
+  }
+  if (dimensions != null) {
+    for (    Dimension dimension : dimensions) {
+      formParameters.put("Dimensions.member." + dimensionIndex + ".Name",dimension.getName());
+      formParameters.put("Dimensions.member." + dimensionIndex + ".Value",dimension.getValue());
+      dimensionIndex++;
+    }
+  }
+  if (nextToken != null) {
+    formParameters.put("NextToken",nextToken);
+  }
+  return formParameters.build();
+}

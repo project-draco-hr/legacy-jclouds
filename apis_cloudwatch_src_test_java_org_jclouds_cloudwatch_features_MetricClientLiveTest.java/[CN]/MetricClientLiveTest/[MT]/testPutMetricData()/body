@@ -6,18 +6,18 @@
   StatisticValues ss=StatisticValues.builder().maximum(4.0).minimum(1.0).sampleCount(4.0).sum(10.0).build();
   MetricDatum metricDatum=MetricDatum.builder().metricName(metricName + "_1").statisticValues(ss).dimension(new Dimension("BaseMetricName",metricName)).dimension(new Dimension("TestDimension2","TEST2")).unit(Unit.COUNT).timestamp(metricTimestamp).build();
   MetricDatum metricDatum2=MetricDatum.builder().metricName(metricName + "_2").dimension(new Dimension("BaseMetricName",metricName)).unit(Unit.COUNT).timestamp(metricTimestamp).value(10.0).build();
-  client().putMetricData(ImmutableSet.of(metricDatum,metricDatum2),namespace);
-  ListMetricsOptions lmo=ListMetricsOptions.builder().namespace(namespace).dimension(new Dimension("BaseMetricName",metricName)).build();
+  client().putMetricsInNamespace(ImmutableSet.of(metricDatum,metricDatum2),namespace);
+  ListMetricsOptions lmo=ListMetricsOptions.Builder.namespace(namespace).dimension(new Dimension("BaseMetricName",metricName));
   boolean success=new RetryablePredicate<ListMetricsOptions>(new Predicate<ListMetricsOptions>(){
     @Override public boolean apply(    ListMetricsOptions options){
-      return Iterables.size(client().listMetrics(options)) == 2;
+      return Iterables.size(client().list(options)) == 2;
     }
   }
 ,20,1,TimeUnit.MINUTES).apply(lmo);
   if (!success) {
     Assert.fail("Unable to gather the created CloudWatch data within the time (20m) allotted.");
   }
-  ListMetricsResponse lmr=client().listMetrics(lmo);
+  PaginatedSet<Metric> lmr=client().list(lmo);
   Date endTime=new Date(metricTimestampInCloudWatch.getTime() + (60 * 1000));
   Date startTime=new Date(metricTimestampInCloudWatch.getTime() - (60 * 1000));
   for (  Metric m : lmr) {

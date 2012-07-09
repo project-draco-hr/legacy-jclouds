@@ -1,32 +1,11 @@
 {
-  return new Iterable<Metric>(){
-    public Iterator<Metric> iterator(){
-      return new AbstractIterator<Metric>(){
-        private ListMetricsOptions lastOptions=options;
-        private ListMetricsResponse response=metricClient.listMetrics(lastOptions);
-        private Iterator<Metric> iterator=response.iterator();
-        /** 
- * {@inheritDoc}
- */
-        @Override protected Metric computeNext(){
-          while (true) {
-            if (iterator == null) {
-              lastOptions=ListMetricsOptions.builder().namespace(lastOptions.getNamespace()).metricName(lastOptions.getMetricName()).dimensions(lastOptions.getDimensions()).nextToken(lastOptions.getNextToken()).build();
-              response=metricClient.listMetrics(lastOptions);
-              iterator=response.iterator();
-            }
-            if (iterator.hasNext()) {
-              return iterator.next();
-            }
-            if (response.getNextToken() == null) {
-              return endOfData();
-            }
-            iterator=null;
-          }
-        }
-      }
-;
+  return PaginatedSets.lazyContinue(metricClient.list(options),new Function<String,PaginatedSet<Metric>>(){
+    @Override public PaginatedSet<Metric> apply(    String input){
+      return metricClient.list(options.clone().nextMarker(input));
+    }
+    @Override public String toString(){
+      return "listMetrics(" + options + ")";
     }
   }
-;
+);
 }

@@ -8,7 +8,7 @@
   }
   expect(client.getMetricClientForRegion(EasyMock.eq(""))).andReturn(metricClient).atLeastOnce();
   for (  List<MetricDatum> slice : Iterables.partition(metrics,10)) {
-    metricClient.putMetricData(slice,namespace);
+    metricClient.putMetricsInNamespace(slice,namespace);
   }
   EasyMock.replay(client,metricClient);
   CloudWatch.putMetricData(client,"",metrics,namespace);
