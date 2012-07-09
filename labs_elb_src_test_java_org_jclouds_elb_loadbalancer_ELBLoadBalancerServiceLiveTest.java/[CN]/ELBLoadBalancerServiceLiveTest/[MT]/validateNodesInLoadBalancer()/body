@@ -5,7 +5,7 @@
   for (  NodeMetadata node : nodes) {
     instanceIds.add(node.getProviderId());
   }
-  PaginatedSet<LoadBalancer> elbs=elbClient.getLoadBalancerClientForRegion(null).list();
+  PaginatedIterable<LoadBalancer> elbs=elbClient.getLoadBalancerClientForRegion(null).list();
   for (  LoadBalancer elb : elbs) {
     if (elb.getName().equals(group))     assertEquals(elb.getInstanceIds(),instanceIds.build());
   }

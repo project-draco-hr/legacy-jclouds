@@ -1,13 +1,13 @@
 {
-  PaginatedSet<User> response=client().list();
+  PaginatedIterable<User> response=client().list();
   for (  User user : response) {
     checkUser(user);
   }
-  if (response.size() > 0) {
+  if (Iterables.size(response) > 0) {
     User user=response.iterator().next();
     Assert.assertEquals(client().get(user.getName().get()),user);
   }
-  response=client().list(ListUsersOptions.Builder.marker(response.getNextMarker()));
+  response=client().list(ListUsersOptions.Builder.afterMarker(response.getNextMarker()));
   for (  User user : response) {
     checkUser(user);
   }

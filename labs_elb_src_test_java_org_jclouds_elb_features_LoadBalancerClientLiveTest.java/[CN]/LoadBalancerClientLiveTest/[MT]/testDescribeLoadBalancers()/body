@@ -1,16 +1,16 @@
 {
-  PaginatedSet<LoadBalancer> response=client().list();
+  PaginatedIterable<LoadBalancer> response=client().list();
   for (  LoadBalancer loadBalancer : response) {
     checkLoadBalancer(loadBalancer);
     for (    ListenerWithPolicies listener : loadBalancer.getListeners()) {
       checkListener(listener);
     }
   }
-  if (response.size() > 0) {
+  if (Iterables.size(response) > 0) {
     LoadBalancer loadBalancer=response.iterator().next();
     Assert.assertEquals(client().get(loadBalancer.getName()),loadBalancer);
   }
-  response=client().list(ListLoadBalancersOptions.Builder.marker(response.getNextMarker()));
+  response=client().list(ListLoadBalancersOptions.Builder.afterMarker(response.getNextMarker()));
   for (  LoadBalancer loadBalancer : response) {
     checkLoadBalancer(loadBalancer);
   }

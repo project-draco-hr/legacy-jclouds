@@ -1,7 +1,7 @@
 {
   UserClient userClient=createMock(UserClient.class);
   ListUsersOptions options=new ListUsersOptions();
-  PaginatedSet<User> response=PaginatedSet.copyOf(ImmutableSet.of(createMock(User.class)));
+  PaginatedIterable<User> response=PaginatedIterables.forward(ImmutableSet.of(createMock(User.class)));
   expect(userClient.list(options)).andReturn(response).once();
   EasyMock.replay(userClient);
   Assert.assertEquals(1,Iterables.size(IAM.list(userClient,options)));

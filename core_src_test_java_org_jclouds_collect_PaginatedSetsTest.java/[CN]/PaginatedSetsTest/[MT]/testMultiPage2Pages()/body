@@ -1,8 +1,0 @@
-{
-  PaginatedSet<String> initial=PaginatedSet.copyOfWithMarker(ImmutableSet.of("foo","bar"),"MARKER1");
-  Function<String,PaginatedSet<String>> markerToNext=createMock(Function.class);
-  expect(markerToNext.apply("MARKER1")).andReturn(PaginatedSet.copyOfWithMarker(ImmutableSet.of("boo","baz"),null));
-  EasyMock.replay(markerToNext);
-  Assert.assertEquals(ImmutableSet.copyOf(PaginatedSets.lazyContinue(initial,markerToNext)),ImmutableSet.of("foo","bar","boo","baz"));
-  EasyMock.verify(markerToNext);
-}

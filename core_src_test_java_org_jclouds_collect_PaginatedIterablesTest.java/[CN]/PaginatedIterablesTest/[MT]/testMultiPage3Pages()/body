@@ -1,0 +1,9 @@
+{
+  PaginatedIterable<String> initial=PaginatedIterables.forwardWithMarker(ImmutableSet.of("foo","bar"),"MARKER1");
+  Function<Object,PaginatedIterable<String>> markerToNext=createMock(Function.class);
+  expect(markerToNext.apply("MARKER1")).andReturn(PaginatedIterables.forwardWithMarker(ImmutableSet.of("boo","baz"),"MARKER2"));
+  expect(markerToNext.apply("MARKER2")).andReturn(PaginatedIterables.forwardWithMarker(ImmutableSet.of("ham","cheeze"),null));
+  EasyMock.replay(markerToNext);
+  Assert.assertEquals(ImmutableSet.copyOf(PaginatedIterables.lazyContinue(initial,markerToNext)),ImmutableSet.of("foo","bar","boo","baz","ham","cheeze"));
+  EasyMock.verify(markerToNext);
+}
