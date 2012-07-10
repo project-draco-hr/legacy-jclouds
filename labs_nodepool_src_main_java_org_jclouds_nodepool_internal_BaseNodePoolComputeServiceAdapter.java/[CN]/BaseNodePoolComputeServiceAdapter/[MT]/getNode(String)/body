@@ -1,5 +1,7 @@
 {
   NodeMetadata backendMetadata=backendComputeService.get().getNodeMetadata(id);
-  checkState(backendMetadata.getGroup().equals(backendMetadata));
+  if (backendMetadata == null) {
+    return null;
+  }
   return metadataStore.load(backendMetadata);
 }

@@ -7,9 +7,7 @@
   }
 ).to(TemplateOptionsToStatement.class);
   bind(LoginCredentials.class).annotatedWith(Names.named("image")).toProvider(GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull.class);
-  bind(new TypeLiteral<Function<Template,LoginCredentials>>(){
-  }
-).to(DefaultCredentialsFromImageOrOverridingCredentials.class);
+  bindCredentialsOverriderFunction();
   install(new FactoryModuleBuilder().implement(RunScriptOnNodeUsingSsh.class,Names.named("direct"),RunScriptOnNodeUsingSsh.class).implement(RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class,Names.named("blocking"),RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class).implement(RunScriptOnNodeAsInitScriptUsingSsh.class,Names.named("nonblocking"),RunScriptOnNodeAsInitScriptUsingSsh.class).build(RunScriptOnNodeFactoryImpl.Factory.class));
   install(new PersistNodeCredentialsModule());
   bind(RunScriptOnNode.Factory.class).to(RunScriptOnNodeFactoryImpl.class);

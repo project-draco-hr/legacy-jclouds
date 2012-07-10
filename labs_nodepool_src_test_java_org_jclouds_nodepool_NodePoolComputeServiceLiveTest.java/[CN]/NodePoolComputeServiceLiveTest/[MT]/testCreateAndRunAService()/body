@@ -1,0 +1,36 @@
+{
+  this.group=this.group + "s";
+  final String configuration=Strings2.toStringAndClose(RunScriptData.class.getResourceAsStream("/standalone-basic.xml"));
+  ImmutableMap<String,String> userMetadata=ImmutableMap.<String,String>of("Name",group);
+  ImmutableSet<String> tags=ImmutableSet.of(group);
+  Stopwatch watch=new Stopwatch().start();
+  NodeMetadata node=getOnlyElement(client.createNodesInGroup(group,1,inboundPorts(22,8080).blockOnPort(22,300).userMetadata(userMetadata).tags(tags)));
+  long createSeconds=watch.elapsedTime(TimeUnit.SECONDS);
+  final String nodeId=node.getId();
+  checkUserMetadataInNodeEquals(node,userMetadata);
+  checkTagsInNodeEquals(node,tags);
+  getAnonymousLogger().info(format("<< available node(%s) os(%s) in %ss",node.getId(),node.getOperatingSystem(),createSeconds));
+  watch.reset().start();
+  client.runScriptOnNode(nodeId,installAdminUserJBossAndOpenPorts(node.getOperatingSystem()),nameTask("configure-jboss"));
+  long configureSeconds=watch.elapsedTime(TimeUnit.SECONDS);
+  getAnonymousLogger().info(format("<< configured node(%s) with %s and JBoss %s in %ss",nodeId,exec(nodeId,"java -fullversion"),exec(nodeId,format("ls %s/bundles/org/jboss/as/osgi/configadmin/main|sed -e 's/.*-//g' -e 's/.jar//g'",JBOSS_HOME)),configureSeconds));
+  trackAvailabilityOfProcessOnNode(view.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    @Override public ExecResponse call(){
+      return client.runScriptOnNode(nodeId,startJBoss(configuration),runAsRoot(false).blockOnComplete(false).nameTask("jboss"));
+    }
+    @Override public String toString(){
+      return "initial start of jboss";
+    }
+  }
+),"jboss",node,JBOSS_PATTERN);
+  client.runScriptOnNode(nodeId,"/tmp/init-jboss stop",runAsRoot(false).wrapInInitScript(false));
+  trackAvailabilityOfProcessOnNode(view.utils().userExecutor().submit(new Callable<ExecResponse>(){
+    @Override public ExecResponse call(){
+      return client.runScriptOnNode(nodeId,"/tmp/init-jboss start",runAsRoot(false).wrapInInitScript(false));
+    }
+    @Override public String toString(){
+      return "warm start of jboss";
+    }
+  }
+),"jboss",node,JBOSS_PATTERN);
+}

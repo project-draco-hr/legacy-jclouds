@@ -1,6 +1,10 @@
 {
   Set<? extends NodeMetadata> backendNodes=getBackendNodes();
+  int currentNodes=backendNodes.size();
+  int newNodes=backendNodes.size() < minSize ? minSize - backendNodes.size() : 0;
+  logger.info(">> initializing nodepool [backend provider: %s]. [existing nodes: %s, min nodes: %s, allocating: %s ]",backendComputeService.get().getClass().getSimpleName(),currentNodes,minSize,newNodes);
   if (backendNodes.size() < minSize) {
-    addToPool(backendNodes.size() - minSize);
+    addToPool(minSize - backendNodes.size());
   }
+  logger.info("<< pool initialized.");
 }

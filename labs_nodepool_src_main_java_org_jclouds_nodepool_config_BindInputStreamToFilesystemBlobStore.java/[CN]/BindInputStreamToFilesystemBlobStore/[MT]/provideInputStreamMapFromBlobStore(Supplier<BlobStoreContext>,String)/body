@@ -1,9 +1,9 @@
 {
-  return Suppliers.memoize(Suppliers2.compose(new Function<BlobStoreContext,Map<String,InputStream>>(){
+  return Suppliers.ofInstance(new Function<BlobStoreContext,Map<String,InputStream>>(){
     @Override public Map<String,InputStream> apply(    BlobStoreContext input){
       input.getBlobStore().createContainerInLocation(null,container);
       return input.createInputStreamMap(container);
     }
   }
-,in));
+.apply(in.get()));
 }

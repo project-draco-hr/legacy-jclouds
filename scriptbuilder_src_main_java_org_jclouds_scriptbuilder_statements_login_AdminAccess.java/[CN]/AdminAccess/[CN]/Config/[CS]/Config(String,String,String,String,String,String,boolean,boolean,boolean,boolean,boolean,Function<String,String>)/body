@@ -12,5 +12,10 @@
   this.resetLoginPassword=resetLoginPassword;
   this.cryptFunction=cryptFunction;
   if (adminUsername != null && authorizeAdminPublicKey && adminPrivateKey != null)   this.adminCredentials=new Credentials(adminUsername,adminPrivateKey);
+ else   if (adminUsername != null && adminPassword != null) {
+    this.adminCredentials=new Credentials(adminUsername,adminPassword);
+    this.authorizeAdminPublicKey=false;
+    this.lockSsh=false;
+  }
  else   this.adminCredentials=null;
 }

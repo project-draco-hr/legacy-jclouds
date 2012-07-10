@@ -1,11 +1,32 @@
 {
   int count=1;
 synchronized (this) {
+    TemplateOptions options=template.getOptions().clone();
+    if (options.getLoginUser() == null) {
+      options.overrideLoginCredentials(LoginCredentials.fromCredentials(checkNotNull(initialCredentialsBuilder.build().getAdminCredentials())));
+    }
+    logger.info(">> assigning pool node to frontend group %s",group);
     Set<NodeMetadata> backendNodes=getBackendNodes();
+    checkState(!backendNodes.isEmpty());
     Set<NodeMetadata> frontendNodes=metadataStore.loadAll(backendNodes);
-    checkState(frontendNodes.size() + count < maxSize,"cannot add more nodes to pool [requested: %s, current: %s, max: %s]",count,frontendNodes.size(),maxSize);
+    checkState(frontendNodes.size() + count <= maxSize,"cannot add more nodes to pool [requested: %s, current: %s, max: %s]",count,frontendNodes.size(),maxSize);
     SetView<NodeMetadata> availableNodes=Sets.difference(backendNodes,frontendNodes);
-    NodeMetadata node=metadataStore.store(Iterables.get(availableNodes,0),template.getOptions(),group);
+    if (availableNodes.size() < 1) {
+      if (backendNodes.size() < maxSize && backendNodes.size() + count <= maxSize) {
+        logger.info(">> all pool nodes are assigned, requiring additional nodes [requested: %s, current: %s, next: %s, max: %s]",count,frontendNodes.size(),frontendNodes.size() + 1,maxSize);
+        addToPool(count);
+        backendNodes=getBackendNodes();
+        availableNodes=Sets.difference(backendNodes,frontendNodes);
+        logger.info("<< additional nodes added to the pool and ready");
+      }
+ else {
+        logger.error("maximum pool size reached (%s)",maxSize);
+        throw new IllegalStateException(String.format("maximum pool size reached (%s)",maxSize));
+      }
+    }
+    NodeMetadata userNode=Iterables.get(availableNodes,0);
+    NodeMetadata node=metadataStore.store(userNode,options,group);
+    logger.info("pool node assigned");
     return new NodeWithInitialCredentials(node);
   }
 }

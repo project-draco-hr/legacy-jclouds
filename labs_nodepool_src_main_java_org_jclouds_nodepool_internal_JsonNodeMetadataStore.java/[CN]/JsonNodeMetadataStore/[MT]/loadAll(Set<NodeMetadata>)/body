@@ -1,8 +1,13 @@
 {
-  return ImmutableSet.copyOf(Iterables.transform(backendNodes,new Function<NodeMetadata,NodeMetadata>(){
-    @Override public NodeMetadata apply(    NodeMetadata input){
-      return load(input);
+  if (backendNodes == null || backendNodes.isEmpty()) {
+    return Collections.emptySet();
+  }
+  final Set<NodeMetadata> loadedSet=Sets.newLinkedHashSet();
+  for (  NodeMetadata input : backendNodes) {
+    NodeMetadata loaded=load(input);
+    if (loaded != null) {
+      loadedSet.add(loaded);
     }
   }
-));
+  return loadedSet;
 }

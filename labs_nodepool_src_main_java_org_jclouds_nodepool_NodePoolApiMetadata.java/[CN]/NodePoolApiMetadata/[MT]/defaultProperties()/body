@@ -1,10 +1,12 @@
 {
   Properties properties=BaseRestApiMetadata.defaultProperties();
+  properties.setProperty("nodepool.identity","nodepool-user");
   properties.setProperty(BACKEND_GROUP,"nodepool");
   properties.setProperty(METADATA_CONTAINER,"nodes");
   properties.setProperty(BACKEND_MODULES,"org.jclouds.logging.slf4j.config.SLF4JLoggingModule,org.jclouds.sshj.config.SshjSshClientModule");
   properties.setProperty(MAX_SIZE,10 + "");
   properties.setProperty(MIN_SIZE,5 + "");
-  properties.setProperty(REMOVE_DESTROYED,"false");
+  properties.setProperty(REMOVE_DESTROYED,"true");
+  properties.setProperty(POOL_ADMIN_ACCESS,"adminUsername=" + System.getProperty("user.name") + ",adminPrivateKeyFile="+ System.getProperty("user.home")+ "/.ssh/id_rsa");
   return properties;
 }

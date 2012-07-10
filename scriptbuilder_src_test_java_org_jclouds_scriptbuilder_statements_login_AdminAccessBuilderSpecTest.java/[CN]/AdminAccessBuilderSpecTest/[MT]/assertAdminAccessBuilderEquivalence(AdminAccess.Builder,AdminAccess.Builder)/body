@@ -1,0 +1,14 @@
+{
+  for (  Field f : AdminAccess.Builder.class.getFields()) {
+    f.setAccessible(true);
+    try {
+      assertEquals(f.get(a),f.get(b),"Field " + f.getName() + " not equal");
+    }
+ catch (    IllegalArgumentException e) {
+      throw new AssertionError(e.getMessage());
+    }
+catch (    IllegalAccessException e) {
+      throw new AssertionError(e.getMessage());
+    }
+  }
+}
