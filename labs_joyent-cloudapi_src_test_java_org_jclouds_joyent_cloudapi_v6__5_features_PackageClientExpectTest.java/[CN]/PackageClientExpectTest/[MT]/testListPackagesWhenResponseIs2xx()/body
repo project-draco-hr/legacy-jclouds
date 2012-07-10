@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/package_list.json")).build();
+  JoyentCloudClient clientWhenPackagesExists=requestsSendResponses(getDatacenters,getDatacentersResponse,list,listResponse);
+  assertEquals(clientWhenPackagesExists.getPackageClientForDatacenter("us-sw-1").list(),new ParsePackageListTest().expected());
+}

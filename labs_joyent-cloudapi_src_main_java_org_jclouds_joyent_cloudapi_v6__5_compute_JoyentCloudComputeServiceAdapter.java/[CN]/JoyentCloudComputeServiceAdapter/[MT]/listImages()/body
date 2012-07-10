@@ -1,0 +1,12 @@
+{
+  Builder<DatasetInDatacenter> builder=ImmutableSet.builder();
+  for (  final String datacenterId : datacenterIds.get()) {
+    builder.addAll(transform(cloudApiClient.getDatasetClientForDatacenter(datacenterId).list(),new Function<Dataset,DatasetInDatacenter>(){
+      @Override public DatasetInDatacenter apply(      Dataset arg0){
+        return new DatasetInDatacenter(arg0,datacenterId);
+      }
+    }
+));
+  }
+  return builder.build();
+}

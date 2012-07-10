@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/dataset_list.json")).build();
+  JoyentCloudClient clientWhenDatasetsExists=requestsSendResponses(getDatacenters,getDatacentersResponse,list,listResponse);
+  assertEquals(clientWhenDatasetsExists.getDatasetClientForDatacenter("us-sw-1").list().toString(),new ParseDatasetListTest().expected().toString());
+}
