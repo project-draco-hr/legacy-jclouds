@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/instances.xml","text/xml")).build();
+  ELBClient clientWhenExist=requestSendsResponse(registerInstanceWithLoadBalancer,getResponse);
+  assertEquals(clientWhenExist.getInstanceClient().registerInstanceWithLoadBalancer("i-6055fa09","name").toString(),new InstancesResultHandlerTest().expected().toString());
+}

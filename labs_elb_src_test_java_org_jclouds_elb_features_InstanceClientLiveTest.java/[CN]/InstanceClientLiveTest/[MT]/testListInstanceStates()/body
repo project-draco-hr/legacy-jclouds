@@ -1,12 +1,12 @@
 {
-  for (  LoadBalancer loadBalancer : context.getApi().getLoadBalancerClientForRegion(null).list()) {
-    Set<InstanceState> response=client().getStateOfInstancesOfLoadBalancer(loadBalancer.getName());
-    for (    InstanceState instanceState : response) {
+  for (  LoadBalancer loadBalancer : context.getApi().getLoadBalancerClient().list()) {
+    Set<InstanceHealth> response=client().getHealthOfInstancesOfLoadBalancer(loadBalancer.getName());
+    for (    InstanceHealth instanceState : response) {
       checkInstanceState(instanceState);
     }
     if (response.size() > 0) {
-      InstanceState instanceState=response.iterator().next();
-      Assert.assertEquals(client().getStateOfInstancesOfLoadBalancer(ImmutableSet.of(instanceState.getInstanceId()),loadBalancer.getName()),instanceState);
+      InstanceHealth instanceState=response.iterator().next();
+      Assert.assertEquals(ImmutableSet.of(client().getHealthOfInstancesOfLoadBalancer(ImmutableSet.of(instanceState.getInstanceId()),loadBalancer.getName())),instanceState);
     }
   }
 }

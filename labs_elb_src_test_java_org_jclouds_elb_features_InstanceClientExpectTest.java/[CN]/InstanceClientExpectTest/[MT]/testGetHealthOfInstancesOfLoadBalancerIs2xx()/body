@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_instancehealth.xml","text/xml")).build();
+  ELBClient clientWhenExist=requestSendsResponse(get,getResponse);
+  assertEquals(clientWhenExist.getInstanceClient().getHealthOfInstancesOfLoadBalancer("name").toString(),new DescribeInstanceHealthResponseTest().expected().toString());
+}
