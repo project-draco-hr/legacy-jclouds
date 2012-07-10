@@ -4,9 +4,7 @@
   if (files.size() > 0)   server.personality=files;
   if (sharedIpGroupId != null)   server.sharedIpGroupId=this.sharedIpGroupId;
   if (publicIp != null) {
-    server.addresses=new Addresses();
-    server.addresses.getPublicAddresses().add(publicIp);
-    server.addresses.setPrivateAddresses(null);
+    server.addresses=Addresses.builder().publicAddresses(ImmutableSet.of(publicIp)).build();
   }
   return bindToRequest(request,ImmutableMap.of("server",server));
 }

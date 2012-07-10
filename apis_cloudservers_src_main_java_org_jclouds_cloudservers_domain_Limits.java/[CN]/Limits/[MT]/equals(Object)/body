@@ -1,15 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  Limits other=(Limits)obj;
-  if (absolute == null) {
-    if (other.absolute != null)     return false;
-  }
- else   if (!absolute.equals(other.absolute))   return false;
-  if (rate == null) {
-    if (other.rate != null)     return false;
-  }
- else   if (!rate.equals(other.rate))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  Limits that=Limits.class.cast(obj);
+  return Objects.equal(this.rate,that.rate) && Objects.equal(this.absolute,that.absolute);
 }

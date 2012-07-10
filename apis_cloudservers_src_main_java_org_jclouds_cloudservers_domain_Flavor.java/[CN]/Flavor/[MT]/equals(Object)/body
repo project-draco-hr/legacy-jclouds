@@ -1,20 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  Flavor other=(Flavor)obj;
-  if (disk == null) {
-    if (other.disk != null)     return false;
-  }
- else   if (!disk.equals(other.disk))   return false;
-  if (id != other.id)   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  if (ram == null) {
-    if (other.ram != null)     return false;
-  }
- else   if (!ram.equals(other.ram))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  Flavor that=Flavor.class.cast(obj);
+  return Objects.equal(this.id,that.id) && Objects.equal(this.name,that.name) && Objects.equal(this.disk,that.disk)&& Objects.equal(this.ram,that.ram);
 }

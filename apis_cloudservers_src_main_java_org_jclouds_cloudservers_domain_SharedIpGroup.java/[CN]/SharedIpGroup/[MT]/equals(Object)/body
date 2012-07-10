@@ -1,16 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  SharedIpGroup other=(SharedIpGroup)obj;
-  if (id != other.id)   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  if (servers == null) {
-    if (other.servers != null)     return false;
-  }
- else   if (!servers.equals(other.servers))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  SharedIpGroup that=SharedIpGroup.class.cast(obj);
+  return Objects.equal(this.id,that.id) && Objects.equal(this.name,that.name) && Objects.equal(this.servers,that.servers);
 }

@@ -1,23 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  RateLimit other=(RateLimit)obj;
-  if (regex == null) {
-    if (other.regex != null)     return false;
-  }
- else   if (!regex.equals(other.regex))   return false;
-  if (remaining != other.remaining)   return false;
-  if (resetTime != other.resetTime)   return false;
-  if (unit != other.unit)   return false;
-  if (uri == null) {
-    if (other.uri != null)     return false;
-  }
- else   if (!uri.equals(other.uri))   return false;
-  if (value != other.value)   return false;
-  if (verb == null) {
-    if (other.verb != null)     return false;
-  }
- else   if (!verb.equals(other.verb))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  RateLimit that=RateLimit.class.cast(obj);
+  return Objects.equal(this.uri,that.uri) && Objects.equal(this.regex,that.regex) && Objects.equal(this.remaining,that.remaining)&& Objects.equal(this.resetTime,that.resetTime)&& Objects.equal(this.unit,that.unit)&& Objects.equal(this.value,that.value)&& Objects.equal(this.verb,that.verb);
 }
