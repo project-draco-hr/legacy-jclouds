@@ -18,7 +18,7 @@
     Set<String> zonesToAdd=Sets.difference(zonesDesired,currentZones);
     if (zonesToAdd.size() > 0)     currentZones=client.getAvailabilityZoneClient().addAvailabilityZonesToLoadBalancer(zonesToAdd,name);
     Set<String> zonesToRemove=Sets.difference(currentZones,zonesDesired);
-    if (zonesToRemove.size() > 0)     client.getAvailabilityZoneClient().addAvailabilityZonesToLoadBalancer(zonesToRemove,name);
+    if (zonesToRemove.size() > 0)     client.getAvailabilityZoneClient().removeAvailabilityZonesFromLoadBalancer(zonesToRemove,name);
   }
   Set<String> instanceIds=ImmutableSet.copyOf(transform(nodes,new Function<NodeMetadata,String>(){
     @Override public String apply(    NodeMetadata from){
