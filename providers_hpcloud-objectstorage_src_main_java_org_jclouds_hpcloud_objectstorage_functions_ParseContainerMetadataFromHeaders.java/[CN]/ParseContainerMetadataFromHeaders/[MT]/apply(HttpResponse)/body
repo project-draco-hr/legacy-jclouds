@@ -1,9 +1,3 @@
 {
-  ContainerMetadata to=new ContainerMetadata();
-  to.setName(request.getArgs().get(0).toString());
-  to.setReadACL(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_READ));
-  to.setBytes(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_BYTES_USED)));
-  to.setCount(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_OBJECT_COUNT)));
-  addUserMetadataTo(from,to);
-  return to;
+  return ContainerMetadata.builder().name(request.getArgs().get(0).toString()).readACL(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_READ)).bytes(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_BYTES_USED))).count(Long.valueOf(from.getFirstHeaderOrNull(SwiftHeaders.CONTAINER_OBJECT_COUNT))).metadata(extractUserMetadata(from)).build();
 }
