@@ -3,10 +3,12 @@
   String channel="exec";
   executor=(ChannelExec)sessionConnection.openChannel(channel);
   executor.setCommand(command);
-  ByteArrayOutputStream error=new ByteArrayOutputStream();
-  executor.setErrStream(error);
+  executor.setErrStream(new ByteArrayOutputStream());
+  InputStream inputStream=executor.getInputStream();
+  InputStream errStream=executor.getErrStream();
+  OutputStream outStream=executor.getOutputStream();
   executor.connect();
-  return new ExecChannel(executor.getOutputStream(),executor.getInputStream(),executor.getErrStream(),new Supplier<Integer>(){
+  return new ExecChannel(outStream,inputStream,errStream,new Supplier<Integer>(){
     @Override public Integer get(){
       int exitStatus=executor.getExitStatus();
       return exitStatus != -1 ? exitStatus : null;

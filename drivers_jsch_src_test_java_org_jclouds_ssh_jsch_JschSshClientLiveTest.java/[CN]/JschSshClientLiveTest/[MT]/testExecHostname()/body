@@ -1,5 +1,12 @@
 {
-  ExecResponse response=setupClient().exec("hostname");
-  assertEquals(response.getError(),"");
-  assertEquals(response.getOutput().trim(),"localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName() : sshHost);
+  SshClient client=setupClient();
+  try {
+    ExecResponse response=client.exec("hostname");
+    assertEquals(response.getExitStatus(),0);
+    assertEquals(response.getError(),"");
+    assertEquals(response.getOutput().trim(),"localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName() : sshHost);
+  }
+  finally {
+    client.disconnect();
+  }
 }

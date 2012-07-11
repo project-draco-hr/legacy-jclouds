@@ -1,0 +1,26 @@
+{
+  final SshClient client=setupClient();
+  ListeningExecutorService executor=MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+  List<ListenableFuture<ExecResponse>> futures=new ArrayList<ListenableFuture<ExecResponse>>();
+  try {
+    final AtomicInteger count=new AtomicInteger();
+    for (int i=0; i < 100; i++) {
+      futures.add(executor.submit(new Callable<ExecResponse>(){
+        @Override public ExecResponse call(){
+          ExecResponse response=client.exec("hostname");
+          return response;
+        }
+      }
+));
+    }
+    List<ExecResponse> responses=Futures.allAsList(futures).get(3000,TimeUnit.SECONDS);
+    for (    ExecResponse response : responses) {
+      assertEquals(response.getError(),"");
+      assertEquals(response.getOutput().trim(),"localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName() : sshHost);
+    }
+  }
+  finally {
+    executor.shutdownNow();
+    client.disconnect();
+  }
+}
