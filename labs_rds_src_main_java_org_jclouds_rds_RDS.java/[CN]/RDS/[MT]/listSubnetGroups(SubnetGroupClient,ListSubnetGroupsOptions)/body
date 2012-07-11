@@ -1,0 +1,11 @@
+{
+  return PaginatedIterables.lazyContinue(subnetGroupClient.list(options),new Function<Object,PaginatedIterable<SubnetGroup>>(){
+    @Override public PaginatedIterable<SubnetGroup> apply(    Object input){
+      return subnetGroupClient.list(options.clone().afterMarker(input));
+    }
+    @Override public String toString(){
+      return "listSubnetGroups(" + options + ")";
+    }
+  }
+);
+}

@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_securitygroups.xml","text/xml")).build();
+  RDSClient clientWhenExist=requestSendsResponse(list,listResponse);
+  assertEquals(clientWhenExist.getSecurityGroupClient().list().toString(),new DescribeDBSecurityGroupsResponseTest().expected().toString());
+}

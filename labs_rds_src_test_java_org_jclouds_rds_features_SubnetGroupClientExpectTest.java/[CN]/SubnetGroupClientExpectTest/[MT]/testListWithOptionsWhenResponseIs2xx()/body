@@ -1,0 +1,6 @@
+{
+  HttpRequest listWithOptions=HttpRequest.builder().method("POST").endpoint(URI.create("https://rds.us-east-1.amazonaws.com/")).headers(ImmutableMultimap.<String,String>builder().put("Host","rds.us-east-1.amazonaws.com").build()).payload(payloadFromStringWithContentType("Action=DescribeDBSubnetGroups" + "&Marker=MARKER" + "&Signature=1yK3VgSfUKDNHEwicyYbnMvSPAeJ7DZvi52gQeUUFSQ%3D"+ "&SignatureMethod=HmacSHA256"+ "&SignatureVersion=2"+ "&Timestamp=2009-11-08T15%3A54%3A08.897Z"+ "&Version=2012-04-23"+ "&AWSAccessKeyId=identity","application/x-www-form-urlencoded")).build();
+  HttpResponse listWithOptionsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_subnetgroups.xml","text/xml")).build();
+  RDSClient clientWhenWithOptionsExist=requestSendsResponse(listWithOptions,listWithOptionsResponse);
+  assertEquals(clientWhenWithOptionsExist.getSubnetGroupClient().list(afterMarker("MARKER")).toString(),new DescribeDBSubnetGroupsResponseTest().expected().toString());
+}

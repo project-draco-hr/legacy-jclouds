@@ -1,0 +1,11 @@
+{
+  return PaginatedIterables.lazyContinue(securityGroupClient.list(options),new Function<Object,PaginatedIterable<SecurityGroup>>(){
+    @Override public PaginatedIterable<SecurityGroup> apply(    Object input){
+      return securityGroupClient.list(options.clone().afterMarker(input));
+    }
+    @Override public String toString(){
+      return "listSecurityGroups(" + options + ")";
+    }
+  }
+);
+}

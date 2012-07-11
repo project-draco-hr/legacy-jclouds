@@ -1,0 +1,10 @@
+{
+  InstanceClient instanceClient=createMock(InstanceClient.class);
+  ListInstancesOptions options=new ListInstancesOptions();
+  PaginatedIterable<Instance> response1=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(Instance.class)),"NEXTTOKEN");
+  PaginatedIterable<Instance> response2=PaginatedIterables.forward(ImmutableSet.of(createMock(Instance.class)));
+  expect(instanceClient.list(anyObject(ListInstancesOptions.class))).andReturn(response1).once();
+  expect(instanceClient.list(anyObject(ListInstancesOptions.class))).andReturn(response2).once();
+  EasyMock.replay(instanceClient);
+  Assert.assertEquals(2,Iterables.size(RDS.listInstances(instanceClient,options)));
+}

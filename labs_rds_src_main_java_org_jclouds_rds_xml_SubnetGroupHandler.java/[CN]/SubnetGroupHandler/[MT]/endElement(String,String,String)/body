@@ -1,0 +1,24 @@
+{
+  if (equalsOrSuffix(qName,"Subnets")) {
+    inSubnets=false;
+  }
+ else   if (equalsOrSuffix(qName,"DBSubnetGroupName")) {
+    builder.name(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"DBSubnetGroupDescription")) {
+    builder.description(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"SubnetGroupStatus")) {
+    builder.status(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"Subnet")) {
+    builder.subnet(subnetHandler.getResult());
+  }
+ else   if (equalsOrSuffix(qName,"VpcId")) {
+    builder.vpcId(currentOrNull(currentText));
+  }
+ else   if (inSubnets) {
+    subnetHandler.endElement(uri,name,qName);
+  }
+  currentText=new StringBuilder();
+}

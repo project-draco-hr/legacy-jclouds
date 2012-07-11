@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_securitygroups.xml");
+  PaginatedIterable<SecurityGroup> expected=expected();
+  DescribeDBSecurityGroupsResultHandler handler=injector.getInstance(DescribeDBSecurityGroupsResultHandler.class);
+  PaginatedIterable<SecurityGroup> result=factory.create(handler).parse(is);
+  assertEquals(result.toString(),expected.toString());
+}

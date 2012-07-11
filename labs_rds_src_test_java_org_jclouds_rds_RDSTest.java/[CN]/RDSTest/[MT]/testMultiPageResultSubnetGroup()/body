@@ -1,0 +1,10 @@
+{
+  SubnetGroupClient subnetGroupClient=createMock(SubnetGroupClient.class);
+  ListSubnetGroupsOptions options=new ListSubnetGroupsOptions();
+  PaginatedIterable<SubnetGroup> response1=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(SubnetGroup.class)),"NEXTTOKEN");
+  PaginatedIterable<SubnetGroup> response2=PaginatedIterables.forward(ImmutableSet.of(createMock(SubnetGroup.class)));
+  expect(subnetGroupClient.list(anyObject(ListSubnetGroupsOptions.class))).andReturn(response1).once();
+  expect(subnetGroupClient.list(anyObject(ListSubnetGroupsOptions.class))).andReturn(response2).once();
+  EasyMock.replay(subnetGroupClient);
+  Assert.assertEquals(2,Iterables.size(RDS.listSubnetGroups(subnetGroupClient,options)));
+}

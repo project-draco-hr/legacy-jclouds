@@ -1,0 +1,14 @@
+{
+  PaginatedIterable<SecurityGroup> response=client().list();
+  for (  SecurityGroup securityGroup : response) {
+    checkSecurityGroup(securityGroup);
+  }
+  if (Iterables.size(response) > 0) {
+    SecurityGroup securityGroup=response.iterator().next();
+    Assert.assertEquals(client().get(securityGroup.getName()),securityGroup);
+  }
+  response=client().list(ListSecurityGroupsOptions.Builder.afterMarker(response.getNextMarker()));
+  for (  SecurityGroup securityGroup : response) {
+    checkSecurityGroup(securityGroup);
+  }
+}

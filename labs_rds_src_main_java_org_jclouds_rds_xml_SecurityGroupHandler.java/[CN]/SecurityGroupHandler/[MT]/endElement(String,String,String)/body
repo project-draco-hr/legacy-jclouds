@@ -1,0 +1,33 @@
+{
+  if (equalsOrSuffix(qName,"EC2SecurityGroups")) {
+    inEC2SecurityGroups=false;
+  }
+ else   if (equalsOrSuffix(qName,"IPRanges")) {
+    inIPRanges=false;
+  }
+ else   if (equalsOrSuffix(qName,"DBSecurityGroupName")) {
+    builder.name(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"DBSecurityGroupDescription")) {
+    builder.description(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"EC2SecurityGroup")) {
+    builder.ec2SecurityGroup(ec2SecurityGroupHandler.getResult());
+  }
+ else   if (equalsOrSuffix(qName,"IPRange")) {
+    builder.ipRange(ipRangeHandler.getResult());
+  }
+ else   if (equalsOrSuffix(qName,"OwnerId")) {
+    builder.ownerId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"VpcId")) {
+    builder.vpcId(currentOrNull(currentText));
+  }
+ else   if (inEC2SecurityGroups) {
+    ec2SecurityGroupHandler.endElement(uri,name,qName);
+  }
+ else   if (inIPRanges) {
+    ipRangeHandler.endElement(uri,name,qName);
+  }
+  currentText=new StringBuilder();
+}

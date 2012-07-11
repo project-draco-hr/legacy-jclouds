@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_subnetgroups.xml","text/xml")).build();
+  RDSClient clientWhenExist=requestSendsResponse(list,listResponse);
+  assertEquals(clientWhenExist.getSubnetGroupClient().list().toString(),new DescribeDBSubnetGroupsResponseTest().expected().toString());
+}

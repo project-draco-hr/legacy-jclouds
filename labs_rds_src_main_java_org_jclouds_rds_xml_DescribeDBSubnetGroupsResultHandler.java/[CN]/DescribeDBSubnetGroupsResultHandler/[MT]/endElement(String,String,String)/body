@@ -1,0 +1,15 @@
+{
+  if (equalsOrSuffix(qName,"DBSubnetGroups")) {
+    inSubnetGroups=false;
+  }
+ else   if (equalsOrSuffix(qName,"DBSubnetGroup")) {
+    subnetGroups.add(subnetGroupHander.getResult());
+  }
+ else   if (equalsOrSuffix(qName,"Marker")) {
+    marker=currentOrNull(currentText);
+  }
+ else   if (inSubnetGroups) {
+    subnetGroupHander.endElement(uri,name,qName);
+  }
+  currentText=new StringBuilder();
+}

@@ -1,0 +1,9 @@
+{
+  install(new LocationModule());
+  bind(RegionIdToURISupplier.class).toInstance(new RegionIdToURISupplier(){
+    @Override public Map<String,Supplier<URI>> get(){
+      return transformValues(ImmutableMap.<String,URI>of(Region.EU_WEST_1,URI.create("https://rds.eu-west-1.amazonaws.com"),Region.US_EAST_1,URI.create("https://rds.us-east-1.amazonaws.com"),Region.US_WEST_1,URI.create("https://rds.us-west-1.amazonaws.com")),Suppliers2.<URI>ofInstanceFunction());
+    }
+  }
+);
+}
