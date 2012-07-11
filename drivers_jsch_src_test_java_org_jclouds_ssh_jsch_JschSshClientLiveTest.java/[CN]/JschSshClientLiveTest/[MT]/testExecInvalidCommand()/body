@@ -1,0 +1,11 @@
+{
+  SshClient client=setupClient();
+  try {
+    ExecResponse response=client.exec("thisCommandDoesNotExist");
+    assertNotEquals(response.getExitStatus(),0);
+    assertTrue(response.getOutput().contains("not found") || response.getError().contains("not found"),"stdout=" + response.getOutput() + "; stderr="+ response.getError());
+  }
+  finally {
+    client.disconnect();
+  }
+}

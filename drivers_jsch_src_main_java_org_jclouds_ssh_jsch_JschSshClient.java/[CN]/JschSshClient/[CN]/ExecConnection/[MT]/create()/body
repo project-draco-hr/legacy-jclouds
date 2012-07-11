@@ -1,7 +1,9 @@
 {
   try {
-    executor=acquire(execConnection(command));
-    String outputString=Strings2.toStringAndClose(executor.getInputStream());
+    ConnectionWithStreams<ChannelExec> connection=execConnection(command);
+    executor=acquire(connection);
+    String outputString=Strings2.toStringAndClose(connection.getInputStream());
+    String errorString=Strings2.toStringAndClose(connection.getErrStream());
     int errorStatus=executor.getExitStatus();
     int i=0;
     String message=String.format("bad status -1 %s",toString());
@@ -10,7 +12,6 @@
       backoffForAttempt(++i,message);
     }
     if (errorStatus == -1)     throw new SshException(message);
-    String errorString="";
     return new ExecResponse(outputString,errorString,errorStatus);
   }
   finally {

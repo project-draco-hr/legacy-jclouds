@@ -1,8 +1,12 @@
 {
   checkNotNull(command,"command");
-  return new Connection<ChannelExec>(){
+  return new ConnectionWithStreams<ChannelExec>(){
     private ChannelExec executor=null;
+    private InputStream inputStream;
+    private InputStream errStream;
     @Override public void clear(){
+      if (inputStream != null)       Closeables.closeQuietly(inputStream);
+      if (errStream != null)       Closeables.closeQuietly(errStream);
       if (executor != null)       executor.disconnect();
     }
     @Override public ChannelExec create() throws Exception {
@@ -11,10 +15,16 @@
       executor=(ChannelExec)sessionConnection.getSession().openChannel(channel);
       executor.setPty(true);
       executor.setCommand(command);
-      ByteArrayOutputStream error=new ByteArrayOutputStream();
-      executor.setErrStream(error);
+      inputStream=executor.getInputStream();
+      errStream=executor.getErrStream();
       executor.connect();
       return executor;
+    }
+    @Override public InputStream getInputStream(){
+      return inputStream;
+    }
+    @Override public InputStream getErrStream(){
+      return errStream;
     }
     @Override public String toString(){
       return "ChannelExec()";

@@ -1,0 +1,13 @@
+{
+  final SshClient client=setupClient();
+  try {
+    for (int i=0; i < 100; i++) {
+      ExecResponse response=client.exec("hostname");
+      assertEquals(response.getError(),"");
+      assertEquals(response.getOutput().trim(),"localhost".equals(sshHost) ? InetAddress.getLocalHost().getHostName() : sshHost);
+    }
+  }
+  finally {
+    client.disconnect();
+  }
+}
