@@ -1,0 +1,19 @@
+{
+  VCloudTemplateOptions vOptions=VCloudTemplateOptions.class.cast(template.getOptions());
+  URI templateId=URI.create(template.getImage().getId());
+  VAppTemplate vAppTemplate=vAppTemplates.getUnchecked(templateId);
+  if (vAppTemplate.getChildren().size() > 1)   throw new UnsupportedOperationException("we currently do not support multiple vms in a vAppTemplate " + vAppTemplate);
+  if (vAppTemplate.getNetworkSection().getNetworks().size() > 1)   throw new UnsupportedOperationException("we currently do not support multiple network connections in a vAppTemplate " + vAppTemplate);
+  Network networkToConnect=get(vAppTemplate.getNetworkSection().getNetworks(),0);
+  NetworkConfig config=networkConfigurationForNetworkAndOptions.apply(networkToConnect,vOptions);
+  InstantiateVAppTemplateOptions options=addNetworkConfig(config);
+  String description=VCloudTemplateOptions.class.cast(template.getOptions()).getDescription();
+  if (description == null)   description=vAppTemplate.getName();
+  options.description(description);
+  options.deploy(false);
+  options.powerOn(false);
+  URI VDC=URI.create(template.getLocation().getId());
+  logger.debug(">> instantiating vApp vDC(%s) template(%s) name(%s) options(%s) ",VDC,templateId,name,options);
+  VApp vAppResponse=client.getVAppTemplateClient().createVAppInVDCByInstantiatingTemplate(name,VDC,templateId,options);
+  return vAppResponse;
+}
