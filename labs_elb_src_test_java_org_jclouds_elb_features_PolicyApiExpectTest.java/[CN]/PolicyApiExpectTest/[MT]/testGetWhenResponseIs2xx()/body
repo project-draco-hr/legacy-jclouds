@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_policy.xml","text/xml")).build();
+  ELBApi apiWhenExist=requestSendsResponse(get,getResponse);
+  assertEquals(apiWhenExist.getPolicyApi().get("name").toString(),new GetPolicyResponseTest().expected().toString());
+}

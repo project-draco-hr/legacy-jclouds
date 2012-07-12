@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/zones.xml","text/xml")).build();
+  ELBApi apiWhenExist=requestSendsResponse(removeZoneFromLoadBalancer,getResponse);
+  assertEquals(apiWhenExist.getAvailabilityZoneApi().removeAvailabilityZoneFromLoadBalancer("us-east-1a","name").toString(),new AvailabilityZonesResultHandlerTest().expected().toString());
+}

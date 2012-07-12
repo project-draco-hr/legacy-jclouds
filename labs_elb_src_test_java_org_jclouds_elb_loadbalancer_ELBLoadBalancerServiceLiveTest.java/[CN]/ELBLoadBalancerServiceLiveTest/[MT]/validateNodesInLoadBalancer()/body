@@ -1,11 +1,11 @@
 {
-  RestContext<ELBClient,ELBAsyncClient> elbContext=view.unwrap();
-  ELBClient elbClient=elbContext.getApi();
+  RestContext<ELBApi,ELBAsyncApi> elbContext=view.unwrap();
+  ELBApi elbApi=elbContext.getApi();
   Builder<String> instanceIds=ImmutableSet.<String>builder();
   for (  NodeMetadata node : nodes) {
     instanceIds.add(node.getProviderId());
   }
-  PaginatedIterable<LoadBalancer> elbs=elbClient.getLoadBalancerClient().list();
+  PaginatedIterable<LoadBalancer> elbs=elbApi.getLoadBalancerApi().list();
   for (  LoadBalancer elb : elbs) {
     if (elb.getName().equals(group))     assertEquals(elb.getInstanceIds(),instanceIds.build());
   }

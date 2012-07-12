@@ -1,0 +1,11 @@
+{
+  return PaginatedIterables.lazyContinue(userApi.list(options),new Function<Object,PaginatedIterable<User>>(){
+    @Override public PaginatedIterable<User> apply(    Object input){
+      return userApi.list(options.clone().afterMarker(input));
+    }
+    @Override public String toString(){
+      return "listUsers(" + options + ")";
+    }
+  }
+);
+}

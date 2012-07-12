@@ -1,7 +1,7 @@
 {
   Iterable<LoadBalancerInRegion> loadBalancers=concat(transformParallel(regions.get(),new Function<String,Future<? extends Iterable<LoadBalancerInRegion>>>(){
     @Override public ListenableFuture<? extends Iterable<LoadBalancerInRegion>> apply(    final String from){
-      return Futures.compose(aclient.getLoadBalancerClientForRegion(from).list(),new Function<Iterable<LoadBalancer>,Iterable<LoadBalancerInRegion>>(){
+      return Futures.compose(aapi.getLoadBalancerApiForRegion(from).list(),new Function<Iterable<LoadBalancer>,Iterable<LoadBalancerInRegion>>(){
         @Override public Iterable<LoadBalancerInRegion> apply(        Iterable<LoadBalancer> input){
           return Iterables.transform(input,new Function<LoadBalancer,LoadBalancerInRegion>(){
             @Override public LoadBalancerInRegion apply(            LoadBalancer lb){

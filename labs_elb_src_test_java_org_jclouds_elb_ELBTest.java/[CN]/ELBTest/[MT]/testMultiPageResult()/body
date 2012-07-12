@@ -1,10 +1,10 @@
 {
-  LoadBalancerClient loadBalancerClient=createMock(LoadBalancerClient.class);
+  LoadBalancerApi loadBalancerApi=createMock(LoadBalancerApi.class);
   ListLoadBalancersOptions options=new ListLoadBalancersOptions();
   PaginatedIterable<LoadBalancer> response1=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(LoadBalancer.class)),"NEXTTOKEN");
   PaginatedIterable<LoadBalancer> response2=PaginatedIterables.forward(ImmutableSet.of(createMock(LoadBalancer.class)));
-  expect(loadBalancerClient.list(anyObject(ListLoadBalancersOptions.class))).andReturn(response1).once();
-  expect(loadBalancerClient.list(anyObject(ListLoadBalancersOptions.class))).andReturn(response2).once();
-  EasyMock.replay(loadBalancerClient);
-  Assert.assertEquals(2,Iterables.size(ELB.listLoadBalancers(loadBalancerClient,options)));
+  expect(loadBalancerApi.list(anyObject(ListLoadBalancersOptions.class))).andReturn(response1).once();
+  expect(loadBalancerApi.list(anyObject(ListLoadBalancersOptions.class))).andReturn(response2).once();
+  EasyMock.replay(loadBalancerApi);
+  Assert.assertEquals(2,Iterables.size(ELB.listLoadBalancers(loadBalancerApi,options)));
 }

@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_loadbalancers.xml","text/xml")).build();
+  ELBApi apiWhenExist=requestSendsResponse(get,getResponse);
+  assertEquals(apiWhenExist.getLoadBalancerApi().get("name").toString(),new GetLoadBalancerResponseTest().expected().toString());
+}

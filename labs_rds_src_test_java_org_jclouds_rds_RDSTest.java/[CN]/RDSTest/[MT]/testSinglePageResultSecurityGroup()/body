@@ -1,8 +1,8 @@
 {
-  SecurityGroupClient securityGroupClient=createMock(SecurityGroupClient.class);
+  SecurityGroupApi securityGroupApi=createMock(SecurityGroupApi.class);
   ListSecurityGroupsOptions options=new ListSecurityGroupsOptions();
   PaginatedIterable<SecurityGroup> response=PaginatedIterables.forward(ImmutableSet.of(createMock(SecurityGroup.class)));
-  expect(securityGroupClient.list(options)).andReturn(response).once();
-  EasyMock.replay(securityGroupClient);
-  Assert.assertEquals(1,Iterables.size(RDS.listSecurityGroups(securityGroupClient,options)));
+  expect(securityGroupApi.list(options)).andReturn(response).once();
+  EasyMock.replay(securityGroupApi);
+  Assert.assertEquals(1,Iterables.size(RDS.listSecurityGroups(securityGroupApi,options)));
 }

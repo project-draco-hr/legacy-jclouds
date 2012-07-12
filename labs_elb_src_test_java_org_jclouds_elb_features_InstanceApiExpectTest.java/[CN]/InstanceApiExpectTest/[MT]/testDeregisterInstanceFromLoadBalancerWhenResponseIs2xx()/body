@@ -1,0 +1,5 @@
+{
+  HttpResponse getResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/instances.xml","text/xml")).build();
+  ELBApi apiWhenExist=requestSendsResponse(deregisterInstanceFromLoadBalancer,getResponse);
+  assertEquals(apiWhenExist.getInstanceApi().deregisterInstanceFromLoadBalancer("i-6055fa09","name").toString(),new InstancesResultHandlerTest().expected().toString());
+}

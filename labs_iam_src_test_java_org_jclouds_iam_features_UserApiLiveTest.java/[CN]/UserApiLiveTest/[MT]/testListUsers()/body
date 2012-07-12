@@ -1,0 +1,14 @@
+{
+  PaginatedIterable<User> response=api().list();
+  for (  User user : response) {
+    checkUser(user);
+  }
+  if (Iterables.size(response) > 0) {
+    User user=response.iterator().next();
+    Assert.assertEquals(api().get(user.getName().get()),user);
+  }
+  response=api().list(ListUsersOptions.Builder.afterMarker(response.getNextMarker()));
+  for (  User user : response) {
+    checkUser(user);
+  }
+}

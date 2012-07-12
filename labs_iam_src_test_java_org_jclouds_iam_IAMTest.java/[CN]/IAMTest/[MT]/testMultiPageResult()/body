@@ -1,10 +1,10 @@
 {
-  UserClient userClient=createMock(UserClient.class);
+  UserApi userApi=createMock(UserApi.class);
   ListUsersOptions options=new ListUsersOptions();
   PaginatedIterable<User> response1=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(User.class)),"NEXTTOKEN");
   PaginatedIterable<User> response2=PaginatedIterables.forward(ImmutableSet.of(createMock(User.class)));
-  expect(userClient.list(anyObject(ListUsersOptions.class))).andReturn(response1).once();
-  expect(userClient.list(anyObject(ListUsersOptions.class))).andReturn(response2).once();
-  EasyMock.replay(userClient);
-  Assert.assertEquals(2,Iterables.size(IAM.list(userClient,options)));
+  expect(userApi.list(anyObject(ListUsersOptions.class))).andReturn(response1).once();
+  expect(userApi.list(anyObject(ListUsersOptions.class))).andReturn(response2).once();
+  EasyMock.replay(userApi);
+  Assert.assertEquals(2,Iterables.size(IAM.list(userApi,options)));
 }
