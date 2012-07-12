@@ -1,15 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  Addresses other=(Addresses)obj;
-  if (privateAddresses == null) {
-    if (other.privateAddresses != null)     return false;
-  }
- else   if (!privateAddresses.equals(other.privateAddresses))   return false;
-  if (publicAddresses == null) {
-    if (other.publicAddresses != null)     return false;
-  }
- else   if (!publicAddresses.equals(other.publicAddresses))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  Addresses that=Addresses.class.cast(obj);
+  return Objects.equal(this.publicAddresses,that.publicAddresses) && Objects.equal(this.privateAddresses,that.privateAddresses);
 }
