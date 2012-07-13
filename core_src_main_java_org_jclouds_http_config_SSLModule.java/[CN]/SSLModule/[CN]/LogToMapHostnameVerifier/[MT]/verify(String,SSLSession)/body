@@ -1,5 +1,11 @@
 {
-  logger.warn("hostname was %s while session was %s",hostname,session.getPeerHost());
-  sslMap.put(hostname,session.getPeerHost());
+  String peerHost=session.getPeerHost();
+  if (!hostname.equals(peerHost)) {
+    String oldPeerHost=sslMap.get(hostname);
+    if (oldPeerHost == null || !oldPeerHost.equals(peerHost)) {
+      logger.warn("hostname was %s while session was %s",hostname,peerHost);
+      sslMap.put(hostname,peerHost);
+    }
+  }
   return true;
 }
