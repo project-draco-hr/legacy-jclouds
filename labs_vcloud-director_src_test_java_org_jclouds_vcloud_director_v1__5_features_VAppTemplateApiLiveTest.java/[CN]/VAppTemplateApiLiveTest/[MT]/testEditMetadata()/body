@@ -1,0 +1,13 @@
+{
+  Metadata oldMetadata=vAppTemplateApi.getMetadataApi().getMetadata(vAppTemplateURI);
+  Map<String,String> oldMetadataMap=metadataToMap(oldMetadata);
+  key=name("key-");
+  val=name("value-");
+  MetadataEntry metadataEntry=MetadataEntry.builder().entry(key,val).build();
+  Metadata metadata=Metadata.builder().fromMetadata(oldMetadata).entry(metadataEntry).build();
+  final Task task=vAppTemplateApi.getMetadataApi().mergeMetadata(vAppTemplateURI,metadata);
+  assertTaskSucceeds(task);
+  Metadata newMetadata=vAppTemplateApi.getMetadataApi().getMetadata(vAppTemplateURI);
+  Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,val).build();
+  checkMetadataFor("vAppTemplate",newMetadata,expectedMetadataMap);
+}

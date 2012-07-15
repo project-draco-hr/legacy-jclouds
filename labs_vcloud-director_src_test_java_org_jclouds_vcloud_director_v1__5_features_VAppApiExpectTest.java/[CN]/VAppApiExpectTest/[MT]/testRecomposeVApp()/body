@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/recomposeVApp").xmlFilePayload("/vApp/recomposeVAppParams.xml",VCloudDirectorMediaType.RECOMPOSE_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/recomposeVAppTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RecomposeVAppParams params=RecomposeVAppParams.builder().build();
+  Task expected=recomposeVAppTask();
+  assertEquals(api.getVAppApi().recompose(vAppURI,params),expected);
+}

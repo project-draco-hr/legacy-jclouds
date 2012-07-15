@@ -1,0 +1,17 @@
+{
+  if (adminMembersSet) {
+    try {
+      Task delete=adminContext.getApi().getOrgApi().getMetadataApi().deleteMetadataEntry(toAdminUri(orgURI),"KEY");
+      taskDoneEventually(delete);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting metadata entry");
+    }
+    try {
+      adminContext.getApi().getCatalogApi().deleteCatalog(catalogRef);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting catalog'%s': %s",catalogRef);
+    }
+  }
+}

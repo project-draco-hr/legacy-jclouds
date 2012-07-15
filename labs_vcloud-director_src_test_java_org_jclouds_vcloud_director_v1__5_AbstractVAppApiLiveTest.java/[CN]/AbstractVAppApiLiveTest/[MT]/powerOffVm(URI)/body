@@ -1,0 +1,11 @@
+{
+  Vm test=vmApi.getVm(testVmURI);
+  Status status=test.getStatus();
+  if (status != Status.POWERED_OFF) {
+    Task powerOff=vmApi.powerOff(vm.getHref());
+    assertTaskSucceedsLong(powerOff);
+  }
+  test=vmApi.getVm(testVmURI);
+  assertStatus(VM,test,Status.POWERED_OFF);
+  return test;
+}

@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/undeploy").xmlFilePayload("/vApp/undeployParams.xml",VCloudDirectorMediaType.UNDEPLOY_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/undeployTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  UndeployVAppParams params=UndeployVAppParams.builder().build();
+  Task expected=undeployTask();
+  assertEquals(api.getVAppApi().undeploy(vAppURI,params),expected);
+}

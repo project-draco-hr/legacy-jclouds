@@ -1,0 +1,6 @@
+{
+  TaskApi taskApi=context.getApi().getTaskApi();
+  TaskStatusEquals predicate=new TaskStatusEquals(taskApi,ImmutableSet.of(Task.Status.ABORTED,Task.Status.CANCELED,Task.Status.ERROR,Task.Status.SUCCESS),Collections.<Task.Status>emptySet());
+  RetryablePredicate<Task> retryablePredicate=new RetryablePredicate<Task>(predicate,LONG_TASK_TIMEOUT_SECONDS * 1000L);
+  return retryablePredicate.apply(task);
+}

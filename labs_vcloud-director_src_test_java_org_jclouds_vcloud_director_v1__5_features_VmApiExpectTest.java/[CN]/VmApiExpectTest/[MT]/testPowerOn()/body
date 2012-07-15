@@ -1,0 +1,5 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/power/action/powerOn").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/powerOnTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=powerOnTask();
+  assertEquals(api.getVmApi().powerOn(vmURI),expected);
+}

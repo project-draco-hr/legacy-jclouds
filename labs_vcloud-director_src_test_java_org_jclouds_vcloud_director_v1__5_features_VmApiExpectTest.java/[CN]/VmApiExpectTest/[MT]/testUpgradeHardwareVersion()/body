@@ -1,0 +1,5 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/action/upgradeHardwareVersion").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/upgradeHardwareVersionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=upgradeHardwareVersionTask();
+  assertEquals(api.getVmApi().upgradeHardwareVersion(vmURI),expected);
+}

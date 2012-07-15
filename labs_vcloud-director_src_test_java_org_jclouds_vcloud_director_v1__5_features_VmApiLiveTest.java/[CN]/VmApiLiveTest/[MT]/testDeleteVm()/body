@@ -1,0 +1,13 @@
+{
+  VApp delete=instantiateVApp();
+  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().powerOn().build();
+  Task deployVApp=vAppApi.deploy(delete.getHref(),params);
+  assertTaskSucceedsLong(deployVApp);
+  delete=vAppApi.getVApp(delete.getHref());
+  Vm temp=Iterables.getOnlyElement(delete.getChildren().getVms());
+  temp=powerOffVm(temp.getHref());
+  Task deleteVm=vmApi.deleteVm(temp.getHref());
+  assertTrue(retryTaskSuccess.apply(deleteVm),String.format(TASK_COMPLETE_TIMELY,"deleteVm"));
+  Vm deleted=vmApi.getVm(temp.getHref());
+  assertNull(deleted,"The Vm " + temp.getName() + " should have been deleted");
+}

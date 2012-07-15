@@ -1,0 +1,7 @@
+{
+  Task deleteCatalogItemMetadataValue=catalogApi.getCatalogItemMetadataApi().deleteMetadataEntry(catalogItem.getHref(),"KEY");
+  checkTask(deleteCatalogItemMetadataValue);
+  assertTrue(retryTaskSuccess.apply(deleteCatalogItemMetadataValue),String.format(TASK_COMPLETE_TIMELY,"deleteCatalogItemMetadataValue"));
+  MetadataValue deleted=catalogApi.getMetadataApi().getMetadataValue(catalogItem.getHref(),"KEY");
+  assertNull(deleted);
+}

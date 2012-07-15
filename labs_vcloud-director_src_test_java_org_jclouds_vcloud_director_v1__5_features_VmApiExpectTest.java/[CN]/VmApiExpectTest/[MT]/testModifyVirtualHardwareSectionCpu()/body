@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("",vmId + "/virtualHardwareSection/cpu").xmlFilePayload("/vApp/modifyVirtualHardwareSectionCpu.xml",VCloudDirectorMediaType.OVF_RASD_ITEM).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyVirtualHardwareSectionCpuTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RasdItem cpu=getVirtualHardwareSectionCpu();
+  Task expected=modifyVirtualHardwareSectionCpuTask();
+  assertEquals(api.getVmApi().modifyVirtualHardwareSectionCpu(vmURI,cpu),expected);
+}

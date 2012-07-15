@@ -1,0 +1,8 @@
+{
+  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().notPowerOn().build();
+  Task deployVApp=vAppApi.deploy(vApp.getHref(),params);
+  assertTrue(retryTaskSuccessLong.apply(deployVApp),String.format(TASK_COMPLETE_TIMELY,"deployVApp"));
+  vApp=vAppApi.getVApp(vApp.getHref());
+  assertTrue(vApp.isDeployed(),String.format(OBJ_FIELD_EQ,VAPP,"deployed","TRUE",vApp.isDeployed().toString()));
+  assertVAppStatus(vAppURI,Status.POWERED_OFF);
+}

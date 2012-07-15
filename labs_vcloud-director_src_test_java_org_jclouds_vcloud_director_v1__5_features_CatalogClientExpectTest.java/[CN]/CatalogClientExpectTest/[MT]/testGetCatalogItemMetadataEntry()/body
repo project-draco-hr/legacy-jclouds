@@ -1,8 +1,0 @@
-{
-  HttpRequest catalogItemRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
-  HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/catalogItemMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE + ";version=1.5")).build();
-  VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
-  URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
-  MetadataValue expected=itemMetadataValue();
-  assertEquals(client.getCatalogClient().getMetadataClient().getMetadataValue(catalogItemURI,"KEY"),expected);
-}

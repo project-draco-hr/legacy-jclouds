@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST","/vdc/e9cd3387-ac57-4d27-a481-9bee75e0690f/action/cloneVAppTemplate").xmlFilePayload("/vdc/params/cloneVApp.xml",VCloudDirectorMediaType.CLONE_VAPP_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vdc/cloneVApp.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
+  VApp expected=cloneVApp();
+  CloneVAppParams params=CloneVAppParams.builder().build();
+  assertEquals(api.getVdcApi().cloneVApp(vdcURI,params),expected);
+}

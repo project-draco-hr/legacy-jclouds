@@ -1,0 +1,5 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/power/action/reset").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/resetTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=resetTask();
+  assertEquals(api.getVAppApi().reset(vAppURI),expected);
+}

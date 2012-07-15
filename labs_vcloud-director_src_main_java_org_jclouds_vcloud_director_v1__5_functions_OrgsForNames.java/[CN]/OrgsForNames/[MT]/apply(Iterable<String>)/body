@@ -1,8 +1,8 @@
 {
-  final Set<Reference> orgs=sclient.getOrgClient().getOrgList().getOrgs();
+  final Set<Reference> orgs=sapi.getOrgApi().getOrgList().getOrgs();
   return transformParallel(from,new Function<String,Future<? extends Org>>(){
     @Override public Future<? extends Org> apply(    String from){
-      return aclient.getOrgClient().getOrg(Iterables.find(orgs,nameEquals(from)).getHref());
+      return aapi.getOrgApi().getOrg(Iterables.find(orgs,nameEquals(from)).getHref());
     }
   }
 ,executor,null,logger,"organizations for names");

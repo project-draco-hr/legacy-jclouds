@@ -1,0 +1,5 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/power/action/reboot").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/rebootTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  Task expected=rebootTask();
+  assertEquals(api.getVAppApi().reboot(vAppURI),expected);
+}

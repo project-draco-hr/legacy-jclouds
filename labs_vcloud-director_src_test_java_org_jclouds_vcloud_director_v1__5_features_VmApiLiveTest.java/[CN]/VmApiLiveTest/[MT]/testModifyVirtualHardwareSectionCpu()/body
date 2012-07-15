@@ -1,0 +1,10 @@
+{
+  RasdItem oldItem=vmApi.getVirtualHardwareSectionCpu(vm.getHref());
+  RasdItem newItem=oldItem.toBuilder().elementName("2 virtual CPU(s)").virtualQuantity(new BigInteger("2")).build();
+  Task modifyVirtualHardwareSectionCpu=vmApi.modifyVirtualHardwareSectionCpu(vm.getHref(),newItem);
+  assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionCpu),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionCpu"));
+  RasdItem modified=vmApi.getVirtualHardwareSectionCpu(vm.getHref());
+  checkResourceAllocationSettingData(modified);
+  assertEquals(modified.getVirtualQuantity(),new BigInteger("2"),String.format(OBJ_FIELD_EQ,"ResourceAllocationSettingData","VirtualQuantity","2",modified.getVirtualQuantity().toString()));
+  assertEquals(modified,newItem);
+}

@@ -1,0 +1,9 @@
+{
+  NetworkConfigSection oldSection=vAppApi.getNetworkConfigSection(vApp.getHref());
+  NetworkConfigSection newSection=oldSection.toBuilder().build();
+  Task modifyNetworkConfigSection=vAppApi.modifyNetworkConfigSection(vApp.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(modifyNetworkConfigSection),String.format(TASK_COMPLETE_TIMELY,"modifyNetworkConfigSection"));
+  NetworkConfigSection modified=vAppApi.getNetworkConfigSection(vApp.getHref());
+  checkNetworkConfigSection(modified);
+  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"NetworkConfigSection"));
+}

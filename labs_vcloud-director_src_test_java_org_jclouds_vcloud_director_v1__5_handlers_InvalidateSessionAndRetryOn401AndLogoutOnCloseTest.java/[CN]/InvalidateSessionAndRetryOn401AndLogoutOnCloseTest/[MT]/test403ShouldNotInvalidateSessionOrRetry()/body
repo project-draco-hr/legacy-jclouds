@@ -1,10 +1,10 @@
 {
   HttpCommand command=createMock(HttpCommand.class);
-  SessionClient sessionClient=createMock(SessionClient.class);
+  SessionApi sessionApi=createMock(SessionApi.class);
   LoadingCache<Credentials,SessionWithToken> cache=createMock(LoadingCache.class);
   replay(cache,command);
   HttpResponse response=HttpResponse.builder().statusCode(403).build();
-  InvalidateSessionAndRetryOn401AndLogoutOnClose retry=new InvalidateSessionAndRetryOn401AndLogoutOnClose(cache,sessionClient);
+  InvalidateSessionAndRetryOn401AndLogoutOnClose retry=new InvalidateSessionAndRetryOn401AndLogoutOnClose(cache,sessionApi);
   assertFalse(retry.shouldRetryRequest(command,response));
   verify(cache,command);
 }

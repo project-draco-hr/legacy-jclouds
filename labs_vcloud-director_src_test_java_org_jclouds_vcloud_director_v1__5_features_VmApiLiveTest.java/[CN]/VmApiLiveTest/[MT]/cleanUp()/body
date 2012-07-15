@@ -1,0 +1,19 @@
+{
+  if (adminContext != null && mediaCreated && mediaURI != null) {
+    try {
+      Task delete=context.getApi().getMediaApi().deleteMedia(mediaURI);
+      taskDoneEventually(delete);
+    }
+ catch (    Exception e) {
+      logger.warn("Error when deleting media: %s",e.getMessage());
+    }
+  }
+  if (adminContext != null && testUserCreated && testUserURI != null) {
+    try {
+      adminContext.getApi().getUserApi().deleteUser(testUserURI);
+    }
+ catch (    Exception e) {
+      logger.warn("Error when deleting user: %s",e.getMessage());
+    }
+  }
+}

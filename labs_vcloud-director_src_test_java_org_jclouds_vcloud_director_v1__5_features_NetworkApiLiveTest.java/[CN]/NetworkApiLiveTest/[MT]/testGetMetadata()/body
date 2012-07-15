@@ -1,0 +1,13 @@
+{
+  if (adminContext != null) {
+    setupMetadata();
+  }
+  Metadata metadata=networkApi.getMetadataApi().getMetadata(networkURI);
+  assertFalse(Iterables.isEmpty(metadata.getMetadataEntries()),String.format(OBJ_FIELD_REQ_LIVE,NETWORK,"metadata.entries"));
+  checkResourceType(metadata);
+  for (  MetadataEntry entry : metadata.getMetadataEntries()) {
+    assertNotNull(entry.getKey(),String.format(OBJ_FIELD_ATTRB_REQ,networkApi,"MetadataEntry",entry.getKey(),"key"));
+    assertNotNull(entry.getValue(),String.format(OBJ_FIELD_ATTRB_REQ,networkApi,"MetadataEntry",entry.getValue(),"value"));
+    checkResourceType(entry);
+  }
+}

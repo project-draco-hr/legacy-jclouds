@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vAppId + "/networkConfigSection").xmlFilePayload("/vApp/modifyNetworkConfigSection.xml",VCloudDirectorMediaType.NETWORK_CONFIG_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/modifyNetworkConfigSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  NetworkConfigSection section=getNetworkConfigSection().toBuilder().build();
+  Task expected=modifyNetworkConfigSectionTask();
+  assertEquals(api.getVAppApi().modifyNetworkConfigSection(vAppURI,section),expected);
+}

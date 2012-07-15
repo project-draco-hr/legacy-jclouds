@@ -1,0 +1,10 @@
+{
+  String name=name("myname-");
+  String description=name("Description ");
+  VAppTemplate template=VAppTemplate.builder().name(name).description(description).build();
+  final Task task=vAppTemplateApi.modifyVAppTemplate(vAppTemplateURI,template);
+  assertTaskSucceeds(task);
+  VAppTemplate newTemplate=vAppTemplateApi.getVAppTemplate(vAppTemplateURI);
+  assertEquals(newTemplate.getName(),name);
+  assertEquals(newTemplate.getDescription(),description);
+}

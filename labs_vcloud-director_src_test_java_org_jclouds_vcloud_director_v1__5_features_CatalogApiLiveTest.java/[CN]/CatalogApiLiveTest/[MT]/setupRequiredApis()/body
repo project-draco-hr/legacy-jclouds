@@ -1,0 +1,18 @@
+{
+  if (adminCatalog != null)   return;
+  catalogApi=context.getApi().getCatalogApi();
+  Reference orgRef=Iterables.getFirst(context.getApi().getOrgApi().getOrgList().getOrgs(),null).toAdminReference(endpoint);
+  if (adminContext != null) {
+    AdminCatalog newCatalog=AdminCatalog.builder().name(name("Test Catalog ")).description("created by CatalogApiLiveTest").build();
+    AdminCatalogApi adminCatalogApi=adminContext.getApi().getCatalogApi();
+    adminCatalog=adminCatalogApi.createCatalog(orgRef.getHref(),newCatalog);
+    catalogRef=find(adminCatalog.getLinks(),and(relEquals("alternate"),typeEquals(VCloudDirectorMediaType.CATALOG)));
+    Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).build();
+    Task mergeCatalogMetadata=adminCatalogApi.getMetadataApi().mergeMetadata(adminCatalog.getHref(),newMetadata);
+    checkTask(mergeCatalogMetadata);
+    assertTrue(retryTaskSuccess.apply(mergeCatalogMetadata),String.format(TASK_COMPLETE_TIMELY,"setupRequiredApis"));
+  }
+ else {
+    catalogRef=Reference.builder().href(catalogURI).build();
+  }
+}

@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vAppId + "/action/controlAccess").xmlFilePayload("/vApp/controlAccessParams.xml",VCloudDirectorMediaType.CONTROL_ACCESS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/controlAccessParams.xml",VCloudDirectorMediaType.CONTROL_ACCESS).httpResponseBuilder().build());
+  ControlAccessParams params=controlAccessParams();
+  ControlAccessParams expected=controlAccessParams();
+  assertEquals(api.getVAppApi().modifyControlAccess(vAppURI,params),expected);
+}

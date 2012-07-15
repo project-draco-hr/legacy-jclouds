@@ -1,0 +1,14 @@
+{
+  Properties overrides=setupProperties();
+  testSession=VCloudDirectorTestSession.builder().provider(provider).identity(identity).credential(credential).endpoint(endpoint).overrides(overrides).build();
+  context=testSession.getUserContext();
+  adminContext=testSession.getAdminContext();
+  if (adminContext != null) {
+    adminSession=adminContext.getApi().getCurrentSession();
+    adminContext.utils().injector().injectMembers(this);
+  }
+  session=context.getApi().getCurrentSession();
+  context.utils().injector().injectMembers(this);
+  initTestParametersFromPropertiesOrLazyDiscover();
+  setupRequiredApis();
+}

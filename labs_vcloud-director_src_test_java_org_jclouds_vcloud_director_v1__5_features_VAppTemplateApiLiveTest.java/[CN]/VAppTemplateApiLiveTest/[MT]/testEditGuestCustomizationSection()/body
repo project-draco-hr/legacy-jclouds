@@ -1,0 +1,9 @@
+{
+  String computerName=name("n");
+  GuestCustomizationSection newSection=GuestCustomizationSection.builder().info("").computerName(computerName).build();
+  final Task task=vAppTemplateApi.modifyGuestCustomizationSection(vm.getHref(),newSection);
+  assertTaskSucceeds(task);
+  GuestCustomizationSection modified=vAppTemplateApi.getGuestCustomizationSection(vm.getHref());
+  checkGuestCustomizationSection(modified);
+  assertEquals(modified.getComputerName(),computerName);
+}

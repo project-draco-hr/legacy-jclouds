@@ -1,0 +1,9 @@
+{
+  StartupSection oldSection=vAppApi.getStartupSection(vApp.getHref());
+  StartupSection newSection=oldSection.toBuilder().build();
+  Task modifyStartupSection=vAppApi.modifyStartupSection(vApp.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(modifyStartupSection),String.format(TASK_COMPLETE_TIMELY,"modifyStartupSection"));
+  StartupSection modified=vAppApi.getStartupSection(vApp.getHref());
+  checkStartupSection(modified);
+  assertEquals(modified,newSection);
+}

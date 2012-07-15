@@ -1,0 +1,10 @@
+{
+  Set<Reference> networks=vdc.getAvailableNetworks();
+  Reference network=Iterables.getLast(networks);
+  NetworkConnectionSection oldSection=vAppTemplateApi.getNetworkConnectionSection(vm.getHref());
+  NetworkConnectionSection newSection=oldSection.toBuilder().networkConnection(NetworkConnection.builder().ipAddressAllocationMode(IpAddressAllocationMode.DHCP.toString()).network(network.getName()).build()).build();
+  Task task=vAppTemplateApi.modifyNetworkConnectionSection(vm.getHref(),newSection);
+  assertTaskSucceeds(task);
+  NetworkConnectionSection modified=vAppTemplateApi.getNetworkConnectionSection(vm.getHref());
+  checkNetworkConnectionSection(modified);
+}

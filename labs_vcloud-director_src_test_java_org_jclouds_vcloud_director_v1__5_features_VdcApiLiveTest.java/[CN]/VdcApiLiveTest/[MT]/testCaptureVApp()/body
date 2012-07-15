@@ -1,0 +1,9 @@
+{
+  String name=name("captured-");
+  CaptureVAppParams captureVappParams=CaptureVAppParams.builder().name(name).source(instantiatedVApp.getHref()).build();
+  capturedVAppTemplate=vdcApi.captureVApp(vdcURI,captureVappParams);
+  Task task=Iterables.getFirst(capturedVAppTemplate.getTasks(),null);
+  assertTaskSucceedsLong(task);
+  Checks.checkVAppTemplate(capturedVAppTemplate);
+  assertEquals(capturedVAppTemplate.getName(),name,String.format(OBJ_FIELD_EQ,"VAppTemplate","name",name,capturedVAppTemplate.getName()));
+}

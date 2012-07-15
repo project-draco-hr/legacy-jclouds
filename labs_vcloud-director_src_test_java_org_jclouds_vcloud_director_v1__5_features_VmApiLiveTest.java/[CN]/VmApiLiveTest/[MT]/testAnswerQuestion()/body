@@ -1,0 +1,8 @@
+{
+  VmPendingQuestion question=vmApi.getPendingQuestion(vm.getHref());
+  List<VmQuestionAnswerChoice> answerChoices=question.getChoices();
+  VmQuestionAnswerChoice answerChoice=Iterables.getFirst(answerChoices,null);
+  assertNotNull(answerChoice,"Question " + question + " must have at least once answer-choice");
+  VmQuestionAnswer answer=VmQuestionAnswer.builder().choiceId(answerChoice.getId()).questionId(question.getQuestionId()).build();
+  vmApi.answerQuestion(vm.getHref(),answer);
+}

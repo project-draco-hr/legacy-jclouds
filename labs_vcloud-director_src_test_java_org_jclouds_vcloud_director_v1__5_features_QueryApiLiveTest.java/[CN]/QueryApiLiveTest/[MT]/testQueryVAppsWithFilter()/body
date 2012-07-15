@@ -1,0 +1,6 @@
+{
+  QueryResultRecords queryResult=queryApi.vAppsQuery(String.format("name==%s",vApp.getName()));
+  Set<URI> hrefs=toHrefs(queryResult);
+  assertRecordTypes(queryResult,Arrays.asList(VCloudDirectorMediaType.VAPP,null),QueryResultVAppRecord.class);
+  assertEquals(hrefs,Collections.singleton(vApp.getHref()),"VApps query result should have found vApp " + vApp.getHref());
+}

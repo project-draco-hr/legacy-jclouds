@@ -1,6 +1,0 @@
-{
-  URI loginUrl=URI.create("https://vcloudbeta.bluelock.com/api/sessions");
-  String token="mIaR3/6Lna8DWImd7/JPR5rK8FcUHabt+G/UCJV5pJQ=";
-  SessionClient client=requestSendsResponse(HttpRequest.builder().method("POST").endpoint(loginUrl).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("Authorization","Basic YWRyaWFuQGpjbG91ZHMub3JnQEpDbG91ZHM6cGFzc3dvcmQ=").build()).build(),HttpResponse.builder().statusCode(200).headers(ImmutableMultimap.<String,String>builder().put("x-vcloud-authorization",token).put("Set-Cookie",String.format("vcloud-token=%s; Secure; Path=/",token)).build()).payload(payloadFromResourceWithContentType("/session.xml",VCloudDirectorMediaType.SESSION + ";version=1.5")).build());
-  assertEquals(client.loginUserInOrgWithPassword(loginUrl,user,org,"password"),SessionWithToken.builder().session(SESSION).token(token).build());
-}

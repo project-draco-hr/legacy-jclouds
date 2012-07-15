@@ -1,0 +1,15 @@
+{
+  VApp temp=instantiateVApp();
+  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().notPowerOn().build();
+  Task deployVApp=vAppApi.deploy(temp.getHref(),params);
+  assertTaskSucceedsLong(deployVApp);
+  try {
+    vAppApi.enterMaintenanceMode(temp.getHref());
+    vAppApi.exitMaintenanceMode(temp.getHref());
+    temp=vAppApi.getVApp(temp.getHref());
+    assertFalse(temp.isInMaintenanceMode(),String.format(CONDITION_FMT,"InMaintenanceMode","FALSE",temp.isInMaintenanceMode()));
+  }
+  finally {
+    cleanUpVApp(temp);
+  }
+}

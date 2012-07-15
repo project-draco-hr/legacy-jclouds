@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/media/action/insertMedia").xmlFilePayload("/vApp/insertMediaParams.xml",VCloudDirectorMediaType.MEDIA_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/insertMediaTask.xml",VCloudDirectorMediaType.VAPP).httpResponseBuilder().build());
+  MediaInsertOrEjectParams params=MediaInsertOrEjectParams.builder().build();
+  Task expected=insertMediaTask();
+  assertEquals(api.getVmApi().insertMedia(vmURI,params),expected);
+}

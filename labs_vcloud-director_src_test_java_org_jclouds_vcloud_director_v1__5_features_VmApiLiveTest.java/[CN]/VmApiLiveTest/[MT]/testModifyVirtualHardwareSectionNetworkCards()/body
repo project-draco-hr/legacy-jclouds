@@ -1,0 +1,8 @@
+{
+  RasdItemsList oldSection=vmApi.getVirtualHardwareSectionNetworkCards(vm.getHref());
+  RasdItemsList newSection=oldSection.toBuilder().build();
+  Task modifyVirtualHardwareSectionNetworkCards=vmApi.modifyVirtualHardwareSectionNetworkCards(vm.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(modifyVirtualHardwareSectionNetworkCards),String.format(TASK_COMPLETE_TIMELY,"modifyVirtualHardwareSectionNetworkCards"));
+  RasdItemsList modified=vmApi.getVirtualHardwareSectionNetworkCards(vm.getHref());
+  checkRasdItemsList(modified);
+}

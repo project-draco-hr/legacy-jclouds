@@ -1,0 +1,5 @@
+{
+  VCloudDirectorAdminApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT","/admin/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0/settings/passwordPolicy").xmlFilePayload("/org/admin/updatePasswordPolicySource.xml",VCloudDirectorMediaType.ORG_PASSWORD_POLICY_SETTINGS).acceptMedia(VCloudDirectorMediaType.ORG_PASSWORD_POLICY_SETTINGS).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/org/admin/updatePasswordPolicy.xml",VCloudDirectorMediaType.ORG_PASSWORD_POLICY_SETTINGS).httpResponseBuilder().build());
+  OrgPasswordPolicySettings expected=updateOrgPasswordPolicy();
+  assertEquals(api.getOrgApi().updatePasswordPolicy(orgRef.getHref(),expected),expected);
+}

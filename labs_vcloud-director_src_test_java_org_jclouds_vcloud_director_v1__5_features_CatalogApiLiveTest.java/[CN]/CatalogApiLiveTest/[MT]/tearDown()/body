@@ -1,0 +1,27 @@
+{
+  if (catalogItem != null) {
+    try {
+      catalogApi.deleteCatalogItem(catalogItem.getHref());
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting catalog item '%s'",catalogItem.getName());
+    }
+  }
+  if (media != null) {
+    try {
+      Task delete=context.getApi().getMediaApi().deleteMedia(media.getHref());
+      taskDoneEventually(delete);
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting media '%s'",media.getName());
+    }
+  }
+  if (adminContext != null && adminCatalog != null) {
+    try {
+      adminContext.getApi().getCatalogApi().deleteCatalog(adminCatalog.getHref());
+    }
+ catch (    Exception e) {
+      logger.warn(e,"Error when deleting catalog '%s'",adminCatalog.getName());
+    }
+  }
+}

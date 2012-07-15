@@ -1,0 +1,9 @@
+{
+  MetadataValue newMetadataValue=MetadataValue.builder().value("NEW").build();
+  Task setCatalogItemMetadataValue=catalogApi.getCatalogItemMetadataApi().setMetadata(catalogItem.getHref(),"KEY",newMetadataValue);
+  checkTask(setCatalogItemMetadataValue);
+  assertTrue(retryTaskSuccess.apply(setCatalogItemMetadataValue),String.format(TASK_COMPLETE_TIMELY,"setCatalogItemMetadataValue"));
+  MetadataValue updatedMetadataValue=catalogApi.getCatalogItemMetadataApi().getMetadataValue(catalogItem.getHref(),"KEY");
+  assertEquals(updatedMetadataValue.getValue(),newMetadataValue.getValue(),String.format(CORRECT_VALUE_OBJECT_FMT,"Value","MetadataValue",newMetadataValue.getValue(),updatedMetadataValue.getValue()));
+  checkMetadataValue(updatedMetadataValue);
+}

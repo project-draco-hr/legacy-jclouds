@@ -1,0 +1,13 @@
+{
+  assertNotNull(networkRef,String.format(OBJ_REQ_LIVE,NETWORK));
+  network=networkApi.getNetwork(networkRef.getHref());
+  if (network instanceof ExternalNetwork) {
+    Checks.checkExternalNetwork(Network.<ExternalNetwork>toSubType(network));
+  }
+ else   if (network instanceof OrgNetwork) {
+    Checks.checkOrgNetwork(Network.<OrgNetwork>toSubType(network));
+  }
+ else {
+    fail(String.format(REQUIRED_VALUE_OBJECT_FMT,".class",NETWORK,network.getClass(),"ExternalNetwork,. OrgNetwork"));
+  }
+}

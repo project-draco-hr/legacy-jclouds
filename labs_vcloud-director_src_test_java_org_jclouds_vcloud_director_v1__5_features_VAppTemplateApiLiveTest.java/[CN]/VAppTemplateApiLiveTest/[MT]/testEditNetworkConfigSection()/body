@@ -1,0 +1,8 @@
+{
+  NetworkConfigSection oldSection=vAppTemplateApi.getNetworkConfigSection(vApp.getHref());
+  NetworkConfigSection newSection=oldSection.toBuilder().build();
+  final Task task=vAppTemplateApi.modifyNetworkConfigSection(vApp.getHref(),newSection);
+  assertTaskSucceeds(task);
+  NetworkConfigSection modified=vAppTemplateApi.getNetworkConfigSection(vAppTemplateURI);
+  checkNetworkConfigSection(modified);
+}
