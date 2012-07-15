@@ -1,0 +1,18 @@
+{
+  if (apiOption.isPresent()) {
+    Server testServer=null;
+    try {
+      testServer=createServerInZone(zone);
+      Set<VirtualInterface> results=apiOption.get().listVirtualInterfacesForServer(testServer.getId());
+      for (      VirtualInterface vif : results) {
+        assertNotNull(vif.getId());
+        assertNotNull(vif.getMacAddress());
+      }
+    }
+  finally {
+      if (testServer != null) {
+        novaContext.getApi().getServerApiForZone(zone).deleteServer(testServer.getId());
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  if (apiOption.isPresent()) {
+    QuotaClassApi api=apiOption.get();
+    QuotaClass firstVersion=QuotaClassApiExpectTest.getTestQuotas().toBuilder().id("jcloudstestquotas").cores(10).instances(5).ram(4096).volumes(5).build();
+    assertTrue(api.updateQuotaClass(firstVersion.getId(),firstVersion));
+    assertEquals(api.getQuotaClass(firstVersion.getId()),firstVersion);
+    QuotaClass secondVersion=firstVersion.toBuilder().ram(8192).build();
+    assertTrue(api.updateQuotaClass(secondVersion.getId(),secondVersion));
+    assertEquals(api.getQuotaClass(secondVersion.getId()),secondVersion);
+  }
+}

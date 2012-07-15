@@ -1,16 +1,16 @@
 {
-  CloudWatchClient client=createMock(CloudWatchClient.class);
-  MetricClient metricClient=createMock(MetricClient.class);
+  CloudWatchApi api=createMock(CloudWatchApi.class);
+  MetricApi metricApi=createMock(MetricApi.class);
   Set<MetricDatum> metrics=Sets.newLinkedHashSet();
   String namespace="JCLOUDS/Test";
   for (int i=0; i < 11; i++) {
     metrics.add(MetricDatum.builder().metricName("foo").build());
   }
-  expect(client.getMetricClientForRegion(EasyMock.eq(""))).andReturn(metricClient).atLeastOnce();
+  expect(api.getMetricApiForRegion(EasyMock.eq(""))).andReturn(metricApi).atLeastOnce();
   for (  List<MetricDatum> slice : Iterables.partition(metrics,10)) {
-    metricClient.putMetricsInNamespace(slice,namespace);
+    metricApi.putMetricsInNamespace(slice,namespace);
   }
-  EasyMock.replay(client,metricClient);
-  CloudWatch.putMetricData(client,"",metrics,namespace);
-  EasyMock.verify(metricClient);
+  EasyMock.replay(api,metricApi);
+  CloudWatch.putMetricData(api,"",metrics,namespace);
+  EasyMock.verify(metricApi);
 }

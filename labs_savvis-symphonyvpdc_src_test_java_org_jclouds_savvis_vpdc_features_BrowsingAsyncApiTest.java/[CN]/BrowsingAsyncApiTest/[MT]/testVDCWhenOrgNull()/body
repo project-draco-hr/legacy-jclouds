@@ -1,0 +1,11 @@
+{
+  Method method=BrowsingAsyncApi.class.getMethod("getVDCInOrg",String.class,String.class);
+  HttpRequest request=processor.createRequest(method,(String)null,"22");
+  assertRequestLineEquals(request,"GET https://api.savvis.net/vpdc/v1.0/org/1/vdc/22 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,VDCHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

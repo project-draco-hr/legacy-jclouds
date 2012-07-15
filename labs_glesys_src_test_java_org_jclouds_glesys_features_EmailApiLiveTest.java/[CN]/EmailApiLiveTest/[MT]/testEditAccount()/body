@@ -1,0 +1,15 @@
+{
+  Set<EmailAccount> accounts=api.listAccounts(testDomain);
+  for (  EmailAccount account : accounts) {
+    if (account.getAccount().equals("test@" + testDomain)) {
+      assertTrue(account.isAntiVirus());
+    }
+  }
+  api.editAccount("test@" + testDomain,EditAccountOptions.Builder.antiVirus(false));
+  accounts=api.listAccounts(testDomain);
+  for (  EmailAccount account : accounts) {
+    if (account.getAccount().equals("test@" + testDomain)) {
+      assertFalse(account.isAntiVirus());
+    }
+  }
+}

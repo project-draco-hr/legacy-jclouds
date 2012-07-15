@@ -1,0 +1,5 @@
+{
+  NetworkApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks").method("POST").payload(payloadFromStringWithContentType("{\"network\":{\"name\":\"another-test\"}}",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"network\":{\"id\":\"12345\"}}",APPLICATION_JSON)).build()).getNetworkApiForRegion("region-a.geo-1");
+  Reference net=api.create("another-test");
+  assertEquals(net,Reference.builder().id("12345").build());
+}

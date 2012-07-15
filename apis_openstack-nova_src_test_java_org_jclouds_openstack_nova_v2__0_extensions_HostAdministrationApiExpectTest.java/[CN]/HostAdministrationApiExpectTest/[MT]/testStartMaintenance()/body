@@ -1,0 +1,5 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu");
+  HostAdministrationApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("PUT").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"maintenance_mode\":\"enable\"}",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"maintenance_mode\":\"on_maintenance\"}",MediaType.APPLICATION_JSON)).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+  assertTrue(api.startHostMaintenance("ubuntu"));
+}

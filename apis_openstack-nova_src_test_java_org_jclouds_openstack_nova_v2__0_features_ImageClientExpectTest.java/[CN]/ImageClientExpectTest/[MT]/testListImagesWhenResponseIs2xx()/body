@@ -1,7 +1,0 @@
-{
-  HttpRequest listImages=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse listImagesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list.json")).build();
-  NovaClient clientWhenImagesExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,listImages,listImagesResponse);
-  assertEquals(clientWhenImagesExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
-  assertEquals(clientWhenImagesExist.getImageClientForZone("az-1.region-a.geo-1").listImages().toString(),new ParseImageListTest().expected().toString());
-}

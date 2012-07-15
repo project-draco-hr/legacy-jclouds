@@ -1,6 +1,6 @@
 {
   ZoneAndId zoneAndId=ZoneAndId.fromSlashEncoded(id);
-  if (novaClient.getFloatingIPExtensionForZone(zoneAndId.getZone()).isPresent()) {
+  if (novaApi.getFloatingIPExtensionForZone(zoneAndId.getZone()).isPresent()) {
     try {
       removeFloatingIpFromNodeAndDeallocate.apply(zoneAndId);
     }
@@ -8,5 +8,5 @@
       logger.warn(e,"<< error removing and deallocating ip from node(%s): %s",id,e.getMessage());
     }
   }
-  novaClient.getServerClientForZone(zoneAndId.getZone()).deleteServer(zoneAndId.getId());
+  novaApi.getServerApiForZone(zoneAndId.getZone()).deleteServer(zoneAndId.getId());
 }

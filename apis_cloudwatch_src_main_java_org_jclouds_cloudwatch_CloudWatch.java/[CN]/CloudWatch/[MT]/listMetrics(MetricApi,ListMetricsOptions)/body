@@ -1,0 +1,11 @@
+{
+  return PaginatedIterables.lazyContinue(metricApi.list(options),new Function<Object,PaginatedIterable<Metric>>(){
+    @Override public PaginatedIterable<Metric> apply(    Object input){
+      return metricApi.list(options.clone().afterMarker(input));
+    }
+    @Override public String toString(){
+      return "listMetrics(" + options + ")";
+    }
+  }
+);
+}

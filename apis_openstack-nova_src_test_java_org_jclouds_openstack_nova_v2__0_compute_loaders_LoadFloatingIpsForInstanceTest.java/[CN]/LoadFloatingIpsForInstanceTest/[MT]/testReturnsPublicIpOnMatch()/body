@@ -1,13 +1,13 @@
 {
-  NovaClient client=createMock(NovaClient.class);
-  FloatingIPClient ipClient=createMock(FloatingIPClient.class);
+  NovaApi api=createMock(NovaApi.class);
+  FloatingIPApi ipApi=createMock(FloatingIPApi.class);
   FloatingIP testIp=FloatingIP.builder().id("1").ip("1.1.1.1").fixedIp("10.1.1.1").instanceId("i-blah").build();
-  expect(client.getFloatingIPExtensionForZone("Zone")).andReturn(Optional.of(ipClient)).atLeastOnce();
-  expect(ipClient.listFloatingIPs()).andReturn(ImmutableSet.<FloatingIP>of(testIp)).atLeastOnce();
-  replay(client);
-  replay(ipClient);
-  LoadFloatingIpsForInstance parser=new LoadFloatingIpsForInstance(client);
+  expect(api.getFloatingIPExtensionForZone("Zone")).andReturn(Optional.of(ipApi)).atLeastOnce();
+  expect(ipApi.listFloatingIPs()).andReturn(ImmutableSet.<FloatingIP>of(testIp)).atLeastOnce();
+  replay(api);
+  replay(ipApi);
+  LoadFloatingIpsForInstance parser=new LoadFloatingIpsForInstance(api);
   assertEquals(ImmutableSet.copyOf(parser.load(ZoneAndId.fromZoneAndId("Zone","i-blah"))),ImmutableSet.of(testIp));
-  verify(client);
-  verify(ipClient);
+  verify(api);
+  verify(ipApi);
 }

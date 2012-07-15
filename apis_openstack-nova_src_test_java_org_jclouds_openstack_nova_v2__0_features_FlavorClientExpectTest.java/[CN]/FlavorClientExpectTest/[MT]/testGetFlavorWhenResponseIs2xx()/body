@@ -1,6 +1,0 @@
-{
-  HttpRequest getFlavor=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/52415800-8b69-11e0-9b19-734f1195ff37").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse getFlavorResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_details.json")).build();
-  NovaClient clientWhenFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getFlavor,getFlavorResponse);
-  assertEquals(clientWhenFlavorsExist.getFlavorClientForZone("az-1.region-a.geo-1").getFlavor("52415800-8b69-11e0-9b19-734f1195ff37").toString(),new ParseFlavorTest().expected().toString());
-}

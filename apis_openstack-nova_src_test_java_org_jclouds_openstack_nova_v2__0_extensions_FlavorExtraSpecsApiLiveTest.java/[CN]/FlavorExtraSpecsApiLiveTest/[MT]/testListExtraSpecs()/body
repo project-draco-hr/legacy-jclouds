@@ -1,0 +1,15 @@
+{
+  if (apiOption.isPresent()) {
+    FlavorExtraSpecsApi api=apiOption.get();
+    for (    String key : testSpecs.keySet()) {
+      assertTrue(api.getAllExtraSpecs(testFlavor.getId()).containsKey(key));
+    }
+    for (    Resource flavor : flavorApi.listFlavors()) {
+      Map<String,String> specs=api.getAllExtraSpecs(flavor.getId());
+      assertNotNull(specs);
+      for (      Map.Entry<String,String> entry : specs.entrySet()) {
+        assertEquals(api.getExtraSpec(flavor.getId(),entry.getKey()),entry.getValue());
+      }
+    }
+  }
+}

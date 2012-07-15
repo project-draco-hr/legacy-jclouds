@@ -1,0 +1,12 @@
+{
+  TenantApi api=keystoneContext.getApi().getTenantApi().get();
+  Set<Tenant> result=api.list();
+  assertNotNull(result);
+  assertFalse(result.isEmpty());
+  for (  Tenant tenant : result) {
+    assertNotNull(tenant.getId());
+    Tenant aTenant=api.get(tenant.getId());
+    assertNotNull(aTenant,"get returned null for tenant: " + tenant);
+    assertEquals(aTenant,tenant);
+  }
+}

@@ -17,7 +17,7 @@
   HttpRequest getSecurityGroup=HttpRequest.builder().method("GET").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-groups/" + groupId)).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
   HttpResponse getSecurityGroupResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_details_computeservice_typical.json")).build();
   builder.put(getSecurityGroup,getSecurityGroupResponse);
-  NovaClient clientCanCreateSecurityGroup=requestsSendResponses(builder.build());
-  CreateSecurityGroupIfNeeded fn=new CreateSecurityGroupIfNeeded(clientCanCreateSecurityGroup);
+  NovaApi apiCanCreateSecurityGroup=requestsSendResponses(builder.build());
+  CreateSecurityGroupIfNeeded fn=new CreateSecurityGroupIfNeeded(apiCanCreateSecurityGroup);
   assertEquals(fn.apply(new ZoneSecurityGroupNameAndPorts("az-1.region-a.geo-1","jclouds_mygroup",ImmutableSet.of(22,8080))).toString(),new SecurityGroupInZone(new ParseComputeServiceTypicalSecurityGroupTest().expected(),"az-1.region-a.geo-1").toString());
 }

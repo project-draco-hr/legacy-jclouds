@@ -1,0 +1,5 @@
+{
+  HttpResponse listMetricsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/list_metrics.xml","text/xml")).build();
+  CloudWatchApi apiWhenMetricsExist=requestSendsResponse(listMetrics,listMetricsResponse);
+  assertEquals(apiWhenMetricsExist.getMetricApiForRegion(null).list().toString(),"{elements=[Metric{namespace=AWS/EC2, metricName=CPUUtilization, dimension=[Dimension{name=InstanceId, value=i-689fcf0f}]}], marker=null}");
+}

@@ -1,0 +1,4 @@
+{
+  EmailApi api=requestSendsResponse(HttpRequest.builder().method("POST").endpoint("https://api.glesys.com/email/createaccount/format/json").addHeader("Accept","application/json").addHeader("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").addFormParam("emailaccount","test@jclouds.org").addFormParam("password","newpass").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/email_details.json",MediaType.APPLICATION_JSON)).build()).getEmailApi();
+  assertEquals(api.createAccount("test@jclouds.org","newpass").toString(),getEmailAccountInDetails().toString());
+}

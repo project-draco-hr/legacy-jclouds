@@ -1,0 +1,13 @@
+{
+  String serverId="123";
+  HttpRequest stopServer=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/action").addHeader("Accept","*/*").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"os-stop\":null}","application/json")).build();
+  HttpResponse stopServerResponse=HttpResponse.builder().statusCode(404).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,stopServer,stopServerResponse);
+  try {
+    apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").stopServer(serverId);
+    fail("Expected an exception.");
+  }
+ catch (  Exception e) {
+    ;
+  }
+}

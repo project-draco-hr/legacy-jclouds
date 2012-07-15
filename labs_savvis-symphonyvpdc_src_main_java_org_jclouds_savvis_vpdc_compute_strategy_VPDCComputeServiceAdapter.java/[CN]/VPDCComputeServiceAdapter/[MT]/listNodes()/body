@@ -1,16 +1,16 @@
 {
   Builder<VM> builder=ImmutableSet.builder();
-  for (  Resource org1 : client.listOrgs()) {
-    Org org=client.getBrowsingClient().getOrg(org1.getId());
+  for (  Resource org1 : api.listOrgs()) {
+    Org org=api.getBrowsingApi().getOrg(org1.getId());
     for (    Resource vdc : org.getVDCs()) {
-      VDC VDC=client.getBrowsingClient().getVDCInOrg(org.getId(),vdc.getId());
+      VDC VDC=api.getBrowsingApi().getVDCInOrg(org.getId(),vdc.getId());
       for (      Resource vApp : Iterables.filter(VDC.getResourceEntities(),new Predicate<Resource>(){
         @Override public boolean apply(        Resource arg0){
           return VCloudMediaType.VAPP_XML.equals(arg0.getType());
         }
       }
 )) {
-        builder.add(client.getBrowsingClient().getVMInVDC(org.getId(),vdc.getId(),vApp.getId(),withPowerState()));
+        builder.add(api.getBrowsingApi().getVMInVDC(org.getId(),vdc.getId(),vApp.getId(),withPowerState()));
       }
     }
   }

@@ -1,0 +1,10 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts");
+  HostAdministrationApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/hosts_list.json")).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+  Host expected=Host.builder().name("ubuntu").service("compute").build();
+  Set<Host> result=api.listHosts();
+  Host host=Iterables.getOnlyElement(result);
+  assertEquals(host.getName(),"ubuntu");
+  assertEquals(host.getService(),"compute");
+  assertEquals(host,expected);
+}

@@ -1,0 +1,20 @@
+{
+  for (  Resource org1 : restContext.getApi().listOrgs()) {
+    Org org=api.getOrg(org1.getId());
+    for (    Resource vdc : org.getVDCs()) {
+      VDC VDC=api.getVDCInOrg(org.getId(),vdc.getId());
+      for (      Resource vApp : VDC.getAvailableNetworks()) {
+        Network response=api.getNetworkInVDC(org.getId(),vdc.getId(),vApp.getId());
+        assertNotNull(response);
+        assertNotNull(response.getId());
+        assertNotNull(response.getHref());
+        assertNotNull(response.getName());
+        assertEquals(response.getType(),VCloudMediaType.NETWORK_XML);
+        assertNotNull(response.getNetmask());
+        assertNotNull(response.getGateway());
+        assertNotNull(response.getInternalToExternalNATRules());
+        assertEquals(api.getNetworkInVDC(org.getId(),vdc.getId(),response.getId()).toString(),response.toString());
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  HttpResponse getMetricStatisticsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/get_metric_statistics.xml","text/xml")).build();
+  CloudWatchApi apiWhenMetricsExist=requestSendsResponse(getMetricStatistics,getMetricStatisticsResponse);
+  assertEquals(apiWhenMetricsExist.getMetricApiForRegion(null).getMetricStatistics(stats).toString(),"GetMetricStatisticsResponse{label=CPUUtilization, " + "datapoints=[Datapoint{timestamp=Thu Jan 15 16:00:00 PST 2009, customUnit=null, maximum=null, " + "minimum=null, average=0.17777777777777778, sum=null, samples=9.0, unit=Percent}, "+ "Datapoint{timestamp=Thu Jan 15 16:01:00 PST 2009, customUnit=null, maximum=null, minimum=null, "+ "average=0.1, sum=null, samples=8.0, unit=Percent}]}");
+}

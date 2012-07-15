@@ -1,0 +1,13 @@
+{
+  Set<Server> response=api.listServers();
+  assertNotNull(response);
+  assertTrue(response.size() > 0);
+  for (  Server server : response) {
+    ServerDetails newDetails=api.getServerDetails(server.getId());
+    assertEquals(newDetails.getId(),server.getId());
+    assertEquals(newDetails.getHostname(),server.getHostname());
+    assertEquals(newDetails.getPlatform(),server.getPlatform());
+    assertEquals(newDetails.getDatacenter(),server.getDatacenter());
+    checkServer(newDetails);
+  }
+}

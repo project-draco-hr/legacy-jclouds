@@ -1,0 +1,6 @@
+{
+  HttpRequest deleteKeyPair=HttpRequest.builder().method("DELETE").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs/testkeypair").addHeader("Accept","*/*").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse deleteKeyPairResponse=HttpResponse.builder().statusCode(202).build();
+  NovaApi apiWhenServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,deleteKeyPair,deleteKeyPairResponse);
+  assertTrue(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().deleteKeyPair("testkeypair"));
+}

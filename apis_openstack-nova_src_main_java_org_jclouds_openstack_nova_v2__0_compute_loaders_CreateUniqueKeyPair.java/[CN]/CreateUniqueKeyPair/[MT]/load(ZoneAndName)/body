@@ -1,13 +1,13 @@
 {
   String zoneId=checkNotNull(zoneAndName,"zoneAndName").getZone();
   String prefix=zoneAndName.getName();
-  Optional<KeyPairClient> client=novaClient.getKeyPairExtensionForZone(zoneId);
-  checkArgument(client.isPresent(),"Key pairs are required, but the extension is not available in zone %s!",zoneId);
+  Optional<KeyPairApi> api=novaApi.getKeyPairExtensionForZone(zoneId);
+  checkArgument(api.isPresent(),"Key pairs are required, but the extension is not available in zone %s!",zoneId);
   logger.debug(">> creating keyPair zone(%s) prefix(%s)",zoneId,prefix);
   KeyPair keyPair=null;
   while (keyPair == null) {
     try {
-      keyPair=client.get().createKeyPair(namingConvention.createWithoutPrefix().uniqueNameForGroup(prefix));
+      keyPair=api.get().createKeyPair(namingConvention.createWithoutPrefix().uniqueNameForGroup(prefix));
     }
  catch (    IllegalStateException e) {
     }

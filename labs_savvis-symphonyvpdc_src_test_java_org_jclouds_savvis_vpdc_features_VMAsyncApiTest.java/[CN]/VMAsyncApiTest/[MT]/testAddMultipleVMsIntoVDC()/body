@@ -1,0 +1,19 @@
+{
+  Method method=VMAsyncApi.class.getMethod("addMultipleVMsIntoVDC",String.class,String.class,Iterable.class);
+  CIMOperatingSystem os=Iterables.find(injector.getInstance(Key.get(new TypeLiteral<Set<CIMOperatingSystem>>(){
+  }
+)),new Predicate<CIMOperatingSystem>(){
+    @Override public boolean apply(    CIMOperatingSystem arg0){
+      return arg0.getOsType() == OSType.RHEL_64;
+    }
+  }
+);
+  HttpRequest request=processor.createRequest(method,"11","22",ImmutableSet.of(VMSpec.builder().operatingSystem(os).name("Test VM").networkTierName("VM Tier01").build()));
+  assertRequestLineEquals(request,"GET https://api.savvis.net/vpdc/v1.0/org/11/vdc/22/vApp/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/vm-multiple-default.xml")),"application/xml",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TasksListHandler.class);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
+  checkFilters(request);
+}

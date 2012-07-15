@@ -1,0 +1,11 @@
+{
+  Method method=ServiceManagementAsyncApi.class.getMethod("powerOnVMInVDC",String.class,String.class,String.class);
+  HttpRequest request=processor.createRequest(method,"11","22","33");
+  assertRequestLineEquals(request,"POST https://api.savvis.net/vpdc/v1.0/org/11/vdc/22/vApp/33/action/powerOn HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TaskHandler.class);
+  assertExceptionParserClassEquals(method,MapHttp4xxCodesToExceptions.class);
+  checkFilters(request);
+}

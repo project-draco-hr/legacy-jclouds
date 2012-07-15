@@ -1,10 +1,10 @@
 {
-  FloatingIPClient floatingIpClient=novaClient.getFloatingIPExtensionForZone(id.getZone()).get();
+  FloatingIPApi floatingIpApi=novaApi.getFloatingIPExtensionForZone(id.getZone()).get();
   for (  FloatingIP ip : floatingIpCache.getUnchecked(id)) {
     logger.debug(">> removing floatingIp(%s) from node(%s)",ip,id);
-    floatingIpClient.removeFloatingIPFromServer(ip.getIp(),id.getId());
+    floatingIpApi.removeFloatingIPFromServer(ip.getIp(),id.getId());
     logger.debug(">> deallocating floatingIp(%s)",ip);
-    floatingIpClient.deallocate(ip.getId());
+    floatingIpApi.deallocate(ip.getId());
   }
   floatingIpCache.invalidate(id);
   return id;

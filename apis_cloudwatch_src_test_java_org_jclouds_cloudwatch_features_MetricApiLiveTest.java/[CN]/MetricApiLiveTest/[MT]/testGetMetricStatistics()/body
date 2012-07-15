@@ -1,0 +1,29 @@
+{
+  PaginatedIterable<Metric> metricsResponse=api().list();
+  if (Iterables.size(metricsResponse) > 0) {
+    for (    Metric metric : metricsResponse) {
+      Set<Dimension> dimensions=metric.getDimensions();
+      boolean testRan=false;
+      for (      Dimension dimension : dimensions) {
+        Date endTime=new Date();
+        Calendar cal=Calendar.getInstance();
+        cal.add(Calendar.MINUTE,-60 * 24);
+        GetMetricStatistics options=GetMetricStatistics.builder().dimension(dimension).endTime(endTime).metricName(metric.getMetricName()).namespace(metric.getNamespace()).period(300).startTime(cal.getTime()).statistics(ImmutableSet.of(Statistics.MAXIMUM,Statistics.MINIMUM)).unit(Unit.PERCENT).build();
+        GetMetricStatisticsResponse response=api().getMetricStatistics(options);
+        if (response.size() > 0) {
+          checkNotNull(response.getLabel());
+          for (          Datapoint datapoint : response) {
+            checkArgument(datapoint.getAverage() == null);
+            checkNotNull(datapoint.getMaximum());
+            checkNotNull(datapoint.getMinimum());
+          }
+          testRan=true;
+          break;
+        }
+      }
+      if (testRan) {
+        break;
+      }
+    }
+  }
+}

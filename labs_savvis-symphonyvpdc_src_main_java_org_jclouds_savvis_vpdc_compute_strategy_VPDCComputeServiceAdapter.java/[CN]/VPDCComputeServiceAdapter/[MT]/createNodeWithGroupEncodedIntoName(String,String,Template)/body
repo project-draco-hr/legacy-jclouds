@@ -12,7 +12,7 @@
     if (volume.isBootDevice())     specBuilder.bootDeviceName(volume.getDevice()).bootDiskSize(volume.getSize().intValue());
  else     specBuilder.addDataDrive(volume.getDevice(),volume.getSize().intValue());
   }
-  Task task=client.getVMClient().addVMIntoVDC(billingSiteId,vpdcId,specBuilder.build());
+  Task task=api.getVMApi().addVMIntoVDC(billingSiteId,vpdcId,specBuilder.build());
   if (task.getError() != null)   throw new RuntimeException("cloud not add vm: " + task.getError().toString());
   if (taskTester.apply(task.getId())) {
     try {

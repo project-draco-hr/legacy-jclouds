@@ -1,0 +1,7 @@
+{
+  HttpRequest get=HttpRequest.builder().method("DELETE").endpoint("https://glance.jclouds.org:9292/v1.0/images/fcc451d0-f6e4-4824-ad8f-70ec12326d07").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getResponse=HttpResponse.builder().statusCode(404).build();
+  GlanceApi apiWhenExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,get,getResponse);
+  assertEquals(apiWhenExist.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertFalse(apiWhenExist.getImageApiForRegion("az-1.region-a.geo-1").delete("fcc451d0-f6e4-4824-ad8f-70ec12326d07"));
+}

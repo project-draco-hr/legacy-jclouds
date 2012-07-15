@@ -1,0 +1,19 @@
+{
+  for (  String zoneId : novaContext.getApi().getConfiguredZones()) {
+    Optional<FloatingIPApi> apiOption=novaContext.getApi().getFloatingIPExtensionForZone(zoneId);
+    if (!apiOption.isPresent())     continue;
+    FloatingIPApi api=apiOption.get();
+    ServerApi serverApi=novaContext.getApi().getServerApiForZone(zoneId);
+    Server server=createServerInZone(zoneId);
+    FloatingIP floatingIP=api.allocate();
+    assertNotNull(floatingIP);
+    try {
+      api.addFloatingIPToServer(floatingIP.getIp(),server.getId());
+      assertEventually(new ServerHasFloatingIP(serverApi,server.getId(),floatingIP.getIp()));
+    }
+  finally {
+      api.removeFloatingIPFromServer(floatingIP.getIp(),server.getId());
+      serverApi.deleteServer(server.getId());
+    }
+  }
+}

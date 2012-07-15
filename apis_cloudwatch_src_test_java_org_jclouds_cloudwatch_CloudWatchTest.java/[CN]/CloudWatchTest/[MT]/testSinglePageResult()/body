@@ -1,10 +1,10 @@
 {
-  CloudWatchClient client=createMock(CloudWatchClient.class);
-  MetricClient metricClient=createMock(MetricClient.class);
+  CloudWatchApi api=createMock(CloudWatchApi.class);
+  MetricApi metricApi=createMock(MetricApi.class);
   ListMetricsOptions options=new ListMetricsOptions();
   PaginatedIterable<Metric> response=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(Metric.class)),null);
-  expect(client.getMetricClientForRegion(null)).andReturn(metricClient).atLeastOnce();
-  expect(metricClient.list(options)).andReturn(response).once();
-  EasyMock.replay(client,metricClient);
-  Assert.assertEquals(1,Iterables.size(CloudWatch.listMetrics(client,null,options)));
+  expect(api.getMetricApiForRegion(null)).andReturn(metricApi).atLeastOnce();
+  expect(metricApi.list(options)).andReturn(response).once();
+  EasyMock.replay(api,metricApi);
+  Assert.assertEquals(1,Iterables.size(CloudWatch.listMetrics(api,null,options)));
 }

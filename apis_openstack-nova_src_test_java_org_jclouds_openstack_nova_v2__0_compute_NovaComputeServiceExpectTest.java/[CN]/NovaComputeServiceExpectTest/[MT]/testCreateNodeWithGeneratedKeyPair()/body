@@ -9,7 +9,7 @@
   HttpRequest createServerWithGeneratedKeyPair=HttpRequest.builder().method("POST").endpoint("https://nova-api.trystack.org:9774/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}","application/json")).build();
   HttpResponse createdServer=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
   requestResponseMap.put(createServerWithGeneratedKeyPair,createdServer);
-  ComputeService clientThatCreatesNode=requestsSendResponses(requestResponseMap.build(),new AbstractModule(){
+  ComputeService apiThatCreatesNode=requestsSendResponses(requestResponseMap.build(),new AbstractModule(){
     @Override protected void configure(){
       final AtomicInteger suffix=new AtomicInteger();
       bind(new TypeLiteral<Supplier<String>>(){
@@ -23,6 +23,6 @@
     }
   }
 );
-  NodeMetadata node=Iterables.getOnlyElement(clientThatCreatesNode.createNodesInGroup("test",1,blockUntilRunning(false).generateKeyPair(true)));
+  NodeMetadata node=Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test",1,blockUntilRunning(false).generateKeyPair(true)));
   assertNotNull(node.getCredentials().getPrivateKey());
 }

@@ -1,0 +1,13 @@
+{
+  if (optApi.isPresent()) {
+    HostAdministrationApi api=optApi.get();
+    Set<Host> hosts=api.listHosts();
+    assertNotNull(hosts);
+    for (    Host host : hosts) {
+      for (      HostResourceUsage usage : api.getHostResourceUsage(host.getName())) {
+        assertEquals(usage.getHost(),host.getName());
+        assertNotNull(usage);
+      }
+    }
+  }
+}

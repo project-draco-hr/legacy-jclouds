@@ -1,0 +1,7 @@
+{
+  HttpRequest listInDetail=HttpRequest.builder().method("GET").endpoint("https://glance.jclouds.org:9292/v1.0/images/detail").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse listInDetailResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/images_detail.json")).build();
+  GlanceApi apiWhenExistInDetail=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listInDetail,listInDetailResponse);
+  assertEquals(apiWhenExistInDetail.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(apiWhenExistInDetail.getImageApiForRegion("az-1.region-a.geo-1").listInDetail().toString(),new ParseImagesInDetailTest().expected().toString());
+}

@@ -1,0 +1,8 @@
+{
+  UserApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/users").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_list.json",APPLICATION_JSON)).build()).getUserApi().get();
+  Set<User> users=api.list();
+  assertNotNull(users);
+  assertFalse(users.isEmpty());
+  Set<User> expected=ImmutableSet.of(User.builder().name("nova").id("e021dfd758eb44a89f1c57c8ef3be8e2").build(),User.builder().name("glance").id("3f6c1c9ba993495ead7d2eb2192e284f").build(),User.builder().name("demo").id("667b2e1420604df8b67cd8ea57d4ee64").build(),User.builder().name("admin").id("2b9b606181634ae9ac86fd95a8bc2cde").build());
+  assertEquals(users,expected);
+}

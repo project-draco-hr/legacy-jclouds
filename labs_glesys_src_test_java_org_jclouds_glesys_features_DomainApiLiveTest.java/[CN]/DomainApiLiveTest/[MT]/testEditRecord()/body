@@ -1,0 +1,25 @@
+{
+  int before=api.listRecords(testDomain).size();
+  api.addRecord(testDomain,"testeditbefore","A","127.0.0.1");
+  assertTrue(recordCounter.apply(before + 1));
+  String recordId=null;
+  for (  DomainRecord record : api.listRecords(testDomain)) {
+    if ("testeditbefore".equals(record.getHost())) {
+      assertEquals(record.getType(),"A");
+      assertEquals(record.getData(),"127.0.0.1");
+      recordId=record.getId();
+    }
+  }
+  assertNotNull(recordId);
+  api.editRecord(recordId,EditRecordOptions.Builder.host("testeditafter"));
+  boolean found=false;
+  for (  DomainRecord record : api.listRecords(testDomain)) {
+    if (recordId.equals(record.getId())) {
+      assertEquals(record.getHost(),"testeditafter");
+      assertEquals(record.getType(),"A");
+      assertEquals(record.getData(),"127.0.0.1");
+      found=true;
+    }
+  }
+  assertTrue(found);
+}

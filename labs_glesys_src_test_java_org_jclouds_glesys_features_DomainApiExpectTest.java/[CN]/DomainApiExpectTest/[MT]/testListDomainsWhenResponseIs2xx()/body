@@ -1,0 +1,7 @@
+{
+  DomainApi api=requestSendsResponse(HttpRequest.builder().method("POST").endpoint("https://api.glesys.com/domain/list/format/json").addHeader("Accept","application/json").addHeader("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/domain_list.json")).build()).getDomainApi();
+  Domain expected=Domain.builder().domainName("testglesys.jclouds.org").createTime(dateService.iso8601SecondsDateParse("2012-01-31T12:19:03+01:00")).build();
+  Domain actual=Iterables.getOnlyElement(api.listDomains());
+  assertEquals(expected.getDomainName(),actual.getDomainName());
+  assertEquals(expected.getCreateTime(),actual.getCreateTime());
+}

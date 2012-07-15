@@ -1,0 +1,6 @@
+{
+  HttpRequest listContainers=HttpRequest.builder().method("GET").endpoint("https://objects.jclouds.org/v1.0/40806637803162/?format=json").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse listContainersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/container_list.json")).build();
+  SwiftApi apiWhenContainersExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listContainers,listContainersResponse);
+  assertEquals(apiWhenContainersExist.getAccountApiForRegion("region-a.geo-1").listContainers().toString(),new ParseContainerListTest().expected().toString());
+}

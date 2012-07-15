@@ -1,0 +1,10 @@
+{
+  Method method=VMAsyncApi.class.getMethod("captureVApp",String.class,String.class,URI.class);
+  HttpRequest request=processor.createRequest(method,"100000.0","2736",URI.create("https://api.savvis.net/vpdc/v1.0/org/100000.0/vdc/2736/vApp/1001"));
+  assertRequestLineEquals(request,"POST https://api.savvis.net/vpdc/v1.0/org/100000.0/vdc/2736/action/captureVApp HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/capture-vapp-template-default.xml")),"application/xml",false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TaskHandler.class);
+  checkFilters(request);
+}

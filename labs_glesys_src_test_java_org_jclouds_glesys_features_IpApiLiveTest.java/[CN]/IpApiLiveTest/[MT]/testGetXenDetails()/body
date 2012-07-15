@@ -1,0 +1,15 @@
+{
+  Set<String> xenVzIps=api.listFree(4,"Falkenberg","Xen");
+  assertFalse(xenVzIps.isEmpty());
+  String xenIp=xenVzIps.iterator().next();
+  IpDetails ipDetails=api.getIp(xenIp);
+  assertEquals(ipDetails.getDatacenter(),"Falkenberg");
+  assertEquals(ipDetails.getPlatform(),"Xen");
+  assertEquals(ipDetails.getVersion(),4);
+  assertEquals(ipDetails.getAddress(),xenIp);
+  assertFalse(ipDetails.getPtr().isEmpty());
+  assertNotNull(ipDetails.getBroadcast());
+  assertNotNull(ipDetails.getGateway());
+  assertNotNull(ipDetails.getNetmask());
+  assertFalse(ipDetails.getNameServers().isEmpty());
+}

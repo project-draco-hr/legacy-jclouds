@@ -1,0 +1,15 @@
+{
+  if (apiOption.isPresent()) {
+    FlavorExtraSpecsApi api=apiOption.get();
+    testFlavor=Iterables.getLast(flavorApi.listFlavors());
+    Map<String,String> before=api.getAllExtraSpecs(testFlavor.getId());
+    assertNotNull(before);
+    Map<String,String> specs=Maps.newHashMap(before);
+    specs.putAll(testSpecs);
+    assertTrue(api.setAllExtraSpecs(testFlavor.getId(),specs));
+    assertEquals(api.getAllExtraSpecs(testFlavor.getId()),specs);
+    for (    Map.Entry<String,String> entry : specs.entrySet()) {
+      assertEquals(api.getExtraSpec(testFlavor.getId(),entry.getKey()),entry.getValue());
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  ComputerView view=getApi().getView();
+  assertNotNull(view);
+  assertNotNull(view.getDisplayName());
+  for (  Computer computerFromView : view.getComputers()) {
+    assertNotNull(computerFromView.getDisplayName());
+    if (!"master".equals(computerFromView.getDisplayName())) {
+      Computer computerFromGetRequest=getApi().get(computerFromView.getDisplayName());
+      assertEquals(computerFromGetRequest,computerFromView);
+    }
+  }
+}

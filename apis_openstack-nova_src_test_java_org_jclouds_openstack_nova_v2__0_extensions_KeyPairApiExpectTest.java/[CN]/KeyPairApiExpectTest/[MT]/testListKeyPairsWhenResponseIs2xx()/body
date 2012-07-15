@@ -1,0 +1,7 @@
+{
+  HttpRequest listKeyPairs=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse listKeyPairsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/keypair_list.json")).build();
+  NovaApi apiWhenServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listKeyPairs,listKeyPairsResponse);
+  assertEquals(apiWhenServersExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().listKeyPairs().toString(),new ParseKeyPairListTest().expected().toString());
+}

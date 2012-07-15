@@ -1,7 +1,0 @@
-{
-  HttpRequest listServers=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse listServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_list.json")).build();
-  NovaClient clientWhenServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,listServers,listServersResponse);
-  assertEquals(clientWhenServersExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
-  assertEquals(clientWhenServersExist.getServerClientForZone("az-1.region-a.geo-1").listServers().toString(),new ParseServerListTest().expected().toString());
-}

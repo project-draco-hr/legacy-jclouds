@@ -1,0 +1,24 @@
+{
+  for (  String zoneId : novaContext.getApi().getConfiguredZones()) {
+    Optional<FloatingIPApi> apiOption=novaContext.getApi().getFloatingIPExtensionForZone(zoneId);
+    if (!apiOption.isPresent())     continue;
+    FloatingIPApi api=apiOption.get();
+    FloatingIP floatingIP=api.allocate();
+    assertNotNull(floatingIP);
+    Set<FloatingIP> response=api.listFloatingIPs();
+    boolean ipInSet=false;
+    for (    FloatingIP ip : response) {
+      if (ip.getId().equals(floatingIP.getId()))       ipInSet=true;
+    }
+    assertTrue(ipInSet);
+    api.deallocate(floatingIP.getId());
+    response=api.listFloatingIPs();
+    ipInSet=false;
+    for (    FloatingIP ip : response) {
+      if (ip.getId().equals(floatingIP.getId())) {
+        ipInSet=true;
+      }
+    }
+    assertFalse(ipInSet);
+  }
+}

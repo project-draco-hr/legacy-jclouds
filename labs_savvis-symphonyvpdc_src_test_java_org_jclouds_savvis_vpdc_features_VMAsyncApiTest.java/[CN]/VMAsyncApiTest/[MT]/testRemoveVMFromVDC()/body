@@ -1,0 +1,11 @@
+{
+  Method method=VMAsyncApi.class.getMethod("removeVMFromVDC",String.class,String.class,String.class);
+  HttpRequest request=processor.createRequest(method,"11","22","33");
+  assertRequestLineEquals(request,"DELETE https://api.savvis.net/vpdc/v1.0/org/11/vdc/22/vApp/33 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseSax.class);
+  assertSaxResponseParserClassEquals(method,TaskHandler.class);
+  assertExceptionParserClassEquals(method,ReturnNullOnNotFoundOr404.class);
+  checkFilters(request);
+}

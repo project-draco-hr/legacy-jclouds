@@ -1,0 +1,5 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-quota-sets/demo");
+  QuotaApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().endpoint(endpoint).method("PUT").addHeader("X-Auth-Token",authToken).payload(payloadFromResourceWithContentType("/quotas.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).build()).getQuotaExtensionForZone("az-1.region-a.geo-1").get();
+  assertTrue(api.updateQuotasForTenant("demo",getTestQuotas()));
+}

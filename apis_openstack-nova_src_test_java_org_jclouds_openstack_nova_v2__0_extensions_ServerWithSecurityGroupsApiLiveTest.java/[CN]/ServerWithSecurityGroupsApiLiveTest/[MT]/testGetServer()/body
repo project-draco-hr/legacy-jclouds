@@ -1,0 +1,22 @@
+{
+  if (apiOption.isPresent()) {
+    for (    Resource server : serverApi.listServers()) {
+      ServerWithSecurityGroups serverWithGroups=apiOption.get().getServer(server.getId());
+      assertEquals(serverWithGroups.getId(),server.getId());
+      assertEquals(serverWithGroups.getName(),server.getName());
+      assertNotNull(serverWithGroups.getSecurityGroupNames());
+    }
+    Server testServer=null;
+    try {
+      testServer=createServerInZone(zone);
+      ServerWithSecurityGroups results=apiOption.get().getServer(testServer.getId());
+      assertEquals(results.getId(),testServer.getId());
+      assertEquals(results.getSecurityGroupNames(),ImmutableSet.of("default"));
+    }
+  finally {
+      if (testServer != null) {
+        serverApi.deleteServer(testServer.getId());
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  HttpRequest getExtension=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/extensions/RS-PIE").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getExtensionResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/extension_details.json")).build();
+  NovaApi apiWhenExtensionsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getExtension,getExtensionResponse);
+  assertEquals(apiWhenExtensionsExist.getExtensionApiForZone("az-1.region-a.geo-1").getExtensionByAlias("RS-PIE").toString(),new ParseExtensionTest().expected().toString());
+}

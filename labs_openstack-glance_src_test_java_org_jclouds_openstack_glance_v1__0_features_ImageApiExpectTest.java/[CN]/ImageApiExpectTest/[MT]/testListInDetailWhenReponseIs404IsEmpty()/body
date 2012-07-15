@@ -1,0 +1,6 @@
+{
+  HttpRequest listInDetail=HttpRequest.builder().method("GET").endpoint("https://glance.jclouds.org:9292/v1.0/images/detail").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse listInDetailResponse=HttpResponse.builder().statusCode(404).build();
+  GlanceApi apiWhenNoExistInDetail=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listInDetail,listInDetailResponse);
+  assertTrue(apiWhenNoExistInDetail.getImageApiForRegion("az-1.region-a.geo-1").listInDetail().isEmpty());
+}

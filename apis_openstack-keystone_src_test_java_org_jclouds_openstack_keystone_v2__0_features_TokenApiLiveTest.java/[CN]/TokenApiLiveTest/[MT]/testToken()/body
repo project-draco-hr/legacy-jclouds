@@ -1,0 +1,12 @@
+{
+  TokenApi api=keystoneContext.getApi().getTokenApi().get();
+  assertTrue(api.isValid(token));
+  Token result=api.get(token);
+  assertNotNull(result);
+  assertEquals(result.getId(),token);
+  assertNotNull(result.getTenant());
+  User user=api.getUserOfToken(token);
+  assertNotNull(user);
+  assertNotNull(user.getId());
+  assertNotNull(user.getName());
+}

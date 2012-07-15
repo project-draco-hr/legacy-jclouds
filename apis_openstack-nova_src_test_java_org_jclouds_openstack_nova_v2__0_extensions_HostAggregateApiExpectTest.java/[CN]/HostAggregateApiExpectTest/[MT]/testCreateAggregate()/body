@@ -1,0 +1,5 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-aggregates");
+  HostAggregateApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"aggregate\":{\"name\":\"ubuntu1\",\"availability_zone\":\"nova\"}}",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/host_aggregate_details.json")).build()).getHostAggregateExtensionForZone("az-1.region-a.geo-1").get();
+  assertEquals(api.createAggregate("ubuntu1","nova"),exampleHostAggregate());
+}

@@ -2,7 +2,7 @@
   Set<? extends Location> locationsSet=locations.get();
   ImmutableSet.Builder<Hardware> hardwareToReturn=ImmutableSet.builder();
   Set<OSTemplate> images=listImages();
-  for (  Entry<String,AllowedArgumentsForCreateServer> platformToArgs : client.getServerClient().getAllowedArgumentsForCreateServerByPlatform().entrySet())   for (  String datacenter : platformToArgs.getValue().getDataCenters())   for (  int diskSizeGB : platformToArgs.getValue().getDiskSizesInGB())   for (  int cpuCores : platformToArgs.getValue().getCpuCoreOptions())   for (  int memorySizeMB : platformToArgs.getValue().getMemorySizesInMB()) {
+  for (  Entry<String,AllowedArgumentsForCreateServer> platformToArgs : api.getServerApi().getAllowedArgumentsForCreateServerByPlatform().entrySet())   for (  String datacenter : platformToArgs.getValue().getDataCenters())   for (  int diskSizeGB : platformToArgs.getValue().getDiskSizesInGB())   for (  int cpuCores : platformToArgs.getValue().getCpuCoreOptions())   for (  int memorySizeMB : platformToArgs.getValue().getMemorySizesInMB()) {
     ImmutableSet.Builder<String> templatesSupportedBuilder=ImmutableSet.builder();
     for (    OSTemplate template : images) {
       if (template.getPlatform().equals(platformToArgs.getKey()) && diskSizeGB >= template.getMinDiskSize() && memorySizeMB >= template.getMinMemSize())       templatesSupportedBuilder.add(template.getName());

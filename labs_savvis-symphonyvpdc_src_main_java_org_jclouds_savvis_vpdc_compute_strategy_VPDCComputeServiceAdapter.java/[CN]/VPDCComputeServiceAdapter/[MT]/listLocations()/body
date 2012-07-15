@@ -1,12 +1,12 @@
 {
   Builder<Network> builder=ImmutableSet.builder();
-  for (  Resource org1 : client.listOrgs()) {
-    Org org=client.getBrowsingClient().getOrg(org1.getId());
+  for (  Resource org1 : api.listOrgs()) {
+    Org org=api.getBrowsingApi().getOrg(org1.getId());
     for (    Resource vdc : org.getVDCs()) {
-      VDC VDC=client.getBrowsingClient().getVDCInOrg(org.getId(),vdc.getId());
+      VDC VDC=api.getBrowsingApi().getVDCInOrg(org.getId(),vdc.getId());
       if (email != null && VDC.getDescription().indexOf(email) != -1)       continue;
       for (      Resource network : VDC.getAvailableNetworks()) {
-        builder.add(client.getBrowsingClient().getNetworkInVDC(org.getId(),vdc.getId(),network.getId()));
+        builder.add(api.getBrowsingApi().getNetworkInVDC(org.getId(),vdc.getId(),network.getId()));
       }
     }
   }
