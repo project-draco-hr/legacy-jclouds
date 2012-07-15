@@ -1,0 +1,20 @@
+{
+  super.setupContext();
+  key=SshKeys.generate();
+  fingerprint=SshKeys.fingerprintPublicKey(key.get("public"));
+  cloudApiContext.getApi().getKeyApi().create(Key.builder().name(fingerprint).key(key.get("public")).build());
+  api=cloudApiContext.getApi().getMachineApiForDatacenter(Iterables.get(cloudApiContext.getApi().getConfiguredDatacenters(),0));
+  socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
+  machineRunning=new RetryablePredicate<Machine>(new Predicate<Machine>(){
+    @Override public boolean apply(    Machine input){
+      return api.get(input.getId()).getState() == Machine.State.RUNNING;
+    }
+  }
+,600,5,5,TimeUnit.SECONDS);
+  machineRunning=new RetryablePredicate<Machine>(new Predicate<Machine>(){
+    @Override public boolean apply(    Machine input){
+      return api.get(input.getId()).getState() == Machine.State.RUNNING;
+    }
+  }
+,600,5,5,TimeUnit.SECONDS);
+}

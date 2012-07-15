@@ -1,6 +1,6 @@
 {
-  JoyentCloudClient cloudApiClient=createMock(JoyentCloudClient.class);
-  KeyClient keyClient=createMock(KeyClient.class);
+  JoyentCloudApi cloudApiApi=createMock(JoyentCloudApi.class);
+  KeyApi keyApi=createMock(KeyApi.class);
   Crypto crypto=createMock(Crypto.class);
   KeyPairGenerator rsaKeyPairGenerator=createMock(KeyPairGenerator.class);
   SecureRandom secureRandom=createMock(SecureRandom.class);
@@ -8,10 +8,10 @@
   expect(crypto.rsaKeyPairGenerator()).andReturn(rsaKeyPairGenerator);
   rsaKeyPairGenerator.initialize(2048,secureRandom);
   expect(rsaKeyPairGenerator.genKeyPair()).andReturn(keyPair);
-  expect(cloudApiClient.getKeyClient()).andReturn(keyClient);
-  expect(keyClient.create(key)).andReturn(key);
-  replay(cloudApiClient,keyClient,crypto,rsaKeyPairGenerator,secureRandom);
-  CreateUniqueKey parser=new CreateUniqueKey(cloudApiClient,namingConvention,crypto,Providers.of(secureRandom));
+  expect(cloudApiApi.getKeyApi()).andReturn(keyApi);
+  expect(keyApi.create(key)).andReturn(key);
+  replay(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
+  CreateUniqueKey parser=new CreateUniqueKey(cloudApiApi,namingConvention,crypto,Providers.of(secureRandom));
   assertEquals(parser.load(DatacenterAndName.fromDatacenterAndName("datacenter","group")),KeyAndPrivateKey.fromKeyAndPrivateKey(key,PRIVATE_KEY));
-  verify(cloudApiClient,keyClient,crypto,rsaKeyPairGenerator,secureRandom);
+  verify(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
 }

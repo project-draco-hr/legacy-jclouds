@@ -1,10 +1,10 @@
 {
-  KeyClient keyClient=novaClient.getKeyClient();
+  KeyApi keyApi=novaApi.getKeyApi();
   for (  String group : groups) {
-    for (    Key key : Iterables.filter(keyClient.list(),KeyPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
+    for (    Key key : Iterables.filter(keyApi.list(),KeyPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
       DatacenterAndName datacenterAndName=DatacenterAndName.fromDatacenterAndName(datacenterId,key.getName());
       logger.debug(">> deleting key(%s)",datacenterAndName);
-      keyClient.delete(key.getName());
+      keyApi.delete(key.getName());
       keyCache.invalidate(datacenterAndName);
       logger.debug("<< deleted key(%s)",datacenterAndName);
     }

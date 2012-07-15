@@ -1,0 +1,9 @@
+{
+  Machine newMachine=api.createWithDataset(datasetURN,CreateMachineOptions.Builder.metadata(ImmutableMap.of("foo","bar")));
+  machine=newMachine;
+  name=newMachine.getName();
+  assertEquals(newMachine.getMetadata().get("foo").toString(),"bar");
+  assertTrue(newMachine.getMetadata().get(Metadata.ROOT_AUTHORIZED_KEYS.key()).indexOf(key.get("public")) != -1,newMachine + "; key: " + key.get("public"));
+  assertTrue(machineRunning.apply(newMachine),newMachine.toString());
+  machine=api.get(newMachine.getId());
+}
