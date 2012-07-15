@@ -2,6 +2,6 @@
   Builder<String,String> builder=ImmutableMap.builder();
   String date=timeStampProvider.get();
   builder.put(HttpHeaders.DATE,date);
-  request=ModifyRequest.replaceHeaders(request,Multimaps.forMap(builder.build()));
+  request=request.toBuilder().replaceHeaders(Multimaps.forMap(builder.build())).build();
   return request;
 }

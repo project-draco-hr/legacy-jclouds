@@ -1,5 +1,5 @@
 {
-  HttpResponse response=new HttpResponse(200,"ok",Payloads.newPayload(getClass().getResourceAsStream("/list_basic.xml")));
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("ok").payload(Payloads.newPayload(getClass().getResourceAsStream("/list_basic.xml"))).build();
   BoundedSet<DirectoryEntry> result=createFn().apply(response);
   assertEquals(ImmutableSet.copyOf(result),values());
   assertEquals(result.getToken(),null);

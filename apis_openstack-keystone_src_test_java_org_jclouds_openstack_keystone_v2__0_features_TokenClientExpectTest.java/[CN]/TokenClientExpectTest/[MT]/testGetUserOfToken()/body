@@ -1,5 +1,5 @@
 {
-  TokenClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/tokens/sometokenorother").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/token_details.json",APPLICATION_JSON)).build()).getTokenClient().get();
+  TokenClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/tokens/sometokenorother").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/token_details.json",APPLICATION_JSON)).build()).getTokenClient().get();
   User user=client.getUserOfToken("sometokenorother");
   assertNotNull(user);
   assertEquals(user,User.builder().id("2b9b606181634ae9ac86fd95a8bc2cde").name("admin").roles(ImmutableSet.of(Role.builder().id("79cada5c02814b57a52e0eed4dd388cb").name("admin").build())).build());

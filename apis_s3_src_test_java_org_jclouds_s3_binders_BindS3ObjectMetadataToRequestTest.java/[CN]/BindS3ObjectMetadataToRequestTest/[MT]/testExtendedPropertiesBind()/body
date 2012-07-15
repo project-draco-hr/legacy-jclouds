@@ -6,7 +6,7 @@
   object.getMetadata().setKey("foo");
   object.getMetadata().setCacheControl("no-cache");
   object.getMetadata().setUserMetadata(ImmutableMap.of("foo","bar"));
-  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
   BindS3ObjectMetadataToRequest binder=injector.getInstance(BindS3ObjectMetadataToRequest.class);
   assertEquals(binder.bindToRequest(request,object),HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).headers(ImmutableMultimap.of("Cache-Control","no-cache","x-amz-meta-foo","bar")).build());
 }

@@ -1,7 +1,7 @@
 {
   ParseAuthenticationResponseFromHeaders parser=i.getInstance(ParseAuthenticationResponseFromHeaders.class);
   parser=parser.setHostToReplace("fooman");
-  HttpResponse response=new HttpResponse(204,"No Content",null,ImmutableMultimap.<String,String>of("X-Auth-Token","token","X-Storage-Token","token","X-Storage-Url","http://127.0.0.1:8080/v1/token"));
+  HttpResponse response=HttpResponse.builder().statusCode(204).message("No Content").addHeader("X-Auth-Token","token").addHeader("X-Storage-Token","token").addHeader("X-Storage-Url","http://127.0.0.1:8080/v1/token").build();
   AuthenticationResponse md=parser.apply(response);
   assertEquals(md,new AuthenticationResponse("token",ImmutableMap.<String,URI>of("X-Storage-Url",URI.create("http://fooman:8080/v1/token"))));
 }

@@ -1,5 +1,5 @@
 {
-  ServiceClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/tenants").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/tenant_list.json",APPLICATION_JSON)).build()).getServiceClient();
+  ServiceClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/tenants").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/tenant_list.json",APPLICATION_JSON)).build()).getServiceClient();
   Set<Tenant> tenants=client.listTenants();
   assertNotNull(tenants);
   assertFalse(tenants.isEmpty());

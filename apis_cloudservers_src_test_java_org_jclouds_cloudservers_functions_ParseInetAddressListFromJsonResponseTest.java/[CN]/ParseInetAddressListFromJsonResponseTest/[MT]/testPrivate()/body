@@ -3,6 +3,6 @@
   UnwrapOnlyJsonValue<List<String>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<String>>>(){
   }
 ));
-  List<String> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  List<String> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response,ImmutableList.of("10.176.42.16"));
 }

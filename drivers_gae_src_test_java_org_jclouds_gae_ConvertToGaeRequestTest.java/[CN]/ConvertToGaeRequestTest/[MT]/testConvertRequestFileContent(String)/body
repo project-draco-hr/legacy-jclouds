@@ -1,8 +1,7 @@
 {
-  HttpRequest request=new HttpRequest(HttpMethod.GET,endPoint);
   File file=new File(basedir,"target/testfiles/hoot");
   file.getParentFile().mkdirs();
   Files.write("hoot!".getBytes(Charsets.UTF_8),file);
-  request.setPayload(file);
+  HttpRequest request=HttpRequest.builder().method(HttpMethod.GET).endpoint(endPoint).payload(file).build();
   testHoot(request);
 }

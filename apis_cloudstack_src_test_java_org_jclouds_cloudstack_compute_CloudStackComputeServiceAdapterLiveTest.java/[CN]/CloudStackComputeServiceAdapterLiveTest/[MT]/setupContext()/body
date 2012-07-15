@@ -32,7 +32,7 @@
 ).to(ZoneIdToZoneSupplier.class);
       install(new FactoryModuleBuilder().build(StaticNATVirtualMachineInNetwork.Factory.class));
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected Predicate<String> jobComplete(    JobComplete jobComplete){
+    @Provides @Singleton protected Predicate<String> jobComplete(    JobComplete jobComplete){
       return new RetryablePredicate<String>(jobComplete,1200,1,5,TimeUnit.SECONDS);
     }
     @Provides @Singleton protected LoadingCache<String,Set<IPForwardingRule>> getIPForwardingRulesByVirtualMachine(    GetIPForwardingRulesByVirtualMachine getIPForwardingRules){

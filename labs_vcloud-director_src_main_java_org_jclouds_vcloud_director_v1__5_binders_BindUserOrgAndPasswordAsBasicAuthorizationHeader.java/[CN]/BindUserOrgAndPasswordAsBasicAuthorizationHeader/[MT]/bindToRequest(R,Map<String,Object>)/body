@@ -1,7 +1,7 @@
 {
   try {
     String header="Basic " + CryptoStreams.base64(String.format("%s@%s:%s",checkNotNull(postParams.get("user"),"user"),checkNotNull(postParams.get("org"),"org"),checkNotNull(postParams.get("password"),"password")).getBytes("UTF-8"));
-    return ModifyRequest.replaceHeader(request,HttpHeaders.AUTHORIZATION,header);
+    return (R)request.toBuilder().replaceHeader(HttpHeaders.AUTHORIZATION,header).build();
   }
  catch (  UnsupportedEncodingException e) {
     throw Throwables.propagate(e);

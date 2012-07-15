@@ -1,4 +1,4 @@
 {
-  TokenClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/tokens/sometokenorother").method("HEAD").headers(ImmutableMultimap.of("X-Auth-Token",authToken)).build(),standardResponseBuilder(404).build()).getTokenClient().get();
+  TokenClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,HttpRequest.builder().method("HEAD").endpoint(endpoint + "/v2.0/tokens/sometokenorother").addHeader("X-Auth-Token",authToken).build(),HttpResponse.builder().statusCode(404).build()).getTokenClient().get();
   assertFalse(client.isValid("sometokenorother"));
 }

@@ -1,6 +1,6 @@
 {
   String json="{\"tomcat6\":{\"ssl_port\":8433}}";
   Map<String,JsonBall> map=ImmutableMap.<String,JsonBall>of("tomcat6",new JsonBall("{\"ssl_port\":8433}"));
-  assertEquals(handler.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(json))),map);
+  assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json).build()),map);
   assertEquals(mapper.toJson(map),json);
 }

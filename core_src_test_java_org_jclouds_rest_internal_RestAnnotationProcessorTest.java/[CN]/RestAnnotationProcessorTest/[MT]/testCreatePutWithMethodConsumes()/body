@@ -6,5 +6,5 @@
   assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);
   assertResponseParserClassEquals(method,request,ParseJson.class);
   Function<HttpResponse,View> parser=(Function<HttpResponse,View>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
-  assertEquals(parser.apply(new HttpResponse(200,"ok",newStringPayload("{ foo:\"bar\"}"))).foo,"bar");
+  assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()).foo,"bar");
 }

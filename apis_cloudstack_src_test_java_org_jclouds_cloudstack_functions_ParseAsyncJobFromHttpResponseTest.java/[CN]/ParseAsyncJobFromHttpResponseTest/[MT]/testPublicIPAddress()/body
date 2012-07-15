@@ -2,6 +2,6 @@
   InputStream is=getClass().getResourceAsStream("/queryasyncjobresultresponse-ipaddress.json");
   AsyncJob<PublicIPAddress> expects=AsyncJob.<PublicIPAddress>builder().id("860").status(Status.SUCCEEDED).progress(0).resultType("object").resultCode(ResultCode.SUCCESS).result(PublicIPAddress.builder().id("6").IPAddress("72.52.126.35").allocated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-02-23T20:15:01-0800")).zoneId("1").zoneName("San Jose 1").isSourceNAT(false).account("adrian").domainId("1").domain("ROOT").usesVirtualNetwork(true).isStaticNAT(false).associatedNetworkId("204").networkId("200").state(PublicIPAddress.State.ALLOCATING).build()).build();
   ParseAsyncJobFromHttpResponse parser=i.getInstance(ParseAsyncJobFromHttpResponse.class);
-  @SuppressWarnings("unchecked") AsyncJob<PublicIPAddress> response=(AsyncJob<PublicIPAddress>)parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  @SuppressWarnings("unchecked") AsyncJob<PublicIPAddress> response=(AsyncJob<PublicIPAddress>)parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response,expects);
 }

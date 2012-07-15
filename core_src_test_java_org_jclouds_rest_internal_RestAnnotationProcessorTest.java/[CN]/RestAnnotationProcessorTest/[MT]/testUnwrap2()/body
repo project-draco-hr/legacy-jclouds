@@ -3,5 +3,5 @@
   HttpRequest request=factory(TestPut.class).createRequest(method);
   assertResponseParserClassEquals(method,request,UnwrapOnlyJsonValue.class);
   Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
-  assertEquals(parser.apply(new HttpResponse(200,"ok",newStringPayload("{ foo:\"bar\"}"))),"bar");
+  assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()),"bar");
 }

@@ -1,6 +1,6 @@
 {
-  HttpRequest deleteImage=HttpRequest.builder().method("DELETE").endpoint(URI.create("https://lon.servers.api.rackspacecloud.com/v1.0/10001786/images/11?now=1257695648897")).headers(ImmutableMultimap.<String,String>builder().put("X-Auth-Token",authToken).build()).build();
-  HttpResponse unauthResponse=HttpResponse.builder().statusCode(401).message("HTTP/1.1 401 Unauthorized").payload(Payloads.newStringPayload("[{\"unauthorized\":{\"message\":\"Fatal unauthorized.\",\"code\":401}}]")).build();
+  HttpRequest deleteImage=HttpRequest.builder().method("DELETE").endpoint("https://lon.servers.api.rackspacecloud.com/v1.0/10001786/images/11?now=1257695648897").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse unauthResponse=HttpResponse.builder().statusCode(401).message("HTTP/1.1 401 Unauthorized").payload("[{\"unauthorized\":{\"message\":\"Fatal unauthorized.\",\"code\":401}}]").build();
   CloudServersClient client=orderedRequestsSendResponses(initialAuth,responseWithAuth,deleteImage,unauthResponse);
   client.deleteImage(11);
 }

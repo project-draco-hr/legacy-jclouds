@@ -1,12 +1,7 @@
 {
   String[] input={"hello","world"};
-  HttpRequest request=new HttpRequest("GET",URI.create("http://momma/"));
-  BindNamesToQueryParams binder=new BindNamesToQueryParams(new Provider<UriBuilder>(){
-    @Override public UriBuilder get(){
-      return new UriBuilderImpl();
-    }
-  }
-);
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://momma/").build();
+  BindNamesToQueryParams binder=new BindNamesToQueryParams();
   request=binder.bindToRequest(request,input);
   assertEquals(request.getRequestLine(),"GET http://momma/?name=hello&name=world HTTP/1.1");
 }

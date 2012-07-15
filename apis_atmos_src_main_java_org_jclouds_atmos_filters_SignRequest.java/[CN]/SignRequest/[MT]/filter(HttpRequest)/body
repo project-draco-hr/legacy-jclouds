@@ -4,9 +4,9 @@
   String date=timeStampProvider.get();
   builder.put(HttpHeaders.DATE,date);
   if (request.getHeaders().containsKey(AtmosHeaders.DATE))   builder.put(AtmosHeaders.DATE,date);
-  request=ModifyRequest.replaceHeaders(request,Multimaps.forMap(builder.build()));
+  request=request.toBuilder().replaceHeaders(Multimaps.forMap(builder.build())).build();
   String signature=calculateSignature(createStringToSign(request));
-  request=ModifyRequest.replaceHeader(request,AtmosHeaders.SIGNATURE,signature);
+  request=request.toBuilder().replaceHeader(AtmosHeaders.SIGNATURE,signature).build();
   utils.logRequest(signatureLog,request,"<<");
   return request;
 }

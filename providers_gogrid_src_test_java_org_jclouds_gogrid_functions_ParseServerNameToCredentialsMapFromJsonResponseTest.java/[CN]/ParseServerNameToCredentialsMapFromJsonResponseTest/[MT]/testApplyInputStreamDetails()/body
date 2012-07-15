@@ -1,6 +1,6 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_credentials_list.json");
   ParseServerNameToCredentialsMapFromJsonResponse parser=i.getInstance(ParseServerNameToCredentialsMapFromJsonResponse.class);
-  Map<String,Credentials> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  Map<String,Credentials> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.size(),6);
 }

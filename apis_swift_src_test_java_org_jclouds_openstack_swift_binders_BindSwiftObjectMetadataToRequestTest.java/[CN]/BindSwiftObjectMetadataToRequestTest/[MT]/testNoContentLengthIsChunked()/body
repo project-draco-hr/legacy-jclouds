@@ -4,7 +4,7 @@
   payload.getContentMetadata().setContentLength(null);
   object.setPayload(payload);
   object.getInfo().setName("foo");
-  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
   BindSwiftObjectMetadataToRequest binder=injector.getInstance(BindSwiftObjectMetadataToRequest.class);
-  assertEquals(binder.bindToRequest(request,object),HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).headers(ImmutableMultimap.of("Transfer-Encoding","chunked")).build());
+  assertEquals(binder.bindToRequest(request,object),HttpRequest.builder().method("PUT").endpoint("http://localhost").addHeader("Transfer-Encoding","chunked").build());
 }

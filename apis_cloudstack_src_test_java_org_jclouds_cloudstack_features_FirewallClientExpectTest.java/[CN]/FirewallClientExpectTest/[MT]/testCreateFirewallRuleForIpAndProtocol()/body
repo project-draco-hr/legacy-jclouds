@@ -1,5 +1,5 @@
 {
-  FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=createFirewallRule&" + "ipaddressid=2&protocol=TCP&apiKey=identity&signature=d0MZ%2FyhQPAaV%2BYQmfZsQtQL2C28%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/createfirewallrulesresponse.json")).build());
+  FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=createFirewallRule&" + "ipaddressid=2&protocol=TCP&apiKey=identity&signature=d0MZ%2FyhQPAaV%2BYQmfZsQtQL2C28%3D")).addHeader("Accept","application/json").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/createfirewallrulesresponse.json")).build());
   AsyncCreateResponse response=client.createFirewallRuleForIpAndProtocol("2",FirewallRule.Protocol.TCP);
   assertEquals(response.getJobId(),"2036");
   assertEquals(response.getId(),"2017");

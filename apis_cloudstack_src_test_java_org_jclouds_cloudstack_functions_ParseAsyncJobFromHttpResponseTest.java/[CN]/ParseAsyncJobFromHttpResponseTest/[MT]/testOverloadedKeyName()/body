@@ -1,9 +1,9 @@
 {
   InputStream is=getClass().getResourceAsStream("/queryasyncjobresultresponse-createtemplate.json");
   ParseAsyncJobFromHttpResponse parser=i.getInstance(ParseAsyncJobFromHttpResponse.class);
-  AsyncJob<?> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  AsyncJob<?> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertTrue(response.getResult() instanceof Template,"response expected to be Template, actually is " + response.getResult().getClass());
   is=getClass().getResourceAsStream("/queryasyncjobresultresponse-extracttemplate.json");
-  response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertTrue(response.getResult() instanceof TemplateExtraction,"response expected to be TemplateExtraction, actually is " + response.getResult().getClass());
 }

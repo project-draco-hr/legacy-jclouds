@@ -1,5 +1,4 @@
 {
-  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/startup");
-  HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").headers(ImmutableMultimap.of("Accept",MediaType.APPLICATION_JSON,"X-Auth-Token",authToken)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(404).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
+  HostAdministrationClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-hosts/ubuntu/startup").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build(),HttpResponse.builder().statusCode(404).build()).getHostAdministrationExtensionForZone("az-1.region-a.geo-1").get();
   assertTrue(client.startupHost("ubuntu"));
 }

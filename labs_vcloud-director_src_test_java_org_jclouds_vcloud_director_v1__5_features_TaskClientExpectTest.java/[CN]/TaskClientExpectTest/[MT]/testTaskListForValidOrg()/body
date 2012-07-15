@@ -1,7 +1,7 @@
 {
-  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/tasksList/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/tasksList/6f312e42-cd2b-488d-a2bb-97519cd57ed0").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
   HttpResponse taskResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/task/taskslist.xml",VCloudDirectorMediaType.TASKS_LIST + ";version=1.5")).build();
-  HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
   HttpResponse orgResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/org/org.xml",VCloudDirectorMediaType.TASKS_LIST + ";version=1.5")).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
   TasksList expected=TasksList.builder().name("Tasks Lists").type("application/vnd.vmware.vcloud.tasksList+xml").href(URI.create("https://vcloudbeta.bluelock.com/api/tasksList/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).task(taskOne()).task(taskTwo()).build();

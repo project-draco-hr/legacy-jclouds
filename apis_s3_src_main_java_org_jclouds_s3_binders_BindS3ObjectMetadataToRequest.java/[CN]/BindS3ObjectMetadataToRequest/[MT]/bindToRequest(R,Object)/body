@@ -7,7 +7,7 @@
   checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
   request=metadataPrefixer.bindToRequest(request,s3Object.getMetadata().getUserMetadata());
   if (s3Object.getMetadata().getCacheControl() != null) {
-    request=ModifyRequest.replaceHeader(request,HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl());
+    request=(R)request.toBuilder().replaceHeader(HttpHeaders.CACHE_CONTROL,s3Object.getMetadata().getCacheControl()).build();
   }
   return request;
 }

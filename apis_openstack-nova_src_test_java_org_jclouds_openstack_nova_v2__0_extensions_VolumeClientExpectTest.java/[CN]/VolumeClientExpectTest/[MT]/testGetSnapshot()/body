@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-snapshots/1");
-  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).build(),standardResponseBuilder(200).payload(payloadFromResource("/snapshot_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
+  VolumeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_details.json")).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
   VolumeSnapshot snapshot=client.getSnapshot("1");
   assertEquals(snapshot,testSnapshot());
 }

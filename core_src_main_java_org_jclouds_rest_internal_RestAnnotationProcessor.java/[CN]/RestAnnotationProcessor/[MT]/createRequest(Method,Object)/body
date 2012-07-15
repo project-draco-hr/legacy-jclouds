@@ -17,14 +17,14 @@
       endpoint=injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get();
       logger.trace("using default endpoint %s for %s",endpoint,cma);
     }
-    GeneratedHttpRequest.Builder<T> requestBuilder;
+    GeneratedHttpRequest.Builder<?> requestBuilder;
     HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
     if (r != null) {
-      requestBuilder=GeneratedHttpRequest.Builder.fromRequest(r);
+      requestBuilder=GeneratedHttpRequest.builder().fromHttpRequest(r);
       endpoint=r.getEndpoint();
     }
  else {
-      requestBuilder=GeneratedHttpRequest.requestBuilder();
+      requestBuilder=GeneratedHttpRequest.builder();
       requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
     }
     requestBuilder.declaring(declaring).javaMethod(method).args(args).skips(skips);
@@ -70,7 +70,7 @@
       for (      String key : matrixParams.keySet())       builder.matrixParam(key,Lists.newArrayList(matrixParams.get(key)).toArray());
     }
     if (queryParams.size() > 0) {
-      builder.replaceQuery(ModifyRequest.makeQueryLine(queryParams,null,skips));
+      builder.replaceQuery(Queries.makeQueryLine(queryParams,null,skips));
     }
     requestBuilder.headers(filterOutContentHeaders(headers));
     try {
@@ -100,7 +100,7 @@ catch (    UriBuilderException e) {
     if (payload != null) {
       requestBuilder.payload(payload);
     }
-    GeneratedHttpRequest<T> request=requestBuilder.build();
+    GeneratedHttpRequest request=requestBuilder.build();
     org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(method,args);
     if (mapBinder != null) {
       Map<String,Object> mapParams=buildPostParams(method,args);

@@ -3,7 +3,7 @@
   UnwrapOnlyJsonValue<List<Image>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Image>>>(){
   }
 ));
-  List<Image> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  List<Image> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.get(0).getId(),2);
   assertEquals(response.get(0).getName(),"CentOS 5.2");
   assertEquals(response.get(0).getCreated(),dateService.iso8601SecondsDateParse("2010-08-10T12:00:00Z"));

@@ -19,14 +19,14 @@
     if (options.getIfModifiedSince() != null) {
       Date modifiedSince=options.getIfModifiedSince();
       if (blob.getMetadata().getLastModified().before(modifiedSince)) {
-        HttpResponse response=new HttpResponse(304,null,null);
+        HttpResponse response=HttpResponse.builder().statusCode(304).build();
         return immediateFailedFuture(new HttpResponseException(String.format("%1$s is before %2$s",blob.getMetadata().getLastModified(),modifiedSince),null,response));
       }
     }
     if (options.getIfUnmodifiedSince() != null) {
       Date unmodifiedSince=options.getIfUnmodifiedSince();
       if (blob.getMetadata().getLastModified().after(unmodifiedSince)) {
-        HttpResponse response=new HttpResponse(412,null,null);
+        HttpResponse response=HttpResponse.builder().statusCode(412).build();
         return immediateFailedFuture(new HttpResponseException(String.format("%1$s is after %2$s",blob.getMetadata().getLastModified(),unmodifiedSince),null,response));
       }
     }

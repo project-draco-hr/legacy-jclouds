@@ -1,18 +1,18 @@
 {
   return Guice.createInjector(Rocoto.expandVariables(new ConfigurationModule(){
-    @SuppressWarnings("unused") @Provides @Singleton @Network protected Function<VAppTemplate,String> templateToDefaultNetworkName(){
+    @Provides @Singleton @Network protected Function<VAppTemplate,String> templateToDefaultNetworkName(){
       return Functions.forMap(ImmutableMap.of(value,"vAppNet-vApp Internal"));
     }
-    @SuppressWarnings("unused") @Provides @Singleton protected LoadingCache<URI,VAppTemplate> templateIdToVAppTemplate(){
+    @Provides @Singleton protected LoadingCache<URI,VAppTemplate> templateIdToVAppTemplate(){
       return CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImmutableMap.of(vAppTemplate,value))));
     }
     @Override protected void bindConfigurations(){
       bindProperties(new VCloudApiMetadata().getDefaultProperties());
     }
-    @SuppressWarnings("unused") @Provides @Singleton public FenceMode defaultFenceMode(    @Named(PROPERTY_VCLOUD_DEFAULT_FENCEMODE) String fenceMode){
+    @Provides @Singleton public FenceMode defaultFenceMode(    @Named(PROPERTY_VCLOUD_DEFAULT_FENCEMODE) String fenceMode){
       return FenceMode.fromValue(fenceMode);
     }
-    @SuppressWarnings("unused") @Network @Provides @Singleton Supplier<ReferenceType> provideNetwork(){
+    @Network @Provides @Singleton Supplier<ReferenceType> provideNetwork(){
       return Suppliers.<ReferenceType>ofInstance(new ReferenceTypeImpl(null,null,URI.create("https://vcenterprise.bluelock.com/api/v1.0/network/1990")));
     }
   }

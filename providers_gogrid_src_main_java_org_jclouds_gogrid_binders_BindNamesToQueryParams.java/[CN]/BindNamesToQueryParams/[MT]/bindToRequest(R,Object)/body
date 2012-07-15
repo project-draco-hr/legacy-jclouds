@@ -1,5 +1,5 @@
 {
   checkArgument(checkNotNull(input,"input is null") instanceof String[],"this binder is only valid for String[] arguments");
   String[] names=(String[])input;
-  return ModifyRequest.addQueryParam(request,NAME_KEY,ImmutableList.copyOf(names),builder.get());
+  return (R)request.toBuilder().replaceQueryParam(NAME_KEY,names).build();
 }

@@ -1,8 +1,8 @@
 {
-  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
   Payload payload=Payloads.newStringPayload("<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>\"a54357aff0632cce46d942af68356b38\"</ETag></Part></CompleteMultipartUpload>");
   payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
   request=binder.bindToRequest(request,ImmutableMap.<Integer,String>of(1,"\"a54357aff0632cce46d942af68356b38\""));
   assertEquals(request.getPayload().getRawContent(),payload.getRawContent());
-  assertEquals(request,HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).payload(payload).build());
+  assertEquals(request,HttpRequest.builder().method("PUT").endpoint("http://localhost").payload(payload).build());
 }

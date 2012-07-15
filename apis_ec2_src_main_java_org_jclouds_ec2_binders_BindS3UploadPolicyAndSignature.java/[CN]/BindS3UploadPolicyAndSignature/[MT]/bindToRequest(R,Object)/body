@@ -4,5 +4,5 @@
   builder.put("Storage.S3.UploadPolicy",encodedJson);
   String signature=signer.sign(encodedJson);
   builder.put("Storage.S3.UploadPolicySignature",signature);
-  return ModifyRequest.putFormParams(request,builder.build());
+  return (R)request.toBuilder().replaceFormParams(builder.build()).build();
 }

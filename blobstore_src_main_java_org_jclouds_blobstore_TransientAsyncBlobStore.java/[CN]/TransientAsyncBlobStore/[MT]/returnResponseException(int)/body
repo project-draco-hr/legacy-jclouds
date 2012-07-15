@@ -1,6 +1,5 @@
 {
-  HttpResponse response=null;
-  response=new HttpResponse(code,null,null);
+  HttpResponse response=HttpResponse.builder().statusCode(code).build();
   return new HttpResponseException(new HttpCommand(){
     public int getRedirectCount(){
       return 0;
@@ -23,7 +22,7 @@
     public void setException(    Exception exception){
     }
     @Override public HttpRequest getCurrentRequest(){
-      return new HttpRequest("GET",URI.create("http://stub"));
+      return HttpRequest.builder().method("GET").endpoint("http://stub").build();
     }
     @Override public void setCurrentRequest(    HttpRequest request){
     }

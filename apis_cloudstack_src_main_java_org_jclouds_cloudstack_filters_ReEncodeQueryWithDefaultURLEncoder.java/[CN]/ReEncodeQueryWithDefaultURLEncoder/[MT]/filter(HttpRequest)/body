@@ -1,7 +1,7 @@
 {
   UriBuilder builder=builders.get();
   builder.uri(request.getEndpoint());
-  Multimap<String,String> map=ModifyRequest.parseQueryToMap(request.getEndpoint().getRawQuery());
+  Multimap<String,String> map=Queries.parseQueryToMap(request.getEndpoint().getRawQuery());
   builder.replaceQuery("");
   for (  String key : map.keySet())   builder.queryParam(key,getOnlyElement(map.get(key)));
   return request.toBuilder().endpoint(builder.build()).build();

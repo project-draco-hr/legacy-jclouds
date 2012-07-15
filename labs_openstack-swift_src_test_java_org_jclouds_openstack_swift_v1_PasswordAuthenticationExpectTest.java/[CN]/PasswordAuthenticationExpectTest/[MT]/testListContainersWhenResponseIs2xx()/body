@@ -1,5 +1,5 @@
 {
-  HttpRequest listContainers=HttpRequest.builder().method("GET").endpoint(URI.create("https://objects.jclouds.org/v1.0/40806637803162/?format=json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpRequest listContainers=HttpRequest.builder().method("GET").endpoint("https://objects.jclouds.org/v1.0/40806637803162/?format=json").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse listContainersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/container_list.json")).build();
   SwiftClient clientWhenContainersExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listContainers,listContainersResponse);
   assertEquals(clientWhenContainersExist.getConfiguredRegions(),ImmutableSet.of("region-a.geo-1"));

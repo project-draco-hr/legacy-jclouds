@@ -3,7 +3,7 @@
   UnwrapOnlyJsonValue<List<Flavor>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Flavor>>>(){
   }
 ));
-  List<Flavor> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  List<Flavor> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.get(0).getId(),1);
   assertEquals(response.get(0).getName(),"256 MB Server");
   assertEquals(response.get(0).getDisk(),new Integer(10));

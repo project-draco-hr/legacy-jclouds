@@ -1,6 +1,6 @@
 {
   checkArgument(checkNotNull(input,"input") instanceof Map<?,?>,"this binder is only valid for Maps!");
   checkNotNull(request,"request");
-  @SuppressWarnings("unchecked") Map<String,String> userMetadata=Maps2.transformKeys((Map<String,String>)input,FN);
-  return ModifyRequest.putHeaders(request,Multimaps.forMap(userMetadata));
+  Map<String,String> userMetadata=Maps2.transformKeys((Map<String,String>)input,FN);
+  return (R)request.toBuilder().replaceHeaders(Multimaps.forMap(userMetadata)).build();
 }

@@ -2,7 +2,7 @@
   UserMetadata tagsdata=new UserMetadata();
   tagsdata.getListableTags().add("apple");
   tagsdata.getListableTags().add("sushi");
-  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://localhost").build();
   request=binder.bindToRequest(request,tagsdata);
   assertEquals(request.getFirstHeaderOrNull("x-emc-listable-tags"),"apple,sushi");
 }

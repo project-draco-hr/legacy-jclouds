@@ -1,6 +1,6 @@
 {
   InputStream is=getClass().getResourceAsStream("/listasyncjobsresponse.json");
   ParseAsyncJobsFromHttpResponse parser=injector.getInstance(ParseAsyncJobsFromHttpResponse.class);
-  Set<AsyncJob<?>> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  Set<AsyncJob<?>> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.size(),77);
 }

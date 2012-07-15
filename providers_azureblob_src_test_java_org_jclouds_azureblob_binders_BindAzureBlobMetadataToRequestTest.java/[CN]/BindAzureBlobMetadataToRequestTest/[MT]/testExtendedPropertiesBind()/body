@@ -5,7 +5,7 @@
   blob.setPayload(payload);
   blob.getProperties().setName("foo");
   blob.getProperties().setMetadata(ImmutableMap.of("foo","bar"));
-  HttpRequest request=HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).build();
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
   BindAzureBlobMetadataToRequest binder=injector.getInstance(BindAzureBlobMetadataToRequest.class);
-  assertEquals(binder.bindToRequest(request,blob),HttpRequest.builder().method("PUT").endpoint(URI.create("http://localhost")).headers(ImmutableMultimap.of("x-ms-blob-type","BlockBlob","x-ms-meta-foo","bar")).build());
+  assertEquals(binder.bindToRequest(request,blob),HttpRequest.builder().method("PUT").endpoint("http://localhost").addHeader("x-ms-blob-type","BlockBlob").addHeader("x-ms-meta-foo","bar").build());
 }

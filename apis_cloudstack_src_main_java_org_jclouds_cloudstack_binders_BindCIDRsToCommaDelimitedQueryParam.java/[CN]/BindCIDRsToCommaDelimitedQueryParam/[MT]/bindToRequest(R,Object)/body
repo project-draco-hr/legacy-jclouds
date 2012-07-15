@@ -2,5 +2,5 @@
   checkArgument(input instanceof Iterable<?>,"this binder is only valid for Iterables!");
   Iterable<String> cidrs=(Iterable<String>)checkNotNull(input,"cidr list");
   checkArgument(Iterables.size(cidrs) > 0,"you must specify at least one cidr range");
-  return ModifyRequest.addQueryParam(request,"cidrlist",Joiner.on(',').join(cidrs),uriBuilderProvider.get());
+  return (R)request.toBuilder().replaceQueryParam("cidrlist",Joiner.on(',').join(cidrs)).build();
 }

@@ -1,5 +1,5 @@
 {
   checkArgument(checkNotNull(input,"input") instanceof UserMetadata,"this binder is only valid for UserMetadatas!");
   checkNotNull(request,"request");
-  return ModifyRequest.putHeaders(request,Multimaps.forMap(apply(UserMetadata.class.cast(input))));
+  return (R)request.toBuilder().replaceHeaders(Multimaps.forMap(apply(UserMetadata.class.cast(input)))).build();
 }

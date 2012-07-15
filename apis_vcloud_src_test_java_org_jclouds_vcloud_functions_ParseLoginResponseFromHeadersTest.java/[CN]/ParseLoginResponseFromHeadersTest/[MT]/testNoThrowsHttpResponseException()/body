@@ -1,5 +1,5 @@
 {
-  HttpResponse response=new HttpResponse(200,"OK",Payloads.newInputStreamPayload(getClass().getResourceAsStream("/orglist.xml")),ImmutableMultimap.<String,String>of());
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("OK").payload(getClass().getResourceAsStream("/orglist.xml")).build();
   response.getPayload().getContentMetadata().setContentType("Content-Type: application/xml; charset=utf-8");
   response.getPayload().getContentMetadata().setContentLength(307l);
   parser.apply(response);

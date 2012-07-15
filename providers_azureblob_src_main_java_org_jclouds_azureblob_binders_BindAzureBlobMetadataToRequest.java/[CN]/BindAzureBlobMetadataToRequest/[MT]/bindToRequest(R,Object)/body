@@ -14,6 +14,6 @@ case BLOCK_BLOB:
 checkArgument(checkNotNull(blob.getPayload().getContentMetadata().getContentLength(),"blob.getContentLength()") <= 64l * 1024 * 1024,"maximum size for put Blob is 64MB");
 break;
 }
-request=ModifyRequest.putHeaders(request,Multimaps.forMap(headers.build()));
+request=(R)request.toBuilder().replaceHeaders(Multimaps.forMap(headers.build())).build();
 return blobBinder.bindToRequest(request,azureBlob2Blob.apply(blob));
 }

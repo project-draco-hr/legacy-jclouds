@@ -1,5 +1,5 @@
 {
   String json="{\"list\":[8431,8433]}";
-  assertEquals(handler.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(json))),ImmutableMap.<String,Object>of("list",ImmutableList.of(8431d,8433d)));
+  assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json).build()),ImmutableMap.<String,Object>of("list",ImmutableList.of(8431d,8433d)));
   assertEquals(mapper.toJson(ImmutableMap.<String,Object>of("list",ImmutableList.of(8431,8433))),json);
 }

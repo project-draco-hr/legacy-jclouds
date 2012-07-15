@@ -2,7 +2,7 @@
   InputStream is=getClass().getResourceAsStream("/test_error_handler.json");
   GoGridErrorHandler handler=Guice.createInjector(new GsonModule()).getInstance(GoGridErrorHandler.class);
   HttpCommand command=createHttpCommand();
-  handler.handleError(command,new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  handler.handleError(command,HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   Exception createdException=command.getException();
   assertNotNull(createdException,"There should've been an exception generated");
   String message=createdException.getMessage();

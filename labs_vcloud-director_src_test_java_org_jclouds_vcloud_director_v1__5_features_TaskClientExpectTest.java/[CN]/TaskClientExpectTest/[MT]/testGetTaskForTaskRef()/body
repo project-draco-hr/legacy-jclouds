@@ -1,5 +1,5 @@
 {
-  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/task/5fcd2af3-d0ec-45ce-9451-8c585a2c766b")).headers(ImmutableMultimap.<String,String>builder().put("Accept","*/*").put("x-vcloud-authorization",token).build()).build();
+  HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/task/5fcd2af3-d0ec-45ce-9451-8c585a2c766b").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
   HttpResponse taskResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/task/task.xml",VCloudDirectorMediaType.TASK + ";version=1.5")).build();
   VCloudDirectorClient client=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse);
   URI taskUri=URI.create(endpoint + "/task/5fcd2af3-d0ec-45ce-9451-8c585a2c766b");

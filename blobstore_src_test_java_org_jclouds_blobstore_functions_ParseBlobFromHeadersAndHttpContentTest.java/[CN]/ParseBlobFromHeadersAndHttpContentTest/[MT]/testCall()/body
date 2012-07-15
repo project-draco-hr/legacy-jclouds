@@ -1,6 +1,6 @@
 {
   ParseSystemAndUserMetadataFromHeaders metadataParser=createMock(ParseSystemAndUserMetadataFromHeaders.class);
   ParseBlobFromHeadersAndHttpContent callable=new ParseBlobFromHeadersAndHttpContent(metadataParser,blobProvider);
-  HttpResponse response=new HttpResponse(200,null,null,ImmutableMultimap.of("Content-Range",(String)null));
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("ok").addHeader("Content-Range",(String)null).build();
   callable.apply(response);
 }

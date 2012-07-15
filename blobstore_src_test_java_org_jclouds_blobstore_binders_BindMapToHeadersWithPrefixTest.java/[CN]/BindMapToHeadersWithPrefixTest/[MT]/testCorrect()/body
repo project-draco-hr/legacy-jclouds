@@ -1,5 +1,5 @@
 {
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).build();
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://momma").build();
   BindMapToHeadersWithPrefix binder=new BindMapToHeadersWithPrefix("prefix:");
-  assertEquals(binder.bindToRequest(request,ImmutableMap.of("imageName","foo","serverId","2")),HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).headers(ImmutableMultimap.of("prefix:imagename","foo","prefix:serverid","2")).build());
+  assertEquals(binder.bindToRequest(request,ImmutableMap.of("imageName","foo","serverId","2")),HttpRequest.builder().method("GET").endpoint("http://momma").addHeader("prefix:imagename","foo").addHeader("prefix:serverid","2").build());
 }

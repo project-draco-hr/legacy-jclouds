@@ -1,5 +1,5 @@
 {
-  NetworkClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/tenants/3456/networks").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/list_network_refs.json",APPLICATION_JSON)).build()).getNetworkClientForRegion("region-a.geo-1");
+  NetworkClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/list_network_refs.json",APPLICATION_JSON)).build()).getNetworkClientForRegion("region-a.geo-1");
   Set<Reference> nets=client.listReferences();
   assertEquals(nets,listOfNetworkRefs());
 }

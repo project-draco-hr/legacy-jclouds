@@ -1,5 +1,5 @@
 {
-  HttpResponse response=new HttpResponse(200,"OK",Payloads.newInputStreamPayload(getClass().getResourceAsStream("/orglist.xml")),ImmutableMultimap.<String,String>of("x-vcloud-authorization","MUKOJ2HoAfoMmLnHRp4esNb2MtWscCLLhVysnsIsCG0="));
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("OK").payload(getClass().getResourceAsStream("/orglist.xml")).addHeader("x-vcloud-authorization","MUKOJ2HoAfoMmLnHRp4esNb2MtWscCLLhVysnsIsCG0=").build();
   response.getPayload().getContentMetadata().setContentType("Content-Type: application/xml; charset=utf-8");
   response.getPayload().getContentMetadata().setContentLength(307l);
   VCloudSession reply=parser.apply(response);

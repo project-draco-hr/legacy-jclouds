@@ -1,5 +1,5 @@
 {
-  HttpResponse http=new HttpResponse(400,"boa",Payloads.newStringPayload(""),ImmutableMultimap.of(S3Headers.USER_METADATA_PREFIX + "foo","bar",HttpHeaders.LAST_MODIFIED,lastModified,HttpHeaders.ETAG,"\"abcd-1\"",HttpHeaders.CACHE_CONTROL,"cacheControl"));
+  HttpResponse http=HttpResponse.builder().statusCode(400).message("boa").payload("").addHeader(S3Headers.USER_METADATA_PREFIX + "foo","bar").addHeader(HttpHeaders.LAST_MODIFIED,lastModified).addHeader(HttpHeaders.ETAG,"\"abcd-1\"").addHeader(HttpHeaders.CACHE_CONTROL,"cacheControl").build();
   http.getPayload().getContentMetadata().setContentLength(1025l);
   http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
   http.getPayload().getContentMetadata().setContentEncoding("encoding");

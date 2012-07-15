@@ -3,6 +3,6 @@
   UnwrapOnlyJsonValue<BackupSchedule> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<BackupSchedule>>(){
   }
 ));
-  BackupSchedule response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  BackupSchedule response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(new BackupSchedule(WeeklyBackup.THURSDAY,DailyBackup.H_0400_0600,true),response);
 }

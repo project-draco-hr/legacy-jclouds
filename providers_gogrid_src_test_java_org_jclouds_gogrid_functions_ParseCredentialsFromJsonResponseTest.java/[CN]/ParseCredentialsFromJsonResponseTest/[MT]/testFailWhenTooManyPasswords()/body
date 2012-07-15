@@ -1,6 +1,6 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_credentials_list.json");
-  HttpResponse response=new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is));
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("ok").payload(is).build();
   ParseCredentialsFromJsonResponse parser=i.getInstance(ParseCredentialsFromJsonResponse.class);
   parser.apply(response);
 }

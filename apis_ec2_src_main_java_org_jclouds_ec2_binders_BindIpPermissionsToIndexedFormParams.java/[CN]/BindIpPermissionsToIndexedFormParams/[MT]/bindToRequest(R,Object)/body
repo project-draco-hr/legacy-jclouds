@@ -1,7 +1,8 @@
 {
   checkArgument(checkNotNull(input,"input") instanceof Iterable,"this binder is only valid for Iterable<IpPermission>");
-  Builder<String,String> headers=ImmutableMultimap.builder();
+  Builder<String,String> formBuilder=ImmutableMultimap.builder();
   int index=0;
-  for (  IpPermission perm : (Iterable<IpPermission>)input)   headers.putAll(IpPermissions.buildFormParametersForIndex(index++,perm));
-  return ModifyRequest.putFormParams(request,headers.build());
+  for (  IpPermission perm : (Iterable<IpPermission>)input)   formBuilder.putAll(IpPermissions.buildFormParametersForIndex(index++,perm));
+  ImmutableMultimap<String,String> forms=formBuilder.build();
+  return forms.size() == 0 ? request : (R)request.toBuilder().replaceFormParams(forms).build();
 }

@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/cancelled.json");
   ParseServerFromJsonResponse parser=i.getInstance(ParseServerFromJsonResponse.class);
-  Server response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  Server response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.getBillingData().getDateSuspended(),null);
   assertEquals(response.getBillingData().getDateCancelled(),new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-04-02T03:30:28Z"));
 }

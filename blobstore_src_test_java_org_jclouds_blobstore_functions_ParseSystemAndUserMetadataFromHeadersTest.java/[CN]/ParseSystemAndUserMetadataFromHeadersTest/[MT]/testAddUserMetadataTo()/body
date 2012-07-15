@@ -1,5 +1,5 @@
 {
-  HttpResponse from=new HttpResponse(200,"ok",Payloads.newStringPayload(""),ImmutableMultimap.of("prefix" + "key","value"));
+  HttpResponse from=HttpResponse.builder().statusCode(200).message("ok").payload("").addHeader("prefix" + "key","value").build();
   MutableBlobMetadata metadata=blobMetadataProvider.get();
   parser.addUserMetadataTo(from,metadata);
   assertEquals(metadata.getUserMetadata().get("key"),"value");

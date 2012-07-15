@@ -2,7 +2,7 @@
   BindToXMLPayload binder=new BindToXMLPayload(xml);
   TestJAXBDomain obj=new TestJAXBDomain();
   obj.setElem("Hello World");
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://momma")).build();
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://momma").build();
   request=binder.bindToRequest(request,obj);
   assertEquals(request.getPayload().getRawContent(),XMLParser.DEFAULT_XML_HEADER + "\n<test>\n    <elem>Hello World</elem>\n</test>\n");
   assertEquals(request.getPayload().getContentMetadata().getContentType(),MediaType.APPLICATION_XML);

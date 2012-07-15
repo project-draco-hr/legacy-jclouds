@@ -10,5 +10,5 @@
     if (listener.getSSLCertificateId().isPresent())     formParameters.put("Listeners.member." + listenerIndex + ".SSLCertificateId",listener.getSSLCertificateId().get() + "");
     listenerIndex++;
   }
-  return ModifyRequest.putFormParams(request,formParameters.build());
+  return (R)request.toBuilder().replaceFormParams(formParameters.build()).build();
 }

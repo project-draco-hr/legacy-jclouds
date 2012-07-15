@@ -1,6 +1,6 @@
 {
   Method method=TestRequestFilter.class.getMethod("getOverride",HttpRequest.class);
-  HttpRequest request=factory(TestRequestFilter.class).createRequest(method,HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).headers(ImmutableMultimap.of("foo","bar")).build());
+  HttpRequest request=factory(TestRequestFilter.class).createRequest(method,HttpRequest.builder().method("GET").endpoint("http://localhost").addHeader("foo","bar").build());
   assertEquals(request.getFilters().size(),1);
   assertEquals(request.getHeaders().size(),1);
   assertEquals(request.getFilters().get(0).getClass(),TestRequestFilter2.class);

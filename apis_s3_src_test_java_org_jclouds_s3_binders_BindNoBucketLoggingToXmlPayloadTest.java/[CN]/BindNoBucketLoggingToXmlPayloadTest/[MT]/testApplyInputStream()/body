@@ -1,5 +1,5 @@
 {
-  HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://test").build();
   BindNoBucketLoggingToXmlPayload binder=injector.getInstance(BindNoBucketLoggingToXmlPayload.class);
   request=binder.bindToRequest(request,"bucket");
   assertEquals(request.getPayload().getRawContent(),"<BucketLoggingStatus xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"/>");

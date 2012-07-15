@@ -1,11 +1,6 @@
 {
   if (this == obj)   return true;
-  if (!super.equals(obj))   return false;
-  if (getClass() != obj.getClass())   return false;
-  HttpMessage other=(HttpMessage)obj;
-  if (headers == null) {
-    if (other.headers != null)     return false;
-  }
- else   if (!headers.equals(other.headers))   return false;
-  return true;
+  if (!(obj instanceof HttpMessage))   return false;
+  HttpMessage that=HttpMessage.class.cast(obj);
+  return Objects.equal(this.headers,that.headers) && Objects.equal(this.payload,that.payload);
 }

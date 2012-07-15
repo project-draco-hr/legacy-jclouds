@@ -1,5 +1,5 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/5/os-extra_specs/test1");
-  FlavorExtraSpecsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("PUT").payload(payloadFromStringWithContentType("{\"test1\":\"somevalue\"}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(200).build()).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
+  FlavorExtraSpecsClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).method("PUT").payload(payloadFromStringWithContentType("{\"test1\":\"somevalue\"}",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).build()).getFlavorExtraSpecsExtensionForZone("az-1.region-a.geo-1").get();
   assertTrue(client.setExtraSpec("5","test1","somevalue"));
 }

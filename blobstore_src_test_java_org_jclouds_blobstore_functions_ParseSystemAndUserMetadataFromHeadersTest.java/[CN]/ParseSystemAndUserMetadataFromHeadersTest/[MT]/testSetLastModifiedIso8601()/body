@@ -1,5 +1,5 @@
 {
-  HttpResponse from=new HttpResponse(200,"ok",Payloads.newStringPayload(""),ImmutableMultimap.of(HttpHeaders.LAST_MODIFIED,"2011-01-28T17:35:08.000+0000"));
+  HttpResponse from=HttpResponse.builder().statusCode(200).message("ok").payload("").addHeader(HttpHeaders.LAST_MODIFIED,"2011-01-28T17:35:08.000Z").build();
   MutableBlobMetadata metadata=blobMetadataProvider.get();
   parser.parseLastModifiedOrThrowException(from,metadata);
   assertEquals(metadata.getLastModified(),new SimpleDateFormatDateService().iso8601DateParse("2011-01-28T17:35:08.000Z"));

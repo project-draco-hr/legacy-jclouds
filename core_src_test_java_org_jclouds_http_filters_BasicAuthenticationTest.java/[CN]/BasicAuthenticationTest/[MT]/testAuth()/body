@@ -1,6 +1,6 @@
 {
   BasicAuthentication filter=new BasicAuthentication(USER,PASSWORD,new JCECrypto(null));
-  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://localhost").build();
   request=filter.filter(request);
   assertEquals(request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION),"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
 }

@@ -1,5 +1,5 @@
 {
-  HttpResponse response=new HttpResponse(400,"boa",Payloads.newInputStreamPayload(content),ImmutableMultimap.<String,String>of("x-amz-request-id","requestid","x-amz-id-2","requesttoken"));
+  HttpResponse response=HttpResponse.builder().statusCode(400).message("boa").payload(content).addHeader("x-amz-request-id","requestid").addHeader("x-amz-id-2","requesttoken").build();
   response.getPayload().getContentMetadata().setContentType("text/xml");
   return response;
 }

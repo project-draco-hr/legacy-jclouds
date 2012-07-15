@@ -1,5 +1,5 @@
 {
-  HttpResponse response=new HttpResponse(200,"OK",Payloads.newInputStreamPayload(getClass().getResourceAsStream("/orglist.xml")),ImmutableMultimap.<String,String>builder().put("Set-Cookie","NSC_ESUO_21654_72.46.239.132_443=fooo;expires=Thu, 02-Jun-2011 17:19:26 GMT;path=/;secure;httponly").build());
+  HttpResponse response=HttpResponse.builder().statusCode(200).message("OK").payload(getClass().getResourceAsStream("/orglist.xml")).addHeader("Set-Cookie","NSC_ESUO_21654_72.46.239.132_443=fooo;expires=Thu, 02-Jun-2011 17:19:26 GMT;path=/;secure;httponly").build();
   response.getPayload().getContentMetadata().setContentType("Content-Type: application/xml; charset=utf-8");
   response.getPayload().getContentMetadata().setContentLength(307l);
   parser.apply(response);

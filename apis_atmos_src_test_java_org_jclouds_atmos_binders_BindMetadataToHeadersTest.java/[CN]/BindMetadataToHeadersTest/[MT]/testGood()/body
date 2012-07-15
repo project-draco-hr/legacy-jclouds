@@ -4,7 +4,7 @@
   object.setPayload(payload);
   object.getUserMetadata().getListableMetadata().put("apple","bear");
   object.getUserMetadata().getListableMetadata().put("sushi","king");
-  HttpRequest request=new HttpRequest("GET",URI.create("http://localhost"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://localhost").build();
   request=binder.bindToRequest(request,object);
   assertEquals(request.getFirstHeaderOrNull("x-emc-listable-meta"),"apple=bear,sushi=king");
 }

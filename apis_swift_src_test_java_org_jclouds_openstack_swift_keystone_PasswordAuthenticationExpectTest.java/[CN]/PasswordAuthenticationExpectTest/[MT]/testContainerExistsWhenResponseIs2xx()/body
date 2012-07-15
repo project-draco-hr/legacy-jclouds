@@ -1,0 +1,6 @@
+{
+  HttpRequest containerExists=HttpRequest.builder().method("HEAD").endpoint("https://objects.jclouds.org/v1.0/40806637803162/container").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse containerExistsResponse=HttpResponse.builder().statusCode(200).build();
+  SwiftKeystoneClient clientWhenContainerExists=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,containerExists,containerExistsResponse);
+  assertEquals(clientWhenContainerExists.containerExists("container"),true);
+}

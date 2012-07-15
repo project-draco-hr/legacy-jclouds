@@ -1,6 +1,6 @@
 {
   String json="{\"name\":\"fooy\"}";
   Map<String,JsonBall> map=ImmutableMap.<String,JsonBall>of("name",new JsonBall("fooy"));
-  assertEquals(handler.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(json))),map);
+  assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json).build()),map);
   assertEquals(mapper.toJson(map),json);
 }

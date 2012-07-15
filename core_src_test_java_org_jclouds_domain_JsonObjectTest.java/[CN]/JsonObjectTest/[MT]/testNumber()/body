@@ -1,6 +1,6 @@
 {
   String json="{\"number\":1.0}";
   Map<String,Object> map=ImmutableMap.<String,Object>of("number",1d);
-  assertEquals(handler.apply(new HttpResponse(200,"ok",Payloads.newStringPayload(json))),map);
+  assertEquals(handler.apply(HttpResponse.builder().statusCode(200).message("ok").payload(json).build()),map);
   assertEquals(mapper.toJson(map),json);
 }

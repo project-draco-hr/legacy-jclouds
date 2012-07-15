@@ -1,5 +1,5 @@
 {
-  HttpRequest request=HttpRequest.builder().endpoint(URI.create("http://localhost/key")).method("GET").build();
+  HttpRequest request=HttpRequest.builder().endpoint("http://localhost/key").method("GET").build();
   BindNetworkConnectionSectionToXmlPayload binder=injector.getInstance(BindNetworkConnectionSectionToXmlPayload.class);
   binder.bindToRequest(request,NetworkConnectionSection.builder().type("application/vnd.vmware.vcloud.networkConnectionSection+xml").info("Specifies the available VM network connections").href(URI.create("https://1.1.1.1/api/v1.0/vApp/vm-1/networkConnectionSection/")).connections(ImmutableSet.<NetworkConnection>of(NetworkConnection.builder().network("none").ipAddressAllocationMode(IpAddressAllocationMode.NONE).build())).build());
   assertEquals(request.getPayload().getContentMetadata().getContentType(),"application/vnd.vmware.vcloud.networkConnectionSection+xml");

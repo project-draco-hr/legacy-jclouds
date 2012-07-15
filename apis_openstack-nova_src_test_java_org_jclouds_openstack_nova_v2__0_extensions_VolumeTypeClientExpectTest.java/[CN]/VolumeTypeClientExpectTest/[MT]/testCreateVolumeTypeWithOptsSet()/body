@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
-  VolumeTypeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,standardRequestBuilder(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"volume_type\":{\"name\":\"jclouds-test-1\",\"extra_specs\":{\"x\": \"y\"}}}",MediaType.APPLICATION_JSON)).build(),standardResponseBuilder(200).payload(payloadFromResource("/volume_type.json")).build()).getVolumeTypeExtensionForZone("az-1.region-a.geo-1").get();
+  VolumeTypeClient client=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).method("POST").payload(payloadFromStringWithContentType("{\"volume_type\":{\"name\":\"jclouds-test-1\",\"extra_specs\":{\"x\": \"y\"}}}",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_type.json")).build()).getVolumeTypeExtensionForZone("az-1.region-a.geo-1").get();
   VolumeType type=client.createVolumeType("jclouds-test-1",CreateVolumeTypeOptions.Builder.specs(ImmutableMap.of("x","y")));
   assertEquals(type,testVolumeType());
 }

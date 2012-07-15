@@ -1,7 +1,7 @@
 {
   BucketLogging bucketLogging=new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL)));
   String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/bucket_logging.xml"));
-  HttpRequest request=new HttpRequest("GET",URI.create("http://test"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://test").build();
   BindBucketLoggingToXmlPayload binder=injector.getInstance(BindBucketLoggingToXmlPayload.class);
   binder.bindToRequest(request,bucketLogging);
   assertEquals(request.getPayload().getContentMetadata().getContentType(),"text/xml");

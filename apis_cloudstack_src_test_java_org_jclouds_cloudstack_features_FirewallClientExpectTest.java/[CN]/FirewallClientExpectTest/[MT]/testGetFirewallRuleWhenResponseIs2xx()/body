@@ -1,4 +1,4 @@
 {
-  FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listFirewallRules&listAll=true&" + "id=2017&apiKey=identity&signature=6coh9Qdwla94TN1Dl008WlhzZUY%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/getfirewallrulesresponse.json")).build());
+  FirewallClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=listFirewallRules&listAll=true&" + "id=2017&apiKey=identity&signature=6coh9Qdwla94TN1Dl008WlhzZUY%3D")).addHeader("Accept","application/json").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/getfirewallrulesresponse.json")).build());
   assertEquals(client.getFirewallRule("2017"),FirewallRule.builder().id("2017").protocol(FirewallRule.Protocol.TCP).startPort(30).endPort(35).ipAddressId("2").ipAddress("10.27.27.51").state(FirewallRule.State.ACTIVE).CIDRs(ImmutableSet.of("0.0.0.0/0")).build());
 }

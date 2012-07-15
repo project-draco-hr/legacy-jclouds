@@ -1,5 +1,5 @@
 {
-  HttpRequest request=new HttpRequest(HttpMethod.GET,endPoint,ImmutableMultimap.of("foo","bar"));
+  HttpRequest request=HttpRequest.builder().method(HttpMethod.GET).endpoint(endPoint).addHeader("foo","bar").build();
   HTTPRequest gaeRequest=req.apply(request);
   assertEquals(gaeRequest.getHeaders().get(0).getName(),"foo");
   assertEquals(gaeRequest.getHeaders().get(0).getValue(),"bar");

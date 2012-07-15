@@ -1,7 +1,7 @@
 {
   httpStreamUrl=checkNotNull(httpStreamUrl != null ? httpStreamUrl : sysHttpStreamUrl,"httpStreamUrl");
   httpStreamMD5=checkNotNull(httpStreamMD5 != null ? httpStreamMD5 : sysHttpStreamMD5,"httpStreamMd5");
-  HttpResponse response=view.utils().http().invoke(HttpRequest.builder().method("GET").endpoint(URI.create(httpStreamUrl)).build());
+  HttpResponse response=view.utils().http().invoke(HttpRequest.builder().method("GET").endpoint(httpStreamUrl).build());
   long length=response.getPayload().getContentMetadata().getContentLength();
   String name="hello";
   byte[] md5=CryptoStreams.hex(httpStreamMD5);

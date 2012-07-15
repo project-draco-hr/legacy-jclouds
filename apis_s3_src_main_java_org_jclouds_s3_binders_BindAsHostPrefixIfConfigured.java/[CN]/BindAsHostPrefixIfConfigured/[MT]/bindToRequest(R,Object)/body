@@ -6,11 +6,10 @@
     if (request.getEndpoint().getPort() != -1) {
       host+=":" + request.getEndpoint().getPort();
     }
-    return ModifyRequest.replaceHeader(request,HttpHeaders.HOST,host);
+    return (R)request.toBuilder().replaceHeader(HttpHeaders.HOST,host).build();
   }
  else {
-    UriBuilder builder=uriBuilderProvider.get().uri(request.getEndpoint());
-    StringBuilder path=new StringBuilder(Strings2.urlEncode(request.getEndpoint().getPath(),S3AsyncClient.class.getAnnotation(SkipEncoding.class).value()));
+    StringBuilder path=new StringBuilder(request.getEndpoint().getPath());
     int indexToInsert=0;
     if (!servicePath.equals("/")) {
       indexToInsert=path.indexOf(servicePath);
@@ -18,7 +17,6 @@
       indexToInsert+=servicePath.length();
     }
     path.insert(indexToInsert,"/" + payloadAsString);
-    builder.replacePath(path.toString());
-    return (R)request.toBuilder().endpoint(builder.buildFromEncodedMap(ImmutableMap.<String,Object>of())).build();
+    return (R)request.toBuilder().replacePath(path.toString()).build();
   }
 }

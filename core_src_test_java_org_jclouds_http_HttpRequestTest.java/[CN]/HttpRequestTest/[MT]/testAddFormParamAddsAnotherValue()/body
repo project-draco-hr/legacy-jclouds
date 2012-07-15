@@ -1,0 +1,6 @@
+{
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://foo").payload("foo=bar").build();
+  Payload payload=Payloads.newStringPayload("foo=bar&foo=baz");
+  payload.getContentMetadata().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+  assertEquals(request.toBuilder().addFormParams(ImmutableMultimap.of("foo","baz")).build(),HttpRequest.builder().method("GET").endpoint("http://foo").payload(payload).build());
+}

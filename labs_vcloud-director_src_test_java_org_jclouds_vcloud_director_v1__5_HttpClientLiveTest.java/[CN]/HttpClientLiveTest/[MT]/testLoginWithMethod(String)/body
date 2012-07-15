@@ -3,7 +3,7 @@
   String org=identity.substring(identity.lastIndexOf('@') + 1);
   String password=credential;
   String authHeader="Basic " + CryptoStreams.base64(String.format("%s@%s:%s",checkNotNull(user),checkNotNull(org),checkNotNull(password)).getBytes("UTF-8"));
-  HttpResponse response=context.getUtils().getHttpClient().invoke(HttpRequest.builder().method(method).endpoint(URI.create(endpoint + "/login")).headers(ImmutableMultimap.<String,String>builder().put("Authorization",authHeader).put("Accept","*/*").build()).build());
+  HttpResponse response=context.getUtils().getHttpClient().invoke(HttpRequest.builder().method(method).endpoint(endpoint + "/login").addHeader("Authorization",authHeader).addHeader("Accept","*/*").build());
   sessionWithToken=SessionWithToken.builder().session(session).token(response.getFirstHeaderOrNull("x-vcloud-authorization")).build();
   assertEquals(sessionWithToken.getSession().getUser(),user);
   assertEquals(sessionWithToken.getSession().getOrg(),org);

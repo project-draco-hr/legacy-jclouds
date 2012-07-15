@@ -4,6 +4,8 @@
   checkNotNull(ipPortPair.getIp(),"There must be an IP address defined");
   checkNotNull(ipPortPair.getIp().getIp(),"There must be an IP address defined in Ip object");
   checkState(ipPortPair.getPort() > 0,"The port number must be a positive integer");
-  request=ModifyRequest.addQueryParam(request,VIRTUAL_IP_KEY + "ip",ipPortPair.getIp().getIp(),builder.get());
-  return ModifyRequest.addQueryParam(request,VIRTUAL_IP_KEY + "port",String.valueOf(ipPortPair.getPort()),builder.get());
+  ImmutableMultimap.Builder<String,String> builder=ImmutableMultimap.<String,String>builder();
+  builder.put(VIRTUAL_IP_KEY + "ip",ipPortPair.getIp().getIp());
+  builder.put(VIRTUAL_IP_KEY + "port",String.valueOf(ipPortPair.getPort()));
+  return (R)request.toBuilder().replaceQueryParams(builder.build()).build();
 }

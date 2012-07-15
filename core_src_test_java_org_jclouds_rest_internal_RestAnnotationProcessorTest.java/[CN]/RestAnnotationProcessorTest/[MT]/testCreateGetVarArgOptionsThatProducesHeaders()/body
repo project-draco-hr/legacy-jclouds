@@ -1,8 +1,7 @@
 {
   Date date=new Date();
   GetOptions options=GetOptions.Builder.ifModifiedSince(date);
-  HttpRequestOptions[] optionsHolder=new HttpRequestOptions[]{};
-  Method method=TestRequest.class.getMethod("get",String.class,optionsHolder.getClass());
+  Method method=TestRequest.class.getMethod("get",String.class,HttpRequestOptions[].class);
   HttpRequest request=factory(TestRequest.class).createRequest(method,new Object[]{"1",options});
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/1");

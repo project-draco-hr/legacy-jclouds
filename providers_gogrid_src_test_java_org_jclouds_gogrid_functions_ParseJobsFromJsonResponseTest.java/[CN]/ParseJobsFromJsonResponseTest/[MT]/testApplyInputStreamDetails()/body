@@ -1,7 +1,7 @@
 {
   InputStream is=getClass().getResourceAsStream("/test_get_job_list.json");
   ParseJobListFromJsonResponse parser=i.getInstance(ParseJobListFromJsonResponse.class);
-  SortedSet<Job> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  SortedSet<Job> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   Map<String,String> details=ImmutableMap.of("image","GSI-f8979644-e646-4711-ad58-d98a5fa3612c","ip","204.51.240.189","name","ServerCreated40562","type","virtual_server");
   Job job=Job.builder().id(250628L).command(Option.createWithIdNameAndDescription(7L,"DeleteVirtualServer","Delete Virtual Server")).objectType(ObjectType.VIRTUAL_SERVER).createdOn(new Date(1267404528895L)).lastUpdatedOn(new Date(1267404538592L)).currentState(JobState.SUCCEEDED).attempts(1).owner("3116784158f0af2d-24076@api.gogrid.com").history(JobProperties.builder().id(940263L).updatedOn(new Date(1267404528897L)).state(JobState.CREATED).build(),JobProperties.builder().id(940264L).updatedOn(new Date(1267404528967L)).state(JobState.QUEUED).build()).details(details).build();
   assertEquals(job,Iterables.getOnlyElement(response));

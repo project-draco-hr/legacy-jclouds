@@ -3,7 +3,7 @@
   UnwrapOnlyJsonValue<List<Server>> parser=i.getInstance(Key.get(new TypeLiteral<UnwrapOnlyJsonValue<List<Server>>>(){
   }
 ));
-  List<Server> response=parser.apply(new HttpResponse(200,"ok",Payloads.newInputStreamPayload(is)));
+  List<Server> response=parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
   assertEquals(response.get(0).getId(),1234);
   assertEquals(response.get(0).getName(),"sample-server");
   assertEquals(response.get(0).getImageRef(),"https://servers.api.rackspacecloud.com/v1.1/32278/images/1234");

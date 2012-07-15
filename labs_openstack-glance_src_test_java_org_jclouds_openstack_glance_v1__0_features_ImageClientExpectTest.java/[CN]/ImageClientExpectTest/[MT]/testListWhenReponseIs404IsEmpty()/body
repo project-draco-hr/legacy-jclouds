@@ -1,5 +1,5 @@
 {
-  HttpRequest list=HttpRequest.builder().method("GET").endpoint(URI.create("https://glance.jclouds.org:9292/v1.0/images")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://glance.jclouds.org:9292/v1.0/images").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse listResponse=HttpResponse.builder().statusCode(404).build();
   GlanceClient clientWhenNoExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,list,listResponse);
   assertTrue(clientWhenNoExist.getImageClientForRegion("az-1.region-a.geo-1").list().isEmpty());

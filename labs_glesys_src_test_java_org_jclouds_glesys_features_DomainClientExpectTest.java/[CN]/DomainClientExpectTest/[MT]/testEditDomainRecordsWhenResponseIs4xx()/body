@@ -1,4 +1,4 @@
 {
-  DomainClient client=requestSendsResponse(HttpRequest.builder().method("POST").endpoint(URI.create("https://api.glesys.com/domain/updaterecord/format/json")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build()).payload(payloadFromStringWithContentType("recordid=256151&host=somehost&ttl=1800",MediaType.APPLICATION_FORM_URLENCODED)).build(),HttpResponse.builder().statusCode(404).build()).getDomainClient();
+  DomainClient client=requestSendsResponse(HttpRequest.builder().method("POST").endpoint("https://api.glesys.com/domain/updaterecord/format/json").addHeader("Accept","application/json").addHeader("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").addFormParam("recordid","256151").addFormParam("host","somehost").addFormParam("ttl","1800").build(),HttpResponse.builder().statusCode(404).build()).getDomainClient();
   client.editRecord("256151",EditRecordOptions.Builder.host("somehost"),EditRecordOptions.Builder.ttl(1800));
 }

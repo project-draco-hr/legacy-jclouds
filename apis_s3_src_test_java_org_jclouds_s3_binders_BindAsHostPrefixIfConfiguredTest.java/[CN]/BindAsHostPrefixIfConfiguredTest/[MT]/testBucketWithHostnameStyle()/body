@@ -1,5 +1,5 @@
 {
-  HttpRequest request=new HttpRequest("GET",URI.create("http://euc/services/Walrus"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://euc/services/Walrus").build();
   BindAsHostPrefixIfConfigured binder=injector.getInstance(BindAsHostPrefixIfConfigured.class);
   request=binder.bindToRequest(request,"testbucket.example.com");
   assertEquals(request.getRequestLine(),"GET http://euc/services/Walrus/testbucket.example.com HTTP/1.1");

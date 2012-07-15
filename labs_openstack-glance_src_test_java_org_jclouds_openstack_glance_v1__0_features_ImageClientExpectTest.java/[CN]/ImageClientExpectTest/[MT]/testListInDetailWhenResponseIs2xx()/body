@@ -1,5 +1,5 @@
 {
-  HttpRequest listInDetail=HttpRequest.builder().method("GET").endpoint(URI.create("https://glance.jclouds.org:9292/v1.0/images/detail")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).build();
+  HttpRequest listInDetail=HttpRequest.builder().method("GET").endpoint("https://glance.jclouds.org:9292/v1.0/images/detail").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse listInDetailResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/images_detail.json")).build();
   GlanceClient clientWhenExistInDetail=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,listInDetail,listInDetailResponse);
   assertEquals(clientWhenExistInDetail.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));

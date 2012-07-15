@@ -1,5 +1,5 @@
 {
-  UserClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,standardRequestBuilder(endpoint + "/v2.0/users").build(),standardResponseBuilder(200).payload(payloadFromResourceWithContentType("/user_list.json",APPLICATION_JSON)).build()).getUserClient().get();
+  UserClient client=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/users").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_list.json",APPLICATION_JSON)).build()).getUserClient().get();
   Set<User> users=client.list();
   assertNotNull(users);
   assertFalse(users.isEmpty());

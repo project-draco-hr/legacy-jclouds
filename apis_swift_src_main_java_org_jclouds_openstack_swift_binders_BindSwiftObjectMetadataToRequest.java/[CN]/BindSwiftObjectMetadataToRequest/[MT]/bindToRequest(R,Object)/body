@@ -7,7 +7,7 @@
     checkArgument(object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024* 1024,"maximum size for put object is 5GB");
   }
  else {
-    request=ModifyRequest.replaceHeader(request,"Transfer-Encoding","chunked");
+    request=(R)request.toBuilder().replaceHeader("Transfer-Encoding","chunked").build();
   }
   request=mdBinder.bindToRequest(request,object2Blob.apply(object));
   return request;

@@ -1,20 +1,6 @@
 {
   if (this == obj)   return true;
-  if (!super.equals(obj))   return false;
-  if (getClass() != obj.getClass())   return false;
-  HttpResponse other=(HttpResponse)obj;
-  if (payload == null) {
-    if (other.payload != null)     return false;
-  }
- else   if (!payload.equals(other.payload))   return false;
-  if (headers == null) {
-    if (other.headers != null)     return false;
-  }
- else   if (!headers.equals(other.headers))   return false;
-  if (message == null) {
-    if (other.message != null)     return false;
-  }
- else   if (!message.equals(other.message))   return false;
-  if (statusCode != other.statusCode)   return false;
-  return true;
+  if (!(obj instanceof HttpResponse))   return false;
+  HttpResponse that=HttpResponse.class.cast(obj);
+  return super.equals(that) && Objects.equal(this.statusCode,that.statusCode) && Objects.equal(this.message,that.message);
 }
