@@ -3,7 +3,7 @@
     @Override public ListenableFuture<? extends Iterable<LoadBalancerInRegion>> apply(    final String from){
       return Futures.compose(aapi.getLoadBalancerApiForRegion(from).list(),new Function<PagedIterable<LoadBalancer>,Iterable<LoadBalancerInRegion>>(){
         @Override public Iterable<LoadBalancerInRegion> apply(        PagedIterable<LoadBalancer> input){
-          return Iterables.transform(Iterables.concat(input),new Function<LoadBalancer,LoadBalancerInRegion>(){
+          return input.concat().transform(new Function<LoadBalancer,LoadBalancerInRegion>(){
             @Override public LoadBalancerInRegion apply(            LoadBalancer lb){
               return new LoadBalancerInRegion(lb,from);
             }

@@ -3,5 +3,5 @@
   HttpRequest list2=HttpRequest.builder().method("POST").endpoint("https://rds.us-east-1.amazonaws.com/").addHeader("Host","rds.us-east-1.amazonaws.com").payload(payloadFromStringWithContentType("Action=DescribeDBInstances" + "&Marker=MARKER" + "&Signature=TFW8vaU2IppmBey0ZHttbWz4rMFh%2F5ACWl6Xyt58sQU%3D"+ "&SignatureMethod=HmacSHA256"+ "&SignatureVersion=2"+ "&Timestamp=2009-11-08T15%3A54%3A08.897Z"+ "&Version=2012-04-23"+ "&AWSAccessKeyId=identity","application/x-www-form-urlencoded")).build();
   HttpResponse list2Response=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_instances.xml","text/xml")).build();
   RDSApi apiWhenExist=requestsSendResponses(list,listResponse,list2,list2Response);
-  assertEquals(ImmutableList.copyOf(Iterables.concat(apiWhenExist.getInstanceApi().list())),ImmutableList.copyOf(Iterables.concat(new DescribeDBInstancesResponseTest().expected(),new DescribeDBInstancesResponseTest().expected())));
+  assertEquals(apiWhenExist.getInstanceApi().list().concat().toImmutableList(),ImmutableList.copyOf(Iterables.concat(new DescribeDBInstancesResponseTest().expected(),new DescribeDBInstancesResponseTest().expected())));
 }

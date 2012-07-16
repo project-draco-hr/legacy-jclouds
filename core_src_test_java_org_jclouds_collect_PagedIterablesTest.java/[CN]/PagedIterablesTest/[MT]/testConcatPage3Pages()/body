@@ -5,6 +5,6 @@
   expect(markerToNext.apply("MARKER2")).andReturn(IterableWithMarkers.from(ImmutableSet.of("ham","cheeze"),null));
   EasyMock.replay(markerToNext);
   PagedIterable<String> iterable=PagedIterables.create(PagedIterators.advancing(initial,markerToNext));
-  Assert.assertEquals(ImmutableSet.copyOf(Iterables.concat(iterable)),ImmutableSet.of("foo","bar","boo","baz","ham","cheeze"));
+  Assert.assertEquals(iterable.concat().toImmutableSet(),ImmutableSet.of("foo","bar","boo","baz","ham","cheeze"));
   EasyMock.verify(markerToNext);
 }

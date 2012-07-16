@@ -1,0 +1,18 @@
+{
+  final PagedIterator<E> iterator=iterator();
+  final UnmodifiableIterator<Iterator<E>> unmodifiable=new UnmodifiableIterator<Iterator<E>>(){
+    @Override public boolean hasNext(){
+      return iterator.hasNext();
+    }
+    @Override public Iterator<E> next(){
+      return iterator.next().iterator();
+    }
+  }
+;
+  return new FluentIterable<E>(){
+    @Override public Iterator<E> iterator(){
+      return Iterators.concat(unmodifiable);
+    }
+  }
+;
+}
