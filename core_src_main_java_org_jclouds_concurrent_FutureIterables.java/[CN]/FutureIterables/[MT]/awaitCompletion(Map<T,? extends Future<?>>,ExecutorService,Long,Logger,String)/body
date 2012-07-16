@@ -18,7 +18,9 @@
           logException(logger,logPrefix,total,complete.get(),errors.get(),start,e);
           errorMap.put(future.getKey(),e);
         }
-        doneSignal.countDown();
+ finally {
+          doneSignal.countDown();
+        }
       }
       @Override public String toString(){
         return "callGetOnFuture(" + future.getKey() + ","+ future.getValue()+ ")";
@@ -27,8 +29,12 @@
 ,exec);
   }
   try {
-    if (maxTime != null)     doneSignal.await(maxTime,TimeUnit.MILLISECONDS);
- else     doneSignal.await();
+    if (maxTime != null) {
+      doneSignal.await(maxTime,TimeUnit.MILLISECONDS);
+    }
+ else {
+      doneSignal.await();
+    }
     if (errors.get() > 0) {
       String message=message(logPrefix,total,complete.get(),errors.get(),start);
       RuntimeException exception=new RuntimeException(message);
