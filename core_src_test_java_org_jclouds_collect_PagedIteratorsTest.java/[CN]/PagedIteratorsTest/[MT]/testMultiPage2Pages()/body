@@ -1,8 +1,0 @@
-{
-  IterableWithMarker<String> initial=IterableWithMarkers.from(ImmutableSet.of("foo","bar"),"MARKER1");
-  Function<Object,IterableWithMarker<String>> markerToNext=createMock(Function.class);
-  expect(markerToNext.apply("MARKER1")).andReturn(IterableWithMarkers.from(ImmutableSet.of("boo","baz"),null));
-  EasyMock.replay(markerToNext);
-  Assert.assertEquals(ImmutableSet.copyOf(Iterables.concat(ImmutableSet.copyOf(PagedIterators.advancing(initial,markerToNext)))),ImmutableSet.of("foo","bar","boo","baz"));
-  EasyMock.verify(markerToNext);
-}

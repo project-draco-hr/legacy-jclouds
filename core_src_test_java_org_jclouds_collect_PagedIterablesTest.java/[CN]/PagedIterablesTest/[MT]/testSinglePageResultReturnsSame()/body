@@ -2,7 +2,7 @@
   IterableWithMarker<String> initial=IterableWithMarkers.from(ImmutableSet.of("foo","bar"));
   Function<Object,IterableWithMarker<String>> markerToNext=createMock(Function.class);
   EasyMock.replay(markerToNext);
-  PagedIterable<String> iterable=PagedIterables.create(PagedIterators.advancing(initial,markerToNext));
+  PagedIterable<String> iterable=PagedIterables.advance(initial,markerToNext);
   Assert.assertSame(iterable.get(0),initial);
   EasyMock.verify(markerToNext);
 }

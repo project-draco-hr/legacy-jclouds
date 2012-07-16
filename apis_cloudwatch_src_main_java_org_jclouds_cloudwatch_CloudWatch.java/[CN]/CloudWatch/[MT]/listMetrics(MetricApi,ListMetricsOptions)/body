@@ -1,5 +1,5 @@
 {
-  return Iterables.concat(PagedIterables.create(PagedIterators.advancing(metricApi.list(options),new Function<Object,IterableWithMarker<Metric>>(){
+  return Iterables.concat(PagedIterables.advance(metricApi.list(options),new Function<Object,IterableWithMarker<Metric>>(){
     @Override public IterableWithMarker<Metric> apply(    Object input){
       return metricApi.list(options.clone().afterMarker(input));
     }
@@ -7,5 +7,5 @@
       return "listMetrics(" + options + ")";
     }
   }
-)));
+));
 }
