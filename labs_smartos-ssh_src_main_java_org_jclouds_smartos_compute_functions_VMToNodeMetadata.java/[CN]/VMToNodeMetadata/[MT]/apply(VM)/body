@@ -1,0 +1,25 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getUuid() + "");
+  builder.name(from.getAlias());
+  builder.location(findLocationForServer.apply(from));
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getType()));
+  builder.imageId(from.getType() + "");
+  Image image=findImageForServer.apply(from);
+  if (image != null)   builder.operatingSystem(image.getOperatingSystem());
+  builder.hardware(findHardwareForServer.apply(from));
+  builder.status(serverStatusToNodeStatus.get(from.getState()));
+  try {
+    if (from.getState() == VM.State.RUNNING) {
+      Optional<String> ip=from.getPublicAddress();
+      if (ip.isPresent()) {
+        builder.publicAddresses(ImmutableSet.<String>of(ip.get()));
+        builder.privateAddresses(ImmutableSet.<String>of(ip.get()));
+      }
+    }
+  }
+ catch (  Exception ex) {
+  }
+  builder.credentials(LoginCredentials.fromCredentials(credentialStore.get(from.getUuid() + "")));
+  return builder.build();
+}

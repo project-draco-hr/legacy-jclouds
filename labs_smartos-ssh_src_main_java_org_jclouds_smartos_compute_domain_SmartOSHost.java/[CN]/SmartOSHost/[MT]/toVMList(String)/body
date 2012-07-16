@@ -1,0 +1,15 @@
+{
+  try {
+    BufferedReader r=new BufferedReader(new StringReader(string));
+    String line;
+    ImmutableList.Builder resultBuilder=ImmutableList.builder();
+    while ((line=r.readLine()) != null) {
+      VM vm=VM.builder().host(this).fromVmadmString(line).build();
+      resultBuilder.add(vm);
+    }
+    return resultBuilder.build();
+  }
+ catch (  IOException e) {
+    throw new HostException("Error parsing response when building VM list",e);
+  }
+}
