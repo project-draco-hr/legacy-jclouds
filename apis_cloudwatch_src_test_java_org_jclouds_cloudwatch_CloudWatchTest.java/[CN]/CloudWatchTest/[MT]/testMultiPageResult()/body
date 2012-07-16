@@ -2,8 +2,8 @@
   CloudWatchApi api=createMock(CloudWatchApi.class);
   MetricApi metricApi=createMock(MetricApi.class);
   ListMetricsOptions options=new ListMetricsOptions();
-  PaginatedIterable<Metric> response1=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(Metric.class)),"NEXTTOKEN");
-  PaginatedIterable<Metric> response2=PaginatedIterables.forwardWithMarker(ImmutableSet.of(createMock(Metric.class)),null);
+  IterableWithMarker<Metric> response1=IterableWithMarkers.from(ImmutableSet.of(createMock(Metric.class)),"NEXTTOKEN");
+  IterableWithMarker<Metric> response2=IterableWithMarkers.from(ImmutableSet.of(createMock(Metric.class)),null);
   expect(api.getMetricApiForRegion(EasyMock.eq(""))).andReturn(metricApi).atLeastOnce();
   expect(metricApi.list(anyObject(ListMetricsOptions.class))).andReturn(response1).once();
   expect(metricApi.list(anyObject(ListMetricsOptions.class))).andReturn(response2).once();

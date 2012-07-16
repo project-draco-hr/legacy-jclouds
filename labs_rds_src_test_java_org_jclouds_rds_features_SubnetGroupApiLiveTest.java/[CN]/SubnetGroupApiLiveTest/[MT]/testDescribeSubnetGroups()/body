@@ -1,5 +1,5 @@
 {
-  PaginatedIterable<SubnetGroup> response=api().list();
+  IterableWithMarker<SubnetGroup> response=api().list().get(0);
   for (  SubnetGroup subnetGroup : response) {
     checkSubnetGroup(subnetGroup);
   }
@@ -7,7 +7,7 @@
     SubnetGroup subnetGroup=response.iterator().next();
     Assert.assertEquals(api().get(subnetGroup.getName()),subnetGroup);
   }
-  response=api().list(ListSubnetGroupsOptions.Builder.afterMarker(response.getNextMarker()));
+  response=api().list(ListSubnetGroupsOptions.Builder.afterMarker(response.nextMarker().orNull()));
   for (  SubnetGroup subnetGroup : response) {
     checkSubnetGroup(subnetGroup);
   }

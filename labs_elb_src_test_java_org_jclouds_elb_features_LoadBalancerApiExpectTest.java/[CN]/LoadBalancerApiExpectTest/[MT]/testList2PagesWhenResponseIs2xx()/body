@@ -1,0 +1,9 @@
+{
+  HttpResponse listResponse1=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_loadbalancers_marker.xml","text/xml")).build();
+  HttpRequest list2=HttpRequest.builder().method("POST").endpoint("https://elasticloadbalancing.us-east-1.amazonaws.com/").addHeader("Host","elasticloadbalancing.us-east-1.amazonaws.com").payload(payloadFromStringWithContentType("Action=DescribeLoadBalancers" + "&Marker=MARKER" + "&Signature=%2FJttkIXuYljhZLJOPYyn%2BYIkDhD9skmePH3LYEnqmes%3D"+ "&SignatureMethod=HmacSHA256"+ "&SignatureVersion=2"+ "&Timestamp=2009-11-08T15%3A54%3A08.897Z"+ "&Version=2012-06-01"+ "&AWSAccessKeyId=identity","application/x-www-form-urlencoded")).build();
+  HttpResponse listResponse2=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_loadbalancers.xml","text/xml")).build();
+  ELBApi apiWhenExist=requestsSendResponses(list,listResponse1,list2,listResponse2);
+  LoadBalancer lb1=new GetLoadBalancerResponseTest().expected().toBuilder().name("my-load-balancer-1").build();
+  LoadBalancer lb2=new GetLoadBalancerResponseTest().expected();
+  assertEquals(ImmutableSet.copyOf(Iterables.concat(apiWhenExist.getLoadBalancerApi().list())),ImmutableSet.of(lb1,lb2));
+}

@@ -1,5 +1,5 @@
 {
-  PaginatedIterable<SecurityGroup> response=api().list();
+  IterableWithMarker<SecurityGroup> response=api().list().get(0);
   for (  SecurityGroup securityGroup : response) {
     checkSecurityGroup(securityGroup);
   }
@@ -7,7 +7,7 @@
     SecurityGroup securityGroup=response.iterator().next();
     Assert.assertEquals(api().get(securityGroup.getName()),securityGroup);
   }
-  response=api().list(ListSecurityGroupsOptions.Builder.afterMarker(response.getNextMarker()));
+  response=api().list(ListSecurityGroupsOptions.Builder.afterMarker(response.nextMarker().orNull()));
   for (  SecurityGroup securityGroup : response) {
     checkSecurityGroup(securityGroup);
   }

@@ -1,5 +1,5 @@
 {
-  PaginatedIterable<User> response=api().list();
+  IterableWithMarker<User> response=api().list().get(0);
   for (  User user : response) {
     checkUser(user);
   }
@@ -7,7 +7,7 @@
     User user=response.iterator().next();
     Assert.assertEquals(api().get(user.getName().get()),user);
   }
-  response=api().list(ListUsersOptions.Builder.afterMarker(response.getNextMarker()));
+  response=api().list(ListUsersOptions.Builder.afterMarker(response.nextMarker().orNull()));
   for (  User user : response) {
     checkUser(user);
   }

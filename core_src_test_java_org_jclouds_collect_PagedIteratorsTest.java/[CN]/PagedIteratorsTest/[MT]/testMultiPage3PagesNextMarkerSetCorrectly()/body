@@ -1,0 +1,22 @@
+{
+  IterableWithMarker<String> initial=IterableWithMarkers.from(ImmutableSet.of("foo","bar"),"MARKER1");
+  Function<Object,IterableWithMarker<String>> markerToNext=createMock(Function.class);
+  IterableWithMarker<String> second=IterableWithMarkers.from(ImmutableSet.of("boo","baz"),"MARKER2");
+  expect(markerToNext.apply("MARKER1")).andReturn(second);
+  IterableWithMarker<String> third=IterableWithMarkers.from(ImmutableSet.of("ham","cheeze"),null);
+  expect(markerToNext.apply("MARKER2")).andReturn(third);
+  EasyMock.replay(markerToNext);
+  PagedIterator<String> iterator=PagedIterators.advancing(initial,markerToNext);
+  Assert.assertEquals(iterator.hasNext(),true);
+  Assert.assertEquals(iterator.nextMarker(),Optional.of("MARKER1"));
+  Assert.assertEquals(iterator.next(),initial);
+  Assert.assertEquals(iterator.hasNext(),true);
+  Assert.assertEquals(iterator.nextMarker(),Optional.of("MARKER2"));
+  Assert.assertEquals(iterator.next(),second);
+  Assert.assertEquals(iterator.hasNext(),true);
+  Assert.assertEquals(iterator.nextMarker(),Optional.absent());
+  Assert.assertEquals(iterator.next(),third);
+  Assert.assertEquals(iterator.hasNext(),false);
+  Assert.assertEquals(iterator.nextMarker(),Optional.absent());
+  EasyMock.verify(markerToNext);
+}

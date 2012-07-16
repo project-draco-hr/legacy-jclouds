@@ -1,10 +1,10 @@
 {
-  PaginatedIterable<Metric> response;
+  IterableWithMarker<Metric> response;
   String testNamespace=Namespaces.EC2;
   String testMetricName=EC2Constants.MetricName.CPU_UTILIZATION;
   String testDimensionName=EC2Constants.Dimension.INSTANCE_TYPE;
   String testDimensionValue="t1.micro";
-  response=api().list();
+  response=api().list(new ListMetricsOptions());
   performDefaultMetricsTests(response);
   if (Iterables.size(response) > 0) {
     Metric metric=response.iterator().next();
@@ -27,7 +27,7 @@
       }
     }
   }
-  response=api().list(ListMetricsOptions.Builder.afterMarker(response.getNextMarker().toString()));
+  response=api().list(ListMetricsOptions.Builder.afterMarker(response.nextMarker().orNull()));
   performDefaultMetricsTests(response);
   response=api().list(ListMetricsOptions.Builder.namespace(testNamespace));
   performDefaultMetricsTests(response);

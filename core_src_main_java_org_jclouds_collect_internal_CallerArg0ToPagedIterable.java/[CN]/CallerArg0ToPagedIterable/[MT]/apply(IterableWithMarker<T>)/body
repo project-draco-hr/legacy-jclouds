@@ -1,0 +1,10 @@
+{
+  if (input.nextMarker() == null)   return PagedIterables.create(PagedIterators.of(input));
+  Optional<String> arg0Option=Optional.absent();
+  if (request.getCaller().get().getArgs() != null && request.getCaller().get().getArgs().length > 0) {
+    Object arg0=request.getCaller().get().getArgs()[0];
+    if (arg0 != null)     arg0Option=Optional.of(arg0.toString());
+  }
+  final String arg0=arg0Option.orNull();
+  return PagedIterables.create(PagedIterators.advancing(input,markerToNextForCallingArg0(arg0)));
+}
