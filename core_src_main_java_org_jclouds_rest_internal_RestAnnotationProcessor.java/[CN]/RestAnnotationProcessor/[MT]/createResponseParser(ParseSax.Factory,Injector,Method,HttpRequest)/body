@@ -10,5 +10,12 @@
   if (transformer instanceof InvocationContext<?>) {
     ((InvocationContext<?>)transformer).setContext(request);
   }
+  if (method.isAnnotationPresent(Transform.class)) {
+    Function<?,?> wrappingTransformer=injector.getInstance(method.getAnnotation(Transform.class).value());
+    if (wrappingTransformer instanceof InvocationContext<?>) {
+      ((InvocationContext<?>)wrappingTransformer).setContext(request);
+    }
+    transformer=Functions.compose(Function.class.cast(wrappingTransformer),transformer);
+  }
   return transformer;
 }

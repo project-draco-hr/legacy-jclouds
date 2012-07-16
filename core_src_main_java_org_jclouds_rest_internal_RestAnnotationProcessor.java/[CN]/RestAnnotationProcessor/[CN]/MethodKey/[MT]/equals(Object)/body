@@ -1,16 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  MethodKey other=(MethodKey)obj;
-  if (declaringClass == null) {
-    if (other.declaringClass != null)     return false;
-  }
- else   if (!declaringClass.equals(other.declaringClass))   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  if (parametersTypeHashCode != other.parametersTypeHashCode)   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  MethodKey that=MethodKey.class.cast(obj);
+  return Objects.equal(this.declaringClass,that.declaringClass) && Objects.equal(this.name,that.name) && Objects.equal(this.parametersTypeHashCode,that.parametersTypeHashCode);
 }
