@@ -12,6 +12,6 @@
   expect(keyApi.create(key)).andReturn(key);
   replay(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
   CreateUniqueKey parser=new CreateUniqueKey(cloudApiApi,namingConvention,crypto,Providers.of(secureRandom));
-  assertEquals(parser.load(DatacenterAndName.fromDatacenterAndName("datacenter","group")),KeyAndPrivateKey.fromKeyAndPrivateKey(key,PRIVATE_KEY));
+  assertEquals(parser.load(DatacenterAndName.fromDatacenterAndName("datacenter","group")),KeyAndPrivateKey.fromKeyAndPrivateKey(key,PRIVATE_KEY.replaceAll("\n",lineSeparator)));
   verify(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
 }
