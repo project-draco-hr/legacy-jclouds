@@ -1,10 +1,11 @@
 {
   return createClient(new Function<HttpRequest,HttpResponse>(){
-    ImmutableBiMap<HttpRequest,HttpResponse> bimap=ImmutableBiMap.copyOf(requestToResponse);
     @Override public HttpResponse apply(    HttpRequest input){
+      HttpRequest matchedRequest=null;
       HttpResponse response=null;
       for (      HttpRequest request : requestToResponse.keySet()) {
         if (httpRequestsAreEqual(input,request)) {
+          matchedRequest=request;
           response=requestToResponse.get(request);
         }
       }
@@ -22,7 +23,7 @@
         response=HttpResponse.builder().statusCode(500).message("no response configured for request").payload(Payloads.newStringPayload(payload.toString())).build();
       }
  else       if (compareHttpRequestAsType(input) == HttpRequestComparisonType.DEFAULT) {
-        assertEquals(renderRequest(input),renderRequest(bimap.inverse().get(response)));
+        assertEquals(renderRequest(input),renderRequest(matchedRequest));
       }
       return response;
     }
