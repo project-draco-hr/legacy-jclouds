@@ -5,7 +5,9 @@
   blobKey=TestUtils.createRandomBlobKey("writePayload-",".img");
   sourceFile=TestUtils.getImageForBlobPayload();
   filePayload=new FilePayload(sourceFile);
-  storageStrategy.writePayloadOnFile(CONTAINER_NAME,blobKey,filePayload);
+  Blob blob=storageStrategy.newBlob(blobKey);
+  blob.setPayload(filePayload);
+  storageStrategy.putBlob(CONTAINER_NAME,blob);
   File blobFullPath=new File(TARGET_CONTAINER_NAME,blobKey);
   InputSupplier<FileInputStream> expectedInput=Files.newInputStreamSupplier(sourceFile);
   InputSupplier<FileInputStream> actualInput=Files.newInputStreamSupplier(blobFullPath);

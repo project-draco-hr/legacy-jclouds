@@ -3,13 +3,16 @@
   checkNotNull(blob,"blob must be set");
   String blobKey=blob.getMetadata().getName();
   logger.debug("Put blob with key [%s] to container [%s]",blobKey,containerName);
-  String eTag=getEtag(blob);
+  if (!storageStrategy.containerExists(containerName)) {
+    return Futures.immediateFailedFuture(new IllegalStateException("containerName not found: " + containerName));
+  }
   try {
-    storageStrategy.writePayloadOnFile(containerName,blobKey,blob.getPayload());
+    storageStrategy.putBlob(containerName,blob);
   }
  catch (  IOException e) {
     logger.error(e,"An error occurred storing the new blob with name [%s] to container [%s].",blobKey,containerName);
     Throwables.propagate(e);
   }
+  String eTag=getEtag(blob);
   return immediateFuture(eTag);
 }
