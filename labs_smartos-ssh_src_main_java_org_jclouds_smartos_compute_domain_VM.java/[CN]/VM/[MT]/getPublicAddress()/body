@@ -1,0 +1,12 @@
+{
+  Map<String,String> ipAddresses;
+  for (int i=0; i < 30; i++) {
+    ipAddresses=host.getVMIpAddresses(uuid);
+    if (ipAddresses.isEmpty()) {
+      String ip=ipAddresses.get("net0");
+      if (ip != null && !ip.equals("0.0.0.0"))       return Optional.of(ip);
+    }
+    Thread.sleep(1000);
+  }
+  return Optional.absent();
+}

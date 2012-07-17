@@ -1,0 +1,5 @@
+{
+  VmSpecification specification=VmSpecification.builder().alias(name).dataset(getHost().getDataSet(UUID.fromString(template.getImage().getProviderId()))).nic(VmNIC.builder().simpleDCHPNic().build()).build();
+  VM from=getHost().createVM(specification);
+  return new NodeAndInitialCredentials<VM>(from,from.getUuid() + "",LoginCredentials.builder().user("smartos").password("smartos").build());
+}
