@@ -8,5 +8,6 @@
   }
   blob=createUpdatedCopyOfBlobInContainer(containerName,blob);
   storageStrategy.putBlob(containerName,blob);
-  return immediateFuture(Iterables.getOnlyElement(blob.getAllHeaders().get(HttpHeaders.ETAG)));
+  String eTag=getEtag(blob);
+  return immediateFuture(eTag);
 }
