@@ -2,15 +2,7 @@
   final StringBuilder out=new StringBuilder();
   return com.google.common.io.ByteStreams.readBytes(supplier,new ByteProcessor<String>(){
     public boolean processBytes(    byte[] buf,    int off,    int len){
-      char[] hex=new char[2 * len];
-      int index=0;
-      for (int i=off; i < off + len; i++) {
-        byte b=buf[i];
-        int v=b & 0xFF;
-        hex[index++]=(char)HEX_CHAR_TABLE[v >>> 4];
-        hex[index++]=(char)HEX_CHAR_TABLE[v & 0xF];
-      }
-      out.append(hex);
+      out.append(hex(buf,off,len));
       return true;
     }
     public String getResult(){
