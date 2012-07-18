@@ -1,6 +1,13 @@
 {
   if (!storageStrategy.containerExists(container))   return immediateFailedFuture(cnfe(container));
-  Iterable<String> blobBelongingToContainer=storageStrategy.getBlobKeysInsideContainer(container);
+  Iterable<String> blobBelongingToContainer=null;
+  try {
+    blobBelongingToContainer=storageStrategy.getBlobKeysInsideContainer(container);
+  }
+ catch (  IOException e) {
+    logger.error(e,"An error occurred loading blobs contained into container %s",container);
+    Throwables.propagate(e);
+  }
   SortedSet<StorageMetadata> contents=newTreeSet(transform(blobBelongingToContainer,new Function<String,StorageMetadata>(){
     public StorageMetadata apply(    String key){
       Blob oldBlob=loadBlob(container,key);
