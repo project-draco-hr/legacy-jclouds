@@ -5,6 +5,7 @@
   overrides.setProperty(NodePoolProperties.BACKEND_PROVIDER,"stub");
   overrides.setProperty(NodePoolProperties.BASEDIR,basedir);
   overrides.setProperty(NodePoolProperties.BACKEND_MODULES,SLF4JLoggingModule.class.getName() + "," + StubSshClientModule.class.getName());
+  overrides.setProperty(POOL_ADMIN_ACCESS,"adminUsername=pooluser,adminPassword=poolpass");
   ComputeService stub=ContextBuilder.newBuilder("nodepool").credentials("foo","bar").endpoint("gooend").apiVersion("1.1").buildVersion("1.1-2").overrides(overrides).buildInjector().getInstance(Key.get(new TypeLiteral<Supplier<ComputeService>>(){
   }
 ,Backend.class)).get();
