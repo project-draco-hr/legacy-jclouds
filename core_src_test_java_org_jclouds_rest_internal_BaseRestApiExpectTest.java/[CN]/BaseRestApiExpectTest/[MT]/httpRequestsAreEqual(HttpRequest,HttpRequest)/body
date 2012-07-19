@@ -9,7 +9,7 @@
 switch (compareHttpRequestAsType(a)) {
 case XML:
 {
-        Diff diff=XMLUnit.compareXML(Strings2.toStringAndClose(a.getPayload().getInput()),Strings2.toStringAndClose(b.getPayload().getInput()));
+        Diff diff=XMLUnit.compareXML(Strings2.toString(a.getPayload()),Strings2.toString(b.getPayload()));
         diff.overrideDifferenceListener(new DifferenceListener(){
           @Override public int differenceFound(          Difference diff){
             if (diff.getId() == DifferenceConstants.SCHEMA_LOCATION_ID || diff.getId() == DifferenceConstants.NAMESPACE_PREFIX_ID) {
@@ -34,8 +34,8 @@ case XML:
 case JSON:
 {
       JsonParser parser=new JsonParser();
-      JsonElement payloadA=parser.parse(Strings2.toStringAndClose(a.getPayload().getInput()));
-      JsonElement payloadB=parser.parse(Strings2.toStringAndClose(b.getPayload().getInput()));
+      JsonElement payloadA=parser.parse(Strings2.toString(a.getPayload()));
+      JsonElement payloadB=parser.parse(Strings2.toString(b.getPayload()));
       return Objects.equal(payloadA,payloadB);
     }
 default :

@@ -9,7 +9,7 @@
   assertEquals(sessionWithToken.getSession().getOrg(),org);
   assertTrue(sessionWithToken.getSession().getLinks().size() > 0);
   assertNotNull(sessionWithToken.getToken());
-  OrgList orgList=parser.fromXML(Strings2.toStringAndClose(response.getPayload().getInput()),OrgList.class);
+  OrgList orgList=parser.fromXML(Strings2.toString(response.getPayload()),OrgList.class);
   assertTrue(orgList.getOrgs().size() > 0,"must have orgs");
   context.getApi().getOrgApi().getOrg(Iterables.getLast(orgList.getOrgs()).getHref());
 }
