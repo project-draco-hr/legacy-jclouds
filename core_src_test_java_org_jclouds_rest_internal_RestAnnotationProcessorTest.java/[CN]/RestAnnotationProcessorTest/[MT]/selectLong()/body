@@ -3,5 +3,5 @@
   HttpRequest request=factory(TestPut.class).createRequest(method);
   assertResponseParserClassEquals(method,request,ParseFirstJsonValueNamed.class);
   Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
-  assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ \"destroyvirtualmachineresponse\" : {\"jobid\":4} }").build()),new Long(4));
+  assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ \"destroyvirtualmachineresponse\" : {\"jobid\":4} }").build()),Long.valueOf(4));
 }
