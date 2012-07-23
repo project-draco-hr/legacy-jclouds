@@ -1,9 +1,9 @@
 {
-  bind(AsyncBlobStore.class).to(TransientAsyncBlobStore.class).asEagerSingleton();
-  BinderUtils.bindClient(binder(),TransientBlobStore.class,AsyncBlobStore.class,ImmutableMap.<Class<?>,Class<?>>of());
+  bind(AsyncBlobStore.class).to(LocalAsyncBlobStore.class).asEagerSingleton();
+  BinderUtils.bindClient(binder(),LocalBlobStore.class,AsyncBlobStore.class,ImmutableMap.<Class<?>,Class<?>>of());
   install(new BlobStoreObjectModule());
   install(new BlobStoreMapModule());
-  bind(BlobStore.class).to(TransientBlobStore.class);
+  bind(BlobStore.class).to(LocalBlobStore.class);
   bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
   bind(LocalStorageStrategy.class).to(TransientStorageStrategy.class);
   bind(BlobRequestSigner.class).to(TransientBlobRequestSigner.class);
