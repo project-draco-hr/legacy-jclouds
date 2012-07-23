@@ -1,6 +1,7 @@
 {
   Builder builder=AdminAccess.builder(configuration.cryptFunction());
   builder.adminUsername(config.getAdminUsername() != null ? config.getAdminUsername() : configuration.defaultAdminUsername().get());
+  builder.adminFullName(config.getAdminFullName() != null ? config.getAdminFullName() : builder.adminUsername);
   builder.adminHome(config.getAdminHome());
   builder.adminPassword(config.getAdminPassword() != null ? config.getAdminPassword() : configuration.passwordGenerator().get());
   Map<String,String> adminSshKeys=(config.getAdminPublicKey() != null && config.getAdminPrivateKey() != null) ? ImmutableMap.of("public",config.getAdminPublicKey(),"private",config.getAdminPrivateKey()) : configuration.defaultAdminSshKeys().get();

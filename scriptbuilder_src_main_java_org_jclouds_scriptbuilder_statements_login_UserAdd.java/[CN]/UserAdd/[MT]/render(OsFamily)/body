@@ -5,7 +5,12 @@
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
   statements.add(Statements.exec("{md} " + homeDir.substring(0,homeDir.lastIndexOf('/'))));
   ImmutableMap.Builder<String,String> userAddOptions=ImmutableMap.builder();
-  userAddOptions.put("-c",login);
+  if (Strings.isNullOrEmpty(fullName)) {
+    userAddOptions.put("-c",login);
+  }
+ else {
+    userAddOptions.put("-c","'" + fullName + "'");
+  }
   userAddOptions.put("-s",shell);
   if (groups.size() > 0) {
     for (    String group : groups)     statements.add(Statements.exec("groupadd -f " + group));
