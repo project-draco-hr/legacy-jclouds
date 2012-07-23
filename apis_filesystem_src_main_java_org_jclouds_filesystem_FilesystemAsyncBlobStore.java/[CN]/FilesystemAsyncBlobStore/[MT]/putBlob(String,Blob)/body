@@ -7,12 +7,10 @@
     return Futures.immediateFailedFuture(new IllegalStateException("containerName not found: " + containerName));
   }
   try {
-    storageStrategy.putBlob(containerName,blob);
+    return immediateFuture(storageStrategy.putBlob(containerName,blob));
   }
  catch (  IOException e) {
     logger.error(e,"An error occurred storing the new blob with name [%s] to container [%s].",blobKey,containerName);
-    Throwables.propagate(e);
+    throw Throwables.propagate(e);
   }
-  String eTag=getEtag(blob);
-  return immediateFuture(eTag);
 }
