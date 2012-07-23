@@ -19,13 +19,13 @@
       if (unmodifiedSince.before(object.getMetadata().getLastModified()))       return immediateFailedFuture(TransientAsyncBlobStore.returnResponseException(412));
     }
     Blob sourceS3=source.get(sourceObject);
-    MutableBlobMetadata newMd=TransientAsyncBlobStore.copy(sourceS3.getMetadata(),destinationObject);
+    MutableBlobMetadata newMd=BlobStoreUtils.copy(sourceS3.getMetadata(),destinationObject);
     if (options.getAcl() != null)     keyToAcl.put(destinationBucket + "/" + destinationObject,options.getAcl());
     newMd.setLastModified(new Date());
     Blob newBlob=blobProvider.create(newMd);
     newBlob.setPayload(sourceS3.getPayload());
     dest.put(destinationObject,newBlob);
-    return immediateFuture((ObjectMetadata)blob2ObjectMetadata.apply(TransientAsyncBlobStore.copy(newMd)));
+    return immediateFuture((ObjectMetadata)blob2ObjectMetadata.apply(BlobStoreUtils.copy(newMd)));
   }
   return immediateFailedFuture(new KeyNotFoundException(sourceBucket,sourceObject,sourceBucket + "/" + sourceObject));
 }

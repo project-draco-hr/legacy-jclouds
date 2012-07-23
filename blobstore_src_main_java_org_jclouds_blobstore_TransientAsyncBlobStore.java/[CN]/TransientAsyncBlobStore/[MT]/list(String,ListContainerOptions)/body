@@ -13,7 +13,7 @@
       Blob oldBlob=loadBlob(container,key);
       checkState(oldBlob != null,"blob " + key + " is not present although it was in the list of "+ container);
       checkState(oldBlob.getMetadata() != null,"blob " + container + "/"+ key+ " has no metadata");
-      MutableBlobMetadata md=copy(oldBlob.getMetadata());
+      MutableBlobMetadata md=BlobStoreUtils.copy(oldBlob.getMetadata());
       String directoryName=ifDirectoryReturnName.execute(md);
       if (directoryName != null) {
         md.setName(directoryName);
