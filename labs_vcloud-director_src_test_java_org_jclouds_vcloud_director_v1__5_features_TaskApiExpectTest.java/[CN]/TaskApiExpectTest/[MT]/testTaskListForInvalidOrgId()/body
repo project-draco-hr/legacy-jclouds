@@ -1,7 +1,7 @@
 {
   HttpRequest taskRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/tasksList/NOTAUUID").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
   HttpResponse taskResponse=HttpResponse.builder().build();
-  HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/org/NOTAUUID").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).build();
+  HttpRequest orgRequest=HttpRequest.builder().method("GET").endpoint(endpoint + "/org/NOTAUUID").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).build();
   HttpResponse orgResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/org/error400.xml",VCloudDirectorMediaType.ERROR + ";version=1.5")).build();
   VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,taskRequest,taskResponse,orgRequest,orgResponse);
   Error expected=Error.builder().message("validation error on field 'id': String value has invalid format or length").majorErrorCode(400).minorErrorCode("BAD_REQUEST").build();

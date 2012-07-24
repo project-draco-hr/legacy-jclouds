@@ -1,5 +1,5 @@
 {
-  HttpRequest catalogItemRequest=HttpRequest.builder().method("PUT").endpoint(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY").addHeader("Accept","application/vnd.vmware.vcloud.task+xml").addHeader("x-vcloud-authorization",token).payload(payloadFromResourceWithContentType("/catalog/setCatalogItemMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE)).build();
+  HttpRequest catalogItemRequest=HttpRequest.builder().method("PUT").endpoint(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata/KEY").addHeader("Accept","application/vnd.vmware.vcloud.task+xml").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).payload(payloadFromResourceWithContentType("/catalog/setCatalogItemMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE)).build();
   HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/setMetadataValueTask.xml",VCloudDirectorMediaType.TASK + ";version=1.5")).build();
   VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
   URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
