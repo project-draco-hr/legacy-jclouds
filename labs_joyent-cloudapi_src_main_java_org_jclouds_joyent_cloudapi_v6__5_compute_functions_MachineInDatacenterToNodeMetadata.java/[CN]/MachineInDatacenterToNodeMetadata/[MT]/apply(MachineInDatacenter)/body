@@ -6,7 +6,7 @@
   builder.id(machineInDatacenter.slashEncode());
   builder.providerId(from.getId());
   builder.name(from.getName());
-  builder.hostname(from.getName());
+  builder.hostname(from.getId());
   builder.location(zone);
   addMetadataAndParseTagsFromCommaDelimitedValue(builder,filterKeys(from.getMetadata(),new Predicate<String>(){
     @Override public boolean apply(    String input){
@@ -16,7 +16,7 @@
   }
 ));
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
-  builder.imageId(DatacenterAndName.fromDatacenterAndName(machineInDatacenter.getDatacenter(),from.get()).slashEncode());
+  builder.imageId(DatacenterAndName.fromDatacenterAndName(machineInDatacenter.getDatacenter(),from.getDatasetURN()).slashEncode());
   builder.operatingSystem(findOperatingSystemForMachineOrNull(machineInDatacenter));
   builder.hardware(findHardwareForMachineOrNull(machineInDatacenter));
   builder.status(toPortableNodeStatus.get(from.getState()));

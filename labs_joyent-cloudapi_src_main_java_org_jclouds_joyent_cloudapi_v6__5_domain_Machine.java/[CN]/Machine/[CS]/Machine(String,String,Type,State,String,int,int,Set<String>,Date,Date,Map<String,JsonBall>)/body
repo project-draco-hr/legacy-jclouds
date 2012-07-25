@@ -1,14 +1,13 @@
 {
-  super();
-  this.id=id;
-  this.name=name;
-  this.type=type;
-  this.state=state;
-  this.dataset=dataset;
+  this.id=checkNotNull(id,"id");
+  this.name=checkNotNull(name,"name of machine(%s)",id);
+  this.type=checkNotNull(type,"type of machine(%s)",id);
+  this.state=checkNotNull(state,"state of machine(%s)",id);
+  this.dataset=checkNotNull(dataset,"dataset of machine(%s)",id);
   this.memorySizeMb=memorySizeMb;
   this.diskSizeGb=diskSizeGb;
-  this.ips=ImmutableSet.<String>copyOf(ips);
-  this.created=created;
-  this.updated=updated;
-  this.metadata=metadata;
+  this.ips=ImmutableSet.<String>copyOf(checkNotNull(ips,"ips of machine(%s)",id));
+  this.created=checkNotNull(created,"created date of machine(%s)",id);
+  this.updated=checkNotNull(created,"updated date of machine(%s)",id);
+  this.metadata=ImmutableMap.<String,JsonBall>copyOf(checkNotNull(metadata,"metadata of machine(%s)",id));
 }

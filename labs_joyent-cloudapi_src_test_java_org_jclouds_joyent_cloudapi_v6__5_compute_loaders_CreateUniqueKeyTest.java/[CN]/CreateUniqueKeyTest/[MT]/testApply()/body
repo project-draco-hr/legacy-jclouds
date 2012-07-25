@@ -1,17 +1,17 @@
 {
   JoyentCloudApi cloudApiApi=createMock(JoyentCloudApi.class);
+  SshKeyPairGenerator sshKeyPairGenerator=new SshKeyPairGenerator(){
+    @Override public Map<String,String> get(){
+      return keyPair;
+    }
+  }
+;
   KeyApi keyApi=createMock(KeyApi.class);
-  Crypto crypto=createMock(Crypto.class);
-  KeyPairGenerator rsaKeyPairGenerator=createMock(KeyPairGenerator.class);
-  SecureRandom secureRandom=createMock(SecureRandom.class);
-  Key key=Key.builder().name("group-foo").key(openSshKey).build();
-  expect(crypto.rsaKeyPairGenerator()).andReturn(rsaKeyPairGenerator);
-  rsaKeyPairGenerator.initialize(2048,secureRandom);
-  expect(rsaKeyPairGenerator.genKeyPair()).andReturn(keyPair);
+  Key key=Key.builder().name("group-foo").key(keyPair.get("public")).build();
   expect(cloudApiApi.getKeyApi()).andReturn(keyApi);
   expect(keyApi.create(key)).andReturn(key);
-  replay(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
-  CreateUniqueKey parser=new CreateUniqueKey(cloudApiApi,namingConvention,crypto,Providers.of(secureRandom));
-  assertEquals(parser.load(DatacenterAndName.fromDatacenterAndName("datacenter","group")),KeyAndPrivateKey.fromKeyAndPrivateKey(key,PRIVATE_KEY.replaceAll("\n",lineSeparator)));
-  verify(cloudApiApi,keyApi,crypto,rsaKeyPairGenerator,secureRandom);
+  replay(cloudApiApi,keyApi);
+  CreateUniqueKey parser=new CreateUniqueKey(cloudApiApi,namingConvention,sshKeyPairGenerator);
+  assertEquals(parser.load(DatacenterAndName.fromDatacenterAndName("datacenter","group")),KeyAndPrivateKey.fromKeyAndPrivateKey(key,keyPair.get("private")));
+  verify(cloudApiApi,keyApi);
 }
