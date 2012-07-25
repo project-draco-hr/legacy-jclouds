@@ -1,10 +1,5 @@
 {
-  Map<String,String> stringsBoundWithRegionOrZonePrefix=filterStringsBoundByName.apply(new Predicate<String>(){
-    @Override public boolean apply(    String input){
-      return (input.startsWith(PROPERTY_REGION) || input.startsWith(PROPERTY_ZONE));
-    }
-  }
-);
+  Map<String,String> stringsBoundWithRegionOrZonePrefix=filterStringsBoundByName.apply(Predicates.<String>or(Predicates2.startsWith(PROPERTY_REGION),Predicates2.startsWith(PROPERTY_ZONE)));
   Builder<String,Supplier<Set<String>>> codes=ImmutableMap.builder();
   for (  String key : ImmutableSet.of(PROPERTY_REGION,PROPERTY_ZONE)) {
     String regionOrZoneString=stringsBoundWithRegionOrZonePrefix.get(key + "s");

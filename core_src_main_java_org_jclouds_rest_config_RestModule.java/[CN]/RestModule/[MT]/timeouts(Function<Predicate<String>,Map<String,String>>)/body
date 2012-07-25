@@ -1,10 +1,5 @@
 {
-  Map<String,String> stringBoundWithTimeoutPrefix=filterStringsBoundByName.apply(new Predicate<String>(){
-    @Override public boolean apply(    String input){
-      return input.startsWith(PROPERTY_TIMEOUTS_PREFIX);
-    }
-  }
-);
+  Map<String,String> stringBoundWithTimeoutPrefix=filterStringsBoundByName.apply(Predicates2.startsWith(PROPERTY_TIMEOUTS_PREFIX));
   Map<String,Long> longsByName=Maps.transformValues(stringBoundWithTimeoutPrefix,new Function<String,Long>(){
     @Override public Long apply(    String input){
       return Long.valueOf(String.valueOf(input));

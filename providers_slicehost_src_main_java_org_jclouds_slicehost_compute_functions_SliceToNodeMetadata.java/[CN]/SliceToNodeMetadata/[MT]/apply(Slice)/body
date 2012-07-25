@@ -9,17 +9,7 @@
   builder.operatingSystem(parseOperatingSystem(from));
   builder.hardware(parseHardware(from));
   builder.status(sliceToNodeStatus.get(from.getStatus()));
-  builder.publicAddresses(Iterables.filter(from.getAddresses(),new Predicate<String>(){
-    @Override public boolean apply(    String input){
-      return !input.startsWith("10.");
-    }
-  }
-));
-  builder.privateAddresses(Iterables.filter(from.getAddresses(),new Predicate<String>(){
-    @Override public boolean apply(    String input){
-      return input.startsWith("10.");
-    }
-  }
-));
+  builder.publicAddresses(Iterables.filter(from.getAddresses(),Predicates.not(Predicates2.startsWith("10."))));
+  builder.privateAddresses(Iterables.filter(from.getAddresses(),Predicates2.startsWith("10.")));
   return builder.build();
 }
