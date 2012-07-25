@@ -1,11 +1,6 @@
 {
   Builder<String> values=ImmutableSet.builder();
-  for (  String key : Iterables.filter(formParameters.keySet(),new Predicate<String>(){
-    public boolean apply(    String input){
-      return input.startsWith(prefix);
-    }
-  }
-)) {
+  for (  String key : Iterables.filter(formParameters.keySet(),Predicates2.startsWith(prefix))) {
     values.add(Iterables.get(formParameters.get(key),0));
   }
   return values.build();
