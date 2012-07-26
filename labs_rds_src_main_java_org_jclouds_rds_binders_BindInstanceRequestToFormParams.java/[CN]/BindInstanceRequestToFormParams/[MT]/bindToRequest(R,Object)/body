@@ -1,0 +1,22 @@
+{
+  InstanceRequest instanceRequest=InstanceRequest.class.cast(checkNotNull(input,"instanceRequest must be set!"));
+  ImmutableMultimap.Builder<String,String> formParameters=ImmutableMultimap.builder();
+  formParameters.put("AllocatedStorage",instanceRequest.getAllocatedStorageGB() + "");
+  formParameters.put("AutoMinorVersionUpgrade",instanceRequest.isAutoMinorVersionUpgrade() + "");
+  formParameters.put("BackupRetentionPeriod",instanceRequest.getBackupRetentionPeriod() + "");
+  if (instanceRequest.getCharacterSet().isPresent())   formParameters.put("CharacterSetName",instanceRequest.getCharacterSet().get());
+  formParameters.put("DBInstanceClass",instanceRequest.getInstanceClass());
+  if (instanceRequest.getName().isPresent())   formParameters.put("DBName",instanceRequest.getName().get());
+  if (instanceRequest.getParameterGroup().isPresent())   formParameters.put("DBParameterGroupName",instanceRequest.getParameterGroup().get());
+  int groupIndex=1;
+  for (  String securityGroup : instanceRequest.getSecurityGroups())   formParameters.put("DBSecurityGroups.member." + groupIndex++,securityGroup);
+  if (instanceRequest.getSubnetGroup().isPresent())   formParameters.put("DBSubnetGroupName",instanceRequest.getSubnetGroup().get());
+  formParameters.put("Engine",instanceRequest.getEngine());
+  if (instanceRequest.getEngineVersion().isPresent())   formParameters.put("EngineVersion",instanceRequest.getEngineVersion().get());
+  if (instanceRequest.getLicenseModel().isPresent())   formParameters.put("LicenseModel",instanceRequest.getLicenseModel().get());
+  formParameters.put("MasterUserPassword",instanceRequest.getMasterPassword());
+  formParameters.put("MasterUsername",instanceRequest.getMasterUsername());
+  if (instanceRequest.getOptionGroup().isPresent())   formParameters.put("OptionGroupName",instanceRequest.getOptionGroup().get());
+  if (instanceRequest.getPort().isPresent())   formParameters.put("Port",instanceRequest.getPort().get().toString());
+  return (R)request.toBuilder().replaceFormParams(formParameters.build()).build();
+}

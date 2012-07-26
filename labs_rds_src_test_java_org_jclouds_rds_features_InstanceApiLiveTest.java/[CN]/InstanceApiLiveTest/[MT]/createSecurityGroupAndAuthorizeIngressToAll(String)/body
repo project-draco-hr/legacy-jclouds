@@ -1,0 +1,26 @@
+{
+  RetryablePredicate<SecurityGroup> ipRangesAuthorized=new RetryablePredicate<SecurityGroup>(new Predicate<SecurityGroup>(){
+    @Override public boolean apply(    SecurityGroup input){
+      return Iterables.all(sgApi().get(input.getName()).getIPRanges(),new Predicate<Authorization>(){
+        @Override public boolean apply(        @Nullable Authorization i2){
+          return i2.getStatus() == Status.AUTHORIZED;
+        }
+      }
+);
+    }
+  }
+,30000,100,500,TimeUnit.MILLISECONDS);
+  try {
+    SecurityGroup securityGroup=sgApi().createWithNameAndDescription(name,"jclouds");
+    Logger.getAnonymousLogger().info("created securityGroup: " + securityGroup);
+    securityGroup=sgApi().authorizeIngressToIPRange(name,"0.0.0.0/0");
+    assertTrue(ipRangesAuthorized.apply(securityGroup),securityGroup.toString());
+    securityGroup=sgApi().get(securityGroup.getName());
+    Logger.getAnonymousLogger().info("ip range authorized: " + securityGroup);
+    return securityGroup;
+  }
+ catch (  RuntimeException e) {
+    sgApi().delete(name);
+    throw e;
+  }
+}

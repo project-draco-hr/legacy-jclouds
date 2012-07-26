@@ -1,0 +1,6 @@
+{
+  HttpRequest authorize=HttpRequest.builder().method("POST").endpoint("https://rds.us-east-1.amazonaws.com/").addHeader("Host","rds.us-east-1.amazonaws.com").payload(payloadFromStringWithContentType("Action=AuthorizeDBSecurityGroupIngress" + "&DBSecurityGroupName=mydbsecuritygroup" + "&EC2SecurityGroupId=sg-1312321312"+ "&Signature=o31Wey%2FwliTbHJoxdF7KGqIJwSM6pfqzkjIYio3XNGs%3D"+ "&SignatureMethod=HmacSHA256"+ "&SignatureVersion=2"+ "&Timestamp=2009-11-08T15%3A54%3A08.897Z"+ "&Version=2012-04-23"+ "&AWSAccessKeyId=identity","application/x-www-form-urlencoded")).build();
+  HttpResponse authorizeResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/authorize_securitygroup.xml","text/xml")).build();
+  RDSApi apiWhenExist=requestSendsResponse(authorize,authorizeResponse);
+  apiWhenExist.getSecurityGroupApi().authorizeIngressToVPCSecurityGroup("mydbsecuritygroup","sg-1312321312");
+}

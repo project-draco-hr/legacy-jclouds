@@ -1,0 +1,7 @@
+{
+  if (from instanceof AWSResponseException) {
+    AWSResponseException e=AWSResponseException.class.cast(from);
+    if (e.getError().getCode().equals("InvalidDBInstanceState") && e.getError().getMessage().contains("has state: deleting"))     return null;
+  }
+  return rto404.apply(from);
+}

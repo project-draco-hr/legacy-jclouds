@@ -1,0 +1,6 @@
+{
+  HttpRequest create=HttpRequest.builder().method("POST").endpoint("https://rds.us-east-1.amazonaws.com/").addHeader("Host","rds.us-east-1.amazonaws.com").payload(payloadFromStringWithContentType("Action=CreateDBInstance" + "&AllocatedStorage=10" + "&AutoMinorVersionUpgrade=true"+ "&BackupRetentionPeriod=1"+ "&DBInstanceClass=db.m1.large"+ "&DBInstanceIdentifier=SimCoProd01"+ "&DBSubnetGroupName=dbSubnetgroup01"+ "&Engine=mysql"+ "&MasterUserPassword=Password01"+ "&MasterUsername=master"+ "&Signature=kfDFp50sxBkSlZd%2Bv8G9u6%2BFdZ133BEVcIRGwwoa8%2Fs%3D"+ "&SignatureMethod=HmacSHA256"+ "&SignatureVersion=2"+ "&Timestamp=2009-11-08T15%3A54%3A08.897Z"+ "&Version=2012-04-23"+ "&AWSAccessKeyId=identity","application/x-www-form-urlencoded")).build();
+  HttpResponse createResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/create_instance.xml","text/xml")).build();
+  RDSApi apiWhenExist=requestSendsResponse(create,createResponse);
+  apiWhenExist.getInstanceApi().create("SimCoProd01",InstanceRequest.builder().engine("mysql").masterPassword("Password01").allocatedStorageGB(10).masterUsername("master").instanceClass("db.m1.large").subnetGroup("dbSubnetgroup01").build());
+}
