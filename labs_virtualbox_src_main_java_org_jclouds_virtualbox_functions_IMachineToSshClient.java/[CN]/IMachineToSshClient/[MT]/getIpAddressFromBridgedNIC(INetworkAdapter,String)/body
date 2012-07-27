@@ -1,7 +1,7 @@
 {
   List<BridgedIf> activeBridgedInterfaces=new RetrieveActiveBridgedInterfaces(scriptRunnerFactory).apply(hostSupplier.get());
-  BridgedIf activeBrigedIf=checkNotNull(Iterables.get(activeBridgedInterfaces,0),"activeBridgrdIf");
-  network=activeBrigedIf.getIpAddress();
+  BridgedIf activeBridgedIf=checkNotNull(Iterables.get(activeBridgedInterfaces,0),"activeBridgedInterfaces");
+  network=activeBridgedIf.getIpAddress();
   RunScriptOnNode ipScanRunScript=scriptRunnerFactory.create(hostSupplier.get(),new ScanNetworkWithPing(network),RunScriptOptions.NONE);
   ExecResponse execResponse=ipScanRunScript.init().call();
   checkState(execResponse.getExitStatus() == 0);
