@@ -1,0 +1,6 @@
+{
+  Supplier<URI> identityServiceForVersion=getLastValueInMap(factory.createForApiTypeAndVersion(ServiceType.IDENTITY,version));
+  Supplier<URI> whenIdentityServiceIsntListedFallbackToProviderURI=Suppliers2.onThrowable(identityServiceForVersion,NoSuchElementException.class,providerURI);
+  Supplier<URI> whenIdentityServiceHasNoAdminURLFallbackToProviderURI=Suppliers2.or(whenIdentityServiceIsntListedFallbackToProviderURI,providerURI);
+  return whenIdentityServiceHasNoAdminURLFallbackToProviderURI;
+}
