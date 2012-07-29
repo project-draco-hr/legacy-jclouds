@@ -1,0 +1,17 @@
+{
+  return new Supplier<T>(){
+    @Override public T get(){
+      try {
+        return unlessThrowable.get();
+      }
+ catch (      Throwable t) {
+        if (Throwables2.getFirstThrowableOfType(t,throwable) != null)         return fallback.get();
+        throw Throwables.propagate(t);
+      }
+    }
+    @Override public String toString(){
+      return Objects.toStringHelper(this).add("unlessThrowable",unlessThrowable).add("throwable",throwable.getSimpleName()).add("fallback",fallback).toString();
+    }
+  }
+;
+}

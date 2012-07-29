@@ -27,6 +27,9 @@
       requestBuilder=GeneratedHttpRequest.builder();
       requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
     }
+    if (endpoint == null) {
+      throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
+    }
     requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).skips(skips).filters(getFiltersIfAnnotated(method));
     UriBuilder builder=uriBuilderProvider.get().uri(endpoint);
     Multimap<String,String> tokenValues=LinkedHashMultimap.create();

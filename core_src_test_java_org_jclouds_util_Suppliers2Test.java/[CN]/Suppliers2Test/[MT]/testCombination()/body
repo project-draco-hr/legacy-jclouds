@@ -1,0 +1,6 @@
+{
+  Supplier<String> alternate=Suppliers.ofInstance("bar");
+  Supplier<String> or=Suppliers2.or(Suppliers.<String>ofInstance("foo"),alternate);
+  Supplier<String> combined=Suppliers2.onThrowable(or,NoSuchElementException.class,alternate);
+  assertEquals(combined.get(),"foo");
+}
