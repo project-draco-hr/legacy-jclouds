@@ -1,5 +1,5 @@
 {
   String bytesString=checkNotNull(from.getFirstHeaderOrNull(SwiftHeaders.ACCOUNT_BYTES_USED),SwiftHeaders.ACCOUNT_BYTES_USED);
   String containersCountString=checkNotNull(from.getFirstHeaderOrNull(SwiftHeaders.ACCOUNT_CONTAINER_COUNT),SwiftHeaders.ACCOUNT_CONTAINER_COUNT);
-  return new AccountMetadata(Long.parseLong(containersCountString),Long.parseLong(bytesString));
+  return AccountMetadata.builder().containerCount(Long.parseLong(containersCountString)).bytes(Long.parseLong(bytesString)).build();
 }

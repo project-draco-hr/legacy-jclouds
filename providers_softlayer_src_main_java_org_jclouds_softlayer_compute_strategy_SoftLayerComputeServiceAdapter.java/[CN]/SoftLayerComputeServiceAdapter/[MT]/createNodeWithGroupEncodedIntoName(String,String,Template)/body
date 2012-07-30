@@ -4,7 +4,7 @@
   checkArgument(template.getOptions().getClass().isAssignableFrom(SoftLayerTemplateOptions.class),"options class %s should have been assignable from SoftLayerTemplateOptions",template.getOptions().getClass());
   String domainName=template.getOptions().as(SoftLayerTemplateOptions.class).getDomainName();
   VirtualGuest newGuest=VirtualGuest.builder().domain(domainName).hostname(name).build();
-  ProductOrder order=ProductOrder.builder().packageId(productPackageSupplier.get().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuest(newGuest).build();
+  ProductOrder order=ProductOrder.builder().packageId(productPackageSupplier.get().getId()).location(template.getLocation().getId()).quantity(1).useHourlyPricing(true).prices(getPrices(template)).virtualGuests(newGuest).build();
   logger.debug(">> ordering new virtualGuest domain(%s) hostname(%s)",domainName,name);
   ProductOrderReceipt productOrderReceipt=client.getVirtualGuestClient().orderVirtualGuest(order);
   VirtualGuest result=get(productOrderReceipt.getOrderDetails().getVirtualGuests(),0);

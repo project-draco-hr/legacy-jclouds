@@ -1,15 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  ObjectInfoImpl other=(ObjectInfoImpl)obj;
-  if (container == null) {
-    if (other.container != null)     return false;
-  }
- else   if (!container.equals(other.container))   return false;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  ObjectInfoImpl that=ObjectInfoImpl.class.cast(obj);
+  return Objects.equal(this.name,that.name) && Objects.equal(this.container,that.container);
 }

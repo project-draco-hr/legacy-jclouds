@@ -1,17 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  FloatingIP other=(FloatingIP)obj;
-  if (fixedIP == null) {
-    if (other.fixedIP != null)     return false;
-  }
- else   if (!fixedIP.equals(other.fixedIP))   return false;
-  if (id != other.id)   return false;
-  if (instanceID != other.instanceID)   return false;
-  if (ip == null) {
-    if (other.ip != null)     return false;
-  }
- else   if (!ip.equals(other.ip))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  FloatingIP that=FloatingIP.class.cast(obj);
+  return super.equals(that) && Objects.equal(this.ip,that.ip) && Objects.equal(this.fixedIP,that.fixedIP)&& Objects.equal(this.instanceID,that.instanceID);
 }

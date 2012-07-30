@@ -1,16 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  BackupSchedule other=(BackupSchedule)obj;
-  if (daily == null) {
-    if (other.daily != null)     return false;
-  }
- else   if (!daily.equals(other.daily))   return false;
-  if (enabled != other.enabled)   return false;
-  if (weekly == null) {
-    if (other.weekly != null)     return false;
-  }
- else   if (!weekly.equals(other.weekly))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  BackupSchedule that=BackupSchedule.class.cast(obj);
+  return Objects.equal(this.daily,that.daily) && Objects.equal(this.enabled,that.enabled) && Objects.equal(this.weekly,that.weekly);
 }
