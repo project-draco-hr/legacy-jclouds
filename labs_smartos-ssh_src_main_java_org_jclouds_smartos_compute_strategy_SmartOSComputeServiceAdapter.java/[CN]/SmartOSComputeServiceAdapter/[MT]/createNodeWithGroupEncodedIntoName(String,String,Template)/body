@@ -1,5 +1,13 @@
 {
-  VmSpecification specification=VmSpecification.builder().alias(name).dataset(getHost().getDataSet(UUID.fromString(template.getImage().getProviderId()))).nic(VmNIC.builder().simpleDHCPNic().build()).build();
+  VmSpecification.Builder builder=VmSpecification.builder();
+  String providerId=template.getHardware().getProviderId();
+  if (specificationMap.containsKey(providerId)) {
+    builder.fromVmSpecification(specificationMap.get(providerId));
+  }
+ else {
+    builder.nic(VmNIC.builder().simpleDHCPNic().build());
+  }
+  VmSpecification specification=builder.alias(name).dataset(getHost().getDataSet(UUID.fromString(template.getImage().getProviderId()))).build();
   VM from=getHost().createVM(specification);
   return new NodeAndInitialCredentials<VM>(from,from.getUuid() + "",LoginCredentials.builder().user("smartos").password("smartos").build());
 }
