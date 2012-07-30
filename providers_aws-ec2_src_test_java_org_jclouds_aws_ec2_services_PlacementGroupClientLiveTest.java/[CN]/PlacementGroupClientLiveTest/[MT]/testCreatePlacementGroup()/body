@@ -1,6 +1,8 @@
 {
   String groupName=PREFIX + "1";
-  client.getPlacementGroupServices().deletePlacementGroupInRegion(null,groupName);
-  client.getPlacementGroupServices().createPlacementGroupInRegion(null,groupName);
-  verifyPlacementGroup(groupName);
+  for (  String region : supportedRegions) {
+    client.getPlacementGroupServices().deletePlacementGroupInRegion(region,groupName);
+    client.getPlacementGroupServices().createPlacementGroupInRegion(region,groupName);
+    verifyPlacementGroup(region,groupName);
+  }
 }
