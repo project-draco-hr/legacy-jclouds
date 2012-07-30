@@ -11,6 +11,12 @@
   bind(new TypeLiteral<CacheLoader<RegionAndName,String>>(){
   }
 ).annotatedWith(Names.named("ELASTICIP")).to(LoadPublicIpForInstanceOrNull.class);
+  bind(new TypeLiteral<Function<PasswordDataAndPrivateKey,LoginCredentials>>(){
+  }
+).to(WindowsLoginCredentialsFromEncryptedData.class);
+  bind(new TypeLiteral<Function<RunningInstance,LoginCredentials>>(){
+  }
+).to(PasswordCredentialsFromWindowsInstance.class);
   bind(new TypeLiteral<Function<RegionAndName,KeyPair>>(){
   }
 ).to(CreateUniqueKeyPair.class);

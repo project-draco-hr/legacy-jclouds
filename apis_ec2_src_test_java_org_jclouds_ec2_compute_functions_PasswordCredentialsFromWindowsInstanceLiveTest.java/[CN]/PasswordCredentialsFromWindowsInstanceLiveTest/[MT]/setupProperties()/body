@@ -1,0 +1,12 @@
+{
+  Properties overrides=super.setupProperties();
+  String windowsSpec=setIfTestSystemPropertyPresent(overrides,provider + ".windows-template");
+  if (Strings.emptyToNull(windowsSpec) != null) {
+    windowsTemplate=TemplateBuilderSpec.parse(windowsSpec);
+  }
+  String windowsOwner=setIfTestSystemPropertyPresent(overrides,provider + ".windows-owner");
+  if (Strings.emptyToNull(windowsOwner) != null) {
+    overrides.setProperty(PROPERTY_EC2_AMI_OWNERS,windowsOwner);
+  }
+  return overrides;
+}

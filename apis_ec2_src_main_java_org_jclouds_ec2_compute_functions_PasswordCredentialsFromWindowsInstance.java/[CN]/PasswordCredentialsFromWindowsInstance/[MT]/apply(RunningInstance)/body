@@ -1,0 +1,28 @@
+{
+  LoginCredentials credentials=LoginCredentials.builder().user("Administrator").noPrivateKey().build();
+  String privateKey=getPrivateKeyOrNull(instance);
+  if (privateKey == null) {
+    return credentials;
+  }
+  final WindowsApi windowsApi=ec2Client.getWindowsApiForRegion(instance.getRegion());
+  final AtomicReference<PasswordData> data=new AtomicReference<PasswordData>();
+  Predicate<String> passwordReady=new Predicate<String>(){
+    @Override public boolean apply(    @Nullable String s){
+      if (Strings.isNullOrEmpty(s))       return false;
+      data.set(windowsApi.getPasswordDataForInstance(instance.getId()));
+      if (data.get() == null)       return false;
+      return !Strings.isNullOrEmpty(data.get().getPasswordData());
+    }
+  }
+;
+  RetryablePredicate<String> passwordReadyRetryable=new RetryablePredicate<String>(passwordReady,600,10,TimeUnit.SECONDS);
+  logger.debug(">> awaiting password data for instance(%s/%s)",instance.getRegion(),instance.getId());
+  if (passwordReadyRetryable.apply(instance.getId())) {
+    credentials=pwDataToLoginCredentials.apply(new PasswordDataAndPrivateKey(data.get(),privateKey));
+    logger.debug("<< obtained password data for instance(%s/%s)",instance.getRegion(),instance.getId());
+  }
+ else {
+    logger.debug("<< unable to get password data for instance(%s/%s)",instance.getRegion(),instance.getId());
+  }
+  return credentials;
+}

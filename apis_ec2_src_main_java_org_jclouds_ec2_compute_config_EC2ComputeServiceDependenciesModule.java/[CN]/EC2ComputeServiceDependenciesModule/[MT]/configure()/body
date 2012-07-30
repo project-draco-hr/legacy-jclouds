@@ -17,7 +17,12 @@
   bind(new TypeLiteral<CacheLoader<RegionAndName,String>>(){
   }
 ).annotatedWith(Names.named("ELASTICIP")).to(LoadPublicIpForInstanceOrNull.class);
-  bind(WindowsLoginCredentialsFromEncryptedData.class);
+  bind(new TypeLiteral<Function<PasswordDataAndPrivateKey,LoginCredentials>>(){
+  }
+).to(WindowsLoginCredentialsFromEncryptedData.class);
+  bind(new TypeLiteral<Function<RunningInstance,LoginCredentials>>(){
+  }
+).to(PasswordCredentialsFromWindowsInstance.class);
   bind(new TypeLiteral<Function<org.jclouds.ec2.domain.Image,Image>>(){
   }
 ).to(EC2ImageParser.class);

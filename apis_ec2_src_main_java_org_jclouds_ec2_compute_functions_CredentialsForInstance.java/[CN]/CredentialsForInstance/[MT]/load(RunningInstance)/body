@@ -1,7 +1,9 @@
 {
-  Credentials credentials=null;
-  if (instance.getKeyName() != null) {
-    credentials=new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance));
+  if ("windows".equals(instance.getPlatform())) {
+    return passwordCredentialsFromWindowsInstance.apply(instance);
   }
-  return credentials;
+ else   if (instance.getKeyName() != null) {
+    return new Credentials(getLoginAccountFor(instance),getPrivateKeyOrNull(instance));
+  }
+  return null;
 }

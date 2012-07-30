@@ -1,0 +1,12 @@
+{
+  String group="winadm";
+  Template template=view.getComputeService().templateBuilder().from(windowsTemplate).options(inboundPorts(3389)).build();
+  try {
+    NodeMetadata node=Iterables.getOnlyElement(view.getComputeService().createNodesInGroup(group,1,template));
+    assertEquals(node.getCredentials().getUser(),"Administrator");
+    assertFalse(Strings.isNullOrEmpty(node.getCredentials().getPassword()));
+  }
+  finally {
+    view.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));
+  }
+}
