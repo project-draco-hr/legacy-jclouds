@@ -3,6 +3,7 @@
   builder.ids(from.getHref().toASCIIString());
   builder.uri(from.getHref());
   builder.name(from.getName());
+  if (!isNullOrEmpty(from.getDescription()) && from.getDescription().indexOf('=') != -1)   addMetadataAndParseTagsFromCommaDelimitedValue(builder,Splitter.on('\n').withKeyValueSeparator("=").split(from.getDescription()));
   builder.hostname(from.getName());
   builder.location(findLocationForResourceInVDC.apply(from.getVDC()));
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));

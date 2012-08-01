@@ -6,6 +6,8 @@
   VApp result=factory.create(injector.getInstance(VAppHandler.class)).parse(is);
   VAppToNodeMetadata converter=injector.getInstance(VAppToNodeMetadata.class);
   NodeMetadata node=converter.apply(result);
+  assertEquals(node.getUserMetadata(),ImmutableMap.<String,String>of());
+  assertEquals(node.getTags(),ImmutableSet.<String>of());
   assertEquals(node.getLocation(),location);
   assertEquals(node.getPrivateAddresses(),ImmutableSet.of("172.16.7.230"));
   assertEquals(node.getPublicAddresses(),ImmutableSet.of());

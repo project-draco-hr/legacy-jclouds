@@ -8,7 +8,10 @@
   NetworkConfig config=networkConfigurationForNetworkAndOptions.apply(networkToConnect,vOptions);
   InstantiateVAppTemplateOptions options=addNetworkConfig(config);
   String description=VCloudTemplateOptions.class.cast(template.getOptions()).getDescription();
-  if (description == null)   description=vAppTemplate.getName();
+  if (description == null) {
+    Map<String,String> md=metadataAndTagsAsCommaDelimitedValue(template.getOptions());
+    description=Joiner.on('\n').withKeyValueSeparator("=").join(md);
+  }
   options.description(description);
   options.deploy(false);
   options.powerOn(false);
