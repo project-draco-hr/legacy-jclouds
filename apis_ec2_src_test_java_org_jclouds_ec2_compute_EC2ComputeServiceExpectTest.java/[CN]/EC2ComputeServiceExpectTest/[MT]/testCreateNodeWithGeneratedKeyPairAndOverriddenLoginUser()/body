@@ -1,0 +1,18 @@
+{
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  requestResponseMap.put(describeRegionsRequest,describeRegionsResponse);
+  requestResponseMap.put(describeAvailabilityZonesRequest,describeAvailabilityZonesResponse);
+  requestResponseMap.put(describeImagesRequest,describeImagesResponse);
+  requestResponseMap.put(createKeyPairRequest,createKeyPairResponse);
+  requestResponseMap.put(createSecurityGroupRequest,createSecurityGroupResponse);
+  requestResponseMap.put(describeSecurityGroupRequest,describeSecurityGroupResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequest22,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(runInstancesRequest,runInstancesResponse);
+  requestResponseMap.put(describeInstanceRequest,describeInstanceResponse);
+  requestResponseMap.put(describeImageRequest,describeImagesResponse);
+  ComputeService apiThatCreatesNode=requestsSendResponses(requestResponseMap.build());
+  NodeMetadata node=Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test",1,blockUntilRunning(false).overrideLoginUser("ec2-user")));
+  assertEquals(node.getCredentials().getUser(),"ec2-user");
+  assertNotNull(node.getCredentials().getPrivateKey());
+}
