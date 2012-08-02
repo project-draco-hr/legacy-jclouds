@@ -12,8 +12,7 @@
   requestResponseMap.put(describeInstanceRequest,describeInstanceResponse);
   requestResponseMap.put(describeImageRequest,describeImagesResponse);
   ComputeService apiThatCreatesNode=requestsSendResponses(requestResponseMap.build());
-  NodeMetadata node=Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test",1,blockUntilRunning(false).overrideLoginUser("ec2-user")));
+  NodeMetadata node=Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test",1,apiThatCreatesNode.templateBuilder().from("osDescriptionMatches=.*fedora.*,loginUser=ec2-user").build()));
   assertEquals(node.getCredentials().getUser(),"ec2-user");
-  System.out.println(node.getImageId());
   assertNotNull(node.getCredentials().getPrivateKey());
 }
