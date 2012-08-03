@@ -1,5 +1,5 @@
 {
-  for (  String region : view.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi().getAvailabilityZoneAndRegionServices().describeRegions().keySet()) {
+  for (  String region : ec2Client.getConfiguredRegions()) {
     SortedSet<Volume> allResults=Sets.newTreeSet(client.describeVolumesInRegion(region));
     assertNotNull(allResults);
     if (allResults.size() >= 1) {

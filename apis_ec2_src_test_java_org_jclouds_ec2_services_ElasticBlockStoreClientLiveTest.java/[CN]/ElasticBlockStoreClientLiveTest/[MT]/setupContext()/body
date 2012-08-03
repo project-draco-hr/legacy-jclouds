@@ -1,4 +1,8 @@
 {
   super.setupContext();
-  client=view.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi().getElasticBlockStoreServices();
+  ec2Client=view.unwrap(EC2ApiMetadata.CONTEXT_TOKEN).getApi();
+  client=ec2Client.getElasticBlockStoreServices();
+  AvailabilityZoneInfo info=Iterables.get(ec2Client.getAvailabilityZoneAndRegionServices().describeAvailabilityZonesInRegion(defaultRegion),0);
+  defaultRegion=checkNotNull(Strings.emptyToNull(info.getRegion()),"region of " + info);
+  defaultZone=checkNotNull(Strings.emptyToNull(info.getZone()),"zone of " + info);
 }

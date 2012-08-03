@@ -1,10 +1,9 @@
 {
-  Volume expected=client.createVolumeInAvailabilityZone(getDefaultAvailabilityZone(),1);
+  Volume expected=client.createVolumeInAvailabilityZone(defaultZone,1);
   assertNotNull(expected);
-  System.out.println(expected);
-  assertEquals(expected.getAvailabilityZone(),getDefaultAvailabilityZone());
+  assertEquals(expected.getAvailabilityZone(),defaultZone);
   this.volumeId=expected.getId();
-  Set<Volume> result=Sets.newLinkedHashSet(client.describeVolumesInRegion(null,expected.getId()));
+  Set<Volume> result=Sets.newLinkedHashSet(client.describeVolumesInRegion(defaultRegion,expected.getId()));
   assertNotNull(result);
   assertEquals(result.size(),1);
   Volume volume=result.iterator().next();

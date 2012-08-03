@@ -1,0 +1,17 @@
+{
+  String instanceId=null;
+  try {
+    RunningInstance instance=getOnlyElement(concat(ec2Client.getInstanceServices().runInstancesInRegion(regionId,null,imageId,1,1)));
+    instanceId=instance.getId();
+    assertTrue(runningTester.apply(instance),instanceId + "didn't achieve the state running!");
+    instance=getOnlyElement(concat(ec2Client.getInstanceServices().describeInstancesInRegion(regionId,instanceId)));
+    BlockDevice device=instance.getEbsBlockDevices().get("/dev/sda1");
+    assertNotNull(device,"device: /dev/sda1 not present on: " + instance);
+    Snapshot snapshot=ec2Client.getElasticBlockStoreServices().createSnapshotInRegion(regionId,device.getVolumeId());
+    snapshotsToDelete.add(snapshot.getId());
+    return snapshot;
+  }
+  finally {
+    if (instanceId != null)     ec2Client.getInstanceServices().terminateInstancesInRegion(regionId,instanceId);
+  }
+}
