@@ -4,8 +4,16 @@
   Task deployVApp=vAppApi.deploy(delete.getHref(),params);
   assertTaskSucceedsLong(deployVApp);
   delete=vAppApi.getVApp(delete.getHref());
-  Vm temp=Iterables.getOnlyElement(delete.getChildren().getVms());
-  temp=powerOffVm(temp.getHref());
+  List<Vm> vms=delete.getChildren().getVms();
+  Vm temp=Iterables.get(vms,0);
+  if (vms.size() == 1) {
+    UndeployVAppParams undeployParams=UndeployVAppParams.builder().build();
+    Task shutdownVapp=vAppApi.undeploy(delete.getHref(),undeployParams);
+    assertTaskSucceedsLong(shutdownVapp);
+  }
+ else {
+    powerOffVm(temp.getHref());
+  }
   Task deleteVm=vmApi.deleteVm(temp.getHref());
   assertTrue(retryTaskSuccess.apply(deleteVm),String.format(TASK_COMPLETE_TIMELY,"deleteVm"));
   Vm deleted=vmApi.getVm(temp.getHref());

@@ -1,4 +1,5 @@
 {
+  powerOffVm(vm.getHref());
   ProductSectionList oldSections=vmApi.getProductSections(vm.getHref());
   ProductSectionList newSections=oldSections.toBuilder().productSection(ProductSection.builder().info("Information about the installed software").required().product(MsgType.builder().value("jclouds").build()).vendor(MsgType.builder().value("jclouds Inc.").build()).build()).build();
   Task modifyProductSections=vmApi.modifyProductSections(vm.getHref(),newSections);
@@ -6,5 +7,5 @@
   ProductSectionList modified=vmApi.getProductSections(vm.getHref());
   checkProductSectionList(modified);
   assertEquals(modified.getProductSections().size(),oldSections.getProductSections().size() + 1);
-  assertEquals(modified,newSections,String.format(ENTITY_EQUAL,"ProductSectionList"));
+  assertEquals(modified,newSections);
 }
