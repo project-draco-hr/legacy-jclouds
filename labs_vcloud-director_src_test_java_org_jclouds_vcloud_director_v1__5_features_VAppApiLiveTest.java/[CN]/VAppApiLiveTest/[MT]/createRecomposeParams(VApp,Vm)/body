@@ -1,0 +1,20 @@
+{
+  Reference reference=Reference.builder().name(name("vm-")).href(vm.getHref()).type(vm.getType()).build();
+  SourcedCompositionItemParam vmItem=SourcedCompositionItemParam.builder().source(reference).build();
+  InstantiationParams vmInstantiationParams=null;
+  if (vmHasNetworkConnectionConfigured(vm) && vAppHasNetworkConfigured(vApp)) {
+    NetworkConnectionSection networkConnectionSection=NetworkConnectionSection.builder().info("Empty network configuration parameters").build();
+    vmInstantiationParams=InstantiationParams.builder().sections(ImmutableSet.of(networkConnectionSection)).build();
+  }
+  NetworkAssignment networkAssignment=null;
+  if (vmHasNetworkConnectionConfigured(vm) && !vAppHasNetworkConfigured(vApp)) {
+    for (    NetworkConnection networkConnection : vmApi.getNetworkConnectionSection(vm.getHref()).getNetworkConnections()) {
+      if (networkConnection.getNetworkConnectionIndex() == vmApi.getNetworkConnectionSection(vm.getHref()).getPrimaryNetworkConnectionIndex()) {
+        networkAssignment=NetworkAssignment.builder().innerNetwork(networkConnection.getNetwork()).containerNetwork(getVAppNetworkConfig(vApp).getNetworkName()).build();
+      }
+    }
+  }
+  if (vmInstantiationParams != null)   vmItem=SourcedCompositionItemParam.builder().fromSourcedCompositionItemParam(vmItem).instantiationParams(vmInstantiationParams).build();
+  if (networkAssignment != null)   vmItem=SourcedCompositionItemParam.builder().fromSourcedCompositionItemParam(vmItem).networkAssignment(ImmutableSet.of(networkAssignment)).build();
+  return RecomposeVAppParams.builder().name(name("recompose-")).sourcedItems(ImmutableList.of(vmItem)).build();
+}
