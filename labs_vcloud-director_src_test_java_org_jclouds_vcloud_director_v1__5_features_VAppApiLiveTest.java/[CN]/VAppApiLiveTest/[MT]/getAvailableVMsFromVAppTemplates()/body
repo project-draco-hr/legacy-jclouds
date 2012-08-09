@@ -5,7 +5,7 @@
     VAppTemplate vAppTemplate=vAppTemplateApi.getVAppTemplate(templateRecord.getHref());
     vms.addAll(vAppTemplate.getChildren());
   }
-  return Sets.newLinkedHashSet(Iterables.filter(vms,new Predicate<Vm>(){
+  return ImmutableSet.copyOf(Iterables.filter(vms,new Predicate<Vm>(){
     @Override public boolean apply(    Vm input){
       GuestCustomizationSection guestCustomizationSection=vmApi.getGuestCustomizationSection(input.getHref());
       String computerName=guestCustomizationSection.getComputerName();
