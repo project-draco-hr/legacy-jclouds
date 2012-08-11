@@ -5,8 +5,6 @@
   RunScriptOnNode runScriptOnNode=createMock(RunScriptOnNode.class);
   NodeMetadata host=new NodeMetadataBuilder().id("host").status(Status.RUNNING).operatingSystem(OperatingSystem.builder().description("unix").build()).build();
   URI provider=URI.create("http://localhost:18083/");
-  String identity="adminstrator";
-  String credential="12345";
   expect(client.seconds(3)).andReturn(client);
   expect(client.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))).andReturn(false).once().andReturn(true).once();
   expect(runScriptOnNodeFactory.create(host,Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false))).andReturn(runScriptOnNode);
@@ -17,6 +15,6 @@
   expect(runScriptOnNode.call()).andReturn(new ExecResponse("","",0));
   manager.connect(provider.toASCIIString(),"","");
   replay(manager,runScriptOnNodeFactory,runScriptOnNode,client);
-  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider),identity,credential);
+  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider));
   verify(manager,runScriptOnNodeFactory,runScriptOnNode,client);
 }

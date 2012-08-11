@@ -2,7 +2,7 @@
   RetryablePredicate<SecurityGroup> ipRangesAuthorized=new RetryablePredicate<SecurityGroup>(new Predicate<SecurityGroup>(){
     @Override public boolean apply(    SecurityGroup input){
       return Iterables.all(sgApi().get(input.getName()).getIPRanges(),new Predicate<Authorization>(){
-        @Override public boolean apply(        @Nullable Authorization i2){
+        @Override public boolean apply(        Authorization i2){
           return i2.getStatus() == Status.AUTHORIZED;
         }
       }

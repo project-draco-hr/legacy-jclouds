@@ -1,13 +1,13 @@
 {
   StringBuilder command=new StringBuilder();
   command.append("git clone");
-  if (branch.isPresent())   command.append(" -b ").append(branch.get());
-  command.append(' ').append(repository.toASCIIString());
+  if (gitRepoAndRef.getBranch().isPresent())   command.append(" -b ").append(gitRepoAndRef.getBranch().get());
+  command.append(' ').append(gitRepoAndRef.getRepository().toASCIIString());
   if (directory.isPresent())   command.append(' ').append(directory.get());
   command.append("{lf}");
-  command.append("{cd} ").append(directory.or(Iterables.getLast(Splitter.on('/').split(repository.getPath())).replace(".git","")));
-  if (tag.isPresent()) {
-    command.append("{lf}").append("git checkout ").append(tag.get());
+  command.append("{cd} ").append(directory.or(Iterables.getLast(Splitter.on('/').split(gitRepoAndRef.getRepository().getPath())).replace(".git","")));
+  if (gitRepoAndRef.getTag().isPresent()) {
+    command.append("{lf}").append("git checkout ").append(gitRepoAndRef.getTag().get());
   }
   return Statements.exec(command.toString()).render(arg0);
 }

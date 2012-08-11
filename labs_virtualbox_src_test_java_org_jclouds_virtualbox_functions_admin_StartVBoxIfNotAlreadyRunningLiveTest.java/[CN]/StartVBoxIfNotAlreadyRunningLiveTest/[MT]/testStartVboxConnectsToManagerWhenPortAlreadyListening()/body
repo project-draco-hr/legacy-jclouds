@@ -4,13 +4,11 @@
   RetryIfSocketNotYetOpen client=createMock(RetryIfSocketNotYetOpen.class);
   NodeMetadata host=new NodeMetadataBuilder().id("host").status(Status.RUNNING).build();
   URI provider=URI.create("http://localhost:18083/");
-  String identity="adminstrator";
-  String credential="12345";
   expect(client.seconds(3)).andReturn(client);
   expect(client.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))).andReturn(true).anyTimes();
   manager.connect(provider.toASCIIString(),"","");
   expectLastCall().anyTimes();
   replay(manager,runScriptOnNodeFactory,client);
-  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider),identity,credential).start();
+  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider)).start();
   verify(manager,runScriptOnNodeFactory,client);
 }

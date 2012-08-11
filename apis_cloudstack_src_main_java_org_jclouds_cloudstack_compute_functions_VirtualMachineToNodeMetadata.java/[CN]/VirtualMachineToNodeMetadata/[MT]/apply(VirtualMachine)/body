@@ -37,12 +37,12 @@
   }
   try {
     Iterables.addAll(publicAddresses,transform(filter(getIPForwardingRulesByVirtualMachine.getUnchecked(from.getId()),new Predicate<IPForwardingRule>(){
-      @Override public boolean apply(      @Nullable IPForwardingRule rule){
+      @Override public boolean apply(      IPForwardingRule rule){
         return !"Deleting".equals(rule.getState());
       }
     }
 ),new Function<IPForwardingRule,String>(){
-      @Override public String apply(      @Nullable IPForwardingRule rule){
+      @Override public String apply(      IPForwardingRule rule){
         return rule.getIPAddress();
       }
     }

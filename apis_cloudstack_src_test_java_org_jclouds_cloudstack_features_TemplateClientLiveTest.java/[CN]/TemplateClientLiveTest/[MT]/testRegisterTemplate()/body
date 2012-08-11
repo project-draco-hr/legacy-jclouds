@@ -3,7 +3,7 @@
   assertNotNull(zone);
   Iterable<Network> networks=client.getNetworkClient().listNetworks(ListNetworksOptions.Builder.zoneId(zone.getId()).isDefault(true));
   networks=Iterables.filter(networks,new Predicate<Network>(){
-    @Override public boolean apply(    @Nullable Network network){
+    @Override public boolean apply(    Network network){
       return network != null && network.getName().equals("Virtual Network");
     }
   }
@@ -20,7 +20,7 @@
   assertNotNull(registeredTemplate);
   final String zoneId=zone.getId();
   Predicate<Template> templateReadyPredicate=new Predicate<Template>(){
-    @Override public boolean apply(    @Nullable Template template){
+    @Override public boolean apply(    Template template){
       if (template == null)       return false;
       Template t2=client.getTemplateClient().getTemplateInZone(template.getId(),zoneId);
       Logger.CONSOLE.info("%s",t2.getStatus());
