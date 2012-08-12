@@ -1,0 +1,6 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=GetVServerStatus" + "&vserverId=CONTRACT-VSYS00001-S-0005" + "&vsysId=CONTRACT-VSYS00001");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetVServerStatus-response.xml")).build();
+  VirtualServerApi api=requestSendsResponse(request,response).getVirtualServerApi();
+  assertEquals(api.getStatus("CONTRACT-VSYS00001-S-0005"),VServerStatus.STOPPED);
+}

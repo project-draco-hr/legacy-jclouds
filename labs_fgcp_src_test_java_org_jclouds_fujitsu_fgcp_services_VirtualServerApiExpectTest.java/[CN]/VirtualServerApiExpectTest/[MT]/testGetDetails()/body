@@ -1,0 +1,13 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=GetVServerConfiguration" + "&vserverId=CONTRACT-VSYS00001-S-0005" + "&vsysId=CONTRACT-VSYS00001");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetVServerConfiguration-response.xml")).build();
+  VirtualServerApi api=requestSendsResponse(request,response).getVirtualServerApi();
+  VServerWithDetails server=api.getDetails("CONTRACT-VSYS00001-S-0005");
+  assertNotNull(server);
+  assertEquals(server.getId(),"CONTRACT-VSYS00001-S-0005");
+  assertEquals(server.getVnics().iterator().next().getNicNo(),0);
+  assertEquals(server.getVnics().iterator().next().getPrivateIp(),"192.168.4.13");
+  assertEquals(server.getVnics().iterator().next().getNetworkId(),"CONTRACT-VSYS00001-N-DMZ");
+  assertEquals(server.getImage().getId(),"IMG_A1B2C3_1234567890ABCD");
+  assertEquals(server.getImage().getSysvolSize(),10.0f);
+}

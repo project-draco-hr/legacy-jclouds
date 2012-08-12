@@ -1,0 +1,7 @@
+{
+  logger.trace("looking for status on server %s",serverId);
+  VServerStatus status=api.getVirtualServerApi().getStatus(serverId);
+  logger.trace("looking for status on server %s: currently: %s",serverId,status);
+  if (status == VServerStatus.ERROR || status == VServerStatus.STOP_ERROR)   throw new IllegalStateException("server not around or in error: " + status);
+  return status == VServerStatus.STOPPED;
+}

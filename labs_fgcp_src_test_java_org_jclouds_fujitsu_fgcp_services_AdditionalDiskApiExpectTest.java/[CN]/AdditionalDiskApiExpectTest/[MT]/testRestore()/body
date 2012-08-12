@@ -1,0 +1,6 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=RestoreVDisk" + "&vsysId=CONTRACT-VSYS00001" + "&backupId=003");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/RestoreVDisk-response.xml")).build();
+  AdditionalDiskApi api=requestSendsResponse(request,response).getAdditionalDiskApi();
+  api.restore("CONTRACT-VSYS00001","003");
+}

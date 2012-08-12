@@ -1,0 +1,6 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=AttachPublicIP" + "&vsysId=CONTRACT-VSYS00001" + "&publicIp=123.45.67.89");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/AttachPublicIP-response.xml")).build();
+  PublicIPAddressApi api=requestSendsResponse(request,response).getPublicIPAddressApi();
+  api.attach("CONTRACT-VSYS00001","123.45.67.89");
+}

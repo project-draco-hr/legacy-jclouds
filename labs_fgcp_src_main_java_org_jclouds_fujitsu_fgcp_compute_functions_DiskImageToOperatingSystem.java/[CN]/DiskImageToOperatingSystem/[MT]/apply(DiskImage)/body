@@ -1,0 +1,16 @@
+{
+  checkNotNull(image,"disk image");
+  String shortOsName=image.getOsName().replace("Red Hat Enterprise Linux","rhel");
+  OsFamily osFamily=ComputeServiceUtils.parseOsFamilyOrUnrecognized(shortOsName);
+  OperatingSystem.Builder builder=OperatingSystem.builder();
+  builder.name(image.getOsName());
+  builder.family(osFamily);
+  builder.is64Bit(image.getOsName().contains("64bit") || image.getOsName().contains("64 bit") || image.getOsName().contains("x64"));
+  builder.arch(image.getOsType());
+  Matcher m=OS_VERSION_PATTERN.matcher(image.getOsName());
+  if (m.matches()) {
+    builder.version(m.group(1));
+  }
+  builder.description(image.getOsName());
+  return builder.build();
+}

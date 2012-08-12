@@ -1,0 +1,6 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=GetVSYSStatus" + "&vsysId=ABCDEFGH-A123B456CE");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetVSYSStatus-response.xml")).build();
+  VirtualSystemApi api=requestSendsResponse(request,response).getVirtualSystemApi();
+  assertEquals(api.getStatus("ABCDEFGH-A123B456CE"),VSystemStatus.NORMAL);
+}

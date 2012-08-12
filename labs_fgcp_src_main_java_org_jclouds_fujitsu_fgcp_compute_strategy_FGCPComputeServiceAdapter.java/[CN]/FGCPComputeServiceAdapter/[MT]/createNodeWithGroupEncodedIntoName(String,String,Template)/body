@@ -1,0 +1,9 @@
+{
+  String id=api.getVirtualSystemApi().createServer(name,template.getHardware().getName(),template.getImage().getId(),template.getLocation().getId());
+  serverCreated.apply(id);
+  resumeNode(id);
+  VServerMetadata server=getNode(id);
+  server.setTemplate(template);
+  String user=template.getImage().getOperatingSystem().getFamily() == OsFamily.WINDOWS ? "Administrator" : "root";
+  return new NodeAndInitialCredentials<VServerMetadata>(server,id,LoginCredentials.builder().identity(user).password(server.getInitialPassword()).build());
+}

@@ -1,0 +1,8 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=ListDiskImage&vsysDescriptorId=IMG_A1B2C3_1234567890ABCD");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ListDiskImage-response.xml")).build();
+  VirtualDCApi api=requestSendsResponse(request,response).getVirtualDCApi();
+  Set<DiskImage> images=api.listDiskImages(null,"IMG_A1B2C3_1234567890ABCD");
+  assertNotNull(images,"images");
+  assertTrue(images.size() == 1,"Unexpected number of images: " + images.size());
+}

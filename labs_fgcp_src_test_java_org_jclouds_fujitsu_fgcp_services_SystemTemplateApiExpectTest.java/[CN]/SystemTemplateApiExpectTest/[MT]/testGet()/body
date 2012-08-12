@@ -1,0 +1,7 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=GetVSYSDescriptorConfiguration" + "&vsysDescriptorId=3-tier%20Skeleton");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetVSYSDescriptorConfiguration-response.xml")).build();
+  SystemTemplateApi client=requestSendsResponse(request,response).getSystemTemplateApi();
+  VSystemDescriptor desc=client.get("3-tier Skeleton");
+  assertNotNull(desc,"desc");
+}

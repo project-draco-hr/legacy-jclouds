@@ -1,0 +1,8 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=ListDiskImage");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ListDiskImages-response.xml")).build();
+  VirtualDCApi api=requestSendsResponse(request,response).getVirtualDCApi();
+  Set<DiskImage> images=api.listDiskImages();
+  assertNotNull(images,"images");
+  assertTrue(images.size() > 5,"Unexpected number of images: " + images.size());
+}

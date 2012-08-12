@@ -1,0 +1,8 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=ListEFM" + "&vsysId=ABCDEFGH-A123B456CE" + "&efmType=FW");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ListEFM-response.xml")).build();
+  VirtualSystemApi api=requestSendsResponse(request,response).getVirtualSystemApi();
+  Set<BuiltinServer> fws=api.listBuiltinServers("ABCDEFGH-A123B456CE","FW");
+  assertNotNull(fws,"fws");
+  assertEquals(fws.size(),1);
+}

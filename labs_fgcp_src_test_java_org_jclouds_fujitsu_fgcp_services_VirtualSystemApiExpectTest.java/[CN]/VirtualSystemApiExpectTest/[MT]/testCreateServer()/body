@@ -1,0 +1,7 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=CreateVServer" + "&vserverName=vm1" + "&diskImageId=IMG_A1B2C3_1234567890ABCD"+ "&vserverType=economy"+ "&networkId=ABCDEFGH-A123B456CE-N-DMZ"+ "&vsysId=ABCDEFGH-A123B456CE");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/CreateVServer-response.xml")).build();
+  VirtualSystemApi api=requestSendsResponse(request,response).getVirtualSystemApi();
+  String id=api.createServer("vm1","economy","IMG_A1B2C3_1234567890ABCD","ABCDEFGH-A123B456CE-N-DMZ");
+  assertEquals(id,"ABCDEFGH-A123B456CE-S-0007");
+}

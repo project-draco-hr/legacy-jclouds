@@ -1,0 +1,7 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=CreateVSYS&vsysDescriptorId=myDescId&vsysName=myVSYS");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/CreateVSYS-response.xml")).build();
+  VirtualDCApi api=requestSendsResponse(request,response).getVirtualDCApi();
+  String vsysId=api.createVirtualSystem("myDescId","myVSYS");
+  assertEquals(vsysId,"CONTRACT-VSYS00001","vsysId: " + vsysId);
+}

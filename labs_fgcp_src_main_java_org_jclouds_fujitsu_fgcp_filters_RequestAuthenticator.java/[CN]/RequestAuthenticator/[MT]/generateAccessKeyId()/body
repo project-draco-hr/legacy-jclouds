@@ -1,0 +1,13 @@
+{
+  Calendar cal=calendarProvider.get();
+  String timezone=cal.getTimeZone().getDisplayName(Locale.ENGLISH);
+  String expires=String.valueOf(cal.getTime().getTime());
+  String signatureData=String.format("%s&%s&%s&%s",timezone,expires,signatureVersion,signatureMethod);
+  try {
+    String accessKeyId=Base64.encodeBytes(signatureData.getBytes("UTF-8"));
+    return accessKeyId.replace("\n","\r\n");
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new RuntimeException(e);
+  }
+}

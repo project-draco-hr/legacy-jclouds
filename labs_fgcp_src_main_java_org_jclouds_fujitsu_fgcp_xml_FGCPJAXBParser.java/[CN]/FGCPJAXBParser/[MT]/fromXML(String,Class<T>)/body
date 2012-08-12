@@ -1,0 +1,15 @@
+{
+  T response=null;
+  try {
+    StringReader reader=new StringReader(xml);
+    Unmarshaller unmarshaller=context.createUnmarshaller();
+    response=(T)unmarshaller.unmarshal(reader);
+  }
+ catch (  Exception ex) {
+    throw new IOException("Could not unmarshal document",ex);
+  }
+  if (((StatusQuerable)response).isError()) {
+    throw new HttpException(((StatusQuerable)response).getResponseMessage());
+  }
+  return response;
+}

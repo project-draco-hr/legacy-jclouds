@@ -1,0 +1,29 @@
+{
+  checkNotNull(request,"request must be present");
+  utils.logRequest(signatureLog,request,">>");
+  String accessKeyId=createStringToSign(request);
+  String signature=sign(accessKeyId);
+  String lang=Locale.JAPANESE.getLanguage().equals(Locale.getDefault().getLanguage()) ? Locale.JAPANESE.getLanguage() : Locale.ENGLISH.getLanguage();
+  if (HttpMethod.GET.equals(request.getMethod())) {
+    Multimap<String,String> decodedParams=Queries.parseQueryToMap(request.getEndpoint().getRawQuery());
+    if (!decodedParams.containsKey(RequestParameters.VERSION)) {
+      decodedParams.put(RequestParameters.VERSION,apiVersion);
+    }
+    decodedParams.put(RequestParameters.LOCALE,lang);
+    decodedParams.put(RequestParameters.ACCESS_KEY_ID,accessKeyId);
+    decodedParams.put(RequestParameters.SIGNATURE,signature);
+    request=request.toBuilder().replaceQueryParams(decodedParams).build();
+  }
+ else {
+    String payload=request.getPayload().getRawContent().toString();
+    payload=createXmlElementWithValue(payload,RequestParameters.VERSION,apiVersion);
+    payload=createXmlElementWithValue(payload,RequestParameters.LOCALE,lang);
+    payload=createXmlElementWithValue(payload,RequestParameters.ACCESS_KEY_ID,accessKeyId);
+    payload=createXmlElementWithValue(payload,RequestParameters.SIGNATURE,signature);
+    request.setPayload(payload);
+    request.getPayload().getContentMetadata().setContentType(MediaType.TEXT_XML);
+  }
+  HttpRequest filteredRequest=request.toBuilder().replaceHeader(HttpHeaders.USER_AGENT,"OViSS-API-CLIENT").build();
+  utils.logRequest(signatureLog,filteredRequest,">>->");
+  return filteredRequest;
+}

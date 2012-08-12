@@ -1,0 +1,28 @@
+{
+  String action=checkNotNull(mapParams.remove(RequestParameters.ACTION),RequestParameters.ACTION).toString();
+  String version=Strings.nullToEmpty((String)mapParams.remove(RequestParameters.VERSION));
+  StringBuilder xml=new StringBuilder();
+  xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+  xml.append("<OViSSRequest>\r\n");
+  xml.append("  <Action>" + action + "</Action>\r\n");
+  for (  Map.Entry<String,Object> entry : mapParams.entrySet()) {
+    String key=entry.getKey();
+    xml.append("  <" + key + ">"+ checkNotNull(mapParams.get(key))+ "</"+ key+ ">\r\n");
+  }
+  xml.append("  <Version>" + version + "</Version>\r\n");
+  xml.append("  <Locale></Locale>\r\n");
+  xml.append("  <AccessKeyId></AccessKeyId>\r\n");
+  xml.append("  <Signature></Signature>\r\n");
+  xml.append("</OViSSRequest>");
+  request=super.bindToRequest(request,xml);
+  request.getPayload().getContentMetadata().setContentType(MediaType.TEXT_XML);
+  URI uri=request.getEndpoint();
+  URI uriWithoutQueryParams;
+  try {
+    uriWithoutQueryParams=new URI(uri.getScheme(),uri.getUserInfo(),uri.getHost(),uri.getPort(),uri.getPath(),null,uri.getFragment());
+  }
+ catch (  URISyntaxException e) {
+    uriWithoutQueryParams=uri;
+  }
+  return (R)request.toBuilder().endpoint(uriWithoutQueryParams).build();
+}

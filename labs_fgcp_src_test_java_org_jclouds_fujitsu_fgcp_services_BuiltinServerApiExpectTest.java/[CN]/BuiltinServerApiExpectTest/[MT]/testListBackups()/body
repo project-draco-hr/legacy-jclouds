@@ -1,0 +1,10 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=ListEFMBackup" + "&efmId=CONTRACT-VSYS00001-S-0001" + "&vsysId=CONTRACT-VSYS00001");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ListEFMBackup-response.xml")).build();
+  BuiltinServerApi api=requestSendsResponse(request,response).getFirewallApi();
+  Set<BuiltinServerBackup> backups=api.listBackups("CONTRACT-VSYS00001-S-0001");
+  assertNotNull(backups,"backups");
+  assertEquals(backups.size(),2);
+  assertEquals(backups.iterator().next().getId(),"001");
+  assertEquals(backups.iterator().next().getTime(),"20121008201127");
+}

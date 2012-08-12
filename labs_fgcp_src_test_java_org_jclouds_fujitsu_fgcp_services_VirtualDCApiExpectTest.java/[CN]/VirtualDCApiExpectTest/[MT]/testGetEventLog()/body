@@ -1,0 +1,7 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=GetEventLog");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetEventLog-response.xml")).build();
+  VirtualDCApi api=requestSendsResponse(request,response).getVirtualDCApi();
+  Set<EventLog> logs=api.getEventLogs();
+  assertNotNull(logs);
+}

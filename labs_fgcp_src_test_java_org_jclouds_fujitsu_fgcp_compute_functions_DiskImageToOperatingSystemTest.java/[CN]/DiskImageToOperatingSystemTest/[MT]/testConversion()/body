@@ -1,0 +1,20 @@
+{
+  for (  String description : operatingSystems) {
+    Builder builder=DiskImage.builder();
+    builder.osName(description);
+    builder.osType("hvm");
+    builder.creatorName("creator");
+    builder.registrant("registrant");
+    builder.description("description");
+    builder.id("ABCDEFGH");
+    DiskImage image=builder.build();
+    OperatingSystem os=new DiskImageToOperatingSystem().apply(image);
+    assertNotNull(os,description);
+    assertNotNull(os.getFamily(),description);
+    assertFalse(os.getFamily().equals(OsFamily.UNRECOGNIZED),"OsFamily not recognised: " + description);
+    assertNotNull(os.getVersion(),"Version not recognised: " + description);
+    assertEquals(os.getName(),description);
+    assertEquals(os.getDescription(),description);
+    assertNotNull(os.getArch(),description);
+  }
+}

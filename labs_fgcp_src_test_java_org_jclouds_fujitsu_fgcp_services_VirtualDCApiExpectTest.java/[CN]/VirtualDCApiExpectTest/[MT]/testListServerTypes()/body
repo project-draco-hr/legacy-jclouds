@@ -1,0 +1,8 @@
+{
+  HttpRequest request=buildGETWithQuery("Action=ListServerType&diskImageId=dummy");
+  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/ListServerType-response.xml")).build();
+  VirtualDCApi api=requestSendsResponse(request,response).getVirtualDCApi();
+  Set<ServerType> serverTypes=api.listServerTypes();
+  assertNotNull(serverTypes,"serverTypes");
+  assertEquals(serverTypes.size(),4,"Unexpected number of server types: " + serverTypes.size());
+}
