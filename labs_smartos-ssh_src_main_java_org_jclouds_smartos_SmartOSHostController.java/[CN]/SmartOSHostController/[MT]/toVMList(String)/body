@@ -1,0 +1,28 @@
+{
+  try {
+    BufferedReader r=new BufferedReader(new StringReader(string));
+    String line;
+    ImmutableList.Builder<VM> resultBuilder=ImmutableList.builder();
+    while ((line=r.readLine()) != null) {
+      VM vm=VM.builder().fromVmadmString(line).build();
+      Map<String,String> ipAddresses;
+      RateLimiter limiter=RateLimiter.create(1.0);
+      for (int i=0; i < 30; i++) {
+        ipAddresses=getVMIpAddresses(vm.getUuid());
+        if (!ipAddresses.isEmpty()) {
+          String ip=ipAddresses.get("net0");
+          if (ip != null && !ip.equals("0.0.0.0")) {
+            vm=vm.toBuilder().publicAddress(ip).build();
+            break;
+          }
+        }
+        limiter.acquire();
+      }
+      resultBuilder.add(vm);
+    }
+    return resultBuilder.build();
+  }
+ catch (  IOException e) {
+    throw new HostException("Error parsing response when building VM list",e);
+  }
+}

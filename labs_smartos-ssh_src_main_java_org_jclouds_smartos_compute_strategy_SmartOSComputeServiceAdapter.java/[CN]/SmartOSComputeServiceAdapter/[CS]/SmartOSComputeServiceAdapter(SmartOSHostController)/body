@@ -1,0 +1,14 @@
+{
+  this.host=checkNotNull(host,"host");
+  Collection<VmSpecification> specifications=new ArrayList<VmSpecification>();
+  specifications.add(VmSpecification.builder().alias("Standard Joyent VM, 1Gb RAM / 2Gb SWAP").ram(1024).maxSwap(2048).nic(VmNIC.builder().simpleDHCPNic().build()).build());
+  specifications.add(VmSpecification.builder().alias("Standard Joyent VM, 2Gb RAM / 4Gb SWAP").ram(2048).maxSwap(4096).nic(VmNIC.builder().simpleDHCPNic().build()).build());
+  specifications.add(VmSpecification.builder().alias("Standard Joyent VM, 4Gb RAM / 8Gb SWAP").ram(4096).maxSwap(8192).nic(VmNIC.builder().simpleDHCPNic().build()).build());
+  specifications.add(VmSpecification.builder().alias("Standard Joyent VM, 8Gb RAM / 16Gb SWAP").ram(8192).maxSwap(16384).nic(VmNIC.builder().simpleDHCPNic().build()).build());
+  specificationMap=Maps.uniqueIndex(specifications,new Function<VmSpecification,String>(){
+    @Override public String apply(    VmSpecification input){
+      return input.getAlias();
+    }
+  }
+);
+}
