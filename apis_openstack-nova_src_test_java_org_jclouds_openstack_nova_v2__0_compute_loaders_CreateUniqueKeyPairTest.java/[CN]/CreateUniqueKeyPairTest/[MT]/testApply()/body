@@ -2,7 +2,8 @@
   final NovaApi api=createMock(NovaApi.class);
   KeyPairApi keyApi=createMock(KeyPairApi.class);
   KeyPair pair=createMock(KeyPair.class);
-  expect(api.getKeyPairExtensionForZone("zone")).andReturn(Optional.of(keyApi)).atLeastOnce();
+  Optional optKeyApi=Optional.of(keyApi);
+  expect(api.getKeyPairExtensionForZone("zone")).andReturn(optKeyApi).atLeastOnce();
   expect(keyApi.createKeyPair("group-1")).andReturn(pair);
   replay(api,keyApi);
   CreateUniqueKeyPair parser=Guice.createInjector(new AbstractModule(){
