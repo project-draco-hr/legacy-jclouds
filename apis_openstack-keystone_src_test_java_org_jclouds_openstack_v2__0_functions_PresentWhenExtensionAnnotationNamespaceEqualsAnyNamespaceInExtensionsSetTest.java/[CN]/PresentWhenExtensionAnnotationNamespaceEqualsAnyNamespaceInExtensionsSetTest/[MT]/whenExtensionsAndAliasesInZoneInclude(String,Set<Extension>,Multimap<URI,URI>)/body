@@ -1,0 +1,15 @@
+{
+  final LoadingCache<String,Set<? extends Extension>> extensionsForZone=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(ImmutableMap.<String,Set<? extends Extension>>of(zone,extensions,"differentzone",ImmutableSet.<Extension>of()))));
+  PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet fn=Guice.createInjector(new AbstractModule(){
+    @Override protected void configure(){
+    }
+    @Provides LoadingCache<String,Set<? extends Extension>> getExtensions(){
+      return extensionsForZone;
+    }
+    @Provides Multimap<URI,URI> getAliases(){
+      return aliases;
+    }
+  }
+).getInstance(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
+  return fn;
+}
