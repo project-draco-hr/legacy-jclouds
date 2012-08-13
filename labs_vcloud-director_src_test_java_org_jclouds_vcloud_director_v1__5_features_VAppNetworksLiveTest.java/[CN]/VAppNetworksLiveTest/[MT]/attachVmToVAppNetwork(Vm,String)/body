@@ -1,0 +1,10 @@
+{
+  Set<NetworkConnection> networkConnections=vmApi.getNetworkConnectionSection(vm.getHref()).getNetworkConnections();
+  NetworkConnectionSection section=NetworkConnectionSection.builder().info("info").primaryNetworkConnectionIndex(0).build();
+  for (  NetworkConnection networkConnection : networkConnections) {
+    NetworkConnection newNetworkConnection=networkConnection.toBuilder().network(vAppNetworkName).isConnected(true).networkConnectionIndex(0).ipAddressAllocationMode(IpAddressAllocationMode.POOL).build();
+    section=section.toBuilder().networkConnection(newNetworkConnection).build();
+  }
+  Task configureNetwork=vmApi.modifyNetworkConnectionSection(vm.getHref(),section);
+  assertTaskSucceedsLong(configureNetwork);
+}
