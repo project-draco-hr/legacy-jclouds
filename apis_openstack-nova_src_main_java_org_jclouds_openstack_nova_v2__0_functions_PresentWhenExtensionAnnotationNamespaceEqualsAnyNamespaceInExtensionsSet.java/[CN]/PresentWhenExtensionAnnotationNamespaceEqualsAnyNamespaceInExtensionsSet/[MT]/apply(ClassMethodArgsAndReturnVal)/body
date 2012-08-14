@@ -1,9 +1,0 @@
-{
-  Optional<org.jclouds.openstack.v2_0.services.Extension> ext=Optional.fromNullable(input.getClazz().getAnnotation(org.jclouds.openstack.v2_0.services.Extension.class));
-  if (ext.isPresent()) {
-    checkState(input.getArgs() != null && input.getArgs().length == 1,"expecting an arg %s",input);
-    URI namespace=URI.create(ext.get().namespace());
-    if (Iterables.any(extensions.getUnchecked(checkNotNull(input.getArgs()[0],"arg[0] in %s",input).toString()),ExtensionPredicates.namespaceOrAliasEquals(namespace,aliases.get(namespace))))     return Optional.of(input.getReturnVal());
-  }
-  return Optional.absent();
-}
