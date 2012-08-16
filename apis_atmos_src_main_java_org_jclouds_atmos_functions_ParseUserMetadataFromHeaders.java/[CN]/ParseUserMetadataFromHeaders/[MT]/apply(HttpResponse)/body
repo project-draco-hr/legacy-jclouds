@@ -1,6 +1,6 @@
 {
   checkNotNull(from,"http response");
-  Map<String,String> meta=Maps.filterKeys(getMetaMap(checkNotNull(from.getFirstHeaderOrNull(AtmosHeaders.META),AtmosHeaders.META)),filter);
+  Map<String,String> meta=Maps.filterKeys(getMetaMap(checkNotNull(from.getFirstHeaderOrNull(AtmosHeaders.META),AtmosHeaders.META)),Predicates.not(Predicates.in(SYS_KEYS)));
   Map<String,String> listableMeta=(from.getFirstHeaderOrNull(AtmosHeaders.LISTABLE_META) != null) ? getMetaMap(from.getFirstHeaderOrNull(AtmosHeaders.LISTABLE_META)) : ImmutableMap.<String,String>of();
   Iterable<String> tags=(from.getFirstHeaderOrNull(AtmosHeaders.TAGS) != null) ? Splitter.on(", ").split(from.getFirstHeaderOrNull(AtmosHeaders.TAGS)) : ImmutableSet.<String>of();
   Iterable<String> listableTags=(from.getFirstHeaderOrNull(AtmosHeaders.LISTABLE_TAGS) != null) ? Splitter.on(", ").split(from.getFirstHeaderOrNull(AtmosHeaders.LISTABLE_TAGS)) : ImmutableSet.<String>of();
