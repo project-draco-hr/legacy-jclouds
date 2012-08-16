@@ -1,5 +1,5 @@
 {
-  ContextBuilder builder=ContextBuilder.newBuilder(provider).credentials(identity,credential).endpoint(endpoint).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(),new SshjSshClientModule())).overrides(overrides);
+  ContextBuilder builder=ContextBuilder.newBuilder(provider).credentials(identity,credential).endpoint(endpoint).modules(ImmutableSet.<Module>of(new SLF4JLoggingModule(),new SshjSshClientModule())).overrides(overrides);
   userContext=VCloudDirectorContext.class.cast(builder.build());
   Link admin=Iterables.tryFind(userContext.getApi().getCurrentSession().getLinks(),Predicates.and(LinkPredicates.relEquals(Link.Rel.DOWN),ReferencePredicates.typeEquals(VCloudDirectorMediaType.ADMIN))).orNull();
   if (admin != null) {
