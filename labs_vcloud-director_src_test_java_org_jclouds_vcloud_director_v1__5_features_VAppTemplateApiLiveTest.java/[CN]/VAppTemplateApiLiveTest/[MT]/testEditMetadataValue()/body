@@ -1,8 +1,8 @@
 {
   val="new" + val;
   MetadataValue metadataValue=MetadataValue.builder().value(val).build();
-  final Task task=vAppTemplateApi.getMetadataApi().setMetadata(vAppTemplateURI,key,metadataValue);
+  final Task task=vAppTemplateApi.getMetadataApi().putEntry(vAppTemplateURI,key,metadataValue);
   retryTaskSuccess.apply(task);
-  MetadataValue newMetadataValue=vAppTemplateApi.getMetadataApi().getMetadataValue(vAppTemplateURI,key);
+  MetadataValue newMetadataValue=vAppTemplateApi.getMetadataApi().getValue(vAppTemplateURI,key);
   assertEquals(newMetadataValue.getValue(),metadataValue.getValue());
 }

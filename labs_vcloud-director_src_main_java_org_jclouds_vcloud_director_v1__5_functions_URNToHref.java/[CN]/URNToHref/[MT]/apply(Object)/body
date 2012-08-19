@@ -1,0 +1,7 @@
+{
+  checkArgument(checkNotNull(from,"urn") instanceof String,"urn is a String argument");
+  Entity entity=resolveEntityCache.getUnchecked(from.toString());
+  Optional<Link> link=Iterables.tryFind(entity.getLinks(),LinkPredicates.typeEquals(type()));
+  checkArgument(link.isPresent(),"no link for type %s found for entity %s",type(),entity);
+  return link.get().getHref();
+}

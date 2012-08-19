@@ -1,9 +1,0 @@
-{
-  HttpRequest catalogItemRequest=HttpRequest.builder().method("POST").endpoint(endpoint + "/catalog/7212e451-76e1-4631-b2de-ba1dfd8080e4/catalogItems").addHeader("Accept","application/vnd.vmware.vcloud.catalogItem+xml").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).payload(payloadFromResourceWithContentType("/catalog/newCatalogItem.xml",VCloudDirectorMediaType.CATALOG_ITEM)).build();
-  HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/createdCatalogItem.xml",VCloudDirectorMediaType.CATALOG_ITEM + ";version=1.5")).build();
-  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
-  URI catalogURI=URI.create(endpoint + "/catalog/7212e451-76e1-4631-b2de-ba1dfd8080e4");
-  CatalogItem newItem=CatalogItem.builder().name("newCatalogItem").description("New Catalog Item").entity(ubuntuVappTemplateReference()).build();
-  CatalogItem expected=createdCatalogItem();
-  assertEquals(api.getCatalogApi().addCatalogItem(catalogURI,newItem),expected);
-}

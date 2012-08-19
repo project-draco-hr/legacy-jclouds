@@ -1,9 +1,0 @@
-{
-  HttpRequest catalogItemRequest=HttpRequest.builder().method("POST").endpoint(endpoint + "/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df/metadata").addHeader("Accept","application/vnd.vmware.vcloud.task+xml").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).payload(payloadFromResourceWithContentType("/catalog/mergeCatalogItemMetadata.xml",VCloudDirectorMediaType.METADATA)).build();
-  HttpResponse catalogItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/catalog/mergeMetadataTask.xml",VCloudDirectorMediaType.TASK + ";version=1.5")).build();
-  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,catalogItemRequest,catalogItemResponse);
-  URI catalogItemURI=URI.create("https://vcloudbeta.bluelock.com/api/catalogItem/a36fdac9-b8c2-43e2-9a4c-2ffaf3ee13df");
-  Metadata metadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","VALUE").build()).build();
-  Task expected=mergeMetadataTask();
-  assertEquals(api.getCatalogApi().getCatalogItemMetadataApi().mergeMetadata(catalogItemURI,metadata),expected);
-}
