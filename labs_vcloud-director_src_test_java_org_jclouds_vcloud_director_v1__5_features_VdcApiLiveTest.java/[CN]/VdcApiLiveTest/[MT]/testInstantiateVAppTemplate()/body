@@ -1,5 +1,5 @@
 {
-  Vdc vdc=vdcApi.getVdc(vdcURI);
+  Vdc vdc=vdcApi.get(vdcUrn);
   Set<Reference> networks=vdc.getAvailableNetworks();
   Optional<Reference> parentNetwork=Iterables.tryFind(networks,new Predicate<Reference>(){
     @Override public boolean apply(    Reference reference){
@@ -14,7 +14,7 @@
   NetworkConfigSection networkConfigSection=NetworkConfigSection.builder().info("Configuration parameters for logical networks").networkConfigs(ImmutableSet.of(VAppNetworkConfiguration.builder().networkName("vAppNetwork").configuration(networkConfiguration).build())).build();
   InstantiationParams instantiationParams=InstantiationParams.builder().sections(ImmutableSet.of(networkConfigSection)).build();
   InstantiateVAppTemplateParams instantiate=InstantiateVAppTemplateParams.builder().name(name("test-vapp-")).notDeploy().notPowerOn().description("Test VApp").instantiationParams(instantiationParams).source(vAppTemplateURI).build();
-  instantiatedVApp=vdcApi.instantiateVApp(vdcURI,instantiate);
+  instantiatedVApp=vdcApi.instantiateVApp(vdcUrn,instantiate);
   Task instantiationTask=Iterables.getFirst(instantiatedVApp.getTasks(),null);
   assertTaskSucceedsLong(instantiationTask);
   Checks.checkVApp(instantiatedVApp);

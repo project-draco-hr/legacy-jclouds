@@ -1,6 +1,6 @@
 {
-  Vdc vdc=vdcApi.getVdc(vdcURI);
+  Vdc vdc=lazyGetVdc();
   assertNotNull(vdc,String.format(OBJ_REQ_LIVE,VDC));
-  assertTrue(!vdc.getDescription().equals("DO NOT USE"),"vDC isn't to be used for testing");
+  assertFalse("DO NOT USE".equals(vdc.getDescription()),"vDC isn't to be used for testing");
   Checks.checkVdc(vdc);
 }

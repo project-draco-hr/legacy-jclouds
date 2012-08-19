@@ -1,0 +1,13 @@
+{
+  if (catalog == null) {
+    assertNotNull(catalogUrn,String.format(URN_REQ_LIVE,CATALOG));
+    catalog=from(org.getLinks()).filter(LinkPredicates.typeEquals(CATALOG)).transform(new Function<Link,Catalog>(){
+      @Override public Catalog apply(      Link in){
+        return context.getApi().getCatalogApi().get(in.getHref());
+      }
+    }
+).firstMatch(EntityPredicates.idEquals(catalogUrn)).get();
+    assertNotNull(catalog,String.format(ENTITY_NON_NULL,CATALOG));
+  }
+  return catalog;
+}
