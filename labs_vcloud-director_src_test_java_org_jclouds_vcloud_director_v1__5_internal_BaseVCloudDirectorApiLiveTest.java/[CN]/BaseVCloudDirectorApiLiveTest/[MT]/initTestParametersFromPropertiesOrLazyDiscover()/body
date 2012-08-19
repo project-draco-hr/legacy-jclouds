@@ -1,22 +1,23 @@
 {
-  catalogUrn=Strings.emptyToNull(System.getProperty("test." + provider + ".catalog-id"));
-  String vAppTemplateId=Strings.emptyToNull(System.getProperty("test." + provider + ".vapptemplate-id"));
+  catalogUrn=emptyToNull(System.getProperty("test." + provider + ".catalog-id"));
+  String vAppTemplateId=emptyToNull(System.getProperty("test." + provider + ".vapptemplate-id"));
   if (vAppTemplateId != null)   vAppTemplateURI=URI.create(endpoint + "/vAppTemplate/" + vAppTemplateId);
-  String vdcId=Strings.emptyToNull(System.getProperty("test." + provider + ".vdc-id"));
+  String vdcId=emptyToNull(System.getProperty("test." + provider + ".vdc-id"));
   if (vdcId != null)   vdcURI=URI.create(endpoint + "/vdc/" + vdcId);
-  String mediaId=Strings.emptyToNull(System.getProperty("test." + provider + ".media-id"));
+  String mediaId=emptyToNull(System.getProperty("test." + provider + ".media-id"));
   if (mediaId != null)   mediaURI=URI.create(endpoint + "/media/" + mediaId);
-  String networkId=Strings.emptyToNull(System.getProperty("test." + provider + ".network-id"));
-  if (networkId != null)   networkURI=URI.create(endpoint + "/network/" + networkId);
-  String userId=Strings.emptyToNull(System.getProperty("test." + provider + ".user-id"));
-  if (userId != null)   userURI=URI.create(endpoint + "/admin/user/" + userId);
-  if (Iterables.any(Lists.newArrayList(vAppTemplateURI,networkURI,vdcURI),Predicates.isNull())) {
-    Org thisOrg=context.getApi().getOrgApi().getOrg(Iterables.find(context.getApi().getOrgApi().getOrgList(),ReferencePredicates.<Reference>nameEquals(session.getOrg())).getHref());
-    if (vdcURI == null)     vdcURI=Iterables.find(thisOrg.getLinks(),ReferencePredicates.<Link>typeEquals(VCloudDirectorMediaType.VDC)).getHref();
-    if (networkURI == null)     networkURI=Iterables.find(thisOrg.getLinks(),ReferencePredicates.<Link>typeEquals(VCloudDirectorMediaType.ORG_NETWORK)).getHref();
-    if (Strings.isNullOrEmpty(catalogUrn)) {
-      String uri=Iterables.find(thisOrg.getLinks(),ReferencePredicates.<Link>typeEquals(VCloudDirectorMediaType.CATALOG)).getHref().toASCIIString();
-      catalogUrn=Iterables.getLast(Splitter.on('/').split(uri));
+  networkUrn=emptyToNull(System.getProperty("test." + provider + ".network-id"));
+  userUrn=emptyToNull(System.getProperty("test." + provider + ".user-id"));
+  org=context.getApi().getOrgApi().get(find(context.getApi().getOrgApi().list(),ReferencePredicates.<Reference>nameEquals(session.get())).getHref());
+  if (any(Lists.newArrayList(vAppTemplateURI,networkUrn,vdcURI),Predicates.isNull())) {
+    if (vdcURI == null)     vdcURI=find(org.getLinks(),ReferencePredicates.<Link>typeEquals(VDC)).getHref();
+    if (networkUrn == null) {
+      network=context.getApi().getNetworkApi().get(find(org.getLinks(),ReferencePredicates.<Link>typeEquals(ORG_NETWORK)).getHref());
+      networkUrn=network.getId();
+    }
+    if (isNullOrEmpty(catalogUrn)) {
+      String uri=find(org.getLinks(),ReferencePredicates.<Link>typeEquals(CATALOG)).getHref().toASCIIString();
+      catalogUrn=getLast(Splitter.on('/').split(uri));
     }
   }
 }

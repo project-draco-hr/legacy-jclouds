@@ -3,7 +3,7 @@
   Exception exception=null;
   try {
     OrgSettings newSettings=OrgSettings.builder().emailSettings(emailSettings.toBuilder().fromEmailAddress(newFromEmailAddress).build()).build();
-    OrgSettings modified=orgApi.updateSettings(orgRef.getHref(),newSettings);
+    OrgSettings modified=orgApi.updateSettings(org.getId(),newSettings);
     Checks.checkOrgSettings(settings);
     assertTrue(equal(modified.getEmailSettings().getFromEmailAddress(),newFromEmailAddress),String.format(OBJ_FIELD_UPDATABLE,"orgSettings","emailSettings"));
   }
@@ -13,7 +13,7 @@
  finally {
     try {
       OrgSettings restorableSettings=OrgSettings.builder().emailSettings(emailSettings).build();
-      settings=orgApi.updateSettings(orgRef.getHref(),restorableSettings);
+      settings=orgApi.updateSettings(org.getId(),restorableSettings);
     }
  catch (    Exception e) {
       if (exception != null) {

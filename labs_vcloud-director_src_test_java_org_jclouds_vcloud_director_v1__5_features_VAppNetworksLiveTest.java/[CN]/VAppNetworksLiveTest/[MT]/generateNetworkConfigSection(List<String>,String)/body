@@ -7,7 +7,7 @@
   FirewallService firewallService=createFirewallService(firewallRules);
   NatService natService=createNatService();
   IpScope ipScope=createNewIpScope();
-  NetworkConfiguration newConfiguration=NetworkConfiguration.builder().ipScope(ipScope).parentNetwork(parentNetworkRef).fenceMode(FenceMode.NAT_ROUTED).retainNetInfoAcrossDeployments(false).features(createNetworkFeatures(ImmutableSet.of(firewallService,natService))).build();
+  NetworkConfiguration newConfiguration=NetworkConfiguration.builder().ipScope(ipScope).parentNetwork(Reference.builder().fromEntity(network).build()).fenceMode(FenceMode.NAT_ROUTED).retainNetInfoAcrossDeployments(false).features(createNetworkFeatures(ImmutableSet.of(firewallService,natService))).build();
   VAppNetworkConfiguration newVAppNetworkConfiguration=VAppNetworkConfiguration.builder().networkName(newVAppNetworkName).configuration(newConfiguration).build();
   return NetworkConfigSection.builder().info("modified").networkConfigs(ImmutableSet.of(newVAppNetworkConfiguration)).build();
 }

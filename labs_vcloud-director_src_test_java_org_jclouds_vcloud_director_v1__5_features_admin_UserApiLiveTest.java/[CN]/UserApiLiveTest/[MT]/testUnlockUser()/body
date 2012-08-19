@@ -2,17 +2,17 @@
   AdminOrgApi adminOrgApi=adminContext.getApi().getOrgApi();
   OrgPasswordPolicySettings settingsToRevertTo=null;
   SessionApi sessionApi=context.utils().injector().getInstance(SessionApi.class);
-  OrgPasswordPolicySettings settings=adminOrgApi.getSettings(orgRef.getHref()).getPasswordPolicy();
+  OrgPasswordPolicySettings settings=adminOrgApi.getSettings(org.getId()).getPasswordPolicy();
   assertNotNull(settings);
   if (!settings.isAccountLockoutEnabled()) {
     settingsToRevertTo=settings;
     settings=settings.toBuilder().accountLockoutEnabled(true).invalidLoginsBeforeLockout(5).build();
-    settings=adminOrgApi.updatePasswordPolicy(orgRef.getHref(),settings);
+    settings=adminOrgApi.updatePasswordPolicy(org.getId(),settings);
   }
   assertTrue(settings.isAccountLockoutEnabled());
   for (int i=0; i < settings.getInvalidLoginsBeforeLockout() + 1; i++) {
     try {
-      sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"wrongpassword!");
+      sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),org.getName(),"wrongpassword!");
       fail("Managed to login using the wrong password!");
     }
  catch (    AuthorizationException e) {
@@ -21,10 +21,10 @@ catch (    Exception e) {
       fail("Expected AuthorizationException",e);
     }
   }
-  user=userApi.getUser(user.getHref());
+  user=userApi.get(user.getHref());
   assertTrue(user.isLocked());
   try {
-    sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+    sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),org.getName(),"newPassword");
     fail("Managed to login to locked account!");
   }
  catch (  AuthorizationException e) {
@@ -32,13 +32,13 @@ catch (    Exception e) {
 catch (  Exception e) {
     fail("Expected AuthorizationException",e);
   }
-  userApi.unlockUser(user.getHref());
-  user=userApi.getUser(user.getHref());
+  userApi.unlock(user.getHref());
+  user=userApi.get(user.getHref());
   assertFalse(user.isLocked());
-  SessionWithToken sessionWithToken=sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+  SessionWithToken sessionWithToken=sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),org.getName(),"newPassword");
   assertNotNull(sessionWithToken.getToken());
   sessionApi.logoutSessionWithToken(sessionWithToken.getSession().getHref(),sessionWithToken.getToken());
   if (settingsToRevertTo != null) {
-    adminOrgApi.updatePasswordPolicy(orgRef.getHref(),settingsToRevertTo);
+    adminOrgApi.updatePasswordPolicy(org.getId(),settingsToRevertTo);
   }
 }

@@ -1,18 +1,13 @@
 {
-  return transformParallel(Sets.newLinkedHashSet(transform(filter(from,new Predicate<Location>(){
-    @Override public boolean apply(    Location input){
-      return input.getScope() == LocationScope.ZONE;
+  return from(from).filter(LocationPredicates.isZone()).transform(new Function<Location,String>(){
+    @Override public String apply(    Location from){
+      return from.getParent().getId();
     }
   }
-),new Function<Location,URI>(){
-    @Override public URI apply(    Location from){
-      return URI.create(from.getParent().getId());
+).transform(new Function<String,Org>(){
+    @Override public Org apply(    String from){
+      return api.getOrgApi().get(from);
     }
   }
-)),new Function<URI,Future<? extends Org>>(){
-    @Override public Future<? extends Org> apply(    URI from){
-      return aapi.getOrgApi().getOrg(from);
-    }
-  }
-,executor,null,logger,"organizations for uris");
+);
 }

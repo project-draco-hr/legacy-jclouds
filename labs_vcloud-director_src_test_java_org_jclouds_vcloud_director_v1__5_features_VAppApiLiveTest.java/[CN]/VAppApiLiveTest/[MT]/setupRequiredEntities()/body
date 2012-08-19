@@ -23,9 +23,7 @@
   }
   if (adminContext != null) {
     Link orgLink=find(links,and(relEquals("up"),typeEquals(VCloudDirectorMediaType.ORG)));
-    testUserURI=adminContext.getApi().getUserApi().createUser(toAdminUri(orgLink),randomTestUser("VAppAccessTest")).getHref();
+    userUrn=adminContext.getApi().getUserApi().createUserInOrg(randomTestUser("VAppAccessTest"),toAdminUri(orgLink)).getId();
   }
- else {
-    testUserURI=userURI;
-  }
+  user=lazyGetUser();
 }

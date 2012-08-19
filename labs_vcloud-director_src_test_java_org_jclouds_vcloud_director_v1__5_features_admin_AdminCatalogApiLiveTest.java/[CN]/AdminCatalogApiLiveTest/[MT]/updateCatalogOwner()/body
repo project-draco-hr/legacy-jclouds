@@ -1,7 +1,6 @@
 {
-  URI adminOrgHref=Iterables.find(context.getApi().resolveEntity(org.getId()).getLinks(),LinkPredicates.typeEquals(VCloudDirectorMediaType.ADMIN_ORG)).getHref();
   User newOwnerUser=randomTestUser("testUpdateCatalogOwner");
-  newOwnerUser=adminContext.getApi().getUserApi().createUser(adminOrgHref,newOwnerUser);
+  newOwnerUser=adminContext.getApi().getUserApi().createUserInOrg(newOwnerUser,org.getId());
   assertNotNull(newOwnerUser,"failed to create temp user to test updateCatalogOwner");
   Owner oldOwner=owner;
   Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().fromEntity(newOwnerUser).build()).build();
@@ -9,11 +8,11 @@
     catalogApi.setOwner(catalog.getId(),newOwner);
     owner=catalogApi.getOwner(catalog.getId());
     Checks.checkOwner(owner);
-    assertTrue(equal(owner.toBuilder().links(Collections.<Link>emptySet()).build(),newOwner.toBuilder().user(newOwner.getUser().toBuilder().id(null).build()).build()),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
+    assertTrue(equal(owner.toBuilder().links(Collections.<Link>emptySet()).build(),newOwner.toBuilder().user(newOwner.getUser()).build()),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
   }
   finally {
     catalogApi.setOwner(catalog.getId(),oldOwner);
     owner=catalogApi.getOwner(catalog.getId());
-    adminContext.getApi().getUserApi().deleteUser(newOwnerUser.getHref());
+    adminContext.getApi().getUserApi().delete(newOwnerUser.getHref());
   }
 }

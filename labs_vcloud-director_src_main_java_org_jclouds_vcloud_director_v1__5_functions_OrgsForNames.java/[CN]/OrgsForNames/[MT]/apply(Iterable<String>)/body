@@ -1,9 +1,13 @@
 {
-  final Set<Reference> orgs=sapi.getOrgApi().getOrgList();
-  return transformParallel(from,new Function<String,Future<? extends Org>>(){
-    @Override public Future<? extends Org> apply(    String from){
-      return aapi.getOrgApi().getOrg(Iterables.find(orgs,nameEquals(from)).getHref());
+  return from(api.getOrgApi().list()).filter(new Predicate<Reference>(){
+    @Override public boolean apply(    Reference in){
+      return Iterables.contains(from,in.getName());
     }
   }
-,executor,null,logger,"organizations for names");
+).transform(new Function<Reference,Org>(){
+    @Override public Org apply(    Reference in){
+      return api.getOrgApi().get(in.getHref());
+    }
+  }
+);
 }

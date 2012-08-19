@@ -4,9 +4,9 @@
   Link admin=Iterables.tryFind(userContext.getApi().getCurrentSession().getLinks(),Predicates.and(LinkPredicates.relEquals(Link.Rel.DOWN),ReferencePredicates.typeEquals(VCloudDirectorMediaType.ADMIN))).orNull();
   if (admin != null) {
     adminContext=userContext.getAdminContext();
-    Reference orgRef=Iterables.getFirst(userContext.getApi().getOrgApi().getOrgList(),null).toAdminReference(endpoint);
-    Reference userRef=Iterables.find(adminContext.getApi().getOrgApi().getOrg(orgRef.getHref()).getUsers(),ReferencePredicates.nameEquals(adminContext.getApi().getCurrentSession().getUser()));
-    User user=adminContext.getApi().getUserApi().getUser(userRef.getHref());
+    Reference orgRef=Iterables.getFirst(userContext.getApi().getOrgApi().list(),null).toAdminReference(endpoint);
+    Reference userRef=Iterables.find(adminContext.getApi().getOrgApi().get(orgRef.getHref()).getUsers(),ReferencePredicates.nameEquals(adminContext.getApi().getCurrentSession().getUser()));
+    User user=adminContext.getApi().getUserApi().get(userRef.getHref());
     Reference userRole=user.getRole();
     assertEquals(userRole.getName(),DefaultRoles.ORG_ADMIN.value());
   }

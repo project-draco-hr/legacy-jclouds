@@ -1,12 +1,12 @@
 {
-  assertTrue(network instanceof OrgNetwork,String.format(REF_REQ_LIVE,"OrgNetwork"));
+  assertTrue(network instanceof OrgNetwork,String.format(URN_REQ_LIVE,"OrgNetwork"));
   OrgNetwork oldNetwork=Network.<OrgNetwork>toSubType(network).toBuilder().tasks(Collections.<Task>emptySet()).build();
   OrgNetwork updateNetwork=getMutatedOrgNetwork(oldNetwork);
   try {
-    Task updateNetworkTask=networkApi.updateNetwork(network.getHref(),updateNetwork);
+    Task updateNetworkTask=networkApi.update(networkUrn,updateNetwork);
     Checks.checkTask(updateNetworkTask);
     assertTrue(retryTaskSuccess.apply(updateNetworkTask),String.format(TASK_COMPLETE_TIMELY,"updateNetworkTask"));
-    network=networkApi.getNetwork(network.getHref());
+    network=networkApi.get(networkUrn);
     Checks.checkOrgNetwork(Network.<OrgNetwork>toSubType(network));
     assertTrue(equal(network.getConfiguration().getIpScope(),updateNetwork.getConfiguration().getIpScope()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","ipScope"));
     assertTrue(equal(network.getConfiguration().getParentNetwork(),updateNetwork.getConfiguration().getParentNetwork()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","parentNetwork"));
@@ -17,9 +17,9 @@
     assertTrue(equal(network.getConfiguration().getRouterInfo(),updateNetwork.getConfiguration().getRouterInfo()),String.format(OBJ_FIELD_UPDATABLE,NETWORK + ".configuration","routerInfo"));
   }
   finally {
-    Task updateNetworkTask=networkApi.updateNetwork(network.getHref(),oldNetwork);
+    Task updateNetworkTask=networkApi.update(networkUrn,oldNetwork);
     Checks.checkTask(updateNetworkTask);
     assertTrue(retryTaskSuccess.apply(updateNetworkTask),String.format(TASK_COMPLETE_TIMELY,"updateNetworkTask"));
-    network=networkApi.getNetwork(network.getHref());
+    network=networkApi.get(networkUrn);
   }
 }

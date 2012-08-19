@@ -1,8 +1,8 @@
 {
   User oldUser=user.toBuilder().build();
   User newUser=user.toBuilder().fullName("new" + oldUser.getFullName()).emailAddress("new" + oldUser.getEmailAddress()).telephone("1-" + oldUser.getTelephone()).isEnabled(true).im("new" + oldUser.getIM()).isAlertEnabled(true).alertEmailPrefix("new" + oldUser.getAlertEmailPrefix()).alertEmail("new" + oldUser.getAlertEmail()).storedVmQuota(1).deployedVmQuota(1).password("newPassword").role(getRoleReferenceFor(DefaultRoles.AUTHOR.value())).build();
-  userApi.updateUser(user.getHref(),newUser);
-  user=userApi.getUser(user.getHref());
+  userApi.update(user.getHref(),newUser);
+  user=userApi.get(user.getHref());
   checkUser(user);
   assertTrue(equal(user.getFullName(),newUser.getFullName()),String.format(OBJ_FIELD_UPDATABLE,USER,"fullName"));
   assertTrue(equal(user.getEmailAddress(),newUser.getEmailAddress()),String.format(OBJ_FIELD_UPDATABLE,USER,"emailAddress"));
@@ -15,7 +15,7 @@
   assertTrue(equal(user.getStoredVmQuota(),newUser.getStoredVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"storedVmQuota"));
   assertTrue(equal(user.getDeployedVmQuota(),newUser.getDeployedVmQuota()),String.format(OBJ_FIELD_UPDATABLE,USER,"deployedVmQuota"));
   SessionApi sessionApi=context.utils().injector().getInstance(SessionApi.class);
-  SessionWithToken sessionWithToken=sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),orgRef.getName(),"newPassword");
+  SessionWithToken sessionWithToken=sessionApi.loginUserInOrgWithPassword(URI.create(endpoint + "/sessions"),user.getName(),org.getName(),"newPassword");
   assertNotNull(sessionWithToken.getToken());
   sessionApi.logoutSessionWithToken(sessionWithToken.getSession().getHref(),sessionWithToken.getToken());
 }

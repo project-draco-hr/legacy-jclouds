@@ -1,7 +1,7 @@
 {
   User newUser=randomTestUser("testDeleteUser" + getTestDateTimeStamp());
-  User userToBeDeleted=userApi.createUser(orgRef.getHref(),newUser);
-  userApi.deleteUser(userToBeDeleted.getHref());
-  User deleted=userApi.getUser(userToBeDeleted.getHref());
+  User userToBeDeleted=userApi.createUserInOrg(newUser,org.getId());
+  userApi.delete(userToBeDeleted.getHref());
+  User deleted=userApi.get(userToBeDeleted.getHref());
   assertNull(deleted);
 }

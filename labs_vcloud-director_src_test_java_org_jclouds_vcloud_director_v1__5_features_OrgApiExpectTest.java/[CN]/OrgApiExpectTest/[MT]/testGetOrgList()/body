@@ -1,5 +1,7 @@
 {
-  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,getStandardRequest("GET","/org/"),getStandardPayloadResponse("/org/orglist.xml",VCloudDirectorMediaType.ORG_LIST));
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint(endpoint + "/org/").addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).build();
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/org/orglist.xml",ORG_LIST + ";version=1.5")).build();
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,list,listResponse);
   OrgList expected=OrgList.builder().org(Reference.builder().type("application/vnd.vmware.vcloud.org+xml").name("JClouds").href(URI.create("https://vcloudbeta.bluelock.com/api/org/6f312e42-cd2b-488d-a2bb-97519cd57ed0")).build()).build();
-  assertEquals(api.getOrgApi().getOrgList(),expected);
+  assertEquals(api.getOrgApi().list(),expected);
 }

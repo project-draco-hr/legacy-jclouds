@@ -5,7 +5,7 @@
   Integer delayAfterPowerOnSeconds=generalSettings.getDelayAfterPowerOnSeconds();
   try {
     OrgGeneralSettings newGeneralSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota + 1).storedVmQuota(storedVmQuota + 1).useServerBootSequence(!useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds + 1).build();
-    generalSettings=orgApi.updateGeneralSettings(orgRef.getHref(),newGeneralSettings);
+    generalSettings=orgApi.updateGeneralSettings(org.getId(),newGeneralSettings);
     assertTrue(equal(generalSettings.getDeployedVMQuota(),deployedVMQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","deployedVMQuota"));
     assertTrue(equal(generalSettings.getStoredVmQuota(),storedVmQuota + 1),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","storedVmQuota"));
     assertTrue(equal(generalSettings.useServerBootSequence(),!useServerBootSequence),String.format(OBJ_FIELD_UPDATABLE,"generalSettings","useServerBootSequence"));
@@ -14,6 +14,6 @@
   }
   finally {
     generalSettings=generalSettings.toBuilder().deployedVMQuota(deployedVMQuota).storedVmQuota(storedVmQuota).useServerBootSequence(useServerBootSequence).delayAfterPowerOnSeconds(delayAfterPowerOnSeconds).build();
-    generalSettings=orgApi.updateGeneralSettings(orgRef.getHref(),generalSettings);
+    generalSettings=orgApi.updateGeneralSettings(org.getId(),generalSettings);
   }
 }
