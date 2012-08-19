@@ -1,0 +1,18 @@
+{
+  User newOwnerUser=randomTestUser("testEditCatalogOwner");
+  newOwnerUser=adminContext.getApi().getUserApi().addUserToOrg(newOwnerUser,org.getId());
+  assertNotNull(newOwnerUser,"failed to add temp user to test editCatalogOwner");
+  Owner oldOwner=owner;
+  Owner newOwner=Owner.builder().type("application/vnd.vmware.vcloud.owner+xml").user(Reference.builder().fromEntity(newOwnerUser).build()).build();
+  try {
+    catalogApi.setOwner(catalog.getId(),newOwner);
+    owner=catalogApi.getOwner(catalog.getId());
+    Checks.checkOwner(owner);
+    assertTrue(equal(owner.toBuilder().links(Collections.<Link>emptySet()).build(),newOwner.toBuilder().user(newOwner.getUser()).build()),String.format(OBJ_FIELD_UPDATABLE,CATALOG,"owner"));
+  }
+  finally {
+    catalogApi.setOwner(catalog.getId(),oldOwner);
+    owner=catalogApi.getOwner(catalog.getId());
+    adminContext.getApi().getUserApi().remove(newOwnerUser.getHref());
+  }
+}

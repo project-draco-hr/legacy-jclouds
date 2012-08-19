@@ -1,0 +1,11 @@
+{
+  Task removeEntry=mediaApi.getMetadataApi().removeEntry(media.getHref(),"testKey");
+  Checks.checkTask(removeEntry);
+  assertTrue(retryTaskSuccess.apply(removeEntry),String.format(TASK_COMPLETE_TIMELY,"removeEntry"));
+  metadataValue=mediaApi.getMetadataApi().getValue(media.getHref(),"testKey");
+  assertNull(metadataValue,String.format(OBJ_FIELD_ATTRB_DEL,MEDIA,"Metadata",metadataValue != null ? metadataValue.toString() : "","MetadataEntry",metadataValue != null ? metadataValue.toString() : ""));
+  metadataValue=mediaApi.getMetadataApi().getValue(media.getHref(),"key");
+  Checks.checkMetadataValueFor(MEDIA,metadataValue);
+  media=mediaApi.getMedia(media.getHref());
+  Checks.checkMediaFor(MEDIA,media);
+}

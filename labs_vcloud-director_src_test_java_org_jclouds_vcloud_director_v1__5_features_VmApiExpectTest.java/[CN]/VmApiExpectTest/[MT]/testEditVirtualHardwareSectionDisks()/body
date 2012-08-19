@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/virtualHardwareSection/disks").xmlFilePayload("/vApp/editVirtualHardwareSectionDisks.xml",VCloudDirectorMediaType.OVF_RASD_ITEMS_LIST).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/editVirtualHardwareSectionDisksTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RasdItemsList disks=getVirtualHardwareSectionDisks().toBuilder().build();
+  Task expected=editVirtualHardwareSectionDisksTask();
+  assertEquals(api.getVmApi().editVirtualHardwareSectionDisks(vmURI,disks),expected);
+}

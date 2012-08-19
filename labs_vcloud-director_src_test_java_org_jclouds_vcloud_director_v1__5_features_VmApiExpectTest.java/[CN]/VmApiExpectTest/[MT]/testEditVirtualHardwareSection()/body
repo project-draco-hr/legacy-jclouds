@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/virtualHardwareSection").xmlFilePayload("/vApp/editVirtualHardwareSection.xml",VCloudDirectorMediaType.VIRTUAL_HARDWARE_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/editVirtualHardwareSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  VirtualHardwareSection section=getVirtualHardwareSection().toBuilder().build();
+  Task expected=editVirtualHardwareSectionTask();
+  assertEquals(api.getVmApi().editVirtualHardwareSection(vmURI,section),expected);
+}

@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/operatingSystemSection").xmlFilePayload("/vApp/editOperatingSystemSection.xml",VCloudDirectorMediaType.OPERATING_SYSTEM_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/editOperatingSystemSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  OperatingSystemSection section=getOperatingSystemSection().toBuilder().build();
+  Task expected=editOperatingSystemSectionTask();
+  assertEquals(api.getVmApi().editOperatingSystemSection(vmURI,section),expected);
+}

@@ -1,0 +1,19 @@
+{
+  LeaseSettingsSection oldSection=vAppApi.getLeaseSettingsSection(vApp.getHref());
+  Integer twoHours=(int)TimeUnit.SECONDS.convert(2L,TimeUnit.HOURS);
+  LeaseSettingsSection newSection=oldSection.toBuilder().deploymentLeaseInSeconds(twoHours).build();
+  Task editLeaseSettingsSection=vAppApi.editLeaseSettingsSection(vApp.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(editLeaseSettingsSection),String.format(TASK_COMPLETE_TIMELY,"editLeaseSettingsSection"));
+  LeaseSettingsSection modified=vAppApi.getLeaseSettingsSection(vApp.getHref());
+  checkLeaseSettingsSection(modified);
+  if (modified.getDeploymentLeaseExpiration() != null && newSection.getDeploymentLeaseExpiration() != null) {
+    assertTrue(modified.getDeploymentLeaseExpiration().after(newSection.getDeploymentLeaseExpiration()),String.format("The new deploymentLeaseExpiration timestamp must be later than the original: %s > %s",dateService.iso8601DateFormat(modified.getDeploymentLeaseExpiration()),dateService.iso8601DateFormat(newSection.getDeploymentLeaseExpiration())));
+  }
+  if (modified.getStorageLeaseExpiration() != null && newSection.getStorageLeaseExpiration() != null) {
+    assertTrue(modified.getStorageLeaseExpiration().after(newSection.getStorageLeaseExpiration()),String.format("The new storageLeaseExpiration timestamp must be later than the original: %s > %s",dateService.iso8601DateFormat(modified.getStorageLeaseExpiration()),dateService.iso8601DateFormat(newSection.getStorageLeaseExpiration())));
+  }
+  modified=modified.toBuilder().deploymentLeaseExpiration(null).storageLeaseExpiration(null).build();
+  newSection=newSection.toBuilder().deploymentLeaseExpiration(null).storageLeaseExpiration(null).build();
+  assertEquals(modified.getDeploymentLeaseInSeconds(),twoHours,String.format(OBJ_FIELD_EQ,"LeaseSettingsSection","DeploymentLeaseInSeconds",Integer.toString(twoHours),modified.getDeploymentLeaseInSeconds().toString()));
+  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"LeaseSettingsSection"));
+}

@@ -1,0 +1,7 @@
+{
+  String newVAppNetworkName=generateVAppNetworkName(network.getName(),securityGroups);
+  NetworkConfigSection newSection=generateNetworkConfigSection(securityGroups,newVAppNetworkName);
+  Task editNetworkConfigSection=vAppApi.editNetworkConfigSection(vAppURI,newSection);
+  assertTrue(retryTaskSuccess.apply(editNetworkConfigSection),String.format(TASK_COMPLETE_TIMELY,"editNetworkConfigSection"));
+  attachVmToVAppNetwork(vm,newVAppNetworkName);
+}

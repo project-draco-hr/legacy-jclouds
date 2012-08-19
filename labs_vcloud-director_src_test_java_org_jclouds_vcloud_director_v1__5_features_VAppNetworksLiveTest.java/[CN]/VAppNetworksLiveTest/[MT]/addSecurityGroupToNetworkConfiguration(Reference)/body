@@ -1,0 +1,8 @@
+{
+  Set<FirewallRule> defaultFirewallRules=defaultFirewallRules();
+  Set<FirewallRule> httpFirewallRules=httpIngressFirewallRules();
+  Map<String,NetworkConfiguration> securityGroupToNetworkConfigurations=Maps.newHashMap();
+  securityGroupToNetworkConfigurations.put(DEFAULT_SECURITY_GROUP,addNetworkConfiguration(parentNetworkRef,defaultFirewallRules));
+  securityGroupToNetworkConfigurations.put(HTTP_SECURITY_GROUP,addNetworkConfiguration(parentNetworkRef,httpFirewallRules));
+  return securityGroupToNetworkConfigurations;
+}

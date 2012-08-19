@@ -1,0 +1,10 @@
+{
+  Task task=metadataApi.removeEntry(lazyGetVdc().getHref(),metadataKey);
+  assertTaskSucceeds(task);
+  try {
+    metadataApi.getValue(lazyGetVdc().getHref(),metadataKey);
+    fail("Retrieval of metadata value " + metadataKey + " should have fail after deletion");
+  }
+ catch (  VCloudDirectorException e) {
+  }
+}

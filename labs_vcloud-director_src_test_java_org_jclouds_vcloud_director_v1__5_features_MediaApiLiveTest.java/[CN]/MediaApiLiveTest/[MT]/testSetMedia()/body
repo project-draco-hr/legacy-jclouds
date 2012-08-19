@@ -4,16 +4,16 @@
   String oldDescription=media.getDescription();
   String newDescription="new " + oldDescription;
   media=media.toBuilder().name(newName).description(newDescription).build();
-  Task updateMedia=mediaApi.updateMedia(media.getHref(),media);
-  Checks.checkTask(updateMedia);
-  assertTrue(retryTaskSuccess.apply(updateMedia),String.format(TASK_COMPLETE_TIMELY,"updateMedia"));
+  Task editMedia=mediaApi.editMedia(media.getHref(),media);
+  Checks.checkTask(editMedia);
+  assertTrue(retryTaskSuccess.apply(editMedia),String.format(TASK_COMPLETE_TIMELY,"editMedia"));
   media=mediaApi.getMedia(media.getHref());
   assertTrue(equal(media.getName(),newName),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"name"));
   assertTrue(equal(media.getDescription(),newDescription),String.format(OBJ_FIELD_UPDATABLE,MEDIA,"description"));
   Checks.checkMediaFor(MEDIA,media);
   media=media.toBuilder().name(oldName).description(oldDescription).build();
-  updateMedia=mediaApi.updateMedia(media.getHref(),media);
-  Checks.checkTask(updateMedia);
-  assertTrue(retryTaskSuccess.apply(updateMedia),String.format(TASK_COMPLETE_TIMELY,"updateMedia"));
+  editMedia=mediaApi.editMedia(media.getHref(),media);
+  Checks.checkTask(editMedia);
+  assertTrue(retryTaskSuccess.apply(editMedia),String.format(TASK_COMPLETE_TIMELY,"editMedia"));
   media=mediaApi.getMedia(media.getHref());
 }

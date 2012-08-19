@@ -1,0 +1,11 @@
+{
+  Task removeMedia=mediaApi.removeMedia(media.getHref());
+  Checks.checkTask(removeMedia);
+  assertTrue(retryTaskSuccess.apply(removeMedia),String.format(TASK_COMPLETE_TIMELY,"removeMedia"));
+  media=mediaApi.getMedia(media.getHref());
+  assertNull(media,String.format(OBJ_DEL,MEDIA,media != null ? media.toString() : ""));
+  removeMedia=mediaApi.removeMedia(oldMedia.getHref());
+  Checks.checkTask(removeMedia);
+  assertTrue(retryTaskSuccess.apply(removeMedia),String.format(TASK_COMPLETE_TIMELY,"removeMedia"));
+  oldMedia=null;
+}

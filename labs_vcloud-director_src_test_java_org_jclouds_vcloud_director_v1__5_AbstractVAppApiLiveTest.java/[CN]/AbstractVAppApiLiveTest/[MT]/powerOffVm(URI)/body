@@ -1,12 +1,12 @@
 {
-  Vm test=vmApi.getVm(testVmURI);
+  Vm test=vmApi.get(testVmURI);
   Status status=test.getStatus();
   if (status != Status.POWERED_OFF || test.isDeployed()) {
     UndeployVAppParams undeployParams=UndeployVAppParams.builder().build();
     Task shutdownVapp=vAppApi.undeploy(test.getHref(),undeployParams);
     assertTaskSucceedsLong(shutdownVapp);
   }
-  test=vmApi.getVm(testVmURI);
+  test=vmApi.get(testVmURI);
   assertStatus(VM,test,Status.POWERED_OFF);
   return test;
 }

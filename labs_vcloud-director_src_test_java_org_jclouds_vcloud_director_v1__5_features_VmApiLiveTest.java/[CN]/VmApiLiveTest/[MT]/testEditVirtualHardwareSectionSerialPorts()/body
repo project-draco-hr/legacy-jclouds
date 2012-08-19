@@ -1,0 +1,8 @@
+{
+  RasdItemsList oldSection=vmApi.getVirtualHardwareSectionSerialPorts(vm.getHref());
+  RasdItemsList newSection=oldSection.toBuilder().build();
+  Task editVirtualHardwareSectionSerialPorts=vmApi.editVirtualHardwareSectionSerialPorts(vm.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(editVirtualHardwareSectionSerialPorts),String.format(TASK_COMPLETE_TIMELY,"editVirtualHardwareSectionSerialPorts"));
+  RasdItemsList modified=vmApi.getVirtualHardwareSectionSerialPorts(vm.getHref());
+  checkRasdItemsList(modified);
+}

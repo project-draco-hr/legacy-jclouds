@@ -1,0 +1,10 @@
+{
+  ProductSectionList oldSections=vAppApi.getProductSections(vApp.getHref());
+  ProductSectionList newSections=oldSections.toBuilder().productSection(ProductSection.builder().info("Information about the installed software").required().product(MsgType.builder().value("jclouds").build()).vendor(MsgType.builder().value("jclouds Inc.").build()).build()).build();
+  Task editProductSections=vAppApi.editProductSections(vApp.getHref(),newSections);
+  assertTrue(retryTaskSuccess.apply(editProductSections),String.format(TASK_COMPLETE_TIMELY,"editProductSections"));
+  ProductSectionList modified=vAppApi.getProductSections(vApp.getHref());
+  checkProductSectionList(modified);
+  assertEquals(modified.getProductSections().size(),oldSections.getProductSections().size() + 1);
+  assertEquals(modified,newSections);
+}

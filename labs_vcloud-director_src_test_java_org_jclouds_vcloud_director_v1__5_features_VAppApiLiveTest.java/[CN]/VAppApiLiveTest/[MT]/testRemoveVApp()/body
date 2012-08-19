@@ -1,0 +1,7 @@
+{
+  VApp temp=instantiateVApp();
+  Task removeVApp=vAppApi.removeVApp(temp.getHref());
+  assertTrue(retryTaskSuccess.apply(removeVApp),String.format(TASK_COMPLETE_TIMELY,"removeVApp"));
+  VApp removed=vAppApi.getVApp(temp.getHref());
+  assertNull(removed,"The VApp " + temp.getName() + " should have been removed");
+}

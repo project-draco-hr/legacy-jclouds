@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/networkConnectionSection").xmlFilePayload("/vApp/editNetworkConnectionSection.xml",VCloudDirectorMediaType.NETWORK_CONNECTION_SECTION).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/editNetworkConnectionSectionTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  NetworkConnectionSection section=getNetworkConnectionSection().toBuilder().build();
+  Task expected=editNetworkConnectionSectionTask();
+  assertEquals(api.getVmApi().editNetworkConnectionSection(vmURI,section),expected);
+}

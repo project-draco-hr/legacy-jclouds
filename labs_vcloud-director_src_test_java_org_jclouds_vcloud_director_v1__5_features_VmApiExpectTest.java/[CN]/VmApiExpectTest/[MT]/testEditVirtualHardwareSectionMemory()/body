@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",vmId + "/virtualHardwareSection/memory").xmlFilePayload("/vApp/editVirtualHardwareSectionMemory.xml",VCloudDirectorMediaType.VAPP).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/editVirtualHardwareSectionMemoryTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RasdItem memory=getVirtualHardwareSectionCpu();
+  Task expected=editVirtualHardwareSectionMemoryTask();
+  assertEquals(api.getVmApi().editVirtualHardwareSectionMemory(vmURI,memory),expected);
+}

@@ -1,0 +1,12 @@
+{
+  GuestCustomizationSection oldSection=vmApi.getGuestCustomizationSection(vm.getHref());
+  GuestCustomizationSection newSection=oldSection.toBuilder().computerName(name("n")).enabled(Boolean.TRUE).adminPassword(null).build();
+  Task editGuestCustomizationSection=vmApi.editGuestCustomizationSection(vm.getHref(),newSection);
+  assertTrue(retryTaskSuccess.apply(editGuestCustomizationSection),String.format(TASK_COMPLETE_TIMELY,"editGuestCustomizationSection"));
+  GuestCustomizationSection modified=vmApi.getGuestCustomizationSection(vm.getHref());
+  checkGuestCustomizationSection(modified);
+  assertEquals(modified.getComputerName(),newSection.getComputerName());
+  assertTrue(modified.isEnabled());
+  modified=modified.toBuilder().adminPassword(null).build();
+  assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"GuestCustomizationSection"));
+}

@@ -1,0 +1,9 @@
+{
+  VAppTemplate clonedVappTemplate=cloneVAppTemplate(true);
+  VAppTemplate vAppTemplatePreDelete=vAppTemplateApi.getVAppTemplate(clonedVappTemplate.getHref());
+  checkVAppTemplate(vAppTemplatePreDelete);
+  final Task task=vAppTemplateApi.removeVappTemplate(clonedVappTemplate.getHref());
+  assertTaskSucceeds(task);
+  VAppTemplate removed=vAppTemplateApi.getVAppTemplate(clonedVappTemplate.getHref());
+  assertNull(removed);
+}
