@@ -1,12 +1,7 @@
 {
   if (vdc == null) {
     assertNotNull(vdcUrn,String.format(URN_REQ_LIVE,VDC));
-    vdc=from(org.getLinks()).filter(LinkPredicates.typeEquals(VDC)).transform(new Function<Link,Vdc>(){
-      @Override public Vdc apply(      Link in){
-        return context.getApi().getVdcApi().get(in.getHref());
-      }
-    }
-).firstMatch(EntityPredicates.idEquals(vdcUrn)).get();
+    vdc=context.getApi().getVdcApi().get(vdcUrn);
     assertNotNull(vdc,String.format(ENTITY_NON_NULL,VDC));
   }
   return vdc;

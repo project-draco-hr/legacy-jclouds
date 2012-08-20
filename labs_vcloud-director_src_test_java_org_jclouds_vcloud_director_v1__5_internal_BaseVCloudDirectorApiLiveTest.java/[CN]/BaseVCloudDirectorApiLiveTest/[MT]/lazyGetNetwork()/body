@@ -1,12 +1,7 @@
 {
   if (network == null) {
     assertNotNull(networkUrn,String.format(URN_REQ_LIVE,NETWORK));
-    network=from(org.getLinks()).filter(LinkPredicates.typeEquals(ORG_NETWORK)).transform(new Function<Link,Network>(){
-      @Override public Network apply(      Link in){
-        return context.getApi().getNetworkApi().get(in.getHref());
-      }
-    }
-).firstMatch(EntityPredicates.idEquals(networkUrn)).get();
+    network=context.getApi().getNetworkApi().get(networkUrn);
     assertNotNull(network,String.format(ENTITY_NON_NULL,NETWORK));
   }
   return network;

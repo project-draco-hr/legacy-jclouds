@@ -1,12 +1,12 @@
 {
-  Metadata catalogMetadata=catalogApi.getMetadataApi().get(lazyGetCatalog().getHref());
+  Metadata catalogMetadata=catalogApi.getMetadataApi(catalogUrn).get();
   MetadataEntry existingMetadataEntry=Iterables.find(catalogMetadata.getMetadataEntries(),new Predicate<MetadataEntry>(){
     @Override public boolean apply(    MetadataEntry input){
       return input.getKey().equals("KEY");
     }
   }
 );
-  MetadataValue metadataValue=catalogApi.getMetadataApi().getValue(existingMetadataEntry.getHref(),"KEY");
+  MetadataValue metadataValue=catalogApi.getMetadataApi(catalogApi.get(existingMetadataEntry.getHref()).getId()).getValue("KEY");
   assertEquals(metadataValue.getValue(),existingMetadataEntry.getValue(),String.format(CORRECT_VALUE_OBJECT_FMT,"Value","MetadataValue",existingMetadataEntry.getValue(),metadataValue.getValue()));
   checkMetadataValue(metadataValue);
 }

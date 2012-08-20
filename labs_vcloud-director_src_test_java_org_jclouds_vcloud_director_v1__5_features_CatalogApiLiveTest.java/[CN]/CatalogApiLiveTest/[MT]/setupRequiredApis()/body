@@ -8,7 +8,7 @@
     adminCatalog=adminCatalogApi.addCatalogToOrg(newCatalog,org.getId());
     catalogUrn=catalogApi.get(find(adminCatalog.getLinks(),and(relEquals("alternate"),typeEquals(VCloudDirectorMediaType.CATALOG))).getHref()).getId();
     Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).build();
-    Task mergeCatalogMetadata=adminCatalogApi.getMetadataApi().merge(adminCatalog.getHref(),newMetadata);
+    Task mergeCatalogMetadata=adminCatalogApi.getMetadataApi(adminCatalog.getId()).merge(newMetadata);
     checkTask(mergeCatalogMetadata);
     assertTrue(retryTaskSuccess.apply(mergeCatalogMetadata),String.format(TASK_COMPLETE_TIMELY,"setupRequiredApis"));
   }

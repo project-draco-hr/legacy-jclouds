@@ -2,9 +2,9 @@
   metadataKey=name("key-");
   metadataValue=name("value-");
   Metadata metadata=Metadata.builder().entry(MetadataEntry.builder().entry(metadataKey,metadataValue).build()).build();
-  Task task=metadataApi.merge(lazyGetVdc().getHref(),metadata);
+  Task task=metadataApi.merge(metadata);
   assertTaskSucceeds(task);
-  MetadataValue modified=metadataApi.getValue(lazyGetVdc().getHref(),metadataKey);
+  MetadataValue modified=metadataApi.getValue(metadataKey);
   Checks.checkMetadataValueFor("AdminVdc",modified,metadataValue);
   Checks.checkMetadata(metadata);
 }

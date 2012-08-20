@@ -1,15 +1,15 @@
 {
   vdc=lazyGetVdc();
-  vAppTemplate=vAppTemplateApi.getVAppTemplate(vAppTemplateURI);
+  vAppTemplate=vAppTemplateApi.get(vAppTemplateUrn);
   assertNotNull(vAppTemplate,String.format(ENTITY_NON_NULL,VAPP_TEMPLATE));
   VApp vAppInstantiated=instantiateVApp();
   assertNotNull(vAppInstantiated,String.format(ENTITY_NON_NULL,VAPP));
-  vAppURI=vAppInstantiated.getHref();
+  vAppUrn=vAppInstantiated.getId();
   Task instantiateTask=Iterables.getOnlyElement(vAppInstantiated.getTasks());
   assertTrue(retryTaskSuccessLong.apply(instantiateTask),String.format(TASK_COMPLETE_TIMELY,"instantiateTask"));
-  vApp=vAppApi.getVApp(vAppURI);
+  vApp=vAppApi.get(vAppUrn);
   List<Vm> vms=vApp.getChildren().getVms();
   vm=Iterables.getOnlyElement(vms);
-  vmURI=vm.getHref();
+  vmUrn=vm.getId();
   assertFalse(vms.isEmpty(),"The VApp must have a Vm");
 }

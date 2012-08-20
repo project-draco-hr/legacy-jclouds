@@ -1,0 +1,21 @@
+{
+  FluentIterable<Catalog> catalogs=FluentIterable.from(org.getLinks()).filter(ReferencePredicates.<Link>typeEquals(CATALOG)).transform(new Function<Link,Catalog>(){
+    @Override public Catalog apply(    Link in){
+      return context.getApi().getCatalogApi().get(in.getHref());
+    }
+  }
+);
+  Optional<Catalog> optionalCatalog=tryFind(catalogs,new Predicate<Catalog>(){
+    @Override public boolean apply(    Catalog input){
+      return Iterables.any(input.getLinks(),LinkPredicates.relEquals(Rel.ADD));
+    }
+  }
+);
+  if (optionalCatalog.isPresent()) {
+    Logger.CONSOLE.info("found catalog: %s",prettyCatalog.apply(optionalCatalog.get()));
+  }
+ else {
+    Logger.CONSOLE.warn("%s doesn't own any catalogs in org %s; catalogs: %s",context.getApi().getCurrentSession().getUser(),org.getName(),Iterables.transform(catalogs,prettyCatalog));
+  }
+  return optionalCatalog;
+}

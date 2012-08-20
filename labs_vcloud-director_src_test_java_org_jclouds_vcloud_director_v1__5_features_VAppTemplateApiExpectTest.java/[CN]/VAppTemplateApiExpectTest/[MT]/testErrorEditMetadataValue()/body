@@ -2,5 +2,5 @@
   final String templateId="/vAppTemplate/vappTemplate-ef4415e6-d413-4cbb-9262-f9bbec5f2ea9";
   URI uri=URI.create(endpoint + templateId);
   VAppTemplateApi api=orderedRequestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT",templateId + "/metadata/12345").xmlFilePayload("/vapptemplate/metadataValue.xml",METADATA_ENTRY).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vapptemplate/error400.xml",ERROR).httpResponseBuilder().statusCode(400).build()).getVAppTemplateApi();
-  api.getMetadataApi().putEntry(uri,"12345",exampleMetadataValue());
+  api.getMetadataApi(uri).putEntry("12345",exampleMetadataValue());
 }

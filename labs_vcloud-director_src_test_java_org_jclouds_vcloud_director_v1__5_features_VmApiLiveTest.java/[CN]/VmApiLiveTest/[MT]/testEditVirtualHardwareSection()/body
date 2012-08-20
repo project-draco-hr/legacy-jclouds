@@ -1,6 +1,6 @@
 {
-  vm=powerOffVm(vm.getHref());
-  VirtualHardwareSection oldSection=vmApi.getVirtualHardwareSection(vm.getHref());
+  vm=powerOffVm(vmUrn);
+  VirtualHardwareSection oldSection=vmApi.getVirtualHardwareSection(vmUrn);
   Set<? extends ResourceAllocationSettingData> oldItems=oldSection.getItems();
   Set<ResourceAllocationSettingData> newItems=Sets.newLinkedHashSet(oldItems);
   ResourceAllocationSettingData oldMemory=Iterables.find(oldItems,new Predicate<ResourceAllocationSettingData>(){
@@ -13,9 +13,9 @@
   newItems.remove(oldMemory);
   newItems.add(newMemory);
   VirtualHardwareSection newSection=oldSection.toBuilder().items(newItems).build();
-  Task editVirtualHardwareSection=vmApi.editVirtualHardwareSection(vm.getHref(),newSection);
+  Task editVirtualHardwareSection=vmApi.editVirtualHardwareSection(vmUrn,newSection);
   assertTrue(retryTaskSuccess.apply(editVirtualHardwareSection),String.format(TASK_COMPLETE_TIMELY,"editVirtualHardwareSection"));
-  VirtualHardwareSection modifiedSection=vmApi.getVirtualHardwareSection(vm.getHref());
+  VirtualHardwareSection modifiedSection=vmApi.getVirtualHardwareSection(vmUrn);
   checkVirtualHardwareSection(modifiedSection);
   ResourceAllocationSettingData modifiedMemory=Iterables.find(modifiedSection.getItems(),new Predicate<ResourceAllocationSettingData>(){
     @Override public boolean apply(    ResourceAllocationSettingData rasd){

@@ -1,9 +1,9 @@
 {
   metadataEntryValue="value";
   MetadataValue newValue=MetadataValue.builder().value(metadataEntryValue).build();
-  Task setMetadataEntry=mediaApi.getMetadataApi().putEntry(media.getHref(),"key",newValue);
+  Task setMetadataEntry=mediaApi.getMetadataApi(media.getId()).putEntry("key",newValue);
   Checks.checkTask(setMetadataEntry);
   assertTrue(retryTaskSuccess.apply(setMetadataEntry),String.format(TASK_COMPLETE_TIMELY,"setMetadataEntry"));
-  metadataValue=mediaApi.getMetadataApi().getValue(media.getHref(),"key");
+  metadataValue=mediaApi.getMetadataApi(media.getId()).getValue("key");
   Checks.checkMetadataValueFor(MEDIA,metadataValue);
 }

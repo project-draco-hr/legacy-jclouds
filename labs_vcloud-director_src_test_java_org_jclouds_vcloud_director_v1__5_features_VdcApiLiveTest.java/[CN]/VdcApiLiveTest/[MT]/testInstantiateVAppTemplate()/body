@@ -13,7 +13,7 @@
   NetworkConfiguration networkConfiguration=NetworkConfiguration.builder().parentNetwork(parentNetwork.get()).fenceMode(FenceMode.BRIDGED).build();
   NetworkConfigSection networkConfigSection=NetworkConfigSection.builder().info("Configuration parameters for logical networks").networkConfigs(ImmutableSet.of(VAppNetworkConfiguration.builder().networkName("vAppNetwork").configuration(networkConfiguration).build())).build();
   InstantiationParams instantiationParams=InstantiationParams.builder().sections(ImmutableSet.of(networkConfigSection)).build();
-  InstantiateVAppTemplateParams instantiate=InstantiateVAppTemplateParams.builder().name(name("test-vapp-")).notDeploy().notPowerOn().description("Test VApp").instantiationParams(instantiationParams).source(vAppTemplateURI).build();
+  InstantiateVAppTemplateParams instantiate=InstantiateVAppTemplateParams.builder().name(name("test-vapp-")).notDeploy().notPowerOn().description("Test VApp").instantiationParams(instantiationParams).source(lazyGetVAppTemplate().getHref()).build();
   instantiatedVApp=vdcApi.instantiateVApp(vdcUrn,instantiate);
   Task instantiationTask=Iterables.getFirst(instantiatedVApp.getTasks(),null);
   assertTaskSucceedsLong(instantiationTask);

@@ -1,7 +1,7 @@
 {
-  Task removeCatalogItemMetadataValue=catalogApi.getItemMetadataApi().removeEntry(catalogItem.getHref(),"KEY");
+  Task removeCatalogItemMetadataValue=catalogApi.getItemMetadataApi(catalogItem.getId()).removeEntry("KEY");
   checkTask(removeCatalogItemMetadataValue);
   assertTrue(retryTaskSuccess.apply(removeCatalogItemMetadataValue),String.format(TASK_COMPLETE_TIMELY,"removeCatalogItemMetadataValue"));
-  MetadataValue removed=catalogApi.getMetadataApi().getValue(catalogItem.getHref(),"KEY");
+  MetadataValue removed=catalogApi.getItemMetadataApi(catalogItem.getId()).getValue("KEY");
   assertNull(removed);
 }

@@ -1,12 +1,12 @@
 {
-  powerOffVm(vm.getHref());
+  powerOffVm(vmUrn);
   Set<Reference> networks=vdc.getAvailableNetworks();
   Reference network=Iterables.getLast(networks);
-  NetworkConnectionSection oldSection=vmApi.getNetworkConnectionSection(vm.getHref());
+  NetworkConnectionSection oldSection=vmApi.getNetworkConnectionSection(vmUrn);
   NetworkConnectionSection newSection=oldSection.toBuilder().networkConnection(NetworkConnection.builder().ipAddressAllocationMode(IpAddressAllocationMode.DHCP.toString()).network(network.getName()).build()).build();
-  Task editNetworkConnectionSection=vmApi.editNetworkConnectionSection(vm.getHref(),newSection);
+  Task editNetworkConnectionSection=vmApi.editNetworkConnectionSection(vmUrn,newSection);
   assertTrue(retryTaskSuccess.apply(editNetworkConnectionSection),String.format(TASK_COMPLETE_TIMELY,"editNetworkConnectionSection"));
-  NetworkConnectionSection modified=vmApi.getNetworkConnectionSection(vm.getHref());
+  NetworkConnectionSection modified=vmApi.getNetworkConnectionSection(vmUrn);
   checkNetworkConnectionSection(modified);
   assertEquals(modified.getNetworkConnections().size(),newSection.getNetworkConnections().size() + 1);
   assertEquals(modified,newSection,String.format(ENTITY_EQUAL,"NetworkConnectionSection"));

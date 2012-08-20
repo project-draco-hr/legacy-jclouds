@@ -1,20 +1,20 @@
 {
   Set<MetadataEntry> inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","testValue").build());
   Metadata inputMetadata=Metadata.builder().entries(inputEntries).build();
-  Task mergeMetadata=mediaApi.getMetadataApi().merge(media.getHref(),inputMetadata);
+  Task mergeMetadata=mediaApi.getMetadataApi(media.getId()).merge(inputMetadata);
   Checks.checkTask(mergeMetadata);
   assertTrue(retryTaskSuccess.apply(mergeMetadata),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(new)"));
-  metadata=mediaApi.getMetadataApi().get(media.getHref());
+  metadata=mediaApi.getMetadataApi(media.getId()).get();
   Checks.checkMetadataFor(MEDIA,metadata);
   checkMetadataContainsEntries(metadata,inputEntries);
   media=mediaApi.getMedia(media.getHref());
   Checks.checkMediaFor(MEDIA,media);
   inputEntries=ImmutableSet.of(MetadataEntry.builder().entry("testKey","new testValue").build());
   inputMetadata=Metadata.builder().entries(inputEntries).build();
-  mergeMetadata=mediaApi.getMetadataApi().merge(media.getHref(),inputMetadata);
+  mergeMetadata=mediaApi.getMetadataApi(media.getId()).merge(inputMetadata);
   Checks.checkTask(mergeMetadata);
   assertTrue(retryTaskSuccess.apply(mergeMetadata),String.format(TASK_COMPLETE_TIMELY,"mergeMetadata(edit)"));
-  metadata=mediaApi.getMetadataApi().get(media.getHref());
+  metadata=mediaApi.getMetadataApi(media.getId()).get();
   Checks.checkMetadataFor(MEDIA,metadata);
   checkMetadataContainsEntries(metadata,inputEntries);
   media=mediaApi.getMedia(media.getHref());

@@ -1,0 +1,11 @@
+{
+  Vm test=vmApi.get(vmUrn);
+  Status status=test.getStatus();
+  if (status != Status.POWERED_ON) {
+    Task powerOn=vmApi.powerOn(vmUrn);
+    assertTaskSucceedsLong(powerOn);
+  }
+  test=vmApi.get(vmUrn);
+  assertStatus(VM,test,Status.POWERED_ON);
+  return test;
+}

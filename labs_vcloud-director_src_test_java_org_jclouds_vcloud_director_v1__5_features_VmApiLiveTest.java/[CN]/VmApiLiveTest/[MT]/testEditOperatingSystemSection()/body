@@ -1,8 +1,8 @@
 {
   OperatingSystemSection newSection=OperatingSystemSection.builder().info("").id(OSType.RHEL_64.getCode()).osType("rhel5_64Guest").build();
-  Task editOperatingSystemSection=vmApi.editOperatingSystemSection(vm.getHref(),newSection);
+  Task editOperatingSystemSection=vmApi.editOperatingSystemSection(vmUrn,newSection);
   assertTrue(retryTaskSuccess.apply(editOperatingSystemSection),String.format(TASK_COMPLETE_TIMELY,"editOperatingSystemSection"));
-  OperatingSystemSection modified=vmApi.getOperatingSystemSection(vm.getHref());
+  OperatingSystemSection modified=vmApi.getOperatingSystemSection(vmUrn);
   checkOperatingSystemSection(modified);
   assertEquals(modified.getId(),newSection.getId());
 }

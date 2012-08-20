@@ -1,9 +1,9 @@
 {
-  vm=powerOnVm(vm.getHref());
+  vm=powerOnVm(vmUrn);
   UndeployVAppParams params=UndeployVAppParams.builder().build();
-  Task undeploy=vmApi.undeploy(vm.getHref(),params);
+  Task undeploy=vmApi.undeploy(vmUrn,params);
   assertTrue(retryTaskSuccess.apply(undeploy),String.format(TASK_COMPLETE_TIMELY,"undeploy"));
-  vm=vmApi.get(vm.getHref());
+  vm=vmApi.get(vmUrn);
   assertFalse(vm.isDeployed(),String.format(OBJ_FIELD_EQ,VM,"deployed","FALSE",vm.isDeployed().toString()));
-  assertVmStatus(vmURI,Status.POWERED_OFF);
+  assertVmStatus(vmUrn,Status.POWERED_OFF);
 }

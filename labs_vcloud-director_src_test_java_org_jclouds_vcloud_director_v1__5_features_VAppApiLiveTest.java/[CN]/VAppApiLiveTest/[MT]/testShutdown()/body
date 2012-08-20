@@ -1,8 +1,8 @@
 {
-  vApp=powerOnVApp(vApp.getHref());
-  Task shutdown=vAppApi.shutdown(vApp.getHref());
+  vApp=powerOnVApp(vAppUrn);
+  Task shutdown=vAppApi.shutdown(vAppUrn);
   assertTaskSucceedsLong(shutdown);
-  vApp=vAppApi.getVApp(vApp.getHref());
-  assertVAppStatus(vApp.getHref(),Status.POWERED_OFF);
-  vApp=powerOnVApp(vApp.getHref());
+  vApp=vAppApi.get(vAppUrn);
+  assertVAppStatus(vAppUrn,Status.POWERED_OFF);
+  vApp=powerOnVApp(vAppUrn);
 }

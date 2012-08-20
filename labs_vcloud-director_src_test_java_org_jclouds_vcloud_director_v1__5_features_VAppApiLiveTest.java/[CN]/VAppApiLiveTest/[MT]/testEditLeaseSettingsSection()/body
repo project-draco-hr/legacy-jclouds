@@ -1,10 +1,10 @@
 {
-  LeaseSettingsSection oldSection=vAppApi.getLeaseSettingsSection(vApp.getHref());
+  LeaseSettingsSection oldSection=vAppApi.getLeaseSettingsSection(vAppUrn);
   Integer twoHours=(int)TimeUnit.SECONDS.convert(2L,TimeUnit.HOURS);
   LeaseSettingsSection newSection=oldSection.toBuilder().deploymentLeaseInSeconds(twoHours).build();
-  Task editLeaseSettingsSection=vAppApi.editLeaseSettingsSection(vApp.getHref(),newSection);
+  Task editLeaseSettingsSection=vAppApi.editLeaseSettingsSection(vAppUrn,newSection);
   assertTrue(retryTaskSuccess.apply(editLeaseSettingsSection),String.format(TASK_COMPLETE_TIMELY,"editLeaseSettingsSection"));
-  LeaseSettingsSection modified=vAppApi.getLeaseSettingsSection(vApp.getHref());
+  LeaseSettingsSection modified=vAppApi.getLeaseSettingsSection(vAppUrn);
   checkLeaseSettingsSection(modified);
   if (modified.getDeploymentLeaseExpiration() != null && newSection.getDeploymentLeaseExpiration() != null) {
     assertTrue(modified.getDeploymentLeaseExpiration().after(newSection.getDeploymentLeaseExpiration()),String.format("The new deploymentLeaseExpiration timestamp must be later than the original: %s > %s",dateService.iso8601DateFormat(modified.getDeploymentLeaseExpiration()),dateService.iso8601DateFormat(newSection.getDeploymentLeaseExpiration())));

@@ -2,12 +2,12 @@
   Set<Vm> vms=Sets.newLinkedHashSet();
   QueryResultRecords templatesRecords=queryApi.vAppTemplatesQueryAll();
   for (  QueryResultRecordType templateRecord : templatesRecords.getRecords()) {
-    VAppTemplate vAppTemplate=vAppTemplateApi.getVAppTemplate(templateRecord.getHref());
+    VAppTemplate vAppTemplate=vAppTemplateApi.get(templateRecord.getId());
     vms.addAll(vAppTemplate.getChildren());
   }
   return ImmutableSet.copyOf(Iterables.filter(vms,new Predicate<Vm>(){
     @Override public boolean apply(    Vm input){
-      GuestCustomizationSection guestCustomizationSection=vmApi.getGuestCustomizationSection(input.getHref());
+      GuestCustomizationSection guestCustomizationSection=vmApi.getGuestCustomizationSection(input.getId());
       String computerName=guestCustomizationSection.getComputerName();
       String retainComputerName=CharMatcher.inRange('0','9').or(CharMatcher.inRange('a','z')).or(CharMatcher.inRange('A','Z')).or(CharMatcher.is('-')).retainFrom(computerName);
       return computerName.equals(retainComputerName);

@@ -1,0 +1,11 @@
+{
+  VApp test=vAppApi.get(vAppUrn);
+  Status status=test.getStatus();
+  if (status != Status.SUSPENDED) {
+    Task suspend=vAppApi.suspend(vAppUrn);
+    assertTaskSucceedsLong(suspend);
+  }
+  test=vAppApi.get(vAppUrn);
+  assertStatus(VAPP,test,Status.SUSPENDED);
+  return test;
+}

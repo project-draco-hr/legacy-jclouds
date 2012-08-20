@@ -1,9 +1,9 @@
 {
-  RasdItem origItem=vmApi.getVirtualHardwareSectionMemory(vm.getHref());
+  RasdItem origItem=vmApi.getVirtualHardwareSectionMemory(vmUrn);
   RasdItem newItem=origItem.toBuilder().elementName("1024 MB of memory").virtualQuantity(new BigInteger("1024")).build();
-  Task editVirtualHardwareSectionMemory=vmApi.editVirtualHardwareSectionMemory(vm.getHref(),newItem);
+  Task editVirtualHardwareSectionMemory=vmApi.editVirtualHardwareSectionMemory(vmUrn,newItem);
   assertTrue(retryTaskSuccess.apply(editVirtualHardwareSectionMemory),String.format(TASK_COMPLETE_TIMELY,"editVirtualHardwareSectionMemory"));
-  RasdItem modified=vmApi.getVirtualHardwareSectionMemory(vm.getHref());
+  RasdItem modified=vmApi.getVirtualHardwareSectionMemory(vmUrn);
   checkResourceAllocationSettingData(modified);
   assertEquals(modified.getVirtualQuantity(),new BigInteger("1024"),String.format(OBJ_FIELD_EQ,"ResourceAllocationSettingData","VirtualQuantity","1024",modified.getVirtualQuantity().toString()));
   assertEquals(modified,newItem);

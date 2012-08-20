@@ -3,16 +3,16 @@
   VApp composedVApp=vdcApi.composeVApp(vdcUrn,ComposeVAppParams.builder().name(name("composed-")).instantiationParams(instantiationParams()).build());
   Vm toAddVm=Iterables.get(vms,0);
   RecomposeVAppParams params=addRecomposeParams(composedVApp,toAddVm);
-  Task recomposeVApp=vAppApi.recompose(composedVApp.getHref(),params);
+  Task recomposeVApp=vAppApi.recompose(composedVApp.getId(),params);
   assertTaskSucceedsLong(recomposeVApp);
   params=addRecomposeParams(composedVApp,toAddVm);
-  recomposeVApp=vAppApi.recompose(composedVApp.getHref(),params);
+  recomposeVApp=vAppApi.recompose(composedVApp.getId(),params);
   assertTaskSucceedsLong(recomposeVApp);
-  VApp configured=vAppApi.getVApp(composedVApp.getHref());
+  VApp configured=vAppApi.get(composedVApp.getId());
   List<Vm> vmsToBeDeleted=configured.getChildren().getVms();
   Vm toBeDeleted=Iterables.get(vmsToBeDeleted,0);
-  Task removeVm=vmApi.remove(toBeDeleted.getHref());
+  Task removeVm=vmApi.remove(toBeDeleted.getId());
   assertTaskSucceedsLong(removeVm);
-  Task removeVApp=vAppApi.removeVApp(composedVApp.getHref());
+  Task removeVApp=vAppApi.remove(composedVApp.getId());
   assertTaskSucceedsLong(removeVApp);
 }

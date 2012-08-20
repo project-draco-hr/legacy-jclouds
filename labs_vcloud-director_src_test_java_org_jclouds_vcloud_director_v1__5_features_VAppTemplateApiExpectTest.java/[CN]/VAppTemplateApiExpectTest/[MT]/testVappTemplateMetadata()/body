@@ -3,8 +3,8 @@
   URI uri=URI.create(endpoint + templateId);
   VAppTemplateApi api=orderedRequestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("GET",templateId + "/metadata").acceptMedia(ANY).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vapptemplate/metadata.xml",METADATA).httpResponseBuilder().build(),new VcloudHttpRequestPrimer().apiCommand("POST",templateId + "/metadata").xmlFilePayload("/vapptemplate/metadata.xml",METADATA).acceptMedia(TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/task/task.xml",TASK).httpResponseBuilder().build()).getVAppTemplateApi();
   assertNotNull(api);
-  Metadata metadata=api.getMetadataApi().get(uri);
+  Metadata metadata=api.getMetadataApi(uri).get();
   assertEquals(metadata,exampleMetadata());
-  Task task=api.getMetadataApi().merge(uri,exampleMetadata());
+  Task task=api.getMetadataApi(uri).merge(exampleMetadata());
   assertNotNull(task);
 }

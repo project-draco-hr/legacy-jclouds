@@ -12,7 +12,7 @@
   }
   Checks.checkMediaFor(MEDIA,media);
   assertTrue(media.clone(oldMedia),String.format(OBJ_FIELD_CLONE,MEDIA,"copied media",media.toString(),oldMedia.toString()));
-  mediaApi.getMetadataApi().putEntry(media.getHref(),"key",MetadataValue.builder().value("value").build());
+  mediaApi.getMetadataApi(media.getId()).putEntry("key",MetadataValue.builder().value("value").build());
   media=vdcApi.cloneMedia(vdcUrn,CloneMediaParams.builder().source(Reference.builder().fromEntity(media).build()).name("moved test media").description("moved by testCloneMedia()").isSourceDelete(true).build());
   Checks.checkMediaFor(VDC,media);
   if (media.getTasks() != null) {

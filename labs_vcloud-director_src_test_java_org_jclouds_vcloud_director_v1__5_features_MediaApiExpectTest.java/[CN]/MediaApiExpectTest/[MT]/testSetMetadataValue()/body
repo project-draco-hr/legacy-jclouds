@@ -3,5 +3,5 @@
   VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("PUT","/media/794eb334-754e-4917-b5a0-5df85cbd61d1/metadata/key").xmlFilePayload("/media/setMetadataValue.xml",VCloudDirectorMediaType.METADATA_VALUE).acceptMedia(VCloudDirectorMediaType.TASK).httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/media/setMetadataValueTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
   MetadataValue inputMetadataValue=MetadataValue.builder().value("value").build();
   Task expectedTask=setMetadataEntryTask();
-  assertEquals(api.getMediaApi().getMetadataApi().putEntry(mediaUri,"key",inputMetadataValue),expectedTask);
+  assertEquals(api.getMediaApi().getMetadataApi(mediaUri).putEntry("key",inputMetadataValue),expectedTask);
 }

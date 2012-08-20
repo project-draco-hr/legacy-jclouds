@@ -1,5 +1,5 @@
 {
-  CloneVAppTemplateParams cloneVAppTemplateParams=CloneVAppTemplateParams.builder().source(Reference.builder().href(vAppTemplateURI).build()).isSourceDelete(false).name("clone").build();
+  CloneVAppTemplateParams cloneVAppTemplateParams=CloneVAppTemplateParams.builder().source(Reference.builder().href(lazyGetVAppTemplate().getHref()).build()).isSourceDelete(false).name("clone").build();
   VAppTemplate clonedVappTemplate=vdcApi.cloneVAppTemplate(vdcUrn,cloneVAppTemplateParams);
   if (waitForTask) {
     Task cloneTask=Iterables.getFirst(clonedVappTemplate.getTasks(),null);
