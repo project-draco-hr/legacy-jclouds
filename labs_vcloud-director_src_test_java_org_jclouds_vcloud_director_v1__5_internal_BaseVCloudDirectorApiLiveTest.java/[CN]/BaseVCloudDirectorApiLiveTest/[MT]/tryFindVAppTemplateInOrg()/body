@@ -1,0 +1,21 @@
+{
+  FluentIterable<VAppTemplate> vAppTemplates=FluentIterable.from(vdc.getResourceEntities()).filter(ReferencePredicates.<Reference>typeEquals(VAPP_TEMPLATE)).transform(new Function<Reference,VAppTemplate>(){
+    @Override public VAppTemplate apply(    Reference in){
+      return context.getApi().getVAppTemplateApi().get(in.getHref());
+    }
+  }
+).filter(Predicates.notNull());
+  Optional<VAppTemplate> optionalVAppTemplate=tryFind(vAppTemplates,new Predicate<VAppTemplate>(){
+    @Override public boolean apply(    VAppTemplate input){
+      return input.getOwner().getUser().getName().equals(session.getUser());
+    }
+  }
+);
+  if (optionalVAppTemplate.isPresent()) {
+    Logger.CONSOLE.info("found vAppTemplate: %s",prettyVAppTemplate.apply(optionalVAppTemplate.get()));
+  }
+ else {
+    Logger.CONSOLE.warn("%s doesn't own any vApp Template in org %s; vApp templates: %s",context.getApi().getCurrentSession().getUser(),org.getName(),Iterables.transform(vAppTemplates,prettyVAppTemplate));
+  }
+  return optionalVAppTemplate;
+}

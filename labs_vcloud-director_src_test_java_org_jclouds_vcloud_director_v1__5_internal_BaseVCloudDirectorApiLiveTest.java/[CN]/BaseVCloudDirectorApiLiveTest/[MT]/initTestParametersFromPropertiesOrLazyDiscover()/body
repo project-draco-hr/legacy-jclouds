@@ -12,9 +12,11 @@
       vdc=context.getApi().getVdcApi().get(find(org.getLinks(),ReferencePredicates.<Link>typeEquals(VDC)).getHref());
       vdcUrn=vdc.getId();
       if (vAppTemplateUrn == null) {
-        Reference vAppTemplateRef=Iterables.find(vdc.getResourceEntities(),ReferencePredicates.<Reference>typeEquals(VAPP_TEMPLATE));
-        vAppTemplate=context.getApi().getVAppTemplateApi().get(vAppTemplateRef.getHref());
-        vAppTemplateUrn=vAppTemplate.getId();
+        Optional<VAppTemplate> optionalvAppTemplate=tryFindVAppTemplateInOrg();
+        if (optionalvAppTemplate.isPresent()) {
+          vAppTemplate=optionalvAppTemplate.get();
+          vAppTemplateUrn=vAppTemplate.getId();
+        }
       }
     }
     if (networkUrn == null) {

@@ -10,20 +10,15 @@
     }
  else {
       Set<VAppNetworkConfiguration> vAppNetworkConfigurations=listVappNetworkConfigurations(vApp);
-      Set<NetworkConnection> listVmNetworkConnections=listNetworkConnections(vm);
-      for (      NetworkConnection networkConnection : listVmNetworkConnections) {
-        for (        VAppNetworkConfiguration vAppNetworkConfiguration : vAppNetworkConfigurations) {
-          NetworkAssignment networkAssignment=NetworkAssignment.builder().innerNetwork(vAppNetworkConfiguration.getNetworkName()).containerNetwork(vAppNetworkConfiguration.getNetworkName()).build();
-          networkAssignments.add(networkAssignment);
-        }
+      for (      VAppNetworkConfiguration vAppNetworkConfiguration : vAppNetworkConfigurations) {
+        NetworkAssignment networkAssignment=NetworkAssignment.builder().innerNetwork(vAppNetworkConfiguration.getNetworkName()).containerNetwork(vAppNetworkConfiguration.getNetworkName()).build();
+        networkAssignments.add(networkAssignment);
       }
     }
   }
  else {
     if (vAppHasNetworkConfigured(vApp)) {
       VAppNetworkConfiguration vAppNetworkConfiguration=getVAppNetworkConfig(vApp);
-      System.out.println(vAppNetworkConfiguration.getNetworkName());
-      System.out.println(vAppNetworkConfiguration.getDescription());
       NetworkConnection networkConnection=NetworkConnection.builder().network(vAppNetworkConfiguration.getNetworkName()).ipAddressAllocationMode(IpAddressAllocationMode.DHCP).build();
       NetworkConnectionSection networkConnectionSection=NetworkConnectionSection.builder().info("networkInfo").primaryNetworkConnectionIndex(0).networkConnection(networkConnection).build();
       vmInstantiationParams=InstantiationParams.builder().sections(ImmutableSet.of(networkConnectionSection)).build();

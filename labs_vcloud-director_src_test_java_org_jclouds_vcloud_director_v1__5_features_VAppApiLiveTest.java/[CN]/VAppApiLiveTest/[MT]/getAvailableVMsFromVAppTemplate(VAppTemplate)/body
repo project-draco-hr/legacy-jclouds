@@ -1,11 +1,5 @@
 {
-  Set<Vm> vms=Sets.newLinkedHashSet();
-  QueryResultRecords templatesRecords=queryApi.vAppTemplatesQueryAll();
-  for (  QueryResultRecordType templateRecord : templatesRecords.getRecords()) {
-    VAppTemplate vAppTemplate=vAppTemplateApi.get(templateRecord.getId());
-    vms.addAll(vAppTemplate.getChildren());
-  }
-  return ImmutableSet.copyOf(Iterables.filter(vms,new Predicate<Vm>(){
+  return ImmutableSet.copyOf(Iterables.filter(vAppTemplate.getChildren(),new Predicate<Vm>(){
     @Override public boolean apply(    Vm input){
       GuestCustomizationSection guestCustomizationSection=vmApi.getGuestCustomizationSection(input.getId());
       String computerName=guestCustomizationSection.getComputerName();
