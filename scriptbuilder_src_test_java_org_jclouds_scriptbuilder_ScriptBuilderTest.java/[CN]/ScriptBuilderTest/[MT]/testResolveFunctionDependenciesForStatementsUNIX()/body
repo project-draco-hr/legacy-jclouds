@@ -1,0 +1,8 @@
+{
+  ImmutableMap<String,String> defaultFunctions=ImmutableMap.of("abort",Utils.writeFunctionFromResource("abort",OsFamily.UNIX));
+  for (  String fn : defaultFunctions.values()) {
+    assertTrue(fn.indexOf("\r\n") == -1,"windows linefeeds!");
+  }
+  Map<String,String> resolvedFunctions=ScriptBuilder.resolveFunctionDependenciesForStatements(defaultFunctions,ImmutableSet.<Statement>of(call("nonewline")),OsFamily.UNIX);
+  assertEquals(resolvedFunctions,ImmutableMap.of("abort",Utils.writeFunctionFromResource("abort",OsFamily.UNIX),"nonewline",Utils.writeFunctionFromResource("nonewline",OsFamily.UNIX)));
+}
