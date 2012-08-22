@@ -2,6 +2,7 @@
   Vdc vdc=context.getApi().getVdcApi().get(vdcUrn);
   assertNotNull(vdc,String.format(ENTITY_NON_NULL,VDC));
   Set<Reference> networks=vdc.getAvailableNetworks();
+  network=lazyGetNetwork();
   Optional<Reference> parentNetwork=tryFind(networks,new Predicate<Reference>(){
     @Override public boolean apply(    Reference reference){
       return reference.getHref().equals(network.getHref());
