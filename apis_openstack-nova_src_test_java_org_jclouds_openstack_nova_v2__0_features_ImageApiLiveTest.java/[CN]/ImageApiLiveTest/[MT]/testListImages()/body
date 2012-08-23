@@ -1,15 +1,13 @@
 {
-  for (  String zoneId : novaContext.getApi().getConfiguredZones()) {
+  for (  String zoneId : zones) {
     ImageApi api=novaContext.getApi().getImageApiForZone(zoneId);
     Set<? extends Resource> response=api.listImages();
     assertNotNull(response);
-    assertTrue(response.size() >= 0);
+    assertFalse(response.isEmpty());
     for (    Resource image : response) {
-      Image newDetails=api.getImage(image.getId());
-      assertNotNull(newDetails);
-      assertEquals(newDetails.getId(),image.getId());
-      assertEquals(newDetails.getName(),image.getName());
-      assertEquals(newDetails.getLinks(),image.getLinks());
+      assertNotNull(image.getId());
+      assertNotNull(image.getName());
+      assertNotNull(image.getLinks());
     }
   }
 }

@@ -1,0 +1,13 @@
+{
+  for (  String zoneId : zones) {
+    ServerApi api=novaContext.getApi().getServerApiForZone(zoneId);
+    Set<? extends Resource> response=api.listServers();
+    for (    Resource server : response) {
+      Server details=api.getServer(server.getId());
+      assertEquals(details.getId(),server.getId());
+      assertEquals(details.getName(),server.getName());
+      assertEquals(details.getLinks(),server.getLinks());
+      checkServer(details);
+    }
+  }
+}
