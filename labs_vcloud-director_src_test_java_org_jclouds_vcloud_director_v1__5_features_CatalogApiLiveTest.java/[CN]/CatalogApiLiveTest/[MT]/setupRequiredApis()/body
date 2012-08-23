@@ -1,15 +1,10 @@
 {
-  if (adminCatalog != null)   return;
   catalogApi=context.getApi().getCatalogApi();
-  Org org=context.getApi().getOrgApi().get(Iterables.get(context.getApi().getOrgApi().list(),0).getHref());
-  if (adminContext != null) {
+  adminCatalogApi=adminContext.getApi().getCatalogApi();
+  if (catalogUrn == null) {
     AdminCatalog newCatalog=AdminCatalog.builder().name(name("Test Catalog ")).description("created by CatalogApiLiveTest").build();
-    AdminCatalogApi adminCatalogApi=adminContext.getApi().getCatalogApi();
     adminCatalog=adminCatalogApi.addCatalogToOrg(newCatalog,org.getId());
     catalogUrn=catalogApi.get(find(adminCatalog.getLinks(),and(relEquals("alternate"),typeEquals(VCloudDirectorMediaType.CATALOG))).getHref()).getId();
-    Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).build();
-    Task mergeCatalogMetadata=adminCatalogApi.getMetadataApi(adminCatalog.getId()).merge(newMetadata);
-    checkTask(mergeCatalogMetadata);
-    assertTrue(retryTaskSuccess.apply(mergeCatalogMetadata),String.format(TASK_COMPLETE_TIMELY,"setupRequiredApis"));
+    createdByTest=true;
   }
 }

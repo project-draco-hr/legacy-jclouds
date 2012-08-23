@@ -1,4 +1,7 @@
 {
+  Metadata newMetadata=Metadata.builder().entry(MetadataEntry.builder().entry("KEY","MARMALADE").build()).build();
+  Task mergeCatalogMetadata=adminCatalogApi.getMetadataApi(catalogUrn).merge(newMetadata);
+  assertTaskSucceedsLong(mergeCatalogMetadata);
   Metadata catalogMetadata=catalogApi.getMetadataApi(catalogUrn).get();
   MetadataEntry existingMetadataEntry=Iterables.find(catalogMetadata.getMetadataEntries(),new Predicate<MetadataEntry>(){
     @Override public boolean apply(    MetadataEntry input){
@@ -6,7 +9,7 @@
     }
   }
 );
-  MetadataValue metadataValue=catalogApi.getMetadataApi(catalogApi.get(existingMetadataEntry.getHref()).getId()).getValue("KEY");
+  MetadataValue metadataValue=catalogApi.getMetadataApi(catalogUrn).getValue("KEY");
   assertEquals(metadataValue.getValue(),existingMetadataEntry.getValue(),String.format(CORRECT_VALUE_OBJECT_FMT,"Value","MetadataValue",existingMetadataEntry.getValue(),metadataValue.getValue()));
   checkMetadataValue(metadataValue);
 }

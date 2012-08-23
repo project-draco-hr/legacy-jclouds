@@ -1,12 +1,4 @@
 {
-  if (catalogItem != null) {
-    try {
-      catalogApi.removeItem(catalogItem.getId());
-    }
- catch (    Exception e) {
-      logger.warn(e,"Error when deleting catalog item '%s'",catalogItem.getName());
-    }
-  }
   if (media != null) {
     try {
       Task remove=context.getApi().getMediaApi().remove(media.getId());
@@ -16,12 +8,22 @@
       logger.warn(e,"Error when deleting media '%s'",media.getName());
     }
   }
-  if (adminContext != null && adminCatalog != null) {
-    try {
-      adminContext.getApi().getCatalogApi().remove(adminCatalog.getId());
+  if (createdByTest) {
+    if (catalogItem != null) {
+      try {
+        catalogApi.removeItem(catalogItem.getId());
+      }
+ catch (      Exception e) {
+        logger.warn(e,"Error when deleting catalog item '%s'",catalogItem.getName());
+      }
     }
- catch (    Exception e) {
-      logger.warn(e,"Error when deleting catalog '%s'",adminCatalog.getName());
+    if (adminContext != null && adminCatalog != null) {
+      try {
+        adminContext.getApi().getCatalogApi().remove(adminCatalog.getId());
+      }
+ catch (      Exception e) {
+        logger.warn(e,"Error when deleting catalog '%s'",adminCatalog.getName());
+      }
     }
   }
 }
