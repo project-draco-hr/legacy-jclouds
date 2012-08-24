@@ -1,0 +1,9 @@
+{
+  sshKey=SshKeys.generate();
+  String keyPairName="NewKeyPair";
+  String keyPairsContainerName="keypairs";
+  Vdc currentVDC=lazyGetVdc();
+  Media keyPairsContainer=findOrUploadKeyPairInVDCNamed(currentVDC,keyPairsContainerName,keyPairName);
+  MetadataValue keypairValue=mediaApi.getMetadataApi(keyPairsContainer.getId()).getValue(keyPairName);
+  assertEquals(keypairValue.getValue(),generateKeyPair(keyPairName).getValue());
+}

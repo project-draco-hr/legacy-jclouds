@@ -1,0 +1,11 @@
+{
+  String keyPairName="NewKeyPair";
+  String keyPairsContainerName="keypairs";
+  Vdc currentVDC=lazyGetVdc();
+  Media keyPairsContainer=findOrUploadKeyPairInVDCNamed(currentVDC,keyPairsContainerName,keyPairName);
+  Task removeMedia=mediaApi.remove(keyPairsContainer.getId());
+  Checks.checkTask(removeMedia);
+  assertTrue(retryTaskSuccess.apply(removeMedia),String.format(TASK_COMPLETE_TIMELY,"removeMedia"));
+  keyPairsContainer=mediaApi.get(keyPairsContainer.getId());
+  assertNull(keyPairsContainer,String.format(OBJ_DEL,MEDIA,keyPairsContainer != null ? keyPairsContainer.toString() : ""));
+}

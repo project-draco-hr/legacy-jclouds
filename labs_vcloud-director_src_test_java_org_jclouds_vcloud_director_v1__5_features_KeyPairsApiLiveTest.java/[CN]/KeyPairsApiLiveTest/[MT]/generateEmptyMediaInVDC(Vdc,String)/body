@@ -1,0 +1,7 @@
+{
+  Link addMedia=find(currentVDC.getLinks(),and(relEquals("add"),typeEquals(VCloudDirectorMediaType.MEDIA)));
+  Media sourceMedia=Media.builder().type(VCloudDirectorMediaType.MEDIA).name(keyPairName).size(0).imageType(Media.ImageType.ISO).description("iso generated as KeyPair bucket").build();
+  Media emptyMedia=mediaApi.add(addMedia.getHref(),sourceMedia);
+  Checks.checkMediaFor(MEDIA,emptyMedia);
+  return emptyMedia;
+}
