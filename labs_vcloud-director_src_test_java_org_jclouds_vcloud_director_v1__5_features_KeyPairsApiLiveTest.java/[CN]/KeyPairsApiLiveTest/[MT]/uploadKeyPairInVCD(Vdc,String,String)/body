@@ -1,12 +1,11 @@
 {
-  Media keyPairsContainer=generateEmptyMediaInVDC(currentVDC,keyPairsContainerName);
+  Media keyPairsContainer=addEmptyMediaInVDC(currentVDC,keyPairsContainerName);
   assertNotNull(keyPairsContainer.getFiles(),String.format(OBJ_FIELD_REQ,MEDIA,"files"));
   assertTrue(keyPairsContainer.getFiles().size() == 1,String.format(OBJ_FIELD_LIST_SIZE_EQ,MEDIA,"files",1,keyPairsContainer.getFiles().size()));
   Link uploadLink=getUploadLinkForMedia(keyPairsContainer);
   byte[] iso=new byte[]{};
   context.getApi().getUploadApi().upload(uploadLink.getHref(),Payloads.newByteArrayPayload(iso));
   Checks.checkMediaFor(VCloudDirectorMediaType.MEDIA,keyPairsContainer);
-  MetadataValue keyPair=generateKeyPair(keyPairName);
-  setKeyPairOnkeyPairsContainer(keyPairsContainer,keyPairName,keyPair);
+  setKeyPairOnkeyPairsContainer(keyPairsContainer,keyPairName,generateKeyPair(keyPairName));
   return keyPairsContainer;
 }
