@@ -1,0 +1,14 @@
+{
+  Media keyPairsContainer=null;
+  Optional<Media> optionalKeyPairsContainer=Iterables.tryFind(findAllEmptyMediaInOrg(),new Predicate<Media>(){
+    @Override public boolean apply(    Media input){
+      return mediaApi.getMetadataApi(input.getId()).get(keyPairName) != null;
+    }
+  }
+);
+  if (optionalKeyPairsContainer.isPresent())   keyPairsContainer=optionalKeyPairsContainer.get();
+  if (keyPairsContainer == null) {
+    keyPairsContainer=uploadKeyPairInVCD(currentVDC,keyPairsContainerName,keyPairName);
+  }
+  return keyPairsContainer;
+}
