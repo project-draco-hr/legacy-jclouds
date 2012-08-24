@@ -1,8 +1,7 @@
 {
   key=name("key-");
   String value=name("value-");
-  metadataValue=MetadataValue.builder().value(value).build();
-  vAppApi.getMetadataApi(vAppUrn).putEntry(key,metadataValue);
-  MetadataValue newMetadataValue=vAppApi.getMetadataApi(vAppUrn).getValue(key);
-  checkMetadataValueFor(VAPP,newMetadataValue,value);
+  vAppApi.getMetadataApi(vAppUrn).put(key,value);
+  String newMetadataValue=vAppApi.getMetadataApi(vAppUrn).get(key);
+  assertEquals(newMetadataValue,value);
 }

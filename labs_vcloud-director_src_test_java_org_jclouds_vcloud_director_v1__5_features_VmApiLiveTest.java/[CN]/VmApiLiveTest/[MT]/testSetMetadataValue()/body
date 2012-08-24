@@ -1,8 +1,7 @@
 {
   key=name("key-");
-  String value=name("value-");
-  metadataValue=MetadataValue.builder().value(value).build();
-  vmApi.getMetadataApi(vmUrn).putEntry(key,metadataValue);
-  MetadataValue newMetadataValue=vmApi.getMetadataApi(vmUrn).getValue(key);
-  checkMetadataValueFor(VM,newMetadataValue,value);
+  metadataValue=name("value-");
+  vmApi.getMetadataApi(vmUrn).put(key,metadataValue);
+  String newMetadataValue=vmApi.getMetadataApi(vmUrn).get(key);
+  assertEquals(newMetadataValue,metadataValue,String.format(CORRECT_VALUE_OBJECT_FMT,"Value","MetadataValue",metadataValue,newMetadataValue));
 }

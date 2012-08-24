@@ -1,10 +1,8 @@
 {
   metadataKey=name("key-");
   metadataValue=name("value-");
-  Metadata metadata=Metadata.builder().entry(MetadataEntry.builder().entry(metadataKey,metadataValue).build()).build();
-  Task task=metadataApi.merge(metadata);
+  Task task=metadataApi.putAll(ImmutableMap.of(metadataKey,metadataValue));
   assertTaskSucceeds(task);
-  MetadataValue modified=metadataApi.getValue(metadataKey);
-  Checks.checkMetadataValueFor("AdminVdc",modified,metadataValue);
-  Checks.checkMetadata(metadata);
+  String modified=metadataApi.get(metadataKey);
+  assertEquals(modified,metadataValue);
 }

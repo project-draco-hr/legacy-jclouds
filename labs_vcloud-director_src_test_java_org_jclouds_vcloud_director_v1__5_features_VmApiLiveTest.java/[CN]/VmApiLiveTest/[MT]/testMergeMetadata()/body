@@ -3,8 +3,7 @@
   Map<String,String> oldMetadataMap=Checks.metadataToMap(oldMetadata);
   String key=name("key-");
   String value=name("value-");
-  Metadata addedMetadata=Metadata.builder().entry(MetadataEntry.builder().key(key).value(value).build()).build();
-  Task task=vmApi.getMetadataApi(vmUrn).merge(addedMetadata);
+  Task task=vmApi.getMetadataApi(vmUrn).putAll(ImmutableMap.of(key,value));
   retryTaskSuccess.apply(task);
   Metadata newMetadata=vmApi.getMetadataApi(vmUrn).get();
   Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,value).build();
