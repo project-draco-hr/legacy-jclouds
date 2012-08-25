@@ -3,22 +3,20 @@
     ImageApi api=novaContext.getApi().getImageApiForZone(zoneId);
     Set<? extends Image> response=api.listImagesInDetail();
     assertNotNull(response);
-    assertTrue(response.size() >= 0);
+    assertFalse(response.isEmpty());
     for (    Image image : response) {
-      Image newDetails=api.getImage(image.getId());
-      assertNotNull(newDetails);
-      assertEquals(newDetails.getId(),image.getId());
-      assertEquals(newDetails.getName(),image.getName());
-      assertEquals(newDetails.getLinks(),image.getLinks());
-      assertEquals(newDetails.getCreated(),image.getCreated());
-      assertEquals(newDetails.getMinDisk(),image.getMinDisk());
-      assertEquals(newDetails.getMinRam(),image.getMinRam());
-      assertEquals(newDetails.getProgress(),image.getProgress());
-      assertEquals(newDetails.getStatus(),image.getStatus());
-      assertEquals(newDetails.getServer(),image.getServer());
-      assertEquals(newDetails.getTenantId(),image.getTenantId());
-      assertEquals(newDetails.getUpdated(),image.getUpdated());
-      assertEquals(newDetails.getUserId(),image.getUserId());
+      assertNotNull(image.getId());
+      assertNotNull(image.getName());
+      assertNotNull(image.getLinks());
+      assertNotNull(image.getCreated());
+      assertTrue(image.getMinDisk() > 0);
+      assertTrue(image.getMinRam() > 0);
+      assertTrue(image.getProgress() >= 0 && image.getProgress() <= 100);
+      assertNotNull(image.getStatus());
+      assertNotNull(image.getServer());
+      assertNotNull(image.getTenantId());
+      assertNotNull(image.getUpdated());
+      assertNotNull(image.getUserId());
     }
   }
 }
