@@ -1,7 +1,5 @@
 {
   SocketOpen socketOpen=view.utils().injector().getInstance(SocketOpen.class);
   socketTester=new RetryablePredicate<HostAndPort>(socketOpen,60,1,TimeUnit.SECONDS);
-  long maxWait=TimeUnit.SECONDS.toMillis(60);
-  long interval=50;
-  preciseSocketTester=new RetryablePredicate<HostAndPort>(socketOpen,maxWait,interval,interval,TimeUnit.MILLISECONDS);
+  openSocketFinder=context.utils().injector().getInstance(OpenSocketFinder.class);
 }

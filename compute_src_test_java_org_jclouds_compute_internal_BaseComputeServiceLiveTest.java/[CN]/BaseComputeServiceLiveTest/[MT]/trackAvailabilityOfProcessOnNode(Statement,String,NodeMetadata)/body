@@ -1,0 +1,17 @@
+{
+  ServiceStats stats=new ServiceStats();
+  Stopwatch watch=new Stopwatch().start();
+  ExecResponse exec=client.runScriptOnNode(node.getId(),process,runAsRoot(false).wrapInInitScript(false));
+  stats.backgroundProcessMilliseconds=watch.elapsedTime(TimeUnit.MILLISECONDS);
+  watch.reset().start();
+  HostAndPort socket=null;
+  try {
+    socket=openSocketFinder.findOpenSocketOnNode(node,8080,60,TimeUnit.SECONDS);
+  }
+ catch (  NoSuchElementException e) {
+    throw new NoSuchElementException(String.format("%s%n%s%s",e.getMessage(),exec.getOutput(),exec.getError()));
+  }
+  stats.socketOpenMilliseconds=watch.elapsedTime(TimeUnit.MILLISECONDS);
+  getAnonymousLogger().info(format("<< %s on node(%s)[%s] %s",processName,node.getId(),socket,stats));
+  return stats;
+}
