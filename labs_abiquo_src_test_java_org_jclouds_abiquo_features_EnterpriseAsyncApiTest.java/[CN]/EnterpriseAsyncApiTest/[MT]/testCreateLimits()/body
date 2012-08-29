@@ -1,0 +1,16 @@
+{
+  EnterpriseDto enterprise=EnterpriseResources.enterprisePut();
+  DatacenterDto datacenter=InfrastructureResources.datacenterPut();
+  DatacenterLimitsDto limits=EnterpriseResources.datacenterLimitsPost();
+  Method method=EnterpriseAsyncApi.class.getMethod("createLimits",EnterpriseDto.class,DatacenterDto.class,DatacenterLimitsDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,enterprise,datacenter,limits);
+  String limitsUri=enterprise.searchLink("limits").getHref();
+  String requestURI=String.format("POST %s?datacenter=%d HTTP/1.1",limitsUri,datacenter.getId());
+  assertRequestLineEquals(request,requestURI);
+  assertNonPayloadHeadersEqual(request,"Accept: " + DatacenterLimitsDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(EnterpriseResources.datacenterLimitsPostPayload()),DatacenterLimitsDto.class,DatacenterLimitsDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

@@ -1,0 +1,16 @@
+{
+  PrivateNetwork toUpdate=createNetwork(env.virtualDatacenter,privateNetwork,PREFIX + "-privtoupdate-test");
+  try {
+    toUpdate.setTag(20);
+    toUpdate.setAddress("10.1.1.0");
+    toUpdate.setMask(16);
+    toUpdate.update();
+    fail("Tag field should not be editable");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"VLAN-10");
+  }
+ finally {
+    toUpdate.delete();
+  }
+}

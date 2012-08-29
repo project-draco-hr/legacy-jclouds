@@ -1,0 +1,19 @@
+{
+  checkNotNull(virtualMachine,"virtualMachine");
+  try {
+    VirtualMachineState state=virtualMachine.getState();
+switch (state) {
+case NOT_ALLOCATED:
+case UNKNOWN:
+      return MonitorStatus.FAILED;
+case ON:
+    return MonitorStatus.DONE;
+default :
+  return MonitorStatus.CONTINUE;
+}
+}
+ catch (Exception ex) {
+logger.warn(ex,"exception thrown while monitoring %s on %s, returning CONTINUE",virtualMachine,getClass().getName());
+return MonitorStatus.CONTINUE;
+}
+}

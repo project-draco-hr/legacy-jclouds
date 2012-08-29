@@ -1,0 +1,9 @@
+{
+  PrivateNetwork newnet=PrivateNetwork.builder(env.context.getApiContext()).name("Newnet").gateway("10.0.0.1").address("10.0.0.0").mask(24).build();
+  VirtualDatacenter repeated=Builder.fromVirtualDatacenter(env.virtualDatacenter).network(newnet).build();
+  repeated.save();
+  List<VirtualDatacenterDto> virtualDatacenters=env.cloudApi.listVirtualDatacenters(VirtualDatacenterOptions.builder().build()).getCollection();
+  assertEquals(virtualDatacenters.size(),2);
+  assertEquals(virtualDatacenters.get(0).getName(),virtualDatacenters.get(1).getName());
+  repeated.delete();
+}

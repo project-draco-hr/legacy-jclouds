@@ -1,0 +1,8 @@
+{
+  MachinesDto dto=context.getApi().getInfrastructureApi().discoverMultipleMachines(target,ipFrom,ipTo,hypervisorType,user,password,MachineOptions.builder().port(port).build());
+  for (  MachineDto machine : dto.getCollection()) {
+    machine.setUser(user);
+    machine.setPassword(password);
+  }
+  return wrap(context,Machine.class,dto.getCollection());
+}

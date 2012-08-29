@@ -1,0 +1,12 @@
+{
+  DatacenterDto datacenter;
+  if (this.datacenter == null) {
+    datacenter=new DatacenterDto();
+    datacenter.setId(target.getIdFromLink(ParentLinkName.DATACENTER));
+  }
+ else {
+    datacenter=this.getDatacenter().unwrap();
+  }
+  TiersDto dto=context.getApi().getInfrastructureApi().listTiers(datacenter);
+  return DomainWrapper.wrap(context,Tier.class,dto.getCollection());
+}

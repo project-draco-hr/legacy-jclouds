@@ -1,0 +1,11 @@
+{
+  Iterable<VirtualDatacenter> compatibles=findCompatibleVirtualDatacenters(datacenter,template);
+  VirtualDatacenter vdc=options.getVirtualDatacenter() == null ? getFirst(compatibles,null) : find(compatibles,VirtualDatacenterPredicates.name(options.getVirtualDatacenter()));
+  if (vdc == null) {
+    vdc=createCompatibleVirtualDatacenter(user,enterprise,datacenter,template,options.getVirtualDatacenter());
+    if (vdc == null) {
+      throw new NotEnoughResourcesException("There are not resources to deploy the given template");
+    }
+  }
+  return vdc;
+}

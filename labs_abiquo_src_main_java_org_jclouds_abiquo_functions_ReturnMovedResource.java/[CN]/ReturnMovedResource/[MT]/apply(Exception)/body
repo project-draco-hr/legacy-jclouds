@@ -1,0 +1,9 @@
+{
+  Throwable exception=Iterables.find(Throwables.getCausalChain(from),isMovedException(from),null);
+  if (exception != null) {
+    HttpResponseException responseException=(HttpResponseException)exception;
+    HttpResponse response=responseException.getResponse();
+    return getMovedEntity(response);
+  }
+  throw Throwables.propagate(from);
+}

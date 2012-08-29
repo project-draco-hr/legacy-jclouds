@@ -1,0 +1,10 @@
+{
+  return new Predicate<Throwable>(){
+    @Override public boolean apply(    final Throwable input){
+      boolean notAvailable=input instanceof HttpResponseException && ((HttpResponseException)input).getResponse() != null;
+      notAvailable|=input instanceof ResourceNotFoundException;
+      return notAvailable;
+    }
+  }
+;
+}

@@ -1,0 +1,10 @@
+{
+  License repeated=License.Builder.fromLicense(env.license).build();
+  try {
+    repeated.add();
+    fail("Should not be able to create licenses with the same code");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"LICENSE-5");
+  }
+}

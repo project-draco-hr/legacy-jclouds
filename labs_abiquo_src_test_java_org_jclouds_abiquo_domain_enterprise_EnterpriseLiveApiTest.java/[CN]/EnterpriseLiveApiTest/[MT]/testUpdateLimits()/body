@@ -1,0 +1,9 @@
+{
+  limits.setCpuCountLimits(4,5);
+  limits.update();
+  DatacentersLimitsDto limitsDto=env.enterpriseApi.getLimits(enterprise.unwrap(),env.datacenter.unwrap());
+  assertNotNull(limitsDto);
+  assertEquals(limitsDto.getCollection().size(),1);
+  assertEquals(limitsDto.getCollection().get(0).getCpuCountHardLimit(),5);
+  assertEquals(limitsDto.getCollection().get(0).getCpuCountSoftLimit(),4);
+}

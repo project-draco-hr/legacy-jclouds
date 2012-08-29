@@ -1,0 +1,8 @@
+{
+  Category category=Category.builder(env.context.getApiContext()).name(PREFIX + "-test-category").build();
+  category.save();
+  Category apiCategory=env.context.getAdministrationService().findCategory(CategoryPredicates.name(PREFIX + "-test-category"));
+  assertNotNull(apiCategory);
+  assertEquals(category.getName(),apiCategory.getName());
+  apiCategory.delete();
+}

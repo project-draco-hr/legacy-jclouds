@@ -1,0 +1,16 @@
+{
+  Exception exception=null;
+  if (hasPayload(response)) {
+    try {
+      ErrorsDto errors=errorParser.apply(response);
+      exception=new AbiquoException(fromStatusCode(response.getStatusCode()),errors);
+    }
+ catch (    Exception ex) {
+      exception=new HttpResponseException(command,response,defaultMessage);
+    }
+  }
+ else {
+    exception=new HttpResponseException(command,response,defaultMessage);
+  }
+  return exception;
+}

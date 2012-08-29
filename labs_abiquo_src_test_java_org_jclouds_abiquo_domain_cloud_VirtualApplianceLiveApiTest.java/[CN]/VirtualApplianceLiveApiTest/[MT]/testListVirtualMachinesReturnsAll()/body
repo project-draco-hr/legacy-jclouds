@@ -1,0 +1,19 @@
+{
+  List<VirtualMachine> vms=new ArrayList<VirtualMachine>();
+  int numVms=30;
+  for (int i=0; i < numVms; i++) {
+    VirtualMachine vm=VirtualMachine.Builder.fromVirtualMachine(env.virtualMachine).build();
+    vm.save();
+    vms.add(vm);
+  }
+  try {
+    Iterable<VirtualMachine> all=env.virtualAppliance.listVirtualMachines();
+    assertNotNull(all);
+    assertTrue(size(all) >= numVms);
+  }
+  finally {
+    for (    VirtualMachine vm : vms) {
+      vm.delete();
+    }
+  }
+}

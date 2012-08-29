@@ -1,0 +1,10 @@
+{
+  Enterprise repeated=Builder.fromEnterprise(enterprise).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create enterprises with the same name");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"ENTERPRISE-4");
+  }
+}

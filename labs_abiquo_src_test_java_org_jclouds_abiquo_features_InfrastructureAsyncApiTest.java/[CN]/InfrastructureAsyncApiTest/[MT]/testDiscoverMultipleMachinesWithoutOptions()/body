@@ -1,0 +1,14 @@
+{
+  Method method=InfrastructureAsyncApi.class.getMethod("discoverMultipleMachines",DatacenterDto.class,String.class,String.class,HypervisorType.class,String.class,String.class);
+  GeneratedHttpRequest request=processor.createRequest(method,InfrastructureResources.datacenterPut(),"10.60.1.222","10.60.1.250",HypervisorType.XENSERVER,"user","pass");
+  String baseUrl="http://localhost/api/admin/datacenters/1/action/discovermultiple";
+  String query="password=pass&ipTo=10.60.1.250&ipFrom=10.60.1.222&hypervisor=XENSERVER&user=user";
+  String expectedRequest=String.format("GET %s?%s HTTP/1.1",baseUrl,query);
+  assertRequestLineEquals(request,expectedRequest);
+  assertNonPayloadHeadersEqual(request,"Accept: " + MachinesDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnAbiquoExceptionOnNotFoundOr4xx.class);
+  checkFilters(request);
+}

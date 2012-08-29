@@ -1,0 +1,10 @@
+{
+  Datacenter repeated=Builder.fromDatacenter(env.datacenter).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create datacenters with the same name");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"DC-3");
+  }
+}

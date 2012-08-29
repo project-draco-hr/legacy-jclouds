@@ -1,0 +1,8 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof AbstractIpDto,"this binder is only valid for AbstractIpDto objects");
+  AbstractIpDto ip=(AbstractIpDto)input;
+  RESTLink selfLink=checkNotNull(ip.searchLink("self"),"AbstractIpDto must have an self link");
+  LinksDto refs=new LinksDto();
+  refs.addLink(new RESTLink(selfLink.getTitle(),selfLink.getHref()));
+  return super.bindToRequest(request,refs);
+}

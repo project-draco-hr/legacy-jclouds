@@ -1,0 +1,12 @@
+{
+  logger.debug("stopping monitor job for %s",monitoredObject);
+  try {
+    if (future != null && !future.isCancelled() && !future.isDone()) {
+      logger.debug("cancelling future");
+      future.cancel(false);
+    }
+  }
+ catch (  Exception ex) {
+    logger.warn(ex,"failed to stop monitor job for %s",monitoredObject);
+  }
+}

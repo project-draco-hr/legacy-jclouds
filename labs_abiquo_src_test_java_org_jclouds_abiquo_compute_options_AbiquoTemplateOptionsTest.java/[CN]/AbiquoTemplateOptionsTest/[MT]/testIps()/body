@@ -1,0 +1,14 @@
+{
+  RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
+  PrivateIpDto dto1=new PrivateIpDto();
+  dto1.setIp("10.60.0.1");
+  PrivateIpDto dto2=new PrivateIpDto();
+  dto2.setIp("10.60.0.2");
+  PrivateIp ip1=wrap(context,PrivateIp.class,dto1);
+  PrivateIp ip2=wrap(context,PrivateIp.class,dto2);
+  TemplateOptions options=new AbiquoTemplateOptions().ips(ip1,ip2);
+  Ip<?,?>[] ips=options.as(AbiquoTemplateOptions.class).getIps();
+  assertNotNull(ips);
+  assertEquals(ips[0].getIp(),"10.60.0.1");
+  assertEquals(ips[1].getIp(),"10.60.0.2");
+}

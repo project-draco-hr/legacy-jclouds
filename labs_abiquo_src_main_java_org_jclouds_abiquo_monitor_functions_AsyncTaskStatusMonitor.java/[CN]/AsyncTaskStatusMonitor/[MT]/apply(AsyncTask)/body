@@ -1,0 +1,22 @@
+{
+  checkNotNull(asyncTask,"asyncTask");
+  try {
+    asyncTask.refresh();
+switch (asyncTask.getState()) {
+case ABORTED:
+case FINISHED_UNSUCCESSFULLY:
+      return MonitorStatus.FAILED;
+case FINISHED_SUCCESSFULLY:
+    return MonitorStatus.DONE;
+case STARTED:
+case PENDING:
+  return MonitorStatus.CONTINUE;
+default :
+throw new IllegalStateException("Unsupported task status");
+}
+}
+ catch (Exception ex) {
+logger.warn(ex,"exception thrown while monitoring %s on %s, returning CONTINUE",asyncTask,getClass().getName());
+return MonitorStatus.CONTINUE;
+}
+}

@@ -1,0 +1,9 @@
+{
+  Function<HttpResponse,AcceptedRequestDto<String>> function=new ReturnTaskReferenceOrNull(new JAXBParser("false"),createTypeLiteral());
+  HttpResponse response=EasyMock.createMock(HttpResponse.class);
+  expect(response.getStatusCode()).andReturn(Status.NO_CONTENT.getStatusCode());
+  expect(response.getPayload()).andReturn(null);
+  replay(response);
+  assertNull(function.apply(response));
+  verify(response);
+}

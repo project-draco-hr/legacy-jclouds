@@ -1,0 +1,8 @@
+{
+  Payload payload=Payloads.newByteArrayPayload(new byte[]{});
+  payload.getContentMetadata().setContentType("application/vnd.abiquo.racks+xml");
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://foo")).payload(payload).build();
+  AppendApiVersionToMediaType filter=new AppendApiVersionToMediaType(new AppendApiVersionToAbiquoMimeType(AbiquoAsyncApi.API_VERSION));
+  HttpRequest filtered=filter.appendVersionToPayloadHeaders(request);
+  assertEquals(filtered.getPayload().getContentMetadata().getContentType(),"application/vnd.abiquo.racks+xml;version=" + AbiquoAsyncApi.API_VERSION);
+}

@@ -1,0 +1,11 @@
+{
+  Method method=CloudAsyncApi.class.getMethod("createVirtualDatacenter",VirtualDatacenterDto.class,DatacenterDto.class,EnterpriseDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,CloudResources.virtualDatacenterPost(),InfrastructureResources.datacenterPut(),EnterpriseResources.enterprisePut());
+  assertRequestLineEquals(request,"POST http://localhost/api/cloud/virtualdatacenters?enterprise=1&datacenter=1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + VirtualDatacenterDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(CloudResources.virtualDatacenterPostPayload()),VirtualDatacenterDto.class,VirtualDatacenterDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

@@ -1,0 +1,14 @@
+{
+  UnmanagedNetwork toUpdate=createNetwork(unmanagedNetwork,PREFIX + "-umtoupdate-test");
+  try {
+    toUpdate.setMask(60);
+    toUpdate.update();
+    fail("Invalid mask value");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.BAD_REQUEST,"CONSTR-MAX");
+  }
+ finally {
+    toUpdate.delete();
+  }
+}

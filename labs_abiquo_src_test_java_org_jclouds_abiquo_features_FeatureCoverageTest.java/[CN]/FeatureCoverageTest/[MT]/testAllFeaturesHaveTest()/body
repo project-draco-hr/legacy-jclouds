@@ -1,0 +1,18 @@
+{
+  List<String> missingTests=new ArrayList<String>();
+  for (  Class<?> featureClass : featureClasses) {
+    try {
+      Class<?> testClass=loadTestClass(featureClass);
+      Iterable<String> testMethodNames=methodNames(testClass);
+      for (      Method method : featureClass.getMethods()) {
+        if (!hasTest(testMethodNames,method)) {
+          missingTests.add(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+        }
+      }
+    }
+ catch (    ClassNotFoundException ex) {
+      fail("Missing tests for class: " + featureClass.getName());
+    }
+  }
+  assertTrue(missingTests.isEmpty(),"Missing tests: " + Joiner.on(", ").join(missingTests));
+}

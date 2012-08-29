@@ -1,0 +1,14 @@
+{
+  unmanagedNetwork.setName("Unmanaged network Updated");
+  unmanagedNetwork.setPrimaryDNS("8.8.8.8");
+  unmanagedNetwork.setSecondaryDNS("8.8.8.8");
+  unmanagedNetwork.update();
+  assertEquals(unmanagedNetwork.getName(),"Unmanaged network Updated");
+  assertEquals(unmanagedNetwork.getPrimaryDNS(),"8.8.8.8");
+  assertEquals(unmanagedNetwork.getSecondaryDNS(),"8.8.8.8");
+  UnmanagedNetwork en=env.enterprise.findUnmanagedNetwork(env.datacenter,NetworkPredicates.<UnmanagedIp>name(unmanagedNetwork.getName()));
+  assertEquals(en.getId(),unmanagedNetwork.getId());
+  assertEquals(en.getName(),"Unmanaged network Updated");
+  assertEquals(en.getPrimaryDNS(),"8.8.8.8");
+  assertEquals(en.getSecondaryDNS(),"8.8.8.8");
+}

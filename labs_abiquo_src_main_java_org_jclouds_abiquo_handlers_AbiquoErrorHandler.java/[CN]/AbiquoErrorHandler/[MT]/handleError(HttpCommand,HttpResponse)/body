@@ -1,0 +1,27 @@
+{
+  Exception exception=null;
+  String defaultMessage=String.format("%s -> %s",command.getCurrentRequest().getRequestLine(),response.getStatusLine());
+  try {
+switch (response.getStatusCode()) {
+case 401:
+case 403:
+      exception=new AuthorizationException(defaultMessage,new HttpResponseException(command,response,defaultMessage));
+    break;
+case 404:
+  exception=new ResourceNotFoundException(defaultMessage,getExceptionToPropagate(command,response,defaultMessage));
+break;
+case 301:
+exception=new HttpResponseException(command,response,defaultMessage);
+break;
+default :
+exception=getExceptionToPropagate(command,response,defaultMessage);
+break;
+}
+}
+  finally {
+if (response.getPayload() != null) {
+Closeables.closeQuietly(response.getPayload().getInput());
+}
+command.setException(exception);
+}
+}

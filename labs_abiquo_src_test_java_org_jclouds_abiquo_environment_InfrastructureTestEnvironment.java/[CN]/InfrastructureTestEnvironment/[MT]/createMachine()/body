@@ -1,0 +1,14 @@
+{
+  String ip=Config.get("abiquo.hypervisor.address");
+  HypervisorType type=HypervisorType.valueOf(Config.get("abiquo.hypervisor.type"));
+  String user=Config.get("abiquo.hypervisor.user");
+  String pass=Config.get("abiquo.hypervisor.pass");
+  machine=datacenter.discoverSingleMachine(ip,type,user,pass);
+  String vswitch=machine.findAvailableVirtualSwitch(Config.get("abiquo.hypervisor.vswitch"));
+  machine.setVirtualSwitch(vswitch);
+  Datastore datastore=machine.findDatastore(Config.get("abiquo.hypervisor.datastore"));
+  datastore.setEnabled(true);
+  machine.setRack(rack);
+  machine.save();
+  assertNotNull(machine.getId());
+}

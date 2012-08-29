@@ -1,0 +1,10 @@
+{
+  DatacentersLimitsDto limits=context.getApi().getEnterpriseApi().listLimits(target);
+  return Iterables.find(limits.getCollection(),new Predicate<DatacenterLimitsDto>(){
+    @Override public boolean apply(    final DatacenterLimitsDto input){
+      RESTLink datacenterLink=input.searchLink("datacenter");
+      return datacenterLink != null && datacenterLink.getHref().equals(datacenter.unwrap().getEditLink().getHref());
+    }
+  }
+);
+}

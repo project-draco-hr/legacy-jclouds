@@ -1,0 +1,14 @@
+{
+  externalNetwork.setName("External network Updated");
+  externalNetwork.setPrimaryDNS("8.8.8.8");
+  externalNetwork.setSecondaryDNS("8.8.8.8");
+  externalNetwork.update();
+  assertEquals(externalNetwork.getName(),"External network Updated");
+  assertEquals(externalNetwork.getPrimaryDNS(),"8.8.8.8");
+  assertEquals(externalNetwork.getSecondaryDNS(),"8.8.8.8");
+  ExternalNetwork en=env.enterprise.findExternalNetwork(env.datacenter,NetworkPredicates.<ExternalIp>name(externalNetwork.getName()));
+  assertEquals(en.getId(),externalNetwork.getId());
+  assertEquals(en.getName(),"External network Updated");
+  assertEquals(en.getPrimaryDNS(),"8.8.8.8");
+  assertEquals(en.getSecondaryDNS(),"8.8.8.8");
+}

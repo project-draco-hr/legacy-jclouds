@@ -1,0 +1,10 @@
+{
+  String entName=env.enterprise.getName();
+  String name=randomName();
+  env.enterprise.setName(name);
+  env.enterprise.update();
+  EventOptions options=EventOptions.builder().dateFrom(new Date()).enterpriseName(name).build();
+  assertEvents(options);
+  env.enterprise.setName(entName);
+  env.enterprise.update();
+}
