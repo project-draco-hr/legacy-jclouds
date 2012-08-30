@@ -1,0 +1,6 @@
+{
+  HttpRequest setContainerMetadataRequest=HttpRequest.builder().method("POST").endpoint(swiftEndpointWithHostReplaced + "/foo").addHeader(SwiftHeaders.CONTAINER_METADATA_PREFIX + "key","value").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse setContainerMetadataResponse=HttpResponse.builder().statusCode(204).build();
+  SwiftClient clientSetContainerMetadata=requestsSendResponses(authRequest,authResponse,setContainerMetadataRequest,setContainerMetadataResponse);
+  assertTrue(clientSetContainerMetadata.setContainerMetadata("foo",ImmutableMap.<String,String>of("key","value")));
+}

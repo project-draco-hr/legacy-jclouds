@@ -1,0 +1,43 @@
+{
+  String sourceContainer=getContainerName();
+  String sourceObject="original.txt";
+  String sourcePath="/" + sourceContainer + "/"+ sourceObject;
+  String badSource="badsource";
+  String destinationContainer=getContainerName();
+  String destinationObject="copy.txt";
+  String destinationPath="/" + destinationContainer + "/"+ destinationObject;
+  String badDestination="baddestination";
+  String data="Hello World";
+  SwiftObject sourceSwiftObject=newSwiftObject(data,sourceObject);
+  getApi().putObject(sourceContainer,sourceSwiftObject);
+  assertTrue(getApi().copyObject(sourceContainer,sourceObject,destinationContainer,""));
+  assertTrue(!getApi().objectExists(destinationContainer,sourceObject));
+  assertTrue(getApi().copyObject(sourceContainer,sourceObject,destinationContainer,destinationObject));
+  assertTrue(getApi().objectExists(destinationContainer,destinationObject));
+  SwiftObject destinationSwiftObject=getApi().getObject(destinationContainer,destinationObject);
+  assertEquals(Strings2.toString(destinationSwiftObject.getPayload()),data);
+  try {
+    assertFalse(getApi().copyObject(sourceContainer,sourceObject,badDestination,destinationObject));
+    fail("Expected CopyObjectException");
+  }
+ catch (  CopyObjectException e) {
+    assertEquals(e.getSourcePath(),sourcePath);
+    assertEquals(e.getDestinationPath(),"/" + badDestination + "/"+ destinationObject);
+  }
+  try {
+    assertFalse(getApi().copyObject(badSource,sourceObject,destinationContainer,destinationObject));
+    fail("Expected CopyObjectException");
+  }
+ catch (  CopyObjectException e) {
+    assertEquals(e.getSourcePath(),"/" + badSource + "/"+ sourceObject);
+    assertEquals(e.getDestinationPath(),destinationPath);
+  }
+  try {
+    assertFalse(getApi().copyObject(sourceContainer,badSource,destinationContainer,destinationObject));
+    fail("Expected CopyObjectException");
+  }
+ catch (  CopyObjectException e) {
+    assertEquals(e.getSourcePath(),"/" + sourceContainer + "/"+ badSource);
+    assertEquals(e.getDestinationPath(),destinationPath);
+  }
+}

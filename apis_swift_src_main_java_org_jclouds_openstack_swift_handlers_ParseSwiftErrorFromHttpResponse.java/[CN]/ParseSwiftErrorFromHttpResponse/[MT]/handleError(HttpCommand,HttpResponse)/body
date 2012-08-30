@@ -8,21 +8,29 @@ case 401:
     exception=new AuthorizationException(exception.getMessage(),exception);
   break;
 case 404:
-if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
-  String path=command.getCurrentRequest().getEndpoint().getPath();
-  Matcher matcher=CONTAINER_PATH.matcher(path);
-  Exception oldException=exception;
-  if (matcher.find()) {
-    exception=new ContainerNotFoundException(matcher.group(1),message);
-    exception.initCause(oldException);
-  }
+String sourcePath=command.getCurrentRequest().getFirstHeaderOrNull(SwiftHeaders.OBJECT_COPY_FROM);
+Exception oldException=exception;
+if (sourcePath != null) {
+String path=command.getCurrentRequest().getEndpoint().getPath();
+int startOfDestinationPath=path.lastIndexOf("/",path.lastIndexOf("/") - 1);
+String destinationPath=path.substring(startOfDestinationPath);
+exception=new CopyObjectException(sourcePath,destinationPath,message);
+exception.initCause(oldException);
+}
+ else if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
+String path=command.getCurrentRequest().getEndpoint().getPath();
+Matcher matcher=CONTAINER_PATH.matcher(path);
+if (matcher.find()) {
+exception=new ContainerNotFoundException(matcher.group(1),message);
+exception.initCause(oldException);
+}
  else {
-    matcher=CONTAINER_KEY_PATH.matcher(path);
-    if (matcher.find()) {
-      exception=new KeyNotFoundException(matcher.group(1),matcher.group(2),message);
-      exception.initCause(oldException);
-    }
-  }
+matcher=CONTAINER_KEY_PATH.matcher(path);
+if (matcher.find()) {
+  exception=new KeyNotFoundException(matcher.group(1),matcher.group(2),message);
+  exception.initCause(oldException);
+}
+}
 }
 break;
 }

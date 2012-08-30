@@ -1,0 +1,6 @@
+{
+  HttpRequest deleteContainerMetadataRequest=HttpRequest.builder().method("POST").endpoint(swiftEndpointWithHostReplaced + "/foo").addHeader(SwiftHeaders.CONTAINER_DELETE_METADATA_PREFIX,"").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse deleteContainerMetadataResponse=HttpResponse.builder().statusCode(204).build();
+  SwiftClient clientDeleteContainerMetadata=requestsSendResponses(authRequest,authResponse,deleteContainerMetadataRequest,deleteContainerMetadataResponse);
+  assertTrue(clientDeleteContainerMetadata.deleteContainerMetadata("foo",ImmutableList.<String>of("")));
+}
