@@ -1,0 +1,11 @@
+{
+  Auth authResponse=auth.get();
+  Iterable<Endpoint> endpointsForService=authResponse.getServiceCatalog().get(apiType);
+  Optional<Endpoint> defaultEndpoint=tryFind(endpointsForService,new Predicate<Endpoint>(){
+    @Override public boolean apply(    Endpoint in){
+      return in.isV1Default();
+    }
+  }
+);
+  return endpointToRegion.apply(defaultEndpoint.or(Iterables.get(endpointsForService,0)));
+}

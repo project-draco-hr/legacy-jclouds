@@ -1,12 +1,12 @@
 {
-  return Suppliers2.compose(new Function<Map<K,Supplier<V>>,V>(){
-    @Override public V apply(    Map<K,Supplier<V>> input){
-      Supplier<V> last=Iterables.getLast(input.values());
-      return last.get();
+  return new Supplier<V>(){
+    @Override public V get(){
+      Supplier<V> last=Iterables.getLast(input.get().values());
+      return last != null ? last.get() : null;
     }
     @Override public String toString(){
       return "getLastValueInMap()";
     }
   }
-,input);
+;
 }
