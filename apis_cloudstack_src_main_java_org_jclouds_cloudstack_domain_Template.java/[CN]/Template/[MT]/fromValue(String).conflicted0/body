@@ -1,6 +1,27 @@
 {
+  if (Strings.isNullOrEmpty(state)) {
+    return UNKNOWN;
+  }
+ else   if (state.equals("Processing")) {
+    return DOWNLOAD_IN_PROGRESS;
+  }
+ else   if (state.endsWith("% Downloaded")) {
+    return DOWNLOAD_IN_PROGRESS;
+  }
+ else   if (state.equals("Installing Template")) {
+    return DOWNLOAD_IN_PROGRESS;
+  }
+ else   if (state.equals("Installing ISO")) {
+    return DOWNLOAD_IN_PROGRESS;
+  }
+ else   if (state.equals("Download Complete")) {
+    return DOWNLOADED;
+  }
+ else   if (state.equals("Successfully Installed")) {
+    return DOWNLOADED;
+  }
   try {
-    return valueOf(checkNotNull(type,"type"));
+    return valueOf(checkNotNull(state,"state"));
   }
  catch (  IllegalArgumentException e) {
     return UNRECOGNIZED;
