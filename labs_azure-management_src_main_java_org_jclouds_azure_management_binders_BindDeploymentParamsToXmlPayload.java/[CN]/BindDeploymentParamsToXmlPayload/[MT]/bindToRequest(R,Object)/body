@@ -1,0 +1,28 @@
+{
+  DeploymentParams params=DeploymentParams.class.cast(input);
+  try {
+    XMLBuilder builder=XMLBuilder.create("Deployment").a("xmlns","http://schemas.microsoft.com/windowsazure").e("Name").t(params.getName()).up().e("DeploymentSlot").t("Production").up().e("Label").t(params.getName()).up().e("RoleList").e("Role").e("RoleName").t(params.getName()).up().e("RoleType").t("PersistentVMRole").up().e("ConfigurationSets");
+    if (params.getOsType() == OSType.WINDOWS) {
+      XMLBuilder configBuilder=builder.e("ConfigurationSet");
+      configBuilder.e("ConfigurationSetType").t("WindowsProvisioningConfiguration").up().e("ComputerName").t(params.getUsername()).up().e("AdminPassword").t(params.getPassword()).up().e("ResetPasswordOnFirstLogon").t("false").up().e("EnableAutomaticUpdate").t("false").up().e("DomainJoin").e("Credentials").e("Domain").t(params.getName()).up().e("Username").t(params.getUsername()).up().e("Password").t(params.getPassword()).up().up().e("JoinDomain").t(params.getName()).up().up().e("StoredCertificateSettings").up().up();
+    }
+ else     if (params.getOsType() == OSType.LINUX) {
+      XMLBuilder configBuilder=builder.e("ConfigurationSet");
+      configBuilder.e("ConfigurationSetType").t("LinuxProvisioningConfiguration").up().e("HostName").t(params.getName()).up().e("UserName").t(params.getUsername()).up().e("UserPassword").t(params.getPassword()).up().e("DisableSshPasswordAuthentication").t("false").up().e("SSH").up().up();
+    }
+    XMLBuilder configBuilder=builder.e("ConfigurationSet");
+    configBuilder.e("ConfigurationSetType").t("NetworkConfiguration").up();
+    XMLBuilder inputEndpoints=configBuilder.e("InputEndpoints");
+    for (    InputEndpoint endpoint : params.getEndpoints()) {
+      XMLBuilder inputBuilder=inputEndpoints.e("InputEndpoint");
+      inputBuilder.e("LocalPort").t(endpoint.getLocalPort().toString()).up().e("Name").t(endpoint.getName()).up().e("Port").t(endpoint.getExternalPort().toString()).up().e("Protocol").t(endpoint.getProtocol().name()).up().up();
+    }
+    inputEndpoints.up();
+    configBuilder.e("SubnetNames").up().up();
+    builder.up().e("DataVirtualHardDisks").up().e("OSVirtualHardDisk").e("HostCaching").t("ReadWrite").up().e("MediaLink").t("http://" + params.getStorageAccount() + ".blob.core.windows.net/disks/"+ params.getName()+ "/"+ params.getSourceImageName()).up().e("SourceImageName").t(params.getSourceImageName()).up().e("OS").t("Linux").up().up().e("RoleSize").t(params.getSize().value()).up().up().up();
+    return (R)request.toBuilder().payload(builder.asString()).build();
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
+}

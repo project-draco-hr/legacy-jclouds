@@ -1,0 +1,21 @@
+{
+  if (equalsOrSuffix(qName,"Error")) {
+    builder.error(errorHandler.getResult());
+    inError=false;
+  }
+ else   if (inError) {
+    errorHandler.endElement(uri,name,qName);
+  }
+ else   if (equalsOrSuffix(qName,"ID")) {
+    builder.id(currentOrNull(currentText));
+  }
+ else   if (qName.equals("Status")) {
+    String rawStatus=currentOrNull(currentText);
+    builder.rawStatus(rawStatus);
+    builder.status(Status.fromValue(rawStatus));
+  }
+ else   if (equalsOrSuffix(qName,"HttpStatusCode")) {
+    builder.httpStatusCode(Integer.parseInt(currentOrNull(currentText)));
+  }
+  currentText=new StringBuilder();
+}

@@ -1,0 +1,33 @@
+{
+  final String type=adapted.configurationSetType;
+  if (NetworkConfiguration.ID.equals(type)) {
+    NetworkConfiguration network=new NetworkConfiguration();
+    network.setConfigurationSetType(NetworkConfiguration.ID);
+    network.setInputEndpoints(adapted.inputEndpoints);
+    network.setSubnetNames(adapted.subnetNames);
+    return network;
+  }
+ else   if (LinuxProvisioningConfiguration.ID.equals(type)) {
+    LinuxProvisioningConfiguration linux=new LinuxProvisioningConfiguration();
+    linux.setConfigurationSetType(LinuxProvisioningConfiguration.ID);
+    linux.setDisableSshPasswordAuthentication(adapted.disableSshPasswordAuthentication);
+    linux.setHostName(adapted.hostName);
+    linux.setSsh(adapted.ssh);
+    linux.setUserName(adapted.userName);
+    linux.setUserPassword(adapted.userPassword);
+    return linux;
+  }
+ else   if (WindowsProvisioningConfiguration.ID.equals(type)) {
+    WindowsProvisioningConfiguration windows=new WindowsProvisioningConfiguration();
+    windows.setConfigurationSetType(WindowsProvisioningConfiguration.ID);
+    windows.setAdminPassword(adapted.adminPassword);
+    windows.setComputerName(adapted.computerName);
+    windows.setDomainJoin(adapted.domainJoin);
+    windows.setEnableAutomaticUpdates(adapted.enableAutomaticUpdates);
+    windows.setResetPasswordOnFirstLogon(adapted.resetPasswordOnFirstLogon);
+    windows.setStoredCertificateSettings(adapted.storedCertificateSettings);
+    windows.setTimeZone(adapted.timeZone);
+    return windows;
+  }
+  return null;
+}

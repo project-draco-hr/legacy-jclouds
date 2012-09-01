@@ -1,0 +1,22 @@
+{
+  super.setupContext();
+  location=Iterables.get(context.getApi().getLocationApi().list(),0).getName();
+  operationSucceeded=new RetryablePredicate<String>(new Predicate<String>(){
+    @Override public boolean apply(    String input){
+      return context.getApi().getOperationApi().get(input).getStatus() == Operation.Status.SUCCEEDED;
+    }
+  }
+,600,5,5,TimeUnit.SECONDS);
+  hostedServiceCreated=new RetryablePredicate<HostedServiceWithDetailedProperties>(new Predicate<HostedServiceWithDetailedProperties>(){
+    @Override public boolean apply(    HostedServiceWithDetailedProperties input){
+      return api().getDetails(input.getName()).getProperties().getStatus() == Status.CREATED;
+    }
+  }
+,600,5,5,TimeUnit.SECONDS);
+  hostedServiceGone=new RetryablePredicate<HostedService>(new Predicate<HostedService>(){
+    @Override public boolean apply(    HostedService input){
+      return api().get(input.getName()) == null;
+    }
+  }
+,600,5,5,TimeUnit.SECONDS);
+}

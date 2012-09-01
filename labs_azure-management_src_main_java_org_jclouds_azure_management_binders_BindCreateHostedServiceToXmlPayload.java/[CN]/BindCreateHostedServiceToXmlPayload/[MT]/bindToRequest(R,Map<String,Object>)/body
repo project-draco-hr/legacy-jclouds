@@ -1,0 +1,22 @@
+{
+  String serviceName=checkNotNull(postParams.get("serviceName"),"serviceName").toString();
+  String label=CryptoStreams.base64(checkNotNull(postParams.get("label"),"label").toString().getBytes());
+  Optional<String> location=Optional.fromNullable((String)postParams.get("location"));
+  Optional<String> affinityGroup=Optional.fromNullable((String)postParams.get("affinityGroup"));
+  CreateHostedServiceOptions options=Optional.fromNullable((CreateHostedServiceOptions)postParams.get("options")).or(NO_OPTIONS);
+  try {
+    XMLBuilder createHostedService=XMLBuilder.create("CreateHostedService").a("xmlns","http://schemas.microsoft.com/windowsazure").e("ServiceName").t(serviceName).up().e("Label").t(label).up();
+    if (options.getDescription().isPresent())     createHostedService.e("Description").t(options.getDescription().get()).up();
+    if (location.isPresent())     createHostedService.e("Location").t(location.get()).up();
+ else     if (affinityGroup.isPresent())     createHostedService.e("AffinityGroup").t(affinityGroup.get()).up();
+ else     throw new IllegalArgumentException("you must specify either Location or AffinityGroup!");
+    if (options.getExtendedProperties().isPresent() && options.getExtendedProperties().get().size() > 0) {
+      XMLBuilder extendedProperties=createHostedService.e("ExtendedProperties");
+      for (      Entry<String,String> entry : options.getExtendedProperties().get().entrySet())       extendedProperties.e("ExtendedProperty").e("Name").t(entry.getKey()).up().e("Value").t(entry.getValue());
+    }
+    return (R)request.toBuilder().payload(createHostedService.asString()).build();
+  }
+ catch (  Exception e) {
+    throw Throwables.propagate(e);
+  }
+}

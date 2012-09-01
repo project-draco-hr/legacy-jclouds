@@ -1,0 +1,31 @@
+{
+  if (configSet == null) {
+    return null;
+  }
+  AdaptedConfigurationSet adapted=new AdaptedConfigurationSet();
+  adapted.configurationSetType=configSet.getConfigurationSetType();
+  if (configSet instanceof NetworkConfiguration) {
+    NetworkConfiguration network=(NetworkConfiguration)configSet;
+    adapted.inputEndpoints=network.getInputEndpoints();
+    adapted.subnetNames=network.getSubnetNames();
+  }
+ else   if (configSet instanceof LinuxProvisioningConfiguration) {
+    LinuxProvisioningConfiguration linux=(LinuxProvisioningConfiguration)configSet;
+    adapted.disableSshPasswordAuthentication=linux.getDisableSshPasswordAuthentication();
+    adapted.hostName=linux.getHostName();
+    adapted.ssh=linux.getSsh();
+    adapted.userName=linux.getUserName();
+    adapted.userPassword=linux.getUserPassword();
+  }
+ else   if (configSet instanceof WindowsProvisioningConfiguration) {
+    WindowsProvisioningConfiguration windows=(WindowsProvisioningConfiguration)configSet;
+    adapted.adminPassword=windows.getAdminPassword();
+    adapted.computerName=windows.getComputerName();
+    adapted.domainJoin=windows.getDomainJoin();
+    adapted.enableAutomaticUpdates=windows.getEnableAutomaticUpdates();
+    adapted.resetPasswordOnFirstLogon=windows.getResetPasswordOnFirstLogon();
+    adapted.storedCertificateSettings=windows.getStoredCertificateSettings();
+    adapted.timeZone=windows.getTimeZone();
+  }
+  return adapted;
+}

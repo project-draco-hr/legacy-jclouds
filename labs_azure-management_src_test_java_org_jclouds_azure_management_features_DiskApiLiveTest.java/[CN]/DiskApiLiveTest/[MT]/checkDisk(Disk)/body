@@ -1,0 +1,25 @@
+{
+  checkNotNull(disk.getName(),"Name cannot be null for Disk %s",disk.getLabel());
+  checkNotNull(disk.getOS(),"OS cannot be null for Disk: %s",disk);
+  assertNotEquals(disk.getOS(),OSType.UNRECOGNIZED,"Status cannot be UNRECOGNIZED for Disk: " + disk);
+  checkNotNull(disk.getAttachedTo(),"While AttachedTo can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getAttachedTo().isPresent()) {
+  }
+  checkNotNull(disk.getLogicalSizeInGB(),"While LogicalSizeInGB can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getLogicalSizeInGB().isPresent())   assertTrue(disk.getLogicalSizeInGB().get() > 0,"LogicalSizeInGB should be positive, if set" + disk.toString());
+  checkNotNull(disk.getMediaLink(),"While MediaLink can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getMediaLink().isPresent())   assertTrue(ImmutableSet.of("http","https").contains(disk.getMediaLink().get().getScheme()),"MediaLink should be an http(s) url" + disk.toString());
+  checkNotNull(disk.getLabel(),"While Label can be null for Disk, its Optional wrapper cannot: %s",disk);
+  checkNotNull(disk.getDescription(),"While Description can be null for Disk, its Optional wrapper cannot: %s",disk);
+  checkNotNull(disk.getLocation(),"While Location can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getLocation().isPresent()) {
+    assertTrue(locations.contains(disk.getLocation().get()),"Location not in " + locations + " :"+ disk.toString());
+  }
+  checkNotNull(disk.getSourceImage(),"While SourceImage can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getSourceImage().isPresent()) {
+    assertTrue(images.contains(disk.getSourceImage().get()),"SourceImage not in " + images + " :"+ disk.toString());
+  }
+  checkNotNull(disk.getAffinityGroup(),"While AffinityGroup can be null for Disk, its Optional wrapper cannot: %s",disk);
+  if (disk.getAffinityGroup().isPresent()) {
+  }
+}

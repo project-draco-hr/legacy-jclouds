@@ -1,0 +1,10 @@
+{
+  Set<HostedServiceWithDetailedProperties> response=api().list();
+  for (  HostedServiceWithDetailedProperties hostedService : response) {
+    checkHostedService(hostedService);
+  }
+  if (response.size() > 0) {
+    HostedService hostedService=response.iterator().next();
+    Assert.assertEquals(api().getDetails(hostedService.getName()),hostedService);
+  }
+}
