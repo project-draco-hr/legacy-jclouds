@@ -1,59 +1,81 @@
 {
-  String pContainerName="MyContainer" + System.currentTimeMillis();
+  String pContainerName="MyContainer" + System.currentTimeMillis() + "/";
   Map<String,String> pContainerMetaDataIn=new HashMap<String,String>();
   Iterator<String> keys;
   pContainerMetaDataIn.put("containerkey1","value1");
   pContainerMetaDataIn.put("containerkey2","value2");
   pContainerMetaDataIn.put("containerkey3","value3");
-  CreateContainerOptions pCreateContainerOptions=CreateContainerOptions.Builder.withMetadata(pContainerMetaDataIn);
+  CreateContainerOptions pCreateContainerOptions=CreateContainerOptions.Builder.metadata(pContainerMetaDataIn);
   ContainerApi api=cdmiContext.getApi().getContainerApi();
   Logger.getAnonymousLogger().info("createContainer: " + pContainerName);
   Container container=api.createContainer(pContainerName,pCreateContainerOptions);
   assertNotNull(container);
-  System.out.println(container);
-  Logger.getAnonymousLogger().info("getContainer: " + pContainerName);
-  container=api.getContainer(pContainerName);
-  assertNotNull(container);
-  System.out.println(container);
-  assertEquals(container.getObjectType(),ObjectTypes.CONTAINER);
-  assertNotNull(container.getObjectID());
-  assertNotNull(container.getObjectName());
-  assertEquals(container.getObjectName(),pContainerName + "/");
-  assertEquals(container.getParentURI(),"/");
-  assertNotNull(container.getChildren());
-  assertEquals(container.getChildren().isEmpty(),true);
-  System.out.println("Children: " + container.getChildren());
-  assertNotNull(container.getMetadata());
-  System.out.println("Raw metadata: " + container.getMetadata());
-  keys=container.getMetadata().keySet().iterator();
-  while (keys.hasNext()) {
-    String key=keys.next();
-    JsonBall value=container.getMetadata().get(key);
-    System.out.println(key + ":" + value);
+  try {
+    System.out.println(container);
+    Logger.getAnonymousLogger().info("getContainer: " + pContainerName);
+    container=api.getContainer(pContainerName);
+    assertNotNull(container);
+    System.out.println(container);
+    assertEquals(container.getObjectType(),ObjectTypes.CONTAINER);
+    assertNotNull(container.getObjectID());
+    assertNotNull(container.getObjectName());
+    assertEquals(container.getObjectName(),pContainerName);
+    assertEquals(container.getParentURI(),"/");
+    assertNotNull(container.getChildren());
+    assertEquals(container.getChildren().isEmpty(),true);
+    System.out.println("Children: " + container.getChildren());
+    assertNotNull(container.getMetadata());
+    System.out.println("Raw metadata: " + container.getMetadata());
+    keys=container.getMetadata().keySet().iterator();
+    while (keys.hasNext()) {
+      String key=keys.next();
+      JsonBall value=container.getMetadata().get(key);
+      System.out.println(key + ":" + value);
+    }
+    assertNotNull(container.getUserMetadata());
+    Map<String,String> pContainerMetaDataOut=container.getUserMetadata();
+    keys=pContainerMetaDataIn.keySet().iterator();
+    while (keys.hasNext()) {
+      String key=keys.next();
+      assertEquals(pContainerMetaDataOut.containsKey(key),true);
+      assertEquals(pContainerMetaDataOut.get(key),pContainerMetaDataIn.get(key));
+    }
+    System.out.println("UserMetaData: " + container.getUserMetadata());
+    assertNotNull(container.getSystemMetadata());
+    System.out.println("SystemMetaData: " + container.getSystemMetadata());
+    assertNotNull(container.getACLMetadata());
+    assertEquals(container.getACLMetadata().size(),3);
+    List<Map<String,String>> aclMetadataOut=container.getACLMetadata();
+    System.out.println("ACLMetaData: ");
+    for (    Map<String,String> aclMap : aclMetadataOut) {
+      System.out.println(aclMap);
+    }
+    container=api.getContainer("/");
+    System.out.println("root container: " + container);
+    assertEquals(container.getChildren().contains(pContainerName),true);
+    System.out.println("adding containers to container");
+    String firstParentURI=api.getContainer(pContainerName).getObjectName();
+    for (int i=0; i < 10; i++) {
+      container=api.createContainer(pContainerName + "childcontainer" + i+ "/");
+      assertNotNull(container);
+      System.out.println(container);
+      assertEquals(container.getParentURI(),pContainerName);
+      assertEquals(container.getObjectName(),"childcontainer" + i + "/");
+      container=api.createContainer(container.getParentURI() + container.getObjectName() + "grandchild/");
+      assertEquals(container.getParentURI(),pContainerName + "childcontainer" + i+ "/");
+      assertEquals(container.getObjectName(),"grandchild/");
+      System.out.println(container);
+    }
+    container=api.getContainer(pContainerName);
+    assertNotNull(container);
+    assertNotNull(container.getChildren());
+    assertEquals(container.getChildren().size(),10);
   }
-  assertNotNull(container.getUserMetadata());
-  Map<String,String> pContainerMetaDataOut=container.getUserMetadata();
-  keys=pContainerMetaDataIn.keySet().iterator();
-  while (keys.hasNext()) {
-    String key=keys.next();
-    assertEquals(pContainerMetaDataOut.containsKey(key),true);
-    assertEquals(pContainerMetaDataOut.get(key),pContainerMetaDataIn.get(key));
+  finally {
+    Logger.getAnonymousLogger().info("deleteContainer: " + pContainerName);
+    api.deleteContainer(pContainerName);
+    container=api.getContainer("/");
+    System.out.println("root container: " + container);
+    assertEquals(container.getChildren().contains(pContainerName),false);
   }
-  System.out.println("UserMetaData: " + container.getUserMetadata());
-  assertNotNull(container.getSystemMetadata());
-  System.out.println("SystemMetaData: " + container.getSystemMetadata());
-  assertNotNull(container.getACLMetadata());
-  List<Map<String,String>> aclMetadataOut=container.getACLMetadata();
-  System.out.println("ACLMetaData: ");
-  for (  Map<String,String> aclMap : aclMetadataOut) {
-    System.out.println(aclMap);
-  }
-  container=api.getContainer("/");
-  System.out.println("root container: " + container);
-  assertEquals(container.getChildren().contains(pContainerName + "/"),true);
-  Logger.getAnonymousLogger().info("deleteContainer: " + pContainerName);
-  api.deleteContainer(pContainerName);
-  container=api.getContainer("/");
-  System.out.println("root container: " + container);
-  assertEquals(container.getChildren().contains(pContainerName + "/"),false);
 }
