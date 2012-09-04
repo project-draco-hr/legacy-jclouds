@@ -1,0 +1,6 @@
+{
+  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/action/relocate").xmlFilePayload("/vApp/relocateParams.xml",VCloudDirectorMediaType.RELOCATE_VM_PARAMS).acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/relocateTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  RelocateParams params=RelocateParams.builder().build();
+  Task expected=relocateTask();
+  assertEquals(api.getVmApi().relocate(vmURI,params),expected);
+}

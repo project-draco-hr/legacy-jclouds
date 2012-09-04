@@ -1,5 +1,8 @@
 {
+  key=name("key-");
+  metadataValue=name("value-");
+  vmApi.getMetadataApi(vmUrn).put(key,metadataValue);
   Metadata metadata=vmApi.getMetadataApi(vmUrn).get();
   checkMetadata(metadata);
-  assertTrue(Iterables.isEmpty(metadata.getMetadataEntries()),String.format(NOT_EMPTY_OBJECT_FMT,"MetadataEntry","vm"));
+  assertTrue(metadata.containsValue(metadataValue),String.format(CORRECT_VALUE_OBJECT_FMT,"Value","MetadataValue",metadata.get(key),metadataValue));
 }
