@@ -1,0 +1,12 @@
+{
+  String sourceContainer="bar";
+  String sourceObject="foo.txt";
+  String sourcePath="/" + sourceContainer + "/"+ sourceObject;
+  String destinationContainer="foo";
+  String destinationObject="bar.txt";
+  String destinationPath="/" + destinationContainer + "/"+ destinationObject;
+  HttpRequest copyObjectRequest=HttpRequest.builder().method("PUT").endpoint(swiftEndpointWithHostReplaced + destinationPath).addHeader(SwiftHeaders.OBJECT_COPY_FROM,sourcePath).addHeader("X-Auth-Token",authToken).build();
+  HttpResponse copyObjectResponse=HttpResponse.builder().statusCode(201).build();
+  SwiftClient clientCopyObject=requestsSendResponses(authRequest,authResponse,copyObjectRequest,copyObjectResponse);
+  assertTrue(clientCopyObject.copyObject(sourceContainer,sourceObject,destinationContainer,destinationObject));
+}

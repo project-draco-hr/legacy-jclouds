@@ -1,0 +1,8 @@
+{
+  List<String> metadataKeys=ImmutableList.of("foo","bar");
+  HttpRequest request=HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
+  BindIterableToHeadersWithContainerDeleteMetadataPrefix binder=injector.getInstance(BindIterableToHeadersWithContainerDeleteMetadataPrefix.class);
+  HttpRequest actualRequest=binder.bindToRequest(request,metadataKeys);
+  HttpRequest expectedRequest=HttpRequest.builder().method("PUT").endpoint("http://localhost").addHeader(SwiftHeaders.CONTAINER_DELETE_METADATA_PREFIX + "foo","").addHeader(SwiftHeaders.CONTAINER_DELETE_METADATA_PREFIX + "bar","").build();
+  assertEquals(actualRequest,expectedRequest);
+}

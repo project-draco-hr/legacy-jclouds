@@ -1,0 +1,10 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Iterable<?>,"this binder is only valid for Iterable!");
+  checkNotNull(request,"request");
+  Iterable<String> metadataKeys=Iterables.transform((Iterable<String>)input,FN);
+  HashMultimap<String,String> headers=HashMultimap.create();
+  for (  String metadataKey : metadataKeys) {
+    headers.put(metadataKey,"");
+  }
+  return (R)request.toBuilder().replaceHeaders(headers).build();
+}

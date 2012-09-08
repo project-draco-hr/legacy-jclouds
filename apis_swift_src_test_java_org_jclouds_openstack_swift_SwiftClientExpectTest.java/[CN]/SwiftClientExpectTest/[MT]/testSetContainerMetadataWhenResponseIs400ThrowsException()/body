@@ -1,0 +1,6 @@
+{
+  HttpRequest setContainerMetadataRequest=HttpRequest.builder().method("POST").endpoint(swiftEndpointWithHostReplaced + "/foo").addHeader(SwiftHeaders.CONTAINER_METADATA_PREFIX,"value").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse setContainerMetadataResponse=HttpResponse.builder().statusCode(400).message("Metadata name cannot be empty").build();
+  SwiftClient clientSetContainerMetadata=requestsSendResponses(authRequest,authResponse,setContainerMetadataRequest,setContainerMetadataResponse);
+  clientSetContainerMetadata.setContainerMetadata("foo",ImmutableMap.<String,String>of("","value"));
+}

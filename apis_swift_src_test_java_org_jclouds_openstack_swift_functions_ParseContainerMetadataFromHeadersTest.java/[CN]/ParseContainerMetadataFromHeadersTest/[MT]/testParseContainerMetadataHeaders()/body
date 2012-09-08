@@ -1,0 +1,15 @@
+{
+  ParseContainerMetadataFromHeaders parser=i.getInstance(ParseContainerMetadataFromHeaders.class);
+  GeneratedHttpRequest request=createMock(GeneratedHttpRequest.class);
+  expect(request.getArgs()).andReturn(ImmutableList.<Object>of("container","key")).atLeastOnce();
+  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/test")).atLeastOnce();
+  replay(request);
+  parser.setContext(request);
+  HttpResponse response=HttpResponse.builder().statusCode(204).message("No Content").payload("").addHeader(SwiftHeaders.CONTAINER_BYTES_USED,"42").addHeader(SwiftHeaders.CONTAINER_OBJECT_COUNT,"1").addHeader(SwiftHeaders.CONTAINER_METADATA_PREFIX + "label1","test1").addHeader(SwiftHeaders.CONTAINER_METADATA_PREFIX + "label2","test2").build();
+  response.getPayload().getContentMetadata().setContentType("text/plain");
+  ContainerMetadata containerMetadata=parser.apply(response);
+  assertEquals(containerMetadata.getBytes(),42);
+  assertEquals(containerMetadata.getCount(),1);
+  assertEquals(containerMetadata.getMetadata().get("label1"),"test1");
+  assertEquals(containerMetadata.getMetadata().get("label2"),"test2");
+}
