@@ -1,0 +1,8 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Iterable<?>,"this binder is only valid for Iterable!");
+  checkNotNull(request,"request");
+  Iterable<String> emails=(Iterable<String>)input;
+  String emailCSV=Joiner.on(", ").join((List<String>)emails);
+  ImmutableMultimap<String,String> headers=ImmutableMultimap.<String,String>of(CloudFilesHeaders.CDN_CONTAINER_PURGE_OBJECT_EMAIL,emailCSV);
+  return (R)request.toBuilder().replaceHeaders(headers).build();
+}
