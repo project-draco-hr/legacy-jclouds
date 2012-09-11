@@ -1,10 +1,10 @@
 {
-  byte[] value=null;
+  HashCode value=null;
   String content=returnStringIf200.apply(response);
   if (content != null) {
     Matcher matcher=pattern.matcher(content);
     if (matcher.find()) {
-      value=CryptoStreams.hex(matcher.group(1));
+      value=HashCodes.fromBytes(CryptoStreams.hex(matcher.group(1)));
     }
   }
   return value;
