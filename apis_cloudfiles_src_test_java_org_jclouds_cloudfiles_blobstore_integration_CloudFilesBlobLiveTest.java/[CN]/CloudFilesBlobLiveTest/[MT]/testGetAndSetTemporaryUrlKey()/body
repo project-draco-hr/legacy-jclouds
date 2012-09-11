@@ -1,0 +1,13 @@
+{
+  CloudFilesClient client=view.unwrap(CloudFilesApiMetadata.CONTEXT_TOKEN).getApi();
+  String currentSecretKey=client.getTemporaryUrlKey();
+  assertNotNull(currentSecretKey);
+  try {
+    String testKey=UUID.randomUUID().toString();
+    client.setTemporaryUrlKey(testKey);
+    assertEquals(client.getTemporaryUrlKey(),testKey);
+  }
+  finally {
+    client.setTemporaryUrlKey(currentSecretKey);
+  }
+}
