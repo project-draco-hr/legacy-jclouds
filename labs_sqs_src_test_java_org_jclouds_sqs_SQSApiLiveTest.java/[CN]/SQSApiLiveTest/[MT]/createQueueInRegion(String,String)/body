@@ -1,0 +1,27 @@
+{
+  try {
+    SortedSet<URI> result=Sets.newTreeSet(context.getApi().listQueuesInRegion(region,queuePrefix(queueName)));
+    if (result.size() >= 1) {
+      context.getApi().deleteQueue(result.last());
+      queueName+=1;
+    }
+  }
+ catch (  Exception e) {
+  }
+  URI queue=null;
+  int tries=0;
+  while (queue == null && tries < 5) {
+    try {
+      tries++;
+      queue=context.getApi().createQueueInRegion(region,queueName);
+    }
+ catch (    AWSResponseException e) {
+      queueName+="1";
+      if (e.getError().getCode().equals("AWS.SimpleQueueService.QueueDeletedRecently"))       continue;
+      throw e;
+    }
+  }
+  assertQueueInList(region,queue);
+  queues.add(queue);
+  return queueName;
+}

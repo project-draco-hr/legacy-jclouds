@@ -1,0 +1,11 @@
+{
+  Method method=SQSAsyncApi.class.getMethod("createQueueInRegion",String.class,String.class,Array.newInstance(CreateQueueOptions.class,0).getClass());
+  HttpRequest request=processor.createRequest(method,null,"queueName",CreateQueueOptions.Builder.defaultVisibilityTimeout(45));
+  assertRequestLineEquals(request,"POST https://sqs.us-east-1.amazonaws.com/ HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Host: sqs.us-east-1.amazonaws.com\n");
+  assertPayloadEquals(request,"Version=2009-02-01&Action=CreateQueue&QueueName=queueName&DefaultVisibilityTimeout=45","application/x-www-form-urlencoded",false);
+  assertResponseParserClassEquals(method,request,RegexQueueHandler.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}
