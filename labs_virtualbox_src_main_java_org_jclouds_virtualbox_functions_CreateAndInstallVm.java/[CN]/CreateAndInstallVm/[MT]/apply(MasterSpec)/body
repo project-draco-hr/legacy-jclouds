@@ -25,5 +25,14 @@
   ExecResponse gaInstallationResponse=Futures.getUnchecked(execInstallGA);
   checkState(gaInstallationResponse.getExitStatus() == 0);
   machineController.ensureMachineIsShutdown(vmName);
+  Iterable<IMediumAttachment> mediumAttachments=Iterables.filter(vm.getMediumAttachmentsOfController("IDE Controller"),new Predicate<IMediumAttachment>(){
+    public boolean apply(    IMediumAttachment in){
+      return in.getMedium() != null && in.getMedium().getDeviceType().equals(DeviceType.DVD);
+    }
+  }
+);
+  for (  IMediumAttachment iMediumAttachment : mediumAttachments) {
+    machineUtils.writeLockMachineAndApply(vm.getName(),new DetachDistroMediumFromMachine(iMediumAttachment.getController(),iMediumAttachment.getPort(),iMediumAttachment.getDevice()));
+  }
   return vm;
 }

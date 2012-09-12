@@ -6,6 +6,8 @@
   String yamlDescriptor=System.getProperty("test.virtualbox.image.descriptor.yaml",VIRTUALBOX_WORKINGDIR + File.separator + "images.yaml");
   properties.put(VIRTUALBOX_IMAGES_DESCRIPTOR,yamlDescriptor);
   properties.put(VIRTUALBOX_PRECONFIGURATION_URL,"http://10.0.2.2:23232/preseed.cfg");
-  properties.setProperty(TEMPLATE,"osFamily=UBUNTU,osVersionMatches=11.10,os64Bit=true,osArchMatches=x86,loginUser=toor:password,authenticateSudo=true");
+  properties.put(VIRTUALBOX_GUEST_IDENTITY,"toor");
+  properties.put(VIRTUALBOX_GUEST_CREDENTIAL,"password");
+  properties.setProperty(TEMPLATE,String.format("osFamily=UBUNTU,osVersionMatches=12.04.1,os64Bit=true,osArchMatches=amd64,loginUser=%s:%s,authenticateSudo=true",properties.getProperty(VIRTUALBOX_GUEST_IDENTITY),properties.getProperty(VIRTUALBOX_GUEST_CREDENTIAL)));
   return properties;
 }

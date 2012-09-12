@@ -1,0 +1,8 @@
+{
+  NetworkAdapter natAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).build();
+  NetworkInterfaceCard natIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(natAdapter).slot(1L).build();
+  NetworkAdapter hostOnlyAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.HostOnly).build();
+  String hostOnlyIfName=getHostOnlyIfOrCreate();
+  NetworkInterfaceCard hostOnlyIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(hostOnlyAdapter).addHostInterfaceName(hostOnlyIfName).slot(0L).build();
+  return createNetworkSpecForHostOnlyNATNICs(natIfaceCard,hostOnlyIfaceCard);
+}

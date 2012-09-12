@@ -1,14 +1,22 @@
 {
   URI provider=providerSupplier.get();
+  NodeMetadata hostNodeMetadata=hardcodedHostToHostNodeMetadata.apply(host.get());
+  List<Statement> statements=Lists.newArrayList();
+  statements.add(Statements.findPid("vboxwebsrv"));
+  statements.add(Statements.kill());
+  StatementList statementList=new StatementList(statements);
+  if (socketTester.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))) {
+    logger.debug(String.format("shutting down previously started vboxwewbsrv at %s",provider));
+    ExecResponse execResponse=runScriptOnNodeFactory.create(hostNodeMetadata,statementList,runAsRoot(false)).init().call();
+    if (execResponse.getExitStatus() != 0)     throw new RuntimeException("Cannot execute jclouds");
+  }
+  logger.debug("disabling password access");
+  runScriptOnNodeFactory.create(hostNodeMetadata,Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false)).init().call();
+  logger.debug(">> starting vboxwebsrv");
+  String vboxwebsrv="vboxwebsrv -t0 -v -b -H " + providerSupplier.get().getHost();
+  runScriptOnNodeFactory.create(hostNodeMetadata,Statements.exec(vboxwebsrv),runAsRoot(false).wrapInInitScript(false).blockOnComplete(false).nameTask("vboxwebsrv")).init().call();
   if (!socketTester.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))) {
-    logger.debug("disabling password access");
-    runScriptOnNodeFactory.create(host.get(),Statements.exec("VBoxManage setproperty websrvauthlibrary null"),runAsRoot(false).wrapInInitScript(false)).init().call();
-    logger.debug(">> starting vboxwebsrv");
-    String vboxwebsrv="vboxwebsrv -t 10000 -v -b";
-    runScriptOnNodeFactory.create(host.get(),Statements.exec(vboxwebsrv),runAsRoot(false).wrapInInitScript(false).blockOnComplete(false).nameTask("vboxwebsrv")).init().call();
-    if (!socketTester.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))) {
-      throw new RuntimeException("could not connect to virtualbox");
-    }
+    throw new RuntimeException("could not connect to virtualbox");
   }
   manager=managerForNode.apply(host);
   manager.connect(provider.toASCIIString(),"","");

@@ -7,18 +7,8 @@
     SshClient client=sshClientForIMachine.apply(machine);
     sshResponds=injector.getInstance(SshResponds.class);
     checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
-    assertTrue(machineUtils.sharedLockMachineAndApplyToSession(machine.getName(),new Function<ISession,Boolean>(){
-      @Override public Boolean apply(      ISession session){
-        String s=session.getMachine().getGuestPropertyValue("/VirtualBox/GuestInfo/Net/0/V4/IP");
-        return isIpv4(s);
-      }
-      private boolean isIpv4(      String s){
-        Pattern pattern=Pattern.compile(machineUtils.IP_V4_ADDRESS_PATTERN);
-        Matcher matcher=pattern.matcher(s);
-        return matcher.matches();
-      }
-    }
-));
+    ipAddressesLoadingCache=injector.getInstance(IpAddressesLoadingCache.class);
+    assertTrue(MachineUtils.isIpv4(ipAddressesLoadingCache.apply(machine.getName())));
   }
   finally {
     for (    String vmNameOrId : ImmutableSet.of(machine.getName())) {

@@ -1,6 +1,7 @@
 {
   final String hostOnlyIfName;
-  ExecResponse createHostOnlyResponse=runScriptOnNodeFactory.create(host.get(),Statements.exec("VBoxManage hostonlyif create"),runAsRoot(false).wrapInInitScript(false)).init().call();
+  NodeMetadata hostNodeMetadata=getHostNodeMetadata();
+  ExecResponse createHostOnlyResponse=runScriptOnNodeFactory.create(hostNodeMetadata,Statements.exec("VBoxManage hostonlyif create"),runAsRoot(false).wrapInInitScript(false)).init().call();
   String output=createHostOnlyResponse.getOutput();
   checkState(createHostOnlyResponse.getExitStatus() == 0);
   checkState(output.contains("'"),"cannot create hostonlyif");
