@@ -1,0 +1,22 @@
+{
+  if (qName.equals("MessageId")) {
+    builder.id(currentOrNull(currentText));
+  }
+ else   if (qName.equals("ReceiptHandle")) {
+    builder.receiptHandle(currentOrNull(currentText));
+  }
+ else   if (qName.equals("MD5OfBody")) {
+    builder.md5(HashCodes.fromBytes(CryptoStreams.hex(currentOrNull(currentText))));
+  }
+ else   if (qName.equals("Body")) {
+    builder.body(currentOrNull(currentText));
+  }
+ else   if (qName.equals("Name")) {
+    this.name=currentOrNull(currentText);
+  }
+ else   if (qName.equals("Value")) {
+    builder.addAttribute(this.name,currentOrNull(currentText));
+    this.name=null;
+  }
+  currentText=new StringBuilder();
+}

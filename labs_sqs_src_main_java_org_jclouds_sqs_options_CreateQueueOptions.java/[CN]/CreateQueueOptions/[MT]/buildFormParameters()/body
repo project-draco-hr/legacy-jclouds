@@ -1,0 +1,13 @@
+{
+  Multimap<String,String> params=super.buildFormParameters();
+  ImmutableMap<String,String> attributes=this.attributes.build();
+  if (attributes.size() > 0) {
+    int nameIndex=1;
+    for (    Entry<String,String> attribute : attributes.entrySet()) {
+      params.put("Attribute." + nameIndex + ".Name",attribute.getKey());
+      params.put("Attribute." + nameIndex + ".Value",attribute.getValue());
+      nameIndex++;
+    }
+  }
+  return params;
+}

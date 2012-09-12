@@ -1,0 +1,10 @@
+{
+  String content=returnStringIf200.apply(response);
+  if (content != null) {
+    Matcher matcher=pattern.matcher(content);
+    if (matcher.find()) {
+      return MessageIdAndMD5.builder().id(matcher.group(1)).md5(HashCodes.fromBytes(CryptoStreams.hex(matcher.group(2)))).build();
+    }
+  }
+  return null;
+}

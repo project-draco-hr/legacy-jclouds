@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/send_message.xml");
+  MessageIdAndMD5 expected=expected();
+  RegexMessageIdAndMD5Handler handler=new RegexMessageIdAndMD5Handler(new ReturnStringIf2xx());
+  MessageIdAndMD5 result=handler.apply(HttpResponse.builder().statusCode(200).payload(is).build());
+  assertEquals(result.toString(),expected.toString());
+}

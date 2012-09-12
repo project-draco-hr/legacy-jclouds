@@ -1,0 +1,13 @@
+{
+  Multimap<String,String> params=super.buildFormParameters();
+  if (visibilityTimeout != null)   params.put("VisibilityTimeout",visibilityTimeout.toString());
+  ImmutableSet<String> attributes=this.attributes.build();
+  if (attributes.size() > 0) {
+    int nameIndex=1;
+    for (    String attribute : attributes) {
+      params.put("AttributeName." + nameIndex,attribute);
+      nameIndex++;
+    }
+  }
+  return params;
+}

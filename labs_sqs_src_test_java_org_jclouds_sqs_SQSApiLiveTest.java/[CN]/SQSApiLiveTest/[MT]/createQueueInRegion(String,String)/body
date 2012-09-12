@@ -1,8 +1,8 @@
 {
   try {
-    SortedSet<URI> result=Sets.newTreeSet(context.getApi().listQueuesInRegion(region,queuePrefix(queueName)));
+    Set<URI> result=context.getApi().listQueuesInRegion(region,queuePrefix(queueName));
     if (result.size() >= 1) {
-      context.getApi().deleteQueue(result.last());
+      context.getApi().deleteQueue(Iterables.getLast(result));
       queueName+=1;
     }
   }
