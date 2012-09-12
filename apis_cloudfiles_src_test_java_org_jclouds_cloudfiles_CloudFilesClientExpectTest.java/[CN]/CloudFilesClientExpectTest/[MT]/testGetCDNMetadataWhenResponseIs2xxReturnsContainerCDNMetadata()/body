@@ -1,0 +1,12 @@
+{
+  HttpRequest cdnContainerRequest=HttpRequest.builder().method("HEAD").endpoint("https://cdn3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/container").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse cdnContainerResponse=HttpResponse.builder().addHeader(CloudFilesHeaders.CDN_ENABLED,"True").addHeader(CloudFilesHeaders.CDN_LOG_RETENTION,"True").addHeader(CloudFilesHeaders.CDN_TTL,"259200").addHeader(CloudFilesHeaders.CDN_URI,"http://546406d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r19.cf1.rackcdn.com").addHeader(CloudFilesHeaders.CDN_SSL_URI,"https://e9f6fe92d217dc013369-36c33e76d676c80251b3c13ecb603b67.ssl.cf1.rackcdn.com").addHeader(CloudFilesHeaders.CDN_STREAMING_URI,"http://0e79346bc0a2564dcc5e-36c33e76d676c80251b3c13ecb603b67.r19.stream.cf1.rackcdn.com").statusCode(204).build();
+  CloudFilesClient cdnContainerClient=requestsSendResponses(initialAuth,responseWithAuth,cdnContainerRequest,cdnContainerResponse);
+  ContainerCDNMetadata containerCDNMetadata=cdnContainerClient.getCDNMetadata("container");
+  assertTrue(containerCDNMetadata.isCDNEnabled());
+  assertTrue(containerCDNMetadata.isLogRetention());
+  assertEquals(containerCDNMetadata.getTTL(),259200);
+  assertEquals(containerCDNMetadata.getCDNUri().toString(),"http://546406d62bf471d7435d-36c33e76d676c80251b3c13ecb603b67.r19.cf1.rackcdn.com");
+  assertEquals(containerCDNMetadata.getCDNSslUri().toString(),"https://e9f6fe92d217dc013369-36c33e76d676c80251b3c13ecb603b67.ssl.cf1.rackcdn.com");
+  assertEquals(containerCDNMetadata.getCDNStreamingUri().toString(),"http://0e79346bc0a2564dcc5e-36c33e76d676c80251b3c13ecb603b67.r19.stream.cf1.rackcdn.com");
+}

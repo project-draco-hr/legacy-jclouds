@@ -1,0 +1,8 @@
+{
+  List<String> emails=ImmutableList.of("foo@bar.com","bar@foo.com");
+  HttpRequest request=HttpRequest.builder().method("DELETE").endpoint("http://localhost").build();
+  BindIterableToHeadersWithPurgeCDNObjectEmail binder=injector.getInstance(BindIterableToHeadersWithPurgeCDNObjectEmail.class);
+  HttpRequest actualRequest=binder.bindToRequest(request,emails);
+  HttpRequest expectedRequest=HttpRequest.builder().method("DELETE").endpoint("http://localhost").addHeader(CloudFilesHeaders.CDN_CONTAINER_PURGE_OBJECT_EMAIL,"foo@bar.com, bar@foo.com").build();
+  assertEquals(actualRequest,expectedRequest);
+}
