@@ -1,9 +1,16 @@
 {
   int count=0;
   ISession session;
+  IMachine immutableMachine=manager.get().getVBox().findMachine(machineId);
+  try {
+    session=manager.get().openMachineSession(immutableMachine);
+    if (session.getState().equals(SessionState.Locked))     return checkNotNull(session,"session");
+  }
+ catch (  Exception e) {
+    logger.debug("machine %s is not locked). Error: %s",immutableMachine.getName(),e.getMessage());
+  }
   while (true) {
     try {
-      IMachine immutableMachine=manager.get().getVBox().findMachine(machineId);
       session=manager.get().getSessionObject();
       immutableMachine.lockMachine(session,type);
       break;
@@ -14,12 +21,12 @@
         return null;
       }
       count++;
-      logger.warn(e,"Could not lock machine (try %d of %d). Error: %s",count,retries,e.getMessage());
+      logger.debug("Could not lock machine (try %d of %d). Error: %s",count,retries,e.getMessage());
       if (count == retries) {
         throw new RuntimeException(String.format("error locking %s with %s lock: %s",machineId,type,e.getMessage()),e);
       }
       try {
-        Thread.sleep(1000L);
+        Thread.sleep(count * 1000L);
       }
  catch (      InterruptedException e1) {
       }

@@ -13,9 +13,17 @@
   }
  catch (  VBoxException e) {
     if (machineNotFoundException(e)) {
-      YamlImage currentImage=imageMapping.get(key.getId());
-      checkNotNull(currentImage);
-      server.start(preconfigurationUrl,currentImage.preseed_cfg);
+      YamlImage currentImage=checkNotNull(imageMapping.get(key.getId()),"currentImage");
+      URI preseedServer;
+      try {
+        preseedServer=new URI(preconfigurationUrl);
+        if (!socketTester.apply(HostAndPort.fromParts(preseedServer.getHost(),preseedServer.getPort()))) {
+          server.start(preconfigurationUrl,currentImage.preseed_cfg);
+        }
+      }
+ catch (      URISyntaxException e1) {
+        throw e;
+      }
       MasterSpec masterSpec=buildMasterSpecFromYaml(currentImage,vmName);
       masterMachine=masterCreatorAndInstaller.apply(masterSpec);
       master=Master.builder().machine(masterMachine).spec(masterSpec).build();

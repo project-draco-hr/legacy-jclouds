@@ -11,6 +11,7 @@
   String dhcpNetmask="255.255.255.0";
   String dhcpLowerIp=hostOnlyIfIpAddress.substring(0,hostOnlyIfIpAddress.lastIndexOf(".")) + ".2";
   String dhcpUpperIp=hostOnlyIfIpAddress.substring(0,hostOnlyIfIpAddress.lastIndexOf(".")) + ".253";
-  ExecResponse response=runScriptOnNodeFactory.create(host.get(),Statements.exec(String.format("VBoxManage dhcpserver add --ifname %s --ip %s --netmask %s --lowerip %s --upperip %s --enable",hostOnlyIfName,dhcpIpAddress,dhcpNetmask,dhcpLowerIp,dhcpUpperIp)),runAsRoot(false).wrapInInitScript(false)).init().call();
+  NodeMetadata hostNodeMetadata=getHostNodeMetadata();
+  ExecResponse response=runScriptOnNodeFactory.create(hostNodeMetadata,Statements.exec(String.format("VBoxManage dhcpserver add --ifname %s --ip %s --netmask %s --lowerip %s --upperip %s --enable",hostOnlyIfName,dhcpIpAddress,dhcpNetmask,dhcpLowerIp,dhcpUpperIp)),runAsRoot(false).wrapInInitScript(false)).init().call();
   checkState(response.getExitStatus() == 0);
 }

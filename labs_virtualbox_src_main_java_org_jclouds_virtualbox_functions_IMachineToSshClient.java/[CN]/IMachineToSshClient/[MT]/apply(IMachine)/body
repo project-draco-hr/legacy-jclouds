@@ -4,7 +4,9 @@
   checkNotNull(networkAdapter);
   String clientIpAddress=null;
   String sshPort="22";
-  LoginCredentials loginCredentials=LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build();
+  String guestIdentity=VirtualBoxApiMetadata.defaultProperties().getProperty(VIRTUALBOX_GUEST_IDENTITY);
+  String guestCredential=VirtualBoxApiMetadata.defaultProperties().getProperty(VIRTUALBOX_GUEST_CREDENTIAL);
+  LoginCredentials loginCredentials=LoginCredentials.builder().user(guestIdentity).password(guestCredential).authenticateSudo(true).build();
   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.NAT)) {
     for (    String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
       Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
@@ -23,7 +25,7 @@
     clientIpAddress=getIpAddressFromBridgedNIC(networkAdapter,network);
   }
  else   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.HostOnly)) {
-    clientIpAddress=machineUtils.getIpAddressFromHostOnlyNIC(vm.getName());
+    clientIpAddress=machineUtils.getIpAddressFromFirstNIC(vm.getName());
   }
   checkNotNull(clientIpAddress,"clientIpAddress");
   client=sshClientFactory.create(HostAndPort.fromParts(clientIpAddress,Integer.parseInt(sshPort)),loginCredentials);

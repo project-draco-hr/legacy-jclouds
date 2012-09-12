@@ -4,7 +4,8 @@
     INetworkAdapter adapter=vm.getNetworkAdapter(slot);
     if (adapter != null) {
       if (adapter.getAttachmentType() == NetworkAttachmentType.NAT) {
-        publicIpAddresses.add(adapter.getNatDriver().getHostIP());
+        String hostIP=adapter.getNatDriver().getHostIP();
+        if (!hostIP.isEmpty())         publicIpAddresses.add(hostIP);
         for (        String nameProtocolnumberAddressInboudportGuestTargetport : adapter.getNatDriver().getRedirects()) {
           Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
           String protocolNumber=Iterables.get(stuff,1);
@@ -13,16 +14,17 @@
           String targetPort=Iterables.get(stuff,5);
           if ("1".equals(protocolNumber) && "22".equals(targetPort)) {
             int inPort=Integer.parseInt(inboundPort);
-            nodeMetadataBuilder.publicAddresses(ImmutableSet.of(hostAddress)).loginPort(inPort);
+            publicIpAddresses.add(hostAddress);
+            nodeMetadataBuilder.loginPort(inPort);
           }
         }
       }
  else       if (adapter.getAttachmentType() == NetworkAttachmentType.Bridged) {
-        String clientIpAddress=machineUtils.getIpAddressFromBridgedNIC(vm.getName());
+        String clientIpAddress=machineUtils.getIpAddressFromFirstNIC(vm.getName());
         publicIpAddresses.add(clientIpAddress);
       }
  else       if (adapter.getAttachmentType() == NetworkAttachmentType.HostOnly) {
-        String clientIpAddress=machineUtils.getIpAddressFromHostOnlyNIC(vm.getName());
+        String clientIpAddress=machineUtils.getIpAddressFromFirstNIC(vm.getName());
         publicIpAddresses.add(clientIpAddress);
       }
     }

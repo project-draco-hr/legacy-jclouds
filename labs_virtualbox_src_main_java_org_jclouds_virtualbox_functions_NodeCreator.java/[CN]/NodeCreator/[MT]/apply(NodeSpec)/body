@@ -1,7 +1,6 @@
 {
   checkNotNull(nodeSpec,"NodeSpec");
-  Master master=nodeSpec.getMaster();
-  checkNotNull(master,"Master");
+  Master master=checkNotNull(nodeSpec.getMaster(),"Master");
   if (master.getMachine().getCurrentSnapshot() != null) {
     ISession session;
     try {
@@ -16,23 +15,22 @@
   }
   String masterNameWithoutPrefix=master.getMachine().getName().replace(VIRTUALBOX_IMAGE_PREFIX,"");
   String cloneName=VIRTUALBOX_NODE_PREFIX + masterNameWithoutPrefix + VIRTUALBOX_NODE_NAME_SEPARATOR+ nodeSpec.getTag()+ VIRTUALBOX_NODE_NAME_SEPARATOR+ nodeSpec.getName();
-  int ram=512;
   if (nodeSpec.getTemplate() != null && nodeSpec.getTemplate().getHardware() != null && nodeSpec.getTemplate().getHardware().getRam() > 0) {
     ram=nodeSpec.getTemplate().getHardware().getRam();
   }
   VmSpec cloneVmSpec=VmSpec.builder().id(cloneName).name(cloneName).memoryMB(ram).cleanUpMode(CleanupMode.Full).forceOverwrite(true).build();
-  NetworkAdapter natAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).build();
-  NetworkInterfaceCard natIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(natAdapter).slot(1L).build();
-  NetworkAdapter hostOnlyAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.HostOnly).build();
-  String hostOnlyIfName=getHostOnlyIfOrCreate();
-  NetworkInterfaceCard hostOnlyIfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(hostOnlyAdapter).addHostInterfaceName(hostOnlyIfName).slot(0L).build();
-  NetworkSpec networkSpec=createNetworkSpecForHostOnlyNATNICs(natIfaceCard,hostOnlyIfaceCard);
+  NetworkSpec networkSpec=createNetworkSpecWhenVboxIsLocalhost();
+  Optional<NetworkInterfaceCard> optionalNatIfaceCard=Iterables.tryFind(networkSpec.getNetworkInterfaceCards(),new Predicate<NetworkInterfaceCard>(){
+    @Override public boolean apply(    NetworkInterfaceCard nic){
+      return nic.getNetworkAdapter().getNetworkAttachmentType().equals(NetworkAttachmentType.NAT);
+    }
+  }
+);
   CloneSpec cloneSpec=CloneSpec.builder().linked(true).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
   IMachine cloned=cloner.apply(cloneSpec);
   machineController.ensureMachineIsLaunched(cloneVmSpec.getVmName());
   NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
   machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
-  machineUtils.runScriptOnNode(partialNodeMetadata,new EnableNetworkInterface(natIfaceCard),RunScriptOptions.NONE);
-  NodeAndInitialCredentials<IMachine> nodeAndInitialCredentials=new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build());
-  return nodeAndInitialCredentials;
+  if (optionalNatIfaceCard.isPresent())   machineUtils.runScriptOnNode(partialNodeMetadata,new EnableNetworkInterface(optionalNatIfaceCard.get()),RunScriptOptions.NONE);
+  return new NodeAndInitialCredentials<IMachine>(cloned,cloneName,LoginCredentials.builder().user(guestIdentity).password(guestCredential).authenticateSudo(true).build());
 }

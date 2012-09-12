@@ -1,0 +1,18 @@
+{
+  String fileName=httpUrl.substring(httpUrl.lastIndexOf('/') + 1,httpUrl.length());
+  URI provider=providerSupplier.get();
+  if (!socketTester.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))) {
+    throw new RuntimeException("could not connect to virtualbox");
+  }
+  File file=new File(isosDir,fileName);
+  List<Statement> statements=Lists.newArrayList();
+  statements.add(Statements.saveHttpResponseTo(URI.create(httpUrl),isosDir,fileName));
+  StatementList statementList=new StatementList(statements);
+  NodeMetadata hostNodeMetadata=hardcodedHostToHostNodeMetadata.apply(host.get());
+  runScriptOnNodeFactory.create(hostNodeMetadata,statementList,runAsRoot(false)).init().call();
+  ExecResponse response=runScriptOnNodeFactory.create(hostNodeMetadata,Statements.exec("md5 " + isosDir + File.separator+ fileName),runAsRoot(false)).init().call();
+  if (md5 != null) {
+    if (!Iterables.get(Splitter.on("=").trimResults().split(response.getOutput()),1).equals(md5))     return null;
+  }
+  return file.getAbsolutePath();
+}
