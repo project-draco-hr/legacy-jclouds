@@ -3,8 +3,8 @@
     if (response.getPayload() != null) {
       closeClientButKeepContentStream(response);
       AWSError error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
-      if (error != null && ImmutableSet.of("RequestTimeout","OperationAborted","SignatureDoesNotMatch").contains(error.getCode())) {
-        return backoffLimitedRetryHandler.shouldRetryRequest(command,response);
+      if (error != null) {
+        return shouldRetryRequestOnError(command,response,error);
       }
     }
   }
