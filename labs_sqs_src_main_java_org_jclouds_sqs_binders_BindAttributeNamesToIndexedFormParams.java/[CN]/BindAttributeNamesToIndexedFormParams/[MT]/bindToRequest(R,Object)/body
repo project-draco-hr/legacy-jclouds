@@ -1,0 +1,10 @@
+{
+  Iterable<?> values=Iterable.class.cast(checkNotNull(input,"attributeNames"));
+  Builder<String,String> builder=ImmutableMultimap.builder();
+  int i=0;
+  for (  Object o : values) {
+    builder.put("AttributeName." + (i++ + 1),o.toString());
+  }
+  ImmutableMultimap<String,String> forms=builder.build();
+  return (R)(forms.size() == 0 ? request : request.toBuilder().replaceFormParams(forms).build());
+}

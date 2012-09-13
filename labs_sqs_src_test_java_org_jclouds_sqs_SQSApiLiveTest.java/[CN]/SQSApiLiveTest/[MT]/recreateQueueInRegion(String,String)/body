@@ -1,0 +1,10 @@
+{
+  Set<URI> result=api().listQueuesInRegion(region,queuePrefix(queueName));
+  if (result.size() >= 1) {
+    api().deleteQueue(Iterables.getLast(result));
+  }
+  URI queue=api().createQueueInRegion(region,queueName);
+  assertQueueInList(region,queue);
+  queues.add(queue);
+  return queueName;
+}

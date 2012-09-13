@@ -1,0 +1,5 @@
+{
+  HttpResponse createQueueResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/create_queue.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(createQueue,createQueueResponse);
+  assertEquals(apiWhenExist.createQueueInRegion(null,"queueName").toString(),new CreateQueueResponseTest().expected().toString());
+}

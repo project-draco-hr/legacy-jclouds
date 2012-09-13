@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/create_queue.xml");
+  URI expected=expected();
+  RegexQueueHandler handler=new RegexQueueHandler(new ReturnStringIf2xx());
+  URI result=handler.apply(HttpResponse.builder().statusCode(200).payload(is).build());
+  assertEquals(result.toString(),expected.toString());
+}

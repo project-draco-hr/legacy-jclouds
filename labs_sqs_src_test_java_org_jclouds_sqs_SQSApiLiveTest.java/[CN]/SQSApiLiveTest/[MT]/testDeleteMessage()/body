@@ -1,0 +1,7 @@
+{
+  for (  URI queue : queues) {
+    String receiptHandle=api().receiveMessage(queue,attribute("None").visibilityTimeout(0)).getReceiptHandle();
+    api().deleteMessage(queue,receiptHandle);
+    assertNoMessages(queue);
+  }
+}

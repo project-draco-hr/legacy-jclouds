@@ -1,0 +1,5 @@
+{
+  HttpResponse getQueueAttributesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/attributes.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(getQueueAttributes,getQueueAttributesResponse);
+  assertEquals(apiWhenExist.getQueueAttributes(URI.create("https://sqs.us-east-1.amazonaws.com/993194456877/adrian-sqs11/")).toString(),new GetQueueAttributesResponseTest().expected().toString());
+}

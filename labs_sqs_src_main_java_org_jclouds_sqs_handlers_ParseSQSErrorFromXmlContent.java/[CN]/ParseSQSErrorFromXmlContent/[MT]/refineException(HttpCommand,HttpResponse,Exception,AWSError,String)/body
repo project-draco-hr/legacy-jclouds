@@ -1,0 +1,8 @@
+{
+  String errorCode=(error != null && error.getCode() != null) ? error.getCode() : null;
+  if (resourceNotFoundCodes.contains(errorCode))   exception=new ResourceNotFoundException(message,exception);
+ else   if (illegalStateCodes.contains(errorCode))   exception=new IllegalStateException(message,exception);
+ else   if (illegalArgumentCodes.contains(errorCode))   exception=new IllegalArgumentException(message,exception);
+ else   exception=super.refineException(command,response,exception,error,message);
+  return exception;
+}
