@@ -1,5 +1,5 @@
 {
   HttpResponse receiveMessagesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/messages.xml","text/xml")).build();
   SQSApi apiWhenExist=requestSendsResponse(receiveMessages,receiveMessagesResponse);
-  assertEquals(apiWhenExist.receiveMessages(URI.create("https://sqs.us-east-1.amazonaws.com/993194456877/adrian-sqs11/"),10).toString(),new ReceiveMessageResponseTest().expected().toString());
+  assertEquals(apiWhenExist.getMessageApiForQueue(queue).receive(10).toString(),new ReceiveMessageResponseTest().expected().toString());
 }

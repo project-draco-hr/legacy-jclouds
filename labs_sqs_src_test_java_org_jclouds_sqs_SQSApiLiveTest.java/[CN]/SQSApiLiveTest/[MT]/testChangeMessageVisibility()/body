@@ -1,8 +1,9 @@
 {
   for (  URI queue : queues) {
-    receiptHandle=api().receiveMessage(queue,attribute("None").visibilityTimeout(5)).getReceiptHandle();
-    assertNull(api().receiveMessage(queue));
-    api().changeMessageVisibility(queue,receiptHandle,0);
-    assertEquals(api().receiveMessage(queue,attribute("All").visibilityTimeout(0)).getMD5(),md5);
+    MessageApi api=api().getMessageApiForQueue(queue);
+    receiptHandle=api.receive(attribute("None").visibilityTimeout(5)).getReceiptHandle();
+    assertNull(api.receive());
+    api.changeVisibility(receiptHandle,0);
+    assertEquals(api.receive(attribute("All").visibilityTimeout(0)).getMD5(),md5);
   }
 }

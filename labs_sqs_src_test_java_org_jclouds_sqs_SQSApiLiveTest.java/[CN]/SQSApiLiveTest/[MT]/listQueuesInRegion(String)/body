@@ -1,8 +1,8 @@
 {
-  SortedSet<URI> allResults=Sets.newTreeSet(api().listQueuesInRegion(region));
+  Set<URI> allResults=api().getQueueApiForRegion(region).list();
   assertNotNull(allResults);
   if (allResults.size() >= 1) {
-    URI queue=allResults.last();
+    URI queue=getLast(allResults);
     assertQueueInList(region,queue);
   }
 }
