@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_instances_pending.xml");
+  Set<Reservation<AWSRunningInstance>> expected=expected();
+  AWSDescribeInstancesResponseHandler handler=injector.getInstance(AWSDescribeInstancesResponseHandler.class);
+  Set<Reservation<? extends RunningInstance>> result=factory.create(handler).parse(is);
+  assertEquals(result.toString(),expected.toString());
+}
