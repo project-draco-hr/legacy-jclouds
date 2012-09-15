@@ -1,0 +1,10 @@
+{
+  List<Ip<?,?>> nics=env.virtualMachine.listAttachedNics();
+  nics.add(privateIp);
+  AsyncTask task=env.virtualMachine.setNics(nics);
+  assertNull(task);
+  nics=env.virtualMachine.listAttachedNics();
+  assertEquals(nics.size(),2);
+  assertEquals(nics.get(0).getId(),publicIpCloud.getId());
+  assertEquals(nics.get(1).getId(),privateIp.getId());
+}

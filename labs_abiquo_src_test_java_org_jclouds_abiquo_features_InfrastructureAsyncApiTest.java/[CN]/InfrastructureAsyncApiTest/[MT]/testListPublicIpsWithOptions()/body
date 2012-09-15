@@ -1,0 +1,12 @@
+{
+  IpOptions options=IpOptions.builder().startWith(10).build();
+  Method method=InfrastructureAsyncApi.class.getMethod("listPublicIps",VLANNetworkDto.class,IpOptions.class);
+  GeneratedHttpRequest request=processor.createRequest(method,NetworkResources.publicNetworkPut(),options);
+  assertRequestLineEquals(request,"GET http://localhost/api/admin/datacenters/1/network/1/ips?startwith=10 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + PublicIpsDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

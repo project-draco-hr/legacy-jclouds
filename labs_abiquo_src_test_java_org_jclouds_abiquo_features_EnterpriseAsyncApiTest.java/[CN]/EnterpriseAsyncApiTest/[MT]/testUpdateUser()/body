@@ -1,0 +1,11 @@
+{
+  Method method=EnterpriseAsyncApi.class.getMethod("updateUser",UserDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,EnterpriseResources.userPut());
+  assertRequestLineEquals(request,"PUT http://localhost/api/admin/enterprises/1/users/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + UserDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(EnterpriseResources.userPutPayload()),UserDto.class,UserDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

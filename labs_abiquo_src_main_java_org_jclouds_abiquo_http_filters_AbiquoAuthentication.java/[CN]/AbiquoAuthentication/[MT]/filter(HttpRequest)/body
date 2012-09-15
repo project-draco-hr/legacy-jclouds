@@ -1,0 +1,9 @@
+{
+  try {
+    String header=credentialIsToken ? tokenAuth(credential) : basicAuth(identity,credential);
+    return request.toBuilder().replaceHeader(credentialIsToken ? HttpHeaders.COOKIE : HttpHeaders.AUTHORIZATION,header).build();
+  }
+ catch (  UnsupportedEncodingException ex) {
+    throw new HttpException(ex);
+  }
+}

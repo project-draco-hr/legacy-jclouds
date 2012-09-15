@@ -1,0 +1,11 @@
+{
+  RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
+  VLANNetworkDto dto=new VLANNetworkDto();
+  dto.setAddress("10.0.0.0");
+  dto.setMask(24);
+  dto.setGateway("10.0.0.1");
+  dto.setType(NetworkType.INTERNAL);
+  PrivateNetwork gateway=wrap(context,PrivateNetwork.class,dto);
+  TemplateOptions options=new AbiquoTemplateOptions().gatewayNetwork(gateway);
+  assertEquals(options.as(AbiquoTemplateOptions.class).getGatewayNetwork(),gateway);
+}

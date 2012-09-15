@@ -1,0 +1,11 @@
+{
+  Method method=ConfigAsyncApi.class.getMethod("updateCategory",CategoryDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,ConfigResources.categoryPut());
+  assertRequestLineEquals(request,"PUT http://localhost/api/config/categories/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + CategoryDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(ConfigResources.categoryPutPayload()),CategoryDto.class,CategoryDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

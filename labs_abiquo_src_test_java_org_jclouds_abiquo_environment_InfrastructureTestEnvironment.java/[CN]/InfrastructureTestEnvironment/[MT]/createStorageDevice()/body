@@ -1,0 +1,11 @@
+{
+  String ip=Config.get("abiquo.storage.address");
+  String type=Config.get("abiquo.storage.type");
+  String user=Config.get("abiquo.storage.user");
+  String pass=Config.get("abiquo.storage.pass");
+  List<StorageDeviceMetadata> devices=datacenter.listSupportedStorageDevices();
+  StorageDeviceMetadata metadata=Iterables.find(devices,StorageDeviceMetadataPredicates.type(type));
+  storageDevice=StorageDevice.builder(context.getApiContext(),datacenter).name(PREFIX + "Storage Device").type(type).managementIp(ip).managementPort(metadata.getDefaultManagementPort()).iscsiIp(ip).iscsiPort(metadata.getDefaultIscsiPort()).username(user).password(pass).build();
+  storageDevice.save();
+  assertNotNull(storageDevice.getId());
+}

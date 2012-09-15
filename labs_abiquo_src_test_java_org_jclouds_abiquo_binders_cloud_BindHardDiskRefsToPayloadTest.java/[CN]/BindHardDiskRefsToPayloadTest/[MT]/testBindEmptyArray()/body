@@ -1,0 +1,6 @@
+{
+  BindHardDiskRefsToPayload binder=new BindHardDiskRefsToPayload(new JAXBParser("false"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
+  request=binder.bindToRequest(request,new DiskManagementDto[]{});
+  assertPayloadEquals(request.getPayload(),withHeader("<links/>"),LinksDto.class);
+}

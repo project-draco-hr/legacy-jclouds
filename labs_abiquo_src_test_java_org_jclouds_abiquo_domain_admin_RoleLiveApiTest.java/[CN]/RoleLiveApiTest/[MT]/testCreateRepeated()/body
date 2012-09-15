@@ -1,0 +1,10 @@
+{
+  Role repeated=Role.Builder.fromRole(env.role).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create roles with the same name");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"ROLE-7");
+  }
+}

@@ -1,0 +1,10 @@
+{
+  PublicIp publicIp=env.virtualDatacenter.listAvailablePublicIps().get(0);
+  assertNotNull(publicIp);
+  env.virtualDatacenter.purchasePublicIp(publicIp);
+  PublicIp apiIp=env.virtualDatacenter.findPurchasedPublicIp(IpPredicates.<PublicIp>address(publicIp.getIp()));
+  assertNotNull(apiIp);
+  env.virtualDatacenter.releaseePublicIp(apiIp);
+  apiIp=env.virtualDatacenter.findPurchasedPublicIp(IpPredicates.<PublicIp>address(publicIp.getIp()));
+  assertNull(apiIp);
+}

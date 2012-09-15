@@ -1,0 +1,12 @@
+{
+  Method method=CloudAsyncApi.class.getMethod("setDefaultNetwork",VirtualDatacenterDto.class,VLANNetworkDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,CloudResources.virtualDatacenterPut(),NetworkResources.privateNetworkPut());
+  RESTLink netLink=NetworkResources.privateNetworkPut().getEditLink();
+  assertRequestLineEquals(request,"PUT http://localhost/api/cloud/virtualdatacenters/1/action/defaultvlan HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,withHeader("<links><link href=\"" + netLink.getHref() + "\" rel=\"internalnetwork\"/></links>"),LinksDto.class,LinksDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

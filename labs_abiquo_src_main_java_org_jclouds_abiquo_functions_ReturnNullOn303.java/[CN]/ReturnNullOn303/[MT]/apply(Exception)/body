@@ -1,0 +1,11 @@
+{
+  Throwable exception=Iterables.find(Throwables.getCausalChain(from),hasResponse(from),null);
+  if (exception != null) {
+    HttpResponseException responseException=(HttpResponseException)exception;
+    HttpResponse response=responseException.getResponse();
+    if (response != null && response.getStatusCode() == Status.SEE_OTHER.getStatusCode()) {
+      return null;
+    }
+  }
+  throw Throwables.propagate(from);
+}

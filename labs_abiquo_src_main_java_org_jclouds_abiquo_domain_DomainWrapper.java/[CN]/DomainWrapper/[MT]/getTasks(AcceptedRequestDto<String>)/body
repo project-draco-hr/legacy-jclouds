@@ -1,0 +1,11 @@
+{
+  List<AsyncTask> tasks=new ArrayList<AsyncTask>();
+  for (  RESTLink link : acceptedRequest.getLinks()) {
+    TaskDto task=context.getApi().getTaskApi().getTask(link);
+    if (task != null) {
+      tasks.add(wrap(context,AsyncTask.class,task));
+    }
+  }
+  AsyncTask[] taskArr=new AsyncTask[tasks.size()];
+  return tasks.toArray(taskArr);
+}

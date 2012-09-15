@@ -1,0 +1,11 @@
+{
+  Method method=AdminAsyncApi.class.getMethod("updateRole",RoleDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,AdminResources.rolePut());
+  assertRequestLineEquals(request,"PUT http://localhost/api/admin/roles/1 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + RoleDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(AdminResources.rolePutPayload()),RoleDto.class,RoleDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

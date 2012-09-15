@@ -1,0 +1,7 @@
+{
+  RESTLink link=checkNotNull(target.searchLink(ParentLinkName.VIRTUAL_APPLIANCE),ValidationErrors.MISSING_REQUIRED_LINK + " " + ParentLinkName.VIRTUAL_APPLIANCE);
+  ExtendedUtils utils=(ExtendedUtils)context.getUtils();
+  HttpResponse response=utils.getAbiquoHttpClient().get(link);
+  ParseXMLWithJAXB<VirtualApplianceDto> parser=new ParseXMLWithJAXB<VirtualApplianceDto>(utils.getXml(),TypeLiteral.get(VirtualApplianceDto.class));
+  return wrap(context,VirtualAppliance.class,parser.apply(response));
+}

@@ -1,0 +1,11 @@
+{
+  Method method=InfrastructureAsyncApi.class.getMethod("createStorageDevice",DatacenterDto.class,StorageDeviceDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,InfrastructureResources.datacenterPut(),InfrastructureResources.storageDevicePost());
+  assertRequestLineEquals(request,"POST http://localhost/api/admin/datacenters/1/storage/devices HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + StorageDeviceDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(InfrastructureResources.storageDevicePostPayload()),StorageDeviceDto.class,StorageDeviceDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

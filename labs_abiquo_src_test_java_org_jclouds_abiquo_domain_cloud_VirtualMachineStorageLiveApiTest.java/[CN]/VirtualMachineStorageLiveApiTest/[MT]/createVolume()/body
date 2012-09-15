@@ -1,0 +1,8 @@
+{
+  Tier tier=env.virtualDatacenter.findStorageTier(TierPredicates.name(env.tier.getName()));
+  Volume volume=Volume.builder(env.context.getApiContext(),env.virtualDatacenter,tier).name(PREFIX + "Hawaian volume").sizeInMb(32).build();
+  volume.save();
+  assertNotNull(volume.getId());
+  assertNotNull(env.virtualDatacenter.getVolume(volume.getId()));
+  return volume;
+}

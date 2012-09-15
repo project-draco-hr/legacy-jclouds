@@ -1,0 +1,15 @@
+{
+  if (uri == null) {
+    checkNotNull(ip,ValidationErrors.MISSING_REQUIRED_FIELD + "ip");
+    checkNotNull(type,ValidationErrors.MISSING_REQUIRED_FIELD + "type");
+    uri=generateUri(ip,port == null ? type.getDefaultPort() : port,type);
+  }
+  RemoteServiceDto dto=new RemoteServiceDto();
+  dto.setId(id);
+  dto.setType(type);
+  dto.setUri(uri);
+  dto.setStatus(status);
+  RemoteService remoteservice=new RemoteService(context,dto);
+  remoteservice.datacenter=datacenter;
+  return remoteservice;
+}

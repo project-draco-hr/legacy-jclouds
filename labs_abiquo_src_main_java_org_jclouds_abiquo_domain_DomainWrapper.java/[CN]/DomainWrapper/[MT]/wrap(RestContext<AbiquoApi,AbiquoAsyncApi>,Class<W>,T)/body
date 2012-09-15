@@ -1,0 +1,15 @@
+{
+  if (target == null) {
+    return null;
+  }
+  try {
+    Constructor<W> cons=wrapperClass.getDeclaredConstructor(RestContext.class,target.getClass());
+    if (!cons.isAccessible()) {
+      cons.setAccessible(true);
+    }
+    return cons.newInstance(context,target);
+  }
+ catch (  Exception ex) {
+    throw new WrapperException(wrapperClass,target,ex);
+  }
+}

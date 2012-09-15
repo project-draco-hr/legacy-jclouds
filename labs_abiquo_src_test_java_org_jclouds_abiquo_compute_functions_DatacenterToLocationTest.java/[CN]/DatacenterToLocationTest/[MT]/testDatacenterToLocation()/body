@@ -1,0 +1,9 @@
+{
+  RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
+  DatacenterToLocation function=new DatacenterToLocation();
+  Datacenter datacenter=Datacenter.builder(context).name("dc").location("New York").build();
+  datacenter.unwrap().setId(5);
+  Location location=function.apply(datacenter);
+  assertEquals(location.getId(),"5");
+  assertEquals(location.getScope(),LocationScope.ZONE);
+}

@@ -1,0 +1,12 @@
+{
+  BaseMonitoringService service=monitoringService();
+  Object monitoredObject=new Object();
+  CountingHandler handler=new CountingHandler(monitoredObject);
+  service.register(handler);
+  service.monitor(TEST_MONITOR_POLLING + 10L,TimeUnit.MILLISECONDS,new MockInfiniteMonitor(),monitoredObject);
+  handler.lock();
+  service.unregister(handler);
+  assertEquals(handler.numCompletes,0);
+  assertEquals(handler.numFailures,0);
+  assertEquals(handler.numTimeouts,1);
+}

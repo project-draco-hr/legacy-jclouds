@@ -1,0 +1,24 @@
+{
+  VirtualAppliance vapp=EasyMock.createMock(VirtualAppliance.class);
+  VirtualMachine mockVm=mockVirtualMachine(vapp);
+  NodeMetadata node=function.apply(mockVm);
+  verify(mockVm);
+  assertEquals(node.getId(),vm.getId().toString());
+  assertEquals(node.getUri(),URI.create("http://foo/bar"));
+  assertEquals(node.getName(),vm.getNodeName());
+  assertEquals(node.getGroup(),"VAPP");
+  assertEquals(node.getLocation().getId(),"1");
+  assertEquals(node.getLocation().getDescription(),"Mock Location");
+  assertEquals(node.getImageId(),"1");
+  assertEquals(node.getHardware().getId(),"1");
+  assertEquals(node.getHardware().getHypervisor(),HypervisorType.VMX_04.name());
+  assertEquals(node.getHardware().getId(),"1");
+  assertEquals(node.getHardware().getRam(),vm.getRam());
+  assertEquals(node.getHardware().getProcessors().get(0).getCores(),(double)vm.getCpu());
+  assertEquals(node.getLoginPort(),vm.getVdrpPort());
+  assertEquals(node.getPrivateAddresses().size(),1);
+  assertEquals(node.getPublicAddresses().size(),2);
+  assertEquals(Iterables.get(node.getPrivateAddresses(),0),privNic.getIp());
+  assertEquals(Iterables.get(node.getPublicAddresses(),0),pubNic.getIp());
+  assertEquals(Iterables.get(node.getPublicAddresses(),1),extNic.getIp());
+}

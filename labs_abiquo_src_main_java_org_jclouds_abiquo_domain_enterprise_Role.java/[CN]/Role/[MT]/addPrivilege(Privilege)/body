@@ -1,0 +1,10 @@
+{
+  checkNotNull(privilege,ValidationErrors.NULL_RESOURCE + Privilege.class);
+  checkNotNull(privilege.getId(),ValidationErrors.MISSING_REQUIRED_FIELD + " id in " + Privilege.class);
+  RESTLink link=privilege.unwrap().searchLink("self");
+  if (link == null) {
+    link=privilege.unwrap().searchLink("privilege");
+  }
+  checkNotNull(link,ValidationErrors.MISSING_REQUIRED_LINK);
+  target.addLink(new RESTLink("privilege" + privilege.getId(),link.getHref()));
+}

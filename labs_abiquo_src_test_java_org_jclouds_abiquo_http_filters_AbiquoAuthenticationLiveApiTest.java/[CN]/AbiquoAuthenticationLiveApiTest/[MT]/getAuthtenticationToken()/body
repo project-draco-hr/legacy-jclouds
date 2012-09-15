@@ -1,0 +1,20 @@
+{
+  String token=null;
+  AbiquoContext context=ContextBuilder.newBuilder(new AbiquoApiMetadata()).endpoint(endpoint).credentials(identity,credential).modules(ImmutableSet.<Module>of(new SLF4JLoggingModule())).build(AbiquoContext.class);
+  try {
+    HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint)).build();
+    String auth=AbiquoAuthentication.basicAuth(identity,credential);
+    request=request.toBuilder().replaceHeader(HttpHeaders.AUTHORIZATION,auth).build();
+    HttpResponse response=context.utils().http().invoke(request);
+    assertEquals(response.getStatusCode(),200);
+    token=readAuthenticationToken(response);
+    assertNotNull(token);
+    releasePayload(response);
+  }
+  finally {
+    if (context != null) {
+      context.close();
+    }
+  }
+  return token;
+}

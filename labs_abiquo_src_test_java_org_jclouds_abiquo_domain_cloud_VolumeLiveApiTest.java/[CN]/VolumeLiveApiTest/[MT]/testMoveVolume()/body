@@ -1,0 +1,13 @@
+{
+  PrivateNetwork network=PrivateNetwork.builder(env.context.getApiContext()).name("DefaultNetwork").gateway("192.168.1.1").address("192.168.1.0").mask(24).build();
+  VirtualDatacenter newVdc=VirtualDatacenter.builder(env.context.getApiContext(),env.datacenter,env.enterprise).name("New VDC").network(network).hypervisorType(env.machine.getType()).build();
+  newVdc.save();
+  assertNotNull(newVdc.getId());
+  Volume volume=env.virtualDatacenter.findVolume(VolumePredicates.name("Hawaian volume updated"));
+  assertNotNull(volume);
+  volume.moveTo(newVdc);
+  assertTrue(volume.unwrap().getEditLink().getHref().startsWith(newVdc.unwrap().getEditLink().getHref()));
+  volume.moveTo(env.virtualDatacenter);
+  assertTrue(volume.unwrap().getEditLink().getHref().startsWith(env.virtualDatacenter.unwrap().getEditLink().getHref()));
+  newVdc.delete();
+}

@@ -1,0 +1,22 @@
+{
+  vm=new VirtualMachineWithNodeExtendedDto();
+  vm.setNodeName("VM");
+  vm.setName("Internal name");
+  vm.setId(5);
+  vm.setVdrpPort(22);
+  vm.setRam(2048);
+  vm.setCpu(2);
+  vm.setState(VirtualMachineState.ON);
+  vm.addLink(new RESTLink("edit","http://foo/bar"));
+  privNic=new PrivateIpDto();
+  privNic.setIp("192.168.1.2");
+  privNic.setMac("2a:6e:40:69:84:e0");
+  pubNic=new PublicIpDto();
+  pubNic.setIp("80.80.80.80");
+  pubNic.setMac("2a:6e:40:69:84:e1");
+  extNic=new ExternalIpDto();
+  extNic.setIp("10.10.10.10");
+  extNic.setMac("2a:6e:40:69:84:e2");
+  hardware=new HardwareBuilder().ids("1").build();
+  function=new VirtualMachineToNodeMetadata(templateToImage(),templateToHardware(),stateToNodeState(),datacenterToLocation());
+}

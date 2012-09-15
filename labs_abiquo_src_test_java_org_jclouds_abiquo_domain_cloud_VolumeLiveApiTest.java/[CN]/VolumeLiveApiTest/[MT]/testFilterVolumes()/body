@@ -1,0 +1,8 @@
+{
+  VolumeOptions validOptions=VolumeOptions.builder().has("hawa").build();
+  VolumeOptions invalidOptions=VolumeOptions.builder().has("cacatua").build();
+  List<VolumeManagementDto> volumes=env.cloudApi.listVolumes(env.virtualDatacenter.unwrap(),validOptions).getCollection();
+  assertEquals(volumes.size(),1);
+  volumes=env.cloudApi.listVolumes(env.virtualDatacenter.unwrap(),invalidOptions).getCollection();
+  assertEquals(volumes.size(),0);
+}

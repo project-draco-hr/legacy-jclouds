@@ -1,0 +1,16 @@
+{
+  HardwareBuilder builder=new HardwareBuilder();
+  builder.ids(template.getId().toString());
+  builder.uri(template.getURI());
+  builder.name(template.getName());
+  builder.processor(new Processor(template.getCpuRequired(),DEFAULT_CORE_SPEED));
+  builder.ram(template.getRamRequired());
+  builder.supportsImage(ImagePredicates.idEquals(template.getId().toString()));
+  VolumeBuilder volumeBuilder=new VolumeBuilder();
+  volumeBuilder.bootDevice(true);
+  volumeBuilder.size(toGb(template.getHdRequired()));
+  volumeBuilder.type(Volume.Type.LOCAL);
+  volumeBuilder.durable(false);
+  builder.volume(volumeBuilder.build());
+  return builder.build();
+}

@@ -1,0 +1,6 @@
+{
+  BindIpRefsToPayload binder=new BindIpRefsToPayload(new JAXBParser("false"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
+  request=binder.bindToRequest(request,new AbstractIpDto[]{});
+  assertPayloadEquals(request.getPayload(),withHeader("<links/>"),LinksDto.class);
+}

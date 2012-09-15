@@ -1,0 +1,8 @@
+{
+  VLANNetworkDto network=NetworkResources.unmanagedNetworkPut();
+  RESTLink ipsLink=network.searchLink("ips");
+  BindUnmanagedIpRefToPayload binder=new BindUnmanagedIpRefToPayload(new JAXBParser("false"));
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
+  request=binder.bindToRequest(request,network);
+  assertPayloadEquals(request.getPayload(),withHeader("<links><link href=\"" + ipsLink.getHref() + "\" rel=\"unmanagedip\"/></links>"),LinksDto.class);
+}
