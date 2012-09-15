@@ -1,0 +1,5 @@
+{
+  HttpResponse sendMessageResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/send_message_batch.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(sendMessageMap,sendMessageResponse);
+  assertEquals(apiWhenExist.getMessageApiForQueue(queue).send(ImmutableMap.of("foo1","payload1","foo2","payload2")).toString(),new SendMessageBatchResponseTest().expected().toString());
+}

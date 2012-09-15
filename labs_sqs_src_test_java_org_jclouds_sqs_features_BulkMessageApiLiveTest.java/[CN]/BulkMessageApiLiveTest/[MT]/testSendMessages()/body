@@ -1,0 +1,10 @@
+{
+  for (  URI queue : queues) {
+    BatchResult<? extends MessageIdAndMD5> acks=api().getMessageApiForQueue(queue).send(idPayload);
+    assertEquals(acks.size(),idPayload.size(),"error sending " + acks);
+    assertEquals(acks.keySet(),idPayload.keySet());
+    for (    Entry<String,? extends MessageIdAndMD5> entry : acks.entrySet()) {
+      assertEquals(entry.getValue().getMD5(),Hashing.md5().hashString(idPayload.get(entry.getKey()),Charsets.UTF_8),"bad md5 for: " + entry);
+    }
+  }
+}
