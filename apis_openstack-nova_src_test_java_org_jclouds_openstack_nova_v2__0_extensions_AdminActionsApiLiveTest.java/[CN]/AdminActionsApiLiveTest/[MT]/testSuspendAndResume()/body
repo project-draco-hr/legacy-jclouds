@@ -1,27 +1,26 @@
 {
-  if (apiOption.isPresent()) {
-    ServerAdminApi api=apiOption.get();
-    try {
-      api.resume(testServerId);
-      fail("Resumed an active server!");
-    }
- catch (    HttpResponseException e) {
-    }
-    assertTrue(api.suspend(testServerId));
-    blockUntilServerInState(testServerId,serverApi,Status.SUSPENDED);
-    try {
-      api.suspend(testServerId);
-      fail("Suspended an already suspended server!");
-    }
- catch (    HttpResponseException e) {
-    }
-    assertTrue(api.resume(testServerId));
-    blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
-    try {
-      api.resume(testServerId);
-      fail("Resumed an already resumed server!");
-    }
- catch (    HttpResponseException e) {
-    }
+  skipOnAdminExtensionAbsent();
+  ServerAdminApi api=apiOption.get();
+  try {
+    api.resume(testServerId);
+    fail("Resumed an active server!");
+  }
+ catch (  HttpResponseException e) {
+  }
+  assertTrue(api.suspend(testServerId));
+  blockUntilServerInState(testServerId,serverApi,Status.SUSPENDED);
+  try {
+    api.suspend(testServerId);
+    fail("Suspended an already suspended server!");
+  }
+ catch (  HttpResponseException e) {
+  }
+  assertTrue(api.resume(testServerId));
+  blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
+  try {
+    api.resume(testServerId);
+    fail("Resumed an already resumed server!");
+  }
+ catch (  HttpResponseException e) {
   }
 }
