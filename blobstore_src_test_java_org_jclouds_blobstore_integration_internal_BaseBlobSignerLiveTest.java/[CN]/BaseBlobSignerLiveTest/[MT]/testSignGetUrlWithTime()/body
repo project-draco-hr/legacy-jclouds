@@ -1,0 +1,26 @@
+{
+  String name="hello";
+  String text="fooooooooooooooooooooooo";
+  Blob blob=view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
+  String container=getContainerName();
+  try {
+    view.getBlobStore().putBlob(container,blob);
+    assertConsistencyAwareContainerSize(container,1);
+    HttpRequest request=view.getSigner().signGetBlob(container,name,3);
+    assertEquals(request.getFilters().size(),0);
+    assertEquals(Strings2.toString(view.utils().http().invoke(request).getPayload()),text);
+    TimeUnit.SECONDS.sleep(4);
+    try {
+      Strings2.toString(view.utils().http().invoke(request).getPayload());
+      fail("Temporary URL did not expire as expected");
+    }
+ catch (    AuthorizationException expected) {
+    }
+  }
+ catch (  UnsupportedOperationException ignore) {
+    throw new SkipException("signGetUrl with a time limit is not supported on " + provider);
+  }
+ finally {
+    returnContainer(container);
+  }
+}

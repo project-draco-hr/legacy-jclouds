@@ -1,9 +1,0 @@
-{
-  HttpRequest.Builder builder=request.toBuilder();
-  builder.filters(filter(request.getFilters(),instanceOf(AuthenticateRequest.class)));
-  String key=temporaryUrlKeyProvider.get();
-  long expiresInSeconds=unixEpochTimestampProvider.get() + timeInSeconds;
-  builder.addQueryParam("temp_url_sig",createSignature(key,createStringToSign(request.getMethod().toUpperCase(),request,expiresInSeconds)));
-  builder.addQueryParam("temp_url_expires","" + expiresInSeconds);
-  return builder.build();
-}
