@@ -21,7 +21,9 @@
       formParameters.put("MetricData.member." + metricDatumIndex + ".Timestamp",dateService.iso8601SecondsDateFormat(metricDatum.getTimestamp().get()));
     }
     formParameters.put("MetricData.member." + metricDatumIndex + ".Unit",String.valueOf(metricDatum.getUnit()));
-    formParameters.put("MetricData.member." + metricDatumIndex + ".Value",String.valueOf(metricDatum.getValue()));
+    if (metricDatum.getValue().isPresent()) {
+      formParameters.put("MetricData.member." + metricDatumIndex + ".Value",String.valueOf(metricDatum.getValue().get()));
+    }
     metricDatumIndex++;
   }
   return (R)request.toBuilder().replaceFormParams(formParameters.build()).build();
