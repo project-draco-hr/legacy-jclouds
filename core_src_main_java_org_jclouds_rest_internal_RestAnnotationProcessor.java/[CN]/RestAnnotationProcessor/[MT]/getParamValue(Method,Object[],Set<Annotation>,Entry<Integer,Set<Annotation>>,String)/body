@@ -1,0 +1,10 @@
+{
+  Object arg=args[entry.getKey()];
+  if (arg == null && containsNullable(method.getParameterAnnotations()[entry.getKey()]))   return Optional.absent();
+  checkNotNull(arg,"param{%s} for method %s.%s",paramKey,method.getDeclaringClass().getSimpleName(),method.getName());
+  if (extractors != null && extractors.size() > 0) {
+    ParamParser extractor=(ParamParser)extractors.iterator().next();
+    return Optional.of(injector.getInstance(extractor.value()).apply(arg));
+  }
+  return Optional.of(arg);
+}

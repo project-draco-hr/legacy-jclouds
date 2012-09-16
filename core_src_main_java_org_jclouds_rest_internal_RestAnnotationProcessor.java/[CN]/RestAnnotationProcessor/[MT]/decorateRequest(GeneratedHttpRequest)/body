@@ -38,7 +38,7 @@
       if (request.getJavaMethod().isVarArgs() && entry.getKey() + 1 == request.getJavaMethod().getParameterTypes().length)       continue OUTER;
       Annotation[] annotations=request.getJavaMethod().getParameterAnnotations()[entry.getKey()];
       for (      Annotation a : annotations) {
-        if (Nullable.class.isAssignableFrom(a.annotationType()))         continue OUTER;
+        if (NULLABLE.apply(a))         continue OUTER;
       }
       Preconditions.checkNotNull(null,request.getJavaMethod().getName() + " parameter " + (entry.getKey() + 1));
     }
