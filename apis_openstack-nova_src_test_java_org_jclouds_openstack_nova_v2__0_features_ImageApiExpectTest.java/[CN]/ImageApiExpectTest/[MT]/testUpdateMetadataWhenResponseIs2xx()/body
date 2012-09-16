@@ -1,0 +1,8 @@
+{
+  String imageId="52415800-8b69-11e0-9b19-734f5736d2a2";
+  ImmutableMap<String,String> metadata=new ImmutableMap.Builder<String,String>().put("Server Label","Web Head 2").put("Server Description","Simple Server").build();
+  HttpRequest setMetadata=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + imageId + "/metadata").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}","application/json")).build();
+  HttpResponse setMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/metadata_updated.json")).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,setMetadata,setMetadataResponse);
+  assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").updateMetadata(imageId,metadata).toString(),new ParseMetadataUpdateTest().expected().toString());
+}

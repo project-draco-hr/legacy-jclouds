@@ -1,0 +1,8 @@
+{
+  String imageId="52415800-8b69-11e0-9b19-734f5736d2a2";
+  String key="Image%20Version";
+  HttpRequest setMetadataItem=HttpRequest.builder().method("PUT").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/"+ key).addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse setMetadataItemResponse=HttpResponse.builder().statusCode(404).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,setMetadataItem,setMetadataItemResponse);
+  assertNull(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").setMetadataItem(imageId,key,"2.5"));
+}
