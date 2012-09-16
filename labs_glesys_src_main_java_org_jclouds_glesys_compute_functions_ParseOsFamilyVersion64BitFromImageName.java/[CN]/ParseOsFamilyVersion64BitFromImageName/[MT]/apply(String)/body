@@ -15,18 +15,17 @@
   Matcher osFamilyVersionMatcher=OSFAMILY_VERSION.matcher(input);
   if (osFamilyVersionMatcher.find()) {
     OsFamily fam=OsFamily.fromValue(osFamilyVersionMatcher.group(1).toLowerCase());
-switch (fam) {
-case UNRECOGNIZED:
+    if (fam == OsFamily.UNRECOGNIZED) {
       return new OsFamilyVersion64Bit(OsFamily.UNRECOGNIZED,version,is64Bit);
+    }
+    return new OsFamilyVersion64Bit(fam,ComputeServiceUtils.parseVersionOrReturnEmptyString(fam,osFamilyVersionMatcher.group(2),osVersionMap),is64Bit);
   }
-  return new OsFamilyVersion64Bit(fam,ComputeServiceUtils.parseVersionOrReturnEmptyString(fam,osFamilyVersionMatcher.group(2),osVersionMap),is64Bit);
-}
  else {
-  Matcher osFamilyMatcher=OSFAMILY.matcher(input);
-  OsFamily fam=OsFamily.UNRECOGNIZED;
-  if (osFamilyMatcher.find()) {
-    fam=OsFamily.fromValue(osFamilyMatcher.group(1).toLowerCase());
+    Matcher osFamilyMatcher=OSFAMILY.matcher(input);
+    OsFamily fam=OsFamily.UNRECOGNIZED;
+    if (osFamilyMatcher.find()) {
+      fam=OsFamily.fromValue(osFamilyMatcher.group(1).toLowerCase());
+    }
+    return new OsFamilyVersion64Bit(fam,version,is64Bit);
   }
-  return new OsFamilyVersion64Bit(fam,version,is64Bit);
-}
 }
