@@ -4,7 +4,7 @@
   api=gleContext.getApi().getDomainApi();
   domainCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
     public boolean apply(    Integer value){
-      return api.listDomains().size() == value;
+      return api.list().size() == value;
     }
   }
 ,30,1,TimeUnit.SECONDS);
@@ -15,7 +15,7 @@
   }
 ,30,1,TimeUnit.SECONDS);
   try {
-    api.deleteDomain(testDomain);
+    api.delete(testDomain);
   }
  catch (  Exception ex) {
   }

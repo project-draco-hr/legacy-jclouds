@@ -1,5 +1,5 @@
 {
   ArchiveApi api=requestSendsResponse(HttpRequest.builder().method("POST").endpoint("https://api.glesys.com/archive/list/format/json").addHeader("Accept","application/json").addHeader("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/archive_list.json")).build()).getArchiveApi();
-  List<Archive> expected=ImmutableList.of(Archive.builder().username("xxxxx_test1").freeSize("20 GB").totalSize("30 GB").locked(false).build());
-  assertEquals(api.listArchives(),expected);
+  Set<Archive> expected=ImmutableSet.of(Archive.builder().username("xxxxx_test1").freeSize("20 GB").totalSize("30 GB").locked(false).build());
+  assertEquals(api.list().toImmutableSet(),expected);
 }

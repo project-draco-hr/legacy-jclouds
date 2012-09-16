@@ -17,7 +17,7 @@
   ServerSpec spec=builder.build();
   String password=passwordProvider.get();
   logger.debug(">> creating new Server spec(%s) name(%s) options(%s)",spec,name,createServerOptions);
-  ServerDetails result=api.getServerApi().createServerWithHostnameAndRootPassword(spec,name,password,createServerOptions);
+  ServerDetails result=api.getServerApi().createWithHostnameAndRootPassword(spec,name,password,createServerOptions);
   logger.trace("<< server(%s)",result.getId());
   return new NodeAndInitialCredentials<ServerDetails>(result,result.getId() + "",LoginCredentials.builder().password(password).build());
 }

@@ -1,9 +1,9 @@
 {
-  Set<Server> response=api.listServers();
+  FluentIterable<Server> response=api.list();
   assertNotNull(response);
   assertTrue(response.size() > 0);
   for (  Server server : response) {
-    ServerDetails newDetails=api.getServerDetails(server.getId());
+    ServerDetails newDetails=api.get(server.getId());
     assertEquals(newDetails.getId(),server.getId());
     assertEquals(newDetails.getHostname(),server.getHostname());
     assertEquals(newDetails.getPlatform(),server.getPlatform());

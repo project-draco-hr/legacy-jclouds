@@ -1,0 +1,15 @@
+{
+  FluentIterable<EmailAccount> accounts=api.listDomain(testDomain);
+  for (  EmailAccount account : accounts) {
+    if (account.getAccount().equals("test@" + testDomain)) {
+      assertTrue(account.isAntiVirus());
+    }
+  }
+  api.update("test@" + testDomain,UpdateAccountOptions.Builder.antiVirus(false));
+  accounts=api.listDomain(testDomain);
+  for (  EmailAccount account : accounts) {
+    if (account.getAccount().equals("test@" + testDomain)) {
+      assertFalse(account.isAntiVirus());
+    }
+  }
+}

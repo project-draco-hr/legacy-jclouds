@@ -1,14 +1,14 @@
 {
-  Set<IpDetails> ownIps=api.listIps();
+  FluentIterable<IpDetails> ownIps=api.list();
   assertTrue(ownIps.contains(reservedIp));
-  ownIps=api.listIps(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()));
+  ownIps=api.list(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()));
   assertTrue(ownIps.contains(reservedIp));
-  ownIps=api.listIps(ListIpOptions.Builder.platform(reservedIp.getPlatform()));
+  ownIps=api.list(ListIpOptions.Builder.platform(reservedIp.getPlatform()));
   assertTrue(ownIps.contains(reservedIp));
-  ownIps=api.listIps(ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
+  ownIps=api.list(ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
   assertTrue(ownIps.contains(reservedIp));
-  ownIps=api.listIps(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()),ListIpOptions.Builder.platform(reservedIp.getPlatform()),ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
+  ownIps=api.list(ListIpOptions.Builder.datacenter(reservedIp.getDatacenter()),ListIpOptions.Builder.platform(reservedIp.getPlatform()),ListIpOptions.Builder.ipVersion(reservedIp.getVersion()));
   assertTrue(ownIps.contains(reservedIp));
-  ownIps=api.listIps(ListIpOptions.Builder.serverId("xmthisisnotaserverid"));
+  ownIps=api.list(ListIpOptions.Builder.serverId("xmthisisnotaserverid"));
   assertTrue(ownIps.isEmpty());
 }
