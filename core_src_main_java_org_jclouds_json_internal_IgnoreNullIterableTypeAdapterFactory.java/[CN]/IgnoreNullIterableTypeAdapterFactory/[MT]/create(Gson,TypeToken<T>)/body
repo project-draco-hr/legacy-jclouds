@@ -1,0 +1,9 @@
+{
+  Type type=typeToken.getType();
+  if (typeToken.getRawType() != Iterable.class || !(type instanceof ParameterizedType)) {
+    return null;
+  }
+  Type elementType=((ParameterizedType)type).getActualTypeArguments()[0];
+  TypeAdapter<?> elementAdapter=gson.getAdapter(TypeToken.get(elementType));
+  return (TypeAdapter<T>)newIterableAdapter(elementAdapter);
+}
