@@ -1,8 +1,7 @@
 {
   for (  String zoneId : zones) {
     ServerApi api=novaContext.getApi().getServerApiForZone(zoneId);
-    Set<? extends Resource> response=api.list().concat().toImmutableSet();
-    for (    Resource server : response) {
+    for (    Resource server : api.list().concat()) {
       Server details=api.get(server.getId());
       assertEquals(details.getId(),server.getId());
       assertEquals(details.getName(),server.getName());
