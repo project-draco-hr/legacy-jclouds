@@ -1,10 +1,10 @@
 {
   if (volumeOption.isPresent()) {
-    Set<? extends Volume> volumes=volumeOption.get().listVolumesInDetail();
+    Set<? extends Volume> volumes=volumeOption.get().listInDetail().toImmutableSet();
     assertNotNull(volumes);
     boolean foundIt=false;
     for (    Volume vol : volumes) {
-      Volume details=volumeOption.get().getVolume(vol.getId());
+      Volume details=volumeOption.get().get(vol.getId());
       assertNotNull(details);
       assertNotNull(details.getId());
       assertNotNull(details.getCreated());
@@ -18,6 +18,6 @@
         foundIt=true;
       }
     }
-    assertTrue(foundIt,"Failed to find the volume we previously created in listVolumesInDetail() response");
+    assertTrue(foundIt,"Failed to find the volume we previously created in listInDetail() response");
   }
 }

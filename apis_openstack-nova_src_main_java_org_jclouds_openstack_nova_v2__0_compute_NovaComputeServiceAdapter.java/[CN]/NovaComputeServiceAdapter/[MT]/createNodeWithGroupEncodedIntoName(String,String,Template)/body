@@ -18,8 +18,8 @@
   String imageId=template.getImage().getProviderId();
   String flavorId=template.getHardware().getProviderId();
   logger.debug(">> creating new server zone(%s) name(%s) image(%s) flavor(%s) options(%s)",zoneId,name,imageId,flavorId,options);
-  ServerCreated lightweightServer=novaApi.getServerApiForZone(zoneId).createServer(name,imageId,flavorId,options);
-  Server server=novaApi.getServerApiForZone(zoneId).getServer(lightweightServer.getId());
+  ServerCreated lightweightServer=novaApi.getServerApiForZone(zoneId).create(name,imageId,flavorId,options);
+  Server server=novaApi.getServerApiForZone(zoneId).get(lightweightServer.getId());
   logger.trace("<< server(%s)",server.getId());
   ServerInZone serverInZone=new ServerInZone(server,zoneId);
   if (!privateKey.isPresent())   credentialsBuilder.password(lightweightServer.getAdminPass());

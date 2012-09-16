@@ -12,10 +12,10 @@
     }
     if (testVolume != null) {
       final String volumeId=testVolume.getId();
-      assertTrue(volumeOption.get().deleteVolume(volumeId));
+      assertTrue(volumeOption.get().delete(volumeId));
       assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
         @Override public boolean apply(        VolumeApi volumeApi){
-          return volumeOption.get().getVolume(volumeId) == null;
+          return volumeOption.get().get(volumeId) == null;
         }
       }
 ,180 * 1000L).apply(volumeOption.get()));

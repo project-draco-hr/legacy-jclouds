@@ -2,6 +2,6 @@
   HttpRequest get=HttpRequest.builder().method("PUT").endpoint("https://glance.jclouds.org:9292/v1.0/images/fcc451d0-f6e4-4824-ad8f-70ec12326d07").headers(ImmutableMultimap.<String,String>builder().put("Accept",MediaType.APPLICATION_JSON).put("X-Image-Meta-Name","anothernewname").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType("somenewdata",MediaType.APPLICATION_OCTET_STREAM)).build();
   HttpResponse updateResponse=HttpResponse.builder().statusCode(403).build();
   GlanceApi apiWhenExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,get,updateResponse);
-  assertEquals(apiWhenExist.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));
-  apiWhenExist.getImageApiForRegion("az-1.region-a.geo-1").upload("fcc451d0-f6e4-4824-ad8f-70ec12326d07",new StringPayload("somenewdata"),UpdateImageOptions.Builder.name("anothernewname"));
+  assertEquals(apiWhenExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  apiWhenExist.getImageApiForZone("az-1.region-a.geo-1").upload("fcc451d0-f6e4-4824-ad8f-70ec12326d07",new StringPayload("somenewdata"),UpdateImageOptions.Builder.name("anothernewname"));
 }

@@ -2,6 +2,6 @@
   HttpRequest show=HttpRequest.builder().method("HEAD").endpoint("https://glance.jclouds.org:9292/v1.0/images/fcc451d0-f6e4-4824-ad8f-70ec12326d07").addHeader("X-Auth-Token",authToken).build();
   HttpResponse showResponse=new ParseImageDetailsFromHeadersTest().response;
   GlanceApi apiWhenExist=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,show,showResponse);
-  assertEquals(apiWhenExist.getConfiguredRegions(),ImmutableSet.of("az-1.region-a.geo-1"));
-  assertEquals(apiWhenExist.getImageApiForRegion("az-1.region-a.geo-1").show("fcc451d0-f6e4-4824-ad8f-70ec12326d07").toString(),new ParseImageDetailsFromHeadersTest().expected().toString());
+  assertEquals(apiWhenExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(apiWhenExist.getImageApiForZone("az-1.region-a.geo-1").get("fcc451d0-f6e4-4824-ad8f-70ec12326d07").toString(),new ParseImageDetailsFromHeadersTest().expected().toString());
 }

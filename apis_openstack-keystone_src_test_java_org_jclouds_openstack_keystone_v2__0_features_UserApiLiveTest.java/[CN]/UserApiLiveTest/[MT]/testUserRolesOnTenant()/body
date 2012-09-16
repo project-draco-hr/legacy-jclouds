@@ -1,8 +1,7 @@
 {
   UserApi api=keystoneContext.getApi().getUserApi().get();
-  Set<? extends User> users=api.list();
-  Set<? extends Tenant> tenants=keystoneContext.getApi().getTenantApi().get().list();
-  for (  User user : users) {
+  Set<? extends Tenant> tenants=keystoneContext.getApi().getTenantApi().get().list().concat().toImmutableSet();
+  for (  User user : api.list().concat()) {
     for (    Tenant tenant : tenants) {
       Set<? extends Role> roles=api.listRolesOfUserOnTenant(user.getId(),tenant.getId());
       for (      Role role : roles) {

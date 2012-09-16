@@ -8,12 +8,12 @@
     FloatingIP floatingIP=api.allocate();
     assertNotNull(floatingIP);
     try {
-      api.addFloatingIPToServer(floatingIP.getIp(),server.getId());
+      api.addToServer(floatingIP.getIp(),server.getId());
       assertEventually(new ServerHasFloatingIP(serverApi,server.getId(),floatingIP.getIp()));
     }
   finally {
-      api.removeFloatingIPFromServer(floatingIP.getIp(),server.getId());
-      serverApi.deleteServer(server.getId());
+      api.removeFromServer(floatingIP.getIp(),server.getId());
+      serverApi.delete(server.getId());
     }
   }
 }

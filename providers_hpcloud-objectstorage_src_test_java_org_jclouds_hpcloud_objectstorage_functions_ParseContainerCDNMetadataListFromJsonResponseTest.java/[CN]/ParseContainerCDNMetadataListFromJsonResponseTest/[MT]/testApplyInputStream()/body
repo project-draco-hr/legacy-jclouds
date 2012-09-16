@@ -1,8 +1,0 @@
-{
-  InputStream is=getClass().getResourceAsStream("/test_list_cdn.json");
-  Set<ContainerCDNMetadata> expects=ImmutableSet.of(ContainerCDNMetadata.builder().name("hpcloud-blobstore.testCDNOperationsContainerWithCDN").CDNEnabled(false).ttl(3600).CDNUri(URI.create("https://cdnmgmt.hpcloud.net:8080/v1/AUTH_test/")).build(),ContainerCDNMetadata.builder().name("hpcloud-blobstore5").CDNEnabled(true).ttl(28800).CDNUri(URI.create("https://cdnmgmt.hpcloud.net:8080/v1/AUTH_test/")).build(),ContainerCDNMetadata.builder().name("hpcloud-cfcdnint.testCDNOperationsContainerWithCDN").CDNEnabled(false).ttl(3600).CDNUri(URI.create("https://cdnmgmt.hpcloud.net:8080/v1/AUTH_test/")).build());
-  ParseJson<SortedSet<ContainerCDNMetadata>> parser=i.getInstance(Key.get(new TypeLiteral<ParseJson<SortedSet<ContainerCDNMetadata>>>(){
-  }
-));
-  assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build()),expects);
-}

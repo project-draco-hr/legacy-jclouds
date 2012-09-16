@@ -5,14 +5,14 @@
     FloatingIPApi api=apiOption.get();
     FloatingIP floatingIP=api.allocate();
     assertNotNull(floatingIP);
-    Set<? extends FloatingIP> response=api.listFloatingIPs();
+    Set<? extends FloatingIP> response=api.list().toImmutableSet();
     boolean ipInSet=false;
     for (    FloatingIP ip : response) {
       if (ip.getId().equals(floatingIP.getId()))       ipInSet=true;
     }
     assertTrue(ipInSet);
     api.deallocate(floatingIP.getId());
-    response=api.listFloatingIPs();
+    response=api.list().toImmutableSet();
     ipInSet=false;
     for (    FloatingIP ip : response) {
       if (ip.getId().equals(floatingIP.getId())) {

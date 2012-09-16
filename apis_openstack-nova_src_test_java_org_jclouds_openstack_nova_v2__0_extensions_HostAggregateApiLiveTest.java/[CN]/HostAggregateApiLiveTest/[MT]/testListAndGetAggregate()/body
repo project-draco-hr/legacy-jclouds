@@ -1,12 +1,12 @@
 {
   if (apiOption.isPresent()) {
     HostAggregateApi api=apiOption.get();
-    Set<? extends HostAggregate> aggregates=api.listAggregates();
+    Set<? extends HostAggregate> aggregates=api.list().toImmutableSet();
     for (    HostAggregate aggregate : aggregates) {
       assertNotNull(aggregate.getId());
       assertNotNull(aggregate.getName());
       assertNotNull(aggregate.getAvailabilityZone());
-      HostAggregate details=api.getAggregate(aggregate.getId());
+      HostAggregate details=api.get(aggregate.getId());
       assertEquals(details.getId(),aggregate.getId());
       assertEquals(details.getName(),aggregate.getName());
       assertEquals(details.getAvailabilityZone(),aggregate.getAvailabilityZone());

@@ -1,7 +1,7 @@
 {
   Builder<ServerInZone> builder=ImmutableSet.builder();
   for (  final String zoneId : zoneIds.get()) {
-    builder.addAll(transform(novaApi.getServerApiForZone(zoneId).listServersInDetail(),new Function<Server,ServerInZone>(){
+    builder.addAll(novaApi.getServerApiForZone(zoneId).listInDetail().concat().transform(new Function<Server,ServerInZone>(){
       @Override public ServerInZone apply(      Server arg0){
         return new ServerInZone(arg0,zoneId);
       }

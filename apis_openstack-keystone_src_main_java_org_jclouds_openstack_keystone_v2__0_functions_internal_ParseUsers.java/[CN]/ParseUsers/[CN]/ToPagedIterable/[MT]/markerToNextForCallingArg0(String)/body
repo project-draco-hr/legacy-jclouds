@@ -1,0 +1,12 @@
+{
+  final UserApi userApi=api.getUserApi().get();
+  return new Function<Object,IterableWithMarker<User>>(){
+    @SuppressWarnings("unchecked") @Override public IterableWithMarker<User> apply(    Object input){
+      return IterableWithMarker.class.cast(userApi.list(marker(input.toString())));
+    }
+    @Override public String toString(){
+      return "listUsers()";
+    }
+  }
+;
+}

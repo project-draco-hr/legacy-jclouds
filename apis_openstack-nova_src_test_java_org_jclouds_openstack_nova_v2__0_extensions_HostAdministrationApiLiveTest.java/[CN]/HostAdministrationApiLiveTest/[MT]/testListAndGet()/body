@@ -1,10 +1,10 @@
 {
   if (optApi.isPresent()) {
     HostAdministrationApi api=optApi.get();
-    Set<? extends Host> hosts=api.listHosts();
+    Set<? extends Host> hosts=api.list().toImmutableSet();
     assertNotNull(hosts);
     for (    Host host : hosts) {
-      for (      HostResourceUsage usage : api.getHostResourceUsage(host.getName())) {
+      for (      HostResourceUsage usage : api.listResourceUsage(host.getName())) {
         assertEquals(usage.getHost(),host.getName());
         assertNotNull(usage);
       }

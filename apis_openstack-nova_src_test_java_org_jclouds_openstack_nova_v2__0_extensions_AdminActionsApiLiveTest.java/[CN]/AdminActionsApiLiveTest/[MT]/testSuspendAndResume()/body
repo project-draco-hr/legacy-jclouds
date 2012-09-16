@@ -1,24 +1,24 @@
 {
   if (apiOption.isPresent()) {
-    AdminActionsApi api=apiOption.get();
+    ServerAdminApi api=apiOption.get();
     try {
-      api.resumeServer(testServerId);
+      api.resume(testServerId);
       fail("Resumed an active server!");
     }
  catch (    HttpResponseException e) {
     }
-    assertTrue(api.suspendServer(testServerId));
+    assertTrue(api.suspend(testServerId));
     blockUntilServerInState(testServerId,serverApi,Status.SUSPENDED);
     try {
-      api.suspendServer(testServerId);
+      api.suspend(testServerId);
       fail("Suspended an already suspended server!");
     }
  catch (    HttpResponseException e) {
     }
-    assertTrue(api.resumeServer(testServerId));
+    assertTrue(api.resume(testServerId));
     blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
     try {
-      api.resumeServer(testServerId);
+      api.resume(testServerId);
       fail("Resumed an already resumed server!");
     }
  catch (    HttpResponseException e) {

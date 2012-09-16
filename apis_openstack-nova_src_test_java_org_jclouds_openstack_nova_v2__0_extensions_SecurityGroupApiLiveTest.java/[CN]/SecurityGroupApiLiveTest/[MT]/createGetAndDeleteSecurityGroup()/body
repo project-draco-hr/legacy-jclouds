@@ -4,15 +4,15 @@
     SecurityGroup securityGroup=null;
     String id;
     try {
-      securityGroup=api.createSecurityGroupWithNameAndDescription(SECURITY_GROUP_NAME,"test security group");
+      securityGroup=api.createWithDescription(SECURITY_GROUP_NAME,"test security group");
       assertNotNull(securityGroup);
       id=securityGroup.getId();
-      SecurityGroup theGroup=api.getSecurityGroup(id);
+      SecurityGroup theGroup=api.get(id);
       assertNotNull(theGroup);
     }
   finally {
       if (securityGroup != null) {
-        api.deleteSecurityGroup(securityGroup.getId());
+        api.delete(securityGroup.getId());
       }
     }
   }

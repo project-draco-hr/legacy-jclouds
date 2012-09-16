@@ -2,10 +2,10 @@
   Optional<? extends SecurityGroupApi> securityGroupApi=novaApi.getSecurityGroupExtensionForZone(zoneId);
   if (securityGroupApi.isPresent()) {
     for (    String group : groups) {
-      for (      SecurityGroup securityGroup : Iterables.filter(securityGroupApi.get().listSecurityGroups(),SecurityGroupPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
+      for (      SecurityGroup securityGroup : Iterables.filter(securityGroupApi.get().list(),SecurityGroupPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
         ZoneAndName zoneAndName=ZoneAndName.fromZoneAndName(zoneId,securityGroup.getName());
         logger.debug(">> deleting securityGroup(%s)",zoneAndName);
-        securityGroupApi.get().deleteSecurityGroup(securityGroup.getId());
+        securityGroupApi.get().delete(securityGroup.getId());
         securityGroupMap.invalidate(zoneAndName);
         logger.debug("<< deleted securityGroup(%s)",zoneAndName);
       }

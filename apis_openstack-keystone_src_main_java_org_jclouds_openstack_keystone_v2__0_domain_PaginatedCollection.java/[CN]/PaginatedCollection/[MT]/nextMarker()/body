@@ -1,0 +1,14 @@
+{
+  return FluentIterable.from(getLinks()).filter(new Predicate<Link>(){
+    @Override public boolean apply(    Link link){
+      return Link.Relation.NEXT == link.getRelation();
+    }
+  }
+).transform(new Function<Link,Optional<Object>>(){
+    @Override public Optional<Object> apply(    Link link){
+      Collection<String> markers=parseQueryToMap(link.getHref().getRawQuery()).get("marker");
+      return Optional.<Object>fromNullable(markers == null ? null : Iterables.get(markers,0));
+    }
+  }
+).first().or(Optional.absent());
+}

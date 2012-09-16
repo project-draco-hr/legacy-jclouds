@@ -2,7 +2,7 @@
   String zone=key.getZone();
   Optional<? extends FloatingIPApi> ipApiOptional=api.getFloatingIPExtensionForZone(zone);
   if (ipApiOptional.isPresent()) {
-    return Iterables.filter(ipApiOptional.get().listFloatingIPs(),new Predicate<FloatingIP>(){
+    return ipApiOptional.get().list().filter(new Predicate<FloatingIP>(){
       @Override public boolean apply(      FloatingIP input){
         return key.getId().equals(input.getInstanceId());
       }

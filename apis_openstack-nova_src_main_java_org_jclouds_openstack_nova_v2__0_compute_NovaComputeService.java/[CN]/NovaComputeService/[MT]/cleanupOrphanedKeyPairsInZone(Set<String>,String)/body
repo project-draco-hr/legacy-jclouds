@@ -2,14 +2,12 @@
   Optional<? extends KeyPairApi> keyPairApi=novaApi.getKeyPairExtensionForZone(zoneId);
   if (keyPairApi.isPresent()) {
     for (    String group : groups) {
-      for (      Map<String,? extends KeyPair> view : keyPairApi.get().listKeyPairs()) {
-        for (        KeyPair pair : Iterables.filter(view.values(),KeyPairPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
-          ZoneAndName zoneAndName=ZoneAndName.fromZoneAndName(zoneId,pair.getName());
-          logger.debug(">> deleting keypair(%s)",zoneAndName);
-          keyPairApi.get().deleteKeyPair(pair.getName());
-          keyPairCache.invalidate(zoneAndName);
-          logger.debug("<< deleted keypair(%s)",zoneAndName);
-        }
+      for (      KeyPair pair : keyPairApi.get().list().filter(nameMatches(namingConvention.create().containsGroup(group)))) {
+        ZoneAndName zoneAndName=ZoneAndName.fromZoneAndName(zoneId,pair.getName());
+        logger.debug(">> deleting keypair(%s)",zoneAndName);
+        keyPairApi.get().delete(pair.getName());
+        keyPairCache.invalidate(zoneAndName);
+        logger.debug("<< deleted keypair(%s)",zoneAndName);
       }
       keyPairCache.invalidate(ZoneAndName.fromZoneAndName(zoneId,namingConvention.create().sharedNameForGroup(group)));
     }

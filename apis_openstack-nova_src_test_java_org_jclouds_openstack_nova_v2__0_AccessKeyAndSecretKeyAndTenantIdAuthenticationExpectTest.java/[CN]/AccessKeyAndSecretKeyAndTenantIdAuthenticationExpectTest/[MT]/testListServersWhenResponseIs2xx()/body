@@ -3,5 +3,5 @@
   HttpResponse listServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_list.json")).build();
   NovaApi apiWhenServersExist=requestsSendResponses(keystoneAuthWithAccessKeyAndSecretKeyAndTenantId,responseWithKeystoneAccess,listServers,listServersResponse);
   assertEquals(apiWhenServersExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
-  assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").listServers().toString(),new ParseServerListTest().expected().toString());
+  assertEquals(apiWhenServersExist.getServerApiForZone("az-1.region-a.geo-1").list().concat().toString(),new ParseServerListTest().expected().toString());
 }

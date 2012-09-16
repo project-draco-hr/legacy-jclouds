@@ -3,5 +3,5 @@
   HttpResponse listFlavorsResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build();
   NovaApi apiWhenFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,listFlavors,listFlavorsResponse);
   assertEquals(apiWhenFlavorsExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
-  assertEquals(apiWhenFlavorsExist.getFlavorApiForZone("az-1.region-a.geo-1").listFlavors().toString(),new ParseFlavorListTest().expected().toString());
+  assertEquals(apiWhenFlavorsExist.getFlavorApiForZone("az-1.region-a.geo-1").list().concat().toString(),new ParseFlavorListTest().expected().toString());
 }
