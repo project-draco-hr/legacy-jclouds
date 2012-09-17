@@ -7,8 +7,7 @@
     SshClient client=sshClientForIMachine.apply(machine);
     sshResponds=injector.getInstance(SshResponds.class);
     checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
-    ipAddressesLoadingCache=injector.getInstance(IpAddressesLoadingCache.class);
-    assertTrue(MachineUtils.isIpv4(ipAddressesLoadingCache.apply(machine.getName())));
+    assertTrue(NetworkUtils.isIpv4(networkUtils.getIpAddressFromNicSlot(machine.getName(),0l)));
   }
   finally {
     for (    String vmNameOrId : ImmutableSet.of(machine.getName())) {

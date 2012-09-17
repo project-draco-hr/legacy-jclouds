@@ -1,6 +1,6 @@
 {
   int retries=15;
-  ISession session=lockSession(machineId,type,retries);
+  ISession session=checkNotNull(lockSession(machineId,type,retries),"session");
   try {
     return function.apply(session);
   }
@@ -8,6 +8,12 @@
     throw new RuntimeException(String.format("error applying %s to %s with %s lock: %s",function,machineId,type,e.getMessage()),e);
   }
  finally {
-    if (session != null && session.getState().equals(SessionState.Locked))     session.unlockMachine();
+    if (session.getState().equals(SessionState.Locked)) {
+      session.unlockMachine();
+      while (!session.getState().equals(SessionState.Unlocked)) {
+        logger.debug("Session not unlocked - wait ...");
+        Uninterruptibles.sleepUninterruptibly(1,TimeUnit.SECONDS);
+      }
+    }
   }
 }

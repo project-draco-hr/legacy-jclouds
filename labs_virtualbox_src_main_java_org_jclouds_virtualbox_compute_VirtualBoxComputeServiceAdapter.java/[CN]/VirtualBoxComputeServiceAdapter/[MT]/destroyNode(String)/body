@@ -1,5 +1,10 @@
 {
   IMachine machine=manager.get().getVBox().findMachine(vmName);
   powerDownMachine(machine);
-  new UnregisterMachineIfExistsAndForceDeleteItsMedia().apply(machine);
+  try {
+    new UnregisterMachineIfExistsAndForceDeleteItsMedia().apply(machine);
+  }
+ catch (  Exception e) {
+    logger.error("Machine (%s) not unregistered!",vmName);
+  }
 }

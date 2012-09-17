@@ -1,4 +1,5 @@
 {
+  IMachine machine=manager.get().getVBox().findMachine(vmName);
   ISession session=machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,ISession>(){
     @Override public ISession apply(    ISession session){
       session.getConsole().powerButton();
@@ -6,15 +7,6 @@
     }
   }
 );
-  int count=0;
-  while (!manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.PoweredOff) && count < 10) {
-    try {
-      Thread.sleep(500l * count);
-    }
- catch (    InterruptedException e) {
-      Throwables.propagate(e);
-    }
-    count++;
-  }
+  safeCheckMachineIsUnlocked(machine);
   return checkNotNull(session,"session");
 }

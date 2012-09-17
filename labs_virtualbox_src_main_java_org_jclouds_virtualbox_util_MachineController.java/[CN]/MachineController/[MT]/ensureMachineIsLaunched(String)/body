@@ -1,6 +1,7 @@
 {
   ISession session=null;
-  while (!manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.Running)) {
+  IMachine machine=manager.get().getVBox().findMachine(vmName);
+  while (!machine.getState().equals(MachineState.Running)) {
     try {
       session=machineUtils.applyForMachine(vmName,new LaunchMachineIfNotAlreadyRunning(manager.get(),executionType,""));
     }
@@ -15,6 +16,23 @@
         throw e;
       }
     }
+  }
+  Uninterruptibles.sleepUninterruptibly(5,TimeUnit.SECONDS);
+  String guestAdditionsInstalled=machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,String>(){
+    @Override public String apply(    ISession session){
+      int attempts=0;
+      String guestAdditionsInstalled=null;
+      while (!!session.getConsole().getGuest().getAdditionsVersion().isEmpty() && attempts < 3) {
+        Uninterruptibles.sleepUninterruptibly(2,TimeUnit.SECONDS);
+        guestAdditionsInstalled=session.getConsole().getGuest().getAdditionsVersion();
+        attempts++;
+      }
+      return guestAdditionsInstalled;
+    }
+  }
+);
+  if (!Strings.nullToEmpty(guestAdditionsInstalled).isEmpty()) {
+    waitVBoxServiceIsActive(vmName);
   }
   return checkNotNull(session,"session");
 }

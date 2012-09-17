@@ -22,7 +22,9 @@
   if (nodeState == null)   nodeState=Status.UNRECOGNIZED;
   nodeMetadataBuilder.status(nodeState);
   nodeMetadataBuilder=getIpAddresses(vm,nodeMetadataBuilder);
-  LoginCredentials loginCredentials=new LoginCredentials("toor","password",null,true);
+  String guestOsUser=vm.getExtraData(GUEST_OS_USER);
+  String guestOsPassword=vm.getExtraData(GUEST_OS_PASSWORD);
+  LoginCredentials loginCredentials=new LoginCredentials(guestOsUser,guestOsPassword,null,true);
   nodeMetadataBuilder.credentials(loginCredentials);
   return nodeMetadataBuilder.build();
 }

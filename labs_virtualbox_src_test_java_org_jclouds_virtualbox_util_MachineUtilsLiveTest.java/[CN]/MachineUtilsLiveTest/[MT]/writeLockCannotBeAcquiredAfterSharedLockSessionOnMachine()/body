@@ -1,0 +1,25 @@
+{
+  final IMachine clone=cloneFromMaster();
+  try {
+    ISession sharedSession=machineUtils.sharedLockMachineAndApplyToSession(clone.getName(),new Function<ISession,ISession>(){
+      @Override public ISession apply(      ISession sharedSession){
+        checkState(sharedSession.getState().equals(SessionState.Locked));
+        return sharedSession;
+      }
+    }
+);
+    checkState(sharedSession.getState().equals(SessionState.Unlocked));
+    ISession writeSession=machineUtils.writeLockMachineAndApplyToSession(clone.getName(),new Function<ISession,ISession>(){
+      @Override public ISession apply(      ISession writeSession){
+        checkState(writeSession.getState().equals(SessionState.Locked));
+        assertTrue(writeSession.getMachine().getName().equals(clone.getName()));
+        return writeSession;
+      }
+    }
+);
+    checkState(writeSession.getState().equals(SessionState.Unlocked));
+  }
+  finally {
+    undoVm(clone.getName());
+  }
+}

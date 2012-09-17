@@ -4,21 +4,11 @@
       logger.debug("vm was already powered down: ",machine.getId());
       return;
     }
-    logger.debug("powering down vm: ",machine.getId());
-    ISession machineSession=manager.get().openMachineSession(machine);
-    IProgress progress=machineSession.getConsole().powerDown();
-    progress.waitForCompletion(-1);
-    machineSession.unlockMachine();
-    while (!machine.getSessionState().equals(SessionState.Unlocked)) {
-      try {
-        logger.info("waiting for unlocking session - session state: " + machine.getSessionState());
-        Thread.sleep(1000);
-      }
- catch (      InterruptedException e) {
-      }
-    }
+    logger.debug("powering down vm: %s",machine.getName());
+    machineController.ensureMachineHasPowerDown(machine.getName());
   }
  catch (  Exception e) {
+    logger.error(e,"problem in powering down the %s",machine.getName());
     throw Throwables.propagate(e);
   }
 }

@@ -1,13 +1,13 @@
 {
   final IVirtualBox vBox=manager.get().getVBox();
-  String vmName=launchSpecification.getVmSpec().getVmName();
-  String vmId=launchSpecification.getVmSpec().getVmId();
+  String vmName=masterSpec.getVmSpec().getVmName();
+  String vmId=masterSpec.getVmSpec().getVmId();
   try {
     vBox.findMachine(vmId);
     throw new IllegalStateException("Machine " + vmName + " is already registered.");
   }
  catch (  VBoxException e) {
-    if (machineNotFoundException(e))     return createMachine(vBox,launchSpecification);
+    if (machineNotFoundException(e))     return createMachine(vBox,masterSpec);
  else     throw e;
   }
 }

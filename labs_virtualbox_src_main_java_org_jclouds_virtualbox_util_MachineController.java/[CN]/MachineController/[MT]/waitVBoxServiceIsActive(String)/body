@@ -1,0 +1,31 @@
+{
+  machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,Void>(){
+    @Override public Void apply(    ISession session){
+      session.getConsole().getGuest().setStatisticsUpdateInterval(1l);
+      while (!session.getConsole().getGuest().getAdditionsStatus(AdditionsRunLevelType.Userland)) {
+        Uninterruptibles.sleepUninterruptibly(200,TimeUnit.MILLISECONDS);
+      }
+      List<IAdditionsFacility> facilities=session.getConsole().getGuest().getFacilities();
+      while (facilities.size() != 4) {
+        Uninterruptibles.sleepUninterruptibly(200,TimeUnit.MILLISECONDS);
+        facilities=session.getConsole().getGuest().getFacilities();
+      }
+      facilities=session.getConsole().getGuest().getFacilities();
+      Optional<IAdditionsFacility> vboxServiceFacility=Optional.absent();
+      while (!vboxServiceFacility.isPresent()) {
+        vboxServiceFacility=Iterables.tryFind(session.getConsole().getGuest().getFacilities(),new Predicate<IAdditionsFacility>(){
+          @Override public boolean apply(          IAdditionsFacility additionsFacility){
+            return additionsFacility.getType().equals(AdditionsFacilityType.VBoxService);
+          }
+        }
+);
+      }
+      while (!vboxServiceFacility.get().getStatus().equals(AdditionsFacilityStatus.Active)) {
+        Uninterruptibles.sleepUninterruptibly(1,TimeUnit.SECONDS);
+      }
+      Uninterruptibles.sleepUninterruptibly(3,TimeUnit.SECONDS);
+      return null;
+    }
+  }
+);
+}
