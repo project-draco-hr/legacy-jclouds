@@ -2,4 +2,10 @@
   super.setupContext();
   novaContext=view.unwrap();
   zones=novaContext.getApi().getConfiguredZones();
+  for (  String zone : zones) {
+    ServerApi api=novaContext.getApi().getServerApiForZone(zone);
+    for (    Resource server : api.list().concat()) {
+      if (server.getName().equals(hostName))       api.delete(server.getId());
+    }
+  }
 }

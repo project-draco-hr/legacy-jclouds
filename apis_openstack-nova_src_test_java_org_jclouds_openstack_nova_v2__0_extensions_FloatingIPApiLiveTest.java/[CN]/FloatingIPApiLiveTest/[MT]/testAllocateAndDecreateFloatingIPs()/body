@@ -3,7 +3,7 @@
     Optional<? extends FloatingIPApi> apiOption=novaContext.getApi().getFloatingIPExtensionForZone(zoneId);
     if (!apiOption.isPresent())     continue;
     FloatingIPApi api=apiOption.get();
-    FloatingIP floatingIP=api.allocate();
+    FloatingIP floatingIP=api.create();
     assertNotNull(floatingIP);
     Set<? extends FloatingIP> response=api.list().toImmutableSet();
     boolean ipInSet=false;
@@ -11,7 +11,7 @@
       if (ip.getId().equals(floatingIP.getId()))       ipInSet=true;
     }
     assertTrue(ipInSet);
-    api.deallocate(floatingIP.getId());
+    api.delete(floatingIP.getId());
     response=api.list().toImmutableSet();
     ipInSet=false;
     for (    FloatingIP ip : response) {
