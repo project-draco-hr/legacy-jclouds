@@ -1,7 +1,7 @@
 {
   String serverId="123";
-  HttpRequest listMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse listMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/metadata_list.json")).build();
-  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,listMetadata,listMetadataResponse);
-  assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").listMetadata(serverId).toString(),new ParseMetadataListTest().expected().toString());
+  HttpRequest getMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/metadata_list.json")).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getMetadata,getMetadataResponse);
+  assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId).toString(),new ParseMetadataListTest().expected().toString());
 }

@@ -1,10 +1,10 @@
 {
   String serverId="123";
-  HttpRequest listMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata").addHeader("Accept","*/*").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse listMetadataResponse=HttpResponse.builder().statusCode(404).build();
-  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,listMetadata,listMetadataResponse);
+  HttpRequest getMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata").addHeader("Accept","*/*").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getMetadataResponse=HttpResponse.builder().statusCode(404).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getMetadata,getMetadataResponse);
   try {
-    apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").listMetadata(serverId);
+    apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId);
     fail("Expected an exception.");
   }
  catch (  Exception e) {

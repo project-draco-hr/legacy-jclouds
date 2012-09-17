@@ -1,9 +1,8 @@
 {
   String imageId="52415800-8b69-11e0-9b19-734f5736d2a2";
   String key="Image%20Version";
-  HttpRequest getMetadataItem=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/"+ key).addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse getMetadataItemResponse=HttpResponse.builder().statusCode(200).payload(payloadFromString("{\"metadata\":{\"Image Version\":\"2.5\"}}")).build();
-  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getMetadataItem,getMetadataItemResponse);
-  System.out.println(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadataItem(imageId,"Image Version").toString());
-  assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadataItem(imageId,"Image Version").toString(),"{Image Version=2.5}");
+  HttpRequest getMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/"+ key).addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromString("{\"metadata\":{\"Image Version\":\"2.5\"}}")).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getMetadata,getMetadataResponse);
+  assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").getMetadata(imageId,"Image Version").toString(),"2.5");
 }

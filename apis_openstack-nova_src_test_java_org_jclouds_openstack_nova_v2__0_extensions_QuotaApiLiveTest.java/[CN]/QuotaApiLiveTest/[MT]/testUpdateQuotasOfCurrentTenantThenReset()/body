@@ -3,7 +3,7 @@
     QuotaApi api=apiOption.get();
     Quota before=api.getByTenant(tenant);
     assertQuotasIsValid(before);
-    Quota modified=before.toBuilder().cores(before.getCores() - 1).instances(before.getInstances() - 1).metadataItems(before.getMetadataItems() - 1).ram(before.getRam() - 1).volumes(before.getVolumes() - 1).build();
+    Quota modified=before.toBuilder().cores(before.getCores() - 1).instances(before.getInstances() - 1).metadataItems(before.getMetadatas() - 1).ram(before.getRam() - 1).volumes(before.getVolumes() - 1).build();
     assertTrue(api.updateQuotaOfTenant(modified,tenant));
     assertEquals(api.getByTenant(tenant),modified);
     assertTrue(api.updateQuotaOfTenant(before,tenant));
