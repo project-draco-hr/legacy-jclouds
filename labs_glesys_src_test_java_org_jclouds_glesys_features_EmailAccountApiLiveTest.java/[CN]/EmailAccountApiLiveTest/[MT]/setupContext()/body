@@ -1,6 +1,8 @@
 {
-  testDomain=identity + ".test.jclouds.org";
+  super.setupContext();
+  testDomain=hostName + ".test.jclouds.org";
   api=gleContext.getApi().getEmailAccountApi();
+  deleteAll();
   createDomain(testDomain);
   emailAccountCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
     public boolean apply(    Integer value){
@@ -9,9 +11,4 @@
   }
 ,180,5,TimeUnit.SECONDS);
   assertTrue(emailAccountCounter.apply(0));
-  try {
-    api.delete("test2@" + testDomain);
-  }
- catch (  Exception e) {
-  }
 }

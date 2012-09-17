@@ -5,7 +5,11 @@
   GleSYSTemplateOptions templateOptions=template.getOptions().as(GleSYSTemplateOptions.class);
   CreateServerOptions createServerOptions=new CreateServerOptions();
   createServerOptions.ip(templateOptions.getIp());
-  createServerOptions.description(name);
+  Map<String,String> md=metadataAndTagsAsCommaDelimitedValue(template.getOptions());
+  if (md.size() > 0) {
+    String description=Joiner.on('\n').withKeyValueSeparator("=").join(md);
+    createServerOptions.description(CryptoStreams.hex(description.getBytes(Charsets.UTF_8)));
+  }
   ServerSpec.Builder<?> builder=ServerSpec.builder();
   builder.datacenter(template.getLocation().getId());
   builder.templateName(template.getImage().getId());
