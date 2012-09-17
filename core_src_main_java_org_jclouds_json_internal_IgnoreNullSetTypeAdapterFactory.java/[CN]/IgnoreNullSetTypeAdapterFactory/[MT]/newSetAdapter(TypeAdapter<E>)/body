@@ -8,14 +8,14 @@
       out.endArray();
     }
     public Set<E> read(    JsonReader in) throws IOException {
-      Set<E> result=Sets.newLinkedHashSet();
+      ImmutableSet.Builder<E> result=ImmutableSet.<E>builder();
       in.beginArray();
       while (in.hasNext()) {
         E element=elementAdapter.read(in);
         if (element != null)         result.add(element);
       }
       in.endArray();
-      return result;
+      return result.build();
     }
   }
 .nullSafe();
