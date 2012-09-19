@@ -1,0 +1,11 @@
+{
+  List<Statement> statements=Lists.newArrayList();
+  statements.add(Statements.findPid("vboxwebsrv"));
+  statements.add(Statements.kill());
+  StatementList statementList=new StatementList(statements);
+  if (socketTester.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))) {
+    logger.debug(String.format("shutting down previously started vboxwewbsrv at %s",provider));
+    ExecResponse execResponse=runScriptOnNodeFactory.create(hostNodeMetadata,statementList,runAsRoot(false)).init().call();
+    if (execResponse.getExitStatus() != 0)     throw new RuntimeException("Cannot execute jclouds");
+  }
+}

@@ -6,11 +6,7 @@
     int attempts=0;
     while (attempts < 10 && !vm.getSessionState().equals(SessionState.Unlocked)) {
       attempts++;
-      try {
-        Thread.sleep(200l);
-      }
- catch (      InterruptedException e) {
-      }
+      Uninterruptibles.sleepUninterruptibly(200,TimeUnit.MILLISECONDS);
     }
     machineUtils.applyForMachine(vmNameOrId,new UnregisterMachineIfExistsAndDeleteItsMedia(vmSpec));
   }

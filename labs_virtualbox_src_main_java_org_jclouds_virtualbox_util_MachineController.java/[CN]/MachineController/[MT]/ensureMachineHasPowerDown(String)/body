@@ -1,6 +1,7 @@
 {
   ISession session=manager.get().getSessionObject();
-  while (!manager.get().getVBox().findMachine(vmName).getState().equals(MachineState.PoweredOff)) {
+  IMachine machine=manager.get().getVBox().findMachine(vmName);
+  while (!machine.getState().equals(MachineState.PoweredOff)) {
     try {
       session=machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,ISession>(){
         @Override public ISession apply(        ISession session){
@@ -23,5 +24,6 @@
       }
     }
   }
+  safeCheckMachineIsUnlocked(machine);
   return checkNotNull(session,"session");
 }
