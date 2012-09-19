@@ -7,9 +7,13 @@
   int maxErrors=3;
   for (int i=0; i < maxErrors; ) {
     try {
-      listing=Futures.getUnchecked(connection.list(containerName,options));
+      listing=connection.list(containerName,options).get();
     }
- catch (    RuntimeException ee) {
+ catch (    InterruptedException ie) {
+      Thread.currentThread().interrupt();
+      break;
+    }
+catch (    ExecutionException ee) {
       ++i;
       if (i == maxErrors) {
         throw Throwables.propagate(ee.getCause());
