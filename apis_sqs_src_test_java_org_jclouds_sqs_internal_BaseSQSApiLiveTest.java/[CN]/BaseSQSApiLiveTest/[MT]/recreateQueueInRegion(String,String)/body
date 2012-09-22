@@ -1,8 +1,8 @@
 {
   QueueApi api=api().getQueueApiForRegion(region);
-  FluentIterable<URI> result=api.list(queuePrefix(queueName));
-  if (result.size() >= 1) {
-    api.delete(getLast(result));
+  URI result=api.get(queueName);
+  if (result != null) {
+    api.delete(result);
   }
   URI queue=api.create(queueName);
   assertQueueInList(region,queue);

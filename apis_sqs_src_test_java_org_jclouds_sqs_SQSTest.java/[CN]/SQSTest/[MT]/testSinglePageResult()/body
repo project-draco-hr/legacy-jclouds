@@ -1,0 +1,10 @@
+{
+  MessageApi messageClient=createMock(MessageApi.class);
+  ReceiveMessageOptions options=new ReceiveMessageOptions();
+  FluentIterable<Message> aMessage=FluentIterable.from(ImmutableSet.of(createMock(Message.class)));
+  FluentIterable<Message> noMessages=FluentIterable.from(ImmutableSet.<Message>of());
+  expect(messageClient.receive(1,options)).andReturn(aMessage).once();
+  expect(messageClient.receive(1,options)).andReturn(noMessages).once();
+  EasyMock.replay(messageClient);
+  Assert.assertEquals(1,Iterables.size(SQS.receiveAllAtRate(messageClient,1,options)));
+}

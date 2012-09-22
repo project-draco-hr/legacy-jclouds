@@ -1,5 +1,3 @@
 {
-  Set<Message> messages=Sets.newLinkedHashSet();
-  while (messages.size() != idPayload.size())   messages.addAll(api.receive(idPayload.size(),attribute("None").visibilityTimeout(5)).toImmutableSet());
-  return messages;
+  return SQS.receiveAllAtRate(api,idPayload.size(),attribute("None").visibilityTimeout(5)).toImmutableSet();
 }
