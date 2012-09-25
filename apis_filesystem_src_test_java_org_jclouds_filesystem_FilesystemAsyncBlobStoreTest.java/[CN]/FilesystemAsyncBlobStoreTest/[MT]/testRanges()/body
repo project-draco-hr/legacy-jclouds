@@ -1,37 +1,37 @@
 {
   blobStore.createContainerInLocation(null,CONTAINER_NAME);
-  String payload="abcdefgh";
-  InputStream is;
-  Blob blob=blobStore.blobBuilder("test").payload(new StringPayload(payload)).build();
+  String input="abcdefgh";
+  Payload payload;
+  Blob blob=blobStore.blobBuilder("test").payload(new StringPayload(input)).build();
   blobStore.putBlob(CONTAINER_NAME,blob);
   GetOptions getOptionsRangeStartAt=new GetOptions();
   getOptionsRangeStartAt.startAt(1);
   Blob blobRangeStartAt=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsRangeStartAt);
-  is=blobRangeStartAt.getPayload().getInput();
+  payload=blobRangeStartAt.getPayload();
   try {
-    assertEquals("bcdefgh",IOUtils.toString(is));
+    assertEquals(input.substring(1),CharStreams.toString(CharStreams.newReaderSupplier(payload,Charsets.UTF_8)));
   }
   finally {
-    Closeables.closeQuietly(is);
+    Closeables.closeQuietly(payload);
   }
   GetOptions getOptionsRangeTail=new GetOptions();
   getOptionsRangeTail.tail(3);
   Blob blobRangeTail=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsRangeTail);
-  is=blobRangeTail.getPayload().getInput();
+  payload=blobRangeTail.getPayload();
   try {
-    assertEquals("fgh",IOUtils.toString(is));
+    assertEquals(input.substring(5),CharStreams.toString(CharStreams.newReaderSupplier(payload,Charsets.UTF_8)));
   }
   finally {
-    Closeables.closeQuietly(is);
+    Closeables.closeQuietly(payload);
   }
   GetOptions getOptionsFragment=new GetOptions();
   getOptionsFragment.range(4,6);
   Blob blobFragment=blobStore.getBlob(CONTAINER_NAME,blob.getMetadata().getName(),getOptionsFragment);
-  is=blobFragment.getPayload().getInput();
+  payload=blobFragment.getPayload();
   try {
-    assertEquals("efg",IOUtils.toString(is));
+    assertEquals(input.substring(4,7),CharStreams.toString(CharStreams.newReaderSupplier(payload,Charsets.UTF_8)));
   }
   finally {
-    Closeables.closeQuietly(is);
+    Closeables.closeQuietly(payload);
   }
 }
