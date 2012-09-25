@@ -1,0 +1,24 @@
+{
+  PricingTemplateDto dto=new PricingTemplateDto();
+  dto.setName(name);
+  dto.setDescription(description);
+  dto.setHdGB(hdGB);
+  dto.setStandingChargePeriod(standingChargePeriod);
+  dto.setVlan(vlan);
+  dto.setChargingPeriod(chargingPeriod.ordinal());
+  dto.setMinimumCharge(minimumCharge.ordinal());
+  dto.setMinimumChargePeriod(minimumChargePeriod);
+  dto.setShowChangesBefore(showChangesBefore);
+  dto.setShowMinimumCharge(showMinimumCharge);
+  dto.setPublicIp(publicIp);
+  dto.setVcpu(vcpu);
+  dto.setMemoryGB(memoryGB);
+  dto.setDefaultTemplate(defaultTemplate);
+  dto.setLastUpdate(lastUpdate);
+  RESTLink link=currency.unwrap().searchLink("edit");
+  checkNotNull(link,ValidationErrors.MISSING_REQUIRED_LINK);
+  dto.addLink(new RESTLink("currency",link.getHref()));
+  PricingTemplate pricingTemplate=new PricingTemplate(context,dto);
+  pricingTemplate.currency=currency;
+  return pricingTemplate;
+}
