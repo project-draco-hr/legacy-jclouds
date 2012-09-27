@@ -1,0 +1,10 @@
+{
+  CostCode repeated=CostCode.Builder.fromCostCode(costcode).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create costcodes with the same name");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"COSTCODE-2");
+  }
+}
