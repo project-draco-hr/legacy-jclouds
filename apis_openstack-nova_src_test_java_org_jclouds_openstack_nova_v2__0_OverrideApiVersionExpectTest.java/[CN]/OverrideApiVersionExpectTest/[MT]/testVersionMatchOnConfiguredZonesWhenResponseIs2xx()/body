@@ -1,0 +1,6 @@
+{
+  HttpRequest authenticate=HttpRequest.builder().method("POST").endpoint("http://10.10.10.10:5000/v2.0/tokens").addHeader("Accept","application/json").payload(payloadFromStringWithContentType("{\"auth\":{\"passwordCredentials\":{\"username\":\"demo\",\"password\":\"password\"},\"tenantName\":\"demo\"}}","application/json")).build();
+  HttpResponse authenticationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/access_version_uids.json","application/json")).build();
+  NovaApi whenNovaRegionExists=requestSendsResponse(authenticate,authenticationResponse);
+  assertEquals(whenNovaRegionExists.getConfiguredZones(),ImmutableSet.of("RegionOne"));
+}
