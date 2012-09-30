@@ -2,6 +2,6 @@
   HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/floatingip_list.json")).build();
   NovaAsyncApi apiWhenFloatingIPsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,list,listResponse);
-  assertEquals(apiWhenFloatingIPsExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1"));
+  assertEquals(apiWhenFloatingIPsExist.getConfiguredZones(),ImmutableSet.of("az-1.region-a.geo-1","az-2.region-a.geo-1","az-3.region-a.geo-1"));
   assertEquals(apiWhenFloatingIPsExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().list().get().toString(),new ParseFloatingIPListTest().expected().toString());
 }
