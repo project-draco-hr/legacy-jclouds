@@ -34,13 +34,13 @@
     dataNonCDMIContentTypeApi.create(dataObjectNameIn,value);
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn);
     assertNotNull(payloadOut);
-    assertEquals(CharStreams.toString(new InputStreamReader(payloadOut.getInput(),"UTF-8")),value);
+    assertEquals(Strings2.toString(payloadOut),value);
     payloadIn=new StringPayload(value);
     payloadIn.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(payloadIn.getContentMetadata().toBuilder().contentType(MediaType.PLAIN_TEXT_UTF_8.toString()).build()));
     dataNonCDMIContentTypeApi.create(dataObjectNameIn,payloadIn);
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn);
     assertNotNull(payloadOut);
-    assertEquals(CharStreams.toString(new InputStreamReader(payloadOut.getInput(),"UTF-8")),value);
+    assertEquals(Strings2.toString(payloadOut),value);
     dataObject=dataNonCDMIContentTypeApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI"));
     assertNotNull(dataObject);
     System.out.println(dataObject);
@@ -73,7 +73,7 @@
     assertEquals(containerApi.get(containerName).getChildren().contains(dataObjectNameIn),true);
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn);
     assertNotNull(payloadOut);
-    assertEquals(CharStreams.toString(new InputStreamReader(payloadOut.getInput(),"UTF-8")),value);
+    assertEquals(Strings2.toString(payloadOut),value);
     dataNonCDMIContentTypeApi.delete(dataObjectNameIn);
     assertEquals(containerApi.get(containerName).getChildren().contains(dataObjectNameIn),false);
     value="Hello CDMI World non-cdmi File";
@@ -101,7 +101,7 @@
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.txt");
     fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut.getInput(),fos);
+    ByteStreams.copy(payloadOut,fos);
     fos.flush();
     fos.close();
     assertEquals(Files.equal(tmpFileOut,tmpFileIn),true);
@@ -138,7 +138,7 @@
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.jpg");
     fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut.getInput(),fos);
+    ByteStreams.copy(payloadOut,fos);
     fos.flush();
     fos.close();
     assertEquals(Files.equal(tmpFileOut,inFile),true);
@@ -179,7 +179,7 @@
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.jpg");
     fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut.getInput(),fos);
+    ByteStreams.copy(payloadOut,fos);
     fos.flush();
     fos.close();
     assertEquals(Files.equal(tmpFileOut,inFile),true);
@@ -193,11 +193,11 @@
     dataNonCDMIContentTypeApi.create(dataObjectNameIn,payloadIn);
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn,"bytes=0-10");
     assertNotNull(payloadOut);
-    assertEquals(CharStreams.toString(new InputStreamReader(payloadOut.getInput(),"UTF-8")),value.substring(0,11));
+    assertEquals(Strings2.toString(payloadOut),value.substring(0,11));
     assertEquals(payloadOut.getContentMetadata().getContentLength(),new Long(11));
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn,"bytes=11-20");
     assertNotNull(payloadOut);
-    assertEquals(CharStreams.toString(new InputStreamReader(payloadOut.getInput(),"UTF-8")),value.substring(11,21));
+    assertEquals(Strings2.toString(payloadOut),value.substring(11,21));
     assertEquals(payloadOut.getContentMetadata().getContentLength(),new Long(10));
     dataNonCDMIContentTypeApi.delete(dataObjectNameIn);
     assertEquals(containerApi.get(containerName).getChildren().contains(dataObjectNameIn),false);
