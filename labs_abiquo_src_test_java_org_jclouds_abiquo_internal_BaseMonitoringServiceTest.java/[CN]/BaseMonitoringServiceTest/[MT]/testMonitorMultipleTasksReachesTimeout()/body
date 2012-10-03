@@ -1,12 +1,18 @@
 {
-  BaseMonitoringService service=monitoringService();
-  Object monitoredObject1=new Object();
-  Object monitoredObject2=new Object();
-  CountingHandler handler=new CountingHandler(monitoredObject1,monitoredObject2);
-  service.register(handler);
-  service.monitor(TEST_MONITOR_POLLING + 10L,TimeUnit.MILLISECONDS,new MockInfiniteMonitor(),monitoredObject1,monitoredObject2);
-  handler.lock();
-  service.unregister(handler);
+  final BaseMonitoringService service=monitoringService();
+  final Object monitoredObject1=new Object();
+  final Object monitoredObject2=new Object();
+  final CountingHandler handler=new CountingHandler(monitoredObject1,monitoredObject2);
+  Future<?> future=executor.submit(new Runnable(){
+    @Override public void run(){
+      service.register(handler);
+      service.monitor(TEST_MONITOR_POLLING + 10L,TimeUnit.MILLISECONDS,new MockInfiniteMonitor(),monitoredObject1,monitoredObject2);
+      handler.lock();
+      service.unregister(handler);
+    }
+  }
+);
+  waitForResultOrTimeout(future);
   assertEquals(handler.numCompletes,0);
   assertEquals(handler.numFailures,0);
   assertEquals(handler.numTimeouts,2);

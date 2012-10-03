@@ -1,4 +1,10 @@
 {
-  BaseMonitoringService service=monitoringService();
-  service.awaitCompletion(new MockMonitor(),new Object());
+  final BaseMonitoringService service=monitoringService();
+  Future<?> future=executor.submit(new Runnable(){
+    @Override public void run(){
+      service.awaitCompletion(new MockMonitor(),new Object());
+    }
+  }
+);
+  waitForResultOrTimeout(future);
 }
