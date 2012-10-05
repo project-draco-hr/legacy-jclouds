@@ -3,6 +3,7 @@
   InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory=createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
   OpenSocketFinder openSocketFinder=createMock(OpenSocketFinder.class);
   Timeouts timeouts=new Timeouts();
+  PollPeriod period=new PollPeriod();
   Function<TemplateOptions,Statement> templateOptionsToStatement=new TemplateOptionsToStatement();
   Set<NodeMetadata> goodNodes=Sets.newLinkedHashSet();
   Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
@@ -13,11 +14,11 @@
   GetNodeMetadataStrategy nodeClient=createMock(GetNodeMetadataStrategy.class);
   AtomicNodeRunning nodeRunning=new AtomicNodeRunning(nodeClient);
   Predicate<AtomicReference<NodeMetadata>> retryableNodeRunning=new ComputeServiceTimeoutsModule(){
-    public Predicate<AtomicReference<NodeMetadata>> nodeRunning(    AtomicNodeRunning statusRunning,    Timeouts timeouts){
-      return super.nodeRunning(statusRunning,timeouts);
+    public Predicate<AtomicReference<NodeMetadata>> nodeRunning(    AtomicNodeRunning statusRunning,    Timeouts timeouts,    PollPeriod period){
+      return super.nodeRunning(statusRunning,timeouts,period);
     }
   }
-.nodeRunning(nodeRunning,timeouts);
+.nodeRunning(nodeRunning,timeouts,period);
   AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(pendingNode);
   EasyMock.expect(nodeClient.getNode(nodeId)).andAnswer(new IAnswer<NodeMetadata>(){
     private int count=0;
