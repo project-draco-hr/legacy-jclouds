@@ -6,6 +6,5 @@
   Properties expanded=expandProperties(resolved);
   Credentials creds=new Credentials(getAndRemove(expanded,PROPERTY_IDENTITY),getAndRemove(expanded,PROPERTY_CREDENTIAL));
   ProviderMetadata providerMetadata=new UpdateProviderMetadataFromProperties(apiMetadata,this.providerMetadata).apply(expanded);
-  String name=this.name.isPresent() ? this.name.get() : String.valueOf(Objects.hashCode(providerMetadata.getId(),providerMetadata.getEndpoint(),apiVersion,identity.get()));
-  return buildInjector(name,providerMetadata,creds,modules);
+  return buildInjector(name.or(String.valueOf(Objects.hashCode(providerMetadata.getId(),providerMetadata.getEndpoint(),apiVersion,identity.get()))),providerMetadata,creds,modules);
 }
