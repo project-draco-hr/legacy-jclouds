@@ -1,0 +1,7 @@
+{
+  DatacenterDto datacenterDto=new DatacenterDto();
+  datacenterDto.setId(template.unwrap().getIdFromLink(ParentLinkName.DATACENTER_REPOSITORY));
+  Datacenter datacenter=wrap(context,Datacenter.class,datacenterDto);
+  Iterable<VirtualDatacenter> vdcs=cloudService.listVirtualDatacenters(VirtualDatacenterPredicates.datacenter(datacenter));
+  return filter(vdcs,compatibleWithTemplateOrConversions(template));
+}
