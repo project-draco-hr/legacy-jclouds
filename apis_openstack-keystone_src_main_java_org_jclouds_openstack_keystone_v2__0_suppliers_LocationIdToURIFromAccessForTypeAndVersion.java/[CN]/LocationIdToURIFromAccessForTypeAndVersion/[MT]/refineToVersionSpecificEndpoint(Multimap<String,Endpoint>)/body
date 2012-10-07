@@ -1,0 +1,14 @@
+{
+  Builder<String,Endpoint> locationToEndpointBuilder=ImmutableMap.<String,Endpoint>builder();
+  for (  String locationId : locationToEndpoints.keySet()) {
+    Collection<Endpoint> endpoints=locationToEndpoints.get(locationId);
+switch (endpoints.size()) {
+case 0:
+      logNoEndpointsInLocation(locationId);
+    break;
+default :
+  putIfPresent(locationId,strictMatchEndpointVersion(endpoints,locationId),locationToEndpointBuilder);
+}
+}
+return locationToEndpointBuilder.build();
+}
