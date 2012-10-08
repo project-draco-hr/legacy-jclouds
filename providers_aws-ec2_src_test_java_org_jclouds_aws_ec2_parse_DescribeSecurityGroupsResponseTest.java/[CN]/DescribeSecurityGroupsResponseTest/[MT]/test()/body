@@ -1,0 +1,8 @@
+{
+  InputStream is=getClass().getResourceAsStream("/describe_security_groups_vpc.xml");
+  Set<SecurityGroup> expected=expected();
+  DescribeSecurityGroupsResponseHandler handler=injector.getInstance(DescribeSecurityGroupsResponseHandler.class);
+  addDefaultRegionToHandler(handler);
+  Set<SecurityGroup> result=factory.create(handler).parse(is);
+  assertEquals(result.toString(),expected.toString());
+}
