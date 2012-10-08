@@ -1,6 +1,12 @@
 {
   final String path=container + "/" + blob.getMetadata().getName();
-  deleteAndEnsureGone(sync,path);
-  sync.createFile(container,blob2Object.apply(blob),options);
+  final AtmosObject object=blob2Object.apply(blob);
+  try {
+    sync.createFile(container,object,options);
+  }
+ catch (  KeyAlreadyExistsException e) {
+    deleteAndEnsureGone(sync,path);
+    sync.createFile(container,object,options);
+  }
   return path;
 }

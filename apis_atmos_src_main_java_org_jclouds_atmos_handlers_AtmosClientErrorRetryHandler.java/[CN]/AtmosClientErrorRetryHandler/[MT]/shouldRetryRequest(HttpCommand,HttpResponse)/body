@@ -4,12 +4,12 @@
     command.incrementFailureCount();
     return true;
   }
- else   if (response.getStatusCode() == 409 || response.getStatusCode() == 400) {
+ else   if (response.getStatusCode() == 409) {
     byte[] content=HttpUtils.closeClientButKeepContentStream(response);
     if (content != null) {
       try {
         AtmosError error=utils.parseAtmosErrorFromContent(command,response,new String(content));
-        if (error.getCode() == 1016) {
+        if (error.getCode() == 1006) {
           return backoffHandler.shouldRetryRequest(command,response);
         }
         command.incrementFailureCount();
