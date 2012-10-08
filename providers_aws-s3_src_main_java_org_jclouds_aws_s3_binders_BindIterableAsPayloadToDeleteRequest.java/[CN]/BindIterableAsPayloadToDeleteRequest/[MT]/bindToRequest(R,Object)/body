@@ -1,0 +1,17 @@
+{
+  checkArgument(checkNotNull(input,"input is null") instanceof Iterable,"this binder is only valid for an Iterable");
+  checkNotNull(request,"request is null");
+  Iterable<String> keys=(Iterable<String>)input;
+  StringBuilder builder=new StringBuilder();
+  for (  String key : keys) {
+    builder.append(String.format("<Object><Key>%s</Key></Object>",key));
+  }
+  final String objects=builder.toString();
+  checkArgument(!objects.isEmpty(),"The list of keys should not be empty.");
+  final String content=String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<Delete>%s</Delete>",objects);
+  Payload payload=Payloads.newStringPayload(content);
+  payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
+  payload.getContentMetadata().setContentMD5(CryptoStreams.md5(content.getBytes()));
+  request.setPayload(payload);
+  return request;
+}
