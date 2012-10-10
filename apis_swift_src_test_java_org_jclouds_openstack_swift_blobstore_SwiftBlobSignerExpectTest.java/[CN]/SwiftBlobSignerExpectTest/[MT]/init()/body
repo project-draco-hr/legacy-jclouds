@@ -1,0 +1,7 @@
+{
+  HttpRequest authRequest=HttpRequest.builder().method("GET").endpoint("http://auth/v1.0").addHeader("X-Auth-User",identity).addHeader("X-Auth-Key",credential).addHeader("Accept","*/*").addHeader("Host","myhost:8080").build();
+  HttpResponse authResponse=HttpResponse.builder().statusCode(200).message("HTTP/1.1 200 OK").addHeader("X-Storage-Url","http://storage").addHeader("X-Auth-Token","testtoken").build();
+  HttpRequest temporaryKeyRequest=HttpRequest.builder().method("HEAD").endpoint("http://storage/").addHeader("X-Auth-Token","testtoken").build();
+  HttpResponse temporaryKeyResponse=HttpResponse.builder().statusCode(200).addHeader(ACCOUNT_TEMPORARY_URL_KEY,"TEMPORARY_KEY").build();
+  return ImmutableMap.<HttpRequest,HttpResponse>builder().put(authRequest,authResponse).put(temporaryKeyRequest,temporaryKeyResponse).build();
+}

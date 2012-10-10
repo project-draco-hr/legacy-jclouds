@@ -1,0 +1,7 @@
+{
+  BlobStore signPutBloblWithTime=requestsSendResponses(init());
+  Blob blob=signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
+  HttpRequest compare=putBlobWithTime();
+  compare.setPayload(blob.getPayload());
+  assertEquals(signPutBloblWithTime.getContext().getSigner().signPutBlob(container,blob,3l),compare);
+}
