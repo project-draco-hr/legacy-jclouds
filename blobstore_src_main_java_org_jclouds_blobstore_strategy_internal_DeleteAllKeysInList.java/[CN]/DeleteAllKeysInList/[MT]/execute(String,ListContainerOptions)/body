@@ -5,7 +5,7 @@
   Map<StorageMetadata,Exception> exceptions=Maps.newHashMap();
   PageSet<? extends StorageMetadata> listing;
   int maxErrors=3;
-  for (int i=0; i < maxErrors; ) {
+  for (int numErrors=0; numErrors < maxErrors; ) {
     try {
       listing=connection.list(containerName,options).get();
     }
@@ -14,11 +14,11 @@
       break;
     }
 catch (    ExecutionException ee) {
-      ++i;
-      if (i == maxErrors) {
+      ++numErrors;
+      if (numErrors == maxErrors) {
         throw Throwables.propagate(ee.getCause());
       }
-      retryHandler.imposeBackoffExponentialDelay(i,message);
+      retryHandler.imposeBackoffExponentialDelay(numErrors,message);
       continue;
     }
     if (options.isRecursive()) {
@@ -61,8 +61,8 @@ throw new IllegalArgumentException("Container type not supported");
 }
 exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,message);
 if (!exceptions.isEmpty()) {
-++i;
-retryHandler.imposeBackoffExponentialDelay(i,message);
+++numErrors;
+retryHandler.imposeBackoffExponentialDelay(numErrors,message);
 continue;
 }
 String marker=listing.getNextMarker();
@@ -70,6 +70,7 @@ if (marker == null) {
 break;
 }
 options=options.afterMarker(marker);
+numErrors=0;
 }
 if (!exceptions.isEmpty()) throw new BlobRuntimeException(String.format("error %s: %s",message,exceptions));
 }
