@@ -1,0 +1,9 @@
+{
+  String region="eu-west-1";
+  Builder<HttpRequest,HttpResponse> builder=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  builder.put(describeRegionsRequest,describeRegionsResponse);
+  builder.putAll(describeAvailabilityZonesRequestResponse);
+  builder.put(formSigner.filter(HttpRequest.builder().method("POST").endpoint("https://ec2." + region + ".amazonaws.com/").addHeader("Host","ec2." + region + ".amazonaws.com").addFormParam("Action","CreateVolume").addFormParam("AvailabilityZone","eu-west-1a").addFormParam("Size","1").addFormParam("SnapshotId","snap-8b7ffbdd").build()),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/created_volume.xml")).build());
+  ElasticBlockStoreClient client=requestsSendResponses(builder.build()).getElasticBlockStoreServices();
+  assertEquals(client.createVolumeFromSnapshotInAvailabilityZone(region + "a",1,"snap-8b7ffbdd"),creating.toBuilder().region(region).build());
+}
