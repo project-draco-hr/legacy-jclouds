@@ -1,0 +1,10 @@
+{
+  S3Client api=createMock(S3Client.class);
+  ListBucketOptions options=new ListBucketOptions();
+  ListBucketResponse response=new ListBucketHandlerTest().expected();
+  expect(api.listBucket("bucket",options)).andReturn(response).once();
+  EasyMock.replay(api);
+  PagedIterable<ObjectMetadata> result=S3.listBucket(api,"bucket",options);
+  assertEquals(result.size(),1);
+  assertEquals(result.get(0).size(),10);
+}

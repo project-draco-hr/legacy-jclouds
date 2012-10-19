@@ -1,0 +1,11 @@
+{
+  return PagedIterables.advance(ToIterableWithMarker.INSTANCE.apply(s3Client.listBucket(bucket,options)),new Function<Object,IterableWithMarker<ObjectMetadata>>(){
+    @Override public IterableWithMarker<ObjectMetadata> apply(    Object input){
+      return ToIterableWithMarker.INSTANCE.apply(s3Client.listBucket(bucket,options.clone().afterMarker(input.toString())));
+    }
+    @Override public String toString(){
+      return "listBucket(" + options + ")";
+    }
+  }
+);
+}
