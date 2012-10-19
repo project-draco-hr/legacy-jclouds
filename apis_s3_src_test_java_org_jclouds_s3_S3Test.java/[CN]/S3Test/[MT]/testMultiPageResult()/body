@@ -1,0 +1,12 @@
+{
+  String nextMarker="FOO";
+  S3Client api=createMock(S3Client.class);
+  ListBucketOptions options=new ListBucketOptions();
+  ListBucketResponse response2=new ListBucketHandlerTest().expected();
+  ListBucketResponse response1=new ListBucketResponseImpl(response2.getName(),response2,response2.getPrefix(),null,nextMarker,response2.getMaxKeys(),response2.getDelimiter(),false,response2.getCommonPrefixes());
+  expect(api.listBucket("bucket",options)).andReturn(response1).once();
+  expect(api.listBucket("bucket",options.afterMarker(nextMarker))).andReturn(response2).once();
+  EasyMock.replay(api);
+  PagedIterable<ObjectMetadata> result=S3.listBucket(api,"bucket",options);
+  assertEquals(result.concat().size(),20);
+}
