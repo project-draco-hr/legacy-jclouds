@@ -1,14 +1,7 @@
 {
   String nodeId="myid";
-  InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory=createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
-  OpenSocketFinder openSocketFinder=createMock(OpenSocketFinder.class);
   Timeouts timeouts=new Timeouts();
   PollPeriod period=new PollPeriod();
-  Function<TemplateOptions,Statement> templateOptionsToStatement=new TemplateOptionsToStatement();
-  Set<NodeMetadata> goodNodes=Sets.newLinkedHashSet();
-  Map<NodeMetadata,Exception> badNodes=Maps.newLinkedHashMap();
-  Multimap<NodeMetadata,CustomizationResponse> customizationResponses=LinkedHashMultimap.create();
-  TemplateOptions options=new TemplateOptions();
   final NodeMetadata pendingNode=new NodeMetadataBuilder().ids(nodeId).status(Status.PENDING).build();
   final NodeMetadata runningNode=new NodeMetadataBuilder().ids(nodeId).status(Status.RUNNING).build();
   GetNodeMetadataStrategy nodeClient=createMock(GetNodeMetadataStrategy.class);
@@ -33,11 +26,8 @@
     }
   }
 ).anyTimes();
-  replay(initScriptRunnerFactory,openSocketFinder,nodeClient);
-  new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(retryableNodeRunning,openSocketFinder,timeouts,templateOptionsToStatement,initScriptRunnerFactory,options,atomicNode,goodNodes,badNodes,customizationResponses).apply(atomicNode);
-  if (badNodes.size() > 0)   Iterables.get(badNodes.values(),0).printStackTrace();
-  assertEquals(badNodes.size(),0);
-  assertEquals(goodNodes,ImmutableSet.of(runningNode));
-  assertEquals(customizationResponses.size(),0);
-  verify(initScriptRunnerFactory,openSocketFinder,nodeClient);
+  replay(nodeClient);
+  new PollNodeRunning(retryableNodeRunning).apply(atomicNode);
+  assertEquals(atomicNode.get().getStatus(),Status.RUNNING);
+  verify(nodeClient);
 }
