@@ -7,9 +7,9 @@
   HttpCommand command=control.createMock(HttpCommand.class);
   HttpResponseException exception=new HttpResponseException("Error: Unable to tunnel through proxy: ...",command,null);
   expect(client.getAvailabilityZoneAndRegionServices()).andStubReturn(regionClient);
-  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion1")).andReturn(Collections.singleton(info1));
+  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion1")).andReturn(ImmutableSet.of(info1));
   expect(regionClient.describeAvailabilityZonesInRegion("inaccessibleRegion")).andThrow(exception);
-  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion2")).andReturn(Collections.singleton(info2));
+  expect(regionClient.describeAvailabilityZonesInRegion("accessibleRegion2")).andReturn(ImmutableSet.of(info2));
   expect(info1.getZone()).andStubReturn("zone1");
   expect(info2.getZone()).andStubReturn("zone2");
   Set<String> regions=ImmutableSet.of("accessibleRegion1","inaccessibleRegion","accessibleRegion2");
