@@ -1,7 +1,7 @@
 {
   RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
   Function<VirtualDatacenter,Location> vdcToLocation=mockVirtualDatacenterToLocation();
-  VirtualMachineTemplateWithZoneToHardware function=new VirtualMachineTemplateWithZoneToHardware(vdcToLocation);
+  VirtualMachineTemplateInVirtualDatacenterToHardware function=new VirtualMachineTemplateInVirtualDatacenterToHardware(vdcToLocation);
   VirtualMachineTemplateDto dto=new VirtualMachineTemplateDto();
   dto.setId(5);
   dto.setName("Template");
@@ -15,16 +15,16 @@
   vdcDto.setId(6);
   vdcDto.setHypervisorType(HypervisorType.VMX_04);
   VirtualDatacenter vdc=wrap(context,VirtualDatacenter.class,vdcDto);
-  Hardware hardware=function.apply(new VirtualMachineTemplateWithZone(template,vdc));
+  Hardware hardware=function.apply(new VirtualMachineTemplateInVirtualDatacenter(template,vdc));
   verify(vdcToLocation);
   assertEquals(hardware.getProviderId(),template.getId().toString());
-  assertEquals(hardware.getId(),template.getId() + "-" + vdc.getId());
+  assertEquals(hardware.getId(),template.getId() + "/" + vdc.getId());
   assertEquals(hardware.getName(),template.getName());
   assertEquals(hardware.getUri(),URI.create("http://foo/bar"));
   assertEquals(hardware.getRam(),template.getRamRequired());
   assertEquals(hardware.getProcessors().size(),1);
   assertEquals(hardware.getProcessors().get(0).getCores(),(double)template.getCpuRequired());
-  assertEquals(hardware.getProcessors().get(0).getSpeed(),VirtualMachineTemplateWithZoneToHardware.DEFAULT_CORE_SPEED);
+  assertEquals(hardware.getProcessors().get(0).getSpeed(),VirtualMachineTemplateInVirtualDatacenterToHardware.DEFAULT_CORE_SPEED);
   assertEquals(hardware.getVolumes().size(),1);
   assertEquals(hardware.getVolumes().get(0).getSize(),50F);
   assertEquals(hardware.getVolumes().get(0).getType(),Volume.Type.LOCAL);

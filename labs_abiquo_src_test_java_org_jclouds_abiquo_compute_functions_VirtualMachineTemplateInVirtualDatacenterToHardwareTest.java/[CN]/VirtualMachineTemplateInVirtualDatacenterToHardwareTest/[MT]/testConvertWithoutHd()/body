@@ -1,7 +1,7 @@
 {
   RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
   Function<VirtualDatacenter,Location> vdcToLocation=mockVirtualDatacenterToLocation();
-  VirtualMachineTemplateWithZoneToHardware function=new VirtualMachineTemplateWithZoneToHardware(vdcToLocation);
+  VirtualMachineTemplateInVirtualDatacenterToHardware function=new VirtualMachineTemplateInVirtualDatacenterToHardware(vdcToLocation);
   VirtualMachineTemplateDto dto=new VirtualMachineTemplateDto();
   dto.setId(5);
   dto.setName("Template");
@@ -13,7 +13,7 @@
   vdcDto.setId(6);
   vdcDto.setHypervisorType(HypervisorType.VMX_04);
   VirtualDatacenter vdc=wrap(context,VirtualDatacenter.class,vdcDto);
-  Hardware hardware=function.apply(new VirtualMachineTemplateWithZone(template,vdc));
+  Hardware hardware=function.apply(new VirtualMachineTemplateInVirtualDatacenter(template,vdc));
   verify(vdcToLocation);
   assertEquals(hardware.getVolumes().size(),1);
   assertEquals(hardware.getVolumes().get(0).getSize(),0F);

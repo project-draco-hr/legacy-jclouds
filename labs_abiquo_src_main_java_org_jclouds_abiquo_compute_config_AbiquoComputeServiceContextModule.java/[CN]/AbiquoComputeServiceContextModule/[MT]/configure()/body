@@ -1,6 +1,6 @@
 {
   super.configure();
-  bind(new TypeLiteral<ComputeServiceAdapter<VirtualMachine,VirtualMachineTemplateWithZone,VirtualMachineTemplate,VirtualDatacenter>>(){
+  bind(new TypeLiteral<ComputeServiceAdapter<VirtualMachine,VirtualMachineTemplateInVirtualDatacenter,VirtualMachineTemplate,VirtualDatacenter>>(){
   }
 ).to(AbiquoComputeServiceAdapter.class);
   bind(new TypeLiteral<Function<VirtualMachine,NodeMetadata>>(){
@@ -9,9 +9,9 @@
   bind(new TypeLiteral<Function<VirtualMachineTemplate,Image>>(){
   }
 ).to(VirtualMachineTemplateToImage.class);
-  bind(new TypeLiteral<Function<VirtualMachineTemplateWithZone,Hardware>>(){
+  bind(new TypeLiteral<Function<VirtualMachineTemplateInVirtualDatacenter,Hardware>>(){
   }
-).to(VirtualMachineTemplateWithZoneToHardware.class);
+).to(VirtualMachineTemplateInVirtualDatacenterToHardware.class);
   bind(new TypeLiteral<Function<Datacenter,Location>>(){
   }
 ).to(DatacenterToLocation.class);
@@ -20,7 +20,7 @@
 ).to(VirtualDatacenterToLocation.class);
   bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Scopes.SINGLETON);
   bind(TemplateOptions.class).to(AbiquoTemplateOptions.class);
-  install(new LocationsFromComputeServiceAdapterModule<VirtualMachine,VirtualMachineTemplateWithZone,VirtualMachineTemplate,VirtualDatacenter>(){
+  install(new LocationsFromComputeServiceAdapterModule<VirtualMachine,VirtualMachineTemplateInVirtualDatacenter,VirtualMachineTemplate,VirtualDatacenter>(){
   }
 );
 }

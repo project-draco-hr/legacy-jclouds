@@ -10,8 +10,8 @@
   Image image=virtualMachineTemplateToImage.apply(template);
   builder.imageId(image.getId().toString());
   builder.operatingSystem(image.getOperatingSystem());
-  Hardware defaultHardware=virtualMachineTemplateToHardware.apply(new VirtualMachineTemplateWithZone(template,vdc));
-  Hardware hardware=HardwareBuilder.fromHardware(defaultHardware).ram(vm.getRam()).processors(Lists.newArrayList(new Processor(vm.getCpu(),VirtualMachineTemplateWithZoneToHardware.DEFAULT_CORE_SPEED))).build();
+  Hardware defaultHardware=virtualMachineTemplateToHardware.apply(new VirtualMachineTemplateInVirtualDatacenter(template,vdc));
+  Hardware hardware=HardwareBuilder.fromHardware(defaultHardware).ram(vm.getRam()).processors(Lists.newArrayList(new Processor(vm.getCpu(),VirtualMachineTemplateInVirtualDatacenterToHardware.DEFAULT_CORE_SPEED))).build();
   builder.hardware(hardware);
   List<Ip<?,?>> nics=vm.listAttachedNics();
   builder.privateAddresses(ips(filter(nics,Predicates.instanceOf(PrivateIp.class))));

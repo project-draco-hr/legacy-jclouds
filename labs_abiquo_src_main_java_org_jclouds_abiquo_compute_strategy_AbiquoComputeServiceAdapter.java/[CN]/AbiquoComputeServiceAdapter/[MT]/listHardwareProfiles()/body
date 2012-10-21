@@ -1,10 +1,10 @@
 {
-  return concat(transform(listImages(),new Function<VirtualMachineTemplate,Iterable<VirtualMachineTemplateWithZone>>(){
-    @Override public Iterable<VirtualMachineTemplateWithZone> apply(    final VirtualMachineTemplate template){
+  return concat(transform(listImages(),new Function<VirtualMachineTemplate,Iterable<VirtualMachineTemplateInVirtualDatacenter>>(){
+    @Override public Iterable<VirtualMachineTemplateInVirtualDatacenter> apply(    final VirtualMachineTemplate template){
       Iterable<VirtualDatacenter> compatibleZones=compatibleVirtualDatacenters.execute(template);
-      return transform(compatibleZones,new Function<VirtualDatacenter,VirtualMachineTemplateWithZone>(){
-        @Override public VirtualMachineTemplateWithZone apply(        final VirtualDatacenter vdc){
-          return new VirtualMachineTemplateWithZone(template,vdc);
+      return transform(compatibleZones,new Function<VirtualDatacenter,VirtualMachineTemplateInVirtualDatacenter>(){
+        @Override public VirtualMachineTemplateInVirtualDatacenter apply(        final VirtualDatacenter vdc){
+          return new VirtualMachineTemplateInVirtualDatacenter(template,vdc);
         }
       }
 );
