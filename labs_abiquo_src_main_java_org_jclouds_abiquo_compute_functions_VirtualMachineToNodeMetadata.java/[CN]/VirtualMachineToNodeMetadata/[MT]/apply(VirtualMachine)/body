@@ -5,19 +5,13 @@
   builder.name(vm.getNameLabel());
   builder.group(vm.getVirtualAppliance().getName());
   VirtualDatacenter vdc=vm.getVirtualDatacenter();
-  try {
-    Datacenter datacenter=vdc.getDatacenter();
-    builder.location(datacenterToLocation.apply(datacenter));
-  }
- catch (  AuthorizationException ex) {
-    logger.debug("User does not have permissions to see the location of the node");
-  }
+  builder.location(virtualDatacenterToLocation.apply(vdc));
   VirtualMachineTemplate template=vm.getTemplate();
   Image image=virtualMachineTemplateToImage.apply(template);
   builder.imageId(image.getId().toString());
   builder.operatingSystem(image.getOperatingSystem());
-  Hardware defaultHardware=virtualMachineTemplateToHardware.apply(template);
-  Hardware hardware=new HardwareBuilder().ids(defaultHardware.getId()).uri(defaultHardware.getUri()).name(defaultHardware.getName()).supportsImage(defaultHardware.supportsImage()).ram(vm.getRam()).hypervisor(vdc.getHypervisorType().name()).processor(new Processor(vm.getCpu(),VirtualMachineTemplateToHardware.DEFAULT_CORE_SPEED)).build();
+  Hardware defaultHardware=virtualMachineTemplateToHardware.apply(new VirtualMachineTemplateInVirtualDatacenter(template,vdc));
+  Hardware hardware=HardwareBuilder.fromHardware(defaultHardware).ram(vm.getRam()).processors(Lists.newArrayList(new Processor(vm.getCpu(),VirtualMachineTemplateInVirtualDatacenterToHardware.DEFAULT_CORE_SPEED))).build();
   builder.hardware(hardware);
   List<Ip<?,?>> nics=vm.listAttachedNics();
   builder.privateAddresses(ips(filter(nics,Predicates.instanceOf(PrivateIp.class))));

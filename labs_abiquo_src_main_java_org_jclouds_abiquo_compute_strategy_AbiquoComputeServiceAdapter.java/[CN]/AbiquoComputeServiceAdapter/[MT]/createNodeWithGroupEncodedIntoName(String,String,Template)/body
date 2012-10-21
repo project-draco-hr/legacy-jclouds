@@ -1,10 +1,9 @@
 {
   AbiquoTemplateOptions options=template.getOptions().as(AbiquoTemplateOptions.class);
-  User user=adminService.getCurrentUser();
   Enterprise enterprise=adminService.getCurrentEnterprise();
-  Datacenter datacenter=enterprise.findAllowedDatacenter(DatacenterPredicates.id(Integer.valueOf(template.getLocation().getId())));
+  Datacenter datacenter=regionMap.get().get(Integer.valueOf(template.getImage().getLocation().getId()));
   VirtualMachineTemplate virtualMachineTemplate=enterprise.getTemplateInRepository(datacenter,Integer.valueOf(template.getImage().getId()));
-  VirtualDatacenter vdc=helper.getOrCreateVirtualDatacenter(user,enterprise,datacenter,virtualMachineTemplate,options);
+  VirtualDatacenter vdc=cloudService.getVirtualDatacenter(Integer.valueOf(template.getHardware().getLocation().getId()));
   VirtualAppliance vapp=vdc.findVirtualAppliance(VirtualAppliancePredicates.name(tag));
   if (vapp == null) {
     vapp=VirtualAppliance.builder(context,vdc).name(tag).build();
@@ -14,9 +13,12 @@
   Integer overrideRam=options.getOverrideRam();
   VirtualMachine vm=VirtualMachine.builder(context,vapp,virtualMachineTemplate).nameLabel(name).cpu(overrideCores != null ? overrideCores : totalCores(template.getHardware())).ram(overrideRam != null ? overrideRam : template.getHardware().getRam()).password(options.getVncPassword()).build();
   vm.save();
-  helper.configureNetwork(vm,options.getGatewayNetwork(),options.getIps() == null ? null : Arrays.asList(options.getIps()),options.getUnmanagedIps() == null ? null : Arrays.asList(options.getUnmanagedIps()));
-  VirtualMachineMonitor monitor=monitoringService.getVirtualMachineMonitor();
+  PublicIp publicIp=vdc.findPurchasedPublicIp(IpPredicates.<PublicIp>notUsed());
+  if (publicIp != null) {
+    List<PublicIp> ips=Lists.newArrayList();
+    ips.add(publicIp);
+    vm.setNics(ips);
+  }
   vm.deploy();
-  monitor.awaitCompletionDeploy(vm);
-  return new NodeAndInitialCredentials<VirtualMachine>(vm,vm.getId().toString(),template.getImage().getDefaultCredentials());
+  return new NodeAndInitialCredentials<VirtualMachine>(vm,vm.getId().toString(),null);
 }

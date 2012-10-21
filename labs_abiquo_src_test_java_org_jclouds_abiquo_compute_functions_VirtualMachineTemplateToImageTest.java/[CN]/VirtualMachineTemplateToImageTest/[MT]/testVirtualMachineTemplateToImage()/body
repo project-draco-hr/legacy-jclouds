@@ -1,12 +1,17 @@
 {
   RestContext<AbiquoApi,AbiquoAsyncApi> context=EasyMock.createMock(RestContext.class);
-  VirtualMachineTemplateToImage function=new VirtualMachineTemplateToImage();
+  Function<Datacenter,Location> dcToLocation=mockDatacenterToLocation();
+  Supplier<Map<Integer,Datacenter>> regionMap=mockRegionMap();
+  VirtualMachineTemplateToImage function=new VirtualMachineTemplateToImage(dcToLocation,regionMap);
   VirtualMachineTemplateDto dto=new VirtualMachineTemplateDto();
   dto.setId(5);
   dto.setName("Template");
   dto.setDescription("Template description");
   dto.addLink(new RESTLink("diskfile","http://foo/bar"));
+  dto.addLink(new RESTLink("datacenter","http://foo/bar/4"));
   Image image=function.apply(wrap(context,VirtualMachineTemplate.class,dto));
+  verify(regionMap);
+  verify(dcToLocation);
   assertEquals(image.getId(),dto.getId().toString());
   assertEquals(image.getName(),dto.getName());
   assertEquals(image.getDescription(),dto.getDescription());

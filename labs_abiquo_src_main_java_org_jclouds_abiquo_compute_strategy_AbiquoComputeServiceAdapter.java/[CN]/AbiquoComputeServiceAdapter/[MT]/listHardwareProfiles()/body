@@ -1,3 +1,14 @@
 {
-  return listImages();
+  return concat(transform(listImages(),new Function<VirtualMachineTemplate,Iterable<VirtualMachineTemplateInVirtualDatacenter>>(){
+    @Override public Iterable<VirtualMachineTemplateInVirtualDatacenter> apply(    final VirtualMachineTemplate template){
+      Iterable<VirtualDatacenter> compatibleZones=compatibleVirtualDatacenters.execute(template);
+      return transform(compatibleZones,new Function<VirtualDatacenter,VirtualMachineTemplateInVirtualDatacenter>(){
+        @Override public VirtualMachineTemplateInVirtualDatacenter apply(        final VirtualDatacenter vdc){
+          return new VirtualMachineTemplateInVirtualDatacenter(template,vdc);
+        }
+      }
+);
+    }
+  }
+));
 }
