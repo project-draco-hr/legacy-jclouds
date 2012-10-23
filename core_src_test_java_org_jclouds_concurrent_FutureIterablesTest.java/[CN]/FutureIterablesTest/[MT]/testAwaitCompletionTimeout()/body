@@ -1,0 +1,27 @@
+{
+  final long timeoutMs=1000;
+  ExecutorService executorService=Executors.newSingleThreadExecutor();
+  Map<Void,Future<?>> responses=Maps.newHashMap();
+  try {
+    responses.put(null,executorService.submit(new Runnable(){
+      @Override public void run(){
+        try {
+          Thread.sleep(2 * timeoutMs);
+        }
+ catch (        InterruptedException ie) {
+        }
+      }
+    }
+));
+    Map<Void,Exception> errors=FutureIterables.awaitCompletion(responses,executorService,timeoutMs,Logger.CONSOLE,"");
+    if (!errors.isEmpty()) {
+      throw errors.values().iterator().next();
+    }
+    fail("Did not throw TimeoutException");
+  }
+ catch (  TimeoutException te) {
+  }
+ finally {
+    executorService.shutdownNow();
+  }
+}

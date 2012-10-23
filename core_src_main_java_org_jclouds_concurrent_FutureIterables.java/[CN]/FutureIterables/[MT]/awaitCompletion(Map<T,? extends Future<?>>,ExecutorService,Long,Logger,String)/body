@@ -30,7 +30,12 @@
   }
   try {
     if (maxTime != null) {
-      doneSignal.await(maxTime,TimeUnit.MILLISECONDS);
+      if (!doneSignal.await(maxTime,TimeUnit.MILLISECONDS)) {
+        String message=message(logPrefix,total,complete.get(),errors.get(),start);
+        TimeoutException te=new TimeoutException(message);
+        logger.error(te,message);
+        throw te;
+      }
     }
  else {
       doneSignal.await();
@@ -45,11 +50,10 @@
       logger.trace(message);
     }
   }
- catch (  InterruptedException e) {
+ catch (  InterruptedException ie) {
     String message=message(logPrefix,total,complete.get(),errors.get(),start);
-    TimeoutException exception=new TimeoutException(message);
-    logger.error(exception,message);
-    propagate(exception);
+    logger.error(ie,message);
+    throw propagate(ie);
   }
   return errorMap;
 }

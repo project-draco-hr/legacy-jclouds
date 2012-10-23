@@ -29,7 +29,13 @@ catch (        ExecutionException e) {
 ,userExecutor);
     responses.put(md.getName(),future);
   }
-  Map<String,Exception> exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("searching for md5 in container %s",containerName));
+  Map<String,Exception> exceptions;
+  try {
+    exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,String.format("searching for md5 in container %s",containerName));
+  }
+ catch (  TimeoutException te) {
+    throw propagate(te);
+  }
   if (exceptions.size() > 0)   throw new BlobRuntimeException(String.format("searching for md5 in container %s: %s",containerName,exceptions));
   try {
     return queue.poll(1,TimeUnit.MICROSECONDS) != null;
