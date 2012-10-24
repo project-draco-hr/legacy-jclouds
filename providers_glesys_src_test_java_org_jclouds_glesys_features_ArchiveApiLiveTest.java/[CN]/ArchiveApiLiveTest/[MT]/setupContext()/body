@@ -1,0 +1,11 @@
+{
+  super.setupContext();
+  api=gleContext.getApi().getArchiveApi();
+  archiveUser=gleContext.getIdentity().toLowerCase() + "_test9";
+  archiveCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+    public boolean apply(    Integer value){
+      return api.list().size() == value;
+    }
+  }
+,30,1,TimeUnit.SECONDS);
+}

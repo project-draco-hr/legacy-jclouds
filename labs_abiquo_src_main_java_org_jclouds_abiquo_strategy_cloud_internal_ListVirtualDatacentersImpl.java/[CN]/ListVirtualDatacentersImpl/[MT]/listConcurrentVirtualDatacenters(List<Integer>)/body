@@ -1,0 +1,9 @@
+{
+  Iterable<VirtualDatacenterDto> vdcs=transformParallel(ids,new Function<Integer,Future<? extends VirtualDatacenterDto>>(){
+    @Override public Future<VirtualDatacenterDto> apply(    final Integer input){
+      return context.getAsyncApi().getCloudApi().getVirtualDatacenter(input);
+    }
+  }
+,userExecutor,maxTime,logger,"getting virtual datacenters");
+  return DomainWrapper.wrap(context,VirtualDatacenter.class,Lists.newArrayList(vdcs));
+}

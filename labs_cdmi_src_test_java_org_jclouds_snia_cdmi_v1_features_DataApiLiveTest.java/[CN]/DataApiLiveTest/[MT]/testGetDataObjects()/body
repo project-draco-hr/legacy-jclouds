@@ -14,22 +14,22 @@
   pDataObjectMetaDataIn.put("dataObjectkey2","value2");
   pDataObjectMetaDataIn.put("dataObjectkey3","value3");
   CreateContainerOptions pCreateContainerOptions=CreateContainerOptions.Builder.metadata(pContainerMetaDataIn);
-  ContainerApi containerApi=cdmiContext.getApi().getContainerApi();
-  DataApi dataApi=cdmiContext.getApi().getDataApi();
-  Logger.getAnonymousLogger().info("createContainer: " + containerName);
-  Container container=containerApi.createContainer(containerName,pCreateContainerOptions);
+  ContainerApi containerApi=cdmiContext.getApi().getApi();
+  DataApi dataApi=cdmiContext.getApi().getDataApiForContainer(containerName);
+  Logger.getAnonymousLogger().info("create: " + containerName);
+  Container container=containerApi.create(containerName,pCreateContainerOptions);
   try {
     assertNotNull(container);
     System.out.println(container);
-    container=containerApi.getContainer(containerName);
+    container=containerApi.get(containerName);
     assertNotNull(container);
     assertNotNull(container.getChildren());
     assertEquals(container.getChildren().isEmpty(),true);
     value="Hello CDMI data object with value mimetype and metadata";
     pCreateDataObjectOptions=CreateDataObjectOptions.Builder.value(value).mimetype("text/plain").metadata(pDataObjectMetaDataIn);
-    dataObject=dataApi.createDataObject(containerName,dataObjectNameIn,pCreateDataObjectOptions);
+    dataObject=dataApi.create(dataObjectNameIn,pCreateDataObjectOptions);
     assertNotNull(dataObject);
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn);
+    dataObject=dataApi.get(dataObjectNameIn);
     assertNotNull(dataObject);
     System.out.println(dataObject);
     System.out.println("value: " + dataObject.getValueAsString());
@@ -47,23 +47,23 @@
     assertEquals(dataObject.getObjectName(),dataObjectNameIn);
     assertEquals(dataObject.getObjectType(),"application/cdmi-object");
     assertEquals(dataObject.getParentURI(),"/" + containerName);
-    assertEquals(containerApi.getContainer(containerName).getChildren().contains(dataObjectNameIn),true);
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI"));
+    assertEquals(containerApi.get(containerName).getChildren().contains(dataObjectNameIn),true);
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI"));
     assertNotNull(dataObject);
     System.out.println(dataObject);
     assertEquals(dataObject.getParentURI(),container.getParentURI() + container.getObjectName());
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName"));
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName"));
     assertNotNull(dataObject);
     System.out.println(dataObject);
     assertEquals(dataObject.getParentURI(),container.getParentURI() + container.getObjectName());
     assertEquals(dataObject.getObjectName(),dataObjectNameIn);
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName").field("mimetype"));
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName").field("mimetype"));
     assertNotNull(dataObject);
     System.out.println(dataObject);
     assertEquals(dataObject.getParentURI(),container.getParentURI() + container.getObjectName());
     assertEquals(dataObject.getObjectName(),dataObjectNameIn);
     assertEquals(dataObject.getMimetype(),"text/plain");
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName").field("mimetype").metadata());
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("parentURI").field("objectName").field("mimetype").metadata());
     assertNotNull(dataObject);
     System.out.println(dataObject);
     assertEquals(dataObject.getParentURI(),container.getParentURI() + container.getObjectName());
@@ -78,26 +78,26 @@
       assertEquals(dataObjectMetaDataOut.get(key),pDataObjectMetaDataIn.get(key));
     }
     assertEquals(Integer.parseInt(dataObject.getSystemMetadata().get("cdmi_size")),value.length());
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.metadata("cdmi_size"));
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.metadata("cdmi_size"));
     assertNotNull(dataObject);
     System.out.println(dataObject);
     assertEquals(Integer.parseInt(dataObject.getSystemMetadata().get("cdmi_size")),value.length());
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("mimetype").value());
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("mimetype").value());
     assertNotNull(dataObject);
     System.out.println(dataObject);
     System.out.println(dataObject.getValueAsString());
     assertEquals(dataObject.getMimetype(),"text/plain");
     assertEquals(dataObject.getValueAsString(),value);
-    dataObject=dataApi.getDataObject(containerName,dataObjectNameIn,DataObjectQueryParams.Builder.field("mimetype").value(0,3));
+    dataObject=dataApi.get(dataObjectNameIn,DataObjectQueryParams.Builder.field("mimetype").value(0,3));
     assertNotNull(dataObject);
     System.out.println(dataObject);
     System.out.println(dataObject.getValueAsString());
     assertEquals(dataObject.getMimetype(),"text/plain");
-    dataApi.deleteDataObject(containerName,dataObjectNameIn);
-    assertEquals(containerApi.getContainer(containerName).getChildren().contains(dataObjectNameIn),false);
+    dataApi.delete(dataObjectNameIn);
+    assertEquals(containerApi.get(containerName).getChildren().contains(dataObjectNameIn),false);
   }
   finally {
     tmpFileIn.delete();
-    containerApi.deleteContainer(containerName);
+    containerApi.delete(containerName);
   }
 }

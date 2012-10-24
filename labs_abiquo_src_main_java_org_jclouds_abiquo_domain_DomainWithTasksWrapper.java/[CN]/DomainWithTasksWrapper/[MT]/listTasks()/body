@@ -1,0 +1,11 @@
+{
+  TasksDto result=context.getApi().getTaskApi().listTasks(target);
+  List<AsyncTask> tasks=wrap(context,AsyncTask.class,result.getCollection());
+  Collections.sort(tasks,new Ordering<AsyncTask>(){
+    @Override public int compare(    final AsyncTask left,    final AsyncTask right){
+      return Longs.compare(left.getTimestamp(),right.getTimestamp());
+    }
+  }
+.reverse());
+  return tasks;
+}

@@ -4,7 +4,9 @@
   checkNotNull(networkAdapter);
   String clientIpAddress=null;
   String sshPort="22";
-  LoginCredentials loginCredentials=LoginCredentials.builder().user("toor").password("password").authenticateSudo(true).build();
+  String guestIdentity=vm.getExtraData(GUEST_OS_USER);
+  String guestCredential=vm.getExtraData(GUEST_OS_PASSWORD);
+  LoginCredentials loginCredentials=LoginCredentials.builder().user(guestIdentity).password(guestCredential).authenticateSudo(true).build();
   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.NAT)) {
     for (    String nameProtocolnumberAddressInboudportGuestTargetport : networkAdapter.getNatDriver().getRedirects()) {
       Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
@@ -19,11 +21,10 @@
     }
   }
  else   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.Bridged)) {
-    String network="1.1.1.1";
-    clientIpAddress=getIpAddressFromBridgedNIC(networkAdapter,network);
+    clientIpAddress=networkUtils.getIpAddressFromNicSlot(vm.getName(),networkAdapter.getSlot());
   }
  else   if (networkAdapter.getAttachmentType().equals(NetworkAttachmentType.HostOnly)) {
-    clientIpAddress=machineUtils.getIpAddressFromHostOnlyNIC(vm.getName());
+    clientIpAddress=networkUtils.getIpAddressFromNicSlot(vm.getName(),networkAdapter.getSlot());
   }
   checkNotNull(clientIpAddress,"clientIpAddress");
   client=sshClientFactory.create(HostAndPort.fromParts(clientIpAddress,Integer.parseInt(sshPort)),loginCredentials);

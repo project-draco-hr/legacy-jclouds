@@ -1,12 +1,12 @@
 {
   if (apiOption.isPresent()) {
     QuotaApi api=apiOption.get();
-    Quotas before=api.getQuotasForTenant(tenant);
+    Quota before=api.getByTenant(tenant);
     assertQuotasIsValid(before);
-    Quotas modified=before.toBuilder().cores(before.getCores() - 1).instances(before.getInstances() - 1).metadataItems(before.getMetadataItems() - 1).ram(before.getRam() - 1).volumes(before.getVolumes() - 1).build();
-    assertTrue(api.updateQuotasForTenant(tenant,modified));
-    assertEquals(api.getQuotasForTenant(tenant),modified);
-    assertTrue(api.updateQuotasForTenant(tenant,before));
-    assertEquals(api.getQuotasForTenant(tenant),before);
+    Quota modified=before.toBuilder().cores(before.getCores() - 1).instances(before.getInstances() - 1).metadataItems(before.getMetadatas() - 1).ram(before.getRam() - 1).volumes(before.getVolumes() - 1).build();
+    assertTrue(api.updateQuotaOfTenant(modified,tenant));
+    assertEquals(api.getByTenant(tenant),modified);
+    assertTrue(api.updateQuotaOfTenant(before,tenant));
+    assertEquals(api.getByTenant(tenant),before);
   }
 }

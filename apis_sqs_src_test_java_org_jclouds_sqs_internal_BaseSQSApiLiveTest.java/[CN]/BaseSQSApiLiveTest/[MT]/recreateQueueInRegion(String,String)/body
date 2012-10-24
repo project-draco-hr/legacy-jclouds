@@ -1,0 +1,11 @@
+{
+  QueueApi api=api().getQueueApiForRegion(region);
+  URI result=api.get(queueName);
+  if (result != null) {
+    api.delete(result);
+  }
+  URI queue=api.create(queueName);
+  assertQueueInList(region,queue);
+  queues.add(queue);
+  return queueName;
+}

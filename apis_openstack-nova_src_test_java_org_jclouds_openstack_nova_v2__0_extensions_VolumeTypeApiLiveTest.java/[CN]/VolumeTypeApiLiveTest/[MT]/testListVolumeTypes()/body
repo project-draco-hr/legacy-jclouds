@@ -1,15 +1,15 @@
 {
   if (volumeTypeOption.isPresent()) {
-    Set<? extends VolumeType> volumeTypes=volumeTypeOption.get().listVolumeTypes();
+    Set<? extends VolumeType> volumeTypes=volumeTypeOption.get().list().toImmutableSet();
     assertNotNull(volumeTypes);
     boolean foundIt=false;
     for (    VolumeType vt : volumeTypes) {
-      VolumeType details=volumeTypeOption.get().getVolumeType(vt.getId());
+      VolumeType details=volumeTypeOption.get().get(vt.getId());
       assertNotNull(details);
       if (Objects.equal(details.getId(),testVolumeType.getId())) {
         foundIt=true;
       }
     }
-    assertTrue(foundIt,"Failed to find the volume type we created in listVolumeTypes() response");
+    assertTrue(foundIt,"Failed to find the volume type we created in list() response");
   }
 }

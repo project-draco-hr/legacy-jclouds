@@ -1,0 +1,10 @@
+{
+  PricingTemplate repeated=PricingTemplate.Builder.fromPricingTemplate(pricingTemplate).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create pricingtemplates with the same name");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"PRICINGTEMPLATE-2");
+  }
+}

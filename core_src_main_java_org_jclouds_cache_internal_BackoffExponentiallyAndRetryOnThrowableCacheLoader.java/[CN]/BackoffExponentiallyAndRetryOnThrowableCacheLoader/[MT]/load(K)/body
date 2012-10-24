@@ -1,7 +1,16 @@
 {
   return backoffExponentiallyAndRetryOnThrowable(new Callable<V>(){
     @Override public V call() throws Exception {
-      return BackoffExponentiallyAndRetryOnThrowableCacheLoader.super.load(key);
+      try {
+        return BackoffExponentiallyAndRetryOnThrowableCacheLoader.super.load(key);
+      }
+ catch (      Exception e) {
+        TimeoutException te=Throwables2.getFirstThrowableOfType(e,TimeoutException.class);
+        if (te != null) {
+          throw te;
+        }
+        throw e;
+      }
     }
   }
 );

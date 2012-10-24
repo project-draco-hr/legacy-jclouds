@@ -25,8 +25,8 @@
   blob.getMetadata().setLastModified(new Date());
   String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
   blob.getMetadata().setETag(eTag);
-  blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,Collections.singleton(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
-  blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,Collections.singleton(eTag));
+  blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,ImmutableList.of(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
+  blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,ImmutableList.of(eTag));
   copyPayloadHeadersToBlob(payload,blob);
   blob.getAllHeaders().putAll(Multimaps.forMap(blob.getMetadata().getUserMetadata()));
   return blob;

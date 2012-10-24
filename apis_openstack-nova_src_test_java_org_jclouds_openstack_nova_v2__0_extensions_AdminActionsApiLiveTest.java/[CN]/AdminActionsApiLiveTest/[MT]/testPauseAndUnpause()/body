@@ -1,27 +1,26 @@
 {
-  if (apiOption.isPresent()) {
-    AdminActionsApi api=apiOption.get();
-    try {
-      api.unpauseServer(testServerId);
-      fail("Unpaused active server!");
-    }
- catch (    HttpResponseException e) {
-    }
-    assertTrue(api.pauseServer(testServerId));
-    blockUntilServerInState(testServerId,serverApi,Status.PAUSED);
-    try {
-      api.pauseServer(testServerId);
-      fail("paused a paused server!");
-    }
- catch (    HttpResponseException e) {
-    }
-    assertTrue(api.unpauseServer(testServerId));
-    blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
-    try {
-      api.unpauseServer(testServerId);
-      fail("Unpaused a server we just unpaused!");
-    }
- catch (    HttpResponseException e) {
-    }
+  skipOnAdminExtensionAbsent();
+  ServerAdminApi api=apiOption.get();
+  try {
+    api.unpause(testServerId);
+    fail("Unpaused active server!");
+  }
+ catch (  HttpResponseException e) {
+  }
+  assertTrue(api.pause(testServerId));
+  blockUntilServerInState(testServerId,serverApi,Status.PAUSED);
+  try {
+    api.pause(testServerId);
+    fail("paused a paused server!");
+  }
+ catch (  HttpResponseException e) {
+  }
+  assertTrue(api.unpause(testServerId));
+  blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
+  try {
+    api.unpause(testServerId);
+    fail("Unpaused a server we just unpaused!");
+  }
+ catch (  HttpResponseException e) {
   }
 }

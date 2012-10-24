@@ -1,0 +1,38 @@
+{
+  VirtualMachineWithNodeExtendedDto dto=new VirtualMachineWithNodeExtendedDto();
+  dto.setNodeName(nameLabel);
+  dto.setDescription(description);
+  dto.setHdInBytes(template.getHdRequired());
+  dto.setVdrpIP(vncAddress);
+  if (cpu != null) {
+    dto.setCpu(cpu);
+  }
+  if (ram != null) {
+    dto.setRam(ram);
+  }
+  if (vncPort != null) {
+    dto.setVdrpPort(vncPort);
+  }
+  if (idState != null) {
+    dto.setIdState(idState);
+  }
+  if (idType != null) {
+    dto.setIdType(idType);
+  }
+  if (internalName != null) {
+    dto.setName(internalName);
+  }
+  dto.setPassword(password);
+  dto.setKeymap(keymap);
+  dto.setUuid(uuid);
+  if (dvd) {
+    DvdManagementDto dvd=new DvdManagementDto();
+    RESTLink link=new RESTLink("image","");
+    dvd.addLink(link);
+    dto.setDvd(dvd);
+  }
+  VirtualMachine virtualMachine=new VirtualMachine(context,dto);
+  virtualMachine.virtualAppliance=virtualAppliance;
+  virtualMachine.template=template;
+  return virtualMachine;
+}

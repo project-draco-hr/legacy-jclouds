@@ -1,10 +1,10 @@
 {
   String signed;
   try {
-    signer.update(stringToSign.getBytes("UTF-8"));
+    signer.update(stringToSign.getBytes(Charsets.UTF_8));
     signed=Base64.encodeBytes(signer.sign()).replace("\n","\r\n");
   }
- catch (  Exception e) {
+ catch (  SignatureException e) {
     throw new HttpException("error signing request",e);
   }
   return signed;

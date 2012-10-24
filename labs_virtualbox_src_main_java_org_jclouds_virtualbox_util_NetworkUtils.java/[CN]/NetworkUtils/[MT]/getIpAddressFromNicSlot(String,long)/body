@@ -1,0 +1,17 @@
+{
+  MachineNameOrIdAndNicSlot machineNameOrIdAndNicSlot=MachineNameOrIdAndNicSlot.fromParts(machineNameOrId,nicSlot);
+  logger.debug("Looking for an available IP address for %s at slot %s ...",machineNameOrIdAndNicSlot.getMachineNameOrId(),machineNameOrIdAndNicSlot.getSlotText());
+  try {
+    String ipAddress=ipAddressesLoadingCache.get(machineNameOrIdAndNicSlot);
+    while (!isValidIpForHostOnly(machineNameOrIdAndNicSlot,ipAddress)) {
+      ipAddressesLoadingCache.invalidate(machineNameOrIdAndNicSlot);
+      ipAddress=ipAddressesLoadingCache.get(machineNameOrIdAndNicSlot);
+    }
+    logger.debug("Found an available IP address %s for guest: %s at slot: %s",ipAddress,machineNameOrIdAndNicSlot.getMachineNameOrId(),machineNameOrIdAndNicSlot.getSlotText());
+    return ipAddress;
+  }
+ catch (  ExecutionException e) {
+    logger.error("Problem in using the ipAddressCache",e.getCause());
+    throw Throwables.propagate(e);
+  }
+}

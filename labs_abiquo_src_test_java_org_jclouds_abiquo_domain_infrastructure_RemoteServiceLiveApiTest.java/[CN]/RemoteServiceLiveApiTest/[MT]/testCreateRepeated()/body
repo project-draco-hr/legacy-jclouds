@@ -1,0 +1,10 @@
+{
+  RemoteService repeated=Builder.fromRemoteService(env.remoteServices.get(1)).build();
+  try {
+    repeated.save();
+    fail("Should not be able to create duplicated remote services in the datacenter");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"RS-6");
+  }
+}

@@ -1,0 +1,10 @@
+{
+  Integer argIndex=entry.getKey();
+  Object arg=args[argIndex];
+  if (extractors != null && extractors.size() > 0 && checkPresentOrNullable(method,paramKey,argIndex,arg)) {
+    ParamParser extractor=(ParamParser)extractors.iterator().next();
+    arg=injector.getInstance(extractor.value()).apply(arg);
+  }
+  checkPresentOrNullable(method,paramKey,argIndex,arg);
+  return Optional.fromNullable(arg);
+}

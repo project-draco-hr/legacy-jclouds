@@ -1,0 +1,16 @@
+{
+  UnmanagedNetwork toUpdate=createNetwork(unmanagedNetwork,PREFIX + "-umtoupdate-test");
+  try {
+    toUpdate.setTag(20);
+    toUpdate.setAddress("10.2.0.0");
+    toUpdate.setMask(16);
+    toUpdate.update();
+    fail("Tag field should not be editable");
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.CONFLICT,"VLAN-19");
+  }
+ finally {
+    toUpdate.delete();
+  }
+}

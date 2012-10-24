@@ -1,0 +1,5 @@
+{
+  HttpResponse getQueueUrlResponse=HttpResponse.builder().statusCode(400).payload(payloadFromStringWithContentType("<ErrorResponse><Error><Type>Sender</Type><Code>AWS.SimpleQueueService.NonExistentQueue</Code><Message>The specified queue does not exist or you do not have access to it.</Message><Detail/></Error><RequestId>194a169f-4483-5bb1-8cb6-5e4ac865909a</RequestId></ErrorResponse>","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(getQueueUrlByOwner,getQueueUrlResponse);
+  assertNull(apiWhenExist.getQueueApi().getInAccount("queueName","120908098979"));
+}

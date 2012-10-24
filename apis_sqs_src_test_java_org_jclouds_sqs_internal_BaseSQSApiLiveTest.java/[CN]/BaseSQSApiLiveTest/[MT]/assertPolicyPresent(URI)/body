@@ -1,0 +1,12 @@
+{
+  final AtomicReference<String> policy=new AtomicReference<String>();
+  assertEventually(new Runnable(){
+    public void run(){
+      String policyForAuthorizationByAccount=api().getQueueApi().getAttribute(queue,"Policy");
+      assertNotNull(policyForAuthorizationByAccount);
+      policy.set(policyForAuthorizationByAccount);
+    }
+  }
+);
+  return policy.get();
+}

@@ -1,0 +1,11 @@
+{
+  Method method=ConfigAsyncApi.class.getMethod("addLicense",LicenseDto.class);
+  GeneratedHttpRequest request=processor.createRequest(method,ConfigResources.licensePost());
+  assertRequestLineEquals(request,"POST http://localhost/api/config/licenses HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + LicenseDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,withHeader(ConfigResources.licensePostPayload()),LicenseDto.class,LicenseDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

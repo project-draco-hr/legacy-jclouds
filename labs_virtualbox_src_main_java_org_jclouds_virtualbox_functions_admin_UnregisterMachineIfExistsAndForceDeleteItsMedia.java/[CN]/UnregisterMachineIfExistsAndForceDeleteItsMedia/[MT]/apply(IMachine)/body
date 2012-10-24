@@ -1,5 +1,5 @@
 {
-  List<IMedium> mediaToBeDeleted=Collections.emptyList();
+  List<IMedium> mediaToBeDeleted=ImmutableList.of();
   try {
     mediaToBeDeleted=machine.unregister(CleanupMode.Full);
   }
@@ -17,7 +17,7 @@ List<IMedium> filteredMediaToBeDeleted=Lists.newArrayList(transform(mediaToBeDel
 if (!filteredMediaToBeDeleted.isEmpty()) {
 try {
 IProgress deletion=machine.delete(filteredMediaToBeDeleted);
-deletion.waitForCompletion(-1);
+deletion.waitForCompletion(100);
 }
  catch (Exception e) {
 logger.error(e,"Problem in deleting the media attached to %s",machine.getName());

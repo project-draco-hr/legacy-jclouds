@@ -1,0 +1,20 @@
+{
+  VirtualMachine mockVm=EasyMock.createMock(VirtualMachine.class);
+  Ip<?,?> mockPrivNic=wrap(EasyMock.createMock(RestContext.class),PrivateIp.class,privNic);
+  Ip<?,?> mockPubNic=wrap(EasyMock.createMock(RestContext.class),PublicIp.class,pubNic);
+  Ip<?,?> mockExtNic=wrap(EasyMock.createMock(RestContext.class),ExternalIp.class,extNic);
+  expect(mockVm.getId()).andReturn(vm.getId());
+  expect(mockVm.getURI()).andReturn(URI.create(vm.getEditLink().getHref()));
+  expect(mockVm.getNameLabel()).andReturn(vm.getNodeName());
+  expect(mockVm.getTemplate()).andReturn(mockTemplate());
+  expect(mockVm.getState()).andReturn(vm.getState());
+  expect(mockVm.listAttachedNics()).andReturn(ImmutableList.<Ip<?,?>>of(mockPubNic,mockPrivNic,mockExtNic));
+  expect(mockVm.getVirtualAppliance()).andReturn(vapp);
+  expect(vapp.getName()).andReturn("VAPP");
+  expect(mockVm.getVirtualDatacenter()).andReturn(mockVirtualDatacenter());
+  expect(mockVm.getRam()).andReturn(vm.getRam());
+  expect(mockVm.getCpu()).andReturn(vm.getCpu());
+  replay(mockVm);
+  replay(vapp);
+  return mockVm;
+}

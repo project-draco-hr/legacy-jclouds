@@ -1,0 +1,16 @@
+{
+  for (  URI queue : queues) {
+    MessageApi api=api().getMessageApiForQueue(queue);
+    Set<Message> messages=collectMessages(api);
+    receiptHandles=Iterables.transform(messages,new Function<Message,String>(){
+      @Override public String apply(      Message in){
+        return in.getReceiptHandle();
+      }
+    }
+);
+    assertNull(api.receive());
+    BatchResult<String> acks=api.changeVisibility(receiptHandles,0);
+    assertEquals(acks.size(),messages.size(),"error changing visibility " + acks);
+    assertEquals(collectMessages(api).size(),messages.size());
+  }
+}

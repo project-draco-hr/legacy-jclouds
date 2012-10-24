@@ -1,0 +1,23 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(vm.getId().toString());
+  builder.uri(vm.getURI());
+  builder.name(vm.getNameLabel());
+  builder.group(vm.getVirtualAppliance().getName());
+  VirtualDatacenter vdc=vm.getVirtualDatacenter();
+  builder.location(virtualDatacenterToLocation.apply(vdc));
+  VirtualMachineTemplate template=vm.getTemplate();
+  Image image=virtualMachineTemplateToImage.apply(template);
+  builder.imageId(image.getId().toString());
+  builder.operatingSystem(image.getOperatingSystem());
+  Hardware defaultHardware=virtualMachineTemplateToHardware.apply(new VirtualMachineTemplateInVirtualDatacenter(template,vdc));
+  Hardware hardware=HardwareBuilder.fromHardware(defaultHardware).ram(vm.getRam()).processors(Lists.newArrayList(new Processor(vm.getCpu(),VirtualMachineTemplateInVirtualDatacenterToHardware.DEFAULT_CORE_SPEED))).build();
+  builder.hardware(hardware);
+  List<Ip<?,?>> nics=vm.listAttachedNics();
+  builder.privateAddresses(ips(filter(nics,Predicates.instanceOf(PrivateIp.class))));
+  builder.publicAddresses(ips(filter(nics,Predicates.not(Predicates.instanceOf(PrivateIp.class)))));
+  VirtualMachineState state=vm.getState();
+  builder.status(virtualMachineStateToNodeState.apply(state));
+  builder.backendStatus(state.name());
+  return builder.build();
+}

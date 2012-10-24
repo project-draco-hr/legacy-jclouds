@@ -1,0 +1,9 @@
+{
+  Iterable<MachinesDto> machines=transformParallel(racks,new Function<RackDto,Future<? extends MachinesDto>>(){
+    @Override public Future<MachinesDto> apply(    final RackDto input){
+      return context.getAsyncApi().getInfrastructureApi().listMachines(input);
+    }
+  }
+,userExecutor,maxTime,logger,"getting machines");
+  return DomainWrapper.join(machines);
+}

@@ -24,7 +24,7 @@
       KeySpec keySpec=Pems.privateKeySpec(InputSuppliers.of(pemPrivateKey));
       PrivateKey privateKey=crypto.rsaKeyFactory().generatePrivate(keySpec);
       CertificateFactory cf=CertificateFactory.getInstance("X.509");
-      @SuppressWarnings("unchecked") Collection<Certificate> certs=(Collection<Certificate>)cf.generateCertificates(new ByteArrayInputStream(pemCerts.getBytes("UTF-8")));
+      @SuppressWarnings("unchecked") Collection<Certificate> certs=(Collection<Certificate>)cf.generateCertificates(new ByteArrayInputStream(pemCerts.getBytes(Charsets.UTF_8)));
       keyStore.load(null);
       keyStore.setKeyEntry("dummy",privateKey,keyStorePassword.toCharArray(),certs.toArray(new java.security.cert.Certificate[0]));
     }

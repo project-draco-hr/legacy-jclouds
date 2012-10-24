@@ -1,9 +1,13 @@
 {
-  Iterable<String> containers=new Iterable<String>(){
-    @Override public Iterator<String> iterator(){
-      return new FileIterator(buildPathStartingFromBaseDir(),DirectoryFileFilter.INSTANCE);
+  File[] files=new File(buildPathStartingFromBaseDir()).listFiles();
+  if (files == null) {
+    return ImmutableList.of();
+  }
+  ImmutableList.Builder<String> containers=ImmutableList.builder();
+  for (  File file : files) {
+    if (file.isDirectory()) {
+      containers.add(file.getName());
     }
   }
-;
-  return containers;
+  return containers.build();
 }

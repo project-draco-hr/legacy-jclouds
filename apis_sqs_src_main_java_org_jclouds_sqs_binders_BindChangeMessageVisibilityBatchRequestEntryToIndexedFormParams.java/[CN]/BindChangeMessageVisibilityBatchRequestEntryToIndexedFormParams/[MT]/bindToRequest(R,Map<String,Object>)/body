@@ -1,0 +1,10 @@
+{
+  Map<String,String> idReceiptHandle=(Map<String,String>)postParams.get("idReceiptHandle");
+  if (idReceiptHandle == null) {
+    idReceiptHandle=idReceiptHandle((Iterable<String>)postParams.get("receiptHandles"));
+  }
+  int visibilityTimeout=(Integer)postParams.get("visibilityTimeout");
+  Builder<Object,Object,Object> builder=ImmutableTable.builder();
+  for (  Map.Entry<?,?> entry : idReceiptHandle.entrySet())   builder.put(entry.getKey(),entry.getValue(),visibilityTimeout);
+  return bindToRequest(request,(Object)builder.build());
+}

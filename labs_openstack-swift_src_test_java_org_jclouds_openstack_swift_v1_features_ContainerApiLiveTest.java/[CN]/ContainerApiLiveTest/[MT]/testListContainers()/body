@@ -1,0 +1,12 @@
+{
+  for (  String regionId : swiftContext.getApi().getConfiguredRegions()) {
+    ContainerApi api=swiftContext.getApi().getContainerApiForRegion(regionId);
+    FluentIterable<? extends Container> response=api.list();
+    assertNotNull(response);
+    for (    Container container : response) {
+      assertNotNull(container.getName());
+      assertTrue(container.getCount() >= 0);
+      assertTrue(container.getBytes() >= 0);
+    }
+  }
+}

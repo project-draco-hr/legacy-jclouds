@@ -1,0 +1,16 @@
+{
+  long start=System.currentTimeMillis();
+  AssertionError error=null;
+  for (int i=0; i < 30; i++) {
+    try {
+      assertion.run();
+      if (i > 0)       System.err.printf("%d attempts and %dms asserting %s%n",i + 1,System.currentTimeMillis() - start,assertion.getClass().getSimpleName());
+      return;
+    }
+ catch (    AssertionError e) {
+      error=e;
+    }
+    Uninterruptibles.sleepUninterruptibly(INCONSISTENCY_WINDOW / 30,TimeUnit.MILLISECONDS);
+  }
+  if (error != null)   throw error;
+}

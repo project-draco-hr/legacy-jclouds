@@ -1,0 +1,12 @@
+{
+  final DomainApi api=gleContext.getApi().getDomainApi();
+  int before=api.list().size();
+  api.create(domain);
+  RetryablePredicate<Integer> result=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+    public boolean apply(    Integer value){
+      return api.list().size() == value;
+    }
+  }
+,30,1,TimeUnit.SECONDS);
+  assertTrue(result.apply(before + 1));
+}

@@ -1,0 +1,7 @@
+{
+  BlobStore signPutBlob=requestsSendResponses(init());
+  Blob blob=signPutBlob.blobBuilder("name").forSigning().contentLength(2l).contentMD5(new byte[]{0,2,4,8}).contentType("text/plain").expires(new Date(1000)).build();
+  HttpRequest compare=putBlob();
+  compare.setPayload(blob.getPayload());
+  assertEquals(signPutBlob.getContext().getSigner().signPutBlob(container,blob),compare);
+}

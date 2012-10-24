@@ -1,0 +1,26 @@
+{
+  if (equalsOrSuffix(qName,"item")) {
+    endItem(uri,name,qName);
+    itemDepth--;
+  }
+ else   if (equalsOrSuffix(qName,"ipPermissions")) {
+    inIpPermissions=false;
+    itemDepth=0;
+  }
+ else   if (inIpPermissions) {
+    ipPermissionHandler.endElement(uri,name,qName);
+  }
+ else   if (equalsOrSuffix(qName,"groupName")) {
+    builder.name(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"groupId")) {
+    builder.id(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"ownerId")) {
+    builder.ownerId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"groupDescription")) {
+    builder.description(currentOrNull(currentText));
+  }
+  currentText=new StringBuilder();
+}

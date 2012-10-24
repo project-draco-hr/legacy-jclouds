@@ -1,0 +1,7 @@
+{
+  HttpRequest authRequest=HttpRequest.builder().method("POST").endpoint("https://auth.api.rackspacecloud.com/v1.1/auth").addHeader(HttpHeaders.ACCEPT,"application/json").payload(payloadFromStringWithContentType("{\"credentials\":{\"username\":\"user@jclouds.org\",\"key\":\"Password1234\"}}","application/json")).build();
+  HttpResponse authResponse=HttpResponse.builder().statusCode(200).message("HTTP/1.1 200").payload(payloadFromResourceWithContentType("/auth1_1.json","application/json")).build();
+  HttpRequest temporaryKeyRequest=HttpRequest.builder().method("HEAD").endpoint("https://storage101.lon3.clouddrive.com/v1/MossoCloudFS_83a9d536-2e25-4166-bd3b-a503a934f953/").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse temporaryKeyResponse=HttpResponse.builder().statusCode(200).addHeader(ACCOUNT_TEMPORARY_URL_KEY,"TEMPORARY_KEY").build();
+  return ImmutableMap.<HttpRequest,HttpResponse>builder().put(authRequest,authResponse).put(temporaryKeyRequest,temporaryKeyResponse).build();
+}

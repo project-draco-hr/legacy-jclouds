@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/messages.xml");
+  FluentIterable<Message> expected=expected();
+  ReceiveMessageResponseHandler handler=injector.getInstance(ReceiveMessageResponseHandler.class);
+  FluentIterable<Message> result=factory.create(handler).parse(is);
+  assertEquals(result.toString(),expected.toString());
+}

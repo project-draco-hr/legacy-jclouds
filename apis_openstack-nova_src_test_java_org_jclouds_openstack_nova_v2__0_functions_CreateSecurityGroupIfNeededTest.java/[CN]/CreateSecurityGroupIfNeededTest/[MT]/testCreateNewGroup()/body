@@ -3,8 +3,8 @@
   builder.put(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess);
   builder.put(extensionsOfNovaRequest,extensionsOfNovaResponse);
   int groupId=2769;
-  HttpResponse createSecurityGroupResponse=HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType(String.format("{\"security_group\": {\"rules\": [], \"tenant_id\": \"37936628937291\", \"id\": %s, \"name\": \"jclouds_mygroup\", \"description\": \"jclouds_mygroup\"}}",groupId),"application/json; charset=UTF-8")).build();
-  builder.put(createSecurityGroup,createSecurityGroupResponse);
+  HttpResponse createResponse=HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType(String.format("{\"security_group\": {\"rules\": [], \"tenant_id\": \"37936628937291\", \"id\": %s, \"name\": \"jclouds_mygroup\", \"description\": \"jclouds_mygroup\"}}",groupId),"application/json; charset=UTF-8")).build();
+  builder.put(create,createResponse);
   int ruleId=10331;
   for (  int port : ImmutableList.of(22,8080)) {
     HttpRequest createCidrRule=HttpRequest.builder().method("POST").endpoint(URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-security-group-rules")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").put("X-Auth-Token",authToken).build()).payload(payloadFromStringWithContentType(String.format("{\"security_group_rule\":{\"parent_group_id\":\"%s\",\"cidr\":\"0.0.0.0/0\",\"ip_protocol\":\"tcp\",\"from_port\":\"%d\",\"to_port\":\"%d\"}}",groupId,port,port),"application/json")).build();

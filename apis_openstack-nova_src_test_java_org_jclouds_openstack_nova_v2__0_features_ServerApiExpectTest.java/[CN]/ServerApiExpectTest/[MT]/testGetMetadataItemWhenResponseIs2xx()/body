@@ -1,0 +1,8 @@
+{
+  String serverId="123";
+  String key="Server Label";
+  HttpRequest getMetadata=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata/"+ "Server%20Label").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse getMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/metadata_item.json")).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getMetadata,getMetadataResponse);
+  assertEquals(apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").getMetadata(serverId,key).toString(),"Web Head 1");
+}

@@ -21,7 +21,12 @@
     return returnVal;
   }
  else   if (syncMethodMap.containsKey(method)) {
-    return syncMethodMap.get(method).invoke(delegate,args);
+    try {
+      return syncMethodMap.get(method).invoke(delegate,args);
+    }
+ catch (    InvocationTargetException e) {
+      throw Throwables.propagate(e.getCause());
+    }
   }
  else {
     try {

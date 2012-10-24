@@ -1,0 +1,26 @@
+{
+  NodeMetadataBuilder builder=new NodeMetadataBuilder();
+  builder.ids(from.getId() + "");
+  builder.name(from.getHostname());
+  builder.hostname(from.getHostname());
+  Location location=findLocationForServerDetails.apply(from);
+  checkState(location != null,"no location matched ServerDetails %s",from);
+  builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
+  if (!isNullOrEmpty(from.getDescription()) && from.getDescription().matches("^[0-9A-Fa-f]+$")) {
+    String decoded=new String(CryptoStreams.hex(from.getDescription()),Charsets.UTF_8);
+    addMetadataAndParseTagsFromCommaDelimitedValue(builder,Splitter.on('\n').withKeyValueSeparator("=").split(decoded));
+  }
+  builder.imageId(from.getTemplateName() + "");
+  builder.operatingSystem(parseOperatingSystem(from));
+  builder.hardware(new HardwareBuilder().ids(from.getId() + "").ram(from.getMemorySizeMB()).processors(ImmutableList.of(new Processor(from.getCpuCores(),1.0))).volumes(ImmutableList.<Volume>of(new VolumeImpl((float)from.getDiskSizeGB(),true,true))).hypervisor(from.getPlatform()).build());
+  builder.status(serverStateToNodeStatus.get(from.getState()));
+  Iterable<String> addresses=Iterables.filter(Iterables.transform(from.getIps(),new Function<Ip,String>(){
+    @Override public String apply(    Ip arg0){
+      return Strings.emptyToNull(arg0.getIp());
+    }
+  }
+),Predicates.notNull());
+  builder.publicAddresses(Iterables.filter(addresses,Predicates.not(IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(Iterables.filter(addresses,IsPrivateIPAddress.INSTANCE));
+  return builder.build();
+}

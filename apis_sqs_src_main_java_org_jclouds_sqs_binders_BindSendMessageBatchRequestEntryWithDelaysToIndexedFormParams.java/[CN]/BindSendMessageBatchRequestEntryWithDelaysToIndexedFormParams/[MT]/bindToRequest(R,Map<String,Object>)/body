@@ -1,0 +1,10 @@
+{
+  Map<String,String> idMessageBody=(Map<String,String>)postParams.get("idMessageBody");
+  if (idMessageBody == null) {
+    idMessageBody=idMessageBody((Iterable<String>)postParams.get("messageBodies"));
+  }
+  int delaySeconds=(Integer)postParams.get("delaySeconds");
+  Builder<Object,Object,Object> builder=ImmutableTable.builder();
+  for (  Map.Entry<?,?> entry : idMessageBody.entrySet())   builder.put(entry.getKey(),entry.getValue(),delaySeconds);
+  return bindToRequest(request,(Object)builder.build());
+}

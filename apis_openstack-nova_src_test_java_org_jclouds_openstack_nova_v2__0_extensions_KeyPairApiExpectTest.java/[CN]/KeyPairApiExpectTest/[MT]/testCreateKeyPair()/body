@@ -1,6 +1,6 @@
 {
-  HttpRequest createKeyPair=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"keypair\":{\"name\":\"testkeypair\"}}","application/json")).build();
-  HttpResponse createKeyPairResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/keypair_created.json")).build();
-  NovaApi apiWhenServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,createKeyPair,createKeyPairResponse);
-  assertEquals(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().createKeyPair("testkeypair").toString(),new ParseKeyPairTest().expected().toString());
+  HttpRequest create=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-keypairs").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"keypair\":{\"name\":\"testkeypair\"}}","application/json")).build();
+  HttpResponse createResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/keypair_created.json")).build();
+  NovaApi apiWhenServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,create,createResponse);
+  assertEquals(apiWhenServersExist.getKeyPairExtensionForZone("az-1.region-a.geo-1").get().create("testkeypair").toString(),new ParseKeyPairTest().expected().toString());
 }

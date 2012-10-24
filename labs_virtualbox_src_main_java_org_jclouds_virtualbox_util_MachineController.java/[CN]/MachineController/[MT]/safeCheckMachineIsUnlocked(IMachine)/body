@@ -1,0 +1,13 @@
+{
+  int guard=0;
+  while (!machine.getSessionState().equals(SessionState.Unlocked)) {
+    if (guard >= 5) {
+      logger.warn("Machine session (%s) possibly still unlocked!!!",machine.getName());
+      break;
+    }
+    logger.debug("Machine session (%s) not unlocked - wait ...",machine.getName());
+    Uninterruptibles.sleepUninterruptibly(3,TimeUnit.SECONDS);
+    guard++;
+  }
+  logger.debug("Machine session (%s) is %s",machine.getName(),machine.getSessionState());
+}

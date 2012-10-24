@@ -1,0 +1,5 @@
+{
+  HttpResponse sendMessageResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/change_message_visibility_batch.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(changeMessageVisibilityTable,sendMessageResponse);
+  assertEquals(apiWhenExist.getMessageApiForQueue(queue).changeVisibility(ImmutableTable.<String,String,Integer>builder().put("foo1","aaaaaaaaa",1).put("foo2","bbbbbbbbb",10).build()).toString(),new ChangeMessageVisibilityBatchResponseTest().expected().toString());
+}

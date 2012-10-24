@@ -1,0 +1,18 @@
+{
+  for (  Server server : api.list()) {
+    try {
+      ResourceUsage usage=api.getResourceUsage(server.getId(),"diskioread","minute");
+      assertEquals(usage.getInfo().getResource(),"diskioread");
+      assertEquals(usage.getInfo().getResolution(),"minute");
+    }
+ catch (    UnsupportedOperationException e) {
+    }
+    try {
+      ResourceUsage usage=api.getResourceUsage(server.getId(),"cpuusage","minute");
+      assertEquals(usage.getInfo().getResource(),"cpuusage");
+      assertEquals(usage.getInfo().getResolution(),"minute");
+    }
+ catch (    UnsupportedOperationException e) {
+    }
+  }
+}

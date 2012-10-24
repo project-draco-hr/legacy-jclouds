@@ -1,0 +1,10 @@
+{
+  if ("AWS.SimpleQueueService.QueueDeletedRecently".equals(error.getCode())) {
+    if (command.incrementFailureCount() - 1 < maxTries) {
+      Uninterruptibles.sleepUninterruptibly(retryInterval,TimeUnit.MILLISECONDS);
+      return true;
+    }
+    return false;
+  }
+  return super.shouldRetryRequestOnError(command,response,error);
+}

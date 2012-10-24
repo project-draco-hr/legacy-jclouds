@@ -1,8 +1,0 @@
-{
-  BlobStore blobStore=requestsSendResponses(requestResponseMap);
-  BlobRequestSigner signPutBlob=blobStore.getContext().getSigner();
-  Blob blob=blobStore.blobBuilder("name").forSigning().contentLength(2l).contentMD5(new byte[]{0,2,4,8}).contentType("text/plain").expires(new Date(1000)).build();
-  HttpRequest request=signPutBlob.signPutBlob("container",blob);
-  assertEquals(request.getRequestLine(),"PUT https://objects.jclouds.org/v1.0/40806637803162/container/name HTTP/1.1");
-  assertEquals(request.getHeaders(),ImmutableMultimap.of("X-Auth-Token","Auth_4f173437e4b013bee56d1007"));
-}

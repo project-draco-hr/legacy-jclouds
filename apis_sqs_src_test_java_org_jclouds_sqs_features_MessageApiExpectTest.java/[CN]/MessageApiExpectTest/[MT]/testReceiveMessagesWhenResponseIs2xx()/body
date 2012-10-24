@@ -1,0 +1,5 @@
+{
+  HttpResponse receiveMessagesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/messages.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(receiveMessages,receiveMessagesResponse);
+  assertEquals(apiWhenExist.getMessageApiForQueue(queue).receive(10).toString(),new ReceiveMessageResponseTest().expected().toString());
+}

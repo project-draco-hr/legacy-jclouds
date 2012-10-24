@@ -19,8 +19,8 @@
     assertNotNull(instance1.getKeyName());
     assertEquals(instance1.getRegion(),instance2.getRegion(),"Nodes are not in the same region");
     assertEquals(instance1.getKeyName(),instance2.getKeyName(),"Nodes do not have same key-pair name");
-    assertEquals(instance1.getGroupIds(),instance2.getGroupIds(),"Nodes are not in the same group");
-    assertEquals(instance1.getGroupIds(),ImmutableSet.of(expectedSecurityGroupName),"Nodes are not in the expected security group");
+    assertEquals(instance1.getGroupNames(),instance2.getGroupNames(),"Nodes are not in the same group");
+    assertEquals(instance1.getGroupNames(),ImmutableSet.of(expectedSecurityGroupName),"Nodes are not in the expected security group");
     String expectedKeyPairName=instance1.getKeyName();
     Set<SecurityGroup> securityGroups=securityGroupClient.describeSecurityGroupsInRegion(region,expectedSecurityGroupName);
     Set<KeyPair> keyPairs=keyPairClient.describeKeyPairsInRegion(region,expectedKeyPairName);
@@ -49,8 +49,8 @@
       done=securityGroupsAfterDestroyAll.isEmpty() && keyPairsAfterDestroyAll.isEmpty();
     }
  while (!done && stopwatch.elapsedMillis() < TIMEOUT_MS);
-    assertEquals(securityGroupsAfterDestroyAll,Collections.emptySet());
-    assertEquals(keyPairsAfterDestroyAll,Collections.emptySet());
+    assertEquals(securityGroupsAfterDestroyAll,ImmutableSet.of());
+    assertEquals(keyPairsAfterDestroyAll,ImmutableSet.of());
   }
   finally {
     view.getComputeService().destroyNodesMatching(NodePredicates.inGroup(group));

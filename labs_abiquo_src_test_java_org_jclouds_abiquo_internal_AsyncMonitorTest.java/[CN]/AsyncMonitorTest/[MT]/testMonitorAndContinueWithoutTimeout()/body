@@ -1,0 +1,22 @@
+{
+  ScheduledFuture mockFuture=EasyMock.createMock(ScheduledFuture.class);
+  ScheduledExecutorService schedulerMock=EasyMock.createMock(ScheduledExecutorService.class);
+  expect(schedulerMock.scheduleWithFixedDelay(anyObject(Runnable.class),anyLong(),anyLong(),anyObject(TimeUnit.class))).andReturn(mockFuture);
+  replay(mockFuture);
+  replay(schedulerMock);
+  CoutingEventHandler handler=new CoutingEventHandler();
+  EventBus eventBus=new EventBus();
+  eventBus.register(handler);
+  AsyncMonitor<Object> monitor=mockMonitor(schedulerMock,new Object(),mockFunction(MonitorStatus.CONTINUE),eventBus);
+  assertNull(monitor.getFuture());
+  assertNull(monitor.getTimeout());
+  monitor.startMonitoring(null);
+  assertNotNull(monitor.getFuture());
+  assertNull(monitor.getTimeout());
+  monitor.run();
+  assertEquals(handler.numCompletes,0);
+  assertEquals(handler.numFailures,0);
+  assertEquals(handler.numTimeouts,0);
+  verify(mockFuture);
+  verify(schedulerMock);
+}

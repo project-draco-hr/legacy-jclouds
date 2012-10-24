@@ -1,0 +1,15 @@
+{
+  Predicate<AtomicRefAndOrig> nonNullThingPredicate=new Predicate<AtomicRefAndOrig>(){
+    @Override public boolean apply(    AtomicRefAndOrig input){
+      AtomicReference<T> ref=(input.ref.get() != null) ? input.ref : new AtomicReference<T>(input.orig);
+      try {
+        return predicate.apply(ref);
+      }
+  finally {
+        input.ref.set(ref.get());
+      }
+    }
+  }
+;
+  retryablePredicate=new RetryablePredicate<AtomicRefAndOrig>(nonNullThingPredicate,maxWait,period,maxPeriod);
+}

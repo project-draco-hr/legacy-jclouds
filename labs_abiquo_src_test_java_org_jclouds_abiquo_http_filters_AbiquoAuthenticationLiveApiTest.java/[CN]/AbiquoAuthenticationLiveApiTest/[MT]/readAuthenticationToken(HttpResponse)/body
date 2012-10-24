@@ -1,0 +1,11 @@
+{
+  Collection<String> cookies=response.getHeaders().get(HttpHeaders.SET_COOKIE);
+  assertFalse(cookies.isEmpty());
+  for (  String cookie : cookies) {
+    Cookie c=Cookie.valueOf(cookie);
+    if (c.getName().equals(AbiquoAuthentication.AUTH_TOKEN_NAME)) {
+      return c.getValue();
+    }
+  }
+  return null;
+}

@@ -1,0 +1,5 @@
+{
+  HttpResponse deleteMessageResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/delete_message_batch.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(deleteMessageIterable,deleteMessageResponse);
+  assertEquals(apiWhenExist.getMessageApiForQueue(queue).delete(ImmutableSet.of("eXJYhj5rDr9cAe","fffeeerrr")).toString(),new DeleteMessageBatchResponseTest().expected().toString());
+}

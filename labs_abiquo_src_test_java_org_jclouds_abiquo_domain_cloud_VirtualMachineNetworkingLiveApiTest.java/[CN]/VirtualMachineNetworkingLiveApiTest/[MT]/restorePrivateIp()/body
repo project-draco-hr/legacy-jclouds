@@ -1,0 +1,10 @@
+{
+  AsyncTask task=env.virtualMachine.setNics(Lists.<Ip<?,?>>newArrayList(privateIp));
+  assertNull(task);
+  List<Ip<?,?>> nics=env.virtualMachine.listAttachedNics();
+  assertEquals(nics.size(),1);
+  assertEquals(nics.get(0).getId(),privateIp.getId());
+  String address=publicIpCloud.getIp();
+  env.virtualDatacenter.releaseePublicIp(publicIpCloud);
+  assertNull(env.virtualDatacenter.findPurchasedPublicIp(IpPredicates.<PublicIp>address(address)));
+}

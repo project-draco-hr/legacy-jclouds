@@ -1,0 +1,14 @@
+{
+  String serverId="123";
+  ImmutableMap<String,String> metadata=new ImmutableMap.Builder<String,String>().put("Server Label","Web Head 1").put("Image Version","2.1").build();
+  HttpRequest setMetadata=HttpRequest.builder().method("PUT").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/metadata").addHeader("Accept","*/*").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}","application/json")).build();
+  HttpResponse setMetadataResponse=HttpResponse.builder().statusCode(404).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,setMetadata,setMetadataResponse);
+  try {
+    apiWhenServerExists.getServerApiForZone("az-1.region-a.geo-1").setMetadata(serverId,metadata);
+    fail("Expected an exception.");
+  }
+ catch (  Exception e) {
+    ;
+  }
+}

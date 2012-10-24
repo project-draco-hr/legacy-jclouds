@@ -2,8 +2,11 @@
   NodeMetadataBuilder nodeMetadataBuilder=new NodeMetadataBuilder();
   nodeMetadataBuilder.id(clone.getName());
   nodeMetadataBuilder.status(VirtualBoxComputeServiceContextModule.toPortableNodeStatus.get(clone.getState()));
-  nodeMetadataBuilder.publicAddresses(ImmutableSet.of(machineUtils.getIpAddressFromHostOnlyNIC(clone.getName())));
-  LoginCredentials loginCredentials=new LoginCredentials("toor","password",null,true);
+  long slot=findSlotForNetworkAttachment(clone,NetworkAttachmentType.HostOnly);
+  nodeMetadataBuilder.publicAddresses(ImmutableSet.of(networkUtils.getIpAddressFromNicSlot(clone.getName(),slot)));
+  String guestOsUser=clone.getExtraData(GUEST_OS_USER);
+  String guestOsPassword=clone.getExtraData(GUEST_OS_PASSWORD);
+  LoginCredentials loginCredentials=new LoginCredentials(guestOsUser,guestOsPassword,null,true);
   nodeMetadataBuilder.credentials(loginCredentials);
   return nodeMetadataBuilder.build();
 }

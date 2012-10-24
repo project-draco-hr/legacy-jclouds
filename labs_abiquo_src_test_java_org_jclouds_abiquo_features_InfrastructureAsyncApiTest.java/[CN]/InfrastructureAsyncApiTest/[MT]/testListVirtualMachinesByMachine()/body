@@ -1,0 +1,12 @@
+{
+  MachineOptions options=MachineOptions.builder().sync(true).build();
+  Method method=InfrastructureAsyncApi.class.getMethod("listVirtualMachinesByMachine",MachineDto.class,MachineOptions.class);
+  GeneratedHttpRequest request=processor.createRequest(method,InfrastructureResources.machinePut(),options);
+  assertRequestLineEquals(request,"GET http://localhost/api/admin/datacenters/1/racks/1/machines/1/virtualmachines?sync=true HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + VirtualMachinesWithNodeExtendedDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

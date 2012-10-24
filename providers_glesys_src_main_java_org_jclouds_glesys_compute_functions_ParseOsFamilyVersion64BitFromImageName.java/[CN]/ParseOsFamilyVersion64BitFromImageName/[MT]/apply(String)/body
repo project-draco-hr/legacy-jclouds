@@ -1,0 +1,31 @@
+{
+  boolean is64Bit=containsPattern("64").apply(input);
+  String version="";
+  if (input.indexOf("Windows") != -1) {
+    Matcher matcher=Pattern.compile(".*(20[01][0-9] R[1-9]).*").matcher(input);
+    if (matcher.find()) {
+      version=matcher.group(1);
+    }
+ else {
+      matcher=Pattern.compile(".*(20[01][0-9]).*").matcher(input);
+      if (matcher.find())       version=matcher.group(1);
+    }
+    return new OsFamilyVersion64Bit(OsFamily.WINDOWS,osVersionMap.get(OsFamily.WINDOWS).get(version),is64Bit);
+  }
+  Matcher osFamilyVersionMatcher=OSFAMILY_VERSION.matcher(input);
+  if (osFamilyVersionMatcher.find()) {
+    OsFamily fam=OsFamily.fromValue(osFamilyVersionMatcher.group(1).toLowerCase());
+    if (fam == OsFamily.UNRECOGNIZED) {
+      return new OsFamilyVersion64Bit(OsFamily.UNRECOGNIZED,version,is64Bit);
+    }
+    return new OsFamilyVersion64Bit(fam,ComputeServiceUtils.parseVersionOrReturnEmptyString(fam,osFamilyVersionMatcher.group(2),osVersionMap),is64Bit);
+  }
+ else {
+    Matcher osFamilyMatcher=OSFAMILY.matcher(input);
+    OsFamily fam=OsFamily.UNRECOGNIZED;
+    if (osFamilyMatcher.find()) {
+      fam=OsFamily.fromValue(osFamilyMatcher.group(1).toLowerCase());
+    }
+    return new OsFamilyVersion64Bit(fam,version,is64Bit);
+  }
+}

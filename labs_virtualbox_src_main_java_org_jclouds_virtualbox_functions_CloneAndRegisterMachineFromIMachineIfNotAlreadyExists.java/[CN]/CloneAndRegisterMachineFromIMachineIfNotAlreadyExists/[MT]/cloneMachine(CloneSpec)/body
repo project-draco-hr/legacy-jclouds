@@ -16,5 +16,10 @@
   for (  NetworkInterfaceCard networkInterfaceCard : networkSpec.getNetworkInterfaceCards()) {
     new AttachNicToMachine(vmSpec.getVmName(),machineUtils).apply(networkInterfaceCard);
   }
+  logger.debug(">> storing guest credentials on vm %s as extra data",clonedMachine.getName());
+  String masterUsername=master.getExtraData(GUEST_OS_USER);
+  String masterPassword=master.getExtraData(GUEST_OS_PASSWORD);
+  clonedMachine.setExtraData(GUEST_OS_USER,masterUsername);
+  clonedMachine.setExtraData(GUEST_OS_PASSWORD,masterPassword);
   return clonedMachine;
 }

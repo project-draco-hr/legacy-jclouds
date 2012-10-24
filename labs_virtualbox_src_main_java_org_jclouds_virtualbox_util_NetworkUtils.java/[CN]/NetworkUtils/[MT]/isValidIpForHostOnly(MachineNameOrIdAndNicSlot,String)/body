@@ -1,0 +1,20 @@
+{
+  final String vmNameOrId=machineNameOrIdAndNicSlot.getMachineNameOrId();
+  IMachine machine=manager.get().getVBox().findMachine(vmNameOrId);
+  long slot=machineNameOrIdAndNicSlot.getSlot();
+  if (ip.equals(VIRTUALBOX_HOST_GATEWAY) || !isValidHostOnlyIpAddress(ip,slot,machine)) {
+    logger.debug("reset node (%s) to refresh guest properties.",vmNameOrId);
+    machineUtils.lockSessionOnMachineAndApply(vmNameOrId,LockType.Shared,new Function<ISession,Void>(){
+      @Override public Void apply(      ISession session){
+        session.getConsole().reset();
+        long time=15;
+        logger.debug("Waiting %s secs for the reset of (%s) ...",time,vmNameOrId);
+        Uninterruptibles.sleepUninterruptibly(time,TimeUnit.SECONDS);
+        return null;
+      }
+    }
+);
+    return false;
+  }
+  return true;
+}

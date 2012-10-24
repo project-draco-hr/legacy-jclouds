@@ -1,0 +1,5 @@
+{
+  HttpResponse getQueueAttributesSubsetResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/attributes.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(getQueueAttributesSubset,getQueueAttributesSubsetResponse);
+  assertEquals(apiWhenExist.getQueueApi().getAttributes(queue,ImmutableSet.of("VisibilityTimeout","DelaySeconds")).toString(),new GetQueueAttributesResponseTest().expected().toString());
+}

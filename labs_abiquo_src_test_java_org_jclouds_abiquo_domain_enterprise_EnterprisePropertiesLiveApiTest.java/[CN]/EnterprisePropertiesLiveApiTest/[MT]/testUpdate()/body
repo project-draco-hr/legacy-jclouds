@@ -1,0 +1,10 @@
+{
+  EnterpriseProperties properties=env.administrationService.getEnterpriseProperties(env.enterprise);
+  Integer size=properties.getProperties().size();
+  properties.getProperties().put("Prop","Value");
+  properties.update();
+  EnterprisePropertiesDto updated=env.enterpriseApi.getEnterpriseProperties(env.enterprise.unwrap());
+  assertEquals(updated.getProperties().size(),size + 1);
+  assertTrue(updated.getProperties().containsKey("Prop"));
+  assertTrue(updated.getProperties().containsValue("Value"));
+}

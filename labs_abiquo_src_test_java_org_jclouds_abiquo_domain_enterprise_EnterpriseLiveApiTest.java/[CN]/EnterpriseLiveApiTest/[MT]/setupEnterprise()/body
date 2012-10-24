@@ -1,0 +1,10 @@
+{
+  enterprise=Enterprise.Builder.fromEnterprise(env.enterprise).build();
+  enterprise.setName(PREFIX + "-enterprise-test");
+  enterprise.save();
+  limits=enterprise.allowDatacenter(env.datacenter);
+  assertNotNull(limits);
+  DatacentersLimitsDto limitsDto=env.enterpriseApi.getLimits(enterprise.unwrap(),env.datacenter.unwrap());
+  assertNotNull(limitsDto);
+  assertEquals(limitsDto.getCollection().size(),1);
+}

@@ -1,0 +1,5 @@
+{
+  HttpResponse getQueueAttributesResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/attributes.xml","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(getQueueAttributes,getQueueAttributesResponse);
+  assertEquals(apiWhenExist.getQueueApi().getAttributes(queue).toString(),new MapToQueueAttributesTest().expected().toString());
+}

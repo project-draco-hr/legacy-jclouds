@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volume-types");
   VolumeTypeApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/volume_type_list.json")).build()).getVolumeTypeExtensionForZone("az-1.region-a.geo-1").get();
-  Set<? extends VolumeType> types=api.listVolumeTypes();
+  Set<? extends VolumeType> types=api.list().toImmutableSet();
   assertEquals(types,ImmutableSet.of(testVolumeType()));
 }

@@ -1,0 +1,5 @@
+{
+  HttpResponse getQueueAttributeResponse=HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("<GetQueueAttributesResponse><GetQueueAttributesResult><Attribute><Name>VisibilityTimeout</Name><Value>30</Value></Attribute></GetQueueAttributesResult></GetQueueAttributesResponse>","text/xml")).build();
+  SQSApi apiWhenExist=requestSendsResponse(getQueueAttribute,getQueueAttributeResponse);
+  assertEquals(apiWhenExist.getQueueApi().getAttribute(queue,"VisibilityTimeout"),"30");
+}

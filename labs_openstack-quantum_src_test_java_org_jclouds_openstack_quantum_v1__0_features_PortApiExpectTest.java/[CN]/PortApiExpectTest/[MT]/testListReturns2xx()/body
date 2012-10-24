@@ -1,5 +1,5 @@
 {
-  PortApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks/1a104cf5-cb18-4d35-9407-2fd2646d9d0b/ports/detail").build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"ports\": [{\"state\": \"DOWN\", \"id\": \"814ae4bb-33d9-425f-8ee2-13a5c90b1465\"}]}",APPLICATION_JSON)).build()).getPortApiForRegionAndNetwork("region-a.geo-1","1a104cf5-cb18-4d35-9407-2fd2646d9d0b");
-  Set<? extends Port> nets=api.list();
+  PortApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks/1a104cf5-cb18-4d35-9407-2fd2646d9d0b/ports/detail").build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"ports\": [{\"state\": \"DOWN\", \"id\": \"814ae4bb-33d9-425f-8ee2-13a5c90b1465\"}]}",APPLICATION_JSON)).build()).getPortApiForZoneAndNetwork("region-a.geo-1","1a104cf5-cb18-4d35-9407-2fd2646d9d0b");
+  Set<? extends Port> nets=api.list().toImmutableSet();
   assertEquals(nets,ImmutableSet.of(Port.builder().state(Port.State.DOWN).id("814ae4bb-33d9-425f-8ee2-13a5c90b1465").build()));
 }

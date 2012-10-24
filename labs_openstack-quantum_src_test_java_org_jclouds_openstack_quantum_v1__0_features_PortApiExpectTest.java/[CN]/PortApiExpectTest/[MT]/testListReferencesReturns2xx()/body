@@ -1,5 +1,5 @@
 {
-  PortApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks/1a104cf5-cb18-4d35-9407-2fd2646d9d0b/ports").build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"ports\": [{\"id\": \"a6058a59-fa8c-46cc-bac8-08904e6ff0a5\"}]}",APPLICATION_JSON)).build()).getPortApiForRegionAndNetwork("region-a.geo-1","1a104cf5-cb18-4d35-9407-2fd2646d9d0b");
-  Set<? extends Reference> nets=api.listReferences();
+  PortApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/tenants/3456/networks/1a104cf5-cb18-4d35-9407-2fd2646d9d0b/ports").build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"ports\": [{\"id\": \"a6058a59-fa8c-46cc-bac8-08904e6ff0a5\"}]}",APPLICATION_JSON)).build()).getPortApiForZoneAndNetwork("region-a.geo-1","1a104cf5-cb18-4d35-9407-2fd2646d9d0b");
+  Set<? extends Reference> nets=api.listReferences().toImmutableSet();
   assertEquals(nets,ImmutableSet.of(Reference.builder().id("a6058a59-fa8c-46cc-bac8-08904e6ff0a5").build()));
 }

@@ -1,14 +1,14 @@
 {
   StringPayload imageData=new StringPayload("This isn't an image!");
-  for (  String zoneId : glanceContext.getApi().getConfiguredRegions()) {
-    ImageApi api=glanceContext.getApi().getImageApiForRegion(zoneId);
+  for (  String zoneId : glanceContext.getApi().getConfiguredZones()) {
+    ImageApi api=glanceContext.getApi().getImageApiForZone(zoneId);
     ImageDetails details=api.reserve("jclouds-live-res-test",diskFormat(DiskFormat.RAW),containerFormat(ContainerFormat.BARE));
     assertEquals(details.getName(),"jclouds-live-res-test");
     details=api.upload(details.getId(),imageData,UpdateImageOptions.Builder.name("jclouds-live-res-test2"),UpdateImageOptions.Builder.minDisk(10));
     assertEquals(details.getName(),"jclouds-live-res-test2");
     assertEquals(details.getSize().get().longValue(),imageData.getRawContent().length());
     assertEquals(details.getMinDisk(),10);
-    Image fromListing=Iterables.getOnlyElement(api.list(ListImageOptions.Builder.name("jclouds-live-res-test2"),ListImageOptions.Builder.limit(2),ListImageOptions.Builder.containerFormat(ContainerFormat.BARE)));
+    Image fromListing=Iterables.getOnlyElement(api.list(ListImageOptions.Builder.name("jclouds-live-res-test2").limit(2).containerFormat(ContainerFormat.BARE)));
     assertEquals(fromListing.getId(),details.getId());
     assertEquals(fromListing.getSize(),details.getSize());
     assertEquals(Iterables.getOnlyElement(api.listInDetail(ListImageOptions.Builder.name("jclouds-live-res-test2"))),details);

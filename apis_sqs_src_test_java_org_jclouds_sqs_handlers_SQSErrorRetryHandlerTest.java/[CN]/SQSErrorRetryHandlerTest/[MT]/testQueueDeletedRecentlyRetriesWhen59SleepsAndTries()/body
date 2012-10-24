@@ -1,0 +1,8 @@
+{
+  SQSErrorRetryHandler retry=new SQSErrorRetryHandler(createMock(AWSUtils.class),createMock(BackoffLimitedRetryHandler.class),ImmutableSet.<String>of(),60,100);
+  HttpCommand command=createHttpCommandForFailureCount(59);
+  Stopwatch watch=new Stopwatch().start();
+  assertTrue(retry.shouldRetryRequestOnError(command,response,error));
+  assertEquals(command.getFailureCount(),60);
+  assertTrue(watch.stop().elapsedTime(TimeUnit.MILLISECONDS) >= 98);
+}

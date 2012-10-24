@@ -1,0 +1,11 @@
+{
+  Function<Datacenter,Location> dcToLocation=mockDatacenterToLocation();
+  Supplier<Map<Integer,Datacenter>> regionMap=mockRegionMap();
+  VirtualDatacenterToLocation function=new VirtualDatacenterToLocation(dcToLocation,regionMap);
+  VirtualDatacenter vdc=mockVirtualDatacenter();
+  Location location=function.apply(vdc);
+  verify(regionMap);
+  verify(dcToLocation);
+  assertEquals(location.getId(),"5");
+  assertEquals(location.getScope(),LocationScope.ZONE);
+}

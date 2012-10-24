@@ -1,0 +1,20 @@
+{
+  if (checkNotNull(input,"input") instanceof Map) {
+    Builder<Object,Object,Object> builder=ImmutableTable.builder();
+    int index=1;
+    for (    Map.Entry<?,?> entry : ((Map<?,?>)input).entrySet())     builder.put(index++,entry.getKey(),entry.getValue());
+    input=builder.build();
+  }
+  checkArgument(checkNotNull(input,"input") instanceof Table,"this binder is only valid for Table");
+  Table<?,?,?> table=Table.class.cast(input);
+  ImmutableMap.Builder<String,String> builder=ImmutableMap.builder();
+  int amazonOneBasedIndex=1;
+  for (  Cell<?,?,?> cell : table.cellSet()) {
+    builder.put(format(rowPattern,amazonOneBasedIndex),cell.getRowKey().toString());
+    builder.put(format(columnPattern,amazonOneBasedIndex),cell.getColumnKey().toString());
+    builder.put(format(valuePattern,amazonOneBasedIndex),cell.getValue().toString());
+    amazonOneBasedIndex++;
+  }
+  Multimap<String,String> forms=Multimaps.forMap(builder.build());
+  return forms.size() == 0 ? request : (R)request.toBuilder().replaceFormParams(forms).build();
+}

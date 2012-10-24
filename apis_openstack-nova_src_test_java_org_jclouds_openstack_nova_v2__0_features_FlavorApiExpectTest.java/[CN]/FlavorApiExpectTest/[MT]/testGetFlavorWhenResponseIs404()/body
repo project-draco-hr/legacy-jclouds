@@ -2,5 +2,5 @@
   HttpRequest getFlavor=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/flavors/123").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse getFlavorResponse=HttpResponse.builder().statusCode(404).payload(payloadFromResource("/flavor_details.json")).build();
   NovaApi apiWhenNoFlavorsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getFlavor,getFlavorResponse);
-  assertNull(apiWhenNoFlavorsExist.getFlavorApiForZone("az-1.region-a.geo-1").getFlavor("123"));
+  assertNull(apiWhenNoFlavorsExist.getFlavorApiForZone("az-1.region-a.geo-1").get("123"));
 }

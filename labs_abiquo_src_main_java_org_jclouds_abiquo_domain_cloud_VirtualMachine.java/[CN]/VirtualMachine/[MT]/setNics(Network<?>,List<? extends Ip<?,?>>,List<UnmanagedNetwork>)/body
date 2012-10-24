@@ -1,0 +1,40 @@
+{
+  Iterables.removeIf(target.getLinks(),Predicates.or(LinkPredicates.isNic(),LinkPredicates.rel(ParentLinkName.NETWORK_GATEWAY)));
+  int i=0;
+  if (ips != null) {
+    for (i=0; i < ips.size(); i++) {
+      RESTLink source=LinkUtils.getSelfLink(ips.get(i).unwrap());
+      RESTLink link=new RESTLink("nic" + i,source.getHref());
+      link.setType(ips.get(i).unwrap().getBaseMediaType());
+      target.addLink(link);
+    }
+  }
+  if (unmanagetNetworks != null) {
+    for (    UnmanagedNetwork unmanaged : unmanagetNetworks) {
+      RESTLink source=checkNotNull(unmanaged.unwrap().searchLink("ips"),ValidationErrors.MISSING_REQUIRED_LINK + "ips");
+      RESTLink link=new RESTLink("nic" + i,source.getHref());
+      link.setType(UnmanagedIpDto.BASE_MEDIA_TYPE);
+      target.addLink(link);
+      i++;
+    }
+  }
+  AsyncTask task=update(true);
+  if (gatewayNetwork == null) {
+    return task;
+  }
+  if (task != null) {
+    VirtualMachineState originalState=target.getState();
+    VirtualMachineMonitor monitor=context.getUtils().getInjector().getInstance(MonitoringService.class).getVirtualMachineMonitor();
+    monitor.awaitState(originalState,this);
+  }
+  refresh();
+  VMNetworkConfigurationsDto configs=context.getApi().getCloudApi().listNetworkConfigurations(target);
+  Iterables.removeIf(target.getLinks(),LinkPredicates.rel(ParentLinkName.NETWORK_GATEWAY));
+  for (  VMNetworkConfigurationDto config : configs.getCollection()) {
+    if (config.getGateway().equalsIgnoreCase(gatewayNetwork.getGateway())) {
+      target.addLink(new RESTLink(ParentLinkName.NETWORK_GATEWAY,config.getEditLink().getHref()));
+      break;
+    }
+  }
+  return update(true);
+}

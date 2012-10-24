@@ -1,8 +1,8 @@
 {
-  Optional<HPCloudCDNClient> cdnExtension=client.getCDNExtension();
+  Optional<CDNContainerApi> cdnExtension=client.getCDNExtension();
   checkArgument(cdnExtension.isPresent(),"CDN is required, but the extension is not available!");
   try {
-    ContainerCDNMetadata md=cdnExtension.get().getCDNMetadata(container);
+    CDNContainer md=cdnExtension.get().get(container);
     return md != null ? md.getCDNUri() : null;
   }
  catch (  HttpResponseException e) {

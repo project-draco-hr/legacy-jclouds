@@ -1,0 +1,12 @@
+{
+  final TenantApi tenantApi=api.getTenantApi().get();
+  return new Function<Object,IterableWithMarker<Tenant>>(){
+    @SuppressWarnings("unchecked") @Override public IterableWithMarker<Tenant> apply(    Object input){
+      return IterableWithMarker.class.cast(tenantApi.list(marker(input.toString())));
+    }
+    @Override public String toString(){
+      return "listTenants()";
+    }
+  }
+;
+}

@@ -1,0 +1,10 @@
+{
+  Multimap<String,String> headers=LinkedHashMultimap.<String,String>create();
+  headers.put(HttpHeaders.ACCEPT,"application/vnd.abiquo.racks+xml;version=2.1-SNAPSHOT");
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://foo")).headers(headers).build();
+  AppendApiVersionToMediaType filter=new AppendApiVersionToMediaType(new AppendApiVersionToAbiquoMimeType(AbiquoAsyncApi.API_VERSION));
+  HttpRequest filtered=filter.appendVersionToNonPayloadHeaders(request);
+  Collection<String> contentType=filtered.getHeaders().get(HttpHeaders.ACCEPT);
+  assertEquals(contentType.size(),1);
+  assertEquals(contentType.iterator().next(),"application/vnd.abiquo.racks+xml;version=2.1-SNAPSHOT");
+}

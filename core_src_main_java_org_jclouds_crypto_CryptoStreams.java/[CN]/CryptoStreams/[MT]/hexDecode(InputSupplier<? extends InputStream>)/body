@@ -3,17 +3,12 @@
   return com.google.common.io.ByteStreams.readBytes(supplier,new ByteProcessor<byte[]>(){
     int currentPos=0;
     public boolean processBytes(    byte[] buf,    int off,    int len){
-      try {
-        if (currentPos == 0 && new String(Arrays.copyOfRange(buf,off,2),"ASCII").equals("0x")) {
-          off+=2;
-        }
-        byte[] decoded=hex(new String(Arrays.copyOfRange(buf,off,len),"ASCII"));
-        out.write(decoded,0,decoded.length);
-        currentPos+=len;
+      if (currentPos == 0 && new String(Arrays.copyOfRange(buf,off,2),Charsets.US_ASCII).equals("0x")) {
+        off+=2;
       }
- catch (      UnsupportedEncodingException e) {
-        throw new IllegalStateException("ASCII must be supported");
-      }
+      byte[] decoded=hex(new String(Arrays.copyOfRange(buf,off,len),Charsets.US_ASCII));
+      out.write(decoded,0,decoded.length);
+      currentPos+=len;
       return true;
     }
     public byte[] getResult(){

@@ -1,0 +1,12 @@
+{
+  String blobKey=TestUtils.createRandomBlobKey("writePayload-",".img");
+  File sourceFile=TestUtils.getImageForBlobPayload();
+  InputStreamPayload fileInputStreamPayload=new InputStreamPayload(new FileInputStream(sourceFile));
+  Blob blob=storageStrategy.newBlob(blobKey);
+  blob.setPayload(fileInputStreamPayload);
+  storageStrategy.putBlob(CONTAINER_NAME,blob);
+  File blobFullPath=new File(TARGET_CONTAINER_NAME,blobKey);
+  InputSupplier<FileInputStream> expectedInput=Files.newInputStreamSupplier(sourceFile);
+  InputSupplier<FileInputStream> actualInput=Files.newInputStreamSupplier(blobFullPath);
+  assertTrue(ByteStreams.equal(expectedInput,actualInput),"Files are not equal");
+}

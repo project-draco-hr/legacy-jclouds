@@ -1,0 +1,21 @@
+{
+  checkNotNull(machineNameOrIdAndNicSlotString);
+  String machineNameOrId=null;
+  String nicSlotString=null;
+  Iterable<String> splittedString=Splitter.on(SEPARATOR).split(machineNameOrIdAndNicSlotString);
+  checkState(Iterables.size(splittedString) == 2);
+  machineNameOrId=Iterables.get(splittedString,0);
+  nicSlotString=Iterables.get(splittedString,1);
+  long slot=-1;
+  if (nicSlotString != null) {
+    checkArgument(!nicSlotString.startsWith("+"),"Unparseable slot number: %s",nicSlotString);
+    try {
+      slot=Long.parseLong(nicSlotString);
+    }
+ catch (    NumberFormatException e) {
+      throw new IllegalArgumentException("Unparseable slot number: " + nicSlotString);
+    }
+    checkArgument(isValidSlot(slot),"Slot number out of range: %s",nicSlotString);
+  }
+  return new MachineNameOrIdAndNicSlot(machineNameOrId,slot);
+}

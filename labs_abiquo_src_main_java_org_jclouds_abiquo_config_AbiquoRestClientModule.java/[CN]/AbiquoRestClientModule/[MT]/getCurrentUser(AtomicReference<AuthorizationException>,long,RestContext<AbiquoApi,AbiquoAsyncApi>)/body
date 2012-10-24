@@ -1,0 +1,8 @@
+{
+  return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,new Supplier<User>(){
+    @Override public User get(){
+      return wrap(context,User.class,context.getApi().getAdminApi().getCurrentUser());
+    }
+  }
+,seconds,TimeUnit.SECONDS);
+}

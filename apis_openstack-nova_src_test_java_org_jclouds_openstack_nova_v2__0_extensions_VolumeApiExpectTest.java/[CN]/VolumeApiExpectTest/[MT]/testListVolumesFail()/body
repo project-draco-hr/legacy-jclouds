@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-volumes");
   VolumeApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(404).build()).getVolumeExtensionForZone("az-1.region-a.geo-1").get();
-  Set<? extends Volume> volumes=api.listVolumes();
+  Set<? extends Volume> volumes=api.list().toImmutableSet();
   assertTrue(volumes.isEmpty());
 }

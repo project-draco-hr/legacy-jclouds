@@ -1,0 +1,17 @@
+{
+  RemoteService nc=env.datacenter.findRemoteService(RemoteServicePredicates.type(RemoteServiceType.NODE_COLLECTOR));
+  nc.delete();
+  try {
+    String ip=Config.get("abiquo.hypervisor.address");
+    HypervisorType type=HypervisorType.valueOf(Config.get("abiquo.hypervisor.type"));
+    String user=Config.get("abiquo.hypervisor.user");
+    String pass=Config.get("abiquo.hypervisor.pass");
+    env.datacenter.discoverSingleMachine(ip,type,user,pass);
+  }
+ catch (  AbiquoException ex) {
+    assertHasError(ex,Status.NOT_FOUND,"RS-2");
+  }
+  URI endpoint=URI.create(env.context.getApiContext().getProviderMetadata().getEndpoint());
+  nc=RemoteService.builder(env.context.getApiContext(),env.datacenter).type(RemoteServiceType.NODE_COLLECTOR).ip(endpoint.getHost()).build();
+  nc.save();
+}

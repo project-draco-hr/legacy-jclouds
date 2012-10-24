@@ -1,6 +1,6 @@
 {
-  HttpRequest listFloatingIPs=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
-  HttpResponse listFloatingIPsResponse=HttpResponse.builder().statusCode(404).build();
-  NovaAsyncApi apiWhenNoServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,listFloatingIPs,listFloatingIPsResponse);
-  assertTrue(apiWhenNoServersExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().listFloatingIPs().get().isEmpty());
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/os-floating-ips").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse listResponse=HttpResponse.builder().statusCode(404).build();
+  NovaAsyncApi apiWhenNoServersExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,list,listResponse);
+  assertTrue(apiWhenNoServersExist.getFloatingIPExtensionForZone("az-1.region-a.geo-1").get().list().get().isEmpty());
 }

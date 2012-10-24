@@ -1,0 +1,14 @@
+{
+  new RetryablePredicate<String>(new Predicate<String>(){
+    @Override public boolean apply(    String arg0){
+      try {
+        api.getServerApi().destroy(arg0,DestroyServerOptions.Builder.discardIp());
+        return true;
+      }
+ catch (      IllegalStateException e) {
+        return false;
+      }
+    }
+  }
+,timeouts.nodeTerminated).apply(id);
+}

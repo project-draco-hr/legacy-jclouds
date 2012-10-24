@@ -3,7 +3,7 @@
   HttpResponse createServerResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
   HttpRequest serverDetail=HttpRequest.builder().method("GET").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/71752").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).build();
   HttpResponse serverDetailResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/server_details.json")).build();
-  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess).put(extensionsOfNovaRequest,extensionsOfNovaResponse).put(listImagesDetail,listImagesDetailResponse).put(listFlavorsDetail,listFlavorsDetailResponse).put(createServer,createServerResponse).put(serverDetail,serverDetailResponse).build();
+  Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess).put(extensionsOfNovaRequest,extensionsOfNovaResponse).put(listDetail,listDetailResponse).put(listFlavorsDetail,listFlavorsDetailResponse).put(createServer,createServerResponse).put(serverDetail,serverDetailResponse).build();
   Injector forSecurityGroups=requestsSendResponses(requestResponseMap);
   Template template=forSecurityGroups.getInstance(TemplateBuilder.class).build();
   template.getOptions().as(NovaTemplateOptions.class).securityGroupNames("group1","group2");

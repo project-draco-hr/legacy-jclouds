@@ -1,0 +1,26 @@
+{
+  String originalId=node.get().getId();
+  NodeMetadata originalNode=node.get();
+  try {
+    Stopwatch stopwatch=new Stopwatch().start();
+    if (!nodeRunning.apply(node)) {
+      long timeWaited=stopwatch.elapsedMillis();
+      if (node.get() == null) {
+        node.set(originalNode);
+        throw new IllegalStateException(format("api response for node(%s) was null",originalId));
+      }
+ else {
+        throw new IllegalStateException(format("node(%s) didn't achieve the status running; aborting after %d seconds with final status: %s",originalId,timeWaited / 1000,formatStatus(node.get())));
+      }
+    }
+  }
+ catch (  IllegalStateException e) {
+    if (node.get().getStatus() == Status.TERMINATED) {
+      throw new IllegalStateException(format("node(%s) terminated",originalId));
+    }
+ else {
+      throw propagate(e);
+    }
+  }
+  return node;
+}

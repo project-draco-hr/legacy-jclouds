@@ -2,16 +2,16 @@
   if (apiOption.isPresent()) {
     FlavorExtraSpecsApi api=apiOption.get();
     for (    String key : testSpecs.keySet()) {
-      assertTrue(api.setExtraSpec(testFlavor.getId(),key,"new value"));
+      assertTrue(api.updateMetadataEntry(testFlavor.getId(),key,"new value"));
     }
     for (    String key : testSpecs.keySet()) {
-      assertEquals(api.getExtraSpec(testFlavor.getId(),key),"new value");
+      assertEquals(api.getMetadataKey(testFlavor.getId(),key),"new value");
     }
-    for (    Resource flavor : flavorApi.listFlavors()) {
-      Map<String,String> specs=api.getAllExtraSpecs(flavor.getId());
+    for (    Resource flavor : flavorApi.list().concat()) {
+      Map<String,String> specs=api.getMetadata(flavor.getId());
       assertNotNull(specs);
       for (      Map.Entry<String,String> entry : specs.entrySet()) {
-        assertEquals(api.getExtraSpec(flavor.getId(),entry.getKey()),entry.getValue());
+        assertEquals(api.getMetadataKey(flavor.getId(),entry.getKey()),entry.getValue());
       }
     }
   }

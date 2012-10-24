@@ -1,0 +1,12 @@
+{
+  for (  URI queue : queues) {
+    QueueAttributes attributes=api().getQueueApi().getAttributes(queue);
+    assertNoPermissions(queue);
+    String accountToAuthorize=getOwner(queue);
+    api().getPermissionApiForQueue(queue).addPermissionToAccount("fubar",Action.GET_QUEUE_ATTRIBUTES,accountToAuthorize);
+    String policyForAuthorizationByAccount=assertPolicyPresent(queue);
+    String policyForAnonymous=policyForAuthorizationByAccount.replace("\"" + accountToAuthorize + "\"","\"*\"");
+    api().getQueueApi().setAttribute(queue,"Policy",policyForAnonymous);
+    assertEquals(getAnonymousAttributesApi(queue).getQueueArn(),attributes.getQueueArn());
+  }
+}

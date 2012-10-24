@@ -1,0 +1,19 @@
+{
+  this.declaring=(Class<T>)typeLiteral.getRawType();
+  this.injector=injector;
+  this.parserFactory=parserFactory;
+  this.utils=utils;
+  this.contentMetadataCodec=contentMetadataCodec;
+  this.uriBuilderProvider=injector.getProvider(UriBuilder.class);
+  this.seedAnnotationCache=seedAnnotationCache;
+  seedAnnotationCache.get(declaring);
+  this.delegationMap=delegationMap;
+  if (declaring.isAnnotationPresent(SkipEncoding.class)) {
+    skips=declaring.getAnnotation(SkipEncoding.class).value();
+  }
+ else {
+    skips=new char[]{};
+  }
+  this.apiVersion=apiVersion;
+  this.buildVersion=buildVersion;
+}

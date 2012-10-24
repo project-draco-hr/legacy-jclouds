@@ -1,0 +1,33 @@
+{
+  String nodeId="myid";
+  Timeouts timeouts=new Timeouts();
+  PollPeriod period=new PollPeriod();
+  final NodeMetadata pendingNode=new NodeMetadataBuilder().ids(nodeId).status(Status.PENDING).build();
+  final NodeMetadata runningNode=new NodeMetadataBuilder().ids(nodeId).status(Status.RUNNING).build();
+  GetNodeMetadataStrategy nodeClient=createMock(GetNodeMetadataStrategy.class);
+  AtomicNodeRunning nodeRunning=new AtomicNodeRunning(nodeClient);
+  Predicate<AtomicReference<NodeMetadata>> retryableNodeRunning=new ComputeServiceTimeoutsModule(){
+    public Predicate<AtomicReference<NodeMetadata>> nodeRunning(    AtomicNodeRunning statusRunning,    Timeouts timeouts,    PollPeriod period){
+      return super.nodeRunning(statusRunning,timeouts,period);
+    }
+  }
+.nodeRunning(nodeRunning,timeouts,period);
+  AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(pendingNode);
+  EasyMock.expect(nodeClient.getNode(nodeId)).andAnswer(new IAnswer<NodeMetadata>(){
+    private int count=0;
+    @Override public NodeMetadata answer() throws Throwable {
+      count++;
+      if (count <= 1) {
+        return null;
+      }
+ else {
+        return runningNode;
+      }
+    }
+  }
+).anyTimes();
+  replay(nodeClient);
+  new PollNodeRunning(retryableNodeRunning).apply(atomicNode);
+  assertEquals(atomicNode.get().getStatus(),Status.RUNNING);
+  verify(nodeClient);
+}

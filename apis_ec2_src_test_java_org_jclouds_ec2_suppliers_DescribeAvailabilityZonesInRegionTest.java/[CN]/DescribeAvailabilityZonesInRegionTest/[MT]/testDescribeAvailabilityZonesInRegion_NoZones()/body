@@ -3,10 +3,10 @@
   EC2Client client=control.createMock(EC2Client.class);
   AvailabilityZoneAndRegionClient regionClient=control.createMock(AvailabilityZoneAndRegionClient.class);
   expect(client.getAvailabilityZoneAndRegionServices()).andStubReturn(regionClient);
-  expect(regionClient.describeAvailabilityZonesInRegion("emptyRegion")).andReturn(Collections.<AvailabilityZoneInfo>emptySet());
+  expect(regionClient.describeAvailabilityZonesInRegion("emptyRegion")).andReturn(ImmutableSet.<AvailabilityZoneInfo>of());
   Set<String> regions=ImmutableSet.of("emptyRegion");
   control.replay();
   DescribeAvailabilityZonesInRegion regionIdToZoneId=new DescribeAvailabilityZonesInRegion(client,Suppliers.ofInstance(regions));
-  assertEquals(regionIdToZoneId.get(),Collections.<String,String>emptyMap());
+  assertEquals(regionIdToZoneId.get(),ImmutableMap.<String,String>of());
   control.verify();
 }

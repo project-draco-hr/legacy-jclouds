@@ -1,0 +1,14 @@
+{
+  Method method=InfrastructureAsyncApi.class.getMethod("discoverMultipleMachines",DatacenterDto.class,String.class,String.class,HypervisorType.class,String.class,String.class,MachineOptions.class);
+  GeneratedHttpRequest request=processor.createRequest(method,InfrastructureResources.datacenterPut(),"80.80.80.80","80.80.80.86",HypervisorType.KVM,"user","pass",MachineOptions.builder().port(8889).build());
+  String baseUrl="http://localhost/api/admin/datacenters/1/action/discovermultiple";
+  String query="password=pass&ipTo=80.80.80.86&ipFrom=80.80.80.80&hypervisor=KVM&user=user&port=8889";
+  String expectedRequest=String.format("GET %s?%s HTTP/1.1",baseUrl,query);
+  assertRequestLineEquals(request,expectedRequest);
+  assertNonPayloadHeadersEqual(request,"Accept: " + MachinesDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,ReturnAbiquoExceptionOnNotFoundOr4xx.class);
+  checkFilters(request);
+}

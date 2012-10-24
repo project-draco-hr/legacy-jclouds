@@ -1,12 +1,11 @@
 {
-  if (apiOption.isPresent()) {
-    backupImageId=apiOption.get().createBackupOfServer(testServerId,"jclouds-test-backup",BackupType.DAILY,0,CreateBackupOfServerOptions.Builder.metadata(ImmutableMap.of("test","metadata")));
-    assertNotNull(backupImageId);
-    if (extensionApi.getExtensionByAlias("OS-EXT-STS") == null) {
-      Thread.sleep(30000);
-    }
-    blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
-    Image backupImage=imageApi.getImage(backupImageId);
-    assertEquals(backupImage.getId(),backupImageId);
+  skipOnAdminExtensionAbsent();
+  backupImageId=apiOption.get().createBackup(testServerId,"jclouds-test-backup",BackupType.DAILY,0,CreateBackupOfServerOptions.Builder.metadata(ImmutableMap.of("test","metadata")));
+  assertNotNull(backupImageId);
+  if (extensionApi.get("OS-EXT-STS") == null) {
+    Thread.sleep(30000);
   }
+  blockUntilServerInState(testServerId,serverApi,Status.ACTIVE);
+  Image backupImage=imageApi.get(backupImageId);
+  assertEquals(backupImage.getId(),backupImageId);
 }

@@ -1,0 +1,16 @@
+{
+  if (qName.equals(resultElement)) {
+    results.put(resultHandler.getResult());
+    inResult=false;
+  }
+ else   if (qName.equals("BatchResultErrorEntry")) {
+    errors.add(errorHandler.getResult());
+    inError=false;
+  }
+ else   if (inResult) {
+    resultHandler.endElement(uri,name,qName);
+  }
+ else   if (inError) {
+    errorHandler.endElement(uri,name,qName);
+  }
+}

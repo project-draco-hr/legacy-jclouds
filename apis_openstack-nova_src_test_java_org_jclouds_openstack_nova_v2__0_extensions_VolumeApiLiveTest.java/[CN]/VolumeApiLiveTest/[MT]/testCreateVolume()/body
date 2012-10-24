@@ -1,9 +1,9 @@
 {
   if (volumeOption.isPresent()) {
-    testVolume=volumeOption.get().createVolume(1,CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume").availabilityZone(zone));
+    testVolume=volumeOption.get().create(1,CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume").availabilityZone(zone));
     assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
       @Override public boolean apply(      VolumeApi volumeApi){
-        return volumeOption.get().getVolume(testVolume.getId()).getStatus() == Volume.Status.AVAILABLE;
+        return volumeOption.get().get(testVolume.getId()).getStatus() == Volume.Status.AVAILABLE;
       }
     }
 ,180 * 1000L).apply(volumeOption.get()));

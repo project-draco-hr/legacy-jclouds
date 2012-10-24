@@ -1,22 +1,18 @@
 {
-  Access accessResponse=access.get();
-  Set<Service> services=Sets.filter(accessResponse.getServiceCatalog(),new Predicate<Service>(){
-    @Override public boolean apply(    Service input){
-      return input.getType().equals(apiType);
-    }
+  FluentIterable<Service> services=FluentIterable.from(access.get()).filter(apiTypeEquals);
+  if (services.toImmutableSet().size() == 0)   throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,services));
+  Iterable<Endpoint> endpoints=concat(services);
+  if (size(endpoints) == 0)   throw new NoSuchElementException(String.format("no endpoints for apiType %s in services %s",apiType,services));
+  boolean checkVersionId=any(endpoints,versionAware);
+  Multimap<String,Endpoint> locationToEndpoints=index(endpoints,endpointToLocationId);
+  Map<String,Endpoint> locationToEndpoint;
+  if (checkVersionId && apiVersion != null) {
+    locationToEndpoint=refineToVersionSpecificEndpoint(locationToEndpoints);
+    if (locationToEndpoint.size() == 0)     throw new NoSuchElementException(String.format("no endpoints for apiType %s are of version %s, or version agnostic: %s",apiType,apiVersion,locationToEndpoints));
   }
-);
-  if (services.size() == 0)   throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,accessResponse.getServiceCatalog()));
-  Iterable<Endpoint> endpoints=Iterables.filter(Iterables.concat(services),new Predicate<Endpoint>(){
-    @Override public boolean apply(    Endpoint input){
-      if (input.getVersionId() == null) {
-        return true;
-      }
-      return input.getVersionId().equals(apiVersion);
-    }
+ else {
+    locationToEndpoint=firstEndpointInLocation(locationToEndpoints);
   }
-);
-  if (Iterables.size(endpoints) == 0)   throw new NoSuchElementException(String.format("no endpoints for apiType %s are of version %s, or version agnostic: %s",apiType,apiVersion,services));
-  Map<String,Endpoint> locationIdToEndpoint=Maps.uniqueIndex(endpoints,endpointToLocationId);
-  return Maps.transformValues(locationIdToEndpoint,endpointToSupplierURI);
+  logger.debug("endpoints for apiType %s and version %s: %s",apiType,apiVersion,locationToEndpoints);
+  return Maps.transformValues(locationToEndpoint,endpointToSupplierURI);
 }

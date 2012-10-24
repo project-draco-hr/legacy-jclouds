@@ -1,0 +1,11 @@
+{
+  Function<Exception,Object> function=new ReturnAbiquoExceptionOnNotFoundOr4xx();
+  AbiquoException abiquoException=new AbiquoException(Status.NOT_FOUND,new ErrorsDto());
+  ResourceNotFoundException exception=new ResourceNotFoundException(abiquoException);
+  try {
+    function.apply(exception);
+  }
+ catch (  Exception ex) {
+    assertEquals(ex,abiquoException);
+  }
+}

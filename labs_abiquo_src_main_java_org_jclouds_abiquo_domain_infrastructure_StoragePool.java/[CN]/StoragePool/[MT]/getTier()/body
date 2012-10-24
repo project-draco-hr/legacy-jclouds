@@ -1,0 +1,7 @@
+{
+  RESTLink link=checkNotNull(target.searchLink(ParentLinkName.TIER),ValidationErrors.MISSING_REQUIRED_LINK + " " + ParentLinkName.TIER);
+  ExtendedUtils utils=(ExtendedUtils)context.getUtils();
+  HttpResponse response=utils.getAbiquoHttpClient().get(link);
+  ParseXMLWithJAXB<TierDto> parser=new ParseXMLWithJAXB<TierDto>(utils.getXml(),TypeLiteral.get(TierDto.class));
+  return wrap(context,Tier.class,parser.apply(response));
+}

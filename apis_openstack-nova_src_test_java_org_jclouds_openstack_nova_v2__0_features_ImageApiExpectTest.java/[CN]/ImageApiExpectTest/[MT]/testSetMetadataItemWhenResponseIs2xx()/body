@@ -1,0 +1,8 @@
+{
+  String imageId="52415800-8b69-11e0-9b19-734f5736d2a2";
+  String key="Image Version";
+  HttpRequest updateMetadata=HttpRequest.builder().method("PUT").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/images/" + imageId + "/metadata/"+ "Image%20Version").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"metadata\":{\"Image Version\":\"2.5\"}}","application/json")).build();
+  HttpResponse updateMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"metadata\":{\"Image Version\":\"2.5\"}}","application/json")).build();
+  NovaApi apiWhenServerExists=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,updateMetadata,updateMetadataResponse);
+  assertEquals(apiWhenServerExists.getImageApiForZone("az-1.region-a.geo-1").updateMetadata(imageId,key,"2.5").toString(),"2.5");
+}

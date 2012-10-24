@@ -1,0 +1,9 @@
+{
+  FluentIterable<String> initial=FluentIterable.from(ImmutableSet.of("foo","bar"));
+  Supplier<FluentIterable<String>> nextIterable=createMock(Supplier.class);
+  expect(nextIterable.get()).andReturn(initial);
+  EasyMock.replay(nextIterable);
+  AdvanceUntilEmptyIterable<String> iterable=new AdvanceUntilEmptyIterable<String>(nextIterable);
+  Assert.assertSame(iterable.get(0),initial);
+  EasyMock.verify(nextIterable);
+}

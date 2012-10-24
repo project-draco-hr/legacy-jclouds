@@ -4,13 +4,12 @@
   filesystemContainerNameValidator.validate(containerName);
   filesystemBlobKeyValidator.validate(blobKey);
   File outputFile=getFileForBlobKey(containerName,blobKey);
-  FileOutputStream output=null;
   try {
     Files.createParentDirs(outputFile);
     if (payload.getRawContent() instanceof File)     Files.copy((File)payload.getRawContent(),outputFile);
  else {
-      output=new FileOutputStream(outputFile);
-      payload.writeTo(output);
+      payload=Payloads.newPayload(ByteStreams.toByteArray(payload));
+      Files.copy(payload,outputFile);
     }
     Payloads.calculateMD5(payload,crypto.md5());
     String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
@@ -23,7 +22,6 @@
     throw ex;
   }
  finally {
-    Closeables.closeQuietly(output);
     payload.release();
   }
 }

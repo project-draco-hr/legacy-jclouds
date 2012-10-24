@@ -1,0 +1,19 @@
+{
+  final NodeMetadata pendingNode=new NodeMetadataBuilder().ids("id").status(Status.PENDING).build();
+  final NodeMetadata deadNode=new NodeMetadataBuilder().ids("id").status(Status.TERMINATED).build();
+  Predicate<AtomicReference<NodeMetadata>> nodeRunning=new Predicate<AtomicReference<NodeMetadata>>(){
+    @Override public boolean apply(    AtomicReference<NodeMetadata> input){
+      assertEquals(input.get(),pendingNode);
+      input.set(deadNode);
+      return false;
+    }
+  }
+;
+  AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(pendingNode);
+  try {
+    new PollNodeRunning(nodeRunning).apply(atomicNode);
+  }
+  finally {
+    assertEquals(atomicNode.get(),deadNode);
+  }
+}

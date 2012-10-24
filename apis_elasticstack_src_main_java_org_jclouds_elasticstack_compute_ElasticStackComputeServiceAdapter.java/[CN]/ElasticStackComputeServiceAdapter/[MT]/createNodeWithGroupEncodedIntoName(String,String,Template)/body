@@ -11,7 +11,7 @@
     client.destroyDrive(drive.getUuid());
     throw new IllegalStateException("could not image drive in time!");
   }
-  Server toCreate=small(name,drive.getUuid(),defaultVncPassword).mem(template.getHardware().getRam()).cpu((int)(template.getHardware().getProcessors().get(0).getSpeed())).build();
+  Server toCreate=small(name,drive.getUuid(),defaultVncPassword).mem(template.getHardware().getRam()).cpu((int)(template.getHardware().getProcessors().get(0).getSpeed())).tags(template.getOptions().getTags()).userMetadata(template.getOptions().getUserMetadata()).build();
   ServerInfo from=client.createServer(toCreate);
   client.startServer(from.getUuid());
   from=client.getServerInfo(from.getUuid());

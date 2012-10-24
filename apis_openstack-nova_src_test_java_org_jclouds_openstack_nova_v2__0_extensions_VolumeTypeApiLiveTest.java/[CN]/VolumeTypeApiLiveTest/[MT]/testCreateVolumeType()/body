@@ -1,13 +1,13 @@
 {
   if (volumeTypeOption.isPresent()) {
-    testVolumeType=volumeTypeOption.get().createVolumeType("jclouds-test-1",CreateVolumeTypeOptions.Builder.specs(ImmutableMap.of("test","value1")));
+    testVolumeType=volumeTypeOption.get().create("jclouds-test-1",CreateVolumeTypeOptions.Builder.specs(ImmutableMap.of("test","value1")));
     assertTrue(new RetryablePredicate<VolumeTypeApi>(new Predicate<VolumeTypeApi>(){
       @Override public boolean apply(      VolumeTypeApi volumeTypeApi){
-        return volumeTypeApi.getVolumeType(testVolumeType.getId()) != null;
+        return volumeTypeApi.get(testVolumeType.getId()) != null;
       }
     }
 ,180 * 1000L).apply(volumeTypeOption.get()));
-    assertEquals(volumeTypeOption.get().getVolumeType(testVolumeType.getId()).getName(),"jclouds-test-1");
-    assertEquals(volumeTypeOption.get().getVolumeType(testVolumeType.getId()).getExtraSpecs(),ImmutableMap.of("test","value1"));
+    assertEquals(volumeTypeOption.get().get(testVolumeType.getId()).getName(),"jclouds-test-1");
+    assertEquals(volumeTypeOption.get().get(testVolumeType.getId()).getExtraSpecs(),ImmutableMap.of("test","value1"));
   }
 }

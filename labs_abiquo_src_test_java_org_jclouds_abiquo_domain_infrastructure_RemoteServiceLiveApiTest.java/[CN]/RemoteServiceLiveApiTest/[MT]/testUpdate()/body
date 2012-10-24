@@ -1,0 +1,7 @@
+{
+  RemoteService rs=env.datacenter.findRemoteService(type(RemoteServiceType.VIRTUAL_FACTORY));
+  rs.setUri(rs.getUri());
+  rs.update();
+  RemoteServiceDto updated=env.infrastructureApi.getRemoteService(env.datacenter.unwrap(),RemoteServiceType.VIRTUAL_FACTORY);
+  assertEquals(updated.getUri(),rs.getUri());
+}

@@ -1,0 +1,16 @@
+{
+  String token=getAuthtenticationToken();
+  Properties props=new Properties();
+  props.setProperty(AbiquoProperties.CREDENTIAL_IS_TOKEN,"true");
+  AbiquoContext tokenContext=ContextBuilder.newBuilder(new AbiquoApiMetadata()).endpoint(endpoint).credentials("token",token).modules(ImmutableSet.<Module>of(new SLF4JLoggingModule())).overrides(props).build(AbiquoContext.class);
+  try {
+    UserDto user=tokenContext.getApiContext().getApi().getAdminApi().getCurrentUser();
+    assertNotNull(user);
+    assertEquals(user.getNick(),identity);
+  }
+  finally {
+    if (tokenContext != null) {
+      tokenContext.close();
+    }
+  }
+}

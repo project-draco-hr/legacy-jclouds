@@ -1,0 +1,12 @@
+{
+  IpOptions options=IpOptions.builder().limit(5).build();
+  Method method=CloudAsyncApi.class.getMethod("listPurchasedPublicIps",VirtualDatacenterDto.class,IpOptions.class);
+  GeneratedHttpRequest request=processor.createRequest(method,CloudResources.virtualDatacenterPut(),options);
+  assertRequestLineEquals(request,"GET http://localhost/api/cloud/virtualdatacenters/1/publicips/purchased?limit=5 HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"Accept: " + PublicIpsDto.BASE_MEDIA_TYPE + "\n");
+  assertPayloadEquals(request,null,null,false);
+  assertResponseParserClassEquals(method,request,ParseXMLWithJAXB.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

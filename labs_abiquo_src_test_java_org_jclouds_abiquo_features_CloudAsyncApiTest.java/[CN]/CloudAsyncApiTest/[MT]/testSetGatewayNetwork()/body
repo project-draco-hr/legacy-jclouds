@@ -1,0 +1,14 @@
+{
+  Method method=CloudAsyncApi.class.getMethod("setGatewayNetwork",VirtualMachineDto.class,VLANNetworkDto.class);
+  VirtualMachineDto vm=CloudResources.virtualMachinePut();
+  VLANNetworkDto network=NetworkResources.privateNetworkPut();
+  GeneratedHttpRequest request=processor.createRequest(method,vm,network);
+  String configLink=vm.searchLink("configurations").getHref() + "/" + network.getId();
+  assertRequestLineEquals(request,"PUT http://localhost/api/cloud/virtualdatacenters/1/virtualappliances/1/virtualmachines/1/network/configurations HTTP/1.1");
+  assertNonPayloadHeadersEqual(request,"");
+  assertPayloadEquals(request,withHeader("<links><link href=\"" + configLink + "\" rel=\"network_configuration\"/></links>"),LinksDto.class,LinksDto.BASE_MEDIA_TYPE,false);
+  assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
+  assertSaxResponseParserClassEquals(method,null);
+  assertExceptionParserClassEquals(method,null);
+  checkFilters(request);
+}

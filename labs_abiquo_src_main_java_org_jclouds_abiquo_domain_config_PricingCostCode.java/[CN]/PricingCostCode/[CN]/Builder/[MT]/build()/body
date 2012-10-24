@@ -1,0 +1,12 @@
+{
+  PricingCostCodeDto dto=new PricingCostCodeDto();
+  dto.setId(id);
+  dto.setPrice(price);
+  RESTLink link=costcode.unwrap().searchLink("edit");
+  checkNotNull(link,ValidationErrors.MISSING_REQUIRED_LINK);
+  dto.addLink(new RESTLink("costcode",link.getHref()));
+  PricingCostCode pricingcostcode=new PricingCostCode(context,dto);
+  pricingcostcode.pricingTemplate=pricingTemplate;
+  pricingcostcode.costcode=costcode;
+  return pricingcostcode;
+}

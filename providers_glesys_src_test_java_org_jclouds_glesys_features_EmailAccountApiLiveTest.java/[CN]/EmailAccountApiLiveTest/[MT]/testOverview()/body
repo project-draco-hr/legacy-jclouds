@@ -1,0 +1,12 @@
+{
+  EmailOverview overview=api.getOverview();
+  assertNotNull(overview.getSummary());
+  assertTrue(overview.getSummary().getAccounts() > 0);
+  assertTrue(overview.getSummary().getAliases() > -1);
+  assertTrue(overview.getSummary().getMaxAccounts() > 0);
+  assertTrue(overview.getSummary().getMaxAliases() > 0);
+  assertNotNull(overview.gets());
+  assertFalse(overview.gets().isEmpty());
+  EmailOverviewDomain domain=EmailOverviewDomain.builder().domain(testDomain).accounts(1).build();
+  assertTrue(overview.gets().contains(domain));
+}

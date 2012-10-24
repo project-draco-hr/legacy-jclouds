@@ -1,0 +1,31 @@
+{
+  MachineDto dto=new MachineDto();
+  dto.setName(name);
+  dto.setDescription(description);
+  dto.setVirtualRamInMb(virtualRamInMb);
+  dto.setVirtualRamUsedInMb(virtualRamUsedInMb);
+  dto.setVirtualCpuCores(virtualCpuCores);
+  dto.setVirtualCpusUsed(virtualCpusUsed);
+  dto.setVirtualSwitch(virtualSwitch);
+  if (port != null) {
+    dto.setPort(port);
+  }
+  dto.setIp(ip);
+  dto.setIpService(ipService);
+  dto.setType(type);
+  dto.setUser(user);
+  dto.setPassword(password);
+  dto.setIpmiIP(ipmiIp);
+  dto.setIpmiPassword(ipmiPassword);
+  if (ipmiPort != null) {
+    dto.setIpmiPort(ipmiPort);
+  }
+  dto.setIpmiUser(ipmiUser);
+  dto.setState(state);
+  DatastoresDto datastoresDto=new DatastoresDto();
+  datastoresDto.getCollection().addAll(unwrap(datastores));
+  dto.setDatastores(datastoresDto);
+  Machine machine=new Machine(context,dto);
+  machine.rack=rack;
+  return machine;
+}

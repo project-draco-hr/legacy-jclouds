@@ -1,0 +1,17 @@
+{
+  List<IHostNetworkInterface> availableNetworkInterfaces=manager.get().getVBox().getHost().getNetworkInterfaces();
+  IHostNetworkInterface iHostNetworkInterfaceWithHostOnlyIfName=Iterables.getOnlyElement(Iterables.filter(availableNetworkInterfaces,new Predicate<IHostNetworkInterface>(){
+    @Override public boolean apply(    IHostNetworkInterface iHostNetworkInterface){
+      return iHostNetworkInterface.getName().equals(hostOnlyIfName);
+    }
+  }
+));
+  String hostOnlyIfIpAddress=iHostNetworkInterfaceWithHostOnlyIfName.getIPAddress();
+  String dhcpIpAddress=hostOnlyIfIpAddress.substring(0,hostOnlyIfIpAddress.lastIndexOf(".")) + ".254";
+  String dhcpNetmask="255.255.255.0";
+  String dhcpLowerIp=hostOnlyIfIpAddress.substring(0,hostOnlyIfIpAddress.lastIndexOf(".")) + ".2";
+  String dhcpUpperIp=hostOnlyIfIpAddress.substring(0,hostOnlyIfIpAddress.lastIndexOf(".")) + ".253";
+  NodeMetadata hostNodeMetadata=getHostNodeMetadata();
+  ExecResponse response=scriptRunnerFactory.create(hostNodeMetadata,Statements.exec(String.format("VBoxManage dhcpserver add --ifname %s --ip %s --netmask %s --lowerip %s --upperip %s --enable",hostOnlyIfName,dhcpIpAddress,dhcpNetmask,dhcpLowerIp,dhcpUpperIp)),runAsRoot(false).wrapInInitScript(false)).init().call();
+  checkState(response.getExitStatus() == 0);
+}
