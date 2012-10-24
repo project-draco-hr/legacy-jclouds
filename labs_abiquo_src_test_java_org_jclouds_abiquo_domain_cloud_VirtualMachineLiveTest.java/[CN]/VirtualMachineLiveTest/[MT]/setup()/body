@@ -1,0 +1,8 @@
+{
+  monitoringService=view.getMonitoringService();
+  vdc=getLast(view.getCloudService().listVirtualDatacenters());
+  vmt=templateBySize().min(vdc.listAvailableTemplates());
+  vapp=VirtualAppliance.builder(view.getApiContext(),vdc).name(PREFIX + "Virtual Appliance Wahine").build();
+  vapp.save();
+  assertNotNull(vapp.getId());
+}
