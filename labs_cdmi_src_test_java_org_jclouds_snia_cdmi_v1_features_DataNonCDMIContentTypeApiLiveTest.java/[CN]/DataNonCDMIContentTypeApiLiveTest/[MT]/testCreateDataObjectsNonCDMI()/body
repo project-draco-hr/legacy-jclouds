@@ -16,7 +16,6 @@
   pDataObjectMetaDataIn.put("dataObjectkey3","value3");
   Payload payloadIn;
   Payload payloadOut;
-  FileOutputStream fos;
   CreateContainerOptions pCreateContainerOptions=CreateContainerOptions.Builder.metadata(pContainerMetaDataIn);
   ContainerApi containerApi=cdmiContext.getApi().getApi();
   DataApi dataApi=cdmiContext.getApi().getDataApiForContainer(containerName);
@@ -100,10 +99,7 @@
     payloadOut=dataNonCDMIContentTypeApi.getValue(dataObjectNameIn);
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.txt");
-    fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut,fos);
-    fos.flush();
-    fos.close();
+    Files.copy(payloadOut,tmpFileOut);
     assertEquals(Files.equal(tmpFileOut,tmpFileIn),true);
     tmpFileOut.delete();
     dataNonCDMIContentTypeApi.delete(dataObjectNameIn);
@@ -137,10 +133,7 @@
     payloadOut=dataNonCDMIContentTypeApi.getValue(inFile.getName());
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.jpg");
-    fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut,fos);
-    fos.flush();
-    fos.close();
+    Files.copy(payloadOut,tmpFileOut);
     assertEquals(Files.equal(tmpFileOut,inFile),true);
     tmpFileOut.delete();
     assertEquals(containerApi.get(containerName).getChildren().contains(inFile.getName()),true);
@@ -178,10 +171,7 @@
     payloadOut=dataNonCDMIContentTypeApi.getValue(inFile.getName());
     assertNotNull(payloadOut);
     tmpFileOut=new File(Files.createTempDir(),"temp.jpg");
-    fos=new FileOutputStream(tmpFileOut);
-    ByteStreams.copy(payloadOut,fos);
-    fos.flush();
-    fos.close();
+    Files.copy(payloadOut,tmpFileOut);
     assertEquals(Files.equal(tmpFileOut,inFile),true);
     tmpFileOut.delete();
     assertEquals(containerApi.get(containerName).getChildren().contains(inFile.getName()),true);
