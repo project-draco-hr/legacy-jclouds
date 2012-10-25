@@ -1,0 +1,8 @@
+{
+  try {
+    return new Resource(securityGroupApi().createSecurityGroupInRegionAndReturnId(null,prefix,prefix),SECURITY_GROUP);
+  }
+ catch (  IllegalStateException e) {
+    return new Resource(Iterables.get(securityGroupApi().describeSecurityGroupsInRegion(null,prefix),0).getId(),SECURITY_GROUP);
+  }
+}

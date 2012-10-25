@@ -1,0 +1,9 @@
+{
+  api().applyToResources(ImmutableSet.of("foo"),ImmutableSet.of(resource.id));
+  tag=api().filter(new TagFilterBuilder().resourceId(resource.id).key("foo").build()).get(0);
+  Logger.getAnonymousLogger().info("created tag: " + tag);
+  assertEquals(tag.getKey(),"foo");
+  assertEquals(tag.getResourceId(),resource.id);
+  assertEquals(tag.getResourceType(),resource.type);
+  assertFalse(tag.getValue().isPresent());
+}
