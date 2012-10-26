@@ -4,8 +4,9 @@
   String user=Config.get("abiquo.hypervisor.user");
   String pass=Config.get("abiquo.hypervisor.pass");
   machine=datacenter.discoverSingleMachine(ip,type,user,pass);
-  String vswitch=machine.findAvailableVirtualSwitch(Config.get("abiquo.hypervisor.vswitch"));
-  machine.setVirtualSwitch(vswitch);
+  NetworkServiceType nst=datacenter.defaultNetworkServiceType();
+  NetworkInterface vswitch=machine.findAvailableVirtualSwitch(Config.get("abiquo.hypervisor.vswitch"));
+  vswitch.setNetworkServiceType(nst);
   Datastore datastore=machine.findDatastore(Config.get("abiquo.hypervisor.datastore"));
   datastore.setEnabled(true);
   machine.setRack(rack);

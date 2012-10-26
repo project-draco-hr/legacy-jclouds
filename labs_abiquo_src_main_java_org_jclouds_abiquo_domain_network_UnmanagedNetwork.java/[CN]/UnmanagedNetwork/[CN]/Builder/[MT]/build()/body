@@ -11,6 +11,8 @@
   dto.setDefaultNetwork(defaultNetwork);
   dto.setUnmanaged(true);
   dto.setType(NetworkType.UNMANAGED);
+  NetworkServiceType nst=networkServiceType.or(datacenter.defaultNetworkServiceType());
+  dto.getLinks().add(new RESTLink("networkservicetype",nst.unwrap().getEditLink().getHref()));
   UnmanagedNetwork network=new UnmanagedNetwork(context,dto);
   network.datacenter=datacenter;
   network.enterprise=enterprise;

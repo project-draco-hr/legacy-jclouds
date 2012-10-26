@@ -1,0 +1,9 @@
+{
+  InfrastructureApi api=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost/api/admin/datacenters/1/networkservicetypes")).addHeader("Authorization",basicAuth).addHeader("Accept",normalize(NetworkServiceTypesDto.MEDIA_TYPE)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/payloads/nst-list.xml",normalize(NetworkServiceTypesDto.MEDIA_TYPE))).build());
+  DatacenterDto datacenter=new DatacenterDto();
+  datacenter.addLink(new RESTLink("networkservicetypes","http://localhost/api/admin/datacenters/1/networkservicetypes"));
+  NetworkServiceTypesDto nsts=api.listNetworkServiceTypes(datacenter);
+  assertEquals(nsts.getCollection().size(),2);
+  assertEquals(nsts.getCollection().get(0).getName(),"Service Network");
+  assertEquals(nsts.getCollection().get(1).getName(),"Storage Network");
+}
