@@ -1,5 +1,8 @@
 {
+  if (maxWait != null) {
+    checkNotNull(timeUnit,"timeUnit must not be null when using timeouts");
+  }
   future=scheduler.scheduleWithFixedDelay(this,0L,pollingDelay,TimeUnit.MILLISECONDS);
-  timeout=maxWait == null ? null : System.currentTimeMillis() + maxWait;
+  timeout=maxWait == null ? null : System.currentTimeMillis() + timeUnit.toMillis(maxWait);
   logger.debug("started monitor job for %s with %s timeout",monitoredObject,timeout == null ? "no" : String.valueOf(timeout));
 }

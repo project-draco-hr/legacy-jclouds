@@ -7,10 +7,10 @@
   AsyncMonitor<Object> monitor=mockMonitor(schedulerMock,new Object(),mockFunction(MonitorStatus.DONE),new EventBus());
   assertNull(monitor.getFuture());
   assertNull(monitor.getTimeout());
-  monitor.startMonitoring(null,TimeUnit.MILLISECONDS);
+  monitor.startMonitoring(1L,TimeUnit.MINUTES);
   assertNotNull(monitor.getFuture());
-  assertNull(monitor.getTimeout());
-  assertFalse(monitor.isTimeout());
+  assertNotNull(monitor.getTimeout());
+  assertTrue(monitor.getTimeout() > TimeUnit.MINUTES.toMillis(1));
   verify(mockFuture);
   verify(schedulerMock);
 }
