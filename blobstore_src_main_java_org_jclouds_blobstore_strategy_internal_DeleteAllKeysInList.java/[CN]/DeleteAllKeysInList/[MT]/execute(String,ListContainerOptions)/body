@@ -16,7 +16,7 @@
 catch (    ExecutionException ee) {
       ++numErrors;
       if (numErrors == maxErrors) {
-        throw Throwables.propagate(ee.getCause());
+        throw propagate(ee.getCause());
       }
       retryHandler.imposeBackoffExponentialDelay(numErrors,message);
       continue;
@@ -59,7 +59,17 @@ case CONTAINER:
 throw new IllegalArgumentException("Container type not supported");
 }
 }
+try {
 exceptions=awaitCompletion(responses,userExecutor,maxTime,logger,message);
+}
+ catch (TimeoutException te) {
+++numErrors;
+if (numErrors == maxErrors) {
+throw propagate(te);
+}
+retryHandler.imposeBackoffExponentialDelay(numErrors,message);
+continue;
+}
 if (!exceptions.isEmpty()) {
 ++numErrors;
 retryHandler.imposeBackoffExponentialDelay(numErrors,message);

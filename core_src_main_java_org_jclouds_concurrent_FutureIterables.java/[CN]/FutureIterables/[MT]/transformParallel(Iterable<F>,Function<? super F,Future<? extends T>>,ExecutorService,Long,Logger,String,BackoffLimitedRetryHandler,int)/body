@@ -6,7 +6,12 @@
       Future<? extends T> to=function.apply(from);
       responses.put(from,to);
     }
-    exceptions=awaitCompletion(responses,exec,maxTime,logger,logPrefix);
+    try {
+      exceptions=awaitCompletion(responses,exec,maxTime,logger,logPrefix);
+    }
+ catch (    TimeoutException te) {
+      throw propagate(te);
+    }
     if (exceptions.size() > 0 && !any(exceptions.values(),containsThrowable(AuthorizationException.class))) {
       fromIterable=exceptions.keySet();
       retryHandler.imposeBackoffExponentialDelay(delayStart,2,i + 1,maxRetries,String.format("error %s: %s: %s",logPrefix,fromIterable,exceptions));

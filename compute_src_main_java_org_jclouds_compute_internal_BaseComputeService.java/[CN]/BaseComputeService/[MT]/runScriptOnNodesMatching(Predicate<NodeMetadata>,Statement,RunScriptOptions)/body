@@ -12,7 +12,12 @@
     for (    RunScriptOnNode runner : scriptRunners) {
       responses.put(runner.getNode(),executor.submit(new RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap(runner,goodNodes,badNodes)));
     }
-    exceptions=awaitCompletion(responses,executor,null,logger,"runScriptOnNodesMatching(" + filter + ")");
+    try {
+      exceptions=awaitCompletion(responses,executor,null,logger,"runScriptOnNodesMatching(" + filter + ")");
+    }
+ catch (    TimeoutException te) {
+      throw propagate(te);
+    }
   }
   Function<NodeMetadata,NodeMetadata> fn=persistNodeCredentials.ifAdminAccess(runScript);
   badNodes=Maps2.transformKeys(badNodes,fn);
