@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots");
+  SnapshotApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_list_simple.json")).build()).getSnapshotApiForZone("RegionOne");
+  Set<? extends Snapshot> snapshots=api.list().toImmutableSet();
+  assertEquals(snapshots,ImmutableSet.of(testSnapshot()));
+}
