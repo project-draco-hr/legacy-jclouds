@@ -1,17 +1,22 @@
 {
-  ApiMetadata metadata=null;
-  String className=getApiMetadataClassName(bundle);
-  if (className != null && !className.isEmpty()) {
-    try {
-      Class<? extends ApiMetadata> apiMetadataClass=bundle.loadClass(className);
-      metadata=apiMetadataClass.newInstance();
-    }
- catch (    ClassNotFoundException e) {
-    }
-catch (    InstantiationException e) {
-    }
-catch (    IllegalAccessException e) {
+  List<ApiMetadata> metadataList=Lists.newArrayList();
+  String classNames=getApiMetadataClassNames(bundle);
+  if (classNames != null && !classNames.isEmpty()) {
+    for (    String className : classNames.split("\n")) {
+      try {
+        Class<? extends ApiMetadata> apiMetadataClass=bundle.loadClass(className);
+        if (ApiMetadata.class.isAssignableFrom(apiMetadataClass)) {
+          ApiMetadata metadata=apiMetadataClass.newInstance();
+          metadataList.add(metadata);
+        }
+      }
+ catch (      ClassNotFoundException e) {
+      }
+catch (      InstantiationException e) {
+      }
+catch (      IllegalAccessException e) {
+      }
     }
   }
-  return metadata;
+  return metadataList;
 }

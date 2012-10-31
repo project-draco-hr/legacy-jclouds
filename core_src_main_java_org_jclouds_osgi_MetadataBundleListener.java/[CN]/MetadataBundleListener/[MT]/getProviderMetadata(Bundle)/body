@@ -1,17 +1,22 @@
 {
-  ProviderMetadata metadata=null;
-  String className=getProviderMetadataClassName(bundle);
-  if (className != null && !className.isEmpty()) {
-    try {
-      Class<? extends ProviderMetadata> providerMetadataClass=bundle.loadClass(className);
-      metadata=providerMetadataClass.newInstance();
-    }
- catch (    ClassNotFoundException e) {
-    }
-catch (    InstantiationException e) {
-    }
-catch (    IllegalAccessException e) {
+  List<ProviderMetadata> metadataList=Lists.newArrayList();
+  String classNames=getProviderMetadataClassNames(bundle);
+  if (classNames != null && !classNames.isEmpty()) {
+    for (    String className : classNames.split("\n")) {
+      try {
+        Class<? extends ProviderMetadata> providerMetadataClass=bundle.loadClass(className);
+        if (ProviderMetadata.class.isAssignableFrom(providerMetadataClass)) {
+          ProviderMetadata metadata=providerMetadataClass.newInstance();
+          metadataList.add(metadata);
+        }
+      }
+ catch (      ClassNotFoundException e) {
+      }
+catch (      InstantiationException e) {
+      }
+catch (      IllegalAccessException e) {
+      }
     }
   }
-  return metadata;
+  return metadataList;
 }
