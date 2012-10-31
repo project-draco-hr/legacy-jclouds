@@ -2,5 +2,7 @@
   String filePath;
   if (blobKey.startsWith("\\"))   filePath=containerName + blobKey;
  else   filePath=containerName + File.separator + blobKey;
-  FileUtils.copyFile(source,new File(TARGET_BASE_DIR + filePath));
+  File file=new File(TARGET_BASE_DIR + filePath);
+  Files.createParentDirs(file);
+  Files.copy(source,file);
 }
