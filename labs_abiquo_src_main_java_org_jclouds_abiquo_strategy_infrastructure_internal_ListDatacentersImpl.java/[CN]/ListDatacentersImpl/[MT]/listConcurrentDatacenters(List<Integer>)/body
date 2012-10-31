@@ -1,9 +1,0 @@
-{
-  Iterable<DatacenterDto> dcs=transformParallel(ids,new Function<Integer,Future<? extends DatacenterDto>>(){
-    @Override public Future<DatacenterDto> apply(    final Integer input){
-      return context.getAsyncApi().getInfrastructureApi().getDatacenter(input);
-    }
-  }
-,userExecutor,maxTime,logger,"getting datacenters");
-  return DomainWrapper.wrap(context,Datacenter.class,Lists.newArrayList(dcs));
-}
