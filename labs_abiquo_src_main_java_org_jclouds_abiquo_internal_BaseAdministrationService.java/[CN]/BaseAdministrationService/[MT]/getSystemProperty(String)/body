@@ -1,4 +1,5 @@
 {
   PropertyOptions options=PropertyOptions.builder().name(name).build();
-  return Iterables.getFirst(listProperties.execute(options),null);
+  SystemPropertiesDto result=context.getApi().getConfigApi().listSystemProperties(options);
+  return getFirst(wrap(context,SystemProperty.class,result.getCollection()),null);
 }
