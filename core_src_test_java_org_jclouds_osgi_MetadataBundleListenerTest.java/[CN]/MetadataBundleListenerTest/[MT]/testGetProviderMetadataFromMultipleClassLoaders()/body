@@ -1,0 +1,17 @@
+{
+  ClassLoader isolatedClassLoader=createIsolatedClassLoader();
+  MetadataBundleListener listener=new MetadataBundleListener();
+  Bundle bundle=createMock(Bundle.class);
+  expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(getClass().getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata")).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(isolatedClassLoader.loadClass(JcloudsTestBlobStoreProviderMetadata.class.getName())).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(JcloudsTestComputeProviderMetadata.class).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
+  replay(bundle);
+  List<ProviderMetadata> providerMetadataList=listener.getProviderMetadata(bundle);
+  assertNotNull(providerMetadataList);
+  assertEquals(2,providerMetadataList.size());
+  assertFalse(providerMetadataList.contains(new JcloudsTestBlobStoreProviderMetadata()));
+  assertTrue(providerMetadataList.contains(new JcloudsTestComputeProviderMetadata()));
+  assertTrue(providerMetadataList.contains(new JcloudsTestYetAnotherComputeProviderMetadata()));
+  verify(bundle);
+}

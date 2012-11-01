@@ -1,0 +1,17 @@
+{
+  ClassLoader isolatedClassLoader=createIsolatedClassLoader();
+  MetadataBundleListener listener=new MetadataBundleListener();
+  Bundle bundle=createMock(Bundle.class);
+  expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(getClass().getResource("/META-INF/services/org.jclouds.apis.ApiMetadata")).anyTimes();
+  expect(bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(isolatedClassLoader.loadClass(JcloudsTestBlobStoreApiMetadata.class.getName())).anyTimes();
+  expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(JcloudsTestComputeApiMetadata.class).anyTimes();
+  expect(bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(JcloudsTestYetAnotherComputeApiMetadata.class).anyTimes();
+  replay(bundle);
+  List<ApiMetadata> apiMetadataList=listener.getApiMetadata(bundle);
+  assertNotNull(apiMetadataList);
+  assertEquals(2,apiMetadataList.size());
+  assertFalse(apiMetadataList.contains(new JcloudsTestBlobStoreApiMetadata()));
+  assertTrue(apiMetadataList.contains(new JcloudsTestComputeApiMetadata()));
+  assertTrue(apiMetadataList.contains(new JcloudsTestYetAnotherComputeApiMetadata()));
+  verify(bundle);
+}

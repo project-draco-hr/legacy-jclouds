@@ -16,21 +16,9 @@
  catch (  Throwable e) {
   }
  finally {
-    try {
-      if (reader != null)       reader.close();
-    }
- catch (    Throwable e) {
-    }
-    try {
-      if (bufferedReader != null)       bufferedReader.close();
-    }
- catch (    Throwable e) {
-    }
-    try {
-      is.close();
-    }
- catch (    Throwable e) {
-    }
+    Closeables.closeQuietly(reader);
+    Closeables.closeQuietly(bufferedReader);
+    Closeables.closeQuietly(is);
   }
   return sb.toString().trim();
 }

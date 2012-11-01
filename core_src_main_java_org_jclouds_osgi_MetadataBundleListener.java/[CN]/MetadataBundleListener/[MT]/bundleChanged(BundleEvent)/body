@@ -1,28 +1,36 @@
 {
-  ProviderMetadata providerMetadata;
-  ApiMetadata apiMetadata;
+  Collection<ProviderMetadata> providerMetadataList=null;
+  Collection<ApiMetadata> apiMetadataList=null;
 switch (event.getType()) {
 case BundleEvent.STARTED:
-    providerMetadata=getProviderMetadata(event.getBundle());
-  apiMetadata=getApiMetadata(event.getBundle());
-if (providerMetadata != null) {
-  ProviderRegistry.registerProvider(providerMetadata);
-  providerMetadataMap.put(event.getBundle().getBundleId(),providerMetadata);
+    providerMetadataList=getProviderMetadata(event.getBundle());
+  apiMetadataList=getApiMetadata(event.getBundle());
+for (ProviderMetadata providerMetadata : providerMetadataList) {
+  if (providerMetadata != null) {
+    ProviderRegistry.registerProvider(providerMetadata);
+    providerMetadataMap.put(event.getBundle().getBundleId(),providerMetadata);
+  }
 }
+for (ApiMetadata apiMetadata : apiMetadataList) {
 if (apiMetadata != null) {
-ApiRegistry.registerApi(apiMetadata);
-apiMetadataMap.put(event.getBundle().getBundleId(),apiMetadata);
+  ApiRegistry.registerApi(apiMetadata);
+  apiMetadataMap.put(event.getBundle().getBundleId(),apiMetadata);
+}
 }
 break;
 case BundleEvent.STOPPING:
 case BundleEvent.STOPPED:
-providerMetadata=providerMetadataMap.get(event.getBundle().getBundleId());
-apiMetadata=apiMetadataMap.get(event.getBundle().getBundleId());
-if (providerMetadata != null) {
+providerMetadataList=providerMetadataMap.get(event.getBundle().getBundleId());
+apiMetadataList=apiMetadataMap.get(event.getBundle().getBundleId());
+if (providerMetadataList != null) {
+for (ProviderMetadata providerMetadata : providerMetadataList) {
 ProviderRegistry.unregisterProvider(providerMetadata);
 }
-if (apiMetadata != null) {
+}
+if (apiMetadataList != null) {
+for (ApiMetadata apiMetadata : apiMetadataList) {
 ApiRegistry.unRegisterApi(apiMetadata);
+}
 }
 break;
 }
