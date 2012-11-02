@@ -8,7 +8,7 @@
     PageSet<? extends StorageMetadata> listing;
     Future<PageSet<? extends StorageMetadata>> listFuture=connection.list(containerName,options);
     try {
-      listing=listFuture.get();
+      listing=listFuture.get(maxTime,TimeUnit.MILLISECONDS);
     }
  catch (    InterruptedException ie) {
       Thread.currentThread().interrupt();
@@ -18,6 +18,14 @@ catch (    ExecutionException ee) {
       ++numErrors;
       if (numErrors == maxErrors) {
         throw propagate(ee.getCause());
+      }
+      retryHandler.imposeBackoffExponentialDelay(numErrors,message);
+      continue;
+    }
+catch (    TimeoutException te) {
+      ++numErrors;
+      if (numErrors == maxErrors) {
+        throw propagate(te);
       }
       retryHandler.imposeBackoffExponentialDelay(numErrors,message);
       continue;

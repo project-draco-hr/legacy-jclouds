@@ -1,0 +1,19 @@
+{
+  ListenableFuture<PageSet<? extends StorageMetadata>> future=createMock(ListenableFuture.class);
+  expect(future.get(anyLong(),anyObject(TimeUnit.class))).andThrow(new RuntimeException(new TimeoutException()));
+  expect(future.cancel(true)).andReturn(true);
+  replay(future);
+  AsyncBlobStore asyncBlobStore=createMock(AsyncBlobStore.class);
+  expect(asyncBlobStore.list(anyObject(String.class),anyObject(ListContainerOptions.class))).andReturn(future);
+  replay(asyncBlobStore);
+  deleter=new DeleteAllKeysInList(null,asyncBlobStore,null);
+  try {
+    deleter.execute(containerName,ListContainerOptions.NONE);
+    fail();
+  }
+ catch (  Exception e) {
+    if (Throwables2.getFirstThrowableOfType(e,TimeoutException.class) == null) {
+      throw e;
+    }
+  }
+}
