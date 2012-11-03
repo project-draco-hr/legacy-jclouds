@@ -4,7 +4,7 @@
   int port=URI.create(preconfigurationUrl).getPort();
   PreseedCfgServer starter=new PreseedCfgServer();
   starter.start(preconfigurationUrl,getDefaultImage().preseed_cfg);
-  String preseedFileFromJetty=IOUtils.toString(new URL("http://127.0.0.1:" + port + "/preseed.cfg").openStream());
+  String preseedFileFromJetty=Strings2.toStringAndClose(new URL("http://127.0.0.1:" + port + "/preseed.cfg").openStream());
   String preseedFileFromFile=getDefaultImage().preseed_cfg + lineSeparator;
   assertEquals(preseedFileFromFile,preseedFileFromJetty);
   starter.stop();
