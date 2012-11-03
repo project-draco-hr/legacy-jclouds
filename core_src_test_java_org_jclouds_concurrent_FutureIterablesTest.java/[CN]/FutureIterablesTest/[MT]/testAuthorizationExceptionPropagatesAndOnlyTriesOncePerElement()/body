@@ -1,2 +1,16 @@
 {
+  final AtomicInteger counter=new AtomicInteger();
+  try {
+    transformParallel(ImmutableSet.of("hello","goodbye"),new Function<String,Future<? extends String>>(){
+      @Override public Future<String> apply(      String input){
+        counter.incrementAndGet();
+        return com.google.common.util.concurrent.Futures.immediateFailedFuture(new AuthorizationException());
+      }
+    }
+,MoreExecutors.sameThreadExecutor(),null,Logger.CONSOLE,"");
+    fail("Expected AuthorizationException");
+  }
+ catch (  AuthorizationException e) {
+    assertEquals(counter.get(),2);
+  }
 }

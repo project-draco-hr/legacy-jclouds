@@ -1,2 +1,28 @@
 {
+  Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(region));
+  Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of());
+  Supplier<Set<? extends Hardware>> sizes=Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of(c1_medium().build()));
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  TemplateOptions defaultOptions=createMock(TemplateOptions.class);
+  Image knownImage=createMock(Image.class);
+  expect(knownImage.getId()).andReturn("region/ami").anyTimes();
+  expect(knownImage.getProviderId()).andReturn("ami").anyTimes();
+  expect(knownImage.getLocation()).andReturn(region).anyTimes();
+  expect(optionsProvider.get()).andReturn(defaultOptions);
+  replay(knownImage);
+  replay(defaultOptions);
+  replay(optionsProvider);
+  replay(templateBuilderProvider);
+  TemplateBuilderImpl template=createTemplateBuilder(knownImage,locations,images,sizes,region,optionsProvider,templateBuilderProvider);
+  try {
+    template.imageId("ami").build();
+    fail("Expected IllegalArgumentException");
+  }
+ catch (  IllegalArgumentException e) {
+  }
+  verify(knownImage);
+  verify(defaultOptions);
+  verify(optionsProvider);
+  verify(templateBuilderProvider);
 }

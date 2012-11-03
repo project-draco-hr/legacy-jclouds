@@ -1,2 +1,13 @@
 {
+  Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone=Predicates.alwaysTrue();
+  ZoneAndName input=ZoneAndName.fromZoneAndName("zone","groupName");
+  Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone> groupCreator=new Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone>(){
+    @Override public SecurityGroupInZone apply(    ZoneSecurityGroupNameAndPorts input){
+      fail();
+      return null;
+    }
+  }
+;
+  FindSecurityGroupOrCreate parser=new FindSecurityGroupOrCreate(returnSecurityGroupExistsInZone,groupCreator);
+  parser.load(input);
 }

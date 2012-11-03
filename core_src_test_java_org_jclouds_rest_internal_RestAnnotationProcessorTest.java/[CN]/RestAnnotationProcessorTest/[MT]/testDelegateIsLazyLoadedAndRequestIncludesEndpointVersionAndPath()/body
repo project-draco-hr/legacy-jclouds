@@ -1,2 +1,16 @@
 {
+  Injector child=injectorForCaller(new HttpCommandExecutorService(){
+    @Override public Future<HttpResponse> submit(    HttpCommand command){
+      assertEquals(command.getCurrentRequest().getRequestLine(),"GET http://howdyboys/client/1/foo HTTP/1.1");
+      return Futures.immediateFuture(HttpResponse.builder().build());
+    }
+  }
+);
+  try {
+    child.getInstance(Callee.class);
+    fail("Callee shouldn't be bound yet");
+  }
+ catch (  ConfigurationException e) {
+  }
+  assertEquals(child.getInstance(Caller.class).getURI(),URI.create("http://localhost:1111"));
 }

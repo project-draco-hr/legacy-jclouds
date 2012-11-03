@@ -1,2 +1,11 @@
 {
+  Supplier<Set<? extends Location>> supplier=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(provider,region));
+  OnlyLocationOrFirstZone fn=new OnlyLocationOrFirstZone(supplier);
+  try {
+    fn.get();
+    fail("Expected NoSuchElementException");
+  }
+ catch (  NoSuchElementException e) {
+    assertEquals(e.getMessage(),"none to of the locations are scope ZONE: [servo:PROVIDER, servo-r:REGION]");
+  }
 }

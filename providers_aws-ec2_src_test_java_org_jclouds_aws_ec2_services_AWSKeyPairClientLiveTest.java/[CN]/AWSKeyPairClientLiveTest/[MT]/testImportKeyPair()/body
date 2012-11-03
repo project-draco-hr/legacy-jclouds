@@ -1,2 +1,18 @@
 {
+  String keyName=PREFIX + "2";
+  cleanupKeyPair(keyName);
+  Map<String,String> myKey=ComputeTestUtils.setupKeyPair();
+  try {
+    KeyPair keyPair=client.importKeyPairInRegion(null,keyName,myKey.get("public"));
+    checkKeyPair(keyName,keyPair);
+    try {
+      client.importKeyPairInRegion(null,keyName,myKey.get("public"));
+      fail("Expected IllegalStateException");
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+  finally {
+    cleanupKeyPair(keyName);
+  }
 }

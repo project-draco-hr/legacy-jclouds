@@ -1,2 +1,19 @@
 {
+  Supplier<Set<? extends Location>> locations=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(region));
+  Supplier<Set<? extends Image>> images=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(image));
+  Supplier<Set<? extends Hardware>> hardwares=Suppliers.<Set<? extends Hardware>>ofInstance(ImmutableSet.<Hardware>of(createMock(Hardware.class)));
+  Provider<TemplateOptions> optionsProvider=createMock(Provider.class);
+  Provider<TemplateBuilder> templateBuilderProvider=createMock(Provider.class);
+  TemplateOptions defaultOptions=createMock(TemplateOptions.class);
+  expect(optionsProvider.get()).andReturn(defaultOptions);
+  replay(defaultOptions,optionsProvider,templateBuilderProvider);
+  TemplateBuilderImpl template=createTemplateBuilder(null,locations,images,hardwares,region,optionsProvider,templateBuilderProvider);
+  try {
+    template.imageId("region/imageId2").build();
+    fail("Expected NoSuchElementException");
+  }
+ catch (  NoSuchElementException e) {
+    assertEquals(e.getMessage(),"imageId(region/imageId2) not found");
+  }
+  verify(defaultOptions,optionsProvider,templateBuilderProvider);
 }

@@ -1,2 +1,10 @@
 {
+  try {
+    String oldKernel=client.getInstanceServices().getKernelForInstanceInRegion(null,instanceId);
+    client.getInstanceServices().setKernelForInstanceInRegion(null,instanceId,oldKernel);
+    fail("shouldn't be allowed, as instance needs to be stopped");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("IncorrectInstanceState",e.getError().getCode());
+  }
 }

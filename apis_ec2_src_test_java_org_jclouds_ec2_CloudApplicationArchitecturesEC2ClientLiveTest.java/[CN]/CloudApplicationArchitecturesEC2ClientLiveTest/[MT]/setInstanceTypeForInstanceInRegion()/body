@@ -1,2 +1,9 @@
 {
+  try {
+    client.getInstanceServices().setInstanceTypeForInstanceInRegion(null,instanceId,InstanceType.C1_MEDIUM);
+    fail("shouldn't be allowed, as instance needs to be stopped");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("IncorrectInstanceState",e.getError().getCode());
+  }
 }

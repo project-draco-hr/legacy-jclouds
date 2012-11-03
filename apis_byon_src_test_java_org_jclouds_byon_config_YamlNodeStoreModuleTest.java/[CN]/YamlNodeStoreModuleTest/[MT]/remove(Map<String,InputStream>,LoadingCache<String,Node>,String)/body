@@ -1,2 +1,13 @@
 {
+  store.invalidate(key);
+  assertEquals(store.size(),0);
+  map.remove(key);
+  assertEquals(map.size(),0);
+  try {
+    assertEquals(store.getUnchecked(key),null);
+    fail("should not work as null is invalid");
+  }
+ catch (  UncheckedExecutionException e) {
+  }
+  assertEquals(map.get(key),null);
 }

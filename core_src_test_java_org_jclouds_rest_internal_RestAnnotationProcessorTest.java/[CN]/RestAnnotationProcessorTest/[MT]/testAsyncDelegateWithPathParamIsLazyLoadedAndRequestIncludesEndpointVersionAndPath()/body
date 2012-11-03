@@ -1,2 +1,17 @@
 {
+  Injector child=injectorForCaller(new HttpCommandExecutorService(){
+    @Override public Future<HttpResponse> submit(    HttpCommand command){
+      assertEquals(command.getCurrentRequest().getRequestLine(),"GET http://howdyboys/testing/testing/thepathparam/client/1/foo HTTP/1.1");
+      return Futures.immediateFuture(HttpResponse.builder().build());
+    }
+  }
+);
+  try {
+    child.getInstance(AsyncCallee.class);
+    fail("Callee shouldn't be bound yet");
+  }
+ catch (  ConfigurationException e) {
+  }
+  child.getInstance(AsyncCaller.class).getCalleeWithPath(URI.create("http://howdyboys"),"thepathparam").onePath("foo").get();
+  assertEquals(child.getInstance(AsyncCaller.class).getURI(),URI.create("http://localhost:1111"));
 }
