@@ -4,7 +4,7 @@
   checkNotNull(image.getOS(),"OS cannot be null for OSImage: %s",image);
   assertNotEquals(image.getOS(),OSType.UNRECOGNIZED,"Status cannot be UNRECOGNIZED for OSImage: " + image);
   checkNotNull(image.getCategory(),"While Category can be null for OSImage, its Optional wrapper cannot: %s",image);
-  if (image.getCategory().isPresent())   assertFalse(image.getCategory().get().trim().equals(""),"Invalid Category: " + image.toString());
+  if (image.getCategory().isPresent())   assertNotEquals("",image.getCategory().get().trim(),"Invalid Category: " + image.toString());
   checkNotNull(image.getLogicalSizeInGB(),"While LogicalSizeInGB can be null for OSImage, its Optional wrapper cannot: %s",image);
   if (image.getLogicalSizeInGB().isPresent())   assertTrue(image.getLogicalSizeInGB().get() > 0,"LogicalSizeInGB should be positive, if set" + image.toString());
   checkNotNull(image.getMediaLink(),"While MediaLink can be null for OSImage, its Optional wrapper cannot: %s",image);

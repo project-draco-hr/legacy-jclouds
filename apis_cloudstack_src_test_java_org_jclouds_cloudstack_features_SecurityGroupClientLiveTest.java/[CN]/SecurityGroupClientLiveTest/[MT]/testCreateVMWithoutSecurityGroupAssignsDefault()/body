@@ -4,7 +4,7 @@
   VirtualMachine newVm=VirtualMachineClientLiveTest.createVirtualMachineWithOptionsInZone(DeployVirtualMachineOptions.NONE,zone.getId(),defaultTemplateOrPreferredInZone(defaultTemplate,client,zone.getId()),client,jobComplete,virtualMachineRunning);
   try {
     VirtualMachine runningVm=client.getVirtualMachineClient().getVirtualMachine(newVm.getId());
-    assertTrue(runningVm.getSecurityGroups().size() == 1);
+    assertEquals(1,runningVm.getSecurityGroups().size());
     assertEquals(Iterables.getOnlyElement(runningVm.getSecurityGroups()).getName(),"default");
   }
   finally {
