@@ -3,7 +3,7 @@
   HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/securitygroup_list.json")).build();
   NovaApi apiWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,list,listResponse);
   FindSecurityGroupWithNameAndReturnTrue predicate=new FindSecurityGroupWithNameAndReturnTrue(apiWhenSecurityGroupsExist);
-  AtomicReference<ZoneAndName> securityGroupInZoneRef=new AtomicReference<ZoneAndName>(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1","name1"));
+  AtomicReference<ZoneAndName> securityGroupInZoneRef=Atomics.newReference(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1","name1"));
   assertTrue(predicate.apply(securityGroupInZoneRef));
   assertEquals(securityGroupInZoneRef.get().toString(),new SecurityGroupInZone(Iterables.getOnlyElement(new ParseSecurityGroupListTest().expected()),"az-1.region-a.geo-1").toString());
 }

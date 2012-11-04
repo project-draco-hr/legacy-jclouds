@@ -3,7 +3,7 @@
   GetNodeMetadataStrategy computeService=createMock(GetNodeMetadataStrategy.class);
   replay(computeService);
   AtomicNodeRunning nodeRunning=new AtomicNodeRunning(computeService);
-  AtomicReference<NodeMetadata> reference=new AtomicReference<NodeMetadata>(running);
+  AtomicReference<NodeMetadata> reference=Atomics.newReference(running);
   Assert.assertTrue(nodeRunning.apply(reference));
   Assert.assertEquals(reference.get(),running);
   verify(computeService);

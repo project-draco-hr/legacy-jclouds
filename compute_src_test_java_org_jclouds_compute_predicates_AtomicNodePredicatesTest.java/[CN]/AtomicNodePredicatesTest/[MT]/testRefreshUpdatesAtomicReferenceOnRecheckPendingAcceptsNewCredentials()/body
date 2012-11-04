@@ -7,7 +7,7 @@
   expect(computeService.getNode("myid")).andReturn(pending);
   replay(computeService);
   AtomicNodeRunning nodeRunning=new AtomicNodeRunning(computeService);
-  AtomicReference<NodeMetadata> reference=new AtomicReference<NodeMetadata>(newNode);
+  AtomicReference<NodeMetadata> reference=Atomics.newReference(newNode);
   Assert.assertFalse(nodeRunning.apply(reference));
   Assert.assertEquals(reference.get(),pending);
   verify(computeService);

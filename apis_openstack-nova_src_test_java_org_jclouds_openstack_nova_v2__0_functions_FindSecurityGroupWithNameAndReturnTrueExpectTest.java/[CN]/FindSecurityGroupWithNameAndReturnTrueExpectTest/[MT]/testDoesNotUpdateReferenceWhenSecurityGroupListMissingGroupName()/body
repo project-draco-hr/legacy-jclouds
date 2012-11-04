@@ -4,7 +4,7 @@
   NovaApi apiWhenSecurityGroupsExist=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,list,listResponse);
   FindSecurityGroupWithNameAndReturnTrue predicate=new FindSecurityGroupWithNameAndReturnTrue(apiWhenSecurityGroupsExist);
   ZoneAndName zoneAndGroup=ZoneAndName.fromZoneAndName("az-1.region-a.geo-1","name2");
-  AtomicReference<ZoneAndName> securityGroupInZoneRef=new AtomicReference<ZoneAndName>(zoneAndGroup);
+  AtomicReference<ZoneAndName> securityGroupInZoneRef=Atomics.newReference(zoneAndGroup);
   assertFalse(predicate.apply(securityGroupInZoneRef));
   assertEquals(securityGroupInZoneRef.get(),zoneAndGroup);
 }

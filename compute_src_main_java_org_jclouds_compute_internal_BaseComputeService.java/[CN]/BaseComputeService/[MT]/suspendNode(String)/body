@@ -1,7 +1,7 @@
 {
   checkNotNull(id,"id");
   logger.debug(">> suspending node(%s)",id);
-  AtomicReference<NodeMetadata> node=new AtomicReference<NodeMetadata>(suspendNodeStrategy.suspendNode(id));
+  AtomicReference<NodeMetadata> node=Atomics.newReference(suspendNodeStrategy.suspendNode(id));
   boolean successful=nodeSuspended.apply(node);
   logger.debug("<< suspended node(%s) success(%s)",id,successful);
 }
