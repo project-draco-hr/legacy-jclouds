@@ -1,2 +1,20 @@
 {
+  final SecurityGroupInZone securityGroupInZone=createMock(SecurityGroupInZone.class);
+  Predicate<AtomicReference<ZoneAndName>> returnSecurityGroupExistsInZone=new Predicate<AtomicReference<ZoneAndName>>(){
+    @Override public boolean apply(    AtomicReference<ZoneAndName> input){
+      input.set(securityGroupInZone);
+      return true;
+    }
+  }
+;
+  ZoneAndName input=ZoneAndName.fromZoneAndName("zone","groupName");
+  Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone> groupCreator=new Function<ZoneSecurityGroupNameAndPorts,SecurityGroupInZone>(){
+    @Override public SecurityGroupInZone apply(    ZoneSecurityGroupNameAndPorts input){
+      fail();
+      return null;
+    }
+  }
+;
+  FindSecurityGroupOrCreate parser=new FindSecurityGroupOrCreate(returnSecurityGroupExistsInZone,groupCreator);
+  assertEquals(parser.load(input),securityGroupInZone);
 }

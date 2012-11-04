@@ -1,2 +1,10 @@
 {
+  try {
+    String ramdisk=client.getInstanceServices().getRamdiskForInstanceInRegion(null,instanceId);
+    client.getInstanceServices().setRamdiskForInstanceInRegion(null,instanceId,ramdisk);
+    fail("shouldn't be allowed, as instance needs to be stopped");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("IncorrectInstanceState",e.getError().getCode());
+  }
 }

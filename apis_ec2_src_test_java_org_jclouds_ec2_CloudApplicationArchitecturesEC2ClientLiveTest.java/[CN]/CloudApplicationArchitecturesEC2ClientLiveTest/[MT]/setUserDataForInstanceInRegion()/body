@@ -1,2 +1,9 @@
 {
+  try {
+    client.getInstanceServices().setUserDataForInstanceInRegion(null,instanceId,"test".getBytes());
+    fail("shouldn't be allowed, as instance needs to be stopped");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("IncorrectInstanceState",e.getError().getCode());
+  }
 }

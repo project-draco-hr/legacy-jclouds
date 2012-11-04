@@ -1,2 +1,21 @@
 {
+  Injector child=injectorForCaller(new HttpCommandExecutorService(){
+    int callCounter=0;
+    @Override public Future<HttpResponse> submit(    HttpCommand command){
+      if (callCounter == 1)       assertEquals(command.getCurrentRequest().getRequestLine(),"GET http://localhost:1111/client/1/bar/2 HTTP/1.1");
+ else       assertEquals(command.getCurrentRequest().getRequestLine(),"GET http://localhost:1111/client/1/foo HTTP/1.1");
+      callCounter++;
+      return Futures.immediateFuture(HttpResponse.builder().build());
+    }
+  }
+);
+  try {
+    child.getInstance(Callee.class);
+    fail("Callee shouldn't be bound yet");
+  }
+ catch (  ConfigurationException e) {
+  }
+  child.getInstance(Caller.class).getCallee().onePath("foo");
+  child.getInstance(Caller.class).getCallee2().onePath("bar");
+  child.getInstance(Caller.class).getCallee().onePath("foo");
 }

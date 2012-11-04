@@ -1,2 +1,19 @@
 {
+  Supplier<String> delegate=createMock(Supplier.class);
+  AuthorizationException auth=createMock(AuthorizationException.class);
+  RuntimeException throwable=new RuntimeException(auth);
+  expect(delegate.get()).andThrow(throwable);
+  expect(auth.getCause()).andReturn(null).anyTimes();
+  replay(delegate);
+  replay(auth);
+  RetryOnTimeOutExceptionSupplier<String> supplier=new RetryOnTimeOutExceptionSupplier<String>(delegate);
+  try {
+    supplier.get();
+    fail();
+  }
+ catch (  RuntimeException e) {
+    assertEquals(e.getCause(),auth);
+  }
+  verify(delegate);
+  verify(auth);
 }

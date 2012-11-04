@@ -1,2 +1,10 @@
 {
+  Map<String,BlockDevice> mapping=Maps.newLinkedHashMap();
+  try {
+    client.getInstanceServices().setBlockDeviceMappingForInstanceInRegion(null,instanceId,mapping);
+    fail("shouldn't be allowed, as instance needs to be ebs based-ami");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("InvalidParameterCombination",e.getError().getCode());
+  }
 }

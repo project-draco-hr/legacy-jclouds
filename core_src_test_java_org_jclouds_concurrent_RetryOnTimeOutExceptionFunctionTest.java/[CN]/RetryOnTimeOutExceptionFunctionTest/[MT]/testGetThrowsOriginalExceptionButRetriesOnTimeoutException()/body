@@ -1,2 +1,21 @@
 {
+  Function<String,String> delegate=createMock(Function.class);
+  TimeoutException timeout=createMock(TimeoutException.class);
+  RuntimeException throwable=new RuntimeException(timeout);
+  expect(delegate.apply("baz")).andThrow(throwable);
+  expect(timeout.getCause()).andReturn(null).anyTimes();
+  expect(delegate.apply("baz")).andThrow(throwable);
+  expect(delegate.apply("baz")).andThrow(throwable);
+  replay(delegate);
+  replay(timeout);
+  RetryOnTimeOutExceptionFunction<String,String> supplier=new RetryOnTimeOutExceptionFunction<String,String>(delegate);
+  try {
+    supplier.apply("baz");
+    fail();
+  }
+ catch (  RuntimeException e) {
+    assertEquals(e.getCause(),timeout);
+  }
+  verify(delegate);
+  verify(timeout);
 }

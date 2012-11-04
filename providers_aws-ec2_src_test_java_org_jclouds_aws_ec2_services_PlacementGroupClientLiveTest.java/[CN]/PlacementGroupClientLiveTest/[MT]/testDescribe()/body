@@ -1,2 +1,21 @@
 {
+  for (  String region : supportedRegions) {
+    SortedSet<PlacementGroup> allResults=newTreeSet(client.getPlacementGroupServices().describePlacementGroupsInRegion(region));
+    assertNotNull(allResults);
+    if (allResults.size() >= 1) {
+      PlacementGroup group=allResults.last();
+      SortedSet<PlacementGroup> result=newTreeSet(client.getPlacementGroupServices().describePlacementGroupsInRegion(region,group.getName()));
+      assertNotNull(result);
+      PlacementGroup compare=result.last();
+      assertEquals(compare,group);
+    }
+  }
+  for (  String region : client.getAvailabilityZoneAndRegionServices().describeRegions().keySet()) {
+    if (!supportedRegions.contains(region))     try {
+      client.getPlacementGroupServices().describePlacementGroupsInRegion(region);
+      fail("should be unsupported for region: " + region);
+    }
+ catch (    UnsupportedOperationException e) {
+    }
+  }
 }

@@ -1,2 +1,12 @@
 {
+  HttpRequest listGridServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://api.gogrid.com/api/support/grid/password/get?" + "v=1.6&id=11&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity")).build();
+  HttpResponse listGridServersResponse=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/test_error_handler.json","application/json")).build();
+  GoGridClient clientWhenGridServersNotFound=requestSendsResponse(listGridServers,listGridServersResponse);
+  try {
+    clientWhenGridServersNotFound.getServerServices().getServerCredentials(11);
+    fail("should have failed");
+  }
+ catch (  ResourceNotFoundException e) {
+    assertEquals(e.getMessage(),"No object found that matches your input criteria.");
+  }
 }

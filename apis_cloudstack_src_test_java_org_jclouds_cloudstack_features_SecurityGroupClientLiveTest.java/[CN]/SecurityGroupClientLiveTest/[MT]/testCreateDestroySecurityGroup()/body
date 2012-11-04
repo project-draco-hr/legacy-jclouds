@@ -1,2 +1,27 @@
 {
+  try {
+    zone=Iterables.find(client.getZoneClient().listZones(),new Predicate<Zone>(){
+      @Override public boolean apply(      Zone arg0){
+        return arg0.isSecurityGroupsEnabled();
+      }
+    }
+);
+    securityGroupsSupported=true;
+    for (    SecurityGroup securityGroup : client.getSecurityGroupClient().listSecurityGroups(ListSecurityGroupsOptions.Builder.named(prefix))) {
+      for (      IngressRule rule : securityGroup.getIngressRules())       assertTrue(jobComplete.apply(client.getSecurityGroupClient().revokeIngressRule(rule.getId())),rule.toString());
+      client.getSecurityGroupClient().deleteSecurityGroup(securityGroup.getId());
+    }
+    group=client.getSecurityGroupClient().createSecurityGroup(prefix);
+    assertEquals(group.getName(),prefix);
+    checkGroup(group);
+    try {
+      client.getSecurityGroupClient().createSecurityGroup(prefix);
+      fail("Expected IllegalStateException");
+    }
+ catch (    IllegalStateException e) {
+    }
+  }
+ catch (  NoSuchElementException e) {
+    e.printStackTrace();
+  }
 }

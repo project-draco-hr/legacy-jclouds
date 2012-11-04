@@ -1,2 +1,9 @@
 {
+  try {
+    client.getInstanceServices().setInstanceInitiatedShutdownBehaviorForInstanceInRegion(null,instanceId,InstanceInitiatedShutdownBehavior.STOP);
+    fail("shouldn't be allowed, as instance needs to be ebs based-ami");
+  }
+ catch (  AWSResponseException e) {
+    assertEquals("UnsupportedInstanceAttribute",e.getError().getCode());
+  }
 }

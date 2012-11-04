@@ -1,2 +1,60 @@
 {
+  LoadingCache<String,String> cache=CacheBuilder.newBuilder().build(new CacheLoader<String,String>(){
+    @Override public String load(    String key) throws Exception {
+      if (key.equals("runtimeexception"))       throw new RuntimeException("runtimeexception");
+      if (key.equals("exception"))       throw new Exception("exception");
+      return key.equals("foo") ? null : key;
+    }
+    @Override public String toString(){
+      return "testLoader";
+    }
+  }
+);
+  try {
+    cache.get("foo");
+    fail("expected exception on miss");
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+    assertEquals(e.getMessage(),"CacheLoader returned null for key foo.");
+  }
+  try {
+    cache.getUnchecked("foo");
+    fail("expected exception on miss");
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+    assertEquals(e.getMessage(),"CacheLoader returned null for key foo.");
+  }
+  assertEquals(cache.asMap().keySet().size(),0);
+  assertEquals(cache.asMap().size(),0);
+  cache.asMap().put("foo","bar");
+  assertEquals(cache.get("foo"),"bar");
+  assertEquals(cache.asMap().keySet().size(),1);
+  assertEquals(cache.asMap().size(),1);
+  cache.asMap().remove("foo");
+  assertEquals(cache.asMap().keySet().size(),0);
+  assertEquals(cache.asMap().size(),0);
+  try {
+    cache.get("exception");
+    fail("expected checked exception in loader to rethrow as ExecutionException");
+  }
+ catch (  ExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.Exception: exception");
+  }
+  try {
+    cache.get("runtimeexception");
+    fail("expected unchecked exception in loader to rethrow as UncheckedExecutionException");
+  }
+ catch (  UncheckedExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.RuntimeException: runtimeexception");
+  }
+  try {
+    cache.getUnchecked("exception");
+    fail("expected checked exception in loader to rethrow as UncheckedExecutionException, when getUnchecked called");
+  }
+ catch (  UncheckedExecutionException e) {
+    assertEquals(e.getMessage(),"java.lang.Exception: exception");
+  }
+  assertEquals(cache.get("bar"),"bar");
+  assertEquals(cache.get("baz"),"baz");
+  assertEquals(cache.asMap().size(),2);
 }

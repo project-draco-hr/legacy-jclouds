@@ -1,2 +1,17 @@
 {
+  final AtomicInteger counter=new AtomicInteger();
+  try {
+    transformParallel(ImmutableSet.of("hello","goodbye"),new Function<String,Future<? extends String>>(){
+      @Override public Future<String> apply(      String input){
+        counter.incrementAndGet();
+        return com.google.common.util.concurrent.Futures.immediateFailedFuture(new RuntimeException());
+      }
+    }
+,MoreExecutors.sameThreadExecutor(),null,Logger.CONSOLE,"");
+    fail("Expected TransformParallelException");
+  }
+ catch (  TransformParallelException e) {
+    assertEquals(e.getFromToException().size(),2);
+    assertEquals(counter.get(),10);
+  }
 }
