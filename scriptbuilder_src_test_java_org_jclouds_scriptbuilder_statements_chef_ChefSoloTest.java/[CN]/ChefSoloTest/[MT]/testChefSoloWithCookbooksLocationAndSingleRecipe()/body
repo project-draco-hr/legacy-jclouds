@@ -1,4 +1,4 @@
 {
   String script=ChefSolo.builder().cookbooksArchiveLocation("/tmp/cookbooks").installRecipe("apache2").build().render(OsFamily.UNIX);
-  assertEquals(script,"setupPublicCurl || return 1\ninstallChefGems || return 1\nchef-solo -N `hostname` -r /tmp/cookbooks -o recipe[apache2]\n");
+  assertEquals(script,Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),Charsets.UTF_8) + "installChefGems || return 1\nchef-solo -N `hostname` -r /tmp/cookbooks -o recipe[apache2]\n");
 }
