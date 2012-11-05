@@ -1,7 +1,7 @@
 {
-  userMetaDataIn=new HashMap<String,String>();
-  systemMetaDataIn=new HashMap<String,String>();
-  aclMetaDataIn=new ArrayList<Map<String,String>>();
+  userMetaDataIn=Maps.newHashMap();
+  systemMetaDataIn=Maps.newHashMap();
+  aclMetaDataIn=Lists.newArrayList();
   Iterator<String> keys=metadata.keySet().iterator();
   while (keys.hasNext()) {
     String key=keys.next();
@@ -11,7 +11,7 @@
         String[] cdmi_acl_array=value.toString().split("[{}]");
         for (int i=0; i < cdmi_acl_array.length; i++) {
           if (!(cdmi_acl_array[i].startsWith("[") || cdmi_acl_array[i].startsWith("]") || cdmi_acl_array[i].startsWith(","))) {
-            HashMap<String,String> aclMap=new HashMap<String,String>();
+            Map<String,String> aclMap=Maps.newHashMap();
             String[] cdmi_acl_member=cdmi_acl_array[i].split(",");
             for (            String s : cdmi_acl_member) {
               String cdmi_acl_key=s.substring(0,s.indexOf(":"));

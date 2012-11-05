@@ -1,7 +1,7 @@
 {
   ImmutableSet.Builder<VServerMetadata> servers=ImmutableSet.<VServerMetadata>builder();
   Set<VSystem> systems=api.getVirtualDCApi().listVirtualSystems();
-  List<ListenableFuture<VSystemWithDetails>> futures=new ArrayList<ListenableFuture<VSystemWithDetails>>();
+  List<ListenableFuture<VSystemWithDetails>> futures=Lists.newArrayList();
   for (  VSystem system : systems) {
     futures.add(asyncApi.getVirtualSystemApi().getDetails(system.getId()));
   }
