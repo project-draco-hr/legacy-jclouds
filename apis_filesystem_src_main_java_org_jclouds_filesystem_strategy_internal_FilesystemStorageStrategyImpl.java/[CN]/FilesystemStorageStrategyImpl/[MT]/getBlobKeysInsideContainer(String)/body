@@ -1,17 +1,16 @@
 {
   filesystemContainerNameValidator.validate(container);
+  Set<String> blobNames=Sets.newHashSet();
   if (!containerExists(container)) {
-    return new HashSet<String>();
+    return blobNames;
   }
   File containerFile=openFolder(container);
   final int containerPathLength=containerFile.getAbsolutePath().length() + 1;
-  Set<String> blobNames=new HashSet<String>(){
-    private static final long serialVersionUID=3152191346558570795L;
-    @Override public boolean add(    String e){
-      return super.add(e.substring(containerPathLength));
+  populateBlobKeysInContainer(containerFile,blobNames,new Function<String,String>(){
+    @Override public String apply(    String string){
+      return string.substring(containerPathLength);
     }
   }
-;
-  populateBlobKeysInContainer(containerFile,blobNames);
+);
   return blobNames;
 }
