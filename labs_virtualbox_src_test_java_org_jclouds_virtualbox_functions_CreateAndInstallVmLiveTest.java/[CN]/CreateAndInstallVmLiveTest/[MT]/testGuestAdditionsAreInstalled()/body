@@ -7,7 +7,8 @@
     sshResponds=injector.getInstance(SshResponds.class);
     checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",machine.getName());
     String version=machine.getGuestPropertyValue("/VirtualBox/GuestAdd/Version");
-    assertTrue(version != null && !version.isEmpty());
+    assertNotNull(version);
+    assertFalse(version.isEmpty());
   }
   finally {
     for (    VmSpec spec : ImmutableSet.of(machineSpec.getVmSpec())) {

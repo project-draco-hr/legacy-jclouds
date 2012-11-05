@@ -2,7 +2,7 @@
   ISession sharedSession=machineUtils.sharedLockMachineAndApplyToSession(clone.getName(),new Function<ISession,ISession>(){
     @Override public ISession apply(    ISession sharedSession){
       checkState(sharedSession.getState().equals(SessionState.Locked));
-      assertTrue(sharedSession.getMachine().getName().equals(clone.getName()));
+      assertEquals(sharedSession.getMachine().getName(),clone.getName());
       return sharedSession;
     }
   }

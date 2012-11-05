@@ -12,7 +12,7 @@
     ISession writeSession=machineUtils.writeLockMachineAndApplyToSession(clone.getName(),new Function<ISession,ISession>(){
       @Override public ISession apply(      ISession writeSession){
         checkState(writeSession.getState().equals(SessionState.Locked));
-        assertTrue(writeSession.getMachine().getName().equals(clone.getName()));
+        assertEquals(writeSession.getMachine().getName(),clone.getName());
         return writeSession;
       }
     }
