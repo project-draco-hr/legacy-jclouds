@@ -5,7 +5,7 @@
   IMachine master=cloneSpec.getMaster();
   String settingsFile=manager.get().getVBox().composeMachineFilename(vmSpec.getVmName(),workingDir);
   IMachine clonedMachine=manager.get().getVBox().createMachine(settingsFile,vmSpec.getVmName(),vmSpec.getOsTypeId(),vmSpec.getVmId(),vmSpec.isForceOverwrite());
-  List<CloneOptions> options=new ArrayList<CloneOptions>();
+  List<CloneOptions> options=Lists.newArrayList();
   if (isLinkedClone)   options.add(CloneOptions.Link);
   ISnapshot currentSnapshot=new TakeSnapshotIfNotAlreadyAttached(manager,"snapshotName","snapshotDesc",logger).apply(master);
   IProgress progress=currentSnapshot.getMachine().cloneTo(clonedMachine,CloneMode.MachineState,options);

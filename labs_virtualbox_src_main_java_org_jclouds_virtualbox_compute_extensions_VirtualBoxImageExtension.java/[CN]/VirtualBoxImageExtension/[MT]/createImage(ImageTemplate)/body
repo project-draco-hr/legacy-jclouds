@@ -4,7 +4,7 @@
   IMachine source=manager.get().getVBox().findMachine(cloneTemplate.getSourceNodeId());
   String settingsFile=manager.get().getVBox().composeMachineFilename(template.getName(),workingDir);
   IMachine clonedMachine=manager.get().getVBox().createMachine(settingsFile,template.getName(),source.getOSTypeId(),template.getName(),true);
-  List<CloneOptions> options=new ArrayList<CloneOptions>();
+  List<CloneOptions> options=Lists.newArrayList();
   if (isLinkedClone)   options.add(CloneOptions.Link);
   ISnapshot currentSnapshot=new TakeSnapshotIfNotAlreadyAttached(manager,"pre-image-spawn","before spawning " + template.getName(),logger).apply(source);
   checkNotNull(currentSnapshot);
