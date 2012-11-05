@@ -12,7 +12,8 @@
   }
   builder.hardware(new HardwareBuilder().ids(from.getServiceOfferingId() + "").name(from.getServiceOfferingName() + "").processors(ImmutableList.of(new Processor(from.getCpuCount(),from.getCpuSpeed()))).ram((int)from.getMemory()).hypervisor(from.getHypervisor()).build());
   builder.status(vmStateToNodeStatus.get(from.getState()));
-  Set<String> publicAddresses=newHashSet(), privateAddresses=newHashSet();
+  Set<String> publicAddresses=newHashSet();
+  Set<String> privateAddresses=newHashSet();
   if (from.getIPAddress() != null) {
     boolean isPrivate=isPrivateIPAddress(from.getIPAddress());
     if (isPrivate) {
