@@ -2,15 +2,20 @@
   if (family == OsFamily.WINDOWS) {
     throw new UnsupportedOperationException("windows not yet implemented");
   }
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  statements.add(installChefGems);
   ImmutableMap.Builder<String,String> chefSoloOptions=ImmutableMap.builder();
   chefSoloOptions.put("-N","`hostname`");
   chefSoloOptions.put("-r",cookbooksArchiveLocation);
+  if (jsonAttributes.isPresent()) {
+    statements.add(exec("{md} /var/chef"));
+    statements.add(createOrOverwriteFile("/var/chef/node.json",jsonAttributes.asSet()));
+    chefSoloOptions.put("-j","/var/chef/node.json");
+  }
   if (!recipes.isEmpty()) {
     chefSoloOptions.put("-o",recipesToRunlistString(recipes));
   }
   String options=Joiner.on(' ').withKeyValueSeparator(" ").join(chefSoloOptions.build());
-  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
-  statements.add(installChefGems);
   statements.add(Statements.exec(String.format("chef-solo %s",options)));
   return new StatementList(statements.build()).render(family);
 }

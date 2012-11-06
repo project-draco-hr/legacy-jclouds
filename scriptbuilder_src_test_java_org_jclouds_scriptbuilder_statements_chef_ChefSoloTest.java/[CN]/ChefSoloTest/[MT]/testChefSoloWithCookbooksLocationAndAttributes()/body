@@ -1,0 +1,4 @@
+{
+  String script=ChefSolo.builder().cookbooksArchiveLocation("/tmp/cookbooks").jsonAttributes("{\"foo\":\"bar\"}").installRecipe("apache2").build().render(OsFamily.UNIX);
+  assertEquals(script,Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),Charsets.UTF_8) + "installChefGems || return 1\n" + "mkdir -p /var/chef\n"+ "cat > /var/chef/node.json <<-'END_OF_JCLOUDS_FILE'\n\t{\"foo\":\"bar\"}\nEND_OF_JCLOUDS_FILE\n"+ "chef-solo -N `hostname` -r /tmp/cookbooks -j /var/chef/node.json -o recipe[apache2]\n");
+}
