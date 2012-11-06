@@ -4,16 +4,22 @@
   }
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
   statements.add(installChefGems);
+  statements.add(exec("{md} /var/chef"));
+  if (!roles.isEmpty()) {
+    statements.add(exec("{md} /var/chef/roles"));
+    for (    Role role : roles) {
+      statements.add(createOrOverwriteFile("/var/chef/roles/" + role.getName() + ".json",ImmutableSet.of(role.toJsonString())));
+    }
+  }
   ImmutableMap.Builder<String,String> chefSoloOptions=ImmutableMap.builder();
   chefSoloOptions.put("-N","`hostname`");
   chefSoloOptions.put("-r",cookbooksArchiveLocation);
   if (jsonAttributes.isPresent()) {
-    statements.add(exec("{md} /var/chef"));
     statements.add(createOrOverwriteFile("/var/chef/node.json",jsonAttributes.asSet()));
     chefSoloOptions.put("-j","/var/chef/node.json");
   }
-  if (!recipes.isEmpty()) {
-    chefSoloOptions.put("-o",recipesToRunlistString(recipes));
+  if (!runlist.isEmpty()) {
+    chefSoloOptions.put("-o",Joiner.on(',').join(runlist));
   }
   String options=Joiner.on(' ').withKeyValueSeparator(" ").join(chefSoloOptions.build());
   statements.add(Statements.exec(String.format("chef-solo %s",options)));
