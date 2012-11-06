@@ -34,7 +34,7 @@
   machineController.ensureMachineIsLaunched(cloneVmSpec.getVmName());
   NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
   machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
-  if (optionalNatIfaceCard.isPresent())   checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()) == true,"cannot enable Nat Interface");
+  if (optionalNatIfaceCard.isPresent())   checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()),"cannot enable Nat Interface");
   LoginCredentials credentials=partialNodeMetadata.getCredentials();
   return new NodeAndInitialCredentials<IMachine>(cloned,cloneName,credentials);
 }
