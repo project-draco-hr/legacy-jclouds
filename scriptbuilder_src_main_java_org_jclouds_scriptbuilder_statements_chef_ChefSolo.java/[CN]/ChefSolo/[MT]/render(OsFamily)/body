@@ -5,10 +5,20 @@
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
   statements.add(installChefGems);
   statements.add(exec("{md} /var/chef"));
-  if (!roles.isEmpty()) {
+  if (roles.isPresent() && !roles.get().isEmpty()) {
     statements.add(exec("{md} /var/chef/roles"));
-    for (    Role role : roles) {
+    for (    Role role : roles.get()) {
       statements.add(createOrOverwriteFile("/var/chef/roles/" + role.getName() + ".json",ImmutableSet.of(role.toJsonString())));
+    }
+  }
+  if (databags.isPresent() && !databags.get().isEmpty()) {
+    statements.add(exec("{md} /var/chef/data_bags"));
+    for (    DataBag databag : databags.get()) {
+      String databagFolder="/var/chef/data_bags/" + databag.getName();
+      statements.add(exec("{md} " + databagFolder));
+      for (      Item item : databag.getItems()) {
+        statements.add(createOrOverwriteFile(databagFolder + "/" + item.getName()+ ".json",ImmutableSet.of(item.getJsonData())));
+      }
     }
   }
   ImmutableMap.Builder<String,String> chefSoloOptions=ImmutableMap.builder();
