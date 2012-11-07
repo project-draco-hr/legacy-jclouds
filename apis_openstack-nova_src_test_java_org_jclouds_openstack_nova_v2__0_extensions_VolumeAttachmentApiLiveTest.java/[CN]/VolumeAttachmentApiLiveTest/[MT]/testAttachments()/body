@@ -1,0 +1,48 @@
+{
+  if (volumeApi.isPresent()) {
+    String server_id=null;
+    try {
+      final String serverId=server_id=createServerInZone(zone).getId();
+      Set<? extends VolumeAttachment> attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toImmutableSet();
+      assertNotNull(attachments);
+      final int before=attachments.size();
+      VolumeAttachment testAttachment=volumeAttachmentApi.get().attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
+      assertNotNull(testAttachment.getId());
+      assertEquals(testAttachment.getVolumeId(),testVolume.getId());
+      assertTrue(new RetryablePredicate<VolumeAttachmentApi>(new Predicate<VolumeAttachmentApi>(){
+        @Override public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
+          return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() > before;
+        }
+      }
+,60 * 1000L).apply(volumeAttachmentApi.get()));
+      attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toImmutableSet();
+      assertNotNull(attachments);
+      assertEquals(attachments.size(),before + 1);
+      assertEquals(volumeApi.get().get(testVolume.getId()).getStatus(),Volume.Status.IN_USE);
+      boolean foundIt=false;
+      for (      VolumeAttachment att : attachments) {
+        VolumeAttachment details=volumeAttachmentApi.get().getAttachmentForVolumeOnServer(att.getVolumeId(),serverId);
+        assertNotNull(details);
+        assertNotNull(details.getId());
+        assertNotNull(details.getServerId());
+        assertNotNull(details.getVolumeId());
+        if (Objects.equal(details.getVolumeId(),testVolume.getId())) {
+          foundIt=true;
+          assertEquals(details.getDevice(),"/dev/vdf");
+          assertEquals(details.getServerId(),serverId);
+        }
+      }
+      assertTrue(foundIt,"Failed to find the attachment we created in listAttachments() response");
+      volumeAttachmentApi.get().detachVolumeFromServer(testVolume.getId(),serverId);
+      assertTrue(new RetryablePredicate<VolumeAttachmentApi>(new Predicate<VolumeAttachmentApi>(){
+        @Override public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
+          return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() == before;
+        }
+      }
+,60 * 1000L).apply(volumeAttachmentApi.get()));
+    }
+  finally {
+      if (server_id != null)       novaContext.getApi().getServerApiForZone(zone).delete(server_id);
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  URI endpoint=URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/instance-1/os-volume_attachments/1");
+  VolumeAttachmentApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,extensionsOfNovaRequest,extensionsOfNovaResponse,authenticatedGET().endpoint(endpoint).method("DELETE").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/attachment_details.json")).build()).getVolumeAttachmentExtensionForZone("az-1.region-a.geo-1").get();
+  assertTrue(api.detachVolumeFromServer("1","instance-1"));
+}

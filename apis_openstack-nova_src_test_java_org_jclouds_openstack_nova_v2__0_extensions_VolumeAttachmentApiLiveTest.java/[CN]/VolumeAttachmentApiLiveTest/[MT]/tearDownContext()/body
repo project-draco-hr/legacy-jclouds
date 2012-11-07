@@ -1,0 +1,15 @@
+{
+  if (volumeApi.isPresent()) {
+    if (testVolume != null) {
+      final String volumeId=testVolume.getId();
+      assertTrue(volumeApi.get().delete(volumeId));
+      assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
+        @Override public boolean apply(        VolumeApi volumeApi){
+          return volumeApi.get(volumeId) == null;
+        }
+      }
+,180 * 1000L).apply(volumeApi.get()));
+    }
+  }
+  super.tearDownContext();
+}
