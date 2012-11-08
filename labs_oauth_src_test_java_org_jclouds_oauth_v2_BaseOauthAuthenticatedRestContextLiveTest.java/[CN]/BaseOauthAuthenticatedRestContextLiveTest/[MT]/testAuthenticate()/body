@@ -1,0 +1,18 @@
+{
+  try {
+    oauthApi=context.utils().injector().getInstance(OAuthApi.class);
+  }
+ catch (  Exception e) {
+    throw new IllegalStateException("Provider has no OAuthApi bound. Was the OAuthAuthenticationModule added?");
+  }
+  String signatureAlgorithm=getContextPropertyOrFail(SIGNATURE_OR_MAC_ALGORITHM);
+  checkState(OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureAlgorithm),String.format("Algorithm not supported: " + signatureAlgorithm));
+  String audience=getContextPropertyOrFail(AUDIENCE);
+  String scopes=getScopes();
+  Header header=Header.builder().signerAlgorithm(signatureAlgorithm).type("JWT").build();
+  long now=TimeUnit.SECONDS.convert(Ticker.systemTicker().read(),TimeUnit.NANOSECONDS);
+  ClaimSet claimSet=ClaimSet.builder().addClaim("aud",audience).addClaim("scope",scopes).addClaim("iss",identity).emissionTime(now).expirationTime(now + 3600).build();
+  TokenRequest tokenRequest=TokenRequest.builder().header(header).claimSet(claimSet).build();
+  Token token=oauthApi.authenticate(tokenRequest);
+  assertNotNull(token);
+}

@@ -1,0 +1,7 @@
+{
+  SignOrProduceMacForToken signer=new SignOrProduceMacForToken("RS256",ofInstance(OAuthCredentialsFromPKTest.loadOAuthCredentials()));
+  signer.loadSignatureOrMacOrNone();
+  byte[] payloadSignature=signer.apply(PAYLOAD.getBytes("UTF-8"));
+  assertNotNull(payloadSignature);
+  assertEquals(CryptoStreams.base64Url(payloadSignature),SHA256withRSA_PAYLOAD_SIGNATURE_RESULT);
+}
