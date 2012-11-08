@@ -14,7 +14,7 @@ case 404:
       }
  else       if (command.getCurrentRequest().getEndpoint().getPath().indexOf(servicePath.equals("/") ? "/" : servicePath + "/") == 0) {
         String path=command.getCurrentRequest().getEndpoint().getPath().substring(servicePath.length());
-        List<String> parts=newArrayList(filter(Splitter.on('/').split(path),not(equalTo(""))));
+        List<String> parts=newArrayList(Splitter.on('/').omitEmptyStrings().split(path));
         if (parts.size() == 1) {
           exception=new ContainerNotFoundException(parts.get(0),message);
         }
