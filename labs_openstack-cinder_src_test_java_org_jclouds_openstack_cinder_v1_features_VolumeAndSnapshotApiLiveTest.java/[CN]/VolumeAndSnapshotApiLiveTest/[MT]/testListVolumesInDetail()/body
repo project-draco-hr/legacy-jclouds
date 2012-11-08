@@ -1,0 +1,21 @@
+{
+  Set<? extends Volume> volumes=volumeApi.listInDetail().toImmutableSet();
+  assertNotNull(volumes);
+  boolean foundIt=false;
+  for (  Volume vol : volumes) {
+    Volume details=volumeApi.get(vol.getId());
+    assertNotNull(details);
+    assertNotNull(details.getId());
+    assertNotNull(details.getCreated());
+    assertTrue(details.getSize() > -1);
+    assertEquals(details.getId(),vol.getId());
+    assertEquals(details.getSize(),vol.getSize());
+    assertEquals(details.getName(),vol.getName());
+    assertEquals(details.getDescription(),vol.getDescription());
+    assertEquals(details.getCreated(),vol.getCreated());
+    if (Objects.equal(details.getId(),testVolume.getId())) {
+      foundIt=true;
+    }
+  }
+  assertTrue(foundIt,"Failed to find the volume we previously created in listInDetail() response");
+}

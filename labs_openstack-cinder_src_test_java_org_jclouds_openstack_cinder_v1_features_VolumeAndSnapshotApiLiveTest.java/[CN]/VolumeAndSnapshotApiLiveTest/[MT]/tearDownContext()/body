@@ -1,0 +1,21 @@
+{
+  if (testSnapshot != null) {
+    assertTrue(snapshotApi.delete(testSnapshot.getId()));
+    assertTrue(new RetryablePredicate<SnapshotApi>(new Predicate<SnapshotApi>(){
+      @Override public boolean apply(      SnapshotApi snapshotApi){
+        return snapshotApi.get(testSnapshot.getId()) == null;
+      }
+    }
+,30 * 1000L).apply(snapshotApi));
+  }
+  if (testVolume != null) {
+    assertTrue(volumeApi.delete(testVolume.getId()));
+    assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
+      @Override public boolean apply(      VolumeApi volumeApi){
+        return volumeApi.get(testVolume.getId()) == null;
+      }
+    }
+,30 * 1000L).apply(volumeApi));
+  }
+  super.tearDownContext();
+}

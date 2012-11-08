@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots");
+  SnapshotApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint).method("POST").payload(payloadFromResourceWithContentType("/snapshot_create.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/snapshot_create_response.json")).build()).getSnapshotApiForZone("RegionOne");
+  CreateSnapshotOptions options=CreateSnapshotOptions.Builder.name("jclouds-test-snapshot").description("jclouds test snapshot").force();
+  Snapshot snapshot=api.create("ea6f70ef-2784-40b9-9d14-d7f33c507c3f",options);
+  assertEquals(snapshot,testSnapshotCreate());
+}

@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes");
+  VolumeApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint).endpoint(endpoint).method("POST").payload(payloadFromResourceWithContentType("/volume_create.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(404).payload(payloadFromResource("/volume_create_response.json")).build()).getVolumeApiForZone("RegionOne");
+  CreateVolumeOptions options=CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume");
+  api.create(1,options);
+}
