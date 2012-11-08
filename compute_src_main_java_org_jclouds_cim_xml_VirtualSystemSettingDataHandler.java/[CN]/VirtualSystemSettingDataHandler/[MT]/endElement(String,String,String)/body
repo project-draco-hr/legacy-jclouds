@@ -59,12 +59,7 @@
       builder.virtualSystemIdentifier(current);
     }
  else     if (equalsOrSuffix(qName,"VirtualSystemType")) {
-      builder.virtualSystemTypes(filter(transform(Splitter.on(',').split(current),new Function<String,String>(){
-        @Override public String apply(        String input){
-          return input.trim();
-        }
-      }
-),not(equalTo(""))));
+      builder.virtualSystemTypes(Splitter.on(',').trimResults().omitEmptyStrings().split(current));
     }
  else     if (equalsOrSuffix(qName,"Notes")) {
       builder.notes(current);
