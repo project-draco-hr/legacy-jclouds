@@ -4,8 +4,8 @@
     for (    DataBag databag : databags.get()) {
       String databagFolder=databagPath + "/" + databag.getName();
       statements.add(exec("{md} " + databagFolder));
-      for (      Item item : databag.getItems()) {
-        statements.add(createOrOverwriteFile(databagFolder + "/" + item.getName()+ ".json",ImmutableSet.of(item.getJsonData())));
+      for (      Map.Entry<String,String> item : databag.getItems().entrySet()) {
+        statements.add(createOrOverwriteFile(databagFolder + "/" + item.getKey()+ ".json",ImmutableSet.of(item.getValue())));
       }
     }
   }

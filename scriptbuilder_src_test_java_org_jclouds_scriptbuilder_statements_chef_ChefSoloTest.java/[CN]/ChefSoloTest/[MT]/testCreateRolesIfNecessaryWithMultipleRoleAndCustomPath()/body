@@ -1,7 +1,7 @@
 {
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
-  Role roleFoo=Role.builder().name("foo").installRecipe("bar").build();
-  Role roleBar=Role.builder().name("bar").installRecipe("foo").build();
+  Role roleFoo=Role.builder().name("foo").runlist(RunList.builder().recipe("foo").build()).build();
+  Role roleBar=Role.builder().name("bar").runlist(RunList.builder().recipe("bar").build()).build();
   ChefSolo solo=ChefSolo.builder().rolePath("/tmp/roles").defineRole(roleFoo).defineRole(roleBar).build();
   solo.createRolesIfNecessary(statements);
   ImmutableList<Statement> statementList=statements.build();

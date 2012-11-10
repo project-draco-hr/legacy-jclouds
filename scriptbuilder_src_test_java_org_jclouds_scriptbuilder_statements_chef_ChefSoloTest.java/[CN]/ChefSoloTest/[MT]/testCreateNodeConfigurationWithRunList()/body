@@ -1,6 +1,7 @@
 {
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
-  ChefSolo solo=ChefSolo.builder().installRecipe("foo").installRole("bar").build();
+  RunList runlist=RunList.builder().recipe("foo").role("bar").build();
+  ChefSolo solo=ChefSolo.builder().runlist(runlist).build();
   solo.createNodeConfiguration(statements);
   ImmutableList<Statement> statementList=statements.build();
   Statement expected=createOrOverwriteFile(ChefSolo.DEFAULT_SOLO_PATH + "/node.json",ImmutableSet.of("{\"run_list\":[\"recipe[foo]\",\"role[bar]\"]}"));
