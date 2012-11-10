@@ -1,4 +1,0 @@
-{
-  String script=ChefSolo.builder().cookbooksArchiveLocation("/tmp/cookbooks").installRecipes(ImmutableList.<String>of("apache2","mysql")).build().render(OsFamily.UNIX);
-  assertEquals(script,Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),Charsets.UTF_8) + "installChefGems || return 1\nmkdir -p /var/chef\n" + "chef-solo -N `hostname` -r /tmp/cookbooks -o recipe[apache2],recipe[mysql]\n");
-}

@@ -1,0 +1,9 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  ChefSolo solo=ChefSolo.builder().jsonAttributes("{\"foo\":\"bar\"}").installRecipe("foo").installRole("bar").build();
+  solo.createNodeConfiguration(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  Statement expected=createOrOverwriteFile(ChefSolo.DEFAULT_SOLO_PATH + "/node.json",ImmutableSet.of("{\"foo\":\"bar\",\"run_list\":[\"recipe[foo]\",\"role[bar]\"]}"));
+  assertEquals(statementList.size(),1);
+  assertEquals(statementList.get(0).render(OsFamily.UNIX),expected.render(OsFamily.UNIX));
+}

@@ -4,34 +4,36 @@
   }
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
   statements.add(installChefGems);
-  statements.add(exec("{md} /var/chef"));
-  if (roles.isPresent() && !roles.get().isEmpty()) {
-    statements.add(exec("{md} /var/chef/roles"));
-    for (    Role role : roles.get()) {
-      statements.add(createOrOverwriteFile("/var/chef/roles/" + role.getName() + ".json",ImmutableSet.of(role.toJsonString())));
-    }
+  createSoloConfiguration(statements);
+  createRolesIfNecessary(statements);
+  createDatabagsIfNecessary(statements);
+  createNodeConfiguration(statements);
+  ImmutableMap.Builder<String,String> options=ImmutableMap.builder();
+  options.put("-c",fileCachePath + "/solo.rb");
+  options.put("-j",fileCachePath + "/node.json");
+  options.put("-N",nodeName.or("`hostname`"));
+  if (group.isPresent()) {
+    options.put("-g",group.get());
   }
-  if (databags.isPresent() && !databags.get().isEmpty()) {
-    statements.add(exec("{md} /var/chef/data_bags"));
-    for (    DataBag databag : databags.get()) {
-      String databagFolder="/var/chef/data_bags/" + databag.getName();
-      statements.add(exec("{md} " + databagFolder));
-      for (      Item item : databag.getItems()) {
-        statements.add(createOrOverwriteFile(databagFolder + "/" + item.getName()+ ".json",ImmutableSet.of(item.getJsonData())));
-      }
-    }
+  if (interval.isPresent()) {
+    options.put("-i",interval.get().toString());
   }
-  ImmutableMap.Builder<String,String> chefSoloOptions=ImmutableMap.builder();
-  chefSoloOptions.put("-N","`hostname`");
-  chefSoloOptions.put("-r",cookbooksArchiveLocation);
-  if (jsonAttributes.isPresent()) {
-    statements.add(createOrOverwriteFile("/var/chef/node.json",jsonAttributes.asSet()));
-    chefSoloOptions.put("-j","/var/chef/node.json");
+  if (logLevel.isPresent()) {
+    options.put("-l",logLevel.get());
   }
-  if (!runlist.isEmpty()) {
-    chefSoloOptions.put("-o",Joiner.on(',').join(runlist));
+  if (logFile.isPresent()) {
+    options.put("-L",logFile.get());
   }
-  String options=Joiner.on(' ').withKeyValueSeparator(" ").join(chefSoloOptions.build());
-  statements.add(Statements.exec(String.format("chef-solo %s",options)));
+  if (cookbooksArchiveLocation.isPresent()) {
+    options.put("-r",cookbooksArchiveLocation.get());
+  }
+  if (splay.isPresent()) {
+    options.put("-s",splay.get().toString());
+  }
+  if (user.isPresent()) {
+    options.put("-u",user.get());
+  }
+  String strOptions=Joiner.on(' ').withKeyValueSeparator(" ").join(options.build());
+  statements.add(Statements.exec(String.format("chef-solo %s",strOptions)));
   return new StatementList(statements.build()).render(family);
 }

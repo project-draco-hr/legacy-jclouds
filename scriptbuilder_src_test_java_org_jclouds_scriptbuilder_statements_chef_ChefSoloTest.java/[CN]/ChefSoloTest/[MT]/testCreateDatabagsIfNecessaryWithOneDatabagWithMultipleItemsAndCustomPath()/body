@@ -1,0 +1,14 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  DataBag databag=DataBag.builder().name("foo").item("item1","{\"foo\":\"bar\"}").item("item2","{\"bar\":\"foo\"}").build();
+  ChefSolo solo=ChefSolo.builder().dataBagPath("/tmp/databags").defineDataBag(databag).build();
+  solo.createDatabagsIfNecessary(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  Statement expectedItem1=createOrOverwriteFile("/tmp/databags/foo/item1.json",ImmutableSet.of("{\"foo\":\"bar\"}"));
+  Statement expectedItem2=createOrOverwriteFile("/tmp/databags/foo/item2.json",ImmutableSet.of("{\"bar\":\"foo\"}"));
+  assertEquals(statementList.size(),4);
+  assertEquals(statementList.get(0),exec("{md} /tmp/databags"));
+  assertEquals(statementList.get(1),exec("{md} /tmp/databags/" + databag.getName()));
+  assertEquals(statementList.get(2).render(OsFamily.UNIX),expectedItem1.render(OsFamily.UNIX));
+  assertEquals(statementList.get(3).render(OsFamily.UNIX),expectedItem2.render(OsFamily.UNIX));
+}

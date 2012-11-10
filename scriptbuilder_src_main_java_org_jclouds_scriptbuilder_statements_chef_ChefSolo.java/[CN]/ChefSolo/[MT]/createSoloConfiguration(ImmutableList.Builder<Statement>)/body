@@ -1,0 +1,8 @@
+{
+  statements.add(exec("{md} " + fileCachePath));
+  for (  String path : cookbookPath) {
+    statements.add(exec("{md} " + path));
+  }
+  String cookbookPathJoined=Joiner.on(',').join(transform(cookbookPath,quote()));
+  statements.add(createOrOverwriteFile(fileCachePath + "/solo.rb",ImmutableSet.of("file_cache_path \"" + fileCachePath + "\"","cookbook_path [" + cookbookPathJoined + "]","role_path \"" + rolePath + "\"","data_bag_path \"" + databagPath + "\"")));
+}

@@ -1,0 +1,11 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  ChefSolo solo=ChefSolo.builder().build();
+  solo.createSoloConfiguration(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  assertEquals(statementList.size(),3);
+  assertEquals(statementList.get(0),exec("{md} " + ChefSolo.DEFAULT_SOLO_PATH));
+  assertEquals(statementList.get(1),exec("{md} " + ChefSolo.DEFAULT_SOLO_PATH + "/cookbooks"));
+  Statement expected=createOrOverwriteFile(ChefSolo.DEFAULT_SOLO_PATH + "/solo.rb",ImmutableSet.of("file_cache_path \"" + ChefSolo.DEFAULT_SOLO_PATH + "\"","cookbook_path [\"" + ChefSolo.DEFAULT_SOLO_PATH + "/cookbooks\"]","role_path \"" + ChefSolo.DEFAULT_SOLO_PATH + "/roles\"","data_bag_path \"" + ChefSolo.DEFAULT_SOLO_PATH + "/data_bags\""));
+  assertEquals(statementList.get(2).render(OsFamily.UNIX),expected.render(OsFamily.UNIX));
+}

@@ -1,5 +1,0 @@
-{
-  Role role=Role.builder().name("foo").installRecipe("apache2").build();
-  String script=ChefSolo.builder().cookbooksArchiveLocation("/tmp/cookbooks").defineRole(role).installRecipe("apache2").build().render(OsFamily.UNIX);
-  assertEquals(script,Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),Charsets.UTF_8) + "installChefGems || return 1\nmkdir -p /var/chef\nmkdir -p /var/chef/roles\n" + "cat > /var/chef/roles/foo.json <<-'END_OF_JCLOUDS_FILE'\n"+ "\t{\"name\": \"foo\",\"description\":\"\",\"default_attributes\":{},\"override_attributes\":{},"+ "\"json_class\":\"Chef::Role\",\"chef_type\":\"role\",\"run_list\":[\"recipe[apache2]\"]}"+ "\nEND_OF_JCLOUDS_FILE\nchef-solo -N `hostname` -r /tmp/cookbooks -o recipe[apache2]\n");
-}
