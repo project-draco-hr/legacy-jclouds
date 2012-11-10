@@ -3,7 +3,7 @@
   HardDisk hardDisk=HardDisk.builder().diskpath(path).controllerPort(0).deviceSlot(0).build();
   new CreateMediumIfNotAlreadyExists(manager,machineUtils,true).apply(hardDisk);
   IMedium iMedium=new CreateMediumIfNotAlreadyExists(manager,machineUtils,true).apply(hardDisk);
-  manager.get().getVBox().findMedium(path,DeviceType.HardDisk);
+  manager.get().getVBox().openMedium(path,DeviceType.HardDisk,AccessMode.ReadWrite,true);
   try {
     assertFileCanBeDeleted(path);
   }

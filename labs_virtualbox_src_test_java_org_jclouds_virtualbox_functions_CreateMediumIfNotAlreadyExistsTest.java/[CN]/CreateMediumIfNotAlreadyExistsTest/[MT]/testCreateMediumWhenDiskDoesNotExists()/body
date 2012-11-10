@@ -7,13 +7,13 @@
   IMedium medium=createMock(IMedium.class);
   IProgress progress=createNiceMock(IProgress.class);
   StringBuilder errorBuilder=new StringBuilder();
-  errorBuilder.append("org.virtualbox_4_1.VBoxException: VirtualBox error: ");
-  errorBuilder.append("Could not find an open hard disk with location ");
+  errorBuilder.append("org.virtualbox_4_2.VBoxException: VirtualBox error: ");
+  errorBuilder.append("Could not find file for the medium ");
   errorBuilder.append("'/Users/johndoe/jclouds-virtualbox-test/testadmin.vdi' (0x80BB0001)");
   String errorMessage=errorBuilder.toString();
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   VBoxException notFoundException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
-  expect(vBox.findMedium(eq(adminDiskPath),eq(DeviceType.HardDisk))).andThrow(notFoundException);
+  expect(vBox.openMedium(adminDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,false)).andThrow(notFoundException);
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(medium);
   expect(medium.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
   replay(manager,machine,vBox,medium,machineUtils);

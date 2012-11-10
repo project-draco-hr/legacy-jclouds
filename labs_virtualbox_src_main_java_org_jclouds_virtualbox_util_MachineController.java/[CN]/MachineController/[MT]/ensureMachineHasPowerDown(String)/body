@@ -1,29 +1,11 @@
 {
-  ISession session=manager.get().getSessionObject();
-  IMachine machine=manager.get().getVBox().findMachine(vmName);
-  while (!machine.getState().equals(MachineState.PoweredOff)) {
-    try {
-      session=machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,ISession>(){
-        @Override public ISession apply(        ISession session){
-          IProgress powerDownProgress=session.getConsole().powerDown();
-          powerDownProgress.waitForCompletion(-1);
-          return session;
-        }
-      }
-);
-    }
- catch (    RuntimeException e) {
-      if (e.getMessage().contains("Invalid machine state: PoweredOff")) {
-        throw e;
-      }
- else       if (e.getMessage().contains("VirtualBox error: The object is not ready")) {
-        continue;
-      }
- else {
-        throw e;
-      }
+  ISession session=machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,ISession>(){
+    @Override public ISession apply(    ISession session){
+      IProgress powerdownIProgress=session.getConsole().powerDown();
+      powerdownIProgress.waitForCompletion(-1);
+      return session;
     }
   }
-  safeCheckMachineIsUnlocked(machine);
+);
   return checkNotNull(session,"session");
 }

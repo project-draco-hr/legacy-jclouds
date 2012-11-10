@@ -5,7 +5,9 @@
   INATEngine natEngine=createMock(INATEngine.class);
   expect(machine.getNetworkAdapter(slotId)).andReturn(iNetworkAdapter);
   iNetworkAdapter.setAttachmentType(NAT);
-  expect(iNetworkAdapter.getNatDriver()).andReturn(natEngine);
+  expect(iNetworkAdapter.getNATEngine()).andReturn(natEngine).anyTimes();
+  List<String> redirects=new ArrayList<String>();
+  expect(natEngine.getRedirects()).andReturn(redirects);
   natEngine.addRedirect("TCP@127.0.0.1:2222->:22",TCP,"127.0.0.1",2222,"",22);
   expectLastCall().andThrow(new VBoxException(null,"VirtualBox error: A NAT rule of this name already exists (0x80070057)"));
   iNetworkAdapter.setEnabled(true);

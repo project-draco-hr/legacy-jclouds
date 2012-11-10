@@ -1,17 +1,14 @@
 {
-  checkNotNull(version,"version");
-  checkNotNull(installationKeySequence,"installationKeySequence");
-  checkNotNull(manager,"vboxmanager");
-  this.manager=manager;
+  this.manager=checkNotNull(manager,"vboxmanager can't be null");
   this.masterCreatorAndInstaller=masterLoader;
-  this.installationKeySequence=installationKeySequence;
+  this.installationKeySequence=checkNotNull(installationKeySequence,"installationKeySequence can't be null");
   this.workingDir=workingDir == null ? VIRTUALBOX_DEFAULT_DIR : workingDir;
   this.isosDir=workingDir + File.separator + "isos";
   this.imageMapping=Maps.newLinkedHashMap();
   for (  Entry<Image,YamlImage> entry : yamlMapper.get().entrySet()) {
     this.imageMapping.put(entry.getKey().getId(),entry.getValue());
   }
-  this.version=Iterables.get(Splitter.on('r').split(version),0);
+  this.version=Iterables.get(Splitter.on('r').split(checkNotNull(version,"version")),0);
   this.preconfigurationUrl=preconfigurationUrl;
   this.runScriptOnNodeFactory=checkNotNull(runScriptOnNodeFactory,"runScriptOnNodeFactory");
   this.socketTester=checkNotNull(socketTester,"socketTester");

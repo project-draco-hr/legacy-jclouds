@@ -4,7 +4,6 @@
   if (snap == null) {
     try {
       session=manager.get().openMachineSession(machine);
-      logger.debug("No snapshot available taking new one: %s (description: %s) taken from %s",snapshotName,snapshotDesc,machine.getName());
       int retries=10;
       while (true) {
         try {
@@ -19,7 +18,7 @@
             session.getConsole().resume();
           }
           snap=machine.getCurrentSnapshot();
-          logger.debug("Snapshot %s (description: %s) taken from %s",snapshotName,snapshotDesc,machine.getName());
+          logger.debug("<< snapshot(%s) with description(%s) taken from master(%s)",snapshotName,snapshotDesc,machine.getName());
           break;
         }
  catch (        Exception e) {

@@ -1,5 +1,8 @@
 {
   IMachine vm=createNiceMock(IMachine.class);
+  VirtualBoxManager vbm=createNiceMock(VirtualBoxManager.class);
+  IVirtualBox vBox=createNiceMock(IVirtualBox.class);
+  expect(vbm.getVBox()).andReturn(vBox).anyTimes();
   String group="my-cluster-group";
   String name="a-name-with-a-code-338";
   expect(vm.getName()).andReturn(VIRTUALBOX_NODE_PREFIX + MASTER_NAME + VIRTUALBOX_NODE_NAME_SEPARATOR+ group+ VIRTUALBOX_NODE_NAME_SEPARATOR+ name).anyTimes();
@@ -10,12 +13,12 @@
   expect(vm.getNetworkAdapter(eq(0l))).andReturn(nat).once();
   expect(vm.getNetworkAdapter(eq(1l))).andReturn(hostOnly).once();
   expect(nat.getAttachmentType()).andReturn(NetworkAttachmentType.NAT).once();
-  expect(nat.getNatDriver()).andReturn(natEng).anyTimes();
+  expect(nat.getNATEngine()).andReturn(natEng).anyTimes();
   expect(natEng.getHostIP()).andReturn("127.0.0.1").once();
   expect(natEng.getRedirects()).andReturn(ImmutableList.of("0,1,127.0.0.1,3000,,22"));
   NetworkUtils networkUtils=createNiceMock(NetworkUtils.class);
   replay(vm,nat,natEng,hostOnly,networkUtils);
-  NodeMetadata node=new IMachineToNodeMetadata(VirtualBoxComputeServiceContextModule.toPortableNodeStatus,networkUtils).apply(vm);
+  NodeMetadata node=new IMachineToNodeMetadata(Suppliers.ofInstance(vbm),VirtualBoxComputeServiceContextModule.toPortableNodeStatus,networkUtils,map).apply(vm);
   assertEquals(name,node.getName());
   assertEquals(group,node.getGroup());
   assertEquals(1,node.getPublicAddresses().size());

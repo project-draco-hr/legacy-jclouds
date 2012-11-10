@@ -22,6 +22,11 @@
   if (nodeState == null)   nodeState=Status.UNRECOGNIZED;
   nodeMetadataBuilder.status(nodeState);
   nodeMetadataBuilder=getIpAddresses(vm,nodeMetadataBuilder);
+  IGuestOSType guestOSType=virtualboxManager.get().getVBox().getGuestOSType(vm.getOSTypeId());
+  OsFamily family=parseOsFamilyOrUnrecognized(guestOSType.getDescription());
+  String version=parseVersionOrReturnEmptyString(family,guestOSType.getDescription(),osVersionMap);
+  OperatingSystem os=OperatingSystem.builder().description(guestOSType.getDescription()).family(family).version(version).is64Bit(guestOSType.getIs64Bit()).build();
+  nodeMetadataBuilder.operatingSystem(os);
   String guestOsUser=vm.getExtraData(GUEST_OS_USER);
   String guestOsPassword=vm.getExtraData(GUEST_OS_PASSWORD);
   LoginCredentials loginCredentials=new LoginCredentials(guestOsUser,guestOsPassword,null,true);

@@ -8,12 +8,14 @@
     throw new RuntimeException(String.format("error applying %s to %s with %s lock: %s",function,machineId,type,e.getMessage()),e);
   }
  finally {
+    if (type == LockType.Shared) {
+      Uninterruptibles.sleepUninterruptibly(1,TimeUnit.SECONDS);
+    }
     if (session.getState().equals(SessionState.Locked)) {
       session.unlockMachine();
-      while (!session.getState().equals(SessionState.Unlocked)) {
-        logger.debug("Session not unlocked - wait ...");
-        Uninterruptibles.sleepUninterruptibly(1,TimeUnit.SECONDS);
-      }
+    }
+    if (!session.getState().equals(SessionState.Unlocked)) {
+      checkSessionIsUnlocked(session,5,3L,TimeUnit.SECONDS);
     }
   }
 }

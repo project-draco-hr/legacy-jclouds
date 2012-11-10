@@ -9,7 +9,7 @@
   String errorMessage="VirtualBox error: Some other VBox error";
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
   VBoxException notFoundException=new VBoxException(createNiceMock(Throwable.class),errorMessage);
-  expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andThrow(notFoundException);
+  expect(vBox.openMedium(adminDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,false)).andThrow(notFoundException);
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(medium);
   expect(medium.createBaseStorage(anyLong(),anyLong())).andReturn(progress);
   replay(manager,machine,vBox,medium,machineUtils);

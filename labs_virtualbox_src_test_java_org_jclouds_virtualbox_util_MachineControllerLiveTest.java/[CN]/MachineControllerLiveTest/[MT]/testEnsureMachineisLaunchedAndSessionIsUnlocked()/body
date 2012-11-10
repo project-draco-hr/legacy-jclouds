@@ -1,7 +1,7 @@
 {
-  cloneFromMaster();
-  ISession cloneMachineSession=machineController.ensureMachineIsLaunched(instanceName);
-  assertSame(cloneMachineSession.getState(),SessionState.Unlocked);
-  cloneMachineSession=machineController.ensureMachineHasPowerDown(instanceName);
-  assertSame(cloneMachineSession.getState(),SessionState.Unlocked);
+  ISession cloneMachineSession=machineController.ensureMachineIsLaunched(clonedMachine.getName());
+  assertTrue(cloneMachineSession.getState() == SessionState.Unlocked);
+  cloneMachineSession=machineController.ensureMachineHasPowerDown(clonedMachine.getName());
+  SessionState state=cloneMachineSession.getState();
+  assertEquals(SessionState.Unlocked,state);
 }
