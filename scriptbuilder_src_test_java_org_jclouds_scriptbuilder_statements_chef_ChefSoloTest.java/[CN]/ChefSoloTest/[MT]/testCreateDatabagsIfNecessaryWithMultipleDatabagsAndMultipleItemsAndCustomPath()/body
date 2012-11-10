@@ -1,0 +1,18 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  DataBag databagFoo=DataBag.builder().name("foo").item("itemFoo","{\"foo\":\"bar\"}").build();
+  DataBag databagBar=DataBag.builder().name("bar").item("itemBar","{\"bar\":\"foo\"}").item("extra","{\"extra\":[]}").build();
+  ChefSolo solo=ChefSolo.builder().dataBagPath("/tmp/databags").defineDataBag(databagFoo).defineDataBag(databagBar).build();
+  solo.createDatabagsIfNecessary(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  Statement expectedFoo=createOrOverwriteFile("/tmp/databags/foo/itemFoo.json",ImmutableSet.of("{\"foo\":\"bar\"}"));
+  Statement expectedBar=createOrOverwriteFile("/tmp/databags/bar/itemBar.json",ImmutableSet.of("{\"bar\":\"foo\"}"));
+  Statement expectedExtra=createOrOverwriteFile("/tmp/databags/bar/extra.json",ImmutableSet.of("{\"extra\":[]}"));
+  assertEquals(statementList.size(),6);
+  assertEquals(statementList.get(0),exec("{md} /tmp/databags"));
+  assertEquals(statementList.get(1),exec("{md} /tmp/databags/" + databagFoo.getName()));
+  assertEquals(statementList.get(2).render(OsFamily.UNIX),expectedFoo.render(OsFamily.UNIX));
+  assertEquals(statementList.get(3),exec("{md} /tmp/databags/" + databagBar.getName()));
+  assertEquals(statementList.get(4).render(OsFamily.UNIX),expectedBar.render(OsFamily.UNIX));
+  assertEquals(statementList.get(5).render(OsFamily.UNIX),expectedExtra.render(OsFamily.UNIX));
+}

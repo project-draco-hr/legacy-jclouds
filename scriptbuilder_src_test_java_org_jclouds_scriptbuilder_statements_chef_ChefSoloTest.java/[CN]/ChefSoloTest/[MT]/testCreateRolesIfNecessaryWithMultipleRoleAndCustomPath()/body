@@ -1,0 +1,14 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  Role roleFoo=Role.builder().name("foo").runlist(RunList.builder().recipe("foo").build()).build();
+  Role roleBar=Role.builder().name("bar").runlist(RunList.builder().recipe("bar").build()).build();
+  ChefSolo solo=ChefSolo.builder().rolePath("/tmp/roles").defineRole(roleFoo).defineRole(roleBar).build();
+  solo.createRolesIfNecessary(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  Statement expectedFoo=createOrOverwriteFile("/tmp/roles/" + roleFoo.getName() + ".json",ImmutableSet.of(roleFoo.toJsonString()));
+  Statement expectedBar=createOrOverwriteFile("/tmp/roles/" + roleBar.getName() + ".json",ImmutableSet.of(roleBar.toJsonString()));
+  assertEquals(statementList.size(),3);
+  assertEquals(statementList.get(0),exec("{md} /tmp/roles"));
+  assertEquals(statementList.get(1).render(OsFamily.UNIX),expectedFoo.render(OsFamily.UNIX));
+  assertEquals(statementList.get(2).render(OsFamily.UNIX),expectedBar.render(OsFamily.UNIX));
+}

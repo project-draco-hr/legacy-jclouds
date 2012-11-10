@@ -1,0 +1,12 @@
+{
+  if (databags.isPresent() && !databags.get().isEmpty()) {
+    statements.add(exec("{md} " + databagPath));
+    for (    DataBag databag : databags.get()) {
+      String databagFolder=databagPath + "/" + databag.getName();
+      statements.add(exec("{md} " + databagFolder));
+      for (      Map.Entry<String,String> item : databag.getItems().entrySet()) {
+        statements.add(createOrOverwriteFile(databagFolder + "/" + item.getKey()+ ".json",ImmutableSet.of(item.getValue())));
+      }
+    }
+  }
+}

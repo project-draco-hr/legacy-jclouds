@@ -2,15 +2,38 @@
   if (family == OsFamily.WINDOWS) {
     throw new UnsupportedOperationException("windows not yet implemented");
   }
-  ImmutableMap.Builder<String,String> chefSoloOptions=ImmutableMap.builder();
-  chefSoloOptions.put("-N","`hostname`");
-  chefSoloOptions.put("-r",cookbooksArchiveLocation);
-  if (!recipes.isEmpty()) {
-    chefSoloOptions.put("-o",recipesToRunlistString(recipes));
-  }
-  String options=Joiner.on(' ').withKeyValueSeparator(" ").join(chefSoloOptions.build());
   ImmutableList.Builder<Statement> statements=ImmutableList.builder();
   statements.add(installChefGems);
-  statements.add(Statements.exec(String.format("chef-solo %s",options)));
+  createSoloConfiguration(statements);
+  createRolesIfNecessary(statements);
+  createDatabagsIfNecessary(statements);
+  createNodeConfiguration(statements);
+  ImmutableMap.Builder<String,String> options=ImmutableMap.builder();
+  options.put("-c",fileCachePath + "/solo.rb");
+  options.put("-j",fileCachePath + "/node.json");
+  options.put("-N",nodeName.or("`hostname`"));
+  if (group.isPresent()) {
+    options.put("-g",group.get());
+  }
+  if (interval.isPresent()) {
+    options.put("-i",interval.get().toString());
+  }
+  if (logLevel.isPresent()) {
+    options.put("-l",logLevel.get());
+  }
+  if (logFile.isPresent()) {
+    options.put("-L",logFile.get());
+  }
+  if (cookbooksArchiveLocation.isPresent()) {
+    options.put("-r",cookbooksArchiveLocation.get());
+  }
+  if (splay.isPresent()) {
+    options.put("-s",splay.get().toString());
+  }
+  if (user.isPresent()) {
+    options.put("-u",user.get());
+  }
+  String strOptions=Joiner.on(' ').withKeyValueSeparator(" ").join(options.build());
+  statements.add(Statements.exec(String.format("chef-solo %s",strOptions)));
   return new StatementList(statements.build()).render(family);
 }

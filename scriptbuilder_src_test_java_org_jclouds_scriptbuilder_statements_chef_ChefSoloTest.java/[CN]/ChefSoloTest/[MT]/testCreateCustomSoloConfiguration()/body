@@ -1,0 +1,12 @@
+{
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  ChefSolo solo=ChefSolo.builder().fileCachePath("/tmp").cookbookPath("/tmp/foo").cookbookPath("/tmp/bar").rolePath("/tmp/roles").dataBagPath("/tmp/databags").build();
+  solo.createSoloConfiguration(statements);
+  ImmutableList<Statement> statementList=statements.build();
+  assertEquals(statementList.size(),4);
+  assertEquals(statementList.get(0),exec("{md} /tmp"));
+  assertEquals(statementList.get(1),exec("{md} /tmp/foo"));
+  assertEquals(statementList.get(2),exec("{md} /tmp/bar"));
+  Statement expected=createOrOverwriteFile("/tmp/solo.rb",ImmutableSet.of("file_cache_path \"/tmp\"","cookbook_path [\"/tmp/foo\",\"/tmp/bar\"]","role_path \"/tmp/roles\"","data_bag_path \"/tmp/databags\""));
+  assertEquals(statementList.get(3).render(OsFamily.UNIX),expected.render(OsFamily.UNIX));
+}
