@@ -1,0 +1,5 @@
+{
+  String claims=String.format(CLAIMS_TEMPLATE,Joiner.on(",").join(scopes));
+  String payload="grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&" + "assertion=" + base64Url(header.getBytes(Charset.forName("UTF-8"))) + "."+ base64Url(claims.getBytes(Charset.forName("UTF-8")))+ ".";
+  return HttpRequest.builder().method("POST").endpoint(URI.create("https://accounts.google.com/o/oauth2/token")).addHeader("Accept",MediaType.APPLICATION_JSON).payload(payloadFromStringWithContentType(payload,"application/x-www-form-urlencoded")).build();
+}
