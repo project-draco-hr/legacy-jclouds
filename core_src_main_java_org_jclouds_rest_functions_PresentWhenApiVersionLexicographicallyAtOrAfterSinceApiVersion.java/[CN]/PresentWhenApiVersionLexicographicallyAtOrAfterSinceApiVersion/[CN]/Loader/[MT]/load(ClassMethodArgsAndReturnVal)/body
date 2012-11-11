@@ -1,0 +1,11 @@
+{
+  Optional<SinceApiVersion> sinceApiVersion=Optional.fromNullable(input.getClazz().getAnnotation(SinceApiVersion.class));
+  if (sinceApiVersion.isPresent()) {
+    String since=sinceApiVersion.get().value();
+    if (since.compareTo(apiVersion) <= 0)     return Optional.of(input.getReturnVal());
+    return Optional.absent();
+  }
+ else {
+    return Optional.of(input.getReturnVal());
+  }
+}
