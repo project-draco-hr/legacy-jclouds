@@ -12,7 +12,7 @@
     }
   }
 .nodeRunning(nodeRunning,timeouts,period);
-  AtomicReference<NodeMetadata> atomicNode=new AtomicReference<NodeMetadata>(pendingNode);
+  AtomicReference<NodeMetadata> atomicNode=Atomics.newReference(pendingNode);
   EasyMock.expect(nodeClient.getNode(nodeId)).andAnswer(new IAnswer<NodeMetadata>(){
     private int count=0;
     @Override public NodeMetadata answer() throws Throwable {
