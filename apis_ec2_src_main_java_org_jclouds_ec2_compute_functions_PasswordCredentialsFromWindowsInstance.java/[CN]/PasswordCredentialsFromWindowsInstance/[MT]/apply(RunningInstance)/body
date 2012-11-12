@@ -1,10 +1,12 @@
 {
+  Optional<? extends WindowsApi> windowsOption=ec2Client.getWindowsApiForRegion(instance.getRegion());
+  checkState(windowsOption.isPresent(),"windows feature not present in region %s",instance.getRegion());
+  final WindowsApi windowsApi=windowsOption.get();
   LoginCredentials credentials=LoginCredentials.builder().user("Administrator").noPrivateKey().build();
   String privateKey=getPrivateKeyOrNull(instance);
   if (privateKey == null) {
     return credentials;
   }
-  final WindowsApi windowsApi=ec2Client.getWindowsApiForRegion(instance.getRegion());
   final AtomicReference<PasswordData> data=Atomics.newReference();
   Predicate<String> passwordReady=new Predicate<String>(){
     @Override public boolean apply(    @Nullable String s){
