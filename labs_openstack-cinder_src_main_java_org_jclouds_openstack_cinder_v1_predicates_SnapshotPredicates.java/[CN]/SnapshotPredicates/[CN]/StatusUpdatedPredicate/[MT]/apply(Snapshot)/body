@@ -1,0 +1,11 @@
+{
+  checkNotNull(snapshot,"snapshotId must be defined");
+  if (status.equals(snapshot.getStatus())) {
+    return true;
+  }
+ else {
+    Snapshot snapshotUpdated=snapshotApi.get(snapshot.getId());
+    checkNotNull(snapshotUpdated,"Snapshot %s not found.",snapshot.getId());
+    return status.equals(snapshotUpdated.getStatus());
+  }
+}
