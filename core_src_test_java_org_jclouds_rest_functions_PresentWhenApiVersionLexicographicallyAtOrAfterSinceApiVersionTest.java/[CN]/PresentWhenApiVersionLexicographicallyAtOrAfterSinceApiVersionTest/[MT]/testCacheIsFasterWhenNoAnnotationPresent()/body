@@ -1,0 +1,12 @@
+{
+  ClassMethodArgsAndReturnVal keyPairApi=getKeyPairApi();
+  ImplicitOptionalConverter fn=forApiVersion("2011-07-15");
+  Stopwatch watch=new Stopwatch().start();
+  fn.apply(keyPairApi);
+  long first=watch.stop().elapsedTime(TimeUnit.MICROSECONDS);
+  watch.reset().start();
+  fn.apply(keyPairApi);
+  long cached=watch.stop().elapsedTime(TimeUnit.MICROSECONDS);
+  assertTrue(cached < first,String.format("cached [%s] should be less than initial [%s]",cached,first));
+  Logger.getAnonymousLogger().info("lookup cache saved " + (first - cached) + " microseconds when no annotation present");
+}
