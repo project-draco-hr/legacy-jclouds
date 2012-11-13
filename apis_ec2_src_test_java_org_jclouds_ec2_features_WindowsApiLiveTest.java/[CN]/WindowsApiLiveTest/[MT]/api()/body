@@ -1,3 +1,5 @@
 {
-  return context.getApi().getWindowsApi();
+  Optional<? extends WindowsApi> windowsOption=context.getApi().getWindowsApi();
+  if (!windowsOption.isPresent())   throw new SkipException("windows api not present");
+  return windowsOption.get();
 }
