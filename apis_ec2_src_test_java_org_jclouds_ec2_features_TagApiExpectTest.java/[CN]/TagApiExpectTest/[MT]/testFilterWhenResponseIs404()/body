@@ -1,0 +1,5 @@
+{
+  HttpResponse filterResponse=HttpResponse.builder().statusCode(404).build();
+  EC2Api apiWhenDontExist=requestSendsResponse(filter,filterResponse);
+  assertEquals(apiWhenDontExist.getTagApi().get().filter(ImmutableMultimap.<String,String>builder().put("resource-type","instance").put("key","stack").build()).toImmutableSet(),ImmutableSet.of());
+}

@@ -1,0 +1,18 @@
+{
+  checkNotNull(input,"tags");
+  Map<String,String> tagValues;
+  if (input instanceof Iterable) {
+    Builder<String,String> builder=ImmutableMap.<String,String>builder();
+    for (    String key : (Iterable<String>)input) {
+      builder.put(key,"");
+    }
+    tagValues=builder.build();
+  }
+ else   if (input instanceof Map) {
+    tagValues=Map.class.cast(input);
+  }
+ else {
+    throw new IllegalArgumentException("This binder is only valid for Map<String,String> or Iterable<String>");
+  }
+  return indexMapToFormValuesWithPrefix(request,"Tag","Key","Value",tagValues);
+}

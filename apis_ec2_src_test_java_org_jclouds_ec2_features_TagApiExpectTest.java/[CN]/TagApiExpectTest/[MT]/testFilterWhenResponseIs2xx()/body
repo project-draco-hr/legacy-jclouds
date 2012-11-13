@@ -1,0 +1,5 @@
+{
+  HttpResponse filterResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_tags.xml","text/xml")).build();
+  EC2Api apiWhenExist=requestSendsResponse(filter,filterResponse);
+  assertEquals(apiWhenExist.getTagApi().get().filter(ImmutableMultimap.<String,String>builder().put("resource-type","instance").put("key","stack").build()).toString(),new DescribeTagsResponseTest().expected().toString());
+}

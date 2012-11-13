@@ -1,0 +1,9 @@
+{
+  api().applyToResources(ImmutableMap.of("type","bar"),ImmutableSet.of(resource.id));
+  tag2=api().filter(new TagFilterBuilder().resourceId(resource.id).key("type").build()).get(0);
+  Logger.getAnonymousLogger().info("created tag: " + tag2);
+  assertEquals(tag2.getKey(),"type");
+  assertEquals(tag2.getResourceId(),resource.id);
+  assertEquals(tag2.getResourceType(),resource.type);
+  assertEquals(tag2.getValue().get(),"bar");
+}

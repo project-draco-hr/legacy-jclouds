@@ -1,0 +1,5 @@
+{
+  HttpRequest request=HttpRequest.builder().method("POST").endpoint("http://localhost").build();
+  request=binder.bindToRequest(request,ImmutableMultimap.<String,String>builder().put("resource-type","instance").put("key","stack").putAll("value","Test","Production").build());
+  assertEquals(request.getPayload().getRawContent(),"Filter.1.Name=resource-type&Filter.1.Value.1=instance&Filter.2.Name=key&Filter.2.Value.1=stack&Filter.3.Name=value&Filter.3.Value.1=Test&Filter.3.Value.2=Production");
+}
