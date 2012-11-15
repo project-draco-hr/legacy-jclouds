@@ -1,0 +1,7 @@
+{
+  String serverId="123";
+  HttpRequest getDiagnostics=HttpRequest.builder().method("GET").addHeader("Accept","application/json").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers/" + serverId + "/diagnostics").addHeader("X-Auth-Token",authToken).build();
+  HttpResponse serverDiagnosticsResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/server_diagnostics.json","application/json; charset=UTF-8")).build();
+  NovaApi apiWithNewServer=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,getDiagnostics,serverDiagnosticsResponse);
+  assertEquals(apiWithNewServer.getServerApiForZone("az-1.region-a.geo-1").getDiagnostics(serverId),new ParseServerDiagnostics().expected());
+}
