@@ -1,9 +1,0 @@
-{
-  CountingSupplier countingSupplier=new CountingSupplier();
-  Supplier<Integer> memoizedSupplier=new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier(new AtomicReference<AuthorizationException>(),countingSupplier,75,TimeUnit.MILLISECONDS);
-  memoizedSupplier.get();
-  Supplier<Integer> copy=reserialize(memoizedSupplier);
-  memoizedSupplier.get();
-  CountingSupplier countingCopy=(CountingSupplier)((MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier)copy).delegate();
-  checkExpiration(countingCopy,copy);
-}
