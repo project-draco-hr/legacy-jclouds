@@ -1,16 +1,5 @@
 {
-  ByteArrayOutputStream bout=new ByteArrayOutputStream();
-  ObjectOutput os;
-  try {
-    os=new ObjectOutputStream(bout);
-    os.writeObject(in);
-    ObjectInput is=new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()));
-    MutableBlobMetadata metadata=(MutableBlobMetadata)is.readObject();
-    convertUserMetadataKeysToLowercase(metadata);
-    HttpUtils.copy(in.getContentMetadata(),metadata.getContentMetadata());
-    return metadata;
-  }
- catch (  Exception e) {
-    throw Throwables.propagate(e);
-  }
+  MutableBlobMetadata metadata=new MutableBlobMetadataImpl(in);
+  convertUserMetadataKeysToLowercase(metadata);
+  return metadata;
 }
