@@ -1,0 +1,8 @@
+{
+  Set<String> retryFields=ImmutableSet.of("retryAfter","retryAt");
+  for (  String value : filterKeys(overLimitParser.apply(json),in(retryFields)).values()) {
+    Optional<RetryAfterException> retryException=retryAfterParser.tryCreateRetryAfterException(exception,value);
+    if (retryException.isPresent())     return retryException.get();
+  }
+  return new InsufficientResourcesException(message,exception);
+}
