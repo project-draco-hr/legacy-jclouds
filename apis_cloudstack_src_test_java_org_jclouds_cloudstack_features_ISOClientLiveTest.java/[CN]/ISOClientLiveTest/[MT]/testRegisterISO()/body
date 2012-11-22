@@ -1,0 +1,18 @@
+{
+  Optional<OSType> guestOSTypeOptional=Iterables.tryFind(client.getGuestOSClient().listOSTypes(),Predicates.notNull());
+  Optional<Zone> zoneOptional=Iterables.tryFind(client.getZoneClient().listZones(available(true)),Predicates.notNull());
+  if (guestOSTypeOptional.isPresent() && zoneOptional.isPresent()) {
+    String osTypeId=guestOSTypeOptional.get().getId();
+    String zoneId=zoneOptional.get().getId();
+    ISO iso=client.getISOClient().registerISO(isoName,"",url,zoneId,RegisterISOOptions.Builder.isPublic(true).osTypeId(osTypeId));
+    assertNotNull(iso);
+    assertNotNull(iso.getId());
+    assertEquals(iso.getName(),isoName);
+  }
+ else {
+    String skipMessage=String.format("Cannot register the iso with url: %s",url);
+    if (zoneOptional.isPresent())     skipMessage+=" without a valid zone";
+ else     skipMessage+=" without a valid guest OS type";
+    throw new SkipException(skipMessage);
+  }
+}
