@@ -1,0 +1,13 @@
+{
+  if (equalsOrSuffix(qName,DELETED_TAG)) {
+    parsingDeletedEntry=false;
+    deleted.add(deletedEntryAccumulator.toString().trim());
+  }
+ else   if (equalsOrSuffix(qName,ERROR_TAG)) {
+    parsingErrorEntry=false;
+    errors.put(errorEntryHandler.getResult());
+  }
+  if (parsingErrorEntry) {
+    errorEntryHandler.endElement(uri,name,qName);
+  }
+}
