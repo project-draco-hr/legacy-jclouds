@@ -1,5 +1,11 @@
 {
-  VCloudDirectorApi api=requestsSendResponses(loginRequest,sessionResponse,new VcloudHttpRequestPrimer().apiCommand("POST",vmId + "/power/action/reboot").acceptAnyMedia().httpRequestBuilder().build(),new VcloudHttpResponsePrimer().xmlFilePayload("/vApp/rebootTask.xml",VCloudDirectorMediaType.TASK).httpResponseBuilder().build());
+  HttpRequest vmEntityRequest=HttpRequest.builder().method("GET").endpoint(URI.create(endpoint + "/entity/" + vmUrn)).addHeader("Accept","*/*").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).build();
+  HttpResponse vmEntityResponse=HttpResponse.builder().payload(payloadFromResourceWithContentType("/vm/vmEntity.xml",VCloudDirectorMediaType.ENTITY)).statusCode(200).build();
+  URI vmRebootUri=URI.create(endpoint + "/vApp/" + vmId+ "/power/action/reboot");
+  HttpRequest vmRebootRequest=HttpRequest.builder().method("POST").endpoint(vmRebootUri).addHeader("Accept","application/vnd.vmware.vcloud.task+xml").addHeader("x-vcloud-authorization",token).addHeader(HttpHeaders.COOKIE,"vcloud-token=" + token).build();
+  HttpResponse vmRebootResponse=HttpResponse.builder().payload(payloadFromResourceWithContentType("/vm/vmRebootTask.xml",VCloudDirectorMediaType.TASK)).statusCode(200).build();
+  VCloudDirectorApi vCloudDirectorApi=requestsSendResponses(loginRequest,sessionResponse,vmEntityRequest,vmEntityResponse,vmRebootRequest,vmRebootResponse);
+  Task actual=vCloudDirectorApi.getVmApi().reboot(vmUrn);
   Task expected=rebootTask();
-  assertEquals(api.getVmApi().reboot(vmURI),expected);
+  assertEquals(actual,expected);
 }
