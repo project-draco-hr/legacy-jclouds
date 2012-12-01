@@ -1,0 +1,38 @@
+{
+  while (b != DONE && limit > pos) {
+    try {
+      b=nextByte(source,pos++,state,last,true);
+    }
+ catch (    IOException e) {
+      b=0;
+    }
+    if (b == MARK) {
+      last=MARK;
+      continue;
+    }
+    if ((b & 0xF000) == 0) {
+      pos--;
+      break;
+    }
+  }
+  if (b == DONE) {
+    while (limit > pos) {
+      if (source instanceof byte[]) {
+        b=((byte[])source)[pos++] & 0xFF;
+      }
+ else       if (source instanceof String) {
+        b=((String)source).charAt(pos++) & 0xFF;
+      }
+ else {
+        throw new IllegalArgumentException();
+      }
+      if (b == '\n') {
+        break;
+      }
+ else       if (b != ' ' && b != '\t' && b != '\r') {
+        pos--;
+      }
+    }
+  }
+  return pos;
+}

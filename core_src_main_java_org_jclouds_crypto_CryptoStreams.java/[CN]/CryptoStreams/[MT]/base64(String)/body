@@ -1,3 +1,11 @@
 {
-  return Base64.decode(in);
+  try {
+    ByteBuffer buffer=FlexBase64.decode(in);
+    byte[] returnVal=new byte[buffer.limit()];
+    System.arraycopy(buffer.array(),buffer.arrayOffset(),returnVal,0,buffer.limit());
+    return returnVal;
+  }
+ catch (  IOException e) {
+    throw Throwables.propagate(e);
+  }
 }

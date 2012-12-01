@@ -1,0 +1,17 @@
+{
+  FlexBase64.DecoderInputStream stream=FlexBase64.createDecoderInputStream(new ByteArrayInputStream(TOWEL_BASE64.getBytes("US-ASCII")));
+  ByteBuffer base64=ByteBuffer.wrap(TOWEL.getBytes("US-ASCII"));
+  verifyStreamContents(stream,base64);
+  stream=FlexBase64.createDecoderInputStream(new ByteArrayInputStream(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")));
+  base64=ByteBuffer.wrap(TOWEL.getBytes("US-ASCII"));
+  verifyStreamContents(stream,base64);
+  stream=FlexBase64.createDecoderInputStream(new ByteArrayInputStream(TOWEL_BASE64.getBytes("US-ASCII")));
+  base64=ByteBuffer.wrap(TOWEL.getBytes("US-ASCII"));
+  verifyStreamContentsOneByte(stream,base64);
+  stream=FlexBase64.createDecoderInputStream(new ByteArrayInputStream(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")));
+  base64=ByteBuffer.wrap(TOWEL.replace("\r\n","").getBytes("US-ASCII"));
+  verifyStreamContentsOneByte(stream,base64);
+  stream=FlexBase64.createDecoderInputStream(new ByteArrayInputStream(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")),10);
+  base64=ByteBuffer.wrap(TOWEL.replace("\r\n","").getBytes("US-ASCII"));
+  verifyStreamContentsOneByte(stream,base64);
+}

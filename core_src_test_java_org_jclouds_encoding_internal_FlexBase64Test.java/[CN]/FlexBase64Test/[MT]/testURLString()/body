@@ -1,0 +1,14 @@
+{
+  byte[] source={0x6b,(byte)0xf6,(byte)0xfe};
+  Assert.assertEquals("a_b-",FlexBase64.encodeURLString(source,0,3));
+  Assert.assertEquals(Bytes.asList(source),Bytes.asList(FlexBase64.decode("a_b-").array()));
+  String actual=FlexBase64.encodeURLString("test".getBytes("UTF-8"),0,4);
+  Assert.assertEquals("dGVzdA",actual);
+  ByteBuffer decode=FlexBase64.decode(actual);
+  Assert.assertEquals("test",new String(decode.array(),0,decode.limit(),"UTF-8"));
+  byte[] bytes=TOWEL.getBytes("UTF-8");
+  Assert.assertEquals(TOWEL_BASE64.replace("\r\n",""),FlexBase64.encodeURLString(ByteBuffer.wrap(bytes)));
+  bytes=KNOWLEDGE.getBytes("UTF-8");
+  String replace=KNOWLEDGE_ENCODED.replace("\r\n","");
+  Assert.assertEquals(replace.substring(0,replace.length() - 1),FlexBase64.encodeURLString(ByteBuffer.wrap(bytes)));
+}

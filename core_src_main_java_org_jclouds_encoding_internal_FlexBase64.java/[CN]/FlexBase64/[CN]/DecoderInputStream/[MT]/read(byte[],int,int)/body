@@ -1,0 +1,32 @@
+{
+  for (; ; ) {
+    byte[] source=buffer;
+    int pos=this.pos;
+    int limit=this.limit;
+    boolean setPos=true;
+    if (pos >= limit) {
+      if (len > source.length) {
+        source=new byte[len];
+        limit=input.read(source,0,len);
+        pos=0;
+        setPos=false;
+      }
+ else {
+        limit=fill();
+        pos=0;
+      }
+      if (limit == -1) {
+        return -1;
+      }
+    }
+    int requested=len + pos;
+    limit=limit > requested ? requested : limit;
+    int read=decoder.decode(source,pos,limit,b,off,off + len) - off;
+    if (setPos) {
+      this.pos=decoder.getLastInputPosition();
+    }
+    if (read > 0) {
+      return read;
+    }
+  }
+}

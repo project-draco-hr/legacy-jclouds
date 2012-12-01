@@ -1,0 +1,18 @@
+{
+  byte[] bytes="c3VyZS4=\r\n\r\n!".getBytes("US-ASCII");
+  ByteBuffer source=ByteBuffer.wrap(bytes);
+  ByteBuffer target=ByteBuffer.allocateDirect(100);
+  FlexBase64.createDecoder().decode(source,target);
+  Assert.assertEquals((byte)'\r' & 0xFF,source.get() & 0xFF);
+  Assert.assertEquals((byte)'\n' & 0xFF,source.get() & 0xFF);
+  Assert.assertEquals((byte)'!' & 0xFF,source.get() & 0xFF);
+  byte[] dest=new byte[100];
+  FlexBase64.Decoder decoder=FlexBase64.createDecoder();
+  decoder.decode(bytes,0,bytes.length,dest,0,dest.length);
+  Assert.assertEquals(10,decoder.getLastInputPosition());
+  bytes="YXN1cmUu\r\n\r\nA".getBytes("US-ASCII");
+  dest=new byte[6];
+  decoder=FlexBase64.createDecoder();
+  decoder.decode(bytes,0,bytes.length,dest,0,dest.length);
+  Assert.assertEquals(12,decoder.getLastInputPosition());
+}
