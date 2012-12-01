@@ -4,18 +4,12 @@
   if (matchFound) {
     String objectId=matcher.group(1);
     String action=matcher.group(2);
-    Map<String,String> options=newHashMap();
+    Builder<String,String> options=ImmutableMap.<String,String>builder();
     if (matcher.groupCount() == 3) {
-      String optionsGroup=matcher.group(3);
-      for (      String entry : optionsGroup.split(";")) {
-        if (entry.indexOf('=') >= 0) {
-          String[] keyValue=entry.split("=");
-          options.put(keyValue[0],keyValue[1]);
-        }
-      }
+      options.putAll(Splitter.on(';').withKeyValueSeparator("=").split(matcher.group(3)));
     }
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().println(objectId + "->" + action+ ":"+ options);
+    response.setStatus(SC_OK);
+    response.getWriter().println(objectId + "->" + action+ ":"+ options.build());
   }
  else {
     response.sendError(500,"no content");

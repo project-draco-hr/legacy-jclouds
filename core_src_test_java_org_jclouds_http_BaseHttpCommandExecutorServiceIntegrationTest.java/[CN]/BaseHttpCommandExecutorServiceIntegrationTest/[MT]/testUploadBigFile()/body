@@ -16,21 +16,18 @@
       }
       os.flush();
     }
- catch (    IOException e) {
-      throw new RuntimeException(e);
+  finally {
+      closeQuietly(out);
     }
- finally {
-      Closeables.closeQuietly(out);
-    }
-    Payload payload=Payloads.newFilePayload(f);
+    Payload payload=newFilePayload(f);
     byte[] digest=digester.digest();
     payload.getContentMetadata().setContentMD5(digest);
     Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
-    assertEquals(headers.get("x-Content-MD5"),ImmutableList.of(CryptoStreams.base64(digest)));
+    assertEquals(headers.get("x-Content-MD5"),ImmutableList.of(base64(digest)));
     payload.release();
   }
   finally {
-    if (os != null)     os.close();
+    closeQuietly(os);
     if (f != null && f.exists())     f.delete();
   }
 }
