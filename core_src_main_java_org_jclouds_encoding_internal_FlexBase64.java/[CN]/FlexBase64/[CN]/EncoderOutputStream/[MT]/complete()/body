@@ -1,0 +1,16 @@
+{
+  OutputStream output=this.output;
+  byte[] buffer=this.buffer;
+  int pos=this.pos;
+  boolean completed=false;
+  if (buffer.length - pos >= (encoder.wrap ? 2 : 4)) {
+    this.pos=encoder.complete(buffer,pos);
+    completed=true;
+  }
+  flush();
+  if (!completed) {
+    int len=encoder.complete(buffer,0);
+    output.write(buffer,0,len);
+    output.flush();
+  }
+}

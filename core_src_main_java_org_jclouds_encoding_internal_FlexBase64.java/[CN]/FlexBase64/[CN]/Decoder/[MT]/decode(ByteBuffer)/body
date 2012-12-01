@@ -1,0 +1,9 @@
+{
+  int len=source.remaining();
+  int remainder=len % 4;
+  int size=((len / 4) + (remainder == 0 ? 0 : 4 - remainder)) * 3;
+  ByteBuffer buffer=ByteBuffer.allocate(size);
+  createDecoder().decode(source,buffer);
+  buffer.flip();
+  return buffer;
+}

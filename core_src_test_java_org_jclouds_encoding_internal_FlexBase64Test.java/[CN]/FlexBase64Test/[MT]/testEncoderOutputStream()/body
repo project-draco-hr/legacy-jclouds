@@ -1,0 +1,29 @@
+{
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  FlexBase64.EncoderOutputStream stream=FlexBase64.createEncoderOutputStream(baos);
+  byte[] towel=TOWEL.getBytes("US-ASCII");
+  stream.write(towel);
+  stream.close();
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+  baos.reset();
+  stream=FlexBase64.createEncoderOutputStream(baos,8192,false);
+  stream.write(towel);
+  stream.close();
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+  baos.reset();
+  stream=FlexBase64.createEncoderOutputStream(baos,8192,true);
+  chunkWrite(stream,towel);
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+  baos.reset();
+  stream=FlexBase64.createEncoderOutputStream(baos,8192,false);
+  chunkWrite(stream,towel);
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+  baos.reset();
+  stream=FlexBase64.createEncoderOutputStream(baos,8192,true);
+  oneByteWrite(stream,towel);
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+  baos.reset();
+  stream=FlexBase64.createEncoderOutputStream(baos,8192,false);
+  oneByteWrite(stream,towel);
+  Assert.assertEquals(Bytes.asList(TOWEL_BASE64.replace("\r\n","").getBytes("US-ASCII")),Bytes.asList(baos.toByteArray()));
+}

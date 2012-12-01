@@ -1,0 +1,52 @@
+{
+  if (target == null)   throw new IllegalStateException();
+  int last=this.last;
+  int state=this.state;
+  int count=this.count;
+  boolean wrap=this.wrap;
+  final byte[] ENCODING_TABLE=FlexBase64.ENCODING_TABLE;
+  while (limit > pos) {
+    int require=4 - state;
+    require=wrap && count >= 72 ? require + 2 : require;
+    if ((require + opos) > olimit) {
+      break;
+    }
+    int b=source[pos++] & 0xFF;
+    if (state == 0) {
+      target[opos++]=ENCODING_TABLE[b >>> 2];
+      last=(b & 0x3) << 4;
+      state++;
+      if (pos >= limit) {
+        break;
+      }
+      b=source[pos++] & 0xFF;
+    }
+    if (state == 1) {
+      target[opos++]=ENCODING_TABLE[last | (b >>> 4)];
+      last=(b & 0x0F) << 2;
+      state++;
+      if (pos >= limit) {
+        break;
+      }
+      b=source[pos++] & 0xFF;
+    }
+    if (state == 2) {
+      target[opos++]=ENCODING_TABLE[last | (b >>> 6)];
+      target[opos++]=ENCODING_TABLE[b & 0x3F];
+      last=state=0;
+    }
+    if (wrap) {
+      count+=4;
+      if (count >= 76) {
+        count=0;
+        target[opos++]=0x0D;
+        target[opos++]=0x0A;
+      }
+    }
+  }
+  this.count=count;
+  this.last=last;
+  this.state=state;
+  this.lastPos=pos;
+  return opos;
+}

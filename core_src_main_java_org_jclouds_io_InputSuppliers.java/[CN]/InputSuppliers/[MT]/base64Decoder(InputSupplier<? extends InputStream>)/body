@@ -1,3 +1,8 @@
 {
-  return new Base64InputSupplier(supplier,Base64.DECODE);
+  return new InputSupplier<InputStream>(){
+    @Override public InputStream getInput() throws IOException {
+      return FlexBase64.createDecoderInputStream(supplier.getInput());
+    }
+  }
+;
 }
