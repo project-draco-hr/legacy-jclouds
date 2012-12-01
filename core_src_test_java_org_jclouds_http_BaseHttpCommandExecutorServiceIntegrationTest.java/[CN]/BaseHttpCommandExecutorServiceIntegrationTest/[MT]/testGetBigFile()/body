@@ -1,13 +1,16 @@
 {
   InputStream input=getConsitution();
   try {
-    assertEquals(CryptoStreams.md5Base64(InputSuppliers.of(input)),md5);
+    assertEquals(md5Base64(InputSuppliers.of(input)),md5);
   }
  catch (  RuntimeException e) {
-    Closeables.closeQuietly(input);
-    if (Throwables2.getFirstThrowableOfType(e,IOException.class) != null) {
+    closeQuietly(input);
+    if (getFirstThrowableOfType(e,IOException.class) != null) {
       input=getConsitution();
-      assertEquals(CryptoStreams.md5Base64(InputSuppliers.of(input)),md5);
+      assertEquals(md5Base64(InputSuppliers.of(input)),md5);
     }
+  }
+ finally {
+    closeQuietly(input);
   }
 }

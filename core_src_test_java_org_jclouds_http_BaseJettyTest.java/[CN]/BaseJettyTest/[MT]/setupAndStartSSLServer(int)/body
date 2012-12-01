@@ -4,10 +4,10 @@
       InputStream body=request.getInputStream();
       try {
         if (request.getMethod().equals("PUT")) {
-          String text=Strings2.toStringAndClose(body);
+          String text=toStringAndClose(body);
           body=null;
           if (request.getContentLength() > 0) {
-            response.setStatus(HttpServletResponse.SC_OK);
+            response.setStatus(SC_OK);
             response.getWriter().println(text + "PUTREDIRECT");
           }
         }
@@ -21,18 +21,18 @@
         }
  else         if (request.getMethod().equals("HEAD")) {
           response.setContentType("text/xml");
-          response.setStatus(HttpServletResponse.SC_OK);
+          response.setStatus(SC_OK);
         }
  else {
           response.setContentType("text/xml");
-          response.setStatus(HttpServletResponse.SC_OK);
+          response.setStatus(SC_OK);
           response.getWriter().println(XML2);
         }
         ((Request)request).setHandled(true);
       }
  catch (      IOException e) {
-        if (body != null)         closeQuietly(body);
-        response.sendError(500,Throwables.getStackTraceAsString(e));
+        closeQuietly(body);
+        response.sendError(500,getStackTraceAsString(e));
       }
     }
   }

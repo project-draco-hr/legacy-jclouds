@@ -4,10 +4,10 @@
     if (request.getHeader("Content-MD5") != null) {
       String expectedMd5=request.getHeader("Content-MD5");
       String realMd5FromRequest;
-      realMd5FromRequest=CryptoStreams.md5Base64(InputSuppliers.of(body));
+      realMd5FromRequest=md5Base64(InputSuppliers.of(body));
       boolean matched=expectedMd5.equals(realMd5FromRequest);
       if (matched) {
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(SC_OK);
         response.addHeader("x-Content-MD5",realMd5FromRequest);
       }
  else {
@@ -15,17 +15,17 @@
       }
     }
  else {
-      String responseString=(request.getContentLength() < 10240) ? Strings2.toStringAndClose(body) + "POST" : "POST";
+      String responseString=(request.getContentLength() < 10240) ? toStringAndClose(body) + "POST" : "POST";
       body=null;
-      for (      String header : new String[]{"Content-Disposition",HttpHeaders.CONTENT_LANGUAGE,HttpHeaders.CONTENT_ENCODING})       if (request.getHeader(header) != null) {
+      for (      String header : new String[]{"Content-Disposition",CONTENT_LANGUAGE,CONTENT_ENCODING})       if (request.getHeader(header) != null) {
         response.addHeader("x-" + header,request.getHeader(header));
       }
-      response.setStatus(HttpServletResponse.SC_OK);
+      response.setStatus(SC_OK);
       response.getWriter().println(responseString);
     }
   }
  catch (  IOException e) {
-    if (body != null)     closeQuietly(body);
-    response.sendError(500,Throwables.getStackTraceAsString(e));
+    closeQuietly(body);
+    response.sendError(500,getStackTraceAsString(e));
   }
 }
