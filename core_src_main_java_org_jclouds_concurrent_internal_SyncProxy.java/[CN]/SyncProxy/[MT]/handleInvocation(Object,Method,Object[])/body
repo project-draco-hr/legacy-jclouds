@@ -1,14 +1,5 @@
 {
-  if (method.getName().equals("equals")) {
-    return this.equals(o);
-  }
- else   if (method.getName().equals("hashCode")) {
-    return this.hashCode();
-  }
- else   if (method.getName().equals("toString")) {
-    return this.toString();
-  }
- else   if (method.isAnnotationPresent(Delegate.class)) {
+  if (method.isAnnotationPresent(Delegate.class)) {
     Class<?> syncClass=Optionals2.returnTypeOrTypeOfOptional(method);
     Class<?> asyncClass=sync2Async.get(syncClass);
     checkState(asyncClass != null,"please configure corresponding async class for " + syncClass + " in your RestClientModule");
