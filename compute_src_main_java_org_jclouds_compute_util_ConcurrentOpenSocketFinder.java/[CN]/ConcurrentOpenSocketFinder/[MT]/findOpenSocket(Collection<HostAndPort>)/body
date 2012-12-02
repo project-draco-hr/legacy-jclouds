@@ -1,5 +1,5 @@
 {
-  final AtomicReference<HostAndPort> result=Atomics.newReference();
+  final AtomicReference<HostAndPort> result=newReference();
   final CountDownLatch latch=new CountDownLatch(1);
   final AtomicInteger completeCount=new AtomicInteger();
   for (  final HostAndPort socket : sockets) {
@@ -24,14 +24,14 @@
         }
       }
     }
-,MoreExecutors.sameThreadExecutor());
+,sameThreadExecutor());
   }
   try {
     latch.await();
   }
  catch (  InterruptedException e) {
     Thread.currentThread().interrupt();
-    throw Throwables.propagate(e);
+    throw propagate(e);
   }
   return result.get();
 }
