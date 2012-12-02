@@ -1,39 +1,31 @@
 {
   Handler server2Handler=new AbstractHandler(){
     public void handle(    String target,    Request baseRequest,    HttpServletRequest request,    HttpServletResponse response) throws IOException, ServletException {
-      InputStream body=request.getInputStream();
-      try {
-        if (request.getMethod().equals("PUT")) {
-          String text=toStringAndClose(body);
-          body=null;
-          if (request.getContentLength() > 0) {
-            response.setStatus(SC_OK);
-            response.getWriter().println(text + "PUTREDIRECT");
-          }
-        }
- else         if (request.getMethod().equals("POST")) {
-          if (request.getContentLength() > 0) {
-            handlePost(request,response);
-          }
- else {
-            handleAction(request,response);
-          }
-        }
- else         if (request.getMethod().equals("HEAD")) {
-          response.setContentType("text/xml");
+      if (request.getMethod().equals("PUT")) {
+        if (request.getContentLength() > 0) {
           response.setStatus(SC_OK);
+          String text=toStringAndClose(request.getInputStream());
+          response.getWriter().println(text + "PUTREDIRECT");
+        }
+      }
+ else       if (request.getMethod().equals("POST")) {
+        if (request.getContentLength() > 0) {
+          handlePost(request,response);
         }
  else {
-          response.setContentType("text/xml");
-          response.setStatus(SC_OK);
-          response.getWriter().println(XML2);
+          handleAction(request,response);
         }
-        ((Request)request).setHandled(true);
       }
- catch (      IOException e) {
-        closeQuietly(body);
-        response.sendError(500,getStackTraceAsString(e));
+ else       if (request.getMethod().equals("HEAD")) {
+        response.setContentType("text/xml");
+        response.setStatus(SC_OK);
       }
+ else {
+        response.setContentType("text/xml");
+        response.setStatus(SC_OK);
+        response.getWriter().println(XML2);
+      }
+      Request.class.cast(request).setHandled(true);
     }
   }
 ;
