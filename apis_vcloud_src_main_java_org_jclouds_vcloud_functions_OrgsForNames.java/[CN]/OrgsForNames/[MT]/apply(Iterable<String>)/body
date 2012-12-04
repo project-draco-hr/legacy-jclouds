@@ -1,8 +1,8 @@
 {
-  return Iterables2.concreteCopy(transformParallel(from,new Function<String,Future<? extends Org>>(){
+  return Iterables.filter(transformParallel(from,new Function<String,Future<? extends Org>>(){
     @Override public Future<Org> apply(    String from){
       return aclient.getOrgClient().findOrgNamed(from);
     }
   }
-,executor,null,logger,"organizations for names"));
+,executor,null,logger,"organizations for names"),Predicates.notNull());
 }
