@@ -1,9 +1,11 @@
 {
-  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.4",22))).andReturn(false).once();
-  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.5",22))).andReturn(true).once();
-  replay(socketTester);
-  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,alwaysTrue,threadPool);
+  SocketOpen secondSocketOpen=new SocketOpen(){
+    @Override public boolean apply(    HostAndPort input){
+      return HostAndPort.fromParts("1.2.3.5",22).equals(input);
+    }
+  }
+;
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(secondSocketOpen,nodeRunning,threadPool);
   HostAndPort result=finder.findOpenSocketOnNode(node,22,2000,MILLISECONDS);
   assertEquals(result,HostAndPort.fromParts("1.2.3.5",22));
-  verify(socketTester);
 }
