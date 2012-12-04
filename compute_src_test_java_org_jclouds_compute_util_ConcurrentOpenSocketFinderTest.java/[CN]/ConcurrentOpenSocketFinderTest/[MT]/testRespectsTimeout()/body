@@ -1,9 +1,6 @@
 {
   final long timeoutMs=1000;
-  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.4",22))).andReturn(false).times(2,Integer.MAX_VALUE);
-  expect(socketTester.apply(HostAndPort.fromParts("1.2.3.5",22))).andReturn(false).times(2,Integer.MAX_VALUE);
-  replay(socketTester);
-  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,alwaysTrue,threadPool);
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketAlwaysClosed,nodeRunning,threadPool);
   Stopwatch stopwatch=new Stopwatch();
   stopwatch.start();
   try {
@@ -14,5 +11,4 @@
   }
   long timetaken=stopwatch.elapsedMillis();
   assertTrue(timetaken >= timeoutMs - EARLY_GRACE && timetaken <= timeoutMs + SLOW_GRACE,"timetaken=" + timetaken);
-  verify(socketTester);
 }

@@ -1,0 +1,28 @@
+{
+  return new Predicate<Iterable<HostAndPort>>(){
+    @Override public boolean apply(    Iterable<HostAndPort> input){
+      Builder<ListenableFuture<?>> futures=ImmutableList.builder();
+      for (      final HostAndPort socket : input) {
+        futures.add(executor.submit(new Runnable(){
+          @Override public void run(){
+            try {
+              if (socketTester.apply(socket)) {
+                reachableSocket.compareAndSet(null,socket);
+              }
+            }
+ catch (            RuntimeException e) {
+              logger.warn(e,"Error checking reachability of ip:port %s",socket);
+            }
+          }
+        }
+));
+      }
+      blockOn(futures.build());
+      return reachableSocket.get() != null;
+    }
+    @Override public String toString(){
+      return "setAndReturnTrueIfSocketFound()";
+    }
+  }
+;
+}

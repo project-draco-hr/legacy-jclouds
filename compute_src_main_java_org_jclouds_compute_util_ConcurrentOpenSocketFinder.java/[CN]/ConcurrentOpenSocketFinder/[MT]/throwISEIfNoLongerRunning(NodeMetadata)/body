@@ -1,0 +1,14 @@
+{
+  return new Predicate<T>(){
+    @Override public boolean apply(    T input){
+      if (!nodeRunning.apply(newReference(node))) {
+        throw new IllegalStateException(node.getId() + " is no longer running; aborting socket open loop");
+      }
+      return false;
+    }
+    @Override public String toString(){
+      return "throwISEIfNoLongerRunning(" + node.getId() + ")";
+    }
+  }
+;
+}

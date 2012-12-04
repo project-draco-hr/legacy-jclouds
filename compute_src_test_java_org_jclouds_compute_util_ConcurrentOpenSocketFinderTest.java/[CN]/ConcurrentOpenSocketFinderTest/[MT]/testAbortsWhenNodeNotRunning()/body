@@ -1,16 +1,25 @@
 {
-  expect(socketTester.apply(EasyMock.<HostAndPort>anyObject())).andReturn(false);
-  replay(socketTester);
-  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,alwaysFalse,threadPool);
-  Stopwatch stopwatch=new Stopwatch();
-  stopwatch.start();
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketAlwaysClosed,nodeNotRunning,threadPool){
+    @Override protected <T>Predicate<T> retryPredicate(    final Predicate<T> findOrBreak,    long period,    long timeoutValue,    TimeUnit timeUnits){
+      return new Predicate<T>(){
+        @Override public boolean apply(        T input){
+          try {
+            findOrBreak.apply(input);
+            fail("should have thrown IllegalStateException");
+          }
+ catch (          IllegalStateException e) {
+          }
+          return false;
+        }
+      }
+;
+    }
+  }
+;
   try {
     finder.findOpenSocketOnNode(node,22,2000,MILLISECONDS);
     fail();
   }
  catch (  NoSuchElementException e) {
   }
-  long timetaken=stopwatch.elapsedMillis();
-  assertTrue(timetaken <= SLOW_GRACE,"timetaken=" + timetaken);
-  verify(socketTester);
 }
