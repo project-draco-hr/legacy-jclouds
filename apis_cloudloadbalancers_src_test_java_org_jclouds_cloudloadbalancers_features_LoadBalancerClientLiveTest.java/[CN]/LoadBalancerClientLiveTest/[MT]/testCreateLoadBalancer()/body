@@ -1,2 +1,13 @@
 {
+  for (  String zone : client.getConfiguredZones()) {
+    Logger.getAnonymousLogger().info("starting lb in region " + zone);
+    LoadBalancer lb=client.getLoadBalancerClient(zone).createLoadBalancer(LoadBalancerRequest.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(NodeRequest.builder().address("192.168.1.1").port(8080).build()).build());
+    checkLBInRegion(zone,lb,prefix + "-" + zone);
+    assertEquals(lb.getStatus(),LoadBalancer.Status.BUILD);
+    lbs.add(lb);
+    assertTrue(loadBalancerActive.apply(lb));
+    LoadBalancer newLb=client.getLoadBalancerClient(zone).getLoadBalancer(lb.getId());
+    checkLBInRegion(zone,newLb,prefix + "-" + zone);
+    assertEquals(newLb.getStatus(),LoadBalancer.Status.ACTIVE);
+  }
 }
