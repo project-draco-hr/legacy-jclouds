@@ -1,0 +1,10 @@
+{
+  Bundle bundle=createMock(Bundle.class);
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(JcloudsTestBlobStoreProviderMetadata.class);
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(JcloudsTestComputeProviderMetadata.class);
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(JcloudsTestYetAnotherComputeProviderMetadata.class);
+  replay(bundle);
+  Iterable<ProviderMetadata> providers=Bundles.instantiateAvailableClasses(bundle,ImmutableSet.of("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata","org.jclouds.providers.JcloudsTestComputeProviderMetadata","org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata"),ProviderMetadata.class);
+  assertEquals(providers,ImmutableSet.of(new JcloudsTestBlobStoreProviderMetadata(),new JcloudsTestComputeProviderMetadata(),new JcloudsTestYetAnotherComputeProviderMetadata()));
+  verify(bundle);
+}

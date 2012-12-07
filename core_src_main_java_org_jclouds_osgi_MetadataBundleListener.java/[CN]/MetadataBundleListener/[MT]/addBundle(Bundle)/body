@@ -1,0 +1,20 @@
+{
+  for (  ProviderMetadata providerMetadata : listProviderMetadata(bundle)) {
+    if (providerMetadata != null) {
+      ProviderRegistry.registerProvider(providerMetadata);
+      providerMetadataMap.put(bundle.getBundleId(),providerMetadata);
+      for (      ProviderListener listener : providerListeners) {
+        listener.added(providerMetadata);
+      }
+    }
+  }
+  for (  ApiMetadata apiMetadata : listApiMetadata(bundle)) {
+    if (apiMetadata != null) {
+      ApiRegistry.registerApi(apiMetadata);
+      apiMetadataMap.put(bundle.getBundleId(),apiMetadata);
+      for (      ApiListener listener : apiListeners) {
+        listener.added(apiMetadata);
+      }
+    }
+  }
+}

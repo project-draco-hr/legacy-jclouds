@@ -1,0 +1,15 @@
+{
+  checkNotNull(resourcePath,"resourcePath");
+  checkNotNull(bundle,"bundle");
+  URL resource=bundle.getEntry(resourcePath);
+  if (resource == null)   return ImmutableSet.of();
+  try {
+    return ImmutableSet.copyOf(splitOrEmptyAndClose(resource.openStream()));
+  }
+ catch (  IOException e) {
+    return ImmutableSet.of();
+  }
+catch (  RuntimeException ex) {
+    return ImmutableSet.of();
+  }
+}
