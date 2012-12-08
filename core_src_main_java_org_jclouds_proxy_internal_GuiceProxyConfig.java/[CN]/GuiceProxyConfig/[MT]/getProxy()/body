@@ -1,0 +1,17 @@
+{
+  if (host == null)   return Optional.absent();
+  Integer port=this.port;
+  if (port == null) {
+switch (type) {
+case HTTP:
+      port=80;
+    break;
+case SOCKS:
+  port=1080;
+break;
+default :
+throw new IllegalArgumentException(type + " not supported");
+}
+}
+return Optional.of(HostAndPort.fromParts(host,port));
+}
