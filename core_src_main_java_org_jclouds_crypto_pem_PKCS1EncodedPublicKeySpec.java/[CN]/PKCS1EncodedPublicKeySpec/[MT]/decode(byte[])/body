@@ -1,4 +1,12 @@
 {
-  PKCS1EncodedKeySpec privateSpec=new PKCS1EncodedKeySpec(keyBytes);
-  keySpec=new RSAPublicKeySpec(privateSpec.getKeySpec().getModulus(),privateSpec.getKeySpec().getPublicExponent());
+  RSAPublicKeyStructure pks=null;
+  ASN1Sequence seq=(ASN1Sequence)ASN1Object.fromByteArray(keyBytes);
+  try {
+    SubjectPublicKeyInfo info=new SubjectPublicKeyInfo(seq);
+    pks=new RSAPublicKeyStructure((ASN1Sequence)info.getPublicKey());
+  }
+ catch (  IllegalArgumentException ex) {
+    pks=new RSAPublicKeyStructure(seq);
+  }
+  keySpec=new RSAPublicKeySpec(pks.getModulus(),pks.getPublicExponent());
 }

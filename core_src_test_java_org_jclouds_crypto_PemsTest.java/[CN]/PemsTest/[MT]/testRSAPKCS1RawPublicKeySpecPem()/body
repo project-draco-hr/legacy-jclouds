@@ -1,0 +1,10 @@
+{
+  KeySpec spec=Pems.publicKeySpec(Payloads.newStringPayload(PUBLIC_KEY_PKCS1_RAW));
+  String encoded=Pems.pem(KeyFactory.getInstance("RSA").generatePublic(spec));
+  KeySpec generatedSpec=Pems.publicKeySpec(encoded);
+  assertTrue(spec instanceof RSAPublicKeySpec);
+  assertTrue(generatedSpec instanceof RSAPublicKeySpec);
+  assertNotEquals(encoded,PUBLIC_KEY_PKCS1_RAW.replaceAll("\n","\n").trim());
+  assertEquals(RSAPublicKeySpec.class.cast(spec).getModulus(),RSAPublicKeySpec.class.cast(generatedSpec).getModulus());
+  assertEquals(RSAPublicKeySpec.class.cast(spec).getPublicExponent(),RSAPublicKeySpec.class.cast(generatedSpec).getPublicExponent());
+}
