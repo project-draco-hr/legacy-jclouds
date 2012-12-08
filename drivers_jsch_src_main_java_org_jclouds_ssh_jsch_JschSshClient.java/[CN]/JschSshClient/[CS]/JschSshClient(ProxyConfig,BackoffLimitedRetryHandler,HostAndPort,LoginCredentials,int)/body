@@ -12,5 +12,5 @@
     String sha1=sha1PrivateKey(loginCredentials.getPrivateKey());
     this.toString=String.format("%s:rsa[fingerprint(%s),sha1(%s)]@%s:%d",loginCredentials.getUser(),fingerPrint,sha1,host,socket.getPort());
   }
-  sessionConnection=SessionConnection.builder().hostAndPort(HostAndPort.fromParts(host,socket.getPort())).loginCredentials(loginCredentials).connectTimeout(timeout).sessionTimeout(timeout).build();
+  sessionConnection=SessionConnection.builder().hostAndPort(HostAndPort.fromParts(host,socket.getPort())).loginCredentials(loginCredentials).proxy(checkNotNull(proxyConfig,"proxyConfig")).connectTimeout(timeout).sessionTimeout(timeout).build();
 }
