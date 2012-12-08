@@ -4,7 +4,8 @@
   fingerprint=SshKeys.fingerprintPublicKey(key.get("public"));
   cloudApiContext.getApi().getKeyApi().create(Key.builder().name(fingerprint).key(key.get("public")).build());
   api=cloudApiContext.getApi().getMachineApiForDatacenter(Iterables.get(cloudApiContext.getApi().getConfiguredDatacenters(),0));
-  socketTester=retry(new InetSocketAddressConnect(),180,1,1,SECONDS);
+  SocketOpen socketOpen=context.utils().injector().getInstance(SocketOpen.class);
+  socketTester=retry(socketOpen,180,1,1,SECONDS);
   machineRunning=retry(new Predicate<Machine>(){
     public boolean apply(    Machine input){
       return api.get(input.getId()).getState() == Machine.State.RUNNING;
