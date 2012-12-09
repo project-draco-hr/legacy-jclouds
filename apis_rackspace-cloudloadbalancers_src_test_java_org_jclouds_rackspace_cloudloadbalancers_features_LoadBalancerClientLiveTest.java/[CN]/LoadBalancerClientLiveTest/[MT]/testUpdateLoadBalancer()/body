@@ -1,9 +1,0 @@
-{
-  for (  LoadBalancer lb : lbs) {
-    client.getLoadBalancerClient(lb.getRegion()).updateLoadBalancerAttributes(lb.getId(),LoadBalancerAttributes.Builder.name("foo" + "-" + lb.getRegion()));
-    assertTrue(loadBalancerActive.apply(lb));
-    LoadBalancer newLb=client.getLoadBalancerClient(lb.getRegion()).getLoadBalancer(lb.getId());
-    checkLBInRegion(newLb.getRegion(),newLb,"foo" + "-" + lb.getRegion());
-    assertEquals(newLb.getStatus(),LoadBalancer.Status.ACTIVE);
-  }
-}

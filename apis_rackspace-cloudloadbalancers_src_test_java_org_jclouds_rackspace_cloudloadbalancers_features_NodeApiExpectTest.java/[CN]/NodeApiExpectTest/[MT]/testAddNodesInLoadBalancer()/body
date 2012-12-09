@@ -1,0 +1,10 @@
+{
+  URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/nodes");
+  NodeApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("POST").payload(payloadFromResourceWithContentType("/nodes-add.json",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/nodes-list.json")).build()).getNodeApiForZoneAndLoadBalancer("DFW",2000);
+  NodeRequest nodeRequest1=NodeRequest.builder().address("10.1.1.1").condition(NodeRequest.Condition.ENABLED).port(80).weight(3).build();
+  NodeRequest nodeRequest2=NodeRequest.builder().address("10.1.1.2").condition(NodeRequest.Condition.ENABLED).port(80).weight(8).build();
+  NodeRequest nodeRequest3=NodeRequest.builder().address("10.1.1.3").condition(NodeRequest.Condition.DISABLED).port(80).weight(12).build();
+  Set<NodeRequest> nodeRequests=ImmutableSortedSet.<NodeRequest>of(nodeRequest1,nodeRequest2,nodeRequest3);
+  Set<Node> nodes=api.add(nodeRequests);
+  assertEquals(nodes,testNodes());
+}
