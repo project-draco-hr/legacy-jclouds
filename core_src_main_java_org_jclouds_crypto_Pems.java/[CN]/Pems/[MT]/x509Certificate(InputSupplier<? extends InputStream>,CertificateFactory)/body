@@ -2,7 +2,7 @@
   final CertificateFactory finalCertFactory=certFactory != null ? certFactory : CertificateFactory.getInstance("X.509");
   try {
     return fromPem(supplier,new PemProcessor<X509Certificate>(ImmutableMap.<String,ResultParser<X509Certificate>>of(CERTIFICATE_X509_MARKER,new ResultParser<X509Certificate>(){
-      public X509Certificate parseResult(      byte[] bytes) throws IOException {
+      @Override public X509Certificate parseResult(      byte[] bytes) throws IOException {
         try {
           return (X509Certificate)finalCertFactory.generateCertificate(new ByteArrayInputStream(bytes));
         }
