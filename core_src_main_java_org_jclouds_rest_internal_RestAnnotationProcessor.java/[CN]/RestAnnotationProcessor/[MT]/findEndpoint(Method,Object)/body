@@ -1,0 +1,23 @@
+{
+  ClassMethodArgs cma=logger.isTraceEnabled() ? new ClassMethodArgs(method.getDeclaringClass(),method,args) : null;
+  Optional<URI> endpoint=Optional.absent();
+  HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
+  if (r != null) {
+    endpoint=Optional.fromNullable(r.getEndpoint());
+    if (endpoint.isPresent())     logger.trace("using endpoint %s from args for %s",endpoint,cma);
+  }
+  if (!endpoint.isPresent() && caller != null) {
+    endpoint=getEndpointFor(caller.getMethod(),caller.getArgs());
+    if (endpoint.isPresent())     logger.trace("using endpoint %s from caller %s for %s",endpoint,caller,cma);
+  }
+  if (!endpoint.isPresent()) {
+    endpoint=getEndpointFor(method,args);
+    if (endpoint.isPresent())     logger.trace("using endpoint %s for %s",endpoint,cma);
+  }
+  if (!endpoint.isPresent()) {
+    logger.trace("looking up default endpoint for %s",cma);
+    endpoint=Optional.fromNullable(injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get());
+    if (endpoint.isPresent())     logger.trace("using default endpoint %s for %s",endpoint,cma);
+  }
+  return endpoint;
+}

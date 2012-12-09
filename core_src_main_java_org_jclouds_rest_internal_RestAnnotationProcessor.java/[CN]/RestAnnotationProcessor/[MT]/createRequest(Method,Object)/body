@@ -1,39 +1,25 @@
 {
   inputParamValidator.validateMethodParametersOrThrow(method,args);
-  ClassMethodArgs cma=logger.isTraceEnabled() ? new ClassMethodArgs(method.getDeclaringClass(),method,args) : null;
-  URI endpoint=callerEndpoint;
-  try {
-    if (endpoint == null) {
-      endpoint=getEndpointFor(method,args,injector);
-      logger.trace("using endpoint %s for %s",endpoint,cma);
-    }
- else {
-      logger.trace("using endpoint %s from caller %s for %s",caller,endpoint,cma);
-    }
-  }
- catch (  IllegalStateException e) {
-    logger.trace("looking up default endpoint for %s",cma);
-    endpoint=injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get();
-    logger.trace("using default endpoint %s for %s",endpoint,cma);
-  }
-  GeneratedHttpRequest.Builder<?> requestBuilder;
-  HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
-  if (r != null) {
-    requestBuilder=GeneratedHttpRequest.builder().fromHttpRequest(r);
-    endpoint=r.getEndpoint();
-  }
- else {
-    requestBuilder=GeneratedHttpRequest.builder();
-    requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
-  }
-  if (endpoint == null) {
+  Optional<URI> endpoint=findEndpoint(method,args);
+  if (!endpoint.isPresent()) {
     throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
   }
+  GeneratedHttpRequest.Builder<?> requestBuilder=GeneratedHttpRequest.builder();
+  HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
+  if (r != null) {
+    requestBuilder.fromHttpRequest(r);
+  }
+ else {
+    requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
+  }
   requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).skips(skips).filters(getFiltersIfAnnotated(method));
-  UriBuilder builder=uriBuilderProvider.get().uri(endpoint);
+  UriBuilder builder=uriBuilderProvider.get().uri(endpoint.get());
   Multimap<String,String> tokenValues=LinkedHashMultimap.create();
   tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
   tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
+  if (caller != null) {
+    tokenValues.putAll(addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),builder));
+  }
   tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
   Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
   Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
@@ -41,8 +27,8 @@
   Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
   if (r != null)   headers.putAll(r.getHeaders());
   if (shouldAddHostHeader(method)) {
-    StringBuilder hostHeader=new StringBuilder(endpoint.getHost());
-    if (endpoint.getPort() != -1)     hostHeader.append(":").append(endpoint.getPort());
+    StringBuilder hostHeader=new StringBuilder(endpoint.get().getHost());
+    if (endpoint.get().getPort() != -1)     hostHeader.append(":").append(endpoint.get().getPort());
     headers.put(HOST,hostHeader.toString());
   }
   Payload payload=null;
