@@ -1,11 +1,11 @@
 {
   return fromPem(supplier,new PemProcessor<KeySpec>(ImmutableMap.<String,ResultParser<KeySpec>>of(PUBLIC_PKCS1_MARKER,new ResultParser<KeySpec>(){
-    public KeySpec parseResult(    byte[] bytes) throws IOException {
-      return (new PKCS1EncodedPublicKeySpec(bytes)).getKeySpec();
+    @Override public KeySpec parseResult(    byte[] bytes) throws IOException {
+      return new PKCS1EncodedPublicKeySpec(bytes).getKeySpec();
     }
   }
 ,PUBLIC_X509_MARKER,new ResultParser<KeySpec>(){
-    public X509EncodedKeySpec parseResult(    byte[] bytes) throws IOException {
+    @Override public X509EncodedKeySpec parseResult(    byte[] bytes) throws IOException {
       return new X509EncodedKeySpec(bytes);
     }
   }
