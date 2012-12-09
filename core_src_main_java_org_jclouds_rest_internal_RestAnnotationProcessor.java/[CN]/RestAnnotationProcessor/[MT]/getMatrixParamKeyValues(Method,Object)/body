@@ -1,10 +1,10 @@
 {
   Multimap<String,String> matrixParamValues=LinkedHashMultimap.create();
-  LoadingCache<Integer,Set<Annotation>> indexToMatrixParam=methodToIndexOfParamToMatrixParamAnnotations.get(method);
-  LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.get(method);
+  LoadingCache<Integer,Set<Annotation>> indexToMatrixParam=methodToIndexOfParamToMatrixParamAnnotations.getUnchecked(method);
+  LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.getUnchecked(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToMatrixParam.asMap().entrySet()) {
     for (    Annotation key : entry.getValue()) {
-      Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());
+      Set<Annotation> extractors=indexToParamExtractor.getUnchecked(entry.getKey());
       String paramKey=((MatrixParam)key).value();
       Optional<?> paramValue=getParamValue(method,args,extractors,entry,paramKey);
       if (paramValue.isPresent())       matrixParamValues.put(paramKey,paramValue.get().toString());

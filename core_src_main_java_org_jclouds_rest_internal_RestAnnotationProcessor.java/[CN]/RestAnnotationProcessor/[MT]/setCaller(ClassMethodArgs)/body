@@ -1,10 +1,5 @@
 {
-  try {
-    seedAnnotationCache.get(caller.getMethod().getDeclaringClass());
-  }
- catch (  ExecutionException e) {
-    Throwables.propagate(e);
-  }
+  seedAnnotationCache.getUnchecked(caller.getMethod().getDeclaringClass());
   this.caller=caller;
   try {
     UriBuilder builder=uriBuilderProvider.get().uri(getEndpointFor(caller.getMethod(),caller.getArgs(),injector));
@@ -12,8 +7,5 @@
     callerEndpoint=builder.buildFromEncodedMap(Maps2.convertUnsafe(tokenValues));
   }
  catch (  IllegalStateException e) {
-  }
-catch (  ExecutionException e) {
-    Throwables.propagate(e);
   }
 }

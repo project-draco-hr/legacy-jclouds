@@ -1,7 +1,7 @@
 {
   Multimap<String,String> headers=LinkedHashMultimap.create();
   addHeaderIfAnnotationPresentOnMethod(headers,method,tokenValues);
-  LoadingCache<Integer,Set<Annotation>> indexToHeaderParam=methodToIndexOfParamToHeaderParamAnnotations.get(method);
+  LoadingCache<Integer,Set<Annotation>> indexToHeaderParam=methodToIndexOfParamToHeaderParamAnnotations.getUnchecked(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToHeaderParam.asMap().entrySet()) {
     for (    Annotation key : entry.getValue()) {
       String value=args[entry.getKey()].toString();
