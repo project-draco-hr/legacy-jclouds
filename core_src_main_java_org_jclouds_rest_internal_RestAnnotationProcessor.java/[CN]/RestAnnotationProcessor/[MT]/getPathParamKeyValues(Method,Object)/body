@@ -1,10 +1,10 @@
 {
   Multimap<String,String> pathParamValues=LinkedHashMultimap.create();
-  LoadingCache<Integer,Set<Annotation>> indexToPathParam=methodToIndexOfParamToPathParamAnnotations.get(method);
-  LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.get(method);
+  LoadingCache<Integer,Set<Annotation>> indexToPathParam=methodToIndexOfParamToPathParamAnnotations.getUnchecked(method);
+  LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.getUnchecked(method);
   for (  Entry<Integer,Set<Annotation>> entry : indexToPathParam.asMap().entrySet()) {
     for (    Annotation key : entry.getValue()) {
-      Set<Annotation> extractors=indexToParamExtractor.get(entry.getKey());
+      Set<Annotation> extractors=indexToParamExtractor.getUnchecked(entry.getKey());
       String paramKey=((PathParam)key).value();
       Optional<?> paramValue=getParamValue(method,args,extractors,entry,paramKey);
       if (paramValue.isPresent())       pathParamValues.put(paramKey,paramValue.get().toString());

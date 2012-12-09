@@ -1,127 +1,108 @@
 {
+  inputParamValidator.validateMethodParametersOrThrow(method,args);
+  Optional<URI> endpoint=findEndpoint(method,args);
+  if (!endpoint.isPresent()) {
+    throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
+  }
+  GeneratedHttpRequest.Builder<?> requestBuilder=GeneratedHttpRequest.builder();
+  HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
+  if (r != null) {
+    requestBuilder.fromHttpRequest(r);
+  }
+ else {
+    requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
+  }
+  requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).skips(skips).filters(getFiltersIfAnnotated(method));
+  UriBuilder builder=uriBuilderProvider.get().uri(endpoint.get());
+  Multimap<String,String> tokenValues=LinkedHashMultimap.create();
+  tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
+  tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
+  if (caller != null) {
+    tokenValues.putAll(addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),builder));
+  }
+  tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
+  Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
+  Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
+  Multimap<String,String> matrixParams=addMatrixParams(tokenValues.entries(),method,args);
+  Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
+  if (r != null)   headers.putAll(r.getHeaders());
+  if (shouldAddHostHeader(method)) {
+    StringBuilder hostHeader=new StringBuilder(endpoint.get().getHost());
+    if (endpoint.get().getPort() != -1)     hostHeader.append(":").append(endpoint.get().getPort());
+    headers.put(HOST,hostHeader.toString());
+  }
+  Payload payload=null;
+  for (  HttpRequestOptions options : findOptionsIn(method,args)) {
+    injector.injectMembers(options);
+    for (    Entry<String,String> header : options.buildRequestHeaders().entries()) {
+      headers.put(header.getKey(),Strings2.replaceTokens(header.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
+      matrixParams.put(matrix.getKey(),Strings2.replaceTokens(matrix.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
+      queryParams.put(query.getKey(),Strings2.replaceTokens(query.getValue(),tokenValues.entries()));
+    }
+    for (    Entry<String,String> form : options.buildFormParameters().entries()) {
+      formParams.put(form.getKey(),Strings2.replaceTokens(form.getValue(),tokenValues.entries()));
+    }
+    String pathSuffix=options.buildPathSuffix();
+    if (pathSuffix != null) {
+      builder.path(pathSuffix);
+    }
+    String stringPayload=options.buildStringPayload();
+    if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
+  }
+  if (matrixParams.size() > 0) {
+    for (    String key : matrixParams.keySet())     builder.matrixParam(key,Lists.newArrayList(matrixParams.get(key)).toArray());
+  }
+  if (queryParams.size() > 0) {
+    builder.replaceQuery(Queries.makeQueryLine(queryParams,null,skips));
+  }
+  requestBuilder.headers(filterOutContentHeaders(headers));
   try {
-    inputParamValidator.validateMethodParametersOrThrow(method,args);
-    ClassMethodArgs cma=logger.isTraceEnabled() ? new ClassMethodArgs(method.getDeclaringClass(),method,args) : null;
-    URI endpoint=callerEndpoint;
-    try {
-      if (endpoint == null) {
-        endpoint=getEndpointFor(method,args,injector);
-        logger.trace("using endpoint %s for %s",endpoint,cma);
-      }
- else {
-        logger.trace("using endpoint %s from caller %s for %s",caller,endpoint,cma);
-      }
-    }
- catch (    IllegalStateException e) {
-      logger.trace("looking up default endpoint for %s",cma);
-      endpoint=injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get();
-      logger.trace("using default endpoint %s for %s",endpoint,cma);
-    }
-    GeneratedHttpRequest.Builder<?> requestBuilder;
-    HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
-    if (r != null) {
-      requestBuilder=GeneratedHttpRequest.builder().fromHttpRequest(r);
-      endpoint=r.getEndpoint();
-    }
- else {
-      requestBuilder=GeneratedHttpRequest.builder();
-      requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
-    }
-    if (endpoint == null) {
-      throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
-    }
-    requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).skips(skips).filters(getFiltersIfAnnotated(method));
-    UriBuilder builder=uriBuilderProvider.get().uri(endpoint);
-    Multimap<String,String> tokenValues=LinkedHashMultimap.create();
-    tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
-    tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
-    tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
-    Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
-    Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
-    Multimap<String,String> matrixParams=addMatrixParams(tokenValues.entries(),method,args);
-    Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
-    if (r != null)     headers.putAll(r.getHeaders());
-    if (shouldAddHostHeader(method)) {
-      StringBuilder hostHeader=new StringBuilder(endpoint.getHost());
-      if (endpoint.getPort() != -1)       hostHeader.append(":").append(endpoint.getPort());
-      headers.put(HOST,hostHeader.toString());
-    }
-    Payload payload=null;
-    for (    HttpRequestOptions options : findOptionsIn(method,args)) {
-      injector.injectMembers(options);
-      for (      Entry<String,String> header : options.buildRequestHeaders().entries()) {
-        headers.put(header.getKey(),Strings2.replaceTokens(header.getValue(),tokenValues.entries()));
-      }
-      for (      Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
-        matrixParams.put(matrix.getKey(),Strings2.replaceTokens(matrix.getValue(),tokenValues.entries()));
-      }
-      for (      Entry<String,String> query : options.buildQueryParameters().entries()) {
-        queryParams.put(query.getKey(),Strings2.replaceTokens(query.getValue(),tokenValues.entries()));
-      }
-      for (      Entry<String,String> form : options.buildFormParameters().entries()) {
-        formParams.put(form.getKey(),Strings2.replaceTokens(form.getValue(),tokenValues.entries()));
-      }
-      String pathSuffix=options.buildPathSuffix();
-      if (pathSuffix != null) {
-        builder.path(pathSuffix);
-      }
-      String stringPayload=options.buildStringPayload();
-      if (stringPayload != null)       payload=Payloads.newStringPayload(stringPayload);
-    }
-    if (matrixParams.size() > 0) {
-      for (      String key : matrixParams.keySet())       builder.matrixParam(key,Lists.newArrayList(matrixParams.get(key)).toArray());
-    }
-    if (queryParams.size() > 0) {
-      builder.replaceQuery(Queries.makeQueryLine(queryParams,null,skips));
-    }
-    requestBuilder.headers(filterOutContentHeaders(headers));
-    try {
-      requestBuilder.endpoint(builder.buildFromEncodedMap(Maps2.convertUnsafe(tokenValues)));
-    }
- catch (    IllegalArgumentException e) {
-      throw new IllegalStateException(e);
-    }
-catch (    UriBuilderException e) {
-      throw new IllegalStateException(e);
-    }
-    if (payload == null)     payload=findPayloadInArgs(args);
-    List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
-    if (parts.size() > 0) {
-      if (formParams.size() > 0) {
-        parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
-      }
-      payload=new MultipartForm(BOUNDARY,parts);
-    }
- else     if (formParams.size() > 0) {
-      payload=Payloads.newUrlEncodedFormPayload(formParams,skips);
-    }
- else     if (headers.containsKey(CONTENT_TYPE)) {
-      if (payload == null)       payload=Payloads.newByteArrayPayload(new byte[]{});
-      payload.getContentMetadata().setContentType(Iterables.get(headers.get(CONTENT_TYPE),0));
-    }
-    if (payload != null) {
-      requestBuilder.payload(payload);
-    }
-    GeneratedHttpRequest request=requestBuilder.build();
-    org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(method,args);
-    if (mapBinder != null) {
-      Map<String,Object> mapParams=buildPostParams(method,args);
-      if (method.isAnnotationPresent(PayloadParams.class)) {
-        PayloadParams params=method.getAnnotation(PayloadParams.class);
-        addMapPayload(mapParams,params,headers.entries());
-      }
-      request=mapBinder.bindToRequest(request,mapParams);
-    }
- else {
-      request=decorateRequest(request);
-    }
-    if (request.getPayload() != null) {
-      contentMetadataCodec.fromHeaders(request.getPayload().getContentMetadata(),headers);
-    }
-    utils.checkRequestHasRequiredProperties(request);
-    return request;
+    requestBuilder.endpoint(builder.buildFromEncodedMap(Maps2.convertUnsafe(tokenValues)));
   }
- catch (  ExecutionException e) {
-    throw Throwables.propagate(e);
+ catch (  IllegalArgumentException e) {
+    throw new IllegalStateException(e);
   }
+catch (  UriBuilderException e) {
+    throw new IllegalStateException(e);
+  }
+  if (payload == null)   payload=findPayloadInArgs(args);
+  List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
+  if (parts.size() > 0) {
+    if (formParams.size() > 0) {
+      parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
+    }
+    payload=new MultipartForm(BOUNDARY,parts);
+  }
+ else   if (formParams.size() > 0) {
+    payload=Payloads.newUrlEncodedFormPayload(formParams,skips);
+  }
+ else   if (headers.containsKey(CONTENT_TYPE)) {
+    if (payload == null)     payload=Payloads.newByteArrayPayload(new byte[]{});
+    payload.getContentMetadata().setContentType(Iterables.get(headers.get(CONTENT_TYPE),0));
+  }
+  if (payload != null) {
+    requestBuilder.payload(payload);
+  }
+  GeneratedHttpRequest request=requestBuilder.build();
+  org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(method,args);
+  if (mapBinder != null) {
+    Map<String,Object> mapParams=buildPostParams(method,args);
+    if (method.isAnnotationPresent(PayloadParams.class)) {
+      PayloadParams params=method.getAnnotation(PayloadParams.class);
+      addMapPayload(mapParams,params,headers.entries());
+    }
+    request=mapBinder.bindToRequest(request,mapParams);
+  }
+ else {
+    request=decorateRequest(request);
+  }
+  if (request.getPayload() != null) {
+    contentMetadataCodec.fromHeaders(request.getPayload().getContentMetadata(),headers);
+  }
+  utils.checkRequestHasRequiredProperties(request);
+  return request;
 }

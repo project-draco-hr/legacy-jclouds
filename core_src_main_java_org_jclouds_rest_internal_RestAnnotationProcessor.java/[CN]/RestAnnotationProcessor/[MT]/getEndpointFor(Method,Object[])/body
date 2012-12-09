@@ -9,10 +9,11 @@
       annotation=method.getDeclaringClass().getAnnotation(Endpoint.class);
     }
  else {
-      throw new IllegalStateException("no annotations on class or method: " + method);
+      logger.trace("no annotations on class or method: %s",method);
+      return Optional.absent();
     }
     endpoint=injector.getInstance(Key.get(uriSupplierLiteral,annotation.value())).get();
   }
   URI providerEndpoint=injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get();
-  return addHostIfMissing(endpoint,providerEndpoint);
+  return Optional.fromNullable(addHostIfMissing(endpoint,providerEndpoint));
 }
