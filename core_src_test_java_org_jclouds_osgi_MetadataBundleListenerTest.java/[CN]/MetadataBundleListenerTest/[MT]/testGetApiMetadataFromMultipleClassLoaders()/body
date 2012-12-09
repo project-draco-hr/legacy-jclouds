@@ -7,7 +7,7 @@
   expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(JcloudsTestComputeApiMetadata.class).anyTimes();
   expect(bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(JcloudsTestYetAnotherComputeApiMetadata.class).anyTimes();
   replay(bundle);
-  List<ApiMetadata> apiMetadataList=listener.getApiMetadata(bundle);
+  List<ApiMetadata> apiMetadataList=Lists.newArrayList(listener.listApiMetadata(bundle));
   assertNotNull(apiMetadataList);
   assertEquals(2,apiMetadataList.size());
   assertFalse(apiMetadataList.contains(new JcloudsTestBlobStoreApiMetadata()));

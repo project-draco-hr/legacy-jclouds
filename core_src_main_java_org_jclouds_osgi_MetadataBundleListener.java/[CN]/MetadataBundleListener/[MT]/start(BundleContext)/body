@@ -2,20 +2,8 @@
   bundleContext.addBundleListener(this);
   for (  Bundle bundle : bundleContext.getBundles()) {
     if (bundle.getState() == Bundle.ACTIVE) {
-      List<ProviderMetadata> providerMetadataList=getProviderMetadata(bundle);
-      List<ApiMetadata> apiMetadataList=getApiMetadata(bundle);
-      for (      ProviderMetadata providerMetadata : providerMetadataList) {
-        if (providerMetadata != null) {
-          ProviderRegistry.registerProvider(providerMetadata);
-          providerMetadataMap.put(bundle.getBundleId(),providerMetadata);
-        }
-      }
-      for (      ApiMetadata apiMetadata : apiMetadataList) {
-        if (apiMetadata != null) {
-          ApiRegistry.registerApi(apiMetadata);
-          apiMetadataMap.put(bundle.getBundleId(),apiMetadata);
-        }
-      }
+      addBundle(bundle);
     }
   }
+  bundleContext.addBundleListener(this);
 }

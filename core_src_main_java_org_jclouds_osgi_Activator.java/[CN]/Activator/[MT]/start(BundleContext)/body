@@ -1,4 +1,37 @@
 {
   bundleListener.start(context);
-  context.addBundleListener(bundleListener);
+  providerListenerTracker=new ServiceTracker(context,ProviderListener.class.getName(),null){
+    @Override public Object addingService(    ServiceReference reference){
+      Object obj=super.addingService(reference);
+      if (ProviderListener.class.isAssignableFrom(obj.getClass())) {
+        bundleListener.addProviderListener((ProviderListener)obj);
+      }
+      return obj;
+    }
+    @Override public void removedService(    ServiceReference reference,    Object service){
+      if (ProviderListener.class.isAssignableFrom(service.getClass())) {
+        bundleListener.removeProviderListener((ProviderListener)service);
+      }
+      super.removedService(reference,service);
+    }
+  }
+;
+  apiListenerTracker=new ServiceTracker(context,ApiListener.class.getName(),null){
+    @Override public Object addingService(    ServiceReference reference){
+      Object obj=super.addingService(reference);
+      if (ApiListener.class.isAssignableFrom(obj.getClass())) {
+        bundleListener.addApiListenerListener((ApiListener)obj);
+      }
+      return obj;
+    }
+    @Override public void removedService(    ServiceReference reference,    Object service){
+      if (ApiListener.class.isAssignableFrom(service.getClass())) {
+        bundleListener.removeApiListenerListener((ApiListener)service);
+      }
+      super.removedService(reference,service);
+    }
+  }
+;
+  providerListenerTracker.open();
+  apiListenerTracker.open();
 }

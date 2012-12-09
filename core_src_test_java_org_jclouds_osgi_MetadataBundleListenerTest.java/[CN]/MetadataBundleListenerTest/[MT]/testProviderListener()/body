@@ -1,0 +1,22 @@
+{
+  MetadataBundleListener listener=new MetadataBundleListener();
+  ProviderListener providerListener=createMock(ProviderListener.class);
+  listener.addProviderListener(providerListener);
+  Bundle bundle=createMock(Bundle.class);
+  expect(bundle.getBundleId()).andReturn(10L).anyTimes();
+  expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(getClass().getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata")).anyTimes();
+  expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(null).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(JcloudsTestBlobStoreProviderMetadata.class).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(JcloudsTestComputeProviderMetadata.class).anyTimes();
+  expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
+  providerListener.added(anyObject(JcloudsTestBlobStoreProviderMetadata.class));
+  expectLastCall().times(1);
+  providerListener.added(anyObject(JcloudsTestComputeProviderMetadata.class));
+  expectLastCall().times(1);
+  providerListener.added(anyObject(JcloudsTestYetAnotherComputeProviderMetadata.class));
+  expectLastCall().times(1);
+  replay(bundle,providerListener);
+  BundleEvent event=new BundleEvent(BundleEvent.STARTED,bundle);
+  listener.bundleChanged(event);
+  verify(bundle,providerListener);
+}

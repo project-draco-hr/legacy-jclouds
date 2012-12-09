@@ -1,0 +1,17 @@
+{
+  checkNotNull(bundle,"bundle");
+  checkNotNull(clazz,"clazz");
+  return new Function<String,Class<?>>(){
+    @Override public Class<?> apply(    String in){
+      checkNotNull(in,"classname");
+      try {
+        Class<?> thing=bundle.loadClass(in);
+        if (clazz.isAssignableFrom(thing))         return thing.asSubclass(clazz);
+      }
+ catch (      ClassNotFoundException e) {
+      }
+      return null;
+    }
+  }
+;
+}

@@ -7,7 +7,7 @@
   expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(JcloudsTestComputeProviderMetadata.class).anyTimes();
   expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
   replay(bundle);
-  List<ProviderMetadata> providerMetadataList=listener.getProviderMetadata(bundle);
+  List<ProviderMetadata> providerMetadataList=Lists.newArrayList(listener.listProviderMetadata(bundle));
   assertNotNull(providerMetadataList);
   assertEquals(2,providerMetadataList.size());
   assertFalse(providerMetadataList.contains(new JcloudsTestBlobStoreProviderMetadata()));

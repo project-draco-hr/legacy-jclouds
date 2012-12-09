@@ -1,0 +1,14 @@
+{
+  for (  ProviderMetadata providerMetadata : providerMetadataMap.removeAll(bundle.getBundleId())) {
+    ProviderRegistry.unregisterProvider(providerMetadata);
+    for (    ProviderListener listener : providerListeners) {
+      listener.removed(providerMetadata);
+    }
+  }
+  for (  ApiMetadata apiMetadata : apiMetadataMap.removeAll(bundle.getBundleId())) {
+    ApiRegistry.unRegisterApi(apiMetadata);
+    for (    ApiListener listener : apiListeners) {
+      listener.removed(apiMetadata);
+    }
+  }
+}
