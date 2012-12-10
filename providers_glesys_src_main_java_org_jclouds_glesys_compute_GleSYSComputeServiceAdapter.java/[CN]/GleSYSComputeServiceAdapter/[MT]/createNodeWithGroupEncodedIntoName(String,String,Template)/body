@@ -17,9 +17,9 @@
   builder.memorySizeMB(template.getHardware().getRam());
   builder.diskSizeGB(Math.round(template.getHardware().getVolumes().get(0).getSize()));
   builder.cpuCores((int)template.getHardware().getProcessors().get(0).getCores());
-  builder.transferGB(50);
+  builder.transferGB(templateOptions.getTransferGB());
   ServerSpec spec=builder.build();
-  String password=passwordProvider.get();
+  String password=templateOptions.hasRootPassword() ? templateOptions.getRootPassword() : getRandomPassword();
   logger.debug(">> creating new Server spec(%s) name(%s) options(%s)",spec,name,createServerOptions);
   ServerDetails result=api.getServerApi().createWithHostnameAndRootPassword(spec,name,password,createServerOptions);
   logger.trace("<< server(%s)",result.getId());
