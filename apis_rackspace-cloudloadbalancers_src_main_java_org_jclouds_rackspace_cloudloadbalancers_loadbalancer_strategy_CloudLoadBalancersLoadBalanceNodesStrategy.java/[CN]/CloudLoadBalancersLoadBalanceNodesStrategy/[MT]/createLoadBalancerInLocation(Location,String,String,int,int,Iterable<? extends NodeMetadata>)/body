@@ -1,6 +1,6 @@
 {
   String region=checkNotNull(location,"location").getId();
-  LoadBalancer lb=client.getLoadBalancerClient(region).createLoadBalancer(LoadBalancerRequest.builder().name(name).protocol(protocol.toUpperCase()).port(loadBalancerPort).virtualIPType(Type.PUBLIC).nodes(Iterables.transform(nodes,new Function<NodeMetadata,NodeRequest>(){
+  LoadBalancer lb=client.getLoadBalancerApiForZone(region).create(LoadBalancerRequest.builder().name(name).protocol(protocol.toUpperCase()).port(loadBalancerPort).virtualIPType(Type.PUBLIC).nodes(Iterables.transform(nodes,new Function<NodeMetadata,NodeRequest>(){
     @Override public NodeRequest apply(    NodeMetadata arg0){
       return NodeRequest.builder().address(Iterables.get(arg0.getPrivateAddresses(),0)).port(instancePort).build();
     }

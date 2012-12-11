@@ -1,11 +1,6 @@
 {
   if (this == obj)   return true;
-  if (obj == null)   return false;
-  if (getClass() != obj.getClass())   return false;
-  BaseLoadBalancer<?,?> other=(BaseLoadBalancer<?,?>)obj;
-  if (name == null) {
-    if (other.name != null)     return false;
-  }
- else   if (!name.equals(other.name))   return false;
-  return true;
+  if (obj == null || getClass() != obj.getClass())   return false;
+  LoadBalancer that=LoadBalancer.class.cast(obj);
+  return Objects.equal(this.name,that.name);
 }
