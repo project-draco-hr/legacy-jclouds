@@ -1,0 +1,11 @@
+{
+  if (!(in instanceof HttpResponseException))   return null;
+  HttpResponse response=HttpResponseException.class.cast(in).getResponse();
+  if (response == null)   return null;
+  String retryAfter=response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER);
+  if (retryAfter != null) {
+    Optional<RetryAfterException> retryException=tryCreateRetryAfterException(in,retryAfter);
+    if (retryException.isPresent())     throw retryException.get();
+  }
+  return null;
+}

@@ -1,0 +1,13 @@
+{
+  checkNotNull(in,"throwable");
+  checkNotNull(retryAfter,"retryAfter");
+  if (retryAfter.matches("^[0-9]+$"))   return Optional.of(new RetryAfterException(in,Integer.parseInt(retryAfter)));
+  try {
+    long retryTimeMillis=dateCodec.toDate(retryAfter).getTime();
+    long currentTimeMillis=NANOSECONDS.toMillis(ticker.read());
+    return Optional.of(new RetryAfterException(in,(int)MILLISECONDS.toSeconds(retryTimeMillis - currentTimeMillis)));
+  }
+ catch (  IllegalArgumentException e) {
+  }
+  return Optional.absent();
+}
