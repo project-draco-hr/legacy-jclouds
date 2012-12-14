@@ -1,7 +1,7 @@
 {
   HttpRequest authenticate=HttpRequest.builder().method("POST").endpoint("http://localhost:5000/v2.0/tokens").addHeader("Accept","application/json").payload(payloadFromStringWithContentType("{\"auth\":{\"passwordCredentials\":{\"username\":\"identity\",\"password\":\"credential\"}}}","application/json")).build();
   HttpResponse authenticationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/keystoneAuthResponse.json","application/json")).build();
-  HttpRequest temporaryKeyRequest=HttpRequest.builder().method("HEAD").endpoint("https://objects.jclouds.org/v1.0/40806637803162/").addHeader("X-Auth-Token","Auth_4f173437e4b013bee56d1007").build();
+  HttpRequest temporaryKeyRequest=HttpRequest.builder().method("HEAD").endpoint("https://objects.jclouds.org/v1.0/40806637803162/").addHeader("Accept",MediaType.WILDCARD).addHeader("X-Auth-Token","Auth_4f173437e4b013bee56d1007").build();
   HttpResponse temporaryKeyResponse=HttpResponse.builder().statusCode(200).addHeader(ACCOUNT_TEMPORARY_URL_KEY,"TEMPORARY_KEY").build();
   return ImmutableMap.<HttpRequest,HttpResponse>builder().put(authenticate,authenticationResponse).put(temporaryKeyRequest,temporaryKeyResponse).build();
 }
