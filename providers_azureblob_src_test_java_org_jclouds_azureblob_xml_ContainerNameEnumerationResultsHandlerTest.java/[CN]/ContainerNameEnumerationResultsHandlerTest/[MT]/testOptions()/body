@@ -2,6 +2,6 @@
   InputStream is=getClass().getResourceAsStream("/test_list_blobs_options.xml");
   Set<BlobProperties> contents=ImmutableSet.<BlobProperties>of(new BlobPropertiesImpl(BlobType.BLOCK_BLOB,"a","adriancole-blobstore3",URI.create("https://jclouds.blob.core.windows.net/adriancole-blobstore3/a"),dateService.rfc822DateParse("Sat, 30 Jan 2010 17:46:15 GMT"),"0x8CC6FEB41736428",8,"application/octet-stream",null,null,null,null,LeaseStatus.UNLOCKED,ImmutableMap.<String,String>of()));
   ListBlobsResponse list=new HashSetListBlobsResponse(contents,URI.create("https://jclouds.blob.core.windows.net/adriancole-blobstore3"),null,null,1,"2!68!MDAwMDA2IWFwcGxlcyEwMDAwMjghOTk5OS0xMi0zMVQyMzo1OTo1OS45OTk5OTk5WiE-","/",Sets.<String>newTreeSet());
-  ListBlobsResponse result=(ListBlobsResponse)factory.create(injector.getInstance(ContainerNameEnumerationResultsHandler.class)).parse(is);
+  ListBlobsResponse result=factory.create(injector.getInstance(ContainerNameEnumerationResultsHandler.class)).parse(is);
   assertEquals(result,list);
 }
