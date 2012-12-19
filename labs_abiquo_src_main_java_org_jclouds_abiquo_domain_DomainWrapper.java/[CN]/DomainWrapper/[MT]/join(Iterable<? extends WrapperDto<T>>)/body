@@ -1,7 +1,8 @@
 {
-  List<T> dtos=Lists.newLinkedList();
-  for (  WrapperDto<T> wrapper : collection) {
-    dtos.addAll(wrapper.getCollection());
+  return concat(transform(collection,new Function<WrapperDto<T>,Collection<T>>(){
+    @Override public Collection<T> apply(    WrapperDto<T> input){
+      return input.getCollection();
+    }
   }
-  return dtos;
+));
 }

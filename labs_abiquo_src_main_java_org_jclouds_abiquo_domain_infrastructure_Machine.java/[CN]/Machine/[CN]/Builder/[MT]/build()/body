@@ -6,7 +6,6 @@
   dto.setVirtualRamUsedInMb(virtualRamUsedInMb);
   dto.setVirtualCpuCores(virtualCpuCores);
   dto.setVirtualCpusUsed(virtualCpusUsed);
-  dto.setVirtualSwitch(virtualSwitch);
   if (port != null) {
     dto.setPort(port);
   }
@@ -25,6 +24,9 @@
   DatastoresDto datastoresDto=new DatastoresDto();
   datastoresDto.getCollection().addAll(unwrap(datastores));
   dto.setDatastores(datastoresDto);
+  NetworkInterfacesDto networkInterfacesDto=new NetworkInterfacesDto();
+  networkInterfacesDto.getCollection().addAll(unwrap(networkInterfaces));
+  dto.setNetworkInterfaces(networkInterfacesDto);
   Machine machine=new Machine(context,dto);
   machine.rack=rack;
   return machine;

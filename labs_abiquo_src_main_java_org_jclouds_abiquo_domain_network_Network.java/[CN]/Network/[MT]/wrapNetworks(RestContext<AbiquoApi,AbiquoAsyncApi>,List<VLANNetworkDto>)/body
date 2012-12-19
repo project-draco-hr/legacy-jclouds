@@ -1,7 +1,8 @@
 {
-  List<Network<?>> networks=Lists.newLinkedList();
-  for (  VLANNetworkDto dto : dtos) {
-    networks.add(wrapNetwork(context,dto));
+  return ImmutableList.copyOf(transform(dtos,new Function<VLANNetworkDto,Network<?>>(){
+    @Override public Network<?> apply(    VLANNetworkDto input){
+      return wrapNetwork(context,input);
+    }
   }
-  return networks;
+));
 }

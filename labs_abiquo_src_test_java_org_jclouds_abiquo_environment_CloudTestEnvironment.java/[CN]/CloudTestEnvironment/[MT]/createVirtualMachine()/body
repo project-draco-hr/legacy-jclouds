@@ -1,13 +1,14 @@
 {
   List<VirtualMachineTemplate> templates=virtualDatacenter.listAvailableTemplates();
   assertFalse(templates.isEmpty());
-  Collections.sort(templates,new Ordering<VirtualMachineTemplate>(){
+  List<VirtualMachineTemplate> sorted=Lists.newArrayList(templates);
+  Collections.sort(sorted,new Ordering<VirtualMachineTemplate>(){
     @Override public int compare(    final VirtualMachineTemplate left,    final VirtualMachineTemplate right){
       return Longs.compare(left.getDiskFileSize(),right.getDiskFileSize());
     }
   }
 );
-  template=templates.get(0);
+  template=sorted.get(0);
   virtualMachine=VirtualMachine.builder(context.getApiContext(),virtualAppliance,template).cpu(2).nameLabel(PREFIX + "VM Aloha").ram(128).build();
   virtualMachine.save();
   assertNotNull(virtualMachine.getId());
