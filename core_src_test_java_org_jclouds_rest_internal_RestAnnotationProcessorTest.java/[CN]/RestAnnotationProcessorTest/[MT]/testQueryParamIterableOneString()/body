@@ -1,0 +1,9 @@
+{
+  Method method=TestQuery.class.getMethod("queryParamIterable",Iterable.class);
+  Set<String> bars=ImmutableSortedSet.<String>of("1");
+  HttpRequest request=factory(TestPath.class).createRequest(method,new Object[]{bars});
+  assertEquals(request.getEndpoint().getHost(),"localhost");
+  assertEquals(request.getEndpoint().getPath(),"/");
+  assertEquals(request.getEndpoint().getQuery(),"foo=1");
+  assertEquals(request.getMethod(),"FOO");
+}
