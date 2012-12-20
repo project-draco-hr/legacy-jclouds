@@ -4,7 +4,7 @@
     KeySpec keySpec=Pems.privateKeySpec(dataAndKey.getPrivateKey());
     KeyFactory kf=crypto.rsaKeyFactory();
     PrivateKey privKey=kf.generatePrivate(keySpec);
-    Cipher cipher=crypto.cipher("RSA/NONE/PKCS1Padding");
+    Cipher cipher=crypto.cipher("RSA");
     cipher.init(Cipher.DECRYPT_MODE,privKey);
     byte[] cipherText=CryptoStreams.base64(dataAndKey.getEncryptedPassword());
     byte[] plainText=cipher.doFinal(cipherText);
