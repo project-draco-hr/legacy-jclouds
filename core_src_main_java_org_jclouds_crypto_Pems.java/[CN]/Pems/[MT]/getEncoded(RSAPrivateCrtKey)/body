@@ -1,5 +1,5 @@
 {
-  RSAPrivateKeyStructure keyStruct=new RSAPrivateKeyStructure(key.getModulus(),key.getPublicExponent(),key.getPrivateExponent(),key.getPrimeP(),key.getPrimeQ(),key.getPrimeExponentP(),key.getPrimeExponentQ(),key.getCrtCoefficient());
+  RSAPrivateKey keyStruct=new RSAPrivateKey(key.getModulus(),key.getPublicExponent(),key.getPrivateExponent(),key.getPrimeP(),key.getPrimeQ(),key.getPrimeExponentP(),key.getPrimeExponentQ(),key.getCrtCoefficient());
   ByteArrayOutputStream bOut=new ByteArrayOutputStream();
   ASN1OutputStream aOut=new ASN1OutputStream(bOut);
   try {
@@ -7,7 +7,7 @@
     aOut.close();
   }
  catch (  IOException e) {
-    Throwables.propagate(e);
+    throw propagate(e);
   }
   return bOut.toByteArray();
 }

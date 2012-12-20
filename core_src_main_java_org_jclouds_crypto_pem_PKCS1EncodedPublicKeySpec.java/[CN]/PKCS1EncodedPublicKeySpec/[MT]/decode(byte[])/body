@@ -1,12 +1,12 @@
 {
-  RSAPublicKeyStructure pks=null;
-  ASN1Sequence seq=(ASN1Sequence)ASN1Object.fromByteArray(keyBytes);
+  RSAPublicKey pks=null;
+  ASN1Sequence seq=ASN1Sequence.getInstance(keyBytes);
   try {
     SubjectPublicKeyInfo info=new SubjectPublicKeyInfo(seq);
-    pks=new RSAPublicKeyStructure((ASN1Sequence)info.getPublicKey());
+    pks=RSAPublicKey.getInstance(info.parsePublicKey());
   }
  catch (  IllegalArgumentException ex) {
-    pks=new RSAPublicKeyStructure(seq);
+    pks=RSAPublicKey.getInstance(seq);
   }
   keySpec=new RSAPublicKeySpec(pks.getModulus(),pks.getPublicExponent());
 }
