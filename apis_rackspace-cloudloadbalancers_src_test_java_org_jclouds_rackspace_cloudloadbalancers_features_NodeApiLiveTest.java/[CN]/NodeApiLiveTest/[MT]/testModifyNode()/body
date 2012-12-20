@@ -2,9 +2,9 @@
   for (  Entry<LoadBalancer,Set<Node>> entry : nodes.entrySet()) {
     for (    Node n : entry.getValue()) {
       String region=entry.getKey().getRegion();
-      client.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).update(n.getId(),NodeAttributes.Builder.weight(23));
-      assertEquals(client.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).get(n.getId()).getStatus(),Node.Status.ONLINE);
-      Node newNode=client.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).get(n.getId());
+      clbApi.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).update(n.getId(),NodeAttributes.Builder.weight(23));
+      assertEquals(clbApi.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).get(n.getId()).getStatus(),Node.Status.ONLINE);
+      Node newNode=clbApi.getNodeApiForZoneAndLoadBalancer(region,entry.getKey().getId()).get(n.getId());
       assertEquals(newNode.getStatus(),Node.Status.ONLINE);
       assertEquals(newNode.getWeight(),(Integer)23);
     }
