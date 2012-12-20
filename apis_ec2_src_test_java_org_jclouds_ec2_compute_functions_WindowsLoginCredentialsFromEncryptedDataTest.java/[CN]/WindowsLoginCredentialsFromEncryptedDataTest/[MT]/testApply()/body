@@ -1,6 +1,5 @@
 {
-  Crypto crypto=new BouncyCastleCrypto();
-  WindowsLoginCredentialsFromEncryptedData f=new WindowsLoginCredentialsFromEncryptedData(crypto);
+  WindowsLoginCredentialsFromEncryptedData f=new WindowsLoginCredentialsFromEncryptedData(new JCECrypto());
   PasswordData passwordData=PasswordData.builder().instanceId("i-2574e22a").timestamp(dateService.iso8601DateParse("2012-07-30T07:27:23.000+0000")).passwordData(ENCRYPTED_PASSWORD).build();
   LoginCredentials credentials=f.apply(new PasswordDataAndPrivateKey(passwordData,PRIVATE_KEY));
   assertEquals(credentials.getUser(),"Administrator");
