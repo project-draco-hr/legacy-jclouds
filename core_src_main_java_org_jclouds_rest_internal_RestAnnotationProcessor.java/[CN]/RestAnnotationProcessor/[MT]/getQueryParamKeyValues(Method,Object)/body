@@ -7,7 +7,15 @@
       Set<Annotation> extractors=indexToParamExtractor.getUnchecked(entry.getKey());
       String paramKey=((QueryParam)key).value();
       Optional<?> paramValue=getParamValue(method,args,extractors,entry,paramKey);
-      if (paramValue.isPresent())       queryParamValues.put(paramKey,paramValue.get().toString());
+      if (paramValue.isPresent()) {
+        if (paramValue.get() instanceof Iterable) {
+          Iterable<String> iterableStrings=transform(Iterable.class.cast(paramValue.get()),toStringFunction());
+          queryParamValues.putAll(paramKey,iterableStrings);
+        }
+ else {
+          queryParamValues.put(paramKey,paramValue.get().toString());
+        }
+      }
     }
   }
   if (method.isAnnotationPresent(QueryParam.class) && method.isAnnotationPresent(ParamParser.class)) {
