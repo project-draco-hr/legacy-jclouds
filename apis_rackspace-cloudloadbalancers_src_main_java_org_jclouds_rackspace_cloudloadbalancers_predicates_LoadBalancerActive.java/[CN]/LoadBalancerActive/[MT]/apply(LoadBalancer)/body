@@ -1,8 +1,0 @@
-{
-  logger.trace("looking for status on loadBalancer %s",checkNotNull(loadBalancer,"loadBalancer"));
-  loadBalancer=refresh(loadBalancer);
-  if (loadBalancer == null)   return false;
-  logger.trace("%s: looking for loadBalancer status %s: currently: %s",loadBalancer.getId(),Status.ACTIVE,loadBalancer.getStatus());
-  if (loadBalancer.getStatus() == Status.ERROR)   throw new IllegalStateException("loadBalancer in error status: " + loadBalancer);
-  return loadBalancer.getStatus() == Status.ACTIVE;
-}
