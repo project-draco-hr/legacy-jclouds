@@ -23,7 +23,6 @@
   tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
   Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
   Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
-  Multimap<String,String> matrixParams=addMatrixParams(tokenValues.entries(),method,args);
   Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
   if (r != null)   headers.putAll(r.getHeaders());
   if (shouldAddHostHeader(method)) {
@@ -37,9 +36,6 @@
     for (    Entry<String,String> header : options.buildRequestHeaders().entries()) {
       headers.put(header.getKey(),Strings2.replaceTokens(header.getValue(),tokenValues.entries()));
     }
-    for (    Entry<String,String> matrix : options.buildMatrixParameters().entries()) {
-      matrixParams.put(matrix.getKey(),Strings2.replaceTokens(matrix.getValue(),tokenValues.entries()));
-    }
     for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
       queryParams.put(query.getKey(),Strings2.replaceTokens(query.getValue(),tokenValues.entries()));
     }
@@ -52,9 +48,6 @@
     }
     String stringPayload=options.buildStringPayload();
     if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
-  }
-  if (matrixParams.size() > 0) {
-    for (    String key : matrixParams.keySet())     builder.matrixParam(key,Lists.newArrayList(matrixParams.get(key)).toArray());
   }
   if (queryParams.size() > 0) {
     builder.replaceQuery(Queries.makeQueryLine(queryParams,null,skips));
