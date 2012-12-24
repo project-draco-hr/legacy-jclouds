@@ -1,0 +1,11 @@
+{
+  if (vm != null) {
+    assertTrue(jobComplete.apply(client.getVirtualMachineClient().destroyVirtualMachine(vm.getId())));
+  }
+  if (group != null) {
+    for (    IngressRule rule : group.getIngressRules())     assertTrue(jobComplete.apply(client.getSecurityGroupClient().revokeIngressRule(rule.getId())),rule.toString());
+    client.getSecurityGroupClient().deleteSecurityGroup(group.getId());
+    assertEquals(client.getSecurityGroupClient().getSecurityGroup(group.getId()),null);
+  }
+  super.tearDownContext();
+}
