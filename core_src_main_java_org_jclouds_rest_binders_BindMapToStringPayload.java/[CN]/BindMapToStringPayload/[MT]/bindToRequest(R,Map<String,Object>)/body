@@ -4,11 +4,7 @@
   checkArgument(r.getJavaMethod().isAnnotationPresent(Payload.class),"method %s must have @Payload annotation to use this binder",r.getJavaMethod());
   String payload=r.getJavaMethod().getAnnotation(Payload.class).value();
   if (postParams.size() > 0) {
-    UriBuilder builder=uriBuilders.get();
-    builder.uri(URI.create("http://fake/"));
-    builder.path(payload);
-    URI fake=builder.buildFromMap(postParams);
-    payload=fake.getPath().substring(1);
+    payload=urlDecode(expand(payload,postParams));
   }
   return (R)request.toBuilder().payload(payload).build();
 }

@@ -1,7 +1,7 @@
 {
   toSign.append(request.getEndpoint().getRawPath());
   if (request.getEndpoint().getQuery() != null) {
-    Multimap<String,String> params=parseQueryToMap(request.getEndpoint().getQuery());
+    Multimap<String,String> params=queryParser().apply(request.getEndpoint().getQuery());
     char separator='?';
     for (    String paramName : Ordering.natural().sortedCopy(params.keySet())) {
       if (!SIGNED_PARAMETERS.contains(paramName))       continue;

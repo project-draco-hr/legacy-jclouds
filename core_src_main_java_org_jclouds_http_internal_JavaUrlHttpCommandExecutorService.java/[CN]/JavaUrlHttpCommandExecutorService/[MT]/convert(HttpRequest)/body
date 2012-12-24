@@ -57,9 +57,9 @@
   if (request.getEndpoint().getPort() != -1) {
     host+=":" + request.getEndpoint().getPort();
   }
-  connection.setRequestProperty(HttpHeaders.HOST,host);
-  if (connection.getRequestProperty(HttpHeaders.USER_AGENT) == null) {
-    connection.setRequestProperty(HttpHeaders.USER_AGENT,USER_AGENT);
+  connection.setRequestProperty(HOST,host);
+  if (connection.getRequestProperty(USER_AGENT) == null) {
+    connection.setRequestProperty(USER_AGENT,DEFAULT_USER_AGENT);
   }
   if (request.getPayload() != null) {
     MutableContentMetadata md=request.getPayload().getContentMetadata();
@@ -71,7 +71,7 @@
     }
  else {
       Long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
-      connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,length.toString());
+      connection.setRequestProperty(CONTENT_LENGTH,length.toString());
       checkArgument(length < Integer.MAX_VALUE,"JDK 1.6 does not support >2GB chunks. Use chunked encoding, if possible.");
       connection.setFixedLengthStreamingMode(length.intValue());
       if (length.intValue() > 0) {
@@ -87,7 +87,7 @@
     }
   }
  else {
-    connection.setRequestProperty(HttpHeaders.CONTENT_LENGTH,"0");
+    connection.setRequestProperty(CONTENT_LENGTH,"0");
     if (connection.getRequestMethod().equals("POST") || connection.getRequestMethod().equals("PUT"))     connection.setFixedLengthStreamingMode(0);
   }
   return connection;

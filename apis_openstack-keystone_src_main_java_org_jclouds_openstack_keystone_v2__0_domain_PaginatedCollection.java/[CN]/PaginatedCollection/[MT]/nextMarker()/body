@@ -6,7 +6,7 @@
   }
 ).transform(new Function<Link,Optional<Object>>(){
     @Override public Optional<Object> apply(    Link link){
-      Collection<String> markers=parseQueryToMap(link.getHref().getRawQuery()).get("marker");
+      Collection<String> markers=queryParser().apply(link.getHref().getRawQuery()).get("marker");
       return Optional.<Object>fromNullable(markers == null ? null : Iterables.get(markers,0));
     }
   }

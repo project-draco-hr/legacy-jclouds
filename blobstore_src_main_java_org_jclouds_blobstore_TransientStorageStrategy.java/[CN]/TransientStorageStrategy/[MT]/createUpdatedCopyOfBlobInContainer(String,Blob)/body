@@ -21,7 +21,7 @@
   Blob blob=blobFactory.create(BlobStoreUtils.copy(in.getMetadata()));
   blob.setPayload(payload);
   blob.getMetadata().setContainer(containerName);
-  blob.getMetadata().setUri(uriBuilders.get().scheme("mem").host(containerName).path(in.getMetadata().getName()).build());
+  blob.getMetadata().setUri(uriBuilder(new StringBuilder("mem://").append(containerName)).path(in.getMetadata().getName()).build());
   blob.getMetadata().setLastModified(new Date());
   String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
   blob.getMetadata().setETag(eTag);

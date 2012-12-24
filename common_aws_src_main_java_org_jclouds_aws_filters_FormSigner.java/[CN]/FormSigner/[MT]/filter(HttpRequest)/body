@@ -1,6 +1,6 @@
 {
   checkNotNull(request.getFirstHeaderOrNull(HttpHeaders.HOST),"request is not ready to sign; host not present");
-  Multimap<String,String> decodedParams=Queries.parseQueryToMap(request.getPayload().getRawContent().toString());
+  Multimap<String,String> decodedParams=queryParser().apply(request.getPayload().getRawContent().toString());
   decodedParams.replaceValues(VERSION,ImmutableSet.of(apiVersion));
   addSigningParams(decodedParams);
   validateParams(decodedParams);

@@ -1,0 +1,18 @@
+{
+  if (isUrlEncoded(in))   return in;
+  try {
+    String returnVal=URLEncoder.encode(in,"UTF-8");
+    returnVal=returnVal.replace("+","%20");
+    returnVal=returnVal.replace("*","%2A");
+    for (    char c : skipEncode) {
+      returnVal=returnVal.replace(CHAR_TO_ENCODED.get(c),c + "");
+    }
+    return returnVal;
+  }
+ catch (  UnsupportedEncodingException e) {
+    throw new IllegalStateException("Bad encoding on input: " + in,e);
+  }
+catch (  ExecutionException e) {
+    throw new IllegalStateException("error creating pattern: " + in,e);
+  }
+}

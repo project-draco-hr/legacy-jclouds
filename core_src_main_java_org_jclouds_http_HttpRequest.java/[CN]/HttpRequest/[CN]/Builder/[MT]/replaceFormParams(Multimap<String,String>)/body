@@ -1,6 +1,9 @@
 {
   checkNotNull(endpoint,"endpoint");
-  Multimap<String,String> map=replaceEntries(payload != null ? parseQueryToMap(payload.getRawContent().toString()) : ImmutableMultimap.<String,String>of(),parameters);
+  Multimap<String,String> map=payload != null ? queryParser().apply(payload.getRawContent().toString()) : LinkedHashMultimap.<String,String>create();
+  for (  String key : parameters.keySet()) {
+    map.replaceValues(key,parameters.get(key));
+  }
   payload=newUrlEncodedFormPayload(map);
   return self();
 }

@@ -1,11 +1,11 @@
 {
-  Function<HttpResponse,URI> function=new ParseURIFromListOrLocationHeaderIf20x(uriBuilderProvider);
+  Function<HttpResponse,URI> function=new ParseURIFromListOrLocationHeaderIf20x();
   HttpResponse response=createMock(HttpResponse.class);
   Payload payload=createMock(Payload.class);
   expect(response.getStatusCode()).andReturn(200).atLeastOnce();
-  expect(response.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE)).andReturn("text/uri-list");
+  expect(response.getFirstHeaderOrNull(CONTENT_TYPE)).andReturn("text/uri-list");
   expect(response.getPayload()).andReturn(payload).atLeastOnce();
-  expect(payload.getInput()).andReturn(Strings2.toInputStream("http://locahost")).atLeastOnce();
+  expect(payload.getInput()).andReturn(toInputStream("http://locahost")).atLeastOnce();
   payload.release();
   replay(payload);
   replay(response);

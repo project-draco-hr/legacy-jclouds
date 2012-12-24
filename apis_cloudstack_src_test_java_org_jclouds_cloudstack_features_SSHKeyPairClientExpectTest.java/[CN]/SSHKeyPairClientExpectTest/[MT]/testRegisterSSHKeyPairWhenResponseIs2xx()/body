@@ -5,7 +5,7 @@
   assertTrue(SshKeys.privateKeyMatchesPublicKey(privateKey,publicKey));
   assertEquals(SshKeys.fingerprintPublicKey(publicKey),expectedFingerprint);
   assertEquals(SshKeys.fingerprintPrivateKey(privateKey),expectedFingerprint);
-  SSHKeyPairClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=registerSSHKeyPair&" + "name=jclouds-keypair&publickey=" + UriComponent.encode(publicKey,UriComponent.Type.QUERY_PARAM) + "&apiKey=identity&signature=g/6BXLnnvOMlKQBp1yM7GKlvfus%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/registersshkeypairresponse.json")).build());
+  SSHKeyPairClient client=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=registerSSHKeyPair&" + "name=jclouds-keypair&publickey=" + Strings2.urlEncode(publicKey,'/') + "&apiKey=identity&signature=g/6BXLnnvOMlKQBp1yM7GKlvfus%3D")).headers(ImmutableMultimap.<String,String>builder().put("Accept","application/json").build()).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/registersshkeypairresponse.json")).build());
   SshKeyPair actual=client.registerSSHKeyPair("jclouds-keypair",publicKey);
   SshKeyPair expected=SshKeyPair.builder().name("jclouds-keypair").fingerprint(expectedFingerprint).build();
   assertEquals(actual,expected);

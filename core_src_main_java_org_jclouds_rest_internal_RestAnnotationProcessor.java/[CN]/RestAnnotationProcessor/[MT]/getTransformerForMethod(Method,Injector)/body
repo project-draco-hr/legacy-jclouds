@@ -4,7 +4,7 @@
     Type returnVal=getReturnTypeForMethod(method);
     if (method.isAnnotationPresent(OnlyElement.class))     returnVal=Types.newParameterizedType(Set.class,returnVal);
     transformer=new ParseFirstJsonValueNamed(injector.getInstance(GsonWrapper.class),TypeLiteral.get(returnVal),method.getAnnotation(SelectJson.class).value());
-    if (method.isAnnotationPresent(OnlyElement.class))     transformer=Functions.compose(new OnlyElementOrNull(),transformer);
+    if (method.isAnnotationPresent(OnlyElement.class))     transformer=compose(new OnlyElementOrNull(),transformer);
   }
  else {
     transformer=injector.getInstance(getParserOrThrowException(method));

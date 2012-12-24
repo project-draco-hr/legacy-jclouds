@@ -5,7 +5,7 @@
   String signature=sign(accessKeyId);
   String lang=Locale.JAPANESE.getLanguage().equals(Locale.getDefault().getLanguage()) ? Locale.JAPANESE.getLanguage() : Locale.ENGLISH.getLanguage();
   if (HttpMethod.GET.equals(request.getMethod())) {
-    Multimap<String,String> decodedParams=Queries.parseQueryToMap(request.getEndpoint().getRawQuery());
+    Multimap<String,String> decodedParams=queryParser().apply(request.getEndpoint().getRawQuery());
     if (!decodedParams.containsKey(RequestParameters.VERSION)) {
       decodedParams.put(RequestParameters.VERSION,apiVersion);
     }

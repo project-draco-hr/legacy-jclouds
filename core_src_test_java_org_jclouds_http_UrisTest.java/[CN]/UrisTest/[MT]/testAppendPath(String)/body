@@ -1,0 +1,8 @@
+{
+  assertEquals(uriBuilder("https://foo.com:8080").appendPath(path).toString(),"https://foo.com:8080/" + path);
+  assertEquals(uriBuilder("https://foo.com:8080").appendPath(path).build().toString(),"https://foo.com:8080/" + urlEncode(path,'/',':',';','='));
+  assertEquals(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").appendPath(path).toString(),"https://api.github.com/repos/user/" + path + "?foo=bar&kung=fu");
+  assertEquals(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").appendPath(path).build().toString(),"https://api.github.com/repos/user/" + urlEncode(path,'/',':',';','=') + "?foo=bar&kung=fu");
+  assertEquals(uriBuilder("https://api.github.com/repos/{user}").appendPath(path).toString(),"https://api.github.com/repos/{user}/" + path);
+  assertEquals(uriBuilder("https://api.github.com/repos/{user}").appendPath(path).build(templateParams).toASCIIString(),"https://api.github.com/repos/bob/" + urlEncode(path,'/',':',';','='));
+}

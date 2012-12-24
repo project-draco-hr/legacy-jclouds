@@ -4,7 +4,7 @@
   if (!endpoint.isPresent()) {
     throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
   }
-  GeneratedHttpRequest.Builder<?> requestBuilder=GeneratedHttpRequest.builder();
+  GeneratedHttpRequest.Builder requestBuilder=GeneratedHttpRequest.builder();
   HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
   if (r != null) {
     requestBuilder.fromHttpRequest(r);
@@ -12,18 +12,19 @@
  else {
     requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
   }
-  requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).skips(skips).filters(getFiltersIfAnnotated(method));
-  UriBuilder builder=uriBuilderProvider.get().uri(endpoint.get());
-  Multimap<String,String> tokenValues=LinkedHashMultimap.create();
+  UriBuilder uriBuilder=uriBuilder(endpoint.get().toString());
+  overridePathEncoding(uriBuilder,method);
+  requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).filters(getFiltersIfAnnotated(method));
+  Multimap<String,Object> tokenValues=LinkedHashMultimap.create();
   tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
   tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
   if (caller != null) {
-    tokenValues.putAll(addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),builder));
+    tokenValues.putAll(addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),uriBuilder));
   }
-  tokenValues.putAll(addPathAndGetTokens(declaring,method,args,builder));
-  Multimap<String,String> formParams=addFormParams(tokenValues.entries(),method,args);
-  Multimap<String,String> queryParams=addQueryParams(tokenValues.entries(),method,args);
-  Multimap<String,String> headers=buildHeaders(tokenValues.entries(),method,args);
+  tokenValues.putAll(addPathAndGetTokens(declaring,method,args,uriBuilder));
+  Multimap<String,Object> formParams=addFormParams(tokenValues,method,args);
+  Multimap<String,Object> queryParams=addQueryParams(tokenValues,method,args);
+  Multimap<String,String> headers=buildHeaders(tokenValues,method,args);
   if (r != null)   headers.putAll(r.getHeaders());
   if (shouldAddHostHeader(method)) {
     StringBuilder hostHeader=new StringBuilder(endpoint.get().getHost());
@@ -34,36 +35,28 @@
   for (  HttpRequestOptions options : findOptionsIn(method,args)) {
     injector.injectMembers(options);
     for (    Entry<String,String> header : options.buildRequestHeaders().entries()) {
-      headers.put(header.getKey(),Strings2.replaceTokens(header.getValue(),tokenValues.entries()));
+      headers.put(header.getKey(),replaceTokens(header.getValue(),tokenValues));
     }
     for (    Entry<String,String> query : options.buildQueryParameters().entries()) {
-      queryParams.put(query.getKey(),Strings2.replaceTokens(query.getValue(),tokenValues.entries()));
+      queryParams.put(query.getKey(),replaceTokens(query.getValue(),tokenValues));
     }
     for (    Entry<String,String> form : options.buildFormParameters().entries()) {
-      formParams.put(form.getKey(),Strings2.replaceTokens(form.getValue(),tokenValues.entries()));
+      formParams.put(form.getKey(),replaceTokens(form.getValue(),tokenValues));
     }
     String pathSuffix=options.buildPathSuffix();
     if (pathSuffix != null) {
-      builder.path(pathSuffix);
+      uriBuilder.appendPath(pathSuffix);
     }
     String stringPayload=options.buildStringPayload();
     if (stringPayload != null)     payload=Payloads.newStringPayload(stringPayload);
   }
   if (queryParams.size() > 0) {
-    builder.replaceQuery(Queries.makeQueryLine(queryParams,null,skips));
+    uriBuilder.query(queryParams);
   }
   requestBuilder.headers(filterOutContentHeaders(headers));
-  try {
-    requestBuilder.endpoint(builder.buildFromEncodedMap(Maps2.convertUnsafe(tokenValues)));
-  }
- catch (  IllegalArgumentException e) {
-    throw new IllegalStateException(e);
-  }
-catch (  UriBuilderException e) {
-    throw new IllegalStateException(e);
-  }
+  requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues)));
   if (payload == null)   payload=findPayloadInArgs(args);
-  List<? extends Part> parts=getParts(method,args,concat(tokenValues.entries(),formParams.entries()));
+  List<? extends Part> parts=getParts(method,args,ImmutableMultimap.<String,Object>builder().putAll(tokenValues).putAll(formParams).build());
   if (parts.size() > 0) {
     if (formParams.size() > 0) {
       parts=newLinkedList(concat(transform(formParams.entries(),ENTRY_TO_PART),parts));
@@ -71,11 +64,11 @@ catch (  UriBuilderException e) {
     payload=new MultipartForm(BOUNDARY,parts);
   }
  else   if (formParams.size() > 0) {
-    payload=Payloads.newUrlEncodedFormPayload(formParams,skips);
+    payload=Payloads.newUrlEncodedFormPayload(transformValues(formParams,NullableToStringFunction.INSTANCE));
   }
  else   if (headers.containsKey(CONTENT_TYPE)) {
     if (payload == null)     payload=Payloads.newByteArrayPayload(new byte[]{});
-    payload.getContentMetadata().setContentType(Iterables.get(headers.get(CONTENT_TYPE),0));
+    payload.getContentMetadata().setContentType(get(headers.get(CONTENT_TYPE),0));
   }
   if (payload != null) {
     requestBuilder.payload(payload);
@@ -86,7 +79,7 @@ catch (  UriBuilderException e) {
     Map<String,Object> mapParams=buildPostParams(method,args);
     if (method.isAnnotationPresent(PayloadParams.class)) {
       PayloadParams params=method.getAnnotation(PayloadParams.class);
-      addMapPayload(mapParams,params,headers.entries());
+      addMapPayload(mapParams,params,headers);
     }
     request=mapBinder.bindToRequest(request,mapParams);
   }

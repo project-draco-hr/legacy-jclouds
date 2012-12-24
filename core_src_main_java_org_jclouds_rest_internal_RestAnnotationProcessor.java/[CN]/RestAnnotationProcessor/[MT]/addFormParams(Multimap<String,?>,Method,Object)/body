@@ -1,0 +1,15 @@
+{
+  Multimap<String,Object> formMap=LinkedListMultimap.create();
+  if (declaring.isAnnotationPresent(FormParams.class)) {
+    FormParams form=declaring.getAnnotation(FormParams.class);
+    addForm(formMap,form,tokenValues);
+  }
+  if (method.isAnnotationPresent(FormParams.class)) {
+    FormParams form=method.getAnnotation(FormParams.class);
+    addForm(formMap,form,tokenValues);
+  }
+  for (  Entry<String,Object> form : getFormParamKeyValues(method,args).entries()) {
+    formMap.put(form.getKey(),replaceTokens(form.getValue().toString(),tokenValues));
+  }
+  return formMap;
+}

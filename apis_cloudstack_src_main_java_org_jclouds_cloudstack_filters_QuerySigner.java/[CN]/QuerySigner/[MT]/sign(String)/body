@@ -1,11 +1,14 @@
 {
   String signature;
   try {
-    signature=CryptoStreams.base64(CryptoStreams.mac(InputSuppliers.of(stringToSign),crypto.hmacSHA1(secretKey.getBytes())));
-    if (signatureWire.enabled())     signatureWire.input(Strings2.toInputStream(signature));
+    signature=base64(mac(InputSuppliers.of(stringToSign),crypto.hmacSHA1(secretKey.getBytes())));
+    if (signatureWire.enabled())     signatureWire.input(toInputStream(signature));
+    return signature;
   }
- catch (  Exception e) {
-    throw new HttpException("error signing request",e);
+ catch (  InvalidKeyException e) {
+    throw propagate(e);
   }
-  return signature;
+catch (  IOException e) {
+    throw propagate(e);
+  }
 }

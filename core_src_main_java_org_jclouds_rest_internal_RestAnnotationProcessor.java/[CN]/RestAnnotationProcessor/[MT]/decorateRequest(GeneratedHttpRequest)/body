@@ -2,7 +2,7 @@
   Iterable<Entry<Integer,Set<Annotation>>> binderOrWrapWith=concat(filterValues(methodToIndexOfParamToBinderParamAnnotation.getUnchecked(request.getJavaMethod()).asMap(),notEmpty).entrySet(),filterValues(methodToIndexOfParamToWrapWithAnnotation.getUnchecked(request.getJavaMethod()).asMap(),notEmpty).entrySet());
   OUTER:   for (  Entry<Integer,Set<Annotation>> entry : binderOrWrapWith) {
     boolean shouldBreak=false;
-    Annotation annotation=Iterables.get(entry.getValue(),0);
+    Annotation annotation=get(entry.getValue(),0);
     Binder binder;
     if (annotation instanceof BinderParam)     binder=injector.getInstance(BinderParam.class.cast(annotation).value());
  else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(WrapWith.class.cast(annotation).value());
@@ -41,7 +41,7 @@
       for (      Annotation a : annotations) {
         if (NULLABLE.apply(a))         continue OUTER;
       }
-      Preconditions.checkNotNull(null,request.getJavaMethod().getName() + " parameter " + (entry.getKey() + 1));
+      checkNotNull(null,request.getJavaMethod().getName() + " parameter " + (entry.getKey() + 1));
     }
   }
   return request;
