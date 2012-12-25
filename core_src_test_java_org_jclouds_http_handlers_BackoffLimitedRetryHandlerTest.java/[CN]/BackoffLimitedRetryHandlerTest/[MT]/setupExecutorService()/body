@@ -3,7 +3,7 @@
   BackoffLimitedRetryHandler backoff=new BackoffLimitedRetryHandler();
   HttpUtils utils=new HttpUtils(0,500,1,1);
   ContentMetadataCodec contentMetadataCodec=new DefaultContentMetadataCodec(new DateServiceDateCodecFactory(new SimpleDateFormatDateService()));
-  RedirectionRetryHandler retry=new RedirectionRetryHandler(uriBuilderProvider,backoff);
+  RedirectionRetryHandler retry=new RedirectionRetryHandler(backoff);
   JavaUrlHttpCommandExecutorService httpService=new JavaUrlHttpCommandExecutorService(utils,contentMetadataCodec,execService,new DelegatingRetryHandler(backoff,retry),new BackoffLimitedRetryHandler(),new DelegatingErrorHandler(),new HttpWire(),new HostnameVerifier(){
     @Override public boolean verify(    String hostname,    SSLSession session){
       return false;

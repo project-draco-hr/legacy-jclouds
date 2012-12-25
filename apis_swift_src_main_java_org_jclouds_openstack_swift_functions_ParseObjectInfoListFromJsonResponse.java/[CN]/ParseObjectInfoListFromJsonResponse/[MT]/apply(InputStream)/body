@@ -12,7 +12,7 @@
     SortedSet<ObjectInfoImpl> list=apply(stream,listType);
     SortedSet<ObjectInfo> returnVal=Sets.newTreeSet(Iterables.transform(list,new Function<ObjectInfoImpl,ObjectInfo>(){
       public ObjectInfo apply(      ObjectInfoImpl from){
-        return from.toBuilder().container(container).uri(uriBuilders.get().uri(request.getEndpoint()).path(from.getName()).replaceQuery("").build()).build();
+        return from.toBuilder().container(container).uri(uriBuilder(request.getEndpoint()).clearQuery().appendPath(from.getName()).build()).build();
       }
     }
 ));

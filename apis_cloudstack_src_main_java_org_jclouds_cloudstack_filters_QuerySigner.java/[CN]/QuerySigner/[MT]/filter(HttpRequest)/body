@@ -1,11 +1,11 @@
 {
   checkNotNull(request,"request must be present");
-  Multimap<String,String> decodedParams=Queries.parseQueryToMap(request.getEndpoint().getRawQuery());
+  Multimap<String,String> decodedParams=queryParser().apply(request.getEndpoint().getRawQuery());
   addSigningParams(decodedParams);
   String stringToSign=createStringToSign(request,decodedParams);
   String signature=sign(stringToSign);
   addSignature(decodedParams,signature);
-  request=request.toBuilder().endpoint(builder.get().uri(request.getEndpoint()).replaceQuery(Queries.makeQueryLine(decodedParams,null)).build()).build();
+  request=request.toBuilder().endpoint(uriBuilder(request.getEndpoint()).query(decodedParams).build()).build();
   utils.logRequest(signatureLog,request,"<<");
   return request;
 }

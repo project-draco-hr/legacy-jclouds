@@ -1,7 +1,7 @@
 {
   Method method=TemplateAsyncClient.class.getMethod("registerTemplate",TemplateMetadata.class,String.class,String.class,String.class,String.class,RegisterTemplateOptions[].class);
   HttpRequest httpRequest=processor.createRequest(method,TemplateMetadata.builder().name("thename").osTypeId("10").displayText("description").build(),Template.Format.QCOW2,"xen","http://example.com/",20);
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=registerTemplate&hypervisor=xen&format=QCOW2&url=http%3A%2F%2Fexample.com%2F&zoneid=20&name=thename&ostypeid=10&displaytext=description HTTP/1.1");
+  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=registerTemplate&hypervisor=xen&format=QCOW2&url=http%3A//example.com/&zoneid=20&name=thename&ostypeid=10&displaytext=description HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);

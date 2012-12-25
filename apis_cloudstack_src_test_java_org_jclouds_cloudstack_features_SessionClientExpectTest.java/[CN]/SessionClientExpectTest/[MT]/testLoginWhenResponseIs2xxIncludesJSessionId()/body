@@ -3,7 +3,7 @@
   String user="jcloud";
   String password="jcl0ud";
   String md5password=md5Hex(password);
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=login&" + "username=" + user + "&password="+ md5password+ "&domain="+ URLEncoder.encode(domain))).addHeader("Accept","application/json").build();
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=login&" + "username=" + user + "&password="+ md5password+ "&domain="+ domain)).addHeader("Accept","application/json").build();
   String jSessionId="90DD65D13AEAA590ECCA312D150B9F6D";
   SessionClient client=requestSendsResponse(request,HttpResponse.builder().statusCode(200).headers(ImmutableMultimap.<String,String>builder().put("Set-Cookie","JSESSIONID=" + jSessionId + "; Path=/client").build()).payload(payloadFromResource("/loginresponse.json")).build());
   assertEquals(client.loginUserInDomainWithHashOfPassword(user,domain,md5password).toString(),LoginResponse.builder().timeout(1800).lastName("Kiran").registered(false).username("jcloud").firstName("Vijay").domainId("11").accountType(Account.Type.DOMAIN_ADMIN).userId("19").sessionKey("uYT4/MNiglgAKiZRQkvV8QP8gn0=").jSessionId(jSessionId).accountName("jcloud").build().toString());

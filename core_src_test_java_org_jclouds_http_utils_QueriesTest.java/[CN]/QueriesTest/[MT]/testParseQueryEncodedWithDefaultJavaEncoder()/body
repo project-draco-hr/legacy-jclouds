@@ -1,8 +1,8 @@
 {
   String key="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCc903twxU2zcQnIJdXv61RwZNZW94uId9qz08fgsBJsCOnHNIC4+L9k" + "DOA2IHV9cUfEDBm1Be5TbpadWwSbS/05E+FARH2/MCO932UgcKUq5PGymS0249fLCBPci5zoLiG5vIym+1ij1hL/nHvkK99NIwe7io+Lmp" + "9OcF3PTsm3Rgh5T09cRHGX9horp0VoAVa9vKJx6C1/IEHVnG8p0YPPa1lmemvx5kNBEiyoNQNYa34EiFkcJfP6rqNgvY8h/j4nE9SXoUCC"+ "/g6frhMFMOL0tzYqvz0Lczqm1Oh4RnSn3O9X4R934p28qqAobe337hmlLUdb6H5zuf+NwCh0HdZ";
   Set<String> expected=ImmutableSet.of(key);
-  Multimap<String,String> parsedMap=parseQueryToMap("a=1&b=1+2&publickey=" + Strings2.urlEncode(key));
+  Multimap<String,String> parsedMap=queryParser().apply("a=1&b=1+2&publickey=" + Strings2.urlEncode(key));
   assertEquals(parsedMap.get("publickey"),expected);
-  parsedMap=parseQueryToMap("publickey=" + Strings2.urlEncode(key));
+  parsedMap=queryParser().apply("publickey=" + Strings2.urlEncode(key));
   assertEquals(parsedMap.get("publickey"),expected);
 }

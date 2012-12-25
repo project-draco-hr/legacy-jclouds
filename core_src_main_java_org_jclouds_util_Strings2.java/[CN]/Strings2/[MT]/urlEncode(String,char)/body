@@ -1,19 +1,3 @@
 {
-  if (isUrlEncoded(in))   return in;
-  try {
-    String returnVal=URLEncoder.encode(in,"UTF-8");
-    returnVal=Strings2.replaceAll(returnVal,'+',PLUS_PATTERN,"%20");
-    returnVal=Strings2.replaceAll(returnVal,'*',STAR_PATTERN,"%2A");
-    returnVal=Strings2.replaceAll(returnVal,_7E_PATTERN,"~");
-    for (    char c : skipEncode) {
-      returnVal=Strings2.replaceAll(returnVal,CHAR_TO_ENCODED_PATTERN.get(c),c + "");
-    }
-    return returnVal;
-  }
- catch (  UnsupportedEncodingException e) {
-    throw new IllegalStateException("Bad encoding on input: " + in,e);
-  }
-catch (  ExecutionException e) {
-    throw new IllegalStateException("error creating pattern: " + in,e);
-  }
+  return urlEncode(in,Chars.asList(skipEncode));
 }

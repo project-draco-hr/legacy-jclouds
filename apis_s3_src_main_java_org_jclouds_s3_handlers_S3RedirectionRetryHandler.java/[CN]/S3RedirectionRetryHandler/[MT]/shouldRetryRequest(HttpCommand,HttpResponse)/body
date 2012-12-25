@@ -15,9 +15,8 @@
           return backoffHandler.shouldRetryRequest(command,response);
         }
  else {
-          UriBuilder builder=uriBuilderProvider.get().uri(command.getCurrentRequest().getEndpoint());
-          builder.host(host);
-          command.setCurrentRequest(command.getCurrentRequest().toBuilder().endpoint(builder.build()).build());
+          URI newHost=uriBuilder(command.getCurrentRequest().getEndpoint()).host(host).build();
+          command.setCurrentRequest(command.getCurrentRequest().toBuilder().endpoint(newHost).build());
         }
         return true;
       }

@@ -1,10 +1,11 @@
 {
-  String signature;
   try {
-    signature=CryptoStreams.base64(CryptoStreams.mac(InputSuppliers.of(toSign),crypto.hmacSHA1(key)));
+    return base64(mac(InputSuppliers.of(toSign),crypto.hmacSHA1(key)));
   }
- catch (  Exception e) {
-    throw new HttpException("error signing request",e);
+ catch (  InvalidKeyException e) {
+    throw propagate(e);
   }
-  return signature;
+catch (  IOException e) {
+    throw propagate(e);
+  }
 }

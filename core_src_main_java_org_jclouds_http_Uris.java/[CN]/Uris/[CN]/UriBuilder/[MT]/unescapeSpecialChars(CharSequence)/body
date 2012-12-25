@@ -1,0 +1,29 @@
+{
+  if (uri.length() < 5)   return uri.toString();
+  char last=uri.charAt(0);
+  StringBuilder builder=new StringBuilder();
+  for (  char c : Lists.charactersOf(uri)) {
+switch (c) {
+case '(':
+      if (last == '(') {
+        builder.setCharAt(builder.length() - 1,'{');
+      }
+ else {
+        builder.append('(');
+      }
+    break;
+case ')':
+  if (last == ')') {
+    builder.setCharAt(builder.length() - 1,'}');
+  }
+ else {
+    builder.append(')');
+  }
+break;
+default :
+builder.append(c);
+}
+last=c;
+}
+return builder.toString();
+}

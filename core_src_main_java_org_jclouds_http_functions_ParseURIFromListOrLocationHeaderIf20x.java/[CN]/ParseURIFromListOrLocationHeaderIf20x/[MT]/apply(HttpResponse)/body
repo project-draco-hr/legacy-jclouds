@@ -1,6 +1,6 @@
 {
   if (from.getStatusCode() > 206)   throw new HttpException(String.format("Unhandled status code  - %1$s",from));
-  if ("text/uri-list".equals(from.getFirstHeaderOrNull(HttpHeaders.CONTENT_TYPE))) {
+  if ("text/uri-list".equals(from.getFirstHeaderOrNull(CONTENT_TYPE))) {
     try {
       if (from.getPayload().getInput() == null)       throw new HttpResponseException("no content",null,from);
       String toParse=Strings2.toString(from.getPayload());
@@ -15,18 +15,15 @@
   }
  else {
     releasePayload(from);
-    String location=from.getFirstHeaderOrNull(HttpHeaders.LOCATION);
+    String location=from.getFirstHeaderOrNull(LOCATION);
     if (location == null)     location=from.getFirstHeaderOrNull("location");
     if (location != null) {
       URI locationUri=URI.create(location);
       if (locationUri.getHost() != null)       return locationUri;
       checkState(request != null,"request should have been initialized");
       if (!location.startsWith("/"))       location="/" + location;
-      UriBuilder builder=uriBuilderProvider.get().uri(URI.create("http://localhost" + location));
-      builder.host(request.getEndpoint().getHost());
-      builder.port(request.getEndpoint().getPort());
-      builder.scheme(request.getEndpoint().getScheme());
-      return builder.build();
+      locationUri=URI.create(location);
+      return Uris.uriBuilder(request.getEndpoint()).path(locationUri.getPath()).query(locationUri.getQuery()).build();
     }
  else {
       throw new HttpResponseException("no uri in headers or content",null,from);

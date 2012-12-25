@@ -1,8 +1,7 @@
 {
   utils.logRequest(signatureLog,request,">>");
-  ImmutableSortedSet.Builder<String> builder=ImmutableSortedSet.naturalOrder();
-  for (  Entry<String,String> entry : decodedParams.entries())   builder.add(entry.getKey() + "=" + Strings2.urlEncode(entry.getValue()));
-  String stringToSign=Joiner.on('&').join(builder.build()).toLowerCase();
+  String queryLine=encodeQueryLine(TreeMultimap.create(decodedParams),ImmutableList.<Character>of());
+  String stringToSign=queryLine.toLowerCase();
   if (signatureWire.enabled())   signatureWire.output(stringToSign);
   return stringToSign;
 }
