@@ -1,7 +1,8 @@
 {
   String message=options.getDir() != null ? String.format("clearing path %s/%s",containerName,options.getDir()) : String.format("clearing container %s",containerName);
   options=options.clone();
-  if (options.isRecursive())   message=message + " recursively";
+  if (options.isRecursive())   message+=" recursively";
+  logger.debug(message);
   Map<StorageMetadata,Exception> exceptions=Maps.newHashMap();
   int maxErrors=3;
   for (int numErrors=0; numErrors < maxErrors; ) {
@@ -96,6 +97,7 @@ String marker=listing.getNextMarker();
 if (marker == null) {
 break;
 }
+logger.debug("%s with marker %s",message,marker);
 options=options.afterMarker(marker);
 numErrors=0;
 }
