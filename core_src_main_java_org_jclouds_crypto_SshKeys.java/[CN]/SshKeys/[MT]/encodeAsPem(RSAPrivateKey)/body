@@ -1,12 +1,9 @@
 {
-  StringWriter stringWriter=new StringWriter();
-  PEMWriter pemFormatWriter=new PEMWriter(stringWriter);
-  try {
-    pemFormatWriter.writeObject(key);
-    pemFormatWriter.close();
-  }
- catch (  IOException e) {
-    throw propagate(e);
-  }
-  return stringWriter.toString();
+  String type="RSA PRIVATE KEY";
+  byte[] encoded=asn1Encode(checkNotNull(key,type));
+  StringBuilder builder=new StringBuilder();
+  builder.append("-----BEGIN ").append(type).append("-----").append('\n');
+  builder.append(on('\n').join(fixedLength(64).split(base64().encode(encoded)))).append('\n');
+  builder.append("-----END ").append(type).append("-----").append('\n');
+  return builder.toString();
 }
