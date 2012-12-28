@@ -1,0 +1,14 @@
+{
+  NullOn303 function=new NullOn303();
+  HttpResponse response=EasyMock.createMock(HttpResponse.class);
+  HttpResponseException exception=EasyMock.createMock(HttpResponseException.class);
+  expect(response.getStatusCode()).andReturn(303);
+  expect(exception.getResponse()).andReturn(response);
+  expect(exception.getResponse()).andReturn(response);
+  expect(exception.getCause()).andReturn(null);
+  replay(response);
+  replay(exception);
+  assertNull(getUnchecked(function.create(exception)));
+  verify(response);
+  verify(exception);
+}

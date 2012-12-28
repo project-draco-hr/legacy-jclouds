@@ -1,0 +1,7 @@
+{
+  S3Client client=createMock(S3Client.class);
+  replay(client);
+  Exception e=getErrorWithCode("BucketAlreadyOwnedByYou");
+  assertFalse(getUnchecked(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(putBucket).create(e)));
+  verify(client);
+}

@@ -1,0 +1,15 @@
+{
+  FalseIfNotAvailable function=new FalseIfNotAvailable();
+  HttpResponse response=EasyMock.createMock(HttpResponse.class);
+  HttpResponseException exception=EasyMock.createMock(HttpResponseException.class);
+  expect(response.getStatusCode()).andReturn(503);
+  expect(response.getStatusCode()).andReturn(503);
+  expect(exception.getResponse()).andReturn(response);
+  expect(exception.getResponse()).andReturn(response);
+  expect(exception.getCause()).andReturn(null);
+  replay(response);
+  replay(exception);
+  assertFalse(getUnchecked(function.create(exception)));
+  verify(response);
+  verify(exception);
+}

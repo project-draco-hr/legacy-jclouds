@@ -1,0 +1,9 @@
+{
+  Throwable exception=find(getCausalChain(from),isMovedException(from),null);
+  if (exception != null) {
+    HttpResponseException responseException=(HttpResponseException)exception;
+    HttpResponse response=responseException.getResponse();
+    return immediateFuture(parser.apply(response).getVolume());
+  }
+  throw propagate(from);
+}
