@@ -1,0 +1,7 @@
+{
+  HttpResponseException exception=getFirstThrowableOfType(t,HttpResponseException.class);
+  if (exception != null && exception.getCommand().getCurrentRequest().getMethod().equals(HttpMethod.DELETE) && exception.getResponse().getStatusCode() == 302) {
+    return immediateFuture(null);
+  }
+  throw propagate(t);
+}

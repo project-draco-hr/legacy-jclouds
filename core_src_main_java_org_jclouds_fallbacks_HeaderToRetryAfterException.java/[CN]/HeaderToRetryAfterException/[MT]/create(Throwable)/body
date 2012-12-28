@@ -1,0 +1,11 @@
+{
+  if (!(t instanceof HttpResponseException))   throw propagate(t);
+  HttpResponse response=HttpResponseException.class.cast(t).getResponse();
+  if (response == null)   return immediateFuture(null);
+  String retryAfter=response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER);
+  if (retryAfter != null) {
+    Optional<RetryAfterException> retryException=tryCreateRetryAfterException(t,retryAfter);
+    if (retryException.isPresent())     throw retryException.get();
+  }
+  return immediateFuture(null);
+}

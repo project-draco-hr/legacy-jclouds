@@ -1,15 +1,15 @@
 {
   method=annotationProcessor.getDelegateOrNull(method);
   logger.trace("Converting %s.%s",declaring.getSimpleName(),method.getName());
-  Function<Exception,?> exceptionParser=annotationProcessor.createExceptionParserOrThrowResourceNotFoundOn404IfNoAnnotation(method);
-  if (exceptionParser instanceof InvocationContext) {
-    ((InvocationContext)exceptionParser).setContext((HttpRequest)null);
+  FutureFallback<?> fallback=fallbacks.getUnchecked(method);
+  if (fallback instanceof InvocationContext) {
+    InvocationContext.class.cast(fallback).setContext((HttpRequest)null);
   }
   ListenableFuture<?> result;
   try {
     GeneratedHttpRequest request=annotationProcessor.createRequest(method,args);
-    if (exceptionParser instanceof InvocationContext) {
-      ((InvocationContext)exceptionParser).setContext(request);
+    if (fallback instanceof InvocationContext) {
+      InvocationContext.class.cast(fallback).setContext(request);
     }
     logger.trace("Converted %s.%s to %s",declaring.getSimpleName(),method.getName(),request.getRequestLine());
     Function<HttpResponse,?> transformer=annotationProcessor.createResponseParser(method,request);
@@ -20,19 +20,13 @@
  catch (  RuntimeException e) {
     AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
     if (aex != null)     e=aex;
-    if (exceptionParser != null) {
-      try {
-        return Futures.immediateFuture(exceptionParser.apply(e));
-      }
- catch (      Exception ex) {
-        return Futures.immediateFailedFuture(ex);
-      }
+    try {
+      return fallback.create(e);
     }
-    return Futures.immediateFailedFuture(e);
+ catch (    Exception ex) {
+      return immediateFailedFuture(ex);
+    }
   }
-  if (exceptionParser != null) {
-    logger.trace("Exceptions from %s.%s are parsed by %s",declaring.getSimpleName(),method.getName(),exceptionParser.getClass().getSimpleName());
-    result=new ExceptionParsingListenableFuture(result,exceptionParser);
-  }
-  return result;
+  logger.trace("Exceptions from %s.%s are parsed by %s",declaring.getSimpleName(),method.getName(),fallback.getClass().getSimpleName());
+  return withFallback(result,fallback);
 }

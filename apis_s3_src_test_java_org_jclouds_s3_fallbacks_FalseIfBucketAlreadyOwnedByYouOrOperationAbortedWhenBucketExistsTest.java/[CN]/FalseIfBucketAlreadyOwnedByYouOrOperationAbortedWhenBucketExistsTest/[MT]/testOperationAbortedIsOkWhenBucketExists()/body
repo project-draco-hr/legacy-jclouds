@@ -1,0 +1,8 @@
+{
+  S3Client client=createMock(S3Client.class);
+  expect(client.bucketExists("bucket")).andReturn(true);
+  replay(client);
+  Exception e=getErrorWithCode("OperationAborted");
+  assertFalse(getUnchecked(new FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists(client).setContext(putBucket).create(e)));
+  verify(client);
+}
