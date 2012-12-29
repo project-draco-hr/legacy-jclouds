@@ -1,0 +1,9 @@
+{
+  PagedIterable<Zone> zones=api().list(new ListOptions.Builder().maxResults(1));
+  Iterator<IterableWithMarker<Zone>> pageIterator=zones.iterator();
+  assertTrue(pageIterator.hasNext());
+  IterableWithMarker<Zone> singlePageIterator=pageIterator.next();
+  List<Zone> zoneAsList=Lists.newArrayList(singlePageIterator);
+  assertSame(zoneAsList.size(),1);
+  this.zone=Iterables.getOnlyElement(zoneAsList);
+}

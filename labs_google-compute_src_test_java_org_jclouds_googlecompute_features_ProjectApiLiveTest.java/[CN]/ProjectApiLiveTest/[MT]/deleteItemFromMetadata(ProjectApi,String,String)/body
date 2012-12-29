@@ -1,0 +1,7 @@
+{
+  Project project=projectApi.get(projectName);
+  assertNotNull(project);
+  ImmutableMap.Builder<String,String> metadataBuilder=ImmutableMap.builder();
+  metadataBuilder.putAll(Maps.filterKeys(project.getCommonInstanceMetadata(),not(equalTo(key))));
+  return projectApi.setCommonInstanceMetadata(projectName,metadataBuilder.build());
+}

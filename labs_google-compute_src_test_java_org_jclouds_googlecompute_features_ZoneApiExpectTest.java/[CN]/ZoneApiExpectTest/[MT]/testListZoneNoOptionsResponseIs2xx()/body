@@ -1,0 +1,6 @@
+{
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint(ZONES_URL_PREFIX).addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/zone_list.json")).build();
+  ZoneApi api=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,list,operationResponse).getZoneApiForProject("google");
+  assertEquals(api.listFirstPage().toString(),new ParseZoneListTest().expected().toString());
+}

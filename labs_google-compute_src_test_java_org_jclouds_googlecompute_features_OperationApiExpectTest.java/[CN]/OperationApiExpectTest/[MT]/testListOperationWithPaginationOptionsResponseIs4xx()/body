@@ -1,0 +1,6 @@
+{
+  HttpRequest get=HttpRequest.builder().method("GET").endpoint(OPERATIONS_URL_PREFIX).addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(404).build();
+  OperationApi operationApi=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,get,operationResponse).getOperationApiForProject("myproject");
+  assertTrue(operationApi.list().concat().isEmpty());
+}

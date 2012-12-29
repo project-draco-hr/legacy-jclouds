@@ -1,0 +1,6 @@
+{
+  HttpRequest getProjectRequest=HttpRequest.builder().method("GET").endpoint(PROJECTS_URL_PREFIX + "/myproject").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse getProjectResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/project.json")).build();
+  ProjectApi api=requestsSendResponses(requestForScopes(GoogleComputeConstants.COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,getProjectRequest,getProjectResponse).getProjectApi();
+  assertEquals(api.get("myproject"),new ParseProjectTest().expected());
+}
