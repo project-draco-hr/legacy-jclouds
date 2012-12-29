@@ -1,8 +1,8 @@
 {
   if (response.getPayload() == null)   return null;
-  if (response.getPayload().getContentMetadata().getContentType() != null && response.getPayload().getContentMetadata().getContentType().indexOf("text/plain") != -1)   return null;
+  if ("text/plain".equals(response.getPayload().getContentMetadata().getContentType()))   return null;
   try {
-    AWSError error=(AWSError)factory.create(errorHandlerProvider.get()).setContext(request).apply(response);
+    AWSError error=factory.create(errorHandlerProvider.get()).setContext(request).apply(response);
     if (error.getRequestId() == null)     error.setRequestId(response.getFirstHeaderOrNull(requestId));
     error.setRequestToken(response.getFirstHeaderOrNull(requestToken));
     if ("SignatureDoesNotMatch".equals(error.getCode())) {
