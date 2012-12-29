@@ -1,0 +1,8 @@
+{
+  List<Object> seq=createASN1Sequence(bytes);
+  checkArgument(seq.size() == 2,"expected 2 components of ASN1Sequence: %s",seq);
+  if (seq.get(1) instanceof List) {
+    seq=List.class.cast(seq.get(1));
+  }
+  return new RSAPublicKeySpec(bigIntAt(seq,0),bigIntAt(seq,1));
+}

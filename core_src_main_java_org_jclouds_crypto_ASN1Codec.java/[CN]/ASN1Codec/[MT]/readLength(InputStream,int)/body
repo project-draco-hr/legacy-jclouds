@@ -1,0 +1,18 @@
+{
+  int length=read(s);
+  checkArgument(length >= 0,"EOF found when length expected");
+  checkArgument(length != 0x80,"indefinite-length encoding not supported");
+  if (length > 127) {
+    int size=length & 0x7f;
+    checkArgument(size <= 4,"DER length more than 4 bytes: %s",size);
+    length=0;
+    for (int i=0; i < size; i++) {
+      int next=read(s);
+      checkArgument(next >= 0,"EOF found reading length");
+      length=(length << 8) + next;
+    }
+    checkArgument(length >= 0,"corrupted stream - negative length %s found",length);
+    checkArgument(length < limit,"corrupted stream - length %s out of bounds %s",length,limit);
+  }
+  return length;
+}

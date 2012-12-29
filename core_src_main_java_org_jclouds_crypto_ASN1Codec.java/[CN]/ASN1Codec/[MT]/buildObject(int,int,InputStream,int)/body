@@ -1,0 +1,15 @@
+{
+  boolean isConstructed=(tag & CONSTRUCTED) != 0;
+  InputStream limited=limit(in,limit);
+  if (isConstructed && tagNo == SEQUENCE) {
+    return Optional.<Object>of(buildEncodableList(limited,limit));
+  }
+  byte[] bytes=toArray(limited);
+switch (tagNo) {
+case BIT_STRING:
+    return Optional.<Object>of(nestedASN1Sequence(bytes));
+case INTEGER:
+  return Optional.<Object>of(new BigInteger(bytes));
+}
+return Optional.absent();
+}

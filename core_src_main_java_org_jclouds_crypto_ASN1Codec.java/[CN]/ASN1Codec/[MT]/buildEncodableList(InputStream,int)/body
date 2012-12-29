@@ -1,0 +1,23 @@
+{
+  return ImmutableList.copyOf(filter(new Iterator<Object>(){
+    boolean hasNext=true;
+    public boolean hasNext(){
+      return hasNext;
+    }
+    public Object next(){
+      int tag=read(in);
+      if (tag == -1) {
+        hasNext=false;
+        return null;
+      }
+      checkArgument(tag != 0,"invalid tag %s",tag);
+      int tagNo=tag & 0x1f;
+      int length=readLength(in,limit);
+      checkArgument(length >= 0,"indefinite length not supported");
+      return buildObject(tag,tagNo,in,length).orNull();
+    }
+    public void remove(){
+    }
+  }
+,notNull()));
+}

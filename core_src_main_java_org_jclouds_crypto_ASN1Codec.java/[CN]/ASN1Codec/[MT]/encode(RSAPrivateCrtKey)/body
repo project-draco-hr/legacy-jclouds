@@ -1,0 +1,18 @@
+{
+  List<BigInteger> seq=ImmutableList.<BigInteger>builder().add(BigInteger.valueOf(0)).add(key.getModulus()).add(key.getPublicExponent()).add(key.getPrivateExponent()).add(key.getPrimeP()).add(key.getPrimeQ()).add(key.getPrimeExponentP()).add(key.getPrimeExponentQ()).add(key.getCrtCoefficient()).build();
+  int length=0;
+  for (  BigInteger part : seq) {
+    byte[] bytes=part.toByteArray();
+    length+=1 + calculateBodyLength(bytes.length) + bytes.length;
+  }
+  Builder<Byte> output=ImmutableList.<Byte>builder();
+  output.add((byte)(SEQUENCE | CONSTRUCTED));
+  writeLength(output,length);
+  for (  BigInteger part : seq) {
+    byte[] bytes=part.toByteArray();
+    output.add((byte)TAG);
+    writeLength(output,bytes.length);
+    output.addAll(Bytes.asList(bytes));
+  }
+  return Bytes.toArray(output.build());
+}

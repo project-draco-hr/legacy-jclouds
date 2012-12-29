@@ -1,0 +1,7 @@
+{
+  List<Object> seq=createASN1Sequence(bytes);
+  checkArgument(seq.size() >= 9,"not enough elements (%s) for a private key",seq.size(),seq);
+  int version=bigIntAt(seq,0).intValue();
+  checkArgument(version == 0 || version == 1,"wrong version %s for RSA private key",version);
+  return new RSAPrivateCrtKeySpec(bigIntAt(seq,1),bigIntAt(seq,2),bigIntAt(seq,3),bigIntAt(seq,4),bigIntAt(seq,5),bigIntAt(seq,6),bigIntAt(seq,7),bigIntAt(seq,8));
+}

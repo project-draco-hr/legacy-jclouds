@@ -1,0 +1,9 @@
+{
+  int tag=read(in);
+  if (tag == -1)   return Optional.absent();
+  checkArgument(tag != 0,"invalid tag %s",tag);
+  int tagNo=tag & 0x1f;
+  int length=readLength(in,limit);
+  checkArgument(length >= 0,"indefinite length not supported");
+  return buildObject(tag,tagNo,in,length);
+}
