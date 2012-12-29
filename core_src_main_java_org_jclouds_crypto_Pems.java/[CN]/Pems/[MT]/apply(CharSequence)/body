@@ -1,0 +1,31 @@
+{
+  checkNotNull(chars,"chars");
+  BufferedReader reader=null;
+  try {
+    reader=new BufferedReader(new StringReader(chars.toString()));
+    Optional<String> begin=skipUntilBegin(reader);
+    checkArgument(begin.isPresent(),"chars %s doesn't contain % line",chars,BEGIN);
+    String line=begin.get().substring(BEGIN.length());
+    String type=line.substring(0,line.indexOf('-'));
+    StringBuilder encoded=new StringBuilder();
+    boolean reachedEnd=false;
+    while ((line=reader.readLine()) != null) {
+      if (line.indexOf(':') >= 0) {
+        continue;
+      }
+      if (line.indexOf(END + type) != -1) {
+        reachedEnd=true;
+        break;
+      }
+      encoded.append(line.trim());
+    }
+    checkArgument(reachedEnd,"chars %s doesn't contain % line",chars,END);
+    return new Pem(type,base64().decode(encoded.toString()));
+  }
+ catch (  IOException e) {
+    throw new IllegalStateException(String.format("io exception reading %s",chars),e);
+  }
+ finally {
+    closeQuietly(reader);
+  }
+}
