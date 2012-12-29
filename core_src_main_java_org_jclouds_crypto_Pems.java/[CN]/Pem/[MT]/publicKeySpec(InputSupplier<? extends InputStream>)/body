@@ -1,0 +1,8 @@
+{
+  return fromPem(supplier,new PemProcessor<KeySpec>(ImmutableMap.<String,PemProcessor.ResultParser<KeySpec>>of(PUBLIC_PKCS1_MARKER,DecodeRSAPublicKeySpec.INSTANCE,PUBLIC_X509_MARKER,new PemProcessor.ResultParser<KeySpec>(){
+    @Override public X509EncodedKeySpec parseResult(    byte[] bytes) throws IOException {
+      return new X509EncodedKeySpec(bytes);
+    }
+  }
+)));
+}
