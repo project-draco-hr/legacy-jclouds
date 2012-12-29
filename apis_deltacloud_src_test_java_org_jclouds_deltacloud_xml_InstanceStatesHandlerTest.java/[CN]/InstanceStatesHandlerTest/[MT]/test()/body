@@ -1,5 +1,0 @@
-{
-  InputStream is=getClass().getResourceAsStream("/test_get_states.xml");
-  Multimap<State,? extends Transition> expects=ImmutableMultimap.<State,Transition>builder().put(State.START,new TransitionOnAction(Action.CREATE,State.PENDING)).put(State.PENDING,new TransitionAutomatically(State.RUNNING)).putAll(State.RUNNING,new TransitionOnAction(Action.REBOOT,State.RUNNING),new TransitionOnAction(Action.STOP,State.STOPPED)).putAll(State.STOPPED,new TransitionOnAction(Action.START,State.RUNNING),new TransitionOnAction(Action.DESTROY,State.FINISH)).build();
-  assertEquals(factory.create(injector.getInstance(InstanceStatesHandler.class)).parse(is).entries(),expects.entries());
-}
