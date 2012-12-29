@@ -1,28 +1,21 @@
 {
   if (response.getFirstHeaderOrNull(HttpHeaders.LOCATION) == null && (response.getStatusCode() == 301 || response.getStatusCode() == 307)) {
-    if (command.getCurrentRequest().getMethod().equals(HttpMethod.HEAD)) {
-      command.incrementRedirectCount();
-      command.setCurrentRequest(command.getCurrentRequest().toBuilder().method("GET").build());
+    command.incrementRedirectCount();
+    closeClientButKeepContentStream(response);
+    AWSError error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
+    String host=error.getDetails().get("Endpoint");
+    if (host != null) {
+      if (host.equals(command.getCurrentRequest().getEndpoint().getHost())) {
+        return backoffHandler.shouldRetryRequest(command,response);
+      }
+ else {
+        URI newHost=uriBuilder(command.getCurrentRequest().getEndpoint()).host(host).build();
+        command.setCurrentRequest(command.getCurrentRequest().toBuilder().endpoint(newHost).build());
+      }
       return true;
     }
  else {
-      command.incrementRedirectCount();
-      closeClientButKeepContentStream(response);
-      AWSError error=utils.parseAWSErrorFromContent(command.getCurrentRequest(),response);
-      String host=error.getDetails().get("Endpoint");
-      if (host != null) {
-        if (host.equals(command.getCurrentRequest().getEndpoint().getHost())) {
-          return backoffHandler.shouldRetryRequest(command,response);
-        }
- else {
-          URI newHost=uriBuilder(command.getCurrentRequest().getEndpoint()).host(host).build();
-          command.setCurrentRequest(command.getCurrentRequest().toBuilder().endpoint(newHost).build());
-        }
-        return true;
-      }
- else {
-        return false;
-      }
+      return false;
     }
   }
  else {
