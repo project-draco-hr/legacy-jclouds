@@ -1,6 +1,6 @@
 {
   FluentIterable<Service> services=FluentIterable.from(access.get()).filter(apiTypeEquals);
-  if (services.toImmutableSet().size() == 0)   throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,services));
+  if (services.toSet().size() == 0)   throw new NoSuchElementException(String.format("apiType %s not found in catalog %s",apiType,services));
   Iterable<Endpoint> endpoints=concat(services);
   if (size(endpoints) == 0)   throw new NoSuchElementException(String.format("no endpoints for apiType %s in services %s",apiType,services));
   boolean checkVersionId=any(endpoints,versionAware);

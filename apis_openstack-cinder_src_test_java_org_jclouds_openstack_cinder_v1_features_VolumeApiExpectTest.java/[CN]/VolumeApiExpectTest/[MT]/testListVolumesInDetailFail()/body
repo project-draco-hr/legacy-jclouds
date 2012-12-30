@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/detail");
   VolumeApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(404).build()).getVolumeApiForZone("RegionOne");
-  Set<? extends Volume> volumes=api.listInDetail().toImmutableSet();
+  Set<? extends Volume> volumes=api.listInDetail().toSet();
   assertTrue(volumes.isEmpty());
 }
