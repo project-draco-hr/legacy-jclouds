@@ -21,7 +21,10 @@
   }
  else {
     try {
-      return ((ListenableFuture<?>)methodMap.get(method).invoke(delegate,args)).get(timeoutMap.get(method),TimeUnit.NANOSECONDS);
+      ListenableFuture<?> future=((ListenableFuture<?>)methodMap.get(method).invoke(delegate,args));
+      Optional<Long> timeoutNanos=timeoutMap.get(method);
+      if (timeoutNanos.isPresent())       return future.get(timeoutNanos.get(),TimeUnit.NANOSECONDS);
+      return future.get();
     }
  catch (    ProvisionException e) {
       throw Throwables2.returnFirstExceptionIfInListOrThrowStandardExceptionOrCause(method.getExceptionTypes(),e);

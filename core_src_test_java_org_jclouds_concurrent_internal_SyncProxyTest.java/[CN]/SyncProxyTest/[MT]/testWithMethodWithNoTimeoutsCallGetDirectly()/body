@@ -1,0 +1,9 @@
+{
+  LoadingCache<ClassMethodArgs,Object> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.<Object>constant(null)));
+  Sync withOverride=SyncProxy.proxy(new AlwaysPresentImplicitOptionalConverter(),Sync.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of(),ImmutableMap.<String,Long>of());
+  future=createMock(ListenableFuture.class);
+  expect(future.get()).andReturn("foo");
+  replay(future);
+  assertEquals(withOverride.get(),"foo");
+  verify(future);
+}

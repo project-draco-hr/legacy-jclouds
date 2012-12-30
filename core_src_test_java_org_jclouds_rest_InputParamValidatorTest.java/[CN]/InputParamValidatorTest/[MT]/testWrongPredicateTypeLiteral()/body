@@ -1,14 +1,4 @@
 {
-@Timeout(duration=1000,timeUnit=TimeUnit.SECONDS) class WrongValidator {
-    @SuppressWarnings("unused") @POST @ParamValidators({AllLowerCaseValidator.class}) public void method(    @PathParam("param1") Integer param1){
-    }
-  }
-  WrongValidator validator=new WrongValidator();
-  Method method=validator.getClass().getMethod("method",Integer.class);
-  try {
-    new InputParamValidator(injector).validateMethodParametersOrThrow(method,55);
-    throw new TestException("ClassCastException expected, but wasn't thrown");
-  }
- catch (  ClassCastException e) {
-  }
+  Method method=WrongValidator.class.getMethod("method",Integer.class);
+  new InputParamValidator(injector).validateMethodParametersOrThrow(method,55);
 }
