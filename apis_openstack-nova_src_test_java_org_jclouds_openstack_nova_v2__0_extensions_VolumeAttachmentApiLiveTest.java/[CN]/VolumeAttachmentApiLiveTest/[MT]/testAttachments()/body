@@ -3,7 +3,7 @@
     String server_id=null;
     try {
       final String serverId=server_id=createServerInZone(zone).getId();
-      Set<? extends VolumeAttachment> attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toImmutableSet();
+      Set<? extends VolumeAttachment> attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toSet();
       assertNotNull(attachments);
       final int before=attachments.size();
       VolumeAttachment testAttachment=volumeAttachmentApi.get().attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
@@ -15,7 +15,7 @@
         }
       }
 ,60 * 1000L).apply(volumeAttachmentApi.get()));
-      attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toImmutableSet();
+      attachments=volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toSet();
       assertNotNull(attachments);
       assertEquals(attachments.size(),before + 1);
       assertEquals(volumeApi.get().get(testVolume.getId()).getStatus(),Volume.Status.IN_USE);

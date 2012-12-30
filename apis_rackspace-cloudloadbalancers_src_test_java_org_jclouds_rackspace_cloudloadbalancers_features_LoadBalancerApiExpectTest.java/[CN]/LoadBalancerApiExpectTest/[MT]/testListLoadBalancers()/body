@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers");
   LoadBalancerApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/loadbalancers-list.json")).build()).getLoadBalancerApiForZone("DFW");
-  Set<LoadBalancer> loadBalancers=api.list().concat().toImmutableSet();
+  Set<LoadBalancer> loadBalancers=api.list().concat().toSet();
   assertEquals(loadBalancers,testLoadBalancers());
 }
