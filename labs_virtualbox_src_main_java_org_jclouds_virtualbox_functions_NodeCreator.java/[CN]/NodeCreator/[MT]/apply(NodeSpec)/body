@@ -13,7 +13,7 @@
  catch (    Exception e) {
       throw new RuntimeException("error opening vbox machine session: " + e.getMessage(),e);
     }
-    logger.debug("Deleted an existing snapshot from %s",master.getMachine().getName());
+    logger.debug("<< deleted an existing snapshot of vm(%s)",master.getMachine().getName());
   }
   String masterNameWithoutPrefix=master.getMachine().getName().replace(VIRTUALBOX_IMAGE_PREFIX,"");
   String cloneName=VIRTUALBOX_NODE_PREFIX + masterNameWithoutPrefix + VIRTUALBOX_NODE_NAME_SEPARATOR+ nodeSpec.getTag()+ VIRTUALBOX_NODE_NAME_SEPARATOR+ nodeSpec.getName();
@@ -29,12 +29,12 @@
   }
 );
   CloneSpec cloneSpec=CloneSpec.builder().linked(true).master(master.getMachine()).network(networkSpec).vm(cloneVmSpec).build();
-  logger.debug("Cloning a new guest an existing snapshot from %s ...",master.getMachine().getName());
   IMachine cloned=cloner.apply(cloneSpec);
+  logger.debug("<< cloned a vm(%s) from master(%s)",cloneName,master.getMachine().getName());
   machineController.ensureMachineIsLaunched(cloneVmSpec.getVmName());
   NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
   machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
-  if (optionalNatIfaceCard.isPresent())   checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()),"cannot enable Nat Interface");
+  if (optionalNatIfaceCard.isPresent())   checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()),"cannot enable NAT Interface on vm(%s)",cloneName);
   LoginCredentials credentials=partialNodeMetadata.getCredentials();
   return new NodeAndInitialCredentials<IMachine>(cloned,cloneName,credentials);
 }

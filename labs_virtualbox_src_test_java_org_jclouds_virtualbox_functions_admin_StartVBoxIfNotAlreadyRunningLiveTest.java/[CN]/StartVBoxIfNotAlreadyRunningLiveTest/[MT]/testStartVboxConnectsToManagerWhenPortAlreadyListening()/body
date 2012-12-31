@@ -1,14 +1,16 @@
 {
   VirtualBoxManager manager=createMock(VirtualBoxManager.class);
   Factory runScriptOnNodeFactory=createMock(Factory.class);
+  RunScriptOnNode runScriptOnNode=createMock(RunScriptOnNode.class);
   RetryIfSocketNotYetOpen client=createMock(RetryIfSocketNotYetOpen.class);
+  HardcodedHostToHostNodeMetadata hardcodedHostToHostNodeMetadata=createMock(HardcodedHostToHostNodeMetadata.class);
   NodeMetadata host=new NodeMetadataBuilder().id("host").status(Status.RUNNING).build();
   URI provider=URI.create("http://localhost:18083/");
   expect(client.seconds(3)).andReturn(client);
   expect(client.apply(HostAndPort.fromParts(provider.getHost(),provider.getPort()))).andReturn(true).anyTimes();
   manager.connect(provider.toASCIIString(),"","");
   expectLastCall().anyTimes();
-  replay(manager,runScriptOnNodeFactory,client);
-  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider),null).start();
+  replay(manager,runScriptOnNodeFactory,runScriptOnNode,client);
+  new StartVBoxIfNotAlreadyRunning((Function)Functions.constant(manager),runScriptOnNodeFactory,client,Suppliers.ofInstance(host),Suppliers.ofInstance(provider),hardcodedHostToHostNodeMetadata).start();
   verify(manager,runScriptOnNodeFactory,client);
 }

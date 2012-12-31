@@ -8,7 +8,7 @@
   IMedium newHardDisk=createMock(IMedium.class);
   IProgress progress=createNiceMock(IProgress.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
-  expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andReturn(medium);
+  expect(vBox.openMedium(adminDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,false)).andReturn(medium);
   expect(medium.deleteStorage()).andReturn(progress);
   expect(vBox.createHardDisk(diskFormat,adminDiskPath)).andReturn(newHardDisk);
   expect(newHardDisk.createBaseStorage(anyLong(),anyLong())).andReturn(progress);

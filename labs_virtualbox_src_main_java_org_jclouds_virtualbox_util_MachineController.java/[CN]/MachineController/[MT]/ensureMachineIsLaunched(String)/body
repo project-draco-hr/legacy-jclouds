@@ -6,7 +6,7 @@
       session=machineUtils.applyForMachine(vmName,new LaunchMachineIfNotAlreadyRunning(manager.get(),executionType,""));
     }
  catch (    RuntimeException e) {
-      if (e.getMessage().contains("org.virtualbox_4_1.VBoxException: VirtualBox error: The given session is busy (0x80BB0007)")) {
+      if (e.getMessage().contains("org.virtualbox_4_2.VBoxException: VirtualBox error: The given session is busy (0x80BB0007)")) {
         throw e;
       }
  else       if (e.getMessage().contains("VirtualBox error: The object is not ready")) {
@@ -17,22 +17,20 @@
       }
     }
   }
-  Uninterruptibles.sleepUninterruptibly(5,TimeUnit.SECONDS);
   String guestAdditionsInstalled=machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,String>(){
     @Override public String apply(    ISession session){
-      int attempts=0;
-      String guestAdditionsInstalled=null;
-      while (!!session.getConsole().getGuest().getAdditionsVersion().isEmpty() && attempts < 3) {
-        Uninterruptibles.sleepUninterruptibly(2,TimeUnit.SECONDS);
-        guestAdditionsInstalled=session.getConsole().getGuest().getAdditionsVersion();
-        attempts++;
-      }
+      new RetryableNumTimesPredicate<Integer>(new FacilitiesPredicate(session),5,3L,TimeUnit.SECONDS).apply(4);
+      String guestAdditionsInstalled=session.getConsole().getGuest().getAdditionsVersion();
       return guestAdditionsInstalled;
     }
   }
 );
   if (!Strings.nullToEmpty(guestAdditionsInstalled).isEmpty()) {
+    logger.debug("<< guest additions(%s) installed on vm(%s)",guestAdditionsInstalled,vmName);
     waitVBoxServiceIsActive(vmName);
+  }
+ else {
+    logger.debug("<< guest additions not available on(%s)",vmName);
   }
   return checkNotNull(session,"session");
 }

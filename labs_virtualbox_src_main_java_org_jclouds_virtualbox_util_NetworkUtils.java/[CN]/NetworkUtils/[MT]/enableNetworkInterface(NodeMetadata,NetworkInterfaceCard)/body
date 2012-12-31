@@ -1,14 +1,6 @@
 {
-  ExecResponse execResponse=null;
-  try {
-    execResponse=machineUtils.runScriptOnNode(nodeMetadata,new EnableNetworkInterface(networkInterfaceCard),RunScriptOptions.NONE).get();
-  }
- catch (  InterruptedException e) {
-    logger.error(e.getMessage());
-  }
-catch (  ExecutionException e) {
-    logger.error(e.getMessage());
-  }
-  if (execResponse == null)   return false;
-  return execResponse.getExitStatus() == 0;
+  ListenableFuture<ExecResponse> execEnableNetworkInterface=null;
+  execEnableNetworkInterface=machineUtils.runScriptOnNode(nodeMetadata,new EnableNetworkInterface(networkInterfaceCard),RunScriptOptions.NONE);
+  ExecResponse execEnableNetworkInterfaceResponse=Futures.getUnchecked(execEnableNetworkInterface);
+  return execEnableNetworkInterfaceResponse.getExitStatus() == 0;
 }

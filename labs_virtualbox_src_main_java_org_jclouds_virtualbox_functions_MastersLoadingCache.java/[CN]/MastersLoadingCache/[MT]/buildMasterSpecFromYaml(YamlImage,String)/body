@@ -8,7 +8,7 @@
   String localIsoUrl=checkNotNull(getFilePathOrDownload(currentImage.iso,currentImage.iso_md5),"distro iso");
   String adminDisk=workingDir + File.separator + vmName+ ".vdi";
   HardDisk hardDisk=HardDisk.builder().diskpath(adminDisk).autoDelete(true).controllerPort(0).deviceSlot(1).build();
-  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,localIsoUrl).attachHardDisk(hardDisk).attachISO(1,0,guestAdditionsIso).build();
+  StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,localIsoUrl).attachHardDisk(hardDisk).build();
   VmSpec vmSpecification=VmSpec.builder().id(currentImage.id).name(vmName).memoryMB(512).osTypeId(getOsTypeId(currentImage.os_family,currentImage.os_64bit)).controller(ideController).forceOverwrite(true).guestUser(currentImage.username).guestPassword(currentImage.credential).cleanUpMode(CleanupMode.Full).build();
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.NAT).tcpRedirectRule(providerSupplier.get().getHost(),NetworkUtils.MASTER_PORT,"",22).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).slot(0L).build();

@@ -1,0 +1,14 @@
+{
+  long nicSlot=0;
+  String ipAddress="";
+  while (nicSlot < 4 && ipAddress.isEmpty()) {
+    MachineNameOrIdAndNicSlot machineNameOrIdAndNicSlot=MachineNameOrIdAndNicSlot.fromParts(machineNameOrId,nicSlot);
+    ipAddress=getIpAddressFromNicSlot(machineNameOrIdAndNicSlot);
+    if (!isValidIpForHostOnly(machineNameOrIdAndNicSlot,ipAddress)) {
+      ipAddressesLoadingCache.invalidate(machineNameOrIdAndNicSlot);
+      ipAddress="";
+    }
+    nicSlot++;
+  }
+  return checkNotNull(Strings.emptyToNull(ipAddress),String.format("Cannot find a valid IP address for the %s's HostOnly NIC",machineNameOrId));
+}

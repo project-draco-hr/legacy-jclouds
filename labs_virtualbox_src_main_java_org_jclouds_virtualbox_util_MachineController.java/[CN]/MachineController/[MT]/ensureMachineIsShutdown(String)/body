@@ -1,12 +1,11 @@
 {
-  IMachine machine=manager.get().getVBox().findMachine(vmName);
-  ISession session=machineUtils.lockSessionOnMachineAndApply(vmName,LockType.Shared,new Function<ISession,ISession>(){
+  ISession session=machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,ISession>(){
     @Override public ISession apply(    ISession session){
       session.getConsole().powerButton();
       return session;
     }
   }
 );
-  safeCheckMachineIsUnlocked(machine);
+  checkState(new RetryableNumTimesPredicate<MachineState>(new MachineStatePredicate(manager.get().getVBox(),vmName),5,3L,TimeUnit.SECONDS).apply(MachineState.PoweredOff),"vm(%s) is not shutdown correctly",vmName);
   return checkNotNull(session,"session");
 }

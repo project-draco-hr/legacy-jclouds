@@ -3,20 +3,22 @@
   NetworkSpec networkSpec=cloneSpec.getNetworkSpec();
   boolean isLinkedClone=cloneSpec.isLinked();
   IMachine master=cloneSpec.getMaster();
-  String settingsFile=manager.get().getVBox().composeMachineFilename(vmSpec.getVmName(),workingDir);
-  IMachine clonedMachine=manager.get().getVBox().createMachine(settingsFile,vmSpec.getVmName(),vmSpec.getOsTypeId(),vmSpec.getVmId(),vmSpec.isForceOverwrite());
+  String flags="";
+  List<String> groups=ImmutableList.of();
+  String group="";
+  String settingsFile=manager.get().getVBox().composeMachineFilename(vmSpec.getVmName(),group,flags,workingDir);
+  IMachine clonedMachine=manager.get().getVBox().createMachine(settingsFile,vmSpec.getVmName(),groups,vmSpec.getOsTypeId(),flags);
   List<CloneOptions> options=Lists.newArrayList();
   if (isLinkedClone)   options.add(CloneOptions.Link);
   ISnapshot currentSnapshot=new TakeSnapshotIfNotAlreadyAttached(manager,"snapshotName","snapshotDesc",logger).apply(master);
   IProgress progress=currentSnapshot.getMachine().cloneTo(clonedMachine,CloneMode.MachineState,options);
   progress.waitForCompletion(-1);
-  logger.debug(String.format("Machine %s is cloned correctly",clonedMachine.getName()));
   clonedMachine.setMemorySize(cloneSpec.getVmSpec().getMemory());
   manager.get().getVBox().registerMachine(clonedMachine);
   for (  NetworkInterfaceCard networkInterfaceCard : networkSpec.getNetworkInterfaceCards()) {
     new AttachNicToMachine(vmSpec.getVmName(),machineUtils).apply(networkInterfaceCard);
   }
-  logger.debug(">> storing guest credentials on vm %s as extra data",clonedMachine.getName());
+  logger.debug("<< storing guest credentials on vm(%s) as extra data",clonedMachine.getName());
   String masterUsername=master.getExtraData(GUEST_OS_USER);
   String masterPassword=master.getExtraData(GUEST_OS_PASSWORD);
   clonedMachine.setExtraData(GUEST_OS_USER,masterUsername);

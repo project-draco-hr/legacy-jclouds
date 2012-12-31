@@ -5,10 +5,10 @@
     INetworkAdapter adapter=vm.getNetworkAdapter(slot);
     if (adapter != null) {
       if (adapter.getAttachmentType() == NetworkAttachmentType.NAT) {
-        String hostIP=adapter.getNatDriver().getHostIP();
+        String hostIP=adapter.getNATEngine().getHostIP();
         if (!hostIP.isEmpty())         publicIpAddresses.add(hostIP);
-        for (        String nameProtocolnumberAddressInboundportGuestTargetport : adapter.getNatDriver().getRedirects()) {
-          Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboundportGuestTargetport);
+        for (        String nameProtocolnumberAddressInboudportGuestTargetport : adapter.getNATEngine().getRedirects()) {
+          Iterable<String> stuff=Splitter.on(',').split(nameProtocolnumberAddressInboudportGuestTargetport);
           String protocolNumber=Iterables.get(stuff,1);
           String hostAddress=Iterables.get(stuff,2);
           String inboundPort=Iterables.get(stuff,3);
@@ -25,7 +25,7 @@
         privateIpAddresses.add(clientIpAddress);
       }
  else       if (adapter.getAttachmentType() == NetworkAttachmentType.HostOnly) {
-        String clientIpAddress=networkUtils.getIpAddressFromNicSlot(vm.getName(),adapter.getSlot());
+        String clientIpAddress=networkUtils.getValidHostOnlyIpFromVm(vm.getName());
         publicIpAddresses.add(clientIpAddress);
       }
     }

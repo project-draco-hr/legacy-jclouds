@@ -8,7 +8,7 @@
   IMedium newHardDisk=createMock(IMedium.class);
   IProgress progress=createNiceMock(IProgress.class);
   expect(manager.getVBox()).andReturn(vBox).anyTimes();
-  expect(vBox.findMedium(adminDiskPath,DeviceType.HardDisk)).andReturn(medium);
+  expect(vBox.openMedium(adminDiskPath,DeviceType.HardDisk,AccessMode.ReadWrite,false)).andReturn(medium);
   String oldMachineId="a1e03931-29f3-4370-ada3-9547b1009212";
   String oldMachineName="oldMachine";
   IMachine oldMachine=createMock(IMachine.class);
@@ -20,7 +20,7 @@
   String oldMediumId="oldMediumId";
   ISession detachSession=createNiceMock(ISession.class);
   StringBuilder errorBuilder=new StringBuilder();
-  errorBuilder.append("org.virtualbox_4_1.VBoxException: VirtualBox error: ");
+  errorBuilder.append("org.virtualbox_4_2.VBoxException: VirtualBox error: ");
   errorBuilder.append("Cannot delete storage: medium '/Users/adriancole/jclouds-virtualbox-test/testadmin.vdi ");
   errorBuilder.append("is still attached to the following 1 virtual machine(s): ");
   errorBuilder.append(oldMachineId + " (0x80BB000C)");

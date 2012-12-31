@@ -6,21 +6,24 @@
   machineController.ensureMachineIsLaunched(masterName);
   String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",preconfigurationUrl);
   configureOsInstallationWithKeyboardSequence(masterName,installationKeySequence);
-  Uninterruptibles.sleepUninterruptibly(40,TimeUnit.SECONDS);
   masterMachine.setExtraData(GUEST_OS_USER,masterSpec.getLoginCredentials().getUser());
   masterMachine.setExtraData(GUEST_OS_PASSWORD,masterSpec.getLoginCredentials().getPassword());
   SshClient client=sshClientForIMachine.apply(masterMachine);
   logger.debug(">> awaiting installation to finish node(%s)",masterName);
+  Stopwatch stopwatch=new Stopwatch();
+  stopwatch.start();
   checkState(sshResponds.apply(client),"timed out waiting for guest %s to be accessible via ssh",masterName);
+  stopwatch.stop();
+  logger.debug(String.format("Elapsed time for the OS installation: %d minutes",TimeUnit.SECONDS.convert(stopwatch.elapsed(TimeUnit.MILLISECONDS),TimeUnit.MILLISECONDS)));
   NodeMetadata nodeMetadata=imachineToNodeMetadata.apply(masterMachine);
   logger.debug(">> awaiting post-installation actions on vm: %s",masterName);
   ListenableFuture<ExecResponse> execCleanup=machineUtils.runScriptOnNode(nodeMetadata,call("cleanupUdevIfNeeded"),RunScriptOptions.NONE);
   ExecResponse cleanupResponse=Futures.getUnchecked(execCleanup);
-  checkState(cleanupResponse.getExitStatus() == 0);
+  checkState(cleanupResponse.getExitStatus() == 0,"post-installation actions on vm(%s) failed",masterName);
   logger.debug(">> awaiting installation of guest additions on vm: %s",masterName);
   ListenableFuture<ExecResponse> execInstallGA=machineUtils.runScriptOnNode(nodeMetadata,new InstallGuestAdditions(vmSpec,version),RunScriptOptions.NONE);
   ExecResponse gaInstallationResponse=Futures.getUnchecked(execInstallGA);
-  checkState(gaInstallationResponse.getExitStatus() == 0);
+  checkState(gaInstallationResponse.getExitStatus() == 0,"installation of guest additions on vm(%s) failed",masterName);
   machineController.ensureMachineIsShutdown(masterName);
   Iterable<IMediumAttachment> mediumAttachments=Iterables.filter(masterMachine.getMediumAttachmentsOfController("IDE Controller"),new Predicate<IMediumAttachment>(){
     public boolean apply(    IMediumAttachment in){
@@ -29,8 +32,8 @@
   }
 );
   for (  IMediumAttachment iMediumAttachment : mediumAttachments) {
-    logger.debug("Detach %s from (%s)",iMediumAttachment.getMedium().getName(),masterMachine.getName());
-    machineUtils.writeLockMachineAndApply(masterMachine.getName(),new DetachDistroMediumFromMachine(iMediumAttachment.getController(),iMediumAttachment.getPort(),iMediumAttachment.getDevice()));
+    logger.debug("<< iMedium(%s) detached from (%s)",iMediumAttachment.getMedium().getName(),masterMachine.getName());
+    machineUtils.sharedLockMachineAndApply(masterMachine.getName(),new DetachDistroMediumFromMachine(iMediumAttachment.getController(),iMediumAttachment.getPort(),iMediumAttachment.getDevice()));
   }
   return masterMachine;
 }
