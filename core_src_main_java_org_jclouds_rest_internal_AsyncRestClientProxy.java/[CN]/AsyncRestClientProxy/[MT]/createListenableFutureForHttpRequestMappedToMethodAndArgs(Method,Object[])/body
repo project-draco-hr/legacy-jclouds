@@ -1,6 +1,7 @@
 {
   method=annotationProcessor.getDelegateOrNull(method);
-  logger.trace("Converting %s.%s",declaring.getSimpleName(),method.getName());
+  String name=method.getDeclaringClass().getSimpleName() + "." + method.getName();
+  logger.trace(">> converting %s",name);
   FutureFallback<?> fallback=fallbacks.getUnchecked(method);
   if (fallback instanceof InvocationContext) {
     InvocationContext.class.cast(fallback).setContext((HttpRequest)null);
@@ -11,10 +12,10 @@
     if (fallback instanceof InvocationContext) {
       InvocationContext.class.cast(fallback).setContext(request);
     }
-    logger.trace("Converted %s.%s to %s",declaring.getSimpleName(),method.getName(),request.getRequestLine());
+    logger.trace("<< converted %s to %s",name,request.getRequestLine());
     Function<HttpResponse,?> transformer=annotationProcessor.createResponseParser(method,request);
-    logger.trace("Response from %s.%s is parsed by %s",declaring.getSimpleName(),method.getName(),transformer.getClass().getSimpleName());
-    logger.debug("Invoking %s.%s",declaring.getSimpleName(),method.getName());
+    logger.trace("<< response from %s is parsed by %s",name,transformer.getClass().getSimpleName());
+    logger.debug(">> invoking %s",name);
     result=commandFactory.create(request,transformer).execute();
   }
  catch (  RuntimeException e) {
@@ -27,6 +28,6 @@
       return immediateFailedFuture(ex);
     }
   }
-  logger.trace("Exceptions from %s.%s are parsed by %s",declaring.getSimpleName(),method.getName(),fallback.getClass().getSimpleName());
+  logger.trace("<< exceptions from %s are parsed by %s",name,fallback.getClass().getSimpleName());
   return withFallback(result,fallback);
 }

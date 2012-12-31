@@ -1,18 +1,3 @@
 {
-  A client=(A)injector.getInstance(Key.get(asyncClientType));
-  Function<ClassMethodArgsAndReturnVal,Optional<Object>> optionalConverter=injector.getInstance(Key.get(new TypeLiteral<Function<ClassMethodArgsAndReturnVal,Optional<Object>>>(){
-  }
-));
-  LoadingCache<ClassMethodArgs,Object> delegateMap=injector.getInstance(Key.get(new TypeLiteral<LoadingCache<ClassMethodArgs,Object>>(){
-  }
-,Names.named("sync")));
-  Map<String,Long> timeoutsMap=injector.getInstance(Key.get(new TypeLiteral<Map<String,Long>>(){
-  }
-,Names.named("TIMEOUTS")));
-  try {
-    return (S)SyncProxy.proxy(optionalConverter,syncClientType,client,delegateMap,sync2Async,timeoutsMap);
-  }
- catch (  Exception e) {
-    throw Throwables.propagate(e);
-  }
+  return newProxy(syncClientType,factory.create(syncClientType,asyncClient));
 }

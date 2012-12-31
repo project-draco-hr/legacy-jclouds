@@ -4,16 +4,5 @@
   checkState(asyncClass != null,"configuration error, sync class " + syncClass + " not mapped to an async class");
   Object asyncClient=asyncMap.getUnchecked(from);
   checkState(asyncClient != null,"configuration error, sync client for " + from + " not found");
-  Function<ClassMethodArgsAndReturnVal,Optional<Object>> optionalConverter=injector.getInstance(Key.get(new TypeLiteral<Function<ClassMethodArgsAndReturnVal,Optional<Object>>>(){
-  }
-));
-  Map<String,Long> timeoutsMap=injector.getInstance(Key.get(new TypeLiteral<Map<String,Long>>(){
-  }
-,Names.named("TIMEOUTS")));
-  try {
-    return SyncProxy.proxy(optionalConverter,syncClass,asyncClient,delegateMap.get(),sync2Async,timeoutsMap);
-  }
- catch (  Exception e) {
-    throw Throwables.propagate(e);
-  }
+  return newProxy(syncClass,factory.create(syncClass,asyncClient));
 }

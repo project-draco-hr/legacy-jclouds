@@ -21,9 +21,15 @@
   }
  else {
     try {
-      ListenableFuture<?> future=((ListenableFuture<?>)methodMap.get(method).invoke(delegate,args));
       Optional<Long> timeoutNanos=timeoutMap.get(method);
-      if (timeoutNanos.isPresent())       return future.get(timeoutNanos.get(),TimeUnit.NANOSECONDS);
+      Method asyncMethod=methodMap.get(method);
+      String name=asyncMethod.getDeclaringClass().getSimpleName() + "." + asyncMethod.getName();
+      ListenableFuture<?> future=((ListenableFuture<?>)asyncMethod.invoke(delegate,args));
+      if (timeoutNanos.isPresent()) {
+        logger.debug(">> blocking on %s for %s",name,timeoutNanos);
+        return future.get(timeoutNanos.get(),TimeUnit.NANOSECONDS);
+      }
+      logger.debug(">> blocking on %s",name);
       return future.get();
     }
  catch (    ProvisionException e) {
