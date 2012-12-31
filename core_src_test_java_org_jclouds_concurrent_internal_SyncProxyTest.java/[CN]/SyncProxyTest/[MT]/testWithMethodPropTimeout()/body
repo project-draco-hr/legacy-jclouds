@@ -1,6 +1,5 @@
 {
-  LoadingCache<ClassMethodArgs,Object> cache=CacheBuilder.newBuilder().build(CacheLoader.from(Functions.<Object>constant(null)));
-  Sync withOverride=SyncProxy.proxy(new AlwaysPresentImplicitOptionalConverter(),Sync.class,new Async(),cache,ImmutableMap.<Class<?>,Class<?>>of(),ImmutableMap.<String,Long>of("default",50L,"Sync",100L,"Sync.get",250L));
+  Sync withOverride=syncProxyForTimeouts(ImmutableMap.of("default",50L,"Sync",100L,"Sync.get",250L));
   assertEquals(withOverride.get(),"foo");
   verify(future);
 }

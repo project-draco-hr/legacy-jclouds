@@ -1,0 +1,28 @@
+{
+  this.optionalConverter=optionalConverter;
+  this.delegateMap=delegateMap;
+  this.delegate=async;
+  this.declaring=declaring;
+  this.sync2Async=ImmutableMap.copyOf(sync2Async);
+  ImmutableMap.Builder<Method,Method> methodMapBuilder=ImmutableMap.builder();
+  ImmutableMap.Builder<Method,Method> syncMethodMapBuilder=ImmutableMap.builder();
+  for (  Method method : declaring.getMethods()) {
+    if (!objectMethods.contains(method)) {
+      Method delegatedMethod=delegate.getClass().getMethod(method.getName(),method.getParameterTypes());
+      if (!Arrays.equals(delegatedMethod.getExceptionTypes(),method.getExceptionTypes()))       throw new IllegalArgumentException(String.format("method %s has different typed exceptions than delegated method %s",method,delegatedMethod));
+      if (delegatedMethod.getReturnType().isAssignableFrom(ListenableFuture.class)) {
+        methodMapBuilder.put(method,delegatedMethod);
+      }
+ else {
+        syncMethodMapBuilder.put(method,delegatedMethod);
+      }
+    }
+  }
+  methodMap=methodMapBuilder.build();
+  syncMethodMap=syncMethodMapBuilder.build();
+  ImmutableMap.Builder<Method,Optional<Long>> timeoutMapBuilder=ImmutableMap.builder();
+  for (  Method method : methodMap.keySet()) {
+    timeoutMapBuilder.put(method,timeoutInNanos(method,timeouts));
+  }
+  timeoutMap=timeoutMapBuilder.build();
+}
