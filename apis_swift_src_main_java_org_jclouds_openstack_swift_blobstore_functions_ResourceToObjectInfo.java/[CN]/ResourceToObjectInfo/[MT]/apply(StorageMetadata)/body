@@ -9,7 +9,7 @@
  else   if (from.getType() == StorageType.RELATIVE_PATH) {
     to.setContentType("application/directory");
   }
-  if (from.getETag() != null && to.getHash() == null)   to.setHash(CryptoStreams.hex(from.getETag()));
+  if (from.getETag() != null && to.getHash() == null)   to.setHash(base16().lowerCase().decode(from.getETag()));
   to.setName(from.getName());
   to.setLastModified(from.getLastModified());
   if (from.getUserMetadata() != null) {

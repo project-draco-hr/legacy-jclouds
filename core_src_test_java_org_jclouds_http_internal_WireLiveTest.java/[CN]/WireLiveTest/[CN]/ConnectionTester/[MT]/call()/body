@@ -3,9 +3,9 @@
   InputStream in=wire.input(fromServer);
   ByteArrayOutputStream out=new ByteArrayOutputStream();
   copy(in,out);
-  byte[] compare=CryptoStreams.md5(out.toByteArray());
+  byte[] compare=md5().hashBytes(out.toByteArray()).asBytes();
   Thread.sleep(100);
-  assertEquals(CryptoStreams.hex(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
+  assertEquals(base16().lowerCase().encode(compare),checkNotNull(sysHttpStreamMd5,sysHttpStreamMd5));
   assertEquals(((BufferLogger)wire.getWireLog()).buff.toString().getBytes().length,3331484);
   return null;
 }

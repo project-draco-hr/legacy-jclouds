@@ -1,20 +1,20 @@
 {
   String filename="jclouds";
-  OutputStream os=null;
   File f=null;
   try {
     f=File.createTempFile(filename,"tmp");
     f.deleteOnExit();
     long length=(long)(Runtime.getRuntime().freeMemory() * 1.1);
-    os=new BufferedOutputStream(new FileOutputStream(f.getAbsolutePath()));
-    MessageDigest digester=context.utils().crypto().md5();
-    ByteArrayOutputStream out=new ByteArrayOutputStream();
+    MessageDigest digester=md5Digest();
+    CharSink fileSink=Files.asCharSink(f,Charsets.UTF_8);
+    Writer out=null;
     try {
+      out=fileSink.openStream();
       for (long i=0; i < length; i++) {
+        out.append('a');
         digester.update((byte)'a');
-        os.write((byte)'a');
       }
-      os.flush();
+      out.flush();
     }
   finally {
       closeQuietly(out);
@@ -23,11 +23,10 @@
     byte[] digest=digester.digest();
     payload.getContentMetadata().setContentMD5(digest);
     Multimap<String,String> headers=client.postPayloadAndReturnHeaders("",payload);
-    assertEquals(headers.get("x-Content-MD5"),ImmutableList.of(base64(digest)));
+    assertEquals(headers.get("x-Content-MD5"),ImmutableList.of(base64().encode(digest)));
     payload.release();
   }
   finally {
-    closeQuietly(os);
     if (f != null && f.exists())     f.delete();
   }
 }

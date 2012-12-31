@@ -2,7 +2,7 @@
   final String request="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<Delete>" + "<Object><Key>key1</Key></Object>"+ "<Object><Key>key2</Key></Object>"+ "</Delete>";
   final Payload requestPayload=Payloads.newStringPayload(request);
   requestPayload.getContentMetadata().setContentType("text/xml");
-  requestPayload.getContentMetadata().setContentMD5(CryptoStreams.md5(request.getBytes()));
+  requestPayload.getContentMetadata().setContentMD5(md5().hashString(request,UTF_8).asBytes());
   final String response="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<DeleteResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">\n" + "  <Deleted>\n"+ "    <Key>key1</Key>\n"+ "  </Deleted>\n"+ "  <Deleted>\n"+ "    <Key>key1.1</Key>\n"+ "  </Deleted>\n"+ "  <Error>\n"+ "    <Key>key2</Key>\n"+ "    <Code>AccessDenied</Code>\n"+ "    <Message>Access Denied</Message>\n"+ "  </Error>\n"+ "</DeleteResult>";
   final Payload responsePayload=Payloads.newStringPayload(response);
   responsePayload.getContentMetadata().setContentType("text/xml");

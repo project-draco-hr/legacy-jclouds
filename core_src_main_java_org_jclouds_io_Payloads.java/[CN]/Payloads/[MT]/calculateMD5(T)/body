@@ -1,8 +1,6 @@
 {
-  try {
-    return calculateMD5(payloadEnclosing,MessageDigest.getInstance("MD5"));
-  }
- catch (  NoSuchAlgorithmException e) {
-    throw Throwables.propagate(e);
-  }
+  checkNotNull(payloadEnclosing,"payloadEnclosing");
+  Payload newPayload=calculateMD5(payloadEnclosing.getPayload());
+  if (newPayload != payloadEnclosing.getPayload())   payloadEnclosing.setPayload(newPayload);
+  return payloadEnclosing;
 }

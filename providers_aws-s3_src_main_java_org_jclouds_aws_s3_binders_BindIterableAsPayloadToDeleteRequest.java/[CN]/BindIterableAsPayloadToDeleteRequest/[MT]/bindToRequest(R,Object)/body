@@ -11,7 +11,8 @@
   final String content=String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<Delete>%s</Delete>",objects);
   Payload payload=Payloads.newStringPayload(content);
   payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
-  payload.getContentMetadata().setContentMD5(CryptoStreams.md5(content.getBytes()));
+  byte[] md5=md5().hashString(content,UTF_8).asBytes();
+  payload.getContentMetadata().setContentMD5(md5);
   request.setPayload(payload);
   return request;
 }

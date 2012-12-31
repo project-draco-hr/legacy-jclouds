@@ -3,15 +3,10 @@
   String absoluteContainerPath=absoluteBasePath + CONTAINER_NAME + FS;
   FilesystemStorageStrategyImpl storageStrategyAbsolute=new FilesystemStorageStrategyImpl(new Provider<BlobBuilder>(){
     @Override public BlobBuilder get(){
-      try {
-        return new BlobBuilderImpl(new JCECrypto());
-      }
- catch (      Exception e) {
-        return null;
-      }
+      return new BlobBuilderImpl();
     }
   }
-,absoluteBasePath,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl(),new JCECrypto());
+,absoluteBasePath,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl());
   TestUtils.cleanDirectoryContent(absoluteContainerPath);
   String blobKey;
   File fileForPayload;

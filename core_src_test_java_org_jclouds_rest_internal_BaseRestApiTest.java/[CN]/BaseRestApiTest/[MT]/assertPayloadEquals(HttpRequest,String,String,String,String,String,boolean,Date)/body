@@ -13,7 +13,7 @@
     assertEquals(payload,toMatch);
     Long length=Long.valueOf(payload.getBytes().length);
     try {
-      assertContentHeadersEqual(request,contentType,contentDispositon,contentEncoding,contentLanguage,length,contentMD5 ? CryptoStreams.md5(request.getPayload()) : null,expires);
+      assertContentHeadersEqual(request,contentType,contentDispositon,contentEncoding,contentLanguage,length,contentMD5 ? asByteSource(request.getPayload().getInput()).hash(md5()).asBytes() : null,expires);
     }
  catch (    IOException e) {
       propagate(e);

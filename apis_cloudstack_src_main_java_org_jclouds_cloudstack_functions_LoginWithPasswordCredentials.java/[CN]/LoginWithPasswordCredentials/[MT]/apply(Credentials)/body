@@ -6,6 +6,6 @@
     username=domainUsername.getName();
     domain=domainUsername.getParent();
   }
-  String hashedPassword=CryptoStreams.md5Hex(input.credential);
+  String hashedPassword=base16().lowerCase().encode(md5().hashString(input.credential,UTF_8).asBytes());
   return client.loginUserInDomainWithHashOfPassword(username,domain,hashedPassword);
 }

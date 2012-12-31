@@ -7,7 +7,7 @@
   checkState(location != null,"no location matched ServerDetails %s",from);
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
   if (!isNullOrEmpty(from.getDescription()) && from.getDescription().matches("^[0-9A-Fa-f]+$")) {
-    String decoded=new String(CryptoStreams.hex(from.getDescription()),Charsets.UTF_8);
+    String decoded=new String(base16().lowerCase().decode(from.getDescription()),UTF_8);
     addMetadataAndParseTagsFromCommaDelimitedValue(builder,Splitter.on('\n').withKeyValueSeparator("=").split(decoded));
   }
   builder.imageId(from.getTemplateName() + "");

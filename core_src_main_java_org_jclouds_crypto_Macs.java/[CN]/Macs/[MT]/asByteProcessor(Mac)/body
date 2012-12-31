@@ -1,0 +1,13 @@
+{
+  checkNotNull(mac,"mac");
+  return new ByteProcessor<byte[]>(){
+    public boolean processBytes(    byte[] buf,    int off,    int len){
+      mac.update(buf,off,len);
+      return true;
+    }
+    public byte[] getResult(){
+      return mac.doFinal();
+    }
+  }
+;
+}

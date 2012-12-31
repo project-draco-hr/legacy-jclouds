@@ -1,10 +1,9 @@
 {
-  String signature;
   try {
-    signature=CryptoStreams.base64(CryptoStreams.mac(InputSuppliers.of(toSign),crypto.hmacSHA256(key)));
+    ByteProcessor<byte[]> hmacSHA256=asByteProcessor(crypto.hmacSHA256(key));
+    return base64().encode(readBytes(toInputStream(toSign),hmacSHA256));
   }
  catch (  Exception e) {
     throw new HttpException("error signing request",e);
   }
-  return signature;
 }

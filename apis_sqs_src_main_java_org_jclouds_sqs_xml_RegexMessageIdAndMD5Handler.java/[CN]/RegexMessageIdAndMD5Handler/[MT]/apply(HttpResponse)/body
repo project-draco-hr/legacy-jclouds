@@ -3,7 +3,7 @@
   if (content != null) {
     Matcher matcher=pattern.matcher(content);
     if (matcher.find()) {
-      return MessageIdAndMD5.builder().id(matcher.group(1)).md5(HashCodes.fromBytes(CryptoStreams.hex(matcher.group(2)))).build();
+      return MessageIdAndMD5.builder().id(matcher.group(1)).md5(HashCodes.fromBytes(base16().lowerCase().decode(matcher.group(2)))).build();
     }
   }
   return null;

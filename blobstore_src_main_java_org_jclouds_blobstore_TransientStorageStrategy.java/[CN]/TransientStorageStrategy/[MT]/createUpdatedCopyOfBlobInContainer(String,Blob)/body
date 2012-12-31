@@ -12,7 +12,7 @@
       HttpUtils.copy(oldMd,payload.getContentMetadata());
     }
  else {
-      if (payload.getContentMetadata().getContentMD5() == null)       Payloads.calculateMD5(in,crypto.md5());
+      if (payload.getContentMetadata().getContentMD5() == null)       Payloads.calculateMD5(in);
     }
   }
  catch (  IOException e) {
@@ -23,7 +23,7 @@
   blob.getMetadata().setContainer(containerName);
   blob.getMetadata().setUri(uriBuilder(new StringBuilder("mem://").append(containerName)).path(in.getMetadata().getName()).build());
   blob.getMetadata().setLastModified(new Date());
-  String eTag=CryptoStreams.hex(payload.getContentMetadata().getContentMD5());
+  String eTag=base16().lowerCase().encode(payload.getContentMetadata().getContentMD5());
   blob.getMetadata().setETag(eTag);
   blob.getAllHeaders().replaceValues(HttpHeaders.LAST_MODIFIED,ImmutableList.of(dateService.rfc822DateFormat(blob.getMetadata().getLastModified())));
   blob.getAllHeaders().replaceValues(HttpHeaders.ETAG,ImmutableList.of(eTag));
