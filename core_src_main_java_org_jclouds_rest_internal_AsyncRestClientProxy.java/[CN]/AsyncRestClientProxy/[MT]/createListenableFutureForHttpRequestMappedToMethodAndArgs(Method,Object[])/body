@@ -16,7 +16,7 @@
     Function<HttpResponse,?> transformer=annotationProcessor.createResponseParser(method,request);
     logger.trace("<< response from %s is parsed by %s",name,transformer.getClass().getSimpleName());
     logger.debug(">> invoking %s",name);
-    result=commandFactory.create(request,transformer).execute();
+    result=transform(makeListenable(http.submit(new HttpCommand(request)),userThreads),transformer);
   }
  catch (  RuntimeException e) {
     AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
