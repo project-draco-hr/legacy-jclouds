@@ -16,7 +16,7 @@
  else   if (qName.equals("ETag")) {
     String currentETag=currentOrNull(currentText);
     builder.eTag(currentETag);
-    builder.contentMD5(CryptoStreams.hex(Strings2.replaceAll(currentETag,'"',"")));
+    builder.contentMD5(base16().lowerCase().decode(Strings2.replaceAll(currentETag,'"',"")));
   }
  else   if (qName.equals("Size")) {
     builder.contentLength(Long.valueOf(currentOrNull(currentText)));

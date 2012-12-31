@@ -1,7 +1,8 @@
 {
   String signature;
   try {
-    signature=base64(mac(InputSuppliers.of(stringToSign),crypto.hmacSHA1(secretKey.getBytes())));
+    ByteProcessor<byte[]> hmacSHA1=asByteProcessor(crypto.hmacSHA1(secretKey.getBytes()));
+    signature=base64().encode(readBytes(toInputStream(toSign),hmacSHA1));
     if (signatureWire.enabled())     signatureWire.input(toInputStream(signature));
     return signature;
   }

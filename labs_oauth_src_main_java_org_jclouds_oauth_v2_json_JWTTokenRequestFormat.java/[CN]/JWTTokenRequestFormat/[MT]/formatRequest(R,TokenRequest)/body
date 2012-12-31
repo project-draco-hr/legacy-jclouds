@@ -2,11 +2,10 @@
   HttpRequest.Builder builder=httpRequest.toBuilder();
   String encodedHeader=json.toJson(tokenRequest.getHeader());
   String encodedClaimSet=json.toJson(tokenRequest.getClaimSet());
-  String encodedSignature=null;
-  encodedHeader=CryptoStreams.base64Url(encodedHeader.getBytes(Charsets.UTF_8));
-  encodedClaimSet=CryptoStreams.base64Url(encodedClaimSet.getBytes(Charsets.UTF_8));
-  byte[] signature=signer.apply(on(".").join(encodedHeader,encodedClaimSet).getBytes(Charsets.UTF_8));
-  encodedSignature=signature != null ? CryptoStreams.base64Url(signature) : "";
+  encodedHeader=base64Url().omitPadding().encode(encodedHeader.getBytes(UTF_8));
+  encodedClaimSet=base64Url().omitPadding().encode(encodedClaimSet.getBytes(UTF_8));
+  byte[] signature=signer.apply(on(".").join(encodedHeader,encodedClaimSet).getBytes(UTF_8));
+  String encodedSignature=signature != null ? base64Url().omitPadding().encode(signature) : "";
   String assertion=on(".").join(encodedHeader,encodedClaimSet,encodedSignature);
   builder.payload(Payloads.newUrlEncodedFormPayload(ImmutableMultimap.of(GRANT_TYPE_FORM_PARAM,GRANT_TYPE_JWT_BEARER,ASSERTION_FORM_PARAM,assertion)));
   return (R)builder.build();

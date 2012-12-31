@@ -14,7 +14,7 @@
     String apiOutput=vm.getGuestCustomizationSection().getCustomizationScript();
     checkApiOutput(apiOutput);
     ExecResponse vmTools=client.runScriptOnNode(node.getId(),PARSE_VMTOOLSD,wrapInInitScript(false).runAsRoot(false));
-    checkApiOutput(new String(base64(vmTools.getOutput().trim())));
+    checkApiOutput(new String(base64().decode(vmTools.getOutput().trim()),UTF_8));
     ExecResponse foo=client.runScriptOnNode(node.getId(),"cat /root/foo.txt",wrapInInitScript(false).runAsRoot(false));
     checkCustomizationOccurred(foo);
   }

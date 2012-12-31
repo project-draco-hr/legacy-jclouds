@@ -1,14 +1,9 @@
 {
   storageStrategy=new FilesystemStorageStrategyImpl(new Provider<BlobBuilder>(){
     @Override public BlobBuilder get(){
-      try {
-        return new BlobBuilderImpl(new JCECrypto());
-      }
- catch (      Exception e) {
-        return null;
-      }
+      return new BlobBuilderImpl();
     }
   }
-,TestUtils.TARGET_BASE_DIR,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl(),new JCECrypto());
+,TestUtils.TARGET_BASE_DIR,new FilesystemContainerNameValidatorImpl(),new FilesystemBlobKeyValidatorImpl());
   TestUtils.cleanDirectoryContent(TestUtils.TARGET_BASE_DIR);
 }

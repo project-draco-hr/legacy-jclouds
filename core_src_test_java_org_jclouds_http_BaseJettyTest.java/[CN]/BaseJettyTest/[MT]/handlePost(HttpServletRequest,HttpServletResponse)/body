@@ -4,7 +4,7 @@
     if (request.getHeader("Content-MD5") != null) {
       String expectedMd5=request.getHeader("Content-MD5");
       String realMd5FromRequest;
-      realMd5FromRequest=md5Base64(InputSuppliers.of(body));
+      realMd5FromRequest=base64().encode(asByteSource(body).hash(md5()).asBytes());
       boolean matched=expectedMd5.equals(realMd5FromRequest);
       if (matched) {
         response.setStatus(SC_OK);

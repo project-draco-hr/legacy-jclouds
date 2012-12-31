@@ -2,7 +2,6 @@
   Blob newBlob=createUpdatedCopyOfBlobInContainer(containerName,blob);
   Map<String,Blob> map=containerToBlobs.get(containerName);
   map.put(newBlob.getMetadata().getName(),newBlob);
-  Payloads.calculateMD5(newBlob,crypto.md5());
-  String eTag=CryptoStreams.hex(newBlob.getPayload().getContentMetadata().getContentMD5());
-  return eTag;
+  Payloads.calculateMD5(newBlob);
+  return base16().lowerCase().encode(newBlob.getPayload().getContentMetadata().getContentMD5());
 }

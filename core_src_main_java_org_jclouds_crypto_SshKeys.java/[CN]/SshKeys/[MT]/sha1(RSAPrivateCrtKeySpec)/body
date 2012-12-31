@@ -1,7 +1,7 @@
 {
   try {
-    String sha1=on(':').join(fixedLength(2).split(hex(CryptoStreams.sha1(KeyFactory.getInstance("RSA").generatePrivate(privateKey).getEncoded()))));
-    return sha1;
+    byte[] encodedKey=KeyFactory.getInstance("RSA").generatePrivate(privateKey).getEncoded();
+    return hexColonDelimited(Hashing.sha1().hashBytes(encodedKey));
   }
  catch (  InvalidKeySpecException e) {
     throw propagate(e);

@@ -4,7 +4,7 @@
   HttpResponse response=view.utils().http().invoke(HttpRequest.builder().method("GET").endpoint(httpStreamUrl).build());
   long length=response.getPayload().getContentMetadata().getContentLength();
   String name="hello";
-  byte[] md5=CryptoStreams.hex(httpStreamMD5);
+  byte[] md5=base16().lowerCase().decode(httpStreamMD5);
   Blob blob=view.getBlobStore().blobBuilder(name).payload(response.getPayload()).contentLength(length).contentMD5(md5).build();
   String container=getContainerName();
   try {

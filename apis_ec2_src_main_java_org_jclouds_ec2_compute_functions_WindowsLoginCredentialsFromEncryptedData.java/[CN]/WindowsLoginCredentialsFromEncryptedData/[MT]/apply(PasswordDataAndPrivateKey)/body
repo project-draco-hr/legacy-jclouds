@@ -6,7 +6,7 @@
     PrivateKey privKey=kf.generatePrivate(keySpec);
     Cipher cipher=crypto.cipher("RSA");
     cipher.init(Cipher.DECRYPT_MODE,privKey);
-    byte[] cipherText=CryptoStreams.base64(dataAndKey.getPasswordData().getPasswordData());
+    byte[] cipherText=base64().decode(dataAndKey.getPasswordData().getPasswordData());
     byte[] plainText=cipher.doFinal(cipherText);
     String password=new String(plainText,Charsets.US_ASCII);
     return LoginCredentials.builder().user("Administrator").password(password).noPrivateKey().build();

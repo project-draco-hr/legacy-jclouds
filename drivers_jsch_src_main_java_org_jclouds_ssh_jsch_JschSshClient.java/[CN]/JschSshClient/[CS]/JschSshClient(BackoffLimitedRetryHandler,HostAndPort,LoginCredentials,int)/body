@@ -5,7 +5,7 @@
   checkArgument(loginCredentials.getPassword() != null || loginCredentials.getPrivateKey() != null,"you must specify a password or a key");
   this.backoffLimitedRetryHandler=checkNotNull(backoffLimitedRetryHandler,"backoffLimitedRetryHandler");
   if (loginCredentials.getPrivateKey() == null) {
-    this.toString=String.format("%s:pw[%s]@%s:%d",loginCredentials.getUser(),hex(md5(loginCredentials.getPassword().getBytes())),host,socket.getPort());
+    this.toString=String.format("%s:pw[%s]@%s:%d",loginCredentials.getUser(),base16().lowerCase().encode(md5().hashString(loginCredentials.getPassword(),UTF_8).asBytes()),host,socket.getPort());
   }
  else {
     String fingerPrint=fingerprintPrivateKey(loginCredentials.getPrivateKey());

@@ -1,8 +1,12 @@
 {
   try {
-    return CryptoStreams.hex(crypto.hmacSHA1(key.getBytes()).doFinal(stringToSign.getBytes()));
+    ByteProcessor<byte[]> hmacSHA1=asByteProcessor(crypto.hmacSHA1(key.getBytes(UTF_8)));
+    return base16().lowerCase().encode(readBytes(toInputStream(toSign),hmacSHA1));
   }
  catch (  InvalidKeyException e) {
+    throw Throwables.propagate(e);
+  }
+catch (  IOException e) {
     throw Throwables.propagate(e);
   }
 }

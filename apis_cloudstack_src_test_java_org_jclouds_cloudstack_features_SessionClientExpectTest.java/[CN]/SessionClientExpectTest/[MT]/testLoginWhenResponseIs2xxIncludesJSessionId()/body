@@ -2,7 +2,7 @@
   String domain="Partners/jCloud";
   String user="jcloud";
   String password="jcl0ud";
-  String md5password=md5Hex(password);
+  String md5password=base16().lowerCase().encode(md5().hashString(password,UTF_8).asBytes());
   HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost:8080/client/api?response=json&command=login&" + "username=" + user + "&password="+ md5password+ "&domain="+ domain)).addHeader("Accept","application/json").build();
   String jSessionId="90DD65D13AEAA590ECCA312D150B9F6D";
   SessionClient client=requestSendsResponse(request,HttpResponse.builder().statusCode(200).headers(ImmutableMultimap.<String,String>builder().put("Set-Cookie","JSESSIONID=" + jSessionId + "; Path=/client").build()).payload(payloadFromResource("/loginresponse.json")).build());

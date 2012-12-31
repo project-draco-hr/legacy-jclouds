@@ -8,7 +8,7 @@
   Map<String,String> md=metadataAndTagsAsCommaDelimitedValue(template.getOptions());
   if (md.size() > 0) {
     String description=Joiner.on('\n').withKeyValueSeparator("=").join(md);
-    createServerOptions.description(CryptoStreams.hex(description.getBytes(Charsets.UTF_8)));
+    createServerOptions.description(base16().lowerCase().encode(description.getBytes(UTF_8)));
   }
   ServerSpec.Builder<?> builder=ServerSpec.builder();
   builder.datacenter(template.getLocation().getId());

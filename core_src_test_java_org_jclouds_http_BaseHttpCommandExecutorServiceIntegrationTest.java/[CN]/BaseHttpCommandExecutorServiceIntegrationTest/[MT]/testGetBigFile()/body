@@ -1,13 +1,13 @@
 {
   InputStream input=getConsitution();
   try {
-    assertEquals(md5Base64(InputSuppliers.of(input)),md5);
+    assertValidMd5(input);
   }
  catch (  RuntimeException e) {
     closeQuietly(input);
     if (getFirstThrowableOfType(e,IOException.class) != null) {
       input=getConsitution();
-      assertEquals(md5Base64(InputSuppliers.of(input)),md5);
+      assertValidMd5(input);
     }
   }
  finally {

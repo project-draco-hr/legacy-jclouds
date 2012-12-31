@@ -1,5 +1,5 @@
 {
-  LoginResponse response=globalAdminClient.getSessionClient().loginUserInDomainWithHashOfPassword(expectedUsername,"",CryptoStreams.md5Hex("password"));
+  LoginResponse response=globalAdminClient.getSessionClient().loginUserInDomainWithHashOfPassword(expectedUsername,"",base16().lowerCase().encode(md5().hashString("password",UTF_8).asBytes()));
   assertNotNull(response);
   assertNotNull(response.getSessionKey());
   assertNotNull(response.getJSessionId());

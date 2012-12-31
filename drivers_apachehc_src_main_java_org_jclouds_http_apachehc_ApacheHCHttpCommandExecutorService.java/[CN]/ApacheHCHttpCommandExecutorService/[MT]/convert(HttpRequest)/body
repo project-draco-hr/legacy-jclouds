@@ -1,5 +1,8 @@
 {
   HttpUriRequest returnVal=apacheHCUtils.convertToApacheRequest(request);
-  if (request.getPayload() != null && request.getPayload().getContentMetadata().getContentMD5() != null)   returnVal.addHeader("Content-MD5",CryptoStreams.md5Base64(request.getPayload()));
+  if (request.getPayload() != null && request.getPayload().getContentMetadata().getContentMD5() != null) {
+    String md5=base64().encode(asByteSource(request.getPayload().getInput()).hash(md5()).asBytes());
+    returnVal.addHeader("Content-MD5",md5);
+  }
   return returnVal;
 }

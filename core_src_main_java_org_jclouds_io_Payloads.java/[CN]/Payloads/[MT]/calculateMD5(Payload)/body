@@ -1,8 +1,18 @@
 {
-  try {
-    return calculateMD5(payload,MessageDigest.getInstance("MD5"));
+  checkNotNull(payload,"payload");
+  if (!payload.isRepeatable()) {
+    MutableContentMetadata oldContentMetadata=payload.getContentMetadata();
+    Payload oldPayload=payload;
+    try {
+      payload=newByteArrayPayload(toByteArray(payload));
+    }
+  finally {
+      oldPayload.release();
+    }
+    oldContentMetadata.setContentLength(payload.getContentMetadata().getContentLength());
+    oldContentMetadata.setContentMD5(payload.getContentMetadata().getContentMD5());
+    payload.setContentMetadata(oldContentMetadata);
   }
- catch (  NoSuchAlgorithmException e) {
-    throw Throwables.propagate(e);
-  }
+  payload.getContentMetadata().setContentMD5(asByteSource(payload.getInput()).hash(md5()).asBytes());
+  return payload;
 }

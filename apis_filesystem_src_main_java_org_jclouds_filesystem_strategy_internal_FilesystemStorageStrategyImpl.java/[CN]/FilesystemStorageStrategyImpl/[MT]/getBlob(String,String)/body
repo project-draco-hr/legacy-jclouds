@@ -10,6 +10,6 @@
     Throwables.propagateIfPossible(e);
   }
   Blob blob=builder.build();
-  if (blob.getPayload().getContentMetadata().getContentMD5() != null)   blob.getMetadata().setETag(CryptoStreams.hex(blob.getPayload().getContentMetadata().getContentMD5()));
+  if (blob.getPayload().getContentMetadata().getContentMD5() != null)   blob.getMetadata().setETag(base16().lowerCase().encode(blob.getPayload().getContentMetadata().getContentMD5()));
   return blob;
 }
