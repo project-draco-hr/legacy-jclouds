@@ -1,4 +1,5 @@
 {
+  Cache<MethodKey,Method> delegationMap=CacheBuilder.newBuilder().<MethodKey,Method>build();
   for (  Method method : difference(ImmutableSet.copyOf(declaring.getMethods()),ImmutableSet.copyOf(Object.class.getMethods()))) {
     if (isHttpMethod(method) || method.isAnnotationPresent(Delegate.class)) {
       for (int index=0; index < method.getParameterTypes().length; index++) {
@@ -15,7 +16,7 @@
         methodToIndexOfParamToPartParamAnnotations.get(method).get(index);
         methodToIndexesOfOptions.get(method);
       }
-      delegationMap.put(new MethodKey(method),method);
+      delegationMap.get(new MethodKey(method),Callables.returning(method));
     }
  else     if (!method.getDeclaringClass().equals(declaring)) {
       logger.trace("skipping potentially overridden method %s",method);
@@ -27,5 +28,5 @@
       logger.trace("Method is not annotated as either http or provider method: %s",method);
     }
   }
-  return true;
+  return delegationMap;
 }

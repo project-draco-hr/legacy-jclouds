@@ -1,5 +1,5 @@
 {
-  HttpRequest.Builder builder=request.toBuilder();
+  HttpRequest.Builder<?> builder=request.toBuilder();
   builder.filters(filter(request.getFilters(),not(instanceOf(AuthenticateRequest.class))));
   long expiresInSeconds=unixEpochTimestampProvider.get() + timeInSeconds;
   String signature=createSignature(secretKey,createStringToSign(request.getMethod().toUpperCase(),request,expiresInSeconds));

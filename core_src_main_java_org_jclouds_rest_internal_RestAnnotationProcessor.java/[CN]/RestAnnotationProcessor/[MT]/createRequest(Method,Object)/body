@@ -1,26 +1,28 @@
 {
   inputParamValidator.validateMethodParametersOrThrow(method,args);
-  Optional<URI> endpoint=findEndpoint(method,args);
-  if (!endpoint.isPresent()) {
-    throw new NoSuchElementException(String.format("no endpoint found for %s",new ClassMethodArgs(method.getDeclaringClass(),method,args)));
+  Optional<URI> endpoint=Optional.absent();
+  HttpRequest r=findHttpRequestInArgs(args);
+  if (r != null) {
+    endpoint=Optional.fromNullable(r.getEndpoint());
+    if (endpoint.isPresent())     logger.trace("using endpoint %s from args for %s",endpoint,cma(method,args));
   }
-  GeneratedHttpRequest.Builder requestBuilder=GeneratedHttpRequest.builder();
-  HttpRequest r=RestAnnotationProcessor.findHttpRequestInArgs(args);
+ else {
+    endpoint=findEndpoint(method,args);
+  }
+  if (!endpoint.isPresent())   throw new NoSuchElementException(format("no endpoint found for %s",cma(method,args)));
+  GeneratedHttpRequest.Builder requestBuilder=requestBuilder();
   if (r != null) {
     requestBuilder.fromHttpRequest(r);
   }
  else {
     requestBuilder.method(getHttpMethodOrConstantOrThrowException(method));
   }
-  UriBuilder uriBuilder=uriBuilder(endpoint.get().toString());
-  overridePathEncoding(uriBuilder,method);
-  requestBuilder.declaring(declaring).javaMethod(method).args(args).caller(caller).filters(getFiltersIfAnnotated(method));
+  requestBuilder.declaring(declaring).javaMethod(method).args(args).filters(getFiltersIfAnnotated(method));
   Multimap<String,Object> tokenValues=LinkedHashMultimap.create();
   tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
   tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
-  if (caller != null) {
-    tokenValues.putAll(addPathAndGetTokens(caller.getMethod().getDeclaringClass(),caller.getMethod(),caller.getArgs(),uriBuilder));
-  }
+  UriBuilder uriBuilder=uriBuilder(endpoint.get().toString());
+  overridePathEncoding(uriBuilder,method);
   tokenValues.putAll(addPathAndGetTokens(declaring,method,args,uriBuilder));
   Multimap<String,Object> formParams=addFormParams(tokenValues,method,args);
   Multimap<String,Object> queryParams=addQueryParams(tokenValues,method,args);

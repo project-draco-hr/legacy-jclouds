@@ -1,7 +1,5 @@
 {
   Set<String> requests=getHttpMethods(method);
-  if (requests == null || requests.size() != 1) {
-    throw new IllegalStateException("You must use at least one, but no more than one http method or pathparam annotation on: " + method.toString());
-  }
-  return requests.iterator().next();
+  checkState(requests.size() == 1,"You must use at least one, but no more than one http method or pathparam annotation on: %s",method);
+  return get(requests,0);
 }

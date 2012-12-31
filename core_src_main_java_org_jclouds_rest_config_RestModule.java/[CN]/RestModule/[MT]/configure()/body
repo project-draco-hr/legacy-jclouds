@@ -5,8 +5,9 @@
   install(new SaxParserModule());
   install(new GsonModule());
   install(new FactoryModuleBuilder().build(BindToJsonPayloadWrappedWith.Factory.class));
+  install(new FactoryModuleBuilder().build(RestAnnotationProcessor.Factory.class));
+  install(new FactoryModuleBuilder().build(AsyncRestClientProxy.Factory.class));
   bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
-  bind(AsyncRestClientProxy.Factory.class).to(Factory.class).in(Scopes.SINGLETON);
   install(new FactoryModuleBuilder().build(SyncProxy.Factory.class));
   bindClientAndAsyncClient(binder(),HttpClient.class,HttpAsyncClient.class);
   bind(new TypeLiteral<AtomicReference<AuthorizationException>>(){
