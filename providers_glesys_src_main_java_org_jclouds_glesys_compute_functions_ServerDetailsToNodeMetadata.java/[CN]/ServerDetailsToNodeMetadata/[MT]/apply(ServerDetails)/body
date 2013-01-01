@@ -3,7 +3,7 @@
   builder.ids(from.getId() + "");
   builder.name(from.getHostname());
   builder.hostname(from.getHostname());
-  Location location=findLocationForServerDetails.apply(from);
+  Location location=FluentIterable.from(locations.get()).firstMatch(idEquals(from.getDatacenter())).orNull();
   checkState(location != null,"no location matched ServerDetails %s",from);
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
   if (!isNullOrEmpty(from.getDescription()) && from.getDescription().matches("^[0-9A-Fa-f]+$")) {

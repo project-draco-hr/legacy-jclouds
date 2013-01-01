@@ -2,7 +2,7 @@
   checkNotNull(template,"template");
   OperatingSystem os=templateToOperatingSystem.apply(template);
   ImageBuilder builder=new ImageBuilder().ids(template.getId() + "").name(template.getName()).description(template.getDisplayText()).operatingSystem(os);
-  if (!template.isCrossZones())   builder.location(findLocationForTemplate.apply(template));
+  if (!template.isCrossZones())   builder.location(FluentIterable.from(locations.get()).firstMatch(idEquals(template.getZoneId())).orNull());
   builder.status(Status.AVAILABLE);
   return builder.build();
 }

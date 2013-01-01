@@ -1,8 +1,8 @@
 {
-  return ImmutableSet.copyOf(Iterables.concat(Iterables.transform(api.getServerApi().getAllowedArgumentsForCreateByPlatform().values(),new Function<AllowedArgumentsForCreateServer,Set<String>>(){
+  return FluentIterable.from(api.getServerApi().getAllowedArgumentsForCreateByPlatform().values()).transformAndConcat(new Function<AllowedArgumentsForCreateServer,Set<String>>(){
     @Override public Set<String> apply(    AllowedArgumentsForCreateServer arg0){
       return arg0.getDataCenters();
     }
   }
-)));
+).toSet();
 }

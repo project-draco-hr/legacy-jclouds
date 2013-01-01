@@ -2,7 +2,8 @@
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
   builder.ids(from.getHref().toASCIIString());
   builder.name(from.getName());
-  builder.location(findLocationForVM.apply(from));
+  String locationId=Iterables.get(from.getNetworkSection().getNetworks(),0).getName();
+  builder.location(from(locations.get()).firstMatch(LocationPredicates.idEquals(locationId)).orNull());
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getName()));
   try {
     builder.operatingSystem(CIMOperatingSystem.toComputeOs(from.getOperatingSystemSection()));

@@ -2,7 +2,7 @@
   VirtualGuest guest=new ParseVirtualGuestPausedTest().expected();
   Location expectedLocation=DatacenterToLocationTest.function.apply(guest.getDatacenter());
   Supplier<Set<? extends Location>> locationSupplier=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(expectedLocation));
-  VirtualGuestToNodeMetadata parser=new VirtualGuestToNodeMetadata(new FindLocationForVirtualGuest(locationSupplier),new GetHardwareForVirtualGuestMock(),new GetImageForVirtualGuestMock(),namingConvention);
+  VirtualGuestToNodeMetadata parser=new VirtualGuestToNodeMetadata(locationSupplier,new GetHardwareForVirtualGuestMock(),new GetImageForVirtualGuestMock(),namingConvention);
   NodeMetadata node=parser.apply(guest);
   assertEquals(node,new NodeMetadataBuilder().ids("416700").name("node1703810489").hostname("node1703810489").location(expectedLocation).status(Status.SUSPENDED).publicAddresses(ImmutableSet.of("173.192.29.187")).privateAddresses(ImmutableSet.of("10.37.102.195")).hardware(new GetHardwareForVirtualGuestMock().getHardware(guest)).imageId(new GetImageForVirtualGuestMock().getImage(guest).getId()).operatingSystem(new GetImageForVirtualGuestMock().getImage(guest).getOperatingSystem()).build());
 }

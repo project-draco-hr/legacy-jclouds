@@ -3,15 +3,14 @@
   builder.ids(from.getId() + "");
   builder.name(from.getHostname());
   builder.hostname(from.getHostname());
-  builder.location(findLocationForVirtualGuest.apply(from));
+  if (from.getDatacenter() != null)   builder.location(from(locations.get()).firstMatch(LocationPredicates.idEquals(from.getDatacenter().getId() + "")).orNull());
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getHostname()));
-  Image image=getImageForVirtualGuest.getImage(from);
+  Image image=images.getImage(from);
   if (image != null) {
     builder.imageId(image.getId());
     builder.operatingSystem(image.getOperatingSystem());
   }
-  Hardware hardware=getHardwareForVirtualGuest.getHardware(from);
-  if (hardware != null)   builder.hardware(hardware);
+  builder.hardware(hardware.getHardware(from));
   builder.status(serverStateToNodeStatus.get(from.getPowerState().getKeyName()));
   if (from.getPrimaryIpAddress() != null)   builder.publicAddresses(ImmutableSet.<String>of(from.getPrimaryIpAddress()));
   if (from.getPrimaryBackendIpAddress() != null)   builder.privateAddresses(ImmutableSet.<String>of(from.getPrimaryBackendIpAddress()));
