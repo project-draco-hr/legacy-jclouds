@@ -1,11 +1,11 @@
 {
-  return new TransformingSetSupplier<I,Image>(new Supplier<Iterable<I>>(){
-    @Override public Iterable<I> get(){
-      return filter(adapter.listImages(),notNull());
+  return new Supplier<Set<? extends Image>>(){
+    @Override public Set<? extends Image> get(){
+      return transformGuardingNull(adapter.listImages(),compose(addDefaultCredentialsToImage,transformer));
     }
-    @Override public String toString(){
-      return Objects.toStringHelper(adapter).add("method","listImages").toString();
+    public String toString(){
+      return toStringHelper(adapter).add("method","listImages").toString();
     }
   }
-,compose(addDefaultCredentialsToImage,transformer));
+;
 }

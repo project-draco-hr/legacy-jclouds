@@ -1,11 +1,11 @@
 {
-  return new TransformingSetSupplier<H,Hardware>(new Supplier<Iterable<H>>(){
-    @Override public Iterable<H> get(){
-      return adapter.listHardwareProfiles();
+  return new Supplier<Set<? extends Hardware>>(){
+    @Override public Set<? extends Hardware> get(){
+      return transformGuardingNull(adapter.listHardwareProfiles(),transformer);
     }
-    @Override public String toString(){
-      return Objects.toStringHelper(adapter).add("method","listHardwareProfiles").toString();
+    public String toString(){
+      return toStringHelper(adapter).add("method","listHardwareProfiles").toString();
     }
   }
-,transformer);
+;
 }
