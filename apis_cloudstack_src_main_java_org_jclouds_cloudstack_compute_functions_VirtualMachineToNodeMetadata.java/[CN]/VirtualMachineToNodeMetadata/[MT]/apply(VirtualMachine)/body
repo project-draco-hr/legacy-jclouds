@@ -3,9 +3,14 @@
   builder.ids(from.getId() + "");
   builder.name(from.getName());
   builder.hostname(from.getDisplayName());
-  builder.location(findLocationForVirtualMachine.apply(from));
+  builder.location(FluentIterable.from(locations.get()).firstMatch(idEquals(from.getZoneId())).orNull());
   builder.group(nodeNamingConvention.groupInUniqueNameOrNull(from.getDisplayName()));
-  Image image=findImageForVirtualMachine.apply(from);
+  Image image=FluentIterable.from(images.get()).firstMatch(new Predicate<Image>(){
+    @Override public boolean apply(    Image input){
+      return input.getProviderId().equals(from.getTemplateId() + "") && (input.getLocation() == null || input.getId().equals(from.getZoneId() + ""));
+    }
+  }
+).orNull();
   if (image != null) {
     builder.imageId(image.getId());
     builder.operatingSystem(image.getOperatingSystem());

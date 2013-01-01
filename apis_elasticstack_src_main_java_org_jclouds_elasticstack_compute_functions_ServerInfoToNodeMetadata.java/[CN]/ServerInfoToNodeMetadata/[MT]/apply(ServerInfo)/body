@@ -8,9 +8,9 @@
   builder.userMetadata(from.getUserMetadata());
   String imageId=getImageIdFromServer.apply(from);
   if (imageId != null) {
-    Image image=findImageForId.apply(imageId);
-    if (image != null) {
-      builder.operatingSystem(image.getOperatingSystem());
+    Optional<? extends Image> image=FluentIterable.from(images.get()).firstMatch(idEquals(imageId));
+    if (image.isPresent()) {
+      builder.operatingSystem(image.get().getOperatingSystem());
     }
   }
   builder.hardware(new HardwareBuilder().ids(from.getUuid()).hypervisor("kvm").processors(ImmutableList.of(new Processor(1,from.getCpu()))).ram(from.getMem()).volumes(Iterables.transform(from.getDevices().values(),deviceToVolume)).build());

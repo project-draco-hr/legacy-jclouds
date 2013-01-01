@@ -1,7 +1,7 @@
 {
   Supplier<Set<? extends Location>> locationSupplier=Suppliers.<Set<? extends Location>>ofInstance(ImmutableSet.<Location>of(ZoneToLocationTest.one,ZoneToLocationTest.two));
   Supplier<Set<? extends Image>> imageSupplier=Suppliers.<Set<? extends Image>>ofInstance(ImmutableSet.<Image>of(TemplateToImageTest.one,TemplateToImageTest.two));
-  VirtualMachineToNodeMetadata parser=new VirtualMachineToNodeMetadata(new FindLocationForVirtualMachine(locationSupplier),new FindImageForVirtualMachine(imageSupplier),CacheBuilder.newBuilder().<String,Set<IPForwardingRule>>build(new CacheLoader<String,Set<IPForwardingRule>>(){
+  VirtualMachineToNodeMetadata parser=new VirtualMachineToNodeMetadata(locationSupplier,imageSupplier,CacheBuilder.newBuilder().<String,Set<IPForwardingRule>>build(new CacheLoader<String,Set<IPForwardingRule>>(){
     @Override public Set<IPForwardingRule> load(    String arg0) throws Exception {
       return ImmutableSet.of();
     }
