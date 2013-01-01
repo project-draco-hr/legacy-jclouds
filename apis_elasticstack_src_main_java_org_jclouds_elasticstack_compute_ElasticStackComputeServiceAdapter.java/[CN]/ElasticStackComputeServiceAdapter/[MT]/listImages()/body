@@ -1,5 +1,5 @@
 {
-  Iterable<? extends DriveInfo> drives=transformParallel(preinstalledImages.keySet(),new Function<String,Future<? extends DriveInfo>>(){
+  return FluentIterable.from(transformParallel(preinstalledImages.keySet(),new Function<String,Future<? extends DriveInfo>>(){
     @Override public Future<? extends DriveInfo> apply(    String input){
       try {
         return Futures.immediateFuture(cache.getUnchecked(input));
@@ -16,6 +16,5 @@ catch (      UncheckedExecutionException e) {
       return "seedDriveCache()";
     }
   }
-,executor,null,logger,"drives");
-  return Iterables2.concreteCopy(filter(drives,notNull()));
+,executor,null,logger,"drives")).filter(notNull());
 }

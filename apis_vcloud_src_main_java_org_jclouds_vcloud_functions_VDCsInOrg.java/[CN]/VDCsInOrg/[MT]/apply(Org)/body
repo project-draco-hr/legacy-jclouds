@@ -1,9 +1,8 @@
 {
-  Iterable<VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<? extends VDC>>(){
+  return transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<? extends VDC>>(){
     @Override public Future<? extends VDC> apply(    ReferenceType from){
       return aclient.getVDCClient().getVDC(from.getHref());
     }
   }
 ,executor,null,logger,"vdcs in org " + org.getName());
-  return Iterables2.concreteCopy(catalogItems);
 }

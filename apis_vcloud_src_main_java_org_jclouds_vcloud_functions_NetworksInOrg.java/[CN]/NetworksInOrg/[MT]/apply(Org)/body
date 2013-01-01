@@ -1,9 +1,8 @@
 {
-  Iterable<OrgNetwork> networkItems=transformParallel(org.getNetworks().values(),new Function<ReferenceType,Future<? extends OrgNetwork>>(){
+  return transformParallel(org.getNetworks().values(),new Function<ReferenceType,Future<? extends OrgNetwork>>(){
     @Override public Future<? extends OrgNetwork> apply(    ReferenceType from){
       return aclient.getNetworkClient().getNetwork(from.getHref());
     }
   }
 ,executor,null,logger,"OrgNetworks in org " + org.getName());
-  return Iterables2.concreteCopy(networkItems);
 }
