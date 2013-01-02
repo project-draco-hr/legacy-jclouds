@@ -1,0 +1,9 @@
+{
+  float twoTB=2048.0f * 1024.0f;
+  Builder<Volume> all24Volumes=ImmutableList.<Volume>builder();
+  all24Volumes.add(new VolumeImpl(twoTB,"/dev/sda1",true,false));
+  for (  char letter : ImmutableSet.of('b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x')) {
+    all24Volumes.add(new VolumeImpl(twoTB,"/dev/sd" + letter,false,false));
+  }
+  return new EC2HardwareBuilder(InstanceType.HS1_8XLARGE).ram(117 * 1024).processors(ImmutableList.of(new Processor(16.0,2.1875))).volumes(all24Volumes.build()).virtualizationType(VirtualizationType.HVM);
+}
