@@ -1,0 +1,11 @@
+{
+  Function<SpotInstanceRequest,AWSRunningInstance> converter=Functions.forMap(ImmutableMap.of(spot1,instance1,spot2,instance2));
+  AWSEC2Client client=createMock(AWSEC2Client.class);
+  SpotInstanceClient spotClient=createMock(SpotInstanceClient.class);
+  expect(client.getSpotInstanceServices()).andReturn(spotClient);
+  expect(spotClient.describeSpotInstanceRequestsInRegion("us-east-1","sir-aaaa","sir-bbbb")).andReturn(ImmutableSet.of(spot1,spot2));
+  replay(client,spotClient);
+  PresentSpotRequestsAndInstances fn=new PresentSpotRequestsAndInstances(client,converter);
+  assertEquals(fn.apply(ImmutableSet.of(new RegionAndName("us-east-1","sir-aaaa"),new RegionAndName("us-east-1","sir-bbbb"))),ImmutableSet.of(instance1,instance2));
+  verify(client,spotClient);
+}

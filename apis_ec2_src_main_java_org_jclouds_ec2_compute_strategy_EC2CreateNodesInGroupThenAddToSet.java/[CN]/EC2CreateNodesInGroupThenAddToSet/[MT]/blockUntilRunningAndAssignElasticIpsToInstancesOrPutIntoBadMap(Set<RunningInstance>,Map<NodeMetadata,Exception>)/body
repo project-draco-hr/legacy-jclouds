@@ -1,0 +1,20 @@
+{
+  Map<RegionAndName,RunningInstance> instancesById=Maps.uniqueIndex(input,instanceToRegionAndName);
+  for (  RegionAndName id : instancesById.keySet()) {
+    try {
+      logger.debug("<< allocating elastic IP instance(%s)",id);
+      String ip=client.getElasticIPAddressServices().allocateAddressInRegion(id.getRegion());
+      logger.debug(">> awaiting status running instance(%s)",id);
+      AtomicReference<NodeMetadata> node=newReference(runningInstanceToNodeMetadata.apply(instancesById.get(id)));
+      nodeRunning.apply(node);
+      logger.trace("<< running instance(%s)",id);
+      logger.debug(">> associating elastic IP %s to instance %s",ip,id);
+      client.getElasticIPAddressServices().associateAddressInRegion(id.getRegion(),ip,id.getName());
+      logger.trace("<< associated elastic IP %s to instance %s",ip,id);
+      elasticIpCache.put(id,ip);
+    }
+ catch (    RuntimeException e) {
+      badNodes.put(runningInstanceToNodeMetadata.apply(instancesById.get(id)),e);
+    }
+  }
+}

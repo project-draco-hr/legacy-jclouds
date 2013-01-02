@@ -1,15 +1,11 @@
 {
   Template mutableTemplate=template.clone();
-  Iterable<String> ips=allocateElasticIpsInRegion(count,mutableTemplate);
-  Iterable<? extends RunningInstance> started=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group,count,mutableTemplate);
-  Iterable<RegionAndName> ids=transform(started,instanceToRegionAndName);
-  String idsString=Joiner.on(',').join(ids);
-  if (Iterables.size(ids) > 0) {
-    logger.debug("<< started instances(%s)",idsString);
-    all(ids,instancePresent);
-    logger.debug("<< present instances(%s)",idsString);
-    populateCredentials(started,template.getOptions());
+  Set<RunningInstance> started=runInstancesAndWarnOnInvisible(group,count,mutableTemplate);
+  if (started.size() == 0) {
+    logger.warn("<< unable to start instances(%s)",mutableTemplate);
+    return ImmutableMap.of();
   }
-  assignElasticIpsToInstances(ips,started);
+  populateCredentials(started,template.getOptions());
+  if (autoAllocateElasticIps)   blockUntilRunningAndAssignElasticIpsToInstancesOrPutIntoBadMap(started,badNodes);
   return utils.customizeNodesAndAddToGoodMapOrPutExceptionIntoBadMap(mutableTemplate.getOptions(),transform(started,runningInstanceToNodeMetadata),goodNodes,badNodes,customizationResponses);
 }

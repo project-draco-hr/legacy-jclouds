@@ -1,11 +1,11 @@
 {
   int countStarted=0;
   int tries=0;
-  Iterable<? extends RunningInstance> started=ImmutableSet.<RunningInstance>of();
+  Set<RunningInstance> started=ImmutableSet.<RunningInstance>of();
   while (countStarted < count && tries++ < count) {
     if (logger.isDebugEnabled())     logger.debug(">> running %d instance region(%s) zone(%s) ami(%s) params(%s)",count - countStarted,region,zone,template.getImage().getProviderId(),instanceOptions.buildFormParameters());
-    started=Iterables.concat(started,client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getProviderId(),1,count - countStarted,instanceOptions));
-    countStarted=Iterables.size(started);
+    started=ImmutableSet.copyOf(concat(started,client.getInstanceServices().runInstancesInRegion(region,zone,template.getImage().getProviderId(),1,count - countStarted,instanceOptions)));
+    countStarted=size(started);
     if (countStarted < count)     logger.debug(">> not enough instances (%d/%d) started, attempting again",countStarted,count);
   }
   return started;

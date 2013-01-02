@@ -1,16 +1,16 @@
 {
-  for (  KeyPair keyPair : ec2Client.getKeyPairServices().describeKeyPairsInRegion(region)) {
+  for (  KeyPair keyPair : client.getKeyPairServices().describeKeyPairsInRegion(region)) {
     String keyName=keyPair.getKeyName();
     Predicate<String> keyNameMatcher=namingConvention.create().containsGroup(group);
     String oldKeyNameRegex=String.format("jclouds#%s#%s#%s",group,region,"[0-9a-f]+").replace('#',delimiter);
     if (keyNameMatcher.apply(keyName) || keyName.matches(oldKeyNameRegex)) {
-      Set<String> instancesUsingKeyPair=extractIdsFromInstances(filter(concat(ec2Client.getInstanceServices().describeInstancesInRegion(region)),usingKeyPairAndNotDead(keyPair)));
+      Set<String> instancesUsingKeyPair=extractIdsFromInstances(filter(concat(client.getInstanceServices().describeInstancesInRegion(region)),usingKeyPairAndNotDead(keyPair)));
       if (instancesUsingKeyPair.size() > 0) {
         logger.debug("<< inUse keyPair(%s), by (%s)",keyPair.getKeyName(),instancesUsingKeyPair);
       }
  else {
         logger.debug(">> deleting keyPair(%s)",keyPair.getKeyName());
-        ec2Client.getKeyPairServices().deleteKeyPairInRegion(region,keyPair.getKeyName());
+        client.getKeyPairServices().deleteKeyPairInRegion(region,keyPair.getKeyName());
         credentialsMap.remove(new RegionAndName(region,keyPair.getKeyName()));
         credentialsMap.remove(new RegionAndName(region,group));
         logger.debug("<< deleted keyPair(%s)",keyPair.getKeyName());

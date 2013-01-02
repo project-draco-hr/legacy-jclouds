@@ -1,0 +1,16 @@
+{
+  Set<RunningInstance> started=createKeyPairAndSecurityGroupsAsNeededThenRunInstances(group,count,mutableTemplate);
+  Set<RegionAndName> startedIds=ImmutableSet.copyOf(transform(started,instanceToRegionAndName));
+  if (startedIds.size() == 0) {
+    return ImmutableSet.copyOf(started);
+  }
+  logger.debug("<< started instances(%s)",startedIds);
+  Set<RunningInstance> visible=presentInstances.apply(startedIds);
+  Set<RegionAndName> visibleIds=ImmutableSet.copyOf(transform(visible,instanceToRegionAndName));
+  logger.trace("<< visible instances(%s)",visibleIds);
+  Set<RegionAndName> invisibleIds=difference(startedIds,visibleIds);
+  if (invisibleIds.size() > 0) {
+    logger.warn("<< not api visible instances(%s)",invisibleIds);
+  }
+  return started;
+}
