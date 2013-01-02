@@ -1,0 +1,24 @@
+{
+  Map<String,? extends NodeMetadata> instancesById=Maps.uniqueIndex(input,instanceId);
+  ImmutableSet.Builder<NodeMetadata> builder=ImmutableSet.<NodeMetadata>builder();
+  if (generateInstanceNames && !common.containsKey("Name")) {
+    for (    String id : instancesById.keySet()) {
+      Map<String,String> tags=ImmutableMap.<String,String>builder().putAll(common).put("Name",id.replaceAll(".*-",group + "-")).build();
+      logger.debug(">> applying tags %s to instance %s in region %s",tags,id,region);
+      client.getTagApiForRegion(region).get().applyToResources(tags,ImmutableSet.of(id));
+      builder.add(addTagsForInstance(tags,instancesById.get(id)));
+    }
+  }
+ else {
+    Iterable<String> ids=instancesById.keySet();
+    logger.debug(">> applying tags %s to instances %s in region %s",common,ids,region);
+    client.getTagApiForRegion(region).get().applyToResources(common,ids);
+    for (    NodeMetadata in : input)     builder.add(addTagsForInstance(common,in));
+  }
+  if (logger.isDebugEnabled()) {
+    Multimap<String,String> filter=new TagFilterBuilder().resourceIds(instancesById.keySet()).build();
+    FluentIterable<Tag> tags=client.getTagApiForRegion(region).get().filter(filter);
+    logger.debug("<< applied tags in region %s: %s",region,resourceToTagsAsMap(tags));
+  }
+  return builder.build();
+}

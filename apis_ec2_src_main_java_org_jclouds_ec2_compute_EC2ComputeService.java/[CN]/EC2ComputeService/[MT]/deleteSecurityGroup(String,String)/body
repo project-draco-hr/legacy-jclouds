@@ -2,9 +2,9 @@
   checkNotEmpty(region,"region");
   checkNotEmpty(group,"group");
   String groupName=namingConvention.create().sharedNameForGroup(group);
-  if (ec2Client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,groupName).size() > 0) {
+  if (client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,groupName).size() > 0) {
     logger.debug(">> deleting securityGroup(%s)",groupName);
-    ec2Client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,groupName);
+    client.getSecurityGroupServices().deleteSecurityGroupInRegion(region,groupName);
     securityGroupMap.invalidate(new RegionNameAndIngressRules(region,groupName,null,false));
     logger.debug("<< deleted securityGroup(%s)",groupName);
   }

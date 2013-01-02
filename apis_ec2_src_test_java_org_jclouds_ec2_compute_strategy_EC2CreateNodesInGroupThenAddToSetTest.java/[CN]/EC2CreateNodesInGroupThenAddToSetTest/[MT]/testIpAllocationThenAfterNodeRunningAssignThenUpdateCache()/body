@@ -5,8 +5,7 @@
   String imageId="ami1";
   String instanceCreatedId="instance1";
   NodeMetadata nodeMetadata=new NodeMetadataBuilder().id(region + "/" + instanceCreatedId).providerId(instanceCreatedId).status(Status.RUNNING).build();
-  TemplateBuilder templateBuilder=createMock(TemplateBuilder.class);
-  EC2CreateNodesInGroupThenAddToSet strategy=setupStrategy(templateBuilder,nodeMetadata);
+  EC2CreateNodesInGroupThenAddToSet strategy=setupStrategy(nodeMetadata);
   InputParams input=new InputParams(location);
   InstanceClient instanceClient=createMock(InstanceClient.class);
   ElasticIPAddressClient ipClient=createMock(ElasticIPAddressClient.class);
@@ -31,14 +30,13 @@
   expect(strategy.instanceToCredentials.apply(instance)).andReturn(creds);
   expect(instance.getRegion()).andReturn(region).atLeastOnce();
   expect(strategy.credentialStore.put("node#" + region + "/"+ instanceCreatedId,creds)).andReturn(null);
-  expect(strategy.instancePresent.apply(new RegionAndName(region,instanceCreatedId))).andReturn(true);
+  expect(strategy.presentInstances.apply(ImmutableSet.of(new RegionAndName(region,instanceCreatedId)))).andReturn(ImmutableSet.of(instance));
   expect(input.template.getOptions()).andReturn(input.options).atLeastOnce();
   expect(input.options.getLoginUser()).andReturn(null);
   expect(input.options.getLoginPassword()).andReturn(null);
   expect(input.options.getLoginPrivateKey()).andReturn(null);
   expect(input.options.shouldAuthenticateSudo()).andReturn(null);
   expect(strategy.utils.customizeNodesAndAddToGoodMapOrPutExceptionIntoBadMap(eq(input.options),containsNodeMetadata(nodeMetadata),eq(input.nodes),eq(input.badNodes),eq(input.customization))).andReturn(null);
-  replay(templateBuilder);
   replay(instanceClient);
   replay(ipClient);
   replay(ec2Options);
@@ -46,7 +44,6 @@
   input.replayMe();
   replayStrategy(strategy);
   strategy.execute(input.tag,input.count,input.template,input.nodes,input.badNodes,input.customization);
-  verify(templateBuilder);
   verify(instanceClient);
   verify(ipClient);
   verify(ec2Options);

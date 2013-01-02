@@ -2,10 +2,10 @@
   Preconditions2.checkNotEmpty(group,"group");
   String placementGroup=String.format("jclouds#%s#%s",group,region);
   try {
-    if (ec2Client.getPlacementGroupServices().describePlacementGroupsInRegion(region,placementGroup).size() > 0) {
+    if (client.getPlacementGroupServices().describePlacementGroupsInRegion(region,placementGroup).size() > 0) {
       logger.debug(">> deleting placementGroup(%s)",placementGroup);
       try {
-        ec2Client.getPlacementGroupServices().deletePlacementGroupInRegion(region,placementGroup);
+        client.getPlacementGroupServices().deletePlacementGroupInRegion(region,placementGroup);
         checkState(placementGroupDeleted.apply(new PlacementGroup(region,placementGroup,"cluster",State.PENDING)),String.format("placementGroup region(%s) name(%s) failed to delete",region,placementGroup));
         placementGroupMap.invalidate(new RegionAndName(region,placementGroup));
         logger.debug("<< deleted placementGroup(%s)",placementGroup);

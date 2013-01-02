@@ -1,0 +1,11 @@
+{
+  if (checkNotNull(regionAndIds,"regionAndIds").isEmpty())   return ImmutableSet.of();
+  Builder<RunningInstance> builder=ImmutableSet.<RunningInstance>builder();
+  Multimap<String,String> regionToInstanceIds=transformValues(index(regionAndIds,regionFunction()),nameFunction());
+  for (  String region : regionToInstanceIds.keySet()) {
+    Collection<String> instanceIds=regionToInstanceIds.get(region);
+    logger.trace("looking for instances %s in region %s",instanceIds,region);
+    builder.addAll(concat(client.getInstanceServices().describeInstancesInRegion(region,toArray(instanceIds,String.class))));
+  }
+  return builder.build();
+}

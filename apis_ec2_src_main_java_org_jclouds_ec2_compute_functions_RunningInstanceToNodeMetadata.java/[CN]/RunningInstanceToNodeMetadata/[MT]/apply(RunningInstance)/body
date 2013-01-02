@@ -1,6 +1,36 @@
 {
   if (instance == null || instance.getId() == null)   return null;
   NodeMetadataBuilder builder=new NodeMetadataBuilder();
-  builder=buildInstance(instance,builder);
+  builder.name(instance.getTags().get("Name"));
+  addMetadataAndParseTagsFromValuesOfEmptyString(builder,instance.getTags());
+  builder.providerId(instance.getId());
+  builder.id(instance.getRegion() + "/" + instance.getId());
+  String group=getGroupForInstance(instance);
+  builder.group(group);
+  if (instance.getPrivateDnsName() != null)   builder.hostname(instance.getPrivateDnsName().replaceAll("\\..*",""));
+  addCredentialsForInstance(builder,instance);
+  builder.status(instanceToNodeStatus.get(instance.getInstanceState()));
+  builder.backendStatus(instance.getRawState());
+  Builder<String> addressesBuilder=ImmutableSet.builder();
+  if (emptyToNull(instance.getIpAddress()) != null)   addressesBuilder.add(instance.getIpAddress());
+  if (emptyToNull(instance.getPrivateIpAddress()) != null)   addressesBuilder.add(instance.getPrivateIpAddress());
+  Set<String> addresses=addressesBuilder.build();
+  builder.publicAddresses(filter(addresses,not(IsPrivateIPAddress.INSTANCE)));
+  builder.privateAddresses(filter(addresses,IsPrivateIPAddress.INSTANCE));
+  builder.hardware(parseHardware(instance));
+  Location location=getLocationForAvailabilityZoneOrRegion(instance);
+  builder.location(location);
+  builder.imageId(instance.getRegion() + "/" + instance.getImageId());
+  RegionAndName regionAndName=new RegionAndName(instance.getRegion(),instance.getImageId());
+  try {
+    Image image=imageMap.get().getUnchecked(regionAndName);
+    if (image != null)     builder.operatingSystem(image.getOperatingSystem());
+  }
+ catch (  CacheLoader.InvalidCacheLoadException e) {
+    logger.debug("image not found for %s: %s",regionAndName,e);
+  }
+catch (  UncheckedExecutionException e) {
+    logger.debug("error getting image for %s: %s",regionAndName,e);
+  }
   return builder.build();
 }

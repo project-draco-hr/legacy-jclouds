@@ -1,0 +1,10 @@
+{
+  EC2Client client=createMock(EC2Client.class);
+  InstanceClient instanceClient=createMock(InstanceClient.class);
+  expect(client.getInstanceServices()).andReturn(instanceClient);
+  expect(instanceClient.describeInstancesInRegion("us-east-1","i-aaaa","i-bbbb")).andReturn(Set.class.cast(ImmutableSet.of(Reservation.builder().region("us-east-1").instances(ImmutableSet.of(instance1,instance2)).build())));
+  replay(client,instanceClient);
+  PresentInstances fn=new PresentInstances(client);
+  assertEquals(fn.apply(ImmutableSet.of(new RegionAndName("us-east-1","i-aaaa"),new RegionAndName("us-east-1","i-bbbb"))),ImmutableSet.of(instance1,instance2));
+  verify(client,instanceClient);
+}

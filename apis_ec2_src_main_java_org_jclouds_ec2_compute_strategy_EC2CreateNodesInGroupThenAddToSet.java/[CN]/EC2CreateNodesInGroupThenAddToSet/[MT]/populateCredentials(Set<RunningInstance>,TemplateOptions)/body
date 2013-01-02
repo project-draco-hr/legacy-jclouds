@@ -1,0 +1,9 @@
+{
+  LoginCredentials credentials=null;
+  for (  RunningInstance instance : input) {
+    credentials=instanceToCredentials.apply(instance);
+    if (credentials != null)     break;
+  }
+  credentials=overrideDefaultCredentialsWithOptionsIfPresent(credentials,options);
+  if (credentials != null)   for (  RegionAndName instance : transform(input,instanceToRegionAndName))   credentialStore.put("node#" + instance.slashEncode(),credentials);
+}
