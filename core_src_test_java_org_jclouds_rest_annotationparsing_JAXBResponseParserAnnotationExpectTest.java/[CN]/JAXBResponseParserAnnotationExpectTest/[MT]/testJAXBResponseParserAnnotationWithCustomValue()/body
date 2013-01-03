@@ -1,0 +1,6 @@
+{
+  TestJAXBApi api=requestSendsResponse(HttpRequest.builder().method("GET").endpoint("http://mock/jaxb/custom").build(),HttpResponse.builder().statusCode(200).payload("<test><elem>Hello World</elem></test>").build());
+  Object result=api.jaxbGetWithAnnotationAndCustomClass();
+  assertTrue(result instanceof TestJAXBDomain);
+  assertEquals(TestJAXBDomain.class.cast(result).getElem(),"Hello World");
+}
