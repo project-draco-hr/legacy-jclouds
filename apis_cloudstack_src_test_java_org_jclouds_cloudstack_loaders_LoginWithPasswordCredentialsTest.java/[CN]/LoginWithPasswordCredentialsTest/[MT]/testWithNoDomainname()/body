@@ -1,0 +1,9 @@
+{
+  LoginResponse response=createMock(LoginResponse.class);
+  SessionClient client=createMock(SessionClient.class);
+  expect(client.loginUserInDomainWithHashOfPassword(eq("User"),eq(""),(String)anyObject())).andReturn(response);
+  replay(client);
+  LoginWithPasswordCredentials obj=new LoginWithPasswordCredentials(client);
+  Credentials cred=new Credentials("User","koffiedik");
+  obj.load(cred);
+}
