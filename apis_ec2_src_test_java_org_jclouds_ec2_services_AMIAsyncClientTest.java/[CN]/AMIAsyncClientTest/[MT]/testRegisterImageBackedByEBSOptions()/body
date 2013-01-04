@@ -1,9 +1,10 @@
 {
   Method method=AMIAsyncClient.class.getMethod("registerUnixImageBackedByEbsInRegion",String.class,String.class,String.class,Array.newInstance(RegisterImageBackedByEbsOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,null,"imageName","snapshotId",new RegisterImageBackedByEbsOptions().withDescription("description").addBlockDeviceFromSnapshot("/dev/device",null,"snapshot").addNewBlockDevice("/dev/newdevice","newblock",100));
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=RegisterImage&RootDeviceName=/dev/sda1&BlockDeviceMapping.0.DeviceName=/dev/sda1&BlockDeviceMapping.0.Ebs.SnapshotId=snapshotId&Name=imageName&Description=description&BlockDeviceMapping.1.Ebs.DeleteOnTermination=false&BlockDeviceMapping.1.DeviceName=/dev/device&BlockDeviceMapping.1.Ebs.SnapshotId=snapshot&BlockDeviceMapping.2.Ebs.DeleteOnTermination=false&BlockDeviceMapping.2.DeviceName=/dev/newdevice&BlockDeviceMapping.2.VirtualName=newblock&BlockDeviceMapping.2.Ebs.VolumeSize=100","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,registerImageBackedByEBSOptions.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,ImageIdHandler.class);
   assertFallbackClassEquals(method,null);

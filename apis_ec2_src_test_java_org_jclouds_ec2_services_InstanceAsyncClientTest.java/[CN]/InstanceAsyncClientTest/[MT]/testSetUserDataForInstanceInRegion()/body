@@ -1,11 +1,10 @@
 {
   Method method=InstanceAsyncClient.class.getMethod("setUserDataForInstanceInRegion",String.class,String.class,Array.newInstance(byte.class,0).getClass());
   HttpRequest request=processor.createRequest(method,null,"1","test".getBytes());
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=ModifyInstanceAttribute&Attribute=userData&Value=dGVzdA%3D%3D&InstanceId=1","application/x-www-form-urlencoded",false);
-  filter.filter(request);
-  assertPayloadEquals(request,"Action=ModifyInstanceAttribute&Attribute=userData&InstanceId=1&Signature=LfUmzLM5DsACR5nQcEfGF5FPdznOwwhJ7tjhBWfHtGs%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&Value=dGVzdA%3D%3D&Version=2010-06-15&AWSAccessKeyId=identity","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,setUserDataForInstance.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);

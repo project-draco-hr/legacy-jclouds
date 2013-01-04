@@ -1,7 +1,7 @@
 {
   Method method=SecurityGroupAsyncClient.class.getMethod("authorizeIngressICMPToCIDRs",String.class,int.class,int.class,Iterable.class,AccountInDomainOptions[].class);
   HttpRequest httpRequest=processor.createRequest(method,2,22,22,ImmutableSet.of("1.1.1.1/24","1.2.2.2/16"));
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=authorizeSecurityGroupIngress&protocol=ICMP&securitygroupid=2&icmptype=22&icmpcode=22&cidrlist=1.1.1.1/24,1.2.2.2/16 HTTP/1.1");
+  assertRequestLineEquals(httpRequest,authorizeSecurityGroupIngress1.getRequestLine());
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,ParseFirstJsonValueNamed.class);

@@ -1,9 +1,10 @@
 {
   Method method=PlacementGroupAsyncClient.class.getMethod("createPlacementGroupInRegion",String.class,String.class,String.class);
   HttpRequest request=processor.createRequest(method,null,"name","cluster");
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=CreatePlacementGroup&Strategy=cluster&GroupName=name","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,createPlacementGroup.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);

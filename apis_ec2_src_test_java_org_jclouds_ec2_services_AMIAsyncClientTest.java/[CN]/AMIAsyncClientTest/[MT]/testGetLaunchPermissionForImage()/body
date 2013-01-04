@@ -1,9 +1,10 @@
 {
   Method method=AMIAsyncClient.class.getMethod("getLaunchPermissionForImageInRegion",String.class,String.class);
   HttpRequest request=processor.createRequest(method,null,"imageId");
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=DescribeImageAttribute&Attribute=launchPermission&ImageId=imageId","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,getLaunchPermissionForImage.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,PermissionHandler.class);
   assertFallbackClassEquals(method,null);
