@@ -1,0 +1,14 @@
+{
+  ImmutableList.Builder<Part> parts=ImmutableList.<Part>builder();
+  for (  Parameter param : parametersWithAnnotation(method,PartParam.class)) {
+    PartParam partParam=param.getAnnotation(PartParam.class);
+    PartOptions options=new PartOptions();
+    if (!PartParam.NO_CONTENT_TYPE.equals(partParam.contentType()))     options.contentType(partParam.contentType());
+    if (!PartParam.NO_FILENAME.equals(partParam.filename()))     options.filename(replaceTokens(partParam.filename(),tokenValues));
+    Object arg=args.get(param.hashCode());
+    checkNotNull(arg,partParam.name());
+    Part part=Part.create(partParam.name(),newPayload(arg),options);
+    parts.add(part);
+  }
+  return parts.build();
+}

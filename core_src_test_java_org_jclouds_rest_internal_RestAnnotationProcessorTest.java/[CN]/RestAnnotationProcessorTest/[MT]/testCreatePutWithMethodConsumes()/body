@@ -5,6 +5,6 @@
   assertNonPayloadHeadersEqual(request,"Accept: application/json\n");
   assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);
   assertResponseParserClassEquals(method,request,ParseJson.class);
-  Function<HttpResponse,View> parser=(Function<HttpResponse,View>)RestAnnotationProcessor.createResponseParser(parserFactory,injector,method,request);
+  Function<HttpResponse,View> parser=(Function<HttpResponse,View>)AsyncRestClientProxy.createResponseParser(parserFactory,injector,method,request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()).foo,"bar");
 }

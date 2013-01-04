@@ -1,0 +1,13 @@
+{
+  Function<HttpResponse,?> transformer;
+  if (method.isAnnotationPresent(SelectJson.class)) {
+    Type returnVal=getReturnTypeFor(method.getReturnType());
+    if (method.isAnnotationPresent(OnlyElement.class))     returnVal=newParameterizedType(Set.class,returnVal);
+    transformer=new ParseFirstJsonValueNamed(injector.getInstance(GsonWrapper.class),TypeLiteral.get(returnVal),method.getAnnotation(SelectJson.class).value());
+    if (method.isAnnotationPresent(OnlyElement.class))     transformer=compose(new OnlyElementOrNull(),transformer);
+  }
+ else {
+    transformer=injector.getInstance(getParserOrThrowException(method));
+  }
+  return transformer;
+}

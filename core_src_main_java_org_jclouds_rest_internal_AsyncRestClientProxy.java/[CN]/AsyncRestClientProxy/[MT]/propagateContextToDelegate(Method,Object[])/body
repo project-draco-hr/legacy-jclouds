@@ -1,9 +1,9 @@
 {
-  Class<?> asyncClass=Optionals2.returnTypeOrTypeOfOptional(method);
-  ClassMethodArgs cma=new ClassMethodArgs(asyncClass,method,args);
+  Class<?> asyncClass=returnTypeOrTypeOfOptional(method);
+  ClassInvokerArgs cma=ClassInvokerArgs.builder().clazz(asyncClass).invoker(method).args(args).build();
   Object returnVal=delegateMap.get(cma);
-  if (Optionals2.isReturnTypeOptional(method)) {
-    ClassMethodArgsAndReturnVal cmar=ClassMethodArgsAndReturnVal.builder().fromClassMethodArgs(cma).returnVal(returnVal).build();
+  if (isReturnTypeOptional(method)) {
+    ClassInvokerArgsAndReturnVal cmar=ClassInvokerArgsAndReturnVal.builder().fromClassInvokerArgs(cma).returnVal(returnVal).build();
     return optionalConverter.apply(cmar);
   }
   return returnVal;
