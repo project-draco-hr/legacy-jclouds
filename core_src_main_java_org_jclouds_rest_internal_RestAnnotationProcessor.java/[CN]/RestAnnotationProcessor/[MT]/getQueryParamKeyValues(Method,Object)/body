@@ -2,7 +2,7 @@
   Multimap<String,Object> queryParamValues=LinkedHashMultimap.create();
   LoadingCache<Integer,Set<Annotation>> indexToQueryParam=methodToIndexOfParamToQueryParamAnnotations.getUnchecked(method);
   LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.getUnchecked(method);
-  for (  Entry<Integer,Set<Annotation>> entry : indexToQueryParam.asMap().entrySet()) {
+  for (  Entry<Integer,Set<Annotation>> entry : ImmutableSortedMap.copyOf(indexToQueryParam.asMap()).entrySet()) {
     for (    Annotation key : entry.getValue()) {
       Set<Annotation> extractors=indexToParamExtractor.getUnchecked(entry.getKey());
       String paramKey=((QueryParam)key).value();

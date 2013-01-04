@@ -1,9 +1,10 @@
 {
   Method method=AWSAMIAsyncClient.class.getMethod("createImageInRegion",String.class,String.class,String.class,Array.newInstance(CreateImageOptions.class,0).getClass());
   HttpRequest request=processor.createRequest(method,null,"name","instanceId",new CreateImageOptions().withDescription("description").noReboot());
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=CreateImage&InstanceId=instanceId&Name=name&Description=description&NoReboot=true","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,createImageOptions.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,ImageIdHandler.class);
   assertFallbackClassEquals(method,null);

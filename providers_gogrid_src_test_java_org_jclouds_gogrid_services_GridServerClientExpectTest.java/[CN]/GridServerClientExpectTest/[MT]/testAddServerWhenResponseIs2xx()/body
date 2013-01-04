@@ -1,6 +1,5 @@
 {
-  HttpRequest listGridServers=HttpRequest.builder().method("GET").endpoint(URI.create("https://api.gogrid.com/api/grid/server/add?" + "v=1.6&name=serverName&server.ram=memory&image=img55&ip=127.0.0.1&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity")).build();
   HttpResponse listGridServersResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/test_get_server_list.json","application/json")).build();
-  GoGridClient addServerWorked=requestSendsResponse(listGridServers,listGridServersResponse);
+  GoGridClient addServerWorked=requestSendsResponse(addServer,listGridServersResponse);
   assertEquals(addServerWorked.getServerServices().addServer("serverName","img55","memory","127.0.0.1").toString(),new ParseServerTest().expected().toString());
 }

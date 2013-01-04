@@ -1,9 +1,10 @@
 {
   Method method=AWSInstanceAsyncClient.class.getMethod("setKernelForInstanceInRegion",String.class,String.class,String.class);
   HttpRequest request=processor.createRequest(method,null,"1","test");
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=ModifyInstanceAttribute&Attribute=kernel&Value=test&InstanceId=1","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,setKernelForInstance.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);

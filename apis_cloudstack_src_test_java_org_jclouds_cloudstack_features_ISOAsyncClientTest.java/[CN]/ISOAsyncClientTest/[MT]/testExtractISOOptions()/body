@@ -1,7 +1,7 @@
 {
   Method method=ISOAsyncClient.class.getMethod("extractISO",String.class,ExtractMode.class,String.class,ExtractISOOptions[].class);
   HttpRequest httpRequest=processor.createRequest(method,3,ExtractMode.HTTP_DOWNLOAD,5,ExtractISOOptions.Builder.url("http://example.com/"));
-  assertRequestLineEquals(httpRequest,"GET http://localhost:8080/client/api?response=json&command=extractIso&id=3&zoneid=5&mode=HTTP_DOWNLOAD&url=http%3A//example.com/ HTTP/1.1");
+  assertRequestLineEquals(httpRequest,extractIsoOptions.getRequestLine());
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);
   assertResponseParserClassEquals(method,httpRequest,UnwrapOnlyJsonValue.class);

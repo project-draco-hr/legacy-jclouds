@@ -1,8 +1,8 @@
 {
-  Map<String,Object> postParams=newHashMap();
+  Map<String,Object> postParams=newLinkedHashMap();
   LoadingCache<Integer,Set<Annotation>> indexToPathParam=methodToIndexOfParamToPostParamAnnotations.getUnchecked(method);
   LoadingCache<Integer,Set<Annotation>> indexToParamExtractor=methodToIndexOfParamToParamParserAnnotations.getUnchecked(method);
-  for (  Entry<Integer,Set<Annotation>> entry : indexToPathParam.asMap().entrySet()) {
+  for (  Entry<Integer,Set<Annotation>> entry : ImmutableSortedMap.copyOf(indexToPathParam.asMap()).entrySet()) {
     for (    Annotation key : entry.getValue()) {
       Set<Annotation> extractors=indexToParamExtractor.getUnchecked(entry.getKey());
       String paramKey=((PayloadParam)key).value();

@@ -1,7 +1,7 @@
 {
   ImmutableList.Builder<Part> parts=ImmutableList.<Part>builder();
   LoadingCache<Integer,Set<Annotation>> indexToPartParam=methodToIndexOfParamToPartParamAnnotations.getUnchecked(method);
-  for (  Entry<Integer,Set<Annotation>> entry : indexToPartParam.asMap().entrySet()) {
+  for (  Entry<Integer,Set<Annotation>> entry : ImmutableSortedMap.copyOf(indexToPartParam.asMap()).entrySet()) {
     for (    Annotation key : entry.getValue()) {
       PartParam param=(PartParam)key;
       PartOptions options=new PartOptions();

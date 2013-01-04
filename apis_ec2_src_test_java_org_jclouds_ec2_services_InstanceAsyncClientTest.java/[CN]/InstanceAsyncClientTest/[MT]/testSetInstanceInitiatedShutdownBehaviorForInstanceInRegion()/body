@@ -1,9 +1,10 @@
 {
   Method method=InstanceAsyncClient.class.getMethod("setInstanceInitiatedShutdownBehaviorForInstanceInRegion",String.class,String.class,InstanceInitiatedShutdownBehavior.class);
   HttpRequest request=processor.createRequest(method,null,"1",InstanceInitiatedShutdownBehavior.TERMINATE);
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=ModifyInstanceAttribute&Attribute=instanceInitiatedShutdownBehavior&Value=terminate&InstanceId=1","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,setInstanceInitiatedShutdownBehavior.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);

@@ -1,9 +1,10 @@
 {
   Method method=AWSAMIAsyncClient.class.getMethod("addLaunchPermissionsToImageInRegion",String.class,Iterable.class,Iterable.class,String.class);
   HttpRequest request=processor.createRequest(method,null,ImmutableList.of("bob","sue"),ImmutableList.of("all"),"imageId");
+  request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=ModifyImageAttribute&OperationType=add&Attribute=launchPermission&ImageId=imageId&UserGroup.1=all&UserId.1=bob&UserId.2=sue","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,addLaunchPermission.getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);

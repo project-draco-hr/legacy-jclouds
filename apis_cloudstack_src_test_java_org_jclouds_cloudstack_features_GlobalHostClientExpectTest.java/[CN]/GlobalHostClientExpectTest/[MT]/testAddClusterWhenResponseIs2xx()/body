@@ -1,7 +1,6 @@
 {
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://localhost:8080/client/api?response=json&command=addCluster&zoneid=1&clustertype=CloudManaged&clustername=Xen%20Clust%201&hypervisor=XenServer&allocationstate=Enabled&podid=1&url=http%3A//example.com/cluster&username=fred&password=sekrit&apiKey=identity&signature=2uIQ5qF0bVycXK111wxvogWp1Yw%3D").addHeader("Accept","application/json").build();
   HttpResponse response=HttpResponse.builder().payload(payloadFromResource("/addclusterresponse.json")).statusCode(200).build();
   Cluster expected=Cluster.builder().id("1").name("Xen Clust 1").podId("1").podName("Dev Pod 1").zoneId("1").zoneName("Dev Zone 1").hypervisor("XenServer").clusterType(Host.ClusterType.CLOUD_MANAGED).allocationState(AllocationState.ENABLED).managedState(Cluster.ManagedState.MANAGED).build();
-  Cluster actual=requestSendsResponse(request,response).addCluster("1","Xen Clust 1",Host.ClusterType.CLOUD_MANAGED,"XenServer",AddClusterOptions.Builder.allocationState(AllocationState.ENABLED).podId("1").url("http://example.com/cluster").username("fred").password("sekrit"));
+  Cluster actual=requestSendsResponse(addCluster,response).addCluster("1","Xen Clust 1",Host.ClusterType.CLOUD_MANAGED,"XenServer",AddClusterOptions.Builder.allocationState(AllocationState.ENABLED).podId("1").url("http://example.com/cluster").username("fred").password("sekrit"));
   assertEquals(actual,expected);
 }
