@@ -1,16 +1,5 @@
 {
-  boolean optional=isReturnTypeOptional(method);
-  Class<?> syncClass;
-  if (optional) {
-    ParameterizedType futureType=ParameterizedType.class.cast(method.getGenericReturnType());
-    Type t=futureType.getActualTypeArguments()[0];
-    if (t instanceof WildcardType) {
-      t=((WildcardType)t).getUpperBounds()[0];
-    }
-    syncClass=Class.class.cast(t);
-  }
- else {
-    syncClass=method.getReturnType();
-  }
-  return syncClass;
+  Class<?> syncClass=method.getReturnType();
+  Type genericType=method.getGenericReturnType();
+  return returnTypeOrTypeOfOptional(syncClass,genericType);
 }

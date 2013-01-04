@@ -1,0 +1,12 @@
+{
+  Type returnVal=typeToken.getType();
+  if (typeToken.getRawType().getTypeParameters().length == 0) {
+    returnVal=typeToken.getRawType();
+  }
+ else   if (typeToken.getRawType().equals(ListenableFuture.class)) {
+    ParameterizedType futureType=(ParameterizedType)typeToken.getType();
+    returnVal=futureType.getActualTypeArguments()[0];
+    if (returnVal instanceof WildcardType)     returnVal=WildcardType.class.cast(returnVal).getUpperBounds()[0];
+  }
+  return returnVal;
+}

@@ -1,0 +1,13 @@
+{
+  Multimap<String,String> headers=LinkedHashMultimap.create();
+  addHeaderIfAnnotationPresentOnMethod(headers,method,tokenValues);
+  for (  Parameter headerParam : parametersWithAnnotation(method,HeaderParam.class)) {
+    Annotation key=headerParam.getAnnotation(HeaderParam.class);
+    String value=args.get(headerParam.hashCode()).toString();
+    value=replaceTokens(value,tokenValues);
+    headers.put(((HeaderParam)key).value(),value);
+  }
+  addProducesIfPresentOnTypeOrMethod(headers,method);
+  addConsumesIfPresentOnTypeOrMethod(headers,method);
+  return headers;
+}

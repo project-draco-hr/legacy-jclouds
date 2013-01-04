@@ -3,10 +3,10 @@
     Class<?> syncClass=Optionals2.returnTypeOrTypeOfOptional(method);
     Class<?> asyncClass=sync2Async.get(syncClass);
     checkState(asyncClass != null,"please configure corresponding async class for " + syncClass + " in your RestClientModule");
-    ClassMethodArgs cma=new ClassMethodArgs(asyncClass,method,args);
+    ClassInvokerArgs cma=ClassInvokerArgs.builder().clazz(asyncClass).invoker(method).args(args).build();
     Object returnVal=delegateMap.get(cma);
     if (Optionals2.isReturnTypeOptional(method)) {
-      ClassMethodArgsAndReturnVal cmar=ClassMethodArgsAndReturnVal.builder().fromClassMethodArgs(cma).returnVal(returnVal).build();
+      ClassInvokerArgsAndReturnVal cmar=ClassInvokerArgsAndReturnVal.builder().fromClassInvokerArgs(cma).returnVal(returnVal).build();
       return optionalConverter.apply(cmar);
     }
     return returnVal;

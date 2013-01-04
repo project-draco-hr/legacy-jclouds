@@ -2,18 +2,18 @@
   try {
     Type genericReturnType=method.getGenericReturnType();
     try {
-      Annotation qualifier=Iterables.find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
+      Annotation qualifier=find(ImmutableList.copyOf(method.getAnnotations()),isQualifierPresent);
       return getInstanceOfTypeWithQualifier(genericReturnType,qualifier);
     }
  catch (    ProvisionException e) {
-      throw Throwables.propagate(e.getCause());
+      throw propagate(e.getCause());
     }
 catch (    RuntimeException e) {
       return instanceOfTypeOrPropagate(genericReturnType,e);
     }
   }
  catch (  ProvisionException e) {
-    AuthorizationException aex=Throwables2.getFirstThrowableOfType(e,AuthorizationException.class);
+    AuthorizationException aex=getFirstThrowableOfType(e,AuthorizationException.class);
     if (aex != null)     throw aex;
     throw e;
   }

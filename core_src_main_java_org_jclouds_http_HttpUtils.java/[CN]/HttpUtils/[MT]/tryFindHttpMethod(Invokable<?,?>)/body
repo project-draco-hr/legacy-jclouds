@@ -1,0 +1,16 @@
+{
+  Builder<String> methodsBuilder=ImmutableSet.builder();
+  for (  Annotation annotation : method.getAnnotations()) {
+    HttpMethod http=annotation.annotationType().getAnnotation(HttpMethod.class);
+    if (http != null)     methodsBuilder.add(http.value());
+  }
+  Collection<String> methods=methodsBuilder.build();
+switch (methods.size()) {
+case 0:
+    return Optional.absent();
+case 1:
+  return Optional.of(get(methods,0));
+default :
+throw new IllegalStateException("You must specify at most one HttpMethod annotation on: " + method);
+}
+}

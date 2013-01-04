@@ -1,47 +1,41 @@
 {
-  Iterable<Entry<Integer,Set<Annotation>>> binderOrWrapWith=concat(ImmutableSortedMap.copyOf(filterValues(methodToIndexOfParamToBinderParamAnnotation.getUnchecked(request.getJavaMethod()).asMap(),notEmpty)).entrySet(),ImmutableSortedMap.copyOf(filterValues(methodToIndexOfParamToWrapWithAnnotation.getUnchecked(request.getJavaMethod()).asMap(),notEmpty)).entrySet());
-  OUTER:   for (  Entry<Integer,Set<Annotation>> entry : binderOrWrapWith) {
+  Set<Parameter> binderOrWrapWith=ImmutableSet.copyOf(concat(parametersWithAnnotation(request.getInvoker(),BinderParam.class),parametersWithAnnotation(request.getInvoker(),WrapWith.class)));
+  OUTER:   for (  Parameter entry : binderOrWrapWith) {
+    int position=entry.hashCode();
     boolean shouldBreak=false;
-    Annotation annotation=get(entry.getValue(),0);
     Binder binder;
-    if (annotation instanceof BinderParam)     binder=injector.getInstance(BinderParam.class.cast(annotation).value());
- else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(WrapWith.class.cast(annotation).value());
-    if (request.getArgs().size() >= entry.getKey() + 1 && request.getArgs().get(entry.getKey()) != null) {
-      Object input;
-      Class<?> parameterType=request.getJavaMethod().getParameterTypes()[entry.getKey()];
-      Class<? extends Object> argType=request.getArgs().get(entry.getKey()).getClass();
-      if (!argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
-        int arrayLength=request.getArgs().size() - request.getJavaMethod().getParameterTypes().length + 1;
+    if (entry.isAnnotationPresent(BinderParam.class))     binder=injector.getInstance(entry.getAnnotation(BinderParam.class).value());
+ else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(entry.getAnnotation(WrapWith.class).value());
+    Object arg=request.getArgs().size() >= position + 1 ? request.getArgs().get(position) : null;
+    if (request.getArgs().size() >= position + 1 && arg != null) {
+      Class<?> parameterType=entry.getType().getRawType();
+      Class<? extends Object> argType=arg.getClass();
+      if (!argType.isArray() && parameterType.isArray()) {
+        int arrayLength=request.getArgs().size() - request.getInvoker().getParameters().size() + 1;
         if (arrayLength == 0)         break OUTER;
-        input=(Object[])Array.newInstance(request.getArgs().get(entry.getKey()).getClass(),arrayLength);
-        System.arraycopy(request.getArgs().toArray(),entry.getKey(),input,0,arrayLength);
+        arg=(Object[])Array.newInstance(arg.getClass(),arrayLength);
+        System.arraycopy(request.getArgs().toArray(),position,arg,0,arrayLength);
         shouldBreak=true;
       }
- else       if (argType.isArray() && request.getJavaMethod().isVarArgs() && parameterType.isArray()) {
-        input=request.getArgs().get(entry.getKey());
+ else       if (argType.isArray() && parameterType.isArray()) {
       }
  else {
-        input=request.getArgs().get(entry.getKey());
-        if (input.getClass().isArray()) {
-          Object[] payloadArray=(Object[])input;
-          input=payloadArray.length > 0 ? payloadArray[0] : null;
+        if (arg.getClass().isArray()) {
+          Object[] payloadArray=(Object[])arg;
+          arg=payloadArray.length > 0 ? payloadArray[0] : null;
         }
       }
-      if (input != null) {
-        request=binder.bindToRequest(request,input);
+      if (arg != null) {
+        request=binder.bindToRequest(request,arg);
       }
       if (shouldBreak)       break OUTER;
     }
  else {
-      if (entry.getKey() >= request.getJavaMethod().getParameterAnnotations().length) {
-        throw new IllegalArgumentException(format("Argument index %s is out of bounds for method %s",entry.getKey() + 1,request.getJavaMethod()));
+      if (position + 1 == request.getInvoker().getParameters().size() && entry.getType().isArray())       continue OUTER;
+      if (entry.isAnnotationPresent(Nullable.class)) {
+        continue OUTER;
       }
-      if (request.getJavaMethod().isVarArgs() && entry.getKey() + 1 == request.getJavaMethod().getParameterTypes().length)       continue OUTER;
-      Annotation[] annotations=request.getJavaMethod().getParameterAnnotations()[entry.getKey()];
-      for (      Annotation a : annotations) {
-        if (NULLABLE.apply(a))         continue OUTER;
-      }
-      checkNotNull(null,request.getJavaMethod().getName() + " parameter " + (entry.getKey() + 1));
+      checkNotNull(arg,request.getInvoker().getName() + " parameter " + (position + 1));
     }
   }
   return request;
