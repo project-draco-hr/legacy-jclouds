@@ -1,0 +1,14 @@
+{
+  Object org=postParams.get("orgName");
+  Object vdc=postParams.get("vdcName");
+  if (org == null && vdc == null)   return (R)request.toBuilder().endpoint(defaultVDC.get().getHref()).build();
+ else   if (org == null)   org=defaultOrg.get().getName();
+  try {
+    Map<String,ReferenceType> vdcs=checkNotNull(orgNameToVDCEndpoint.get().get(org)).getVDCs();
+    URI endpoint=vdc == null ? Iterables.getLast(vdcs.values()).getHref() : vdcs.get(vdc).getHref();
+    return (R)request.toBuilder().endpoint(endpoint).build();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException(org + "/" + vdc+ " not found in "+ orgNameToVDCEndpoint.get());
+  }
+}
