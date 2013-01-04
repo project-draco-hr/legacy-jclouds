@@ -1,0 +1,14 @@
+{
+  Object org=postParams.get("orgName");
+  Object catalog=postParams.get("catalogName");
+  if (org == null && catalog == null)   return (R)request.toBuilder().endpoint(defaultCatalog.get().getHref()).build();
+ else   if (org == null)   org=defaultOrg.get().getName();
+  try {
+    Map<String,ReferenceType> catalogs=checkNotNull(orgMap.get().get(org)).getCatalogs();
+    URI endpoint=catalog == null ? Iterables.getLast(catalogs.values()).getHref() : catalogs.get(catalog).getHref();
+    return (R)request.toBuilder().endpoint(endpoint).build();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException(org + "/" + catalog+ " not found in "+ orgMap.get());
+  }
+}

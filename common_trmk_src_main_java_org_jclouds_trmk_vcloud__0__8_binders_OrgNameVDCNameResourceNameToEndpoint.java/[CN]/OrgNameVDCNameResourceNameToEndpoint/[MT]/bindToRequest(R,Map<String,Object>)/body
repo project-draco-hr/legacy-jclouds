@@ -1,0 +1,15 @@
+{
+  Object org=postParams.get("orgName");
+  Object vDC=postParams.get("vdcName");
+  Object resource=postParams.get("resourceName");
+  if (org == null)   org=defaultOrg.get().getName();
+  if (vDC == null)   vDC=defaultVDC.get().getName();
+  Map<String,Map<String,? extends org.jclouds.trmk.vcloud_0_8.domain.VDC>> orgToVDCs=orgVDCMap.get();
+  checkState(orgToVDCs != null,"could not get map of org name to vdcs!");
+  Map<String,? extends org.jclouds.trmk.vcloud_0_8.domain.VDC> vDCs=orgToVDCs.get(org);
+  if (vDCs == null)   throw new NoSuchElementException("org " + org + " not found in "+ orgToVDCs.keySet());
+  org.jclouds.trmk.vcloud_0_8.domain.VDC vDCObject=vDCs.get(vDC);
+  if (vDCObject == null)   throw new NoSuchElementException("vdc " + vDC + " in org "+ org+ " not found in "+ vDCs.keySet());
+  URI endpoint=getEndpointOfResourceInVDC(org,vDC,resource,vDCObject);
+  return (R)request.toBuilder().endpoint(endpoint).build();
+}

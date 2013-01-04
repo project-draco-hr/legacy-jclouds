@@ -1,0 +1,14 @@
+{
+  Object org=postParams.get("orgName");
+  Object catalog=postParams.get("catalogName");
+  Object catalogItem=postParams.get("itemName");
+  if (org == null)   org=defaultOrg.get().getName();
+  if (catalog == null)   catalog=defaultCatalog.get().getName();
+  try {
+    Map<String,org.jclouds.vcloud.domain.Catalog> catalogs=checkNotNull(orgCatalogMap.get().get(org));
+    return (R)request.toBuilder().endpoint(catalogs.get(catalog).get(catalogItem).getHref()).build();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException(org + "/" + catalog+ "/"+ catalogItem+ " not found in "+ orgCatalogMap.get());
+  }
+}
