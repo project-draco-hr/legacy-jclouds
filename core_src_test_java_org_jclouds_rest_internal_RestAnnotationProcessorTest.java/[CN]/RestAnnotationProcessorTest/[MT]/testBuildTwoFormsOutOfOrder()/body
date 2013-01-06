@@ -1,5 +1,5 @@
 {
-  Method twoFormsOutOfOrder=TestFormReplace.class.getMethod("twoFormsOutOfOrder",String.class,String.class);
-  Object form=factory(TestFormReplace.class).createRequest(twoFormsOutOfOrder,"robot","eggs").getPayload().getRawContent();
+  Invokable<?,?> method=Invokable.from(TestFormReplace.class.getMethod("twoFormsOutOfOrder",String.class,String.class));
+  Object form=factory(TestFormReplace.class).createRequest(method,ImmutableList.<Object>of("robot","eggs")).getPayload().getRawContent();
   assertEquals(form,"x-amz-copy-source=/eggs/robot");
 }

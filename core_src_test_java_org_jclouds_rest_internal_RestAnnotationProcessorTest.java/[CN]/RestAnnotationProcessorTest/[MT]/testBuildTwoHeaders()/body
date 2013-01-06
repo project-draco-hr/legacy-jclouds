@@ -1,6 +1,6 @@
 {
-  Method twoHeaders=TestHeader.class.getMethod("twoHeaders",String.class,String.class);
-  Multimap<String,String> headers=factory(TestHeader.class).createRequest(twoHeaders,new Object[]{"robot","eggs"}).getHeaders();
+  Invokable<?,?> method=Invokable.from(TestHeader.class.getMethod("twoHeaders",String.class,String.class));
+  Multimap<String,String> headers=factory(TestHeader.class).createRequest(method,ImmutableList.<Object>of("robot","eggs")).getHeaders();
   assertEquals(headers.size(),1);
   assertEquals(headers.get("x-amz-copy-source"),ImmutableList.of("/robot/eggs"));
 }

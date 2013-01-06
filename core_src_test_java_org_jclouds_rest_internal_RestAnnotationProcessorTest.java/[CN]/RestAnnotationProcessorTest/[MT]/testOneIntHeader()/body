@@ -1,6 +1,6 @@
 {
-  Method method=TestHeaders.class.getMethod("oneIntHeader",int.class);
-  Multimap<String,String> headers=factory(TestHeaders.class).buildHeaders(ImmutableMultimap.<String,String>of(),method,1);
+  Invokable<?,?> method=Invokable.from(TestHeaders.class.getMethod("oneIntHeader",int.class));
+  Multimap<String,String> headers=factory(TestHeaders.class).createRequest(method,ImmutableList.<Object>of(1)).getHeaders();
   assertEquals(headers.size(),1);
   assertEquals(headers.get("header"),ImmutableList.of("1"));
 }

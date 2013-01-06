@@ -1,6 +1,6 @@
 {
-  Method method=TestRequest.class.getMethod("put",String.class,String.class);
-  HttpRequest request=factory(TestRequest.class).createRequest(method,"111","data");
+  Invokable<?,?> method=Invokable.from(TestRequest.class.getMethod("put",String.class,String.class));
+  HttpRequest request=factory(TestRequest.class).createRequest(method,ImmutableList.<Object>of("111","data"));
   assertRequestLineEquals(request,"PUT http://localhost:9999/1 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"data","application/unknown",false);

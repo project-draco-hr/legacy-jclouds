@@ -1,8 +1,8 @@
 {
   Payload payload=newStringPayload("whoops");
   calculateMD5(payload);
-  Method method=TestTransformers.class.getMethod("put",Payload.class);
-  HttpRequest request=factory(TestQuery.class).createRequest(method,payload);
+  Invokable<?,?> method=Invokable.from(TestTransformers.class.getMethod("put",Payload.class));
+  HttpRequest request=factory(TestQuery.class).createRequest(method,ImmutableList.<Object>of(payload));
   assertRequestLineEquals(request,"PUT http://localhost:9999?x-ms-version=2009-07-17 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"whoops","application/unknown",true);

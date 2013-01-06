@@ -1,6 +1,6 @@
 {
-  Method method=TestRequest.class.getMethod("get",String.class,String.class);
-  HttpRequest request=factory(TestRequest.class).createRequest(method,key,"localhost");
+  Invokable<?,?> method=Invokable.from(TestRequest.class.getMethod("get",String.class,String.class));
+  HttpRequest request=factory(TestRequest.class).createRequest(method,ImmutableList.<Object>of(key,"localhost"));
   assertEquals(request.getEndpoint().getHost(),"localhost");
   String expectedPath="/" + URLEncoder.encode(key,"UTF-8").replaceAll("\\+","%20");
   assertEquals(request.getEndpoint().getRawPath(),expectedPath);

@@ -1,6 +1,6 @@
 {
-  Method method=TestPut.class.getMethod("rowdy",String.class);
-  HttpRequest request=factory(TestPut.class).createRequest(method,"data");
+  Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("rowdy",String.class));
+  HttpRequest request=factory(TestPut.class).createRequest(method,ImmutableList.<Object>of("data"));
   assertRequestLineEquals(request,"ROWDY http://localhost:9999/strings/data HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,null,null,false);

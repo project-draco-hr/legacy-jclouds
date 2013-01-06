@@ -1,7 +1,7 @@
 {
-  Method method=TestPost.class.getMethod("postNonnull",String.class);
+  Invokable<?,?> method=Invokable.from(TestPost.class.getMethod("postNonnull",String.class));
   try {
-    HttpRequest request=factory(TestPost.class).createRequest(method);
+    HttpRequest request=factory(TestPost.class).createRequest(method,ImmutableList.of());
     Assert.fail("call should have failed with illegal null parameter, not permitted " + request + " to be created");
   }
  catch (  NullPointerException e) {

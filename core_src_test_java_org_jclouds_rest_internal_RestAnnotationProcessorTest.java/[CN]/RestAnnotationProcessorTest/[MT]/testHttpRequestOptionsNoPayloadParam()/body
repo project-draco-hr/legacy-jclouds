@@ -1,6 +1,6 @@
 {
-  Method method=TestPayloadParamVarargs.class.getMethod("post");
-  HttpRequest request=factory(TestQuery.class).createRequest(method);
+  Invokable<?,?> method=Invokable.from(TestPayloadParamVarargs.class.getMethod("post"));
+  HttpRequest request=factory(TestQuery.class).createRequest(method,ImmutableList.of());
   assertRequestLineEquals(request,"POST http://localhost:9999?x-ms-version=2009-07-17 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"","application/octet-stream",false);

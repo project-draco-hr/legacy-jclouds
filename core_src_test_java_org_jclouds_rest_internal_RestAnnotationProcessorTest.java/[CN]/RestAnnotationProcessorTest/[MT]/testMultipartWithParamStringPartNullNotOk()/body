@@ -1,10 +1,4 @@
 {
-  Method method=TestMultipartForm.class.getMethod("withParamStringPart",String.class,String.class);
-  try {
-    GeneratedHttpRequest httpRequest=factory(TestMultipartForm.class).createRequest(method,null,"foobledata");
-    Assert.fail("call should have failed with illegal null parameter, not permitted " + httpRequest + " to be created");
-  }
- catch (  NullPointerException e) {
-    Assert.assertTrue(e.toString().indexOf("name") >= 0,"Error message should have referred to parameter 'name': " + e);
-  }
+  Invokable<?,?> method=Invokable.from(TestMultipartForm.class.getMethod("withParamStringPart",String.class,String.class));
+  factory(TestMultipartForm.class).createRequest(method,Lists.<Object>newArrayList(null,"foobledata"));
 }

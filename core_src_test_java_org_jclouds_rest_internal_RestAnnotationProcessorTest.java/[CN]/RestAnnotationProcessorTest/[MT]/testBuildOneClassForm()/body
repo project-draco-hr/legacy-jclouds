@@ -1,5 +1,5 @@
 {
-  Method oneForm=TestClassForm.class.getMethod("oneForm",String.class);
-  Object form=factory(TestClassForm.class).createRequest(oneForm,"robot").getPayload().getRawContent();
+  Invokable<?,?> method=Invokable.from(TestClassForm.class.getMethod("oneForm",String.class));
+  Object form=factory(TestClassForm.class).createRequest(method,ImmutableList.<Object>of("robot")).getPayload().getRawContent();
   assertEquals(form,"x-amz-copy-source=/robot");
 }

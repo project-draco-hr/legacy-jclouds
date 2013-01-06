@@ -1,6 +1,6 @@
 {
-  Method method=TestVirtualHost.class.getMethod("get",String.class,String.class);
-  HttpRequest request=factory(TestVirtualHost.class).createRequest(method,new Object[]{"1","localhost"});
+  Invokable<?,?> method=Invokable.from(TestVirtualHost.class.getMethod("get",String.class,String.class));
+  HttpRequest request=factory(TestVirtualHost.class).createRequest(method,ImmutableList.<Object>of("1","localhost"));
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/1");
   assertEquals(request.getMethod(),HttpMethod.GET);

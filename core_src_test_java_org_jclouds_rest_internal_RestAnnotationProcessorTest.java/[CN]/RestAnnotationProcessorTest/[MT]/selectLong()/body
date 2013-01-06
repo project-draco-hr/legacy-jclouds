@@ -1,6 +1,6 @@
 {
-  Method method=TestPut.class.getMethod("selectLong");
-  HttpRequest request=factory(TestPut.class).createRequest(method);
+  Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("selectLong"));
+  HttpRequest request=factory(TestPut.class).createRequest(method,ImmutableList.of());
   assertResponseParserClassEquals(method,request,ParseFirstJsonValueNamed.class);
   Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)AsyncRestClientProxy.createResponseParser(parserFactory,injector,method,request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ \"destroyvirtualmachineresponse\" : {\"jobid\":4} }").build()),Long.valueOf(4));

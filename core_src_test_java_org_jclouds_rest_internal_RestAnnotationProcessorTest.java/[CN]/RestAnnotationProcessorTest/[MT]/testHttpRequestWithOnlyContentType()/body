@@ -1,6 +1,6 @@
 {
-  Method method=TestPayloadParamVarargs.class.getMethod("post",HttpRequestOptions.class);
-  HttpRequest request=factory(TestPayloadParamVarargs.class).createRequest(method,new TestHttpRequestOptions().payload("fooya"));
+  Invokable<?,?> method=Invokable.from(TestPayloadParamVarargs.class.getMethod("post",HttpRequestOptions.class));
+  HttpRequest request=factory(TestPayloadParamVarargs.class).createRequest(method,ImmutableList.<Object>of(new TestHttpRequestOptions().payload("fooya")));
   assertRequestLineEquals(request,"POST http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"fooya","application/unknown",false);

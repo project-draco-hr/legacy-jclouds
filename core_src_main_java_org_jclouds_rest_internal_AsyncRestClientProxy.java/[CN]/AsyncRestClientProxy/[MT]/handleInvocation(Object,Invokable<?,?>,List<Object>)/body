@@ -1,0 +1,14 @@
+{
+  if (method.isAnnotationPresent(Provides.class)) {
+    return lookupValueFromGuice(method);
+  }
+ else   if (method.isAnnotationPresent(Delegate.class)) {
+    return propagateContextToDelegate(method,args);
+  }
+ else   if (isAsyncOrDelegate(method)) {
+    return createListenableFutureForHttpRequestMappedToMethodAndArgs(method,args);
+  }
+ else {
+    throw new RuntimeException(String.format("Method is not annotated as either http or provider method: %s",method));
+  }
+}
