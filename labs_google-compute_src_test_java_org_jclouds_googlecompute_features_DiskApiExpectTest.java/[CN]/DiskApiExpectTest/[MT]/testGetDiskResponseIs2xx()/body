@@ -1,0 +1,6 @@
+{
+  HttpRequest get=HttpRequest.builder().method("GET").endpoint("https://www.googleapis.com/compute/v1beta13/projects/myproject/disks/testimage1").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/disk_get.json")).build();
+  DiskApi api=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,get,operationResponse).getDiskApiForProject("myproject");
+  assertEquals(api.get("testimage1"),new ParseDiskTest().expected());
+}
