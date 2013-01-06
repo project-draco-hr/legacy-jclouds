@@ -1,8 +1,8 @@
 {
-  Method method=CloudAsyncApi.class.getMethod("setGatewayNetwork",VirtualMachineDto.class,VLANNetworkDto.class);
+  Invokable<?,?> method=Invokable.from(CloudAsyncApi.class.getMethod("setGatewayNetwork",VirtualMachineDto.class,VLANNetworkDto.class));
   VirtualMachineDto vm=CloudResources.virtualMachinePut();
   VLANNetworkDto network=NetworkResources.privateNetworkPut();
-  GeneratedHttpRequest request=processor.createRequest(method,vm,network);
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(vm,network));
   String configLink=vm.searchLink("configurations").getHref() + "/" + network.getId();
   assertRequestLineEquals(request,"PUT http://localhost/api/cloud/virtualdatacenters/1/virtualappliances/1/virtualmachines/1/network/configurations HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");

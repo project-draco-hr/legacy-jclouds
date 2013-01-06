@@ -1,6 +1,6 @@
 {
-  Method method=GridServerAsyncClient.class.getMethod("getServersById",long[].class);
-  HttpRequest httpRequest=processor.createRequest(method,123L);
+  Invokable<?,?> method=Invokable.from(GridServerAsyncClient.class.getMethod("getServersById",long[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(123L));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/get?v=1.6&id=123 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

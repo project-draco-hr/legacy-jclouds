@@ -1,7 +1,7 @@
 {
   RestAnnotationProcessor processor=factory(TestPayload.class);
-  Method method=TestPayload.class.getMethod("putWithPath",String.class,String.class);
-  GeneratedHttpRequest request=processor.createRequest(method,"rabble","test");
+  Invokable<?,?> method=Invokable.from(TestPayload.class.getMethod("putWithPath",String.class,String.class));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("rabble","test"));
   assertRequestLineEquals(request,"PUT http://localhost:9999/rabble HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"test","application/unknown",false);

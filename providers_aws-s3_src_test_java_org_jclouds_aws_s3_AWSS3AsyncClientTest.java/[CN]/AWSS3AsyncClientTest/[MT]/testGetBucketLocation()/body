@@ -1,6 +1,6 @@
 {
-  Method method=AWSS3AsyncClient.class.getMethod("getBucketLocation",String.class);
-  HttpRequest request=processor.createRequest(method,"bucket");
+  Invokable<?,?> method=Invokable.from(AWSS3AsyncClient.class.getMethod("getBucketLocation",String.class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket"));
   assertRequestLineEquals(request,"GET https://bucket.s3.amazonaws.com/?location HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket.s3.amazonaws.com\n");
   assertPayloadEquals(request,null,null,false);

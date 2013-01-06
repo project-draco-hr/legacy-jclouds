@@ -1,7 +1,7 @@
 {
   EnterpriseOptions options=EnterpriseOptions.builder().has("abi").orderBy(OrderBy.NAME).ascendant(true).build();
-  Method method=EnterpriseAsyncApi.class.getMethod("listEnterprises",EnterpriseOptions.class);
-  GeneratedHttpRequest request=processor.createRequest(method,options);
+  Invokable<?,?> method=Invokable.from(EnterpriseAsyncApi.class.getMethod("listEnterprises",EnterpriseOptions.class));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(options));
   assertRequestLineEquals(request,"GET http://localhost/api/admin/enterprises?has=abi&by=name&asc=true HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + EnterprisesDto.BASE_MEDIA_TYPE + "\n");
   assertPayloadEquals(request,null,null,false);

@@ -1,6 +1,6 @@
 {
-  Method method=TestPut.class.getMethod("putWithMethodBinderProduces",String.class);
-  HttpRequest request=factory(TestPut.class).createRequest(method,"data");
+  Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("putWithMethodBinderProduces",String.class));
+  HttpRequest request=factory(TestPut.class).createRequest(method,ImmutableList.<Object>of("data"));
   assertRequestLineEquals(request,"PUT http://localhost:9999/data HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"data","text/plain",false);

@@ -2,8 +2,8 @@
   VolumeManagementDto first=CloudResources.volumePut();
   VolumeManagementDto second=CloudResources.volumePut();
   second.getEditLink().setHref(second.getEditLink().getHref() + "second");
-  Method method=CloudAsyncApi.class.getMethod("replaceVolumes",VirtualMachineDto.class,VirtualMachineOptions.class,VolumeManagementDto[].class);
-  GeneratedHttpRequest request=processor.createRequest(method,CloudResources.virtualMachinePut(),VirtualMachineOptions.builder().force(true).build(),new VolumeManagementDto[]{first,second});
+  Invokable<?,?> method=Invokable.from(CloudAsyncApi.class.getMethod("replaceVolumes",VirtualMachineDto.class,VirtualMachineOptions.class,VolumeManagementDto[].class));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(CloudResources.virtualMachinePut(),VirtualMachineOptions.builder().force(true).build(),new VolumeManagementDto[]{first,second}));
   String editLink=CloudResources.volumePut().getEditLink().getHref();
   assertRequestLineEquals(request,"PUT http://localhost/api/cloud/virtualdatacenters/1/virtualappliances/1/virtualmachines/1/storage/volumes?force=true HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + AcceptedRequestDto.BASE_MEDIA_TYPE + "\n");

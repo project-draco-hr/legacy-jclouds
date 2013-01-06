@@ -1,7 +1,7 @@
 {
   String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/moveVApp.xml"));
   CloneVAppOptions options=new CloneVAppOptions().deploy().powerOn().description("The description of the new vApp");
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder().method("POST").endpoint("http://localhost/key").declaring(String.class).javaMethod(String.class.getDeclaredMethod("toString")).arg(options).build();
+  GeneratedHttpRequest request=GeneratedHttpRequest.builder().method("POST").endpoint("http://localhost/key").declaring(String.class).invoker(Invokable.from(String.class.getDeclaredMethod("toString"))).arg(options).build();
   BindCloneVAppParamsToXmlPayload binder=injector.getInstance(BindCloneVAppParamsToXmlPayload.class);
   Builder<String,Object> map=ImmutableMap.builder();
   map.put("name","new-linux-server");

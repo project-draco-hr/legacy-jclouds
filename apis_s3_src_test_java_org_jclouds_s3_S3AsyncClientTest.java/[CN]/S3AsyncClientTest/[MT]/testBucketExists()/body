@@ -1,6 +1,6 @@
 {
-  Method method=S3AsyncClient.class.getMethod("bucketExists",String.class);
-  HttpRequest request=processor.createRequest(method,"bucket");
+  Invokable<?,?> method=Invokable.from(S3AsyncClient.class.getMethod("bucketExists",String.class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket"));
   assertRequestLineEquals(request,"GET https://bucket." + url + "/?max-keys=0 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
   assertPayloadEquals(request,null,null,false);

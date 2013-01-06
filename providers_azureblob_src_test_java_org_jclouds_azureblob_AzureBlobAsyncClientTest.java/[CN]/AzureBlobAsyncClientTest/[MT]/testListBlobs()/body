@@ -1,6 +1,6 @@
 {
-  Method method=AzureBlobAsyncClient.class.getMethod("listBlobs",String.class,ListBlobsOptions[].class);
-  HttpRequest request=processor.createRequest(method,"container");
+  Invokable<?,?> method=Invokable.from(AzureBlobAsyncClient.class.getMethod("listBlobs",String.class,ListBlobsOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("container"));
   assertRequestLineEquals(request,"GET https://identity.blob.core.windows.net/container?restype=container&comp=list HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"x-ms-version: 2009-09-19\n");
   assertPayloadEquals(request,null,null,false);

@@ -1,5 +1,5 @@
 {
-  Method method=VMAsyncApi.class.getMethod("addVMIntoVDC",String.class,String.class,VMSpec.class);
+  Invokable<?,?> method=Invokable.from(VMAsyncApi.class.getMethod("addVMIntoVDC",String.class,String.class,VMSpec.class));
   CIMOperatingSystem os=Iterables.find(injector.getInstance(Key.get(new TypeLiteral<Set<CIMOperatingSystem>>(){
   }
 )),new Predicate<CIMOperatingSystem>(){
@@ -8,7 +8,7 @@
     }
   }
 );
-  HttpRequest request=processor.createRequest(method,"11","22",VMSpec.builder().operatingSystem(os).name("DemoHost-1").networkTierName("VM Tier01").build());
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("11","22",VMSpec.builder().operatingSystem(os).name("DemoHost-1").networkTierName("VM Tier01").build()));
   assertRequestLineEquals(request,"GET https://api.savvis.net/vpdc/v1.0/org/11/vdc/22/vApp/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/vm-default.xml")),"application/xml",false);

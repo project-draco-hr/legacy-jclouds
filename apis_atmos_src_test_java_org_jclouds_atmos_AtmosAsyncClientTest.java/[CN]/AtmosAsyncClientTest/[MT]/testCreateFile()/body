@@ -1,6 +1,6 @@
 {
-  Method method=AtmosAsyncClient.class.getMethod("createFile",String.class,AtmosObject.class,PutOptions[].class);
-  HttpRequest request=processor.createRequest(method,"dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB));
+  Invokable<?,?> method=Invokable.from(AtmosAsyncClient.class.getMethod("createFile",String.class,AtmosObject.class,PutOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB)));
   assertRequestLineEquals(request,"POST https://accesspoint.atmosonline.com/rest/namespace/dir/hello HTTP/1.1");
   assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\n");
   assertPayloadEquals(request,"hello","text/plain",false);

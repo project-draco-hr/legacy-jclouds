@@ -1,8 +1,8 @@
 {
   OAuthScopes classScopes=request.getDeclaring().getAnnotation(OAuthScopes.class);
-  OAuthScopes methodScopes=request.getJavaMethod().getAnnotation(OAuthScopes.class);
+  OAuthScopes methodScopes=request.getInvoker().getAnnotation(OAuthScopes.class);
   if (classScopes == null && methodScopes == null) {
-    checkState(globalScopes != null,String.format("REST class or method should be annotated " + "with OAuthScopes specifying required permissions. Alternatively a global property " + "\"oauth.scopes\" may be set to define scopes globally. REST Class: %s, Method: %s",request.getDeclaring().getName(),request.getJavaMethod().getName()));
+    checkState(globalScopes != null,String.format("REST class or method should be annotated " + "with OAuthScopes specifying required permissions. Alternatively a global property " + "\"oauth.scopes\" may be set to define scopes globally. REST Class: %s, Method: %s",request.getDeclaring().getName(),request.getInvoker().getName()));
     return globalScopes;
   }
   OAuthScopes scopes=methodScopes != null ? methodScopes : classScopes;

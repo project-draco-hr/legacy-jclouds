@@ -1,7 +1,7 @@
 {
   TestDto dto=new TestDto();
-  Method withEndpointLink=TestEndpointLink.class.getMethod("withEndpointLink",TestDto.class);
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder().declaring(TestEndpointLink.class).javaMethod(withEndpointLink).args(ImmutableList.<Object>of(dto)).method(HttpMethod.GET).endpoint(URI.create("http://localhost")).build();
+  Invokable<?,?> withEndpointLink=Invokable.from(TestEndpointLink.class.getMethod("withEndpointLink",TestDto.class));
+  GeneratedHttpRequest request=GeneratedHttpRequest.builder().declaring(TestEndpointLink.class).invoker(withEndpointLink).args(ImmutableList.<Object>of(dto)).method(HttpMethod.GET).endpoint(URI.create("http://localhost")).build();
   BindToPath binder=new BindToPath();
   GeneratedHttpRequest newRequest=binder.bindToRequest(request,dto);
   assertEquals(newRequest.getRequestLine(),"GET http://linkuri HTTP/1.1");

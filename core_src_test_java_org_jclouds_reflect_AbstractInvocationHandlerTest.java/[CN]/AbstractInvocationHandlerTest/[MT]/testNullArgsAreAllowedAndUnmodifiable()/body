@@ -1,0 +1,11 @@
+{
+  Reflection.newProxy(Appendable.class,new AbstractInvocationHandler(){
+    protected Object handleInvocation(    Object proxy,    Invokable<?,?> method,    List<Object> args) throws Throwable {
+      assertNotNull(args);
+      assertNull(args.get(0));
+      args.add("foo");
+      throw new AssertionError("shouldn't be able to mutate the list!");
+    }
+  }
+).append(null);
+}

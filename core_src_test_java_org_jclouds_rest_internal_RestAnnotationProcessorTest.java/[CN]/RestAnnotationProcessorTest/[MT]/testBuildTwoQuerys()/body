@@ -1,5 +1,5 @@
 {
-  Method twoQuerys=TestQueryReplace.class.getMethod("twoQuerys",String.class,String.class);
-  String query=factory(TestQueryReplace.class).createRequest(twoQuerys,new Object[]{"robot","eggs"}).getEndpoint().getQuery();
+  Invokable<?,?> method=Invokable.from(TestQueryReplace.class.getMethod("twoQuerys",String.class,String.class));
+  String query=factory(TestQueryReplace.class).createRequest(method,ImmutableList.<Object>of("robot","eggs")).getEndpoint().getQuery();
   assertEquals(query,"x-amz-copy-source=/robot/eggs");
 }

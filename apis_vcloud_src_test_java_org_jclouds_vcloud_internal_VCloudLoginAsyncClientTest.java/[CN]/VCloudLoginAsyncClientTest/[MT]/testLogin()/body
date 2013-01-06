@@ -1,6 +1,6 @@
 {
-  Method method=VCloudLoginAsyncClient.class.getMethod("login");
-  HttpRequest request=processor.createRequest(method);
+  Invokable<?,?> method=Invokable.from(VCloudLoginAsyncClient.class.getMethod("login"));
+  HttpRequest request=processor.createRequest(method,ImmutableList.of());
   assertEquals(request.getRequestLine(),"POST http://localhost:8080/login HTTP/1.1");
   assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": application/vnd.vmware.vcloud.orgList+xml\n");
   assertPayloadEquals(request,null,null,false);

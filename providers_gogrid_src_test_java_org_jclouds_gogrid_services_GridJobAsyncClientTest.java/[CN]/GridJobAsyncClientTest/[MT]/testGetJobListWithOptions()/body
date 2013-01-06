@@ -1,6 +1,6 @@
 {
-  Method method=GridJobAsyncClient.class.getMethod("getJobList",GetJobListOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,startDate(new Date(1267385381770L)).withEndDate(new Date(1267385382770L)).onlyForObjectType(ObjectType.VIRTUAL_SERVER).onlyForState(JobState.PROCESSING));
+  Invokable<?,?> method=Invokable.from(GridJobAsyncClient.class.getMethod("getJobList",GetJobListOptions[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(startDate(new Date(1267385381770L)).withEndDate(new Date(1267385382770L)).onlyForObjectType(ObjectType.VIRTUAL_SERVER).onlyForState(JobState.PROCESSING)));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/job/list?v=1.5&startdate=1267385381770&" + "enddate=1267385382770&job.objecttype=VirtualServer&" + "job.state=Processing HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

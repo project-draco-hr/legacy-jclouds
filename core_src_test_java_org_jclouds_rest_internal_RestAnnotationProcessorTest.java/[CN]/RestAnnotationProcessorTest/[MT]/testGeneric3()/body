@@ -1,6 +1,6 @@
 {
-  Method method=TestPut.class.getMethod("testGeneric3");
-  HttpRequest request=factory(TestPut.class).createRequest(method);
+  Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("testGeneric3"));
+  HttpRequest request=factory(TestPut.class).createRequest(method,ImmutableList.of());
   assertResponseParserClassEquals(method,request,ParseJson.class);
   Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)AsyncRestClientProxy.createResponseParser(parserFactory,injector,method,request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()),ImmutableMap.of("foo","bar"));

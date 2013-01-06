@@ -1,5 +1,5 @@
 {
-  Method method=TestEndpointParams.class.getMethod("oneEndpointParam",String.class);
-  URI uri=factory(TestEndpointParams.class).getEndpointInParametersOrNull(method,new Object[]{"robot"},injector);
+  Invokable<?,?> method=Invokable.from(TestEndpointParams.class.getMethod("oneEndpointParam",String.class));
+  URI uri=RestAnnotationProcessor.getEndpointInParametersOrNull(method,ImmutableList.<Object>of("robot"),injector);
   assertEquals(uri,URI.create("robot"));
 }

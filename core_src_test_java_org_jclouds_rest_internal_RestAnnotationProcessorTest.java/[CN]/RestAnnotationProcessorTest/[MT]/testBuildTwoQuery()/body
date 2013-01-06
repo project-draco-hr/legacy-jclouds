@@ -1,5 +1,5 @@
 {
-  Method oneQuery=TestQueryReplace.class.getMethod("twoQuery",String.class);
-  String query=factory(TestQueryReplace.class).createRequest(oneQuery,new Object[]{"robot"}).getEndpoint().getQuery();
+  Invokable<?,?> method=Invokable.from(TestQueryReplace.class.getMethod("twoQuery",String.class));
+  String query=factory(TestQueryReplace.class).createRequest(method,ImmutableList.<Object>of("robot")).getEndpoint().getQuery();
   assertEquals(query,"slash=/robot&hyphen=-robot");
 }

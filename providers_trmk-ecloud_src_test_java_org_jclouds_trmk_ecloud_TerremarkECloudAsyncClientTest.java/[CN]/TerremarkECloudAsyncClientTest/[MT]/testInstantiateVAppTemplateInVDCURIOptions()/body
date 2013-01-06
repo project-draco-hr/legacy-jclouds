@@ -1,6 +1,6 @@
 {
-  Method method=TerremarkECloudAsyncClient.class.getMethod("instantiateVAppTemplateInVDC",URI.class,URI.class,String.class,InstantiateVAppTemplateOptions[].class);
-  HttpRequest request=processor.createRequest(method,URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/1"),URI.create("https://vcloud/vAppTemplate/3"),"name",InstantiateVAppTemplateOptions.Builder.processorCount(2).memory(512).inGroup("group").withPassword("password").inRow("row").addNetworkConfig(new NetworkConfig(URI.create("http://network"))));
+  Invokable<?,?> method=Invokable.from(TerremarkECloudAsyncClient.class.getMethod("instantiateVAppTemplateInVDC",URI.class,URI.class,String.class,InstantiateVAppTemplateOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(URI.create("https://vcloud.safesecureweb.com/api/v0.8/vdc/1"),URI.create("https://vcloud/vAppTemplate/3"),"name",InstantiateVAppTemplateOptions.Builder.processorCount(2).memory(512).inGroup("group").withPassword("password").inRow("row").addNetworkConfig(new NetworkConfig(URI.create("http://network")))));
   assertRequestLineEquals(request,"POST https://vcloud.safesecureweb.com/api/v0.8/vdc/1/action/instantiateVAppTemplate HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.vApp+xml\n");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/InstantiateVAppTemplateParams-options-test.xml")),"application/vnd.vmware.vcloud.instantiateVAppTemplateParams+xml",false);

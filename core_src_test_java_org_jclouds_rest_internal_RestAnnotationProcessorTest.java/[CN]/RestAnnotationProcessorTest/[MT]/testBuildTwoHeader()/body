@@ -1,6 +1,6 @@
 {
-  Method oneHeader=TestHeader.class.getMethod("twoHeader",String.class);
-  Multimap<String,String> headers=factory(TestHeader.class).createRequest(oneHeader,new Object[]{"robot"}).getHeaders();
+  Invokable<?,?> method=Invokable.from(TestHeader.class.getMethod("twoHeader",String.class));
+  Multimap<String,String> headers=factory(TestHeader.class).createRequest(method,ImmutableList.<Object>of("robot")).getHeaders();
   assertEquals(headers.size(),2);
   assertEquals(headers.get("slash"),ImmutableList.of("/robot"));
   assertEquals(headers.get("hyphen"),ImmutableList.of("-robot"));

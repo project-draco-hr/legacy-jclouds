@@ -1,5 +1,5 @@
 {
-  Method twoForms=TestFormReplace.class.getMethod("twoForms",String.class,String.class);
-  Object form=factory(TestFormReplace.class).createRequest(twoForms,"robot","eggs").getPayload().getRawContent();
+  Invokable<?,?> method=Invokable.from(TestFormReplace.class.getMethod("twoForms",String.class,String.class));
+  Object form=factory(TestFormReplace.class).createRequest(method,ImmutableList.<Object>of("robot","eggs")).getPayload().getRawContent();
   assertEquals(form,"x-amz-copy-source=/robot/eggs");
 }

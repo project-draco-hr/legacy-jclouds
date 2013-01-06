@@ -1,6 +1,6 @@
 {
-  Method method=AWSS3AsyncClient.class.getMethod("uploadPart",String.class,String.class,int.class,String.class,Payload.class);
-  HttpRequest request=processor.createRequest(method,"bucket","foo",1,"asdsadasdas",Payloads.newStringPayload(""));
+  Invokable<?,?> method=Invokable.from(AWSS3AsyncClient.class.getMethod("uploadPart",String.class,String.class,int.class,String.class,Payload.class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket","foo",1,"asdsadasdas",Payloads.newStringPayload("")));
   assertRequestLineEquals(request,"PUT https://bucket." + url + "/foo?partNumber=1&uploadId=asdsadasdas HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
   assertPayloadEquals(request,"","application/unknown",false);
