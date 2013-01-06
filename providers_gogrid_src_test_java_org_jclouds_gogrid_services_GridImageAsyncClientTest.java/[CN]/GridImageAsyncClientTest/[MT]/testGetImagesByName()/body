@@ -1,6 +1,6 @@
 {
-  Method method=GridImageAsyncClient.class.getMethod("getImagesByName",String[].class);
-  HttpRequest httpRequest=processor.createRequest(method,"name1","name2");
+  Invokable<?,?> method=Invokable.from(GridImageAsyncClient.class.getMethod("getImagesByName",String[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("name1","name2"));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/image/get?v=1.5&" + "name=name1&name=name2 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

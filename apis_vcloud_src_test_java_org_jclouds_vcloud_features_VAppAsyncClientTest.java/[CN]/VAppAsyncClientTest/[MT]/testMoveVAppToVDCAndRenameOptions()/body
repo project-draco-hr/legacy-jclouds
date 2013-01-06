@@ -1,6 +1,6 @@
 {
-  Method method=VAppAsyncClient.class.getMethod("moveVAppToVDCAndRename",URI.class,URI.class,String.class,CloneVAppOptions[].class);
-  HttpRequest request=processor.createRequest(method,URI.create("https://vcenterprise.bluelock.com/api/v1.0/vapp/201"),URI.create("https://vcenterprise.bluelock.com/api/v1.0/vdc/1"),"new-linux-server",new CloneVAppOptions().deploy().powerOn().description("The description of the new vApp"));
+  Invokable<?,?> method=Invokable.from(VAppAsyncClient.class.getMethod("moveVAppToVDCAndRename",URI.class,URI.class,String.class,CloneVAppOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(URI.create("https://vcenterprise.bluelock.com/api/v1.0/vapp/201"),URI.create("https://vcenterprise.bluelock.com/api/v1.0/vdc/1"),"new-linux-server",new CloneVAppOptions().deploy().powerOn().description("The description of the new vApp")));
   assertRequestLineEquals(request,"POST https://vcenterprise.bluelock.com/api/v1.0/vdc/1/action/cloneVApp HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/moveVApp.xml")),"application/vnd.vmware.vcloud.cloneVAppParams+xml",false);

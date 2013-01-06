@@ -1,6 +1,6 @@
 {
-  Method method=TemplateAsyncClient.class.getMethod("registerTemplate",TemplateMetadata.class,String.class,String.class,String.class,String.class,RegisterTemplateOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,TemplateMetadata.builder().name("thename").osTypeId("10").displayText("description").build(),Template.Format.QCOW2,"xen","http://example.com/",20,RegisterTemplateOptions.Builder.accountInDomain("mydomain","3").bits(32).checksum("ABC").isExtractable(true).isFeatured(true).isPublic(true).passwordEnabled(true).requiresHVM(true));
+  Invokable<?,?> method=Invokable.from(TemplateAsyncClient.class.getMethod("registerTemplate",TemplateMetadata.class,String.class,String.class,String.class,String.class,RegisterTemplateOptions[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(TemplateMetadata.builder().name("thename").osTypeId("10").displayText("description").build(),Template.Format.QCOW2,"xen","http://example.com/",20,RegisterTemplateOptions.Builder.accountInDomain("mydomain","3").bits(32).checksum("ABC").isExtractable(true).isFeatured(true).isPublic(true).passwordEnabled(true).requiresHVM(true)));
   assertRequestLineEquals(httpRequest,registerTemplateOptions.getRequestLine());
   assertNonPayloadHeadersEqual(httpRequest,"Accept: application/json\n");
   assertPayloadEquals(httpRequest,null,null,false);

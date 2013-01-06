@@ -1,6 +1,6 @@
 {
-  Method method=S3AsyncClient.class.getMethod("putBucketACL",String.class,AccessControlList.class);
-  HttpRequest request=processor.createRequest(method,"bucket",AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE,"1234"));
+  Invokable<?,?> method=Invokable.from(S3AsyncClient.class.getMethod("putBucketACL",String.class,AccessControlList.class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket",AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE,"1234")));
   assertRequestLineEquals(request,"PUT https://bucket." + url + "/?acl HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
   assertPayloadEquals(request,"<AccessControlPolicy xmlns=\"http://" + url + "/doc/2006-03-01/\"><Owner><ID>1234</ID></Owner><AccessControlList><Grant><Grantee xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"CanonicalUser\"><ID>1234</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>","text/xml",false);

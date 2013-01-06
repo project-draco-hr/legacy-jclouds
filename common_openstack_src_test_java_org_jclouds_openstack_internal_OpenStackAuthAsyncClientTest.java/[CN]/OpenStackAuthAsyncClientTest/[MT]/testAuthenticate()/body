@@ -1,6 +1,6 @@
 {
-  Method method=OpenStackAuthAsyncClient.class.getMethod("authenticate",String.class,String.class);
-  HttpRequest httpRequest=processor.createRequest(method,"foo","bar");
+  Invokable<?,?> method=Invokable.from(OpenStackAuthAsyncClient.class.getMethod("authenticate",String.class,String.class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("foo","bar"));
   assertRequestLineEquals(httpRequest,"GET http://localhost:8080/v1.0 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: */*\nHost: localhost:8080\nX-Auth-Key: bar\nX-Auth-User: foo\n");
   assertPayloadEquals(httpRequest,null,null,false);

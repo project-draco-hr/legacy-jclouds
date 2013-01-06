@@ -1,7 +1,7 @@
 {
   EnterpriseDto enterprise=EnterpriseResources.enterprisePut();
-  Method method=EnterpriseAsyncApi.class.getMethod("updateLimits",DatacenterLimitsDto.class);
-  GeneratedHttpRequest request=processor.createRequest(method,EnterpriseResources.datacenterLimitsPut(enterprise));
+  Invokable<?,?> method=Invokable.from(EnterpriseAsyncApi.class.getMethod("updateLimits",DatacenterLimitsDto.class));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(EnterpriseResources.datacenterLimitsPut(enterprise)));
   assertRequestLineEquals(request,"PUT http://localhost/api/admin/enterprises/1/limits/1 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + DatacenterLimitsDto.BASE_MEDIA_TYPE + "\n");
   assertPayloadEquals(request,withHeader(EnterpriseResources.datacenterLimitsPutPayload(enterprise)),DatacenterLimitsDto.class,DatacenterLimitsDto.BASE_MEDIA_TYPE,false);

@@ -1,6 +1,6 @@
 {
-  Method method=InstanceAsyncClient.class.getMethod("runInstancesInRegion",String.class,String.class,String.class,int.class,int.class,Array.newInstance(RunInstancesOptions.class,0).getClass());
-  HttpRequest request=processor.createRequest(method,"eu-west-1","eu-west-1a","ami-voo",1,5,new RunInstancesOptions().withKernelId("kernelId").withSecurityGroups("group1","group2"));
+  Invokable<?,?> method=Invokable.from(InstanceAsyncClient.class.getMethod("runInstancesInRegion",String.class,String.class,String.class,int.class,int.class,RunInstancesOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("eu-west-1","eu-west-1a","ami-voo",1,5,new RunInstancesOptions().withKernelId("kernelId").withSecurityGroups("group1","group2")));
   assertRequestLineEquals(request,"POST https://ec2.eu-west-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.eu-west-1.amazonaws.com\n");
   try {

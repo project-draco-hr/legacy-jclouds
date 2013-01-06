@@ -1,4 +1,6 @@
 {
-  HttpRequest request=processor.createRequest(getMethod,container,name);
+  checkNotNull(container,"container");
+  checkNotNull(name,"name");
+  HttpRequest request=processor.createRequest(getMethod,ImmutableList.<Object>of(container,name));
   return cleanRequest(signForTemporaryAccess(request,timeInSeconds));
 }

@@ -1,6 +1,6 @@
 {
-  Method method=AMIAsyncClient.class.getMethod("addLaunchPermissionsToImageInRegion",String.class,Iterable.class,Iterable.class,String.class);
-  HttpRequest request=processor.createRequest(method,null,ImmutableList.of("bob","sue"),ImmutableList.of("all"),"imageId");
+  Invokable<?,?> method=Invokable.from(AMIAsyncClient.class.getMethod("addLaunchPermissionsToImageInRegion",String.class,Iterable.class,Iterable.class,String.class));
+  HttpRequest request=processor.createRequest(method,Lists.<Object>newArrayList(null,ImmutableList.of("bob","sue"),ImmutableList.of("all"),"imageId"));
   request=request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");

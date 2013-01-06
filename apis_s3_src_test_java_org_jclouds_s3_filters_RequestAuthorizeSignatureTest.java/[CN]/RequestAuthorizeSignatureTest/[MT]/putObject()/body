@@ -1,6 +1,5 @@
 {
   S3Object object=blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB);
   object.getMetadata().getUserMetadata().put("Adrian","foo");
-  HttpRequest request=processor.createRequest(S3AsyncClient.class.getMethod("putObject",String.class,S3Object.class,PutObjectOptions[].class),"bucket",object);
-  return request;
+  return processor.createRequest(Invokable.from(S3AsyncClient.class.getMethod("putObject",String.class,S3Object.class,PutObjectOptions[].class)),ImmutableList.<Object>of("bucket",object));
 }

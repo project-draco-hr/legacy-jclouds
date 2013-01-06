@@ -1,6 +1,6 @@
 {
-  Method method=GridLoadBalancerAsyncClient.class.getMethod("getLoadBalancersByName",String[].class);
-  HttpRequest httpRequest=processor.createRequest(method,"My Load Balancer","My Load Balancer 2");
+  Invokable<?,?> method=Invokable.from(GridLoadBalancerAsyncClient.class.getMethod("getLoadBalancersByName",String[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("My Load Balancer","My Load Balancer 2"));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/loadbalancer/" + "get?v=1.5&name=My%20Load%20Balancer&name=My%20Load%20Balancer%202 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

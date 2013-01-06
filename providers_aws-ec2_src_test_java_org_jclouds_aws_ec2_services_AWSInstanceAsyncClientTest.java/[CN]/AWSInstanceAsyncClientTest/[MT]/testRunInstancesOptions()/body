@@ -1,14 +1,9 @@
 {
-  Method method=AWSInstanceAsyncClient.class.getMethod("runInstancesInRegion",String.class,String.class,String.class,int.class,int.class,Array.newInstance(RunInstancesOptions.class,0).getClass());
-  HttpRequest request=processor.createRequest(method,"us-east-1","us-east-1a","ami-voo",1,5,new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring().withSecurityGroups("group1","group2"));
+  Invokable<?,?> method=Invokable.from(AWSInstanceAsyncClient.class.getMethod("runInstancesInRegion",String.class,String.class,String.class,int.class,int.class,RunInstancesOptions[].class));
+  HttpRequest request=processor.createRequest(method,Lists.<Object>newArrayList("us-east-1","us-east-1a","ami-voo",1,5,new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring().withSecurityGroups("group1","group2")));
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  try {
-    assertPayloadEquals(request,"Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a","application/x-www-form-urlencoded",false);
-  }
- catch (  AssertionError e) {
-    assertPayloadEquals(request,"Action=RunInstances&ImageId=ami-voo&MaxCount=5&MinCount=1&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a","application/x-www-form-urlencoded",false);
-  }
+  assertPayloadEquals(request,"Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a","application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ParseSax.class);
   assertSaxResponseParserClassEquals(method,AWSRunInstancesResponseHandler.class);
   assertFallbackClassEquals(method,null);

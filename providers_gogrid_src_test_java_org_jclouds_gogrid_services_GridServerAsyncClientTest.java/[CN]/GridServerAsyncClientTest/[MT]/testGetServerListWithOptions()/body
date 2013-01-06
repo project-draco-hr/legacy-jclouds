@@ -1,6 +1,6 @@
 {
-  Method method=GridServerAsyncClient.class.getMethod("getServerList",GetServerListOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,new GetServerListOptions.Builder().onlySandboxServers());
+  Invokable<?,?> method=Invokable.from(GridServerAsyncClient.class.getMethod("getServerList",GetServerListOptions[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(new GetServerListOptions.Builder().onlySandboxServers()));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/list?v=1.6&isSandbox=true HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

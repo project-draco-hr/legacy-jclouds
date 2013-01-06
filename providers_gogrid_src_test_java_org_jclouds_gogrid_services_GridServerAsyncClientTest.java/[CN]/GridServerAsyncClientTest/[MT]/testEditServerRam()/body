@@ -1,6 +1,6 @@
 {
-  Method method=GridServerAsyncClient.class.getMethod("editServerRam",long.class,String.class);
-  HttpRequest httpRequest=processor.createRequest(method,2,"1GB");
+  Invokable<?,?> method=Invokable.from(GridServerAsyncClient.class.getMethod("editServerRam",long.class,String.class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(2,"1GB"));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/edit?v=1.6&" + "id=2&server.ram=1GB HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

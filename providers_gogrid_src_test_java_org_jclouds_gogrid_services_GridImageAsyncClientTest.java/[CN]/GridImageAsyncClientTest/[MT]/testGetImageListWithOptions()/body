@@ -1,6 +1,6 @@
 {
-  Method method=GridImageAsyncClient.class.getMethod("getImageList",GetImageListOptions[].class);
-  HttpRequest httpRequest=processor.createRequest(method,new GetImageListOptions().onlyPublic().setState(ServerImageState.AVAILABLE).setType(ServerImageType.WEB_APPLICATION_SERVER));
+  Invokable<?,?> method=Invokable.from(GridImageAsyncClient.class.getMethod("getImageList",GetImageListOptions[].class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of(new GetImageListOptions().onlyPublic().setState(ServerImageState.AVAILABLE).setType(ServerImageType.WEB_APPLICATION_SERVER)));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/image/list?v=1.5&" + "isPublic=true&image.state=Available&" + "image.type=Web%20Server HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

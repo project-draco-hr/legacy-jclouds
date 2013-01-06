@@ -1,6 +1,6 @@
 {
-  Method method=VAppTemplateAsyncClient.class.getMethod("copyVAppTemplateToVDCAndName",URI.class,URI.class,String.class,CloneVAppTemplateOptions[].class);
-  HttpRequest request=processor.createRequest(method,URI.create("https://vcenterprise.bluelock.com/api/v1.0/vAppTemplate/201"),URI.create("https://vcenterprise.bluelock.com/api/v1.0/vdc/1"),"new-linux-server",new CloneVAppTemplateOptions().description("The description of the new vAppTemplate"));
+  Invokable<?,?> method=Invokable.from(VAppTemplateAsyncClient.class.getMethod("copyVAppTemplateToVDCAndName",URI.class,URI.class,String.class,CloneVAppTemplateOptions[].class));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(URI.create("https://vcenterprise.bluelock.com/api/v1.0/vAppTemplate/201"),URI.create("https://vcenterprise.bluelock.com/api/v1.0/vdc/1"),"new-linux-server",new CloneVAppTemplateOptions().description("The description of the new vAppTemplate")));
   assertRequestLineEquals(request,"POST https://vcenterprise.bluelock.com/api/v1.0/vdc/1/action/cloneVAppTemplate HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: application/vnd.vmware.vcloud.task+xml\n");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/copyVAppTemplate.xml")),"application/vnd.vmware.vcloud.cloneVAppTemplateParams+xml",false);

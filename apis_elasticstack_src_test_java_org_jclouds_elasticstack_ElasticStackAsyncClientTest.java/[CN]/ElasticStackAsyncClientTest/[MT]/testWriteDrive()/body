@@ -1,6 +1,6 @@
 {
-  Method method=ElasticStackAsyncClient.class.getMethod("writeDrive",String.class,Payload.class);
-  HttpRequest httpRequest=processor.createRequest(method,"100",Payloads.newStringPayload("foo"));
+  Invokable<?,?> method=Invokable.from(ElasticStackAsyncClient.class.getMethod("writeDrive",String.class,Payload.class));
+  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("100",Payloads.newStringPayload("foo")));
   assertRequestLineEquals(httpRequest,"POST https://api-lon-p.elastichosts.com/drives/100/write HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"Accept: text/plain\n");
   assertPayloadEquals(httpRequest,"foo",MediaType.APPLICATION_OCTET_STREAM,false);
