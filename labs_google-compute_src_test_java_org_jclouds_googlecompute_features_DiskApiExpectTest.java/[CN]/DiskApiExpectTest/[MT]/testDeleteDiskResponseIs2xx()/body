@@ -1,0 +1,6 @@
+{
+  HttpRequest delete=HttpRequest.builder().method("DELETE").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/disks/testimage1").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse deleteResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/operation.json")).build();
+  DiskApi api=requestsSendResponses(requestForScopes(COMPUTE_SCOPE),TOKEN_RESPONSE,delete,deleteResponse).getDiskApiForProject("myproject");
+  assertEquals(api.delete("testimage1"),new ParseOperationTest().expected());
+}
