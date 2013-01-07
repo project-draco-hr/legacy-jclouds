@@ -1,10 +1,6 @@
 {
   ParseObjectInfoFromHeaders parser=i.getInstance(ParseObjectInfoFromHeaders.class);
-  GeneratedHttpRequest request=createMock(GeneratedHttpRequest.class);
-  expect(request.getArgs()).andReturn(ImmutableList.<Object>of("container","key")).atLeastOnce();
-  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/test")).atLeastOnce();
-  replay(request);
-  parser.setContext(request);
+  parser.setContext(requestForArgs(ImmutableList.<Object>of("container","key")));
   HttpResponse response=HttpResponse.builder().statusCode(200).message("ok").payload("").addHeader("Last-Modified","Fri, 12 Jun 2007 13:40:18 GMT").addHeader("Content-Length","0").addHeader("Etag","feb1").build();
   response.getPayload().getContentMetadata().setContentType("text/plain");
   MutableObjectInfoWithMetadata md=parser.apply(response);

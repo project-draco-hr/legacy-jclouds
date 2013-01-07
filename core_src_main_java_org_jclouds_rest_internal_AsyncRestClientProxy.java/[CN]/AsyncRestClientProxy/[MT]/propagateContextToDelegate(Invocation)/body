@@ -1,0 +1,8 @@
+{
+  Class<?> returnType=unwrapIfOptional(invocation.getInvokable().getReturnType());
+  Object result=FunctionalReflection.newProxy(returnType,factory.caller(invocation,returnType));
+  if (isReturnTypeOptional(invocation.getInvokable())) {
+    return optionalConverter.apply(InvocationSuccess.create(invocation,result));
+  }
+  return result;
+}

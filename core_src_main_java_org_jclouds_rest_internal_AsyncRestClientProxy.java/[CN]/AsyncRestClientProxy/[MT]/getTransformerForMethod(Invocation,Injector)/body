@@ -1,0 +1,14 @@
+{
+  Invokable<?,?> invoked=invocation.getInvokable();
+  Function<HttpResponse,?> transformer;
+  if (invoked.isAnnotationPresent(SelectJson.class)) {
+    Type returnVal=getReturnTypeFor(invoked.getReturnType());
+    if (invoked.isAnnotationPresent(OnlyElement.class))     returnVal=newParameterizedType(Set.class,returnVal);
+    transformer=new ParseFirstJsonValueNamed(injector.getInstance(GsonWrapper.class),TypeLiteral.get(returnVal),invoked.getAnnotation(SelectJson.class).value());
+    if (invoked.isAnnotationPresent(OnlyElement.class))     transformer=compose(new OnlyElementOrNull(),transformer);
+  }
+ else {
+    transformer=injector.getInstance(getParserOrThrowException(invocation));
+  }
+  return transformer;
+}

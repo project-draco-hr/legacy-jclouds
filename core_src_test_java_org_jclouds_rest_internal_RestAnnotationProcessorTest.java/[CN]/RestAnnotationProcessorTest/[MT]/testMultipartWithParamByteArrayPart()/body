@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestMultipartForm.class.getMethod("withParamByteArrayBinaryPart",String.class,byte[].class));
-  GeneratedHttpRequest httpRequest=factory(TestMultipartForm.class).createRequest(method,ImmutableList.<Object>of("name","goo".getBytes()));
+  GeneratedHttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("name","goo".getBytes()));
   assertRequestLineEquals(httpRequest,"POST http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,"----JCLOUDS--\r\n" + "Content-Disposition: form-data; name=\"name\"\r\n" + "\r\n"+ "name\r\n"+ "----JCLOUDS--\r\n"+ "Content-Disposition: form-data; name=\"file\"; filename=\"name.tar.gz\"\r\n"+ "Content-Type: application/octet-stream\r\n"+ "\r\n"+ "goo\r\n"+ "----JCLOUDS----\r\n","multipart/form-data; boundary=--JCLOUDS--",false);

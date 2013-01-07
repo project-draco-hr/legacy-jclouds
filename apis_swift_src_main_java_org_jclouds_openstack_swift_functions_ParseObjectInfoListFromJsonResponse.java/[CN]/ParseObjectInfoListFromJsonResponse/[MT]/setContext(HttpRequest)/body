@@ -1,5 +1,11 @@
 {
   checkArgument(request instanceof GeneratedHttpRequest,"note this handler requires a GeneratedHttpRequest");
-  this.request=(GeneratedHttpRequest)request;
-  return setContainer(GeneratedHttpRequest.class.cast(request).getArgs().get(0).toString());
+  this.request=GeneratedHttpRequest.class.cast(request);
+  this.args=this.request.getInvocation().getArgs();
+  checkArgument(args.get(0) instanceof String,"arg[0] must be a container name");
+  this.container=args.get(0).toString();
+  checkArgument(args.get(1) instanceof ListContainerOptions[],"arg[1] must be an array of ListContainerOptions");
+  ListContainerOptions[] optionsList=(ListContainerOptions[])args.get(1);
+  this.options=optionsList.length > 0 ? optionsList[0] : ListContainerOptions.NONE;
+  return this;
 }

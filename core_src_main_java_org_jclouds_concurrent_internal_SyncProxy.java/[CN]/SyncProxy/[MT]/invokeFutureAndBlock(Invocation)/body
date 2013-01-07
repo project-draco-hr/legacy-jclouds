@@ -1,0 +1,14 @@
+{
+  try {
+    Invokable<Object,ListenableFuture<?>> asyncMethod=invokedMap.get(invocation.getInvokable());
+    ListenableFuture<?> future=asyncMethod.invoke(delegate,invocation.getArgs().toArray());
+    Optional<Long> timeoutNanos=timeoutMap.get(invocation.getInvokable());
+    return block(future,timeoutNanos);
+  }
+ catch (  InvocationTargetException e) {
+    return Result.fail(e);
+  }
+catch (  IllegalAccessException e) {
+    return Result.fail(e);
+  }
+}

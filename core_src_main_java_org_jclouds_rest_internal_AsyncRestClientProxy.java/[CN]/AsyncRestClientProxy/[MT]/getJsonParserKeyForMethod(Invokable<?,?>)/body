@@ -1,10 +1,10 @@
 {
   ParameterizedType parserType;
-  if (method.isAnnotationPresent(Unwrap.class)) {
-    parserType=newParameterizedType(UnwrapOnlyJsonValue.class,getReturnTypeFor(method.getReturnType()));
+  if (invoked.isAnnotationPresent(Unwrap.class)) {
+    parserType=newParameterizedType(UnwrapOnlyJsonValue.class,getReturnTypeFor(invoked.getReturnType()));
   }
  else {
-    parserType=newParameterizedType(ParseJson.class,getReturnTypeFor(method.getReturnType()));
+    parserType=newParameterizedType(ParseJson.class,getReturnTypeFor(invoked.getReturnType()));
   }
   return (Key<? extends Function<HttpResponse,?>>)Key.get(parserType);
 }

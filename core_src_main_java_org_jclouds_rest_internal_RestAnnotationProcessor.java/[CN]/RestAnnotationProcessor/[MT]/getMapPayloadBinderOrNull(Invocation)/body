@@ -1,0 +1,38 @@
+{
+  if (invocation.getArgs() != null) {
+    for (    Object arg : invocation.getArgs()) {
+      if (arg instanceof Object[]) {
+        Object[] postBinders=(Object[])arg;
+        if (postBinders.length == 0) {
+        }
+ else         if (postBinders.length == 1) {
+          if (postBinders[0] instanceof org.jclouds.rest.MapBinder) {
+            org.jclouds.rest.MapBinder binder=(org.jclouds.rest.MapBinder)postBinders[0];
+            injector.injectMembers(binder);
+            return binder;
+          }
+        }
+ else {
+          if (postBinders[0] instanceof org.jclouds.rest.MapBinder) {
+            throw new IllegalArgumentException("we currently do not support multiple varinvocation.getArgs() postBinders in: " + invocation.getInvokable().getName());
+          }
+        }
+      }
+ else       if (arg instanceof org.jclouds.rest.MapBinder) {
+        org.jclouds.rest.MapBinder binder=(org.jclouds.rest.MapBinder)arg;
+        injector.injectMembers(binder);
+        return binder;
+      }
+    }
+  }
+  if (invocation.getInvokable().isAnnotationPresent(MapBinder.class)) {
+    return injector.getInstance(invocation.getInvokable().getAnnotation(MapBinder.class).value());
+  }
+ else   if (invocation.getInvokable().isAnnotationPresent(org.jclouds.rest.annotations.Payload.class)) {
+    return injector.getInstance(BindMapToStringPayload.class);
+  }
+ else   if (invocation.getInvokable().isAnnotationPresent(WrapWith.class)) {
+    return injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(invocation.getInvokable().getAnnotation(WrapWith.class).value());
+  }
+  return null;
+}

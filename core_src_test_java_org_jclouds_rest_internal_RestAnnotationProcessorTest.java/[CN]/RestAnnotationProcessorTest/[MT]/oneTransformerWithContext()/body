@@ -1,6 +1,6 @@
 {
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder().method("GET").endpoint("http://localhost").declaring(TestTransformers.class).invoker(Invokable.from(TestTransformers.class.getMethod("oneTransformerWithContext"))).build();
-  Function<HttpResponse,?> transformer=AsyncRestClientProxy.createResponseParser(parserFactory,injector,request.getInvoker(),request);
+  GeneratedHttpRequest request=GeneratedHttpRequest.builder().method("GET").endpoint("http://localhost").invocation(Invocation.create(Invokable.from(TestTransformers.class.getMethod("oneTransformerWithContext")),ImmutableList.of())).build();
+  Function<HttpResponse,?> transformer=AsyncRestClientProxy.createResponseParser(parserFactory,injector,request.getInvocation(),request);
   assertEquals(transformer.getClass(),ReturnStringIf200Context.class);
   assertEquals(((ReturnStringIf200Context)transformer).request,request);
 }

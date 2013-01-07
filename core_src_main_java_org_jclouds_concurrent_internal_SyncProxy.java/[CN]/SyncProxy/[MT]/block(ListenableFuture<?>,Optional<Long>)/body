@@ -1,0 +1,21 @@
+{
+  try {
+    if (timeoutNanos.isPresent()) {
+      logger.debug(">> blocking on %s for %s",future,timeoutNanos);
+      return Result.success(future.get(timeoutNanos.get(),TimeUnit.NANOSECONDS));
+    }
+ else {
+      logger.debug(">> blocking on %s",future);
+      return Result.success(future.get());
+    }
+  }
+ catch (  ExecutionException e) {
+    return Result.fail(e.getCause());
+  }
+catch (  InterruptedException e) {
+    return Result.fail(e);
+  }
+catch (  TimeoutException e) {
+    return Result.fail(e);
+  }
+}

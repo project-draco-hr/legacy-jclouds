@@ -2,9 +2,9 @@
   checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests");
   checkArgument(checkNotNull(input,"input") instanceof VLANNetworkDto,"this binder is only valid for VLANNetworkDto");
   GeneratedHttpRequest gRequest=(GeneratedHttpRequest)request;
-  checkState(gRequest.getArgs() != null,"args should be initialized at this point");
+  checkState(gRequest.getInvocation().getArgs() != null,"args should be initialized at this point");
   VLANNetworkDto network=(VLANNetworkDto)input;
-  VirtualMachineDto vm=(VirtualMachineDto)Iterables.find(gRequest.getArgs(),Predicates.instanceOf(VirtualMachineDto.class));
+  VirtualMachineDto vm=(VirtualMachineDto)Iterables.find(gRequest.getInvocation().getArgs(),Predicates.instanceOf(VirtualMachineDto.class));
   RESTLink configLink=checkNotNull(vm.searchLink("configurations"),"missing required link");
   LinksDto dto=new LinksDto();
   dto.addLink(new RESTLink("network_configuration",configLink.getHref() + "/" + network.getId()));

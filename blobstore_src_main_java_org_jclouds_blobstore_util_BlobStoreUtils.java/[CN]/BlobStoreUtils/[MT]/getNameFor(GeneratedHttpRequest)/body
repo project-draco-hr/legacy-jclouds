@@ -1,10 +1,11 @@
 {
   checkNotNull(request,"request");
-  if (request.getArgs().size() >= 2 && request.getArgs().get(0) instanceof String && request.getArgs().get(1) instanceof String) {
-    return request.getArgs().get(1).toString();
+  List<Object> args=request.getInvocation().getArgs();
+  if (args.size() >= 2 && args.get(0) instanceof String && args.get(1) instanceof String) {
+    return args.get(1).toString();
   }
- else   if (request.getArgs().size() >= 1 && request.getArgs().get(0) instanceof String) {
-    Matcher matcher=keyFromContainer.matcher(request.getArgs().get(0).toString());
+ else   if (args.size() >= 1 && args.get(0) instanceof String) {
+    Matcher matcher=keyFromContainer.matcher(args.get(0).toString());
     if (matcher.find())     return matcher.group(1);
   }
   String objectKey=request.getEndpoint().getPath();

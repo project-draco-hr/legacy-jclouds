@@ -1,0 +1,13 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      assertNotNull(e.getArgs());
+      assertTrue(e.getArgs() instanceof ImmutableList);
+      assertEquals(e.getArgs().get(0),"foo");
+      e.getArgs().add("bar");
+      throw new AssertionError("shouldn't be able to mutate the list!");
+    }
+  }
+;
+  FunctionalReflection.newProxy(Set.class,test).add("foo");
+}

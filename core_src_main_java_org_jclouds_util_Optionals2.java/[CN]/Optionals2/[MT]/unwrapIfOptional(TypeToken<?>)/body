@@ -1,0 +1,11 @@
+{
+  if (type.getRawType().isAssignableFrom(Optional.class)) {
+    ParameterizedType futureType=ParameterizedType.class.cast(type.getType());
+    Type t=futureType.getActualTypeArguments()[0];
+    if (t instanceof WildcardType) {
+      t=((WildcardType)t).getUpperBounds()[0];
+    }
+    return Class.class.cast(t);
+  }
+  return type.getRawType();
+}

@@ -1,0 +1,34 @@
+{
+  Invokable<?,?> invoked=invocation.getInvokable();
+  ResponseParser annotation=invoked.getAnnotation(ResponseParser.class);
+  if (annotation == null) {
+    if (invoked.getReturnType().equals(void.class) || invoked.getReturnType().equals(futureVoidLiteral)) {
+      return Key.get(ReleasePayloadAndReturn.class);
+    }
+ else     if (invoked.getReturnType().equals(boolean.class) || invoked.getReturnType().equals(Boolean.class) || invoked.getReturnType().equals(futureBooleanLiteral)) {
+      return Key.get(ReturnTrueIf2xx.class);
+    }
+ else     if (invoked.getReturnType().equals(InputStream.class) || invoked.getReturnType().equals(futureInputStreamLiteral)) {
+      return Key.get(ReturnInputStream.class);
+    }
+ else     if (invoked.getReturnType().equals(HttpResponse.class) || invoked.getReturnType().equals(futureHttpResponseLiteral)) {
+      return Key.get(Class.class.cast(IdentityFunction.class));
+    }
+ else     if (RestAnnotationProcessor.getAcceptHeaders(invocation).contains(APPLICATION_JSON)) {
+      return getJsonParserKeyForMethod(invoked);
+    }
+ else     if (RestAnnotationProcessor.getAcceptHeaders(invocation).contains(APPLICATION_XML) || invoked.isAnnotationPresent(JAXBResponseParser.class)) {
+      return getJAXBParserKeyForMethod(invoked);
+    }
+ else     if (invoked.getReturnType().equals(String.class) || invoked.getReturnType().equals(futureStringLiteral)) {
+      return Key.get(ReturnStringIf2xx.class);
+    }
+ else     if (invoked.getReturnType().equals(URI.class) || invoked.getReturnType().equals(futureURILiteral)) {
+      return Key.get(ParseURIFromListOrLocationHeaderIf20x.class);
+    }
+ else {
+      throw new IllegalStateException("You must specify a ResponseParser annotation on: " + invoked.toString());
+    }
+  }
+  return Key.get(annotation.value());
+}

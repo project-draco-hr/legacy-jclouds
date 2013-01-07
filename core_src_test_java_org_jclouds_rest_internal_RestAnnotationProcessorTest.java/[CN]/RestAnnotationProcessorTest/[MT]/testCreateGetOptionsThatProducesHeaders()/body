@@ -2,7 +2,7 @@
   Date date=new Date();
   GetOptions options=GetOptions.Builder.ifModifiedSince(date);
   Invokable<?,?> method=Invokable.from(TestRequest.class.getMethod("get",String.class,HttpRequestOptions.class));
-  HttpRequest request=factory(TestRequest.class).createRequest(method,ImmutableList.<Object>of("1",options));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("1",options));
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/1");
   assertEquals(request.getMethod(),HttpMethod.GET);

@@ -1,6 +1,6 @@
 {
   Extension keypairsWithDifferentNamespace=keypairs.toBuilder().namespace(URI.create("http://docs.openstack.org/ext/arbitrarilydifferent/keypairs/api/v1.1")).build();
   Multimap<URI,URI> aliases=ImmutableMultimap.of(keypairs.getNamespace(),keypairsWithDifferentNamespace.getNamespace());
-  assertEquals(whenExtensionsAndAliasesInZoneInclude("zone",ImmutableSet.of(keypairsWithDifferentNamespace),aliases).apply(getKeyPairExtension()),Optional.of("foo"));
-  assertEquals(whenExtensionsAndAliasesInZoneInclude("zone",ImmutableSet.of(keypairsWithDifferentNamespace),aliases).apply(getFloatingIPExtension()),Optional.absent());
+  assertEquals(whenExtensionsAndAliasesInZoneInclude("zone",ImmutableSet.of(keypairsWithDifferentNamespace),aliases).apply(getKeyPairExtension(ImmutableList.<Object>of("zone"))),Optional.of("foo"));
+  assertEquals(whenExtensionsAndAliasesInZoneInclude("zone",ImmutableSet.of(keypairsWithDifferentNamespace),aliases).apply(getFloatingIPExtension(ImmutableList.<Object>of("zone"))),Optional.absent());
 }

@@ -1,0 +1,16 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      return Result.success(null);
+    }
+    public int hashCode(){
+      return 1111;
+    }
+  }
+;
+  Appendable appendable1=FunctionalReflection.newProxy(Appendable.class,test);
+  Appendable appendable2=FunctionalReflection.newProxy(Appendable.class,test);
+  assertEquals(appendable1.hashCode(),appendable2.hashCode());
+  Closeable closeable=FunctionalReflection.newProxy(Closeable.class,test);
+  assertNotEquals(appendable1.hashCode(),closeable.hashCode());
+}

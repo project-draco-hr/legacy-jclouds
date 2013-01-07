@@ -1,0 +1,22 @@
+{
+  ImmutableSet.Builder<HttpRequestOptions> result=ImmutableSet.builder();
+  for (  int index : invokableToIndexesOfOptions.getUnchecked(invocation.getInvokable())) {
+    if (invocation.getArgs().size() >= index + 1) {
+      if (invocation.getArgs().get(index) instanceof Object[]) {
+        for (        Object option : (Object[])invocation.getArgs().get(index)) {
+          if (option instanceof HttpRequestOptions) {
+            result.add((HttpRequestOptions)option);
+          }
+        }
+      }
+ else {
+        for (; index < invocation.getArgs().size(); index++) {
+          if (invocation.getArgs().get(index) instanceof HttpRequestOptions) {
+            result.add((HttpRequestOptions)invocation.getArgs().get(index));
+          }
+        }
+      }
+    }
+  }
+  return result.build();
+}

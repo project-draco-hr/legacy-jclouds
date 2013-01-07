@@ -1,7 +1,7 @@
 {
   PayloadOptions options=new PayloadOptions();
   Invokable<?,?> method=Invokable.from(TestRequest.class.getMethod("putOptions",String.class,HttpRequestOptions.class));
-  HttpRequest request=factory(TestRequest.class).createRequest(method,ImmutableList.<Object>of("1",options));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("1",options));
   assertRequestLineEquals(request,"PUT http://localhost:9999/1 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: localhost:9999\n");
   assertPayloadEquals(request,"foo","application/unknown",false);

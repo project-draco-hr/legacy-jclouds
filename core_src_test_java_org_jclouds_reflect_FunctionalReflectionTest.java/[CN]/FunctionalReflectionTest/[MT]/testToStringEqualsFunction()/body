@@ -1,0 +1,13 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      return Result.success("foo");
+    }
+    public String toString(){
+      return "bar";
+    }
+  }
+;
+  Closeable closeable=FunctionalReflection.newProxy(Closeable.class,test);
+  assertEquals(closeable.toString(),"bar");
+}

@@ -1,0 +1,16 @@
+{
+  Collection<Parameter> endpointParams=parametersWithAnnotation(invocation.getInvokable(),EndpointParam.class);
+  if (endpointParams.isEmpty())   return null;
+  checkState(endpointParams.size() == 1,"invocation.getInvoked() %s has too many EndpointParam annotations",invocation.getInvokable());
+  Parameter endpointParam=get(endpointParams,0);
+  Function<Object,URI> parser=injector.getInstance(endpointParam.getAnnotation(EndpointParam.class).parser());
+  int position=endpointParam.hashCode();
+  try {
+    URI returnVal=parser.apply(invocation.getArgs().get(position));
+    checkArgument(returnVal != null,format("endpoint for [%s] not configured for %s",position,invocation.getInvokable()));
+    return returnVal;
+  }
+ catch (  NullPointerException e) {
+    throw new IllegalArgumentException(format("argument at index %d on invocation.getInvoked() %s was null",position,invocation.getInvokable()),e);
+  }
+}

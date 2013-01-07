@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestRequestFilter.class.getMethod("getOverride",HttpRequest.class));
-  HttpRequest request=factory(TestRequestFilter.class).createRequest(method,ImmutableList.<Object>of(HttpRequest.builder().method("GET").endpoint("http://localhost").addHeader("foo","bar").build()));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(HttpRequest.builder().method("GET").endpoint("http://localhost").addHeader("foo","bar").build()));
   assertEquals(request.getFilters().size(),1);
   assertEquals(request.getHeaders().size(),1);
   assertEquals(request.getFilters().get(0).getClass(),TestRequestFilter2.class);

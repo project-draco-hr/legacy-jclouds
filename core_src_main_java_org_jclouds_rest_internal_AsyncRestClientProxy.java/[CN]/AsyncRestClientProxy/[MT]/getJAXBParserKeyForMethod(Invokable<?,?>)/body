@@ -1,10 +1,10 @@
 {
   Optional<Type> configuredReturnVal=Optional.absent();
-  if (method.isAnnotationPresent(JAXBResponseParser.class)) {
-    Type configuredClass=method.getAnnotation(JAXBResponseParser.class).value();
+  if (invoked.isAnnotationPresent(JAXBResponseParser.class)) {
+    Type configuredClass=invoked.getAnnotation(JAXBResponseParser.class).value();
     configuredReturnVal=configuredClass.equals(NullType.class) ? Optional.<Type>absent() : Optional.<Type>of(configuredClass);
   }
-  Type returnVal=configuredReturnVal.or(getReturnTypeFor(method.getReturnType()));
+  Type returnVal=configuredReturnVal.or(getReturnTypeFor(invoked.getReturnType()));
   Type parserType=newParameterizedType(ParseXMLWithJAXB.class,returnVal);
   return (Key<? extends Function<HttpResponse,?>>)Key.get(parserType);
 }
