@@ -1,0 +1,7 @@
+{
+  checkNotNull(interfaceType,"interfaceType");
+  checkNotNull(invocationFunction,"invocationFunction");
+  checkArgument(interfaceType.isInterface(),"%s is not an interface",interfaceType);
+  Object object=Proxy.newProxyInstance(interfaceType.getClassLoader(),new Class<?>[]{interfaceType},new FunctionalInvocationHandler<T>(interfaceType,invocationFunction));
+  return interfaceType.cast(object);
+}

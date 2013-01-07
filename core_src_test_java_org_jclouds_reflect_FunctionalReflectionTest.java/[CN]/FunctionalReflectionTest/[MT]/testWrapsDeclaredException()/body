@@ -1,0 +1,10 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      return Result.fail(new TimeoutException("timeout"));
+    }
+  }
+;
+  Closeable closeable=FunctionalReflection.newProxy(Closeable.class,test);
+  closeable.close();
+}

@@ -1,0 +1,12 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      assertNotNull(e.getArgs());
+      assertNull(e.getArgs().get(0));
+      e.getArgs().add("foo");
+      throw new AssertionError("shouldn't be able to mutate the list!");
+    }
+  }
+;
+  FunctionalReflection.newProxy(Set.class,test).add(null);
+}
