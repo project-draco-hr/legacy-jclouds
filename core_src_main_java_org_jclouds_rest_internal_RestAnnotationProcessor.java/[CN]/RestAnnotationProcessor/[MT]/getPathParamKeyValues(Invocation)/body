@@ -1,0 +1,10 @@
+{
+  Multimap<String,Object> pathParamValues=LinkedHashMultimap.create();
+  for (  Parameter param : parametersWithAnnotation(invocation.getInvokable(),PathParam.class)) {
+    PathParam pathParam=param.getAnnotation(PathParam.class);
+    String paramKey=pathParam.value();
+    Optional<?> paramValue=getParamValue(invocation,param.getAnnotation(ParamParser.class),param.hashCode(),paramKey);
+    if (paramValue.isPresent())     pathParamValues.put(paramKey,paramValue.get().toString());
+  }
+  return pathParamValues;
+}

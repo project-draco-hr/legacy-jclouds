@@ -1,7 +1,7 @@
 {
   Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("testUnwrap3"));
-  HttpRequest request=factory(TestPut.class).createRequest(method,ImmutableList.of());
+  HttpRequest request=processor.createRequest(method,ImmutableList.of());
   assertResponseParserClassEquals(method,request,UnwrapOnlyJsonValue.class);
-  Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)AsyncRestClientProxy.createResponseParser(parserFactory,injector,method,request);
+  Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)AsyncRestClientProxy.createResponseParser(parserFactory,injector,Invocation.create(method,ImmutableList.of()),request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{\"runit\":[\"0.7.0\",\"0.7.1\"]}").build()),ImmutableSet.of("0.7.0","0.7.1"));
 }

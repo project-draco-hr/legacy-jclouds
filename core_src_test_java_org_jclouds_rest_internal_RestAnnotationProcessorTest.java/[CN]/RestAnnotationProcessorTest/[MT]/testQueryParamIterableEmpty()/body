@@ -1,9 +1,9 @@
 {
   Invokable<?,?> method=Invokable.from(TestQuery.class.getMethod("queryParamIterable",Iterable.class));
   Set<String> bars=Collections.emptySet();
-  HttpRequest request=factory(TestPath.class).createRequest(method,ImmutableList.<Object>of(bars));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(bars));
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/");
-  assertEquals(request.getEndpoint().getQuery(),null);
+  assertEquals(request.getEndpoint().getQuery(),"x-ms-version=2009-07-17");
   assertEquals(request.getMethod(),"FOO");
 }

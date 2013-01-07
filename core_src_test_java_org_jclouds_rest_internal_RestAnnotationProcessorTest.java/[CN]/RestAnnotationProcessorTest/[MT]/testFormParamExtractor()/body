@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestPath.class.getMethod("oneFormParamExtractor",String.class));
-  HttpRequest request=factory(TestPath.class).createRequest(method,ImmutableList.<Object>of("localhost"));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("localhost"));
   assertRequestLineEquals(request,"POST http://localhost:9999/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"one=l","application/x-www-form-urlencoded",false);

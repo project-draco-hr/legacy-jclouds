@@ -1,3 +1,6 @@
 {
-  assertInputAndArgsCreatesPayload(ImmutableMap.<String,Object>of("name","newdrive"),ImmutableList.<Object>of(new CloneDriveOptions().size(1024)),"name newdrive\nsize 1024");
+  String expected="name newdrive\nsize 1024";
+  GeneratedHttpRequest request=requestForArgs(ImmutableList.<Object>of(new CloneDriveOptions().size(1024)));
+  Map<String,Object> map=ImmutableMap.<String,Object>of("name","newdrive");
+  assertEquals(binder.bindToRequest(request,map).getPayload().getRawContent(),expected);
 }

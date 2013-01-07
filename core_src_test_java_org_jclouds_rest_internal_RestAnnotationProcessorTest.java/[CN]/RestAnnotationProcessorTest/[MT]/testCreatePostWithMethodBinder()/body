@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestPost.class.getMethod("postWithMethodBinder",String.class));
-  HttpRequest request=factory(TestPost.class).createRequest(method,ImmutableList.<Object>of("data"));
+  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("data"));
   assertRequestLineEquals(request,"POST http://localhost:9999/data HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);

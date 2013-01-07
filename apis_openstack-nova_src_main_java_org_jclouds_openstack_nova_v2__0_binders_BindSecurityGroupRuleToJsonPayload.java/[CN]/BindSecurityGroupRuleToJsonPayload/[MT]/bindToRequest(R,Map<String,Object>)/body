@@ -3,7 +3,7 @@
   payload.putAll(postParams);
   checkArgument(checkNotNull(request,"request") instanceof GeneratedHttpRequest,"this binder is only valid for GeneratedHttpRequests!");
   GeneratedHttpRequest gRequest=(GeneratedHttpRequest)request;
-  Ingress ingress=Ingress.class.cast(Iterables.find(gRequest.getArgs(),Predicates.instanceOf(Ingress.class)));
+  Ingress ingress=Ingress.class.cast(find(gRequest.getInvocation().getArgs(),instanceOf(Ingress.class)));
   payload.put("ip_protocol",ingress.getIpProtocol().toString());
   payload.put("from_port",ingress.getFromPort() + "");
   payload.put("to_port",ingress.getToPort() + "");

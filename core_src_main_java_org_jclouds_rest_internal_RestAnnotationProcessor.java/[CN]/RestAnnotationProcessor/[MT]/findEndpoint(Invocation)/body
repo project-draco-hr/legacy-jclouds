@@ -1,0 +1,10 @@
+{
+  Optional<URI> endpoint=getEndpointFor(invocation);
+  if (endpoint.isPresent())   logger.trace("using endpoint %s for %s",endpoint,invocation);
+  if (!endpoint.isPresent()) {
+    logger.trace("looking up default endpoint for %s",invocation);
+    endpoint=Optional.fromNullable(injector.getInstance(Key.get(uriSupplierLiteral,org.jclouds.location.Provider.class)).get());
+    if (endpoint.isPresent())     logger.trace("using default endpoint %s for %s",endpoint,invocation);
+  }
+  return endpoint;
+}

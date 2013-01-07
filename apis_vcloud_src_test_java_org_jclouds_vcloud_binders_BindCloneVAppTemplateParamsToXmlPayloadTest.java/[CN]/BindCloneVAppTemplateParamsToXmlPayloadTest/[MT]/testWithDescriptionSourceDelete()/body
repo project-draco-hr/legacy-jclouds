@@ -1,16 +1,11 @@
 {
-  String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/moveVAppTemplate.xml"));
+  String expected=toStringAndClose(getClass().getResourceAsStream("/moveVAppTemplate.xml"));
   CloneVAppTemplateOptions options=new CloneVAppTemplateOptions().description("The description of the new vAppTemplate");
-  GeneratedHttpRequest request=createMock(GeneratedHttpRequest.class);
-  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(options)).atLeastOnce();
-  request.setPayload(expected);
-  replay(request);
+  GeneratedHttpRequest request=requestForArgs(ImmutableList.<Object>of(options));
   BindCloneVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindCloneVAppTemplateParamsToXmlPayload.class);
   Builder<String,Object> map=ImmutableMap.builder();
   map.put("name","new-linux-server");
   map.put("Source","https://vcenterprise.bluelock.com/api/v1.0/vAppTemplate/201");
   map.put("IsSourceDelete","true");
-  binder.bindToRequest(request,map.build());
-  verify(request);
+  assertEquals(binder.bindToRequest(request,map.build()).getPayload().getRawContent(),expected);
 }

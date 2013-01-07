@@ -1,0 +1,12 @@
+{
+  Invokable<Object,?> toInvoke=syncMethodMap.get(invocation.getInvokable());
+  try {
+    return Result.success(toInvoke.invoke(delegate,invocation.getArgs().toArray()));
+  }
+ catch (  InvocationTargetException e) {
+    return Result.fail(e);
+  }
+catch (  IllegalAccessException e) {
+    return Result.fail(e);
+  }
+}

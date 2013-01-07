@@ -1,0 +1,13 @@
+{
+  for (  Parameter param : filter(invocation.getInvokable().getParameters(),new Predicate<Parameter>(){
+    public boolean apply(    Parameter in){
+      return in.isAnnotationPresent(ParamValidators.class);
+    }
+  }
+)) {
+    ParamValidators annotation=param.getAnnotation(ParamValidators.class);
+    if (annotation == null)     continue;
+    List<Validator<?>> parameterValidators=getValidatorsFromAnnotation(annotation);
+    runPredicatesAgainstArg(parameterValidators,invocation.getArgs().get(param.hashCode()));
+  }
+}

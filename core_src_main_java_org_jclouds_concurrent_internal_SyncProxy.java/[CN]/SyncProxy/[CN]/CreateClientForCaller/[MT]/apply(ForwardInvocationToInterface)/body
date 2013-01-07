@@ -1,0 +1,6 @@
+{
+  Object asyncClient=FunctionalReflection.newProxy(from.getInterfaceType(),asyncFactory.caller(from.getInvocation(),from.getInterfaceType()));
+  checkState(asyncClient != null,"configuration error, sync client for " + from + " not found");
+  Class<?> type=Optionals2.unwrapIfOptional(from.getInvocation().getInvokable().getReturnType());
+  return FunctionalReflection.newProxy(type,factory.create(type,asyncClient));
+}

@@ -1,0 +1,14 @@
+{
+  for (  TypeToken<? extends Throwable> type : throwables) {
+    Throwable throwable=Throwables2.getFirstThrowableOfType(exception,(Class<Throwable>)type.getRawType());
+    if (throwable != null) {
+      throw throwable;
+    }
+  }
+  for (  Class<Exception> propagatableExceptionType : new Class[]{IllegalStateException.class,AssertionError.class,UnsupportedOperationException.class,IllegalArgumentException.class,AuthorizationException.class,ResourceNotFoundException.class,InsufficientResourcesException.class,HttpResponseException.class}) {
+    Throwable throwable=Throwables2.getFirstThrowableOfType(exception,propagatableExceptionType);
+    if (throwable != null) {
+      throw throwable;
+    }
+  }
+}

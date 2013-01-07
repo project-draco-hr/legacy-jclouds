@@ -1,20 +1,22 @@
 {
-  Set<Parameter> binderOrWrapWith=ImmutableSet.copyOf(concat(parametersWithAnnotation(request.getInvoker(),BinderParam.class),parametersWithAnnotation(request.getInvoker(),WrapWith.class)));
+  Invocation invocation=request.getInvocation();
+  List<Object> args=request.getInvocation().getArgs();
+  Set<Parameter> binderOrWrapWith=ImmutableSet.copyOf(concat(parametersWithAnnotation(invocation.getInvokable(),BinderParam.class),parametersWithAnnotation(invocation.getInvokable(),WrapWith.class)));
   OUTER:   for (  Parameter entry : binderOrWrapWith) {
     int position=entry.hashCode();
     boolean shouldBreak=false;
     Binder binder;
     if (entry.isAnnotationPresent(BinderParam.class))     binder=injector.getInstance(entry.getAnnotation(BinderParam.class).value());
  else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(entry.getAnnotation(WrapWith.class).value());
-    Object arg=request.getArgs().size() >= position + 1 ? request.getArgs().get(position) : null;
-    if (request.getArgs().size() >= position + 1 && arg != null) {
+    Object arg=args.size() >= position + 1 ? args.get(position) : null;
+    if (args.size() >= position + 1 && arg != null) {
       Class<?> parameterType=entry.getType().getRawType();
       Class<? extends Object> argType=arg.getClass();
       if (!argType.isArray() && parameterType.isArray()) {
-        int arrayLength=request.getArgs().size() - request.getInvoker().getParameters().size() + 1;
+        int arrayLength=args.size() - invocation.getInvokable().getParameters().size() + 1;
         if (arrayLength == 0)         break OUTER;
         arg=(Object[])Array.newInstance(arg.getClass(),arrayLength);
-        System.arraycopy(request.getArgs().toArray(),position,arg,0,arrayLength);
+        System.arraycopy(args.toArray(),position,arg,0,arrayLength);
         shouldBreak=true;
       }
  else       if (argType.isArray() && parameterType.isArray()) {
@@ -31,11 +33,11 @@
       if (shouldBreak)       break OUTER;
     }
  else {
-      if (position + 1 == request.getInvoker().getParameters().size() && entry.getType().isArray())       continue OUTER;
+      if (position + 1 == invocation.getInvokable().getParameters().size() && entry.getType().isArray())       continue OUTER;
       if (entry.isAnnotationPresent(Nullable.class)) {
         continue OUTER;
       }
-      checkNotNull(arg,request.getInvoker().getName() + " parameter " + (position + 1));
+      checkNotNull(arg,invocation.getInvokable().getName() + " parameter " + (position + 1));
     }
   }
   return request;

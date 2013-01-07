@@ -1,16 +1,9 @@
 {
   String expected=Strings2.toStringAndClose(getClass().getResourceAsStream("/InstantiateVAppTemplateParams-options-test.xml"));
-  Multimap<String,String> headers=Multimaps.synchronizedMultimap(HashMultimap.<String,String>create());
-  GeneratedHttpRequest request=createMock(GeneratedHttpRequest.class);
-  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  expect(request.getArgs()).andReturn(ImmutableList.<Object>of(InstantiateVAppTemplateOptions.Builder.processorCount(2).memory(512).inGroup("group").withPassword("password").inRow("row").addNetworkConfig(new NetworkConfig(URI.create("http://network"))))).atLeastOnce();
-  expect(request.getFirstHeaderOrNull("Content-Type")).andReturn("application/unknown").atLeastOnce();
-  expect(request.getHeaders()).andReturn(headers).atLeastOnce();
-  request.setPayload(expected);
-  replay(request);
+  GeneratedHttpRequest request=requestForArgs(ImmutableList.<Object>of(InstantiateVAppTemplateOptions.Builder.processorCount(2).memory(512).inGroup("group").withPassword("password").inRow("row").addNetworkConfig(new NetworkConfig(URI.create("http://network")))));
   BindInstantiateVAppTemplateParamsToXmlPayload binder=injector.getInstance(BindInstantiateVAppTemplateParamsToXmlPayload.class);
   Map<String,Object> map=Maps.newHashMap();
   map.put("name","name");
   map.put("template","https://vcloud/vAppTemplate/3");
-  binder.bindToRequest(request,map);
+  assertEquals(binder.bindToRequest(request,map).getPayload().getRawContent(),expected);
 }

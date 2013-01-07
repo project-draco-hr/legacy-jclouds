@@ -1,6 +1,6 @@
 {
   checkNotNull(container,"container");
   checkNotNull(blob,"blob");
-  HttpRequest request=processor.createRequest(createMethod,ImmutableList.<Object>of(container,blobToObject.apply(blob)));
+  HttpRequest request=processor.apply(Invocation.create(HPCloudObjectStorageAsyncApi.class,createMethod,ImmutableList.<Object>of(container,blobToObject.apply(blob))));
   return cleanRequest(signForTemporaryAccess(request,timeInSeconds));
 }

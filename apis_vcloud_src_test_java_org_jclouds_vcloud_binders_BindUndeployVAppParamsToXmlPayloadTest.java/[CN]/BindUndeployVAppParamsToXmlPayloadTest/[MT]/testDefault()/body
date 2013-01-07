@@ -1,11 +1,7 @@
 {
   String expected="<UndeployVAppParams xmlns=\"http://www.vmware.com/vcloud/v1\"/>";
-  GeneratedHttpRequest request=createMock(GeneratedHttpRequest.class);
-  expect(request.getEndpoint()).andReturn(URI.create("http://localhost/key")).anyTimes();
-  request.setPayload(expected);
-  replay(request);
+  GeneratedHttpRequest request=requestForArgs(ImmutableList.<Object>of());
   BindUndeployVAppParamsToXmlPayload binder=injector.getInstance(BindUndeployVAppParamsToXmlPayload.class);
   Map<String,Object> map=Maps.newHashMap();
-  binder.bindToRequest(request,map);
-  verify(request);
+  assertEquals(binder.bindToRequest(request,map).getPayload().getRawContent(),expected);
 }

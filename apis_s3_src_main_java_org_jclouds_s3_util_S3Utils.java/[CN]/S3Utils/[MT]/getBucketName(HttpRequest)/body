@@ -2,9 +2,9 @@
   checkArgument(req instanceof GeneratedHttpRequest,"this should be a generated http request");
   GeneratedHttpRequest request=GeneratedHttpRequest.class.cast(req);
   String bucketName=null;
-  for (int i=0; i < request.getInvoker().getParameters().size(); i++) {
-    if (any(Arrays.asList(request.getInvoker().getParameters().get(i).getAnnotations()),ANNOTATIONTYPE_BUCKET)) {
-      bucketName=(String)request.getArgs().get(i);
+  for (int i=0; i < request.getInvocation().getInvokable().getParameters().size(); i++) {
+    if (any(Arrays.asList(request.getInvocation().getInvokable().getParameters().get(i).getAnnotations()),ANNOTATIONTYPE_BUCKET)) {
+      bucketName=(String)request.getInvocation().getArgs().get(i);
       break;
     }
   }

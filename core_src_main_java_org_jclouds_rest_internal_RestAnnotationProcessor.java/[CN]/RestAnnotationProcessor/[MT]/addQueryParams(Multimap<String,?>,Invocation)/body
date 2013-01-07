@@ -1,0 +1,15 @@
+{
+  Multimap<String,Object> queryMap=LinkedListMultimap.create();
+  if (invocation.getInterfaceType().isAnnotationPresent(QueryParams.class)) {
+    QueryParams query=invocation.getInterfaceType().getAnnotation(QueryParams.class);
+    addQuery(queryMap,query,tokenValues);
+  }
+  if (invocation.getInvokable().isAnnotationPresent(QueryParams.class)) {
+    QueryParams query=invocation.getInvokable().getAnnotation(QueryParams.class);
+    addQuery(queryMap,query,tokenValues);
+  }
+  for (  Entry<String,Object> query : getQueryParamKeyValues(invocation).entries()) {
+    queryMap.put(query.getKey(),replaceTokens(query.getValue().toString(),tokenValues));
+  }
+  return queryMap;
+}

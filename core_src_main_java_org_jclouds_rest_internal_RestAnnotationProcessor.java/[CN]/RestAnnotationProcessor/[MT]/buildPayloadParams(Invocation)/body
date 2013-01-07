@@ -1,0 +1,10 @@
+{
+  Map<String,Object> payloadParamValues=Maps.newLinkedHashMap();
+  for (  Parameter param : parametersWithAnnotation(invocation.getInvokable(),PayloadParam.class)) {
+    PayloadParam payloadParam=param.getAnnotation(PayloadParam.class);
+    String paramKey=payloadParam.value();
+    Optional<?> paramValue=getParamValue(invocation,param.getAnnotation(ParamParser.class),param.hashCode(),paramKey);
+    if (paramValue.isPresent())     payloadParamValues.put(paramKey,paramValue.get());
+  }
+  return payloadParamValues;
+}

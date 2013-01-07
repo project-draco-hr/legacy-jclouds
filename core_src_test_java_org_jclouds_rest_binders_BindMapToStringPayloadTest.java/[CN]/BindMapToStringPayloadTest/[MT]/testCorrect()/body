@@ -1,6 +1,6 @@
 {
   Invokable<?,Object> testPayload=Invokable.from(TestPayload.class.getMethod("testPayload",String.class));
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder().declaring(TestPayload.class).invoker(testPayload).args(ImmutableList.<Object>of("robot")).method("POST").endpoint("http://localhost").build();
+  GeneratedHttpRequest request=GeneratedHttpRequest.builder().invocation(Invocation.create(testPayload,ImmutableList.<Object>of("robot"))).method("POST").endpoint("http://localhost").build();
   GeneratedHttpRequest newRequest=binder().bindToRequest(request,ImmutableMap.<String,Object>of("fooble","robot"));
   assertEquals(newRequest.getRequestLine(),request.getRequestLine());
   assertEquals(newRequest.getPayload().getRawContent(),"name robot");

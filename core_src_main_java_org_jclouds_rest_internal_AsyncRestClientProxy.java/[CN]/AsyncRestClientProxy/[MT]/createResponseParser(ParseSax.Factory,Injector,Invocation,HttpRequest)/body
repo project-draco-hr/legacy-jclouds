@@ -1,0 +1,21 @@
+{
+  Function<HttpResponse,?> transformer;
+  Class<? extends HandlerWithResult<?>> handler=getSaxResponseParserClassOrNull(invocation.getInvokable());
+  if (handler != null) {
+    transformer=parserFactory.create(injector.getInstance(handler));
+  }
+ else {
+    transformer=getTransformerForMethod(invocation,injector);
+  }
+  if (transformer instanceof InvocationContext<?>) {
+    ((InvocationContext<?>)transformer).setContext(request);
+  }
+  if (invocation.getInvokable().isAnnotationPresent(Transform.class)) {
+    Function<?,?> wrappingTransformer=injector.getInstance(invocation.getInvokable().getAnnotation(Transform.class).value());
+    if (wrappingTransformer instanceof InvocationContext<?>) {
+      ((InvocationContext<?>)wrappingTransformer).setContext(request);
+    }
+    transformer=compose(Function.class.cast(wrappingTransformer),transformer);
+  }
+  return transformer;
+}

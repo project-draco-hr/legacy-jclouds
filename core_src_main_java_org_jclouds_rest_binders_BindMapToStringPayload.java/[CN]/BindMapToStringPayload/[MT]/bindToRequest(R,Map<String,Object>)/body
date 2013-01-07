@@ -1,8 +1,9 @@
 {
   checkNotNull(postParams,"postParams");
   GeneratedHttpRequest r=GeneratedHttpRequest.class.cast(checkNotNull(request,"request"));
-  checkArgument(r.getInvoker().isAnnotationPresent(Payload.class),"method %s must have @Payload annotation to use this binder",r.getInvoker());
-  String payload=r.getInvoker().getAnnotation(Payload.class).value();
+  Invokable<?,?> invoked=r.getInvocation().getInvokable();
+  checkArgument(invoked.isAnnotationPresent(Payload.class),"method %s must have @Payload annotation to use this binder",invoked);
+  String payload=invoked.getAnnotation(Payload.class).value();
   if (postParams.size() > 0) {
     payload=urlDecode(expand(payload,postParams));
   }
