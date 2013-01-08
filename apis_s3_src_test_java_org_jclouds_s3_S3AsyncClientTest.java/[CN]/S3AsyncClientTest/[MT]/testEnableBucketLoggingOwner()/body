@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(S3AsyncClient.class.getMethod("enableBucketLogging",String.class,BucketLogging.class));
-  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket",new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL)))));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket",new BucketLogging("mylogs","access_log-",ImmutableSet.<Grant>of(new Grant(new EmailAddressGrantee("adrian@jclouds.org"),Permission.FULL_CONTROL)))));
   assertRequestLineEquals(request,"PUT https://bucket." + url + "/?logging HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
   assertPayloadEquals(request,Strings2.toStringAndClose(getClass().getResourceAsStream("/bucket_logging.xml")),"text/xml",false);

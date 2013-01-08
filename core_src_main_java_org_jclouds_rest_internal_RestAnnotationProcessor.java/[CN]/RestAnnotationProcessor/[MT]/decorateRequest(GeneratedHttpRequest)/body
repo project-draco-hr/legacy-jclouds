@@ -12,14 +12,14 @@
     if (args.size() >= position + 1 && arg != null) {
       Class<?> parameterType=entry.getType().getRawType();
       Class<? extends Object> argType=arg.getClass();
-      if (!argType.isArray() && parameterType.isArray()) {
+      if (!argType.isArray() && parameterType.isArray() && invocation.getInvokable().isVarArgs()) {
         int arrayLength=args.size() - invocation.getInvokable().getParameters().size() + 1;
         if (arrayLength == 0)         break OUTER;
         arg=(Object[])Array.newInstance(arg.getClass(),arrayLength);
         System.arraycopy(args.toArray(),position,arg,0,arrayLength);
         shouldBreak=true;
       }
- else       if (argType.isArray() && parameterType.isArray()) {
+ else       if (argType.isArray() && parameterType.isArray() && invocation.getInvokable().isVarArgs()) {
       }
  else {
         if (arg.getClass().isArray()) {
@@ -33,7 +33,7 @@
       if (shouldBreak)       break OUTER;
     }
  else {
-      if (position + 1 == invocation.getInvokable().getParameters().size() && entry.getType().isArray())       continue OUTER;
+      if (position + 1 == invocation.getInvokable().getParameters().size() && entry.getType().isArray() && invocation.getInvokable().isVarArgs())       continue OUTER;
       if (entry.isAnnotationPresent(Nullable.class)) {
         continue OUTER;
       }

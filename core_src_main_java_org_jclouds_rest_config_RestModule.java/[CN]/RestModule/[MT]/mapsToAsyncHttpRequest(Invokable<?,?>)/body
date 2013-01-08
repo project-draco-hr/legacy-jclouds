@@ -1,0 +1,14 @@
+{
+  final int soughtHash=hashEnclosingTypeNameAndParameters(toTest);
+  return new Predicate<Invokable<?,?>>(){
+    public boolean apply(    Invokable<?,?> in){
+      return in.isAnnotationPresent(Path.class) || tryFindHttpMethod(in).isPresent() || any(in.getParameters(),new Predicate<Parameter>(){
+        public boolean apply(        Parameter in){
+          return in.getType().getRawType().isAssignableFrom(HttpRequest.class);
+        }
+      }
+) && in.getReturnType().getRawType().isAssignableFrom(ListenableFuture.class) && soughtHash == hashEnclosingTypeNameAndParameters(in);
+    }
+  }
+;
+}

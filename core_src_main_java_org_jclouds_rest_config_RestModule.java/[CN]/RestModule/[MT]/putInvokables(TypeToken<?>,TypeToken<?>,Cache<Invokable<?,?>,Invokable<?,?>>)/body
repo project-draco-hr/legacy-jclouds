@@ -1,0 +1,19 @@
+{
+  for (  Method invoked : sync.getRawType().getMethods()) {
+    if (!objectMethods.contains(invoked)) {
+      try {
+        Method delegatedMethod=async.getRawType().getMethod(invoked.getName(),invoked.getParameterTypes());
+        checkArgument(Arrays.equals(delegatedMethod.getExceptionTypes(),invoked.getExceptionTypes()),"invoked %s has different typed exceptions than delegated invoked %s",invoked,delegatedMethod);
+        invoked.setAccessible(true);
+        delegatedMethod.setAccessible(true);
+        cache.put(Invokable.from(sync,invoked),Invokable.from(async,delegatedMethod));
+      }
+ catch (      SecurityException e) {
+        throw propagate(e);
+      }
+catch (      NoSuchMethodException e) {
+        throw propagate(e);
+      }
+    }
+  }
+}

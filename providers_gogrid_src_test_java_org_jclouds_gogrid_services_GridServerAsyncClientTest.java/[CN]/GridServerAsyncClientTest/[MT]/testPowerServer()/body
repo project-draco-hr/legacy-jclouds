@@ -1,13 +1,13 @@
 {
   Invokable<?,?> method=Invokable.from(GridServerAsyncClient.class.getMethod("power",String.class,PowerCommand.class));
-  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("PowerServer",PowerCommand.RESTART));
+  GeneratedHttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("PowerServer",PowerCommand.RESTART));
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/power?v=1.6&" + "server=PowerServer&power=restart " + "HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);
   checkFilters(httpRequest);
-  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  httpRequest=(GeneratedHttpRequest)Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/grid/server/power?v=1.6&" + "server=PowerServer&power=restart&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity "+ "HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);

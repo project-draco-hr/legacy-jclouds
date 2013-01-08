@@ -1,0 +1,11 @@
+{
+  final Function<Invocation,Result> test=new Function<Invocation,Result>(){
+    public Result apply(    Invocation e){
+      assertEquals(e.getInvokable().getDeclaringClass(),Set.class);
+      assertEquals(e.getInvokable().getEnclosingType().getRawType(),SortedSet.class);
+      return Result.success(true);
+    }
+  }
+;
+  FunctionalReflection.newProxy(SortedSet.class,test).add(null);
+}

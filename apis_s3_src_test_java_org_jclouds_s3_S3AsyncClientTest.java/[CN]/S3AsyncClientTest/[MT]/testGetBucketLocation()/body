@@ -1,10 +1,10 @@
 {
   Invokable<?,?> method=Invokable.from(S3AsyncClient.class.getMethod("getBucketLocation",String.class));
-  HttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket"));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("bucket"));
   assertRequestLineEquals(request,"GET https://bucket." + url + "/?location HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: bucket." + url + "\n");
   assertPayloadEquals(request,null,null,false);
-  request=filter.filter(request);
+  request=(GeneratedHttpRequest)filter.filter(request);
   assertRequestLineEquals(request,"GET https://bucket." + url + "/?location HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Authorization: AWS identity:2fFTeYJTDwiJmaAkKj732RjNbOg=\nDate: 2009-11-08T15:54:08.897Z\nHost: bucket." + url + "\n");
   assertPayloadEquals(request,null,null,false);

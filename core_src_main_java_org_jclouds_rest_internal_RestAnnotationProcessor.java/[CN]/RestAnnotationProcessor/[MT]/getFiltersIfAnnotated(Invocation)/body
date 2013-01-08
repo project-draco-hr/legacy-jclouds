@@ -1,10 +1,10 @@
 {
   List<HttpRequestFilter> filters=newArrayList();
-  if (invocation.getInterfaceType().isAnnotationPresent(RequestFilters.class)) {
-    for (    Class<? extends HttpRequestFilter> clazz : invocation.getInterfaceType().getAnnotation(RequestFilters.class).value()) {
+  if (invocation.getInvokable().getEnclosingType().getRawType().isAnnotationPresent(RequestFilters.class)) {
+    for (    Class<? extends HttpRequestFilter> clazz : invocation.getInvokable().getEnclosingType().getRawType().getAnnotation(RequestFilters.class).value()) {
       HttpRequestFilter instance=injector.getInstance(clazz);
       filters.add(instance);
-      logger.trace("adding filter %s from annotation on %s",instance,invocation.getInterfaceType().getName());
+      logger.trace("adding filter %s from annotation on %s",instance,invocation.getInvokable().getEnclosingType().getRawType().getName());
     }
   }
   if (invocation.getInvokable().isAnnotationPresent(RequestFilters.class)) {

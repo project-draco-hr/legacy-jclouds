@@ -1,13 +1,13 @@
 {
-  Map<String,String> stringBoundWithTimeoutPrefix=filterStringsBoundByName.apply(Predicates2.startsWith(PROPERTY_TIMEOUTS_PREFIX));
-  Map<String,Long> longsByName=Maps.transformValues(stringBoundWithTimeoutPrefix,new Function<String,Long>(){
-    @Override public Long apply(    String input){
+  Map<String,String> stringBoundWithTimeoutPrefix=filterStringsBoundByName.apply(startsWith(PROPERTY_TIMEOUTS_PREFIX));
+  Map<String,Long> longsByName=transformValues(stringBoundWithTimeoutPrefix,new Function<String,Long>(){
+    public Long apply(    String input){
       return Long.valueOf(String.valueOf(input));
     }
   }
 );
-  return Maps2.transformKeys(longsByName,new Function<String,String>(){
-    @Override public String apply(    String input){
+  return transformKeys(longsByName,new Function<String,String>(){
+    public String apply(    String input){
       return input.replaceFirst(PROPERTY_TIMEOUTS_PREFIX,"");
     }
   }

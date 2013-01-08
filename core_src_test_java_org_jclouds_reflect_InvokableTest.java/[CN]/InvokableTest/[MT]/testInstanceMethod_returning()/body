@@ -1,0 +1,10 @@
+{
+  Invokable<Prepender,Iterable<String>> delegate=Prepender.method("prepend",Iterable.class).returning(new TypeToken<Iterable<String>>(){
+  }
+);
+  assertEquals(new TypeToken<Iterable<String>>(){
+  }
+,delegate.getReturnType());
+  Iterable<String> result=delegate.invoke(new Prepender("a",2),ImmutableList.of("b","c"));
+  assertEquals(ImmutableList.of("a","a","b","c"),ImmutableList.copyOf(result));
+}

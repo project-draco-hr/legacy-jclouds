@@ -5,8 +5,8 @@
     if (invocation.getInvokable().isAnnotationPresent(Endpoint.class)) {
       annotation=invocation.getInvokable().getAnnotation(Endpoint.class);
     }
- else     if (invocation.getInterfaceType().isAnnotationPresent(Endpoint.class)) {
-      annotation=invocation.getInterfaceType().getAnnotation(Endpoint.class);
+ else     if (invocation.getInvokable().getEnclosingType().getRawType().isAnnotationPresent(Endpoint.class)) {
+      annotation=invocation.getInvokable().getEnclosingType().getRawType().getAnnotation(Endpoint.class);
     }
  else {
       logger.trace("no annotations on class or invocation.getInvoked(): %s",invocation.getInvokable());
