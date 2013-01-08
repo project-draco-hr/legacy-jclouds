@@ -7,11 +7,16 @@
     endpoint=Optional.fromNullable(r.getEndpoint());
     if (endpoint.isPresent())     logger.trace("using endpoint %s from invocation.getArgs() for %s",endpoint,invocation);
   }
+ else   if (caller != null) {
+    endpoint=getEndpointFor(caller);
+    if (endpoint.isPresent())     logger.trace("using endpoint %s from caller %s for %s",endpoint,caller,invocation);
+ else     endpoint=findEndpoint(invocation);
+  }
  else {
     endpoint=findEndpoint(invocation);
   }
   if (!endpoint.isPresent())   throw new NoSuchElementException(format("no endpoint found for %s",invocation));
-  GeneratedHttpRequest.Builder requestBuilder=requestBuilder();
+  GeneratedHttpRequest.Builder requestBuilder=GeneratedHttpRequest.builder().caller(caller);
   if (r != null) {
     requestBuilder.fromHttpRequest(r);
   }
@@ -24,6 +29,7 @@
   tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
   UriBuilder uriBuilder=uriBuilder(endpoint.get().toString());
   overridePathEncoding(uriBuilder,invocation);
+  if (caller != null)   tokenValues.putAll(addPathAndGetTokens(caller,uriBuilder));
   tokenValues.putAll(addPathAndGetTokens(invocation,uriBuilder));
   Multimap<String,Object> formParams=addFormParams(tokenValues,invocation);
   Multimap<String,Object> queryParams=addQueryParams(tokenValues,invocation);

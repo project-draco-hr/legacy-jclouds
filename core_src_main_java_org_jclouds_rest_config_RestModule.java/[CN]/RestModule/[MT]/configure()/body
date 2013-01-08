@@ -5,10 +5,11 @@
   install(new SaxParserModule());
   install(new GsonModule());
   install(new FactoryModuleBuilder().build(BindToJsonPayloadWrappedWith.Factory.class));
-  install(new FactoryModuleBuilder().build(RestAnnotationProcessor.Caller.Factory.class));
-  install(new FactoryModuleBuilder().build(AsyncRestClientProxy.Caller.Factory.class));
+  install(new FactoryModuleBuilder().build(InvokeAsyncApi.Delegate.Factory.class));
+  install(new FactoryModuleBuilder().build(InvokeFutureAndBlock.Factory.class));
+  install(new FactoryModuleBuilder().build(InvokeListenableFutureViaHttp.Caller.Factory.class));
   bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
-  install(new FactoryModuleBuilder().build(SyncProxy.Factory.class));
+  install(new FactoryModuleBuilder().build(InvokeSyncApi.Factory.class));
   bindClientAndAsyncClient(binder(),HttpClient.class,HttpAsyncClient.class);
   bind(new TypeLiteral<AtomicReference<AuthorizationException>>(){
   }
@@ -19,8 +20,11 @@
   bind(new TypeLiteral<Function<Predicate<String>,Map<String,String>>>(){
   }
 ).to(FilterStringsBoundToInjectorByName.class);
-  bind(new TypeLiteral<Function<ForwardInvocationToInterface,Object>>(){
+  bind(new TypeLiteral<Function<Invocation,ListenableFuture<?>>>(){
   }
-).to(CreateClientForCaller.class);
+).to(InvokeListenableFutureViaHttp.class);
+  bind(new TypeLiteral<Function<GeneratedHttpRequest,Function<HttpResponse,?>>>(){
+  }
+).to(TransformerForRequest.class);
   installLocations();
 }

@@ -3,7 +3,7 @@
   addHeaderIfAnnotationPresentOnMethod(headers,invocation,tokenValues);
   for (  Parameter headerParam : parametersWithAnnotation(invocation.getInvokable(),HeaderParam.class)) {
     Annotation key=headerParam.getAnnotation(HeaderParam.class);
-    String value=invocation.getArgs().get(headerParam.hashCode()).toString();
+    String value=invocation.getArgs().get(headerParam.getPosition()).toString();
     value=replaceTokens(value,tokenValues);
     headers.put(((HeaderParam)key).value(),value);
   }

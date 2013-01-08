@@ -1,7 +1,7 @@
 {
   Multimap<String,Object> queryMap=LinkedListMultimap.create();
-  if (invocation.getInterfaceType().isAnnotationPresent(QueryParams.class)) {
-    QueryParams query=invocation.getInterfaceType().getAnnotation(QueryParams.class);
+  if (invocation.getInvokable().getEnclosingType().getRawType().isAnnotationPresent(QueryParams.class)) {
+    QueryParams query=invocation.getInvokable().getEnclosingType().getRawType().getAnnotation(QueryParams.class);
     addQuery(queryMap,query,tokenValues);
   }
   if (invocation.getInvokable().isAnnotationPresent(QueryParams.class)) {

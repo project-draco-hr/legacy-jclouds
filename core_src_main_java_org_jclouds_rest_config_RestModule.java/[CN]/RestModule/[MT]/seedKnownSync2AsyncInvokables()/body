@@ -1,0 +1,8 @@
+{
+  Cache<Invokable<?,?>,Invokable<?,?>> sync2AsyncBuilder=CacheBuilder.newBuilder().build();
+  putInvokables(TypeToken.of(HttpClient.class),TypeToken.of(HttpAsyncClient.class),sync2AsyncBuilder);
+  for (  Class<?> s : sync2Async.keySet()) {
+    putInvokables(TypeToken.of(s),TypeToken.of(sync2Async.get(s)),sync2AsyncBuilder);
+  }
+  return sync2AsyncBuilder;
+}

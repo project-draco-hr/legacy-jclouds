@@ -1,0 +1,15 @@
+{
+  @SuppressWarnings("rawtypes") Invokable async=checkNotNull(sync2AsyncInvokables.getIfPresent(in.getInvokable()),"invokable %s not in %s",in.getInvokable(),sync2AsyncInvokables);
+  if (async.getReturnType().getRawType().isAssignableFrom(ListenableFuture.class)) {
+    return blocker.create(receiver).apply(in);
+  }
+  try {
+    return Result.success(async.invoke(receiver,in.getArgs().toArray()));
+  }
+ catch (  InvocationTargetException e) {
+    return Result.fail(e);
+  }
+catch (  IllegalAccessException e) {
+    return Result.fail(e);
+  }
+}
