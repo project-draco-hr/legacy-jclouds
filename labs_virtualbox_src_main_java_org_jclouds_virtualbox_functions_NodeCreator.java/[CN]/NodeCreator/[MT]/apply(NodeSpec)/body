@@ -35,6 +35,7 @@
   NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(cloned);
   machineUtils.runScriptOnNode(partialNodeMetadata,new DeleteGShadowLock(),RunScriptOptions.NONE);
   if (optionalNatIfaceCard.isPresent())   checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()),"cannot enable NAT Interface on vm(%s)",cloneName);
+  machineUtils.runScriptOnNode(partialNodeMetadata,new PasswordlessSudo(partialNodeMetadata.getCredentials().identity),RunScriptOptions.Builder.runAsRoot(true));
   LoginCredentials credentials=partialNodeMetadata.getCredentials();
   return new NodeAndInitialCredentials<IMachine>(cloned,cloneName,credentials);
 }
