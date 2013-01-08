@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(GridServerAsyncClient.class.getMethod("getRamSizes"));
-  HttpRequest httpRequest=processor.createRequest(method,ImmutableList.of());
+  GeneratedHttpRequest httpRequest=processor.createRequest(method,ImmutableList.of());
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/common/lookup/list?v=1.6&lookup=server.ram " + "HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
@@ -8,7 +8,7 @@
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);
   checkFilters(httpRequest);
-  httpRequest=Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
+  httpRequest=(GeneratedHttpRequest)Iterables.getOnlyElement(httpRequest.getFilters()).filter(httpRequest);
   assertRequestLineEquals(httpRequest,"GET https://api.gogrid.com/api/common/lookup/list?v=1.6&lookup=server.ram&" + "sig=e9aafd0a5d4c69bb24536be4bce8a528&api_key=identity " + "HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,null,null,false);
