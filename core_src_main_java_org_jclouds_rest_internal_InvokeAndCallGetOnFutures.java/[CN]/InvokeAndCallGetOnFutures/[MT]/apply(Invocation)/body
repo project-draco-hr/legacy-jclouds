@@ -1,0 +1,15 @@
+{
+  @SuppressWarnings("rawtypes") Invokable target=checkNotNull(sync2AsyncInvokables.getIfPresent(in.getInvokable()),"invokable %s not in %s",in.getInvokable(),sync2AsyncInvokables);
+  Object returnVal;
+  try {
+    returnVal=target.invoke(receiver,in.getArgs().toArray());
+  }
+ catch (  InvocationTargetException e) {
+    return Result.fail(e);
+  }
+catch (  IllegalAccessException e) {
+    return Result.fail(e);
+  }
+  if (!isFuture(target))   return Result.success(returnVal);
+  return Result.success(Futures.getUnchecked(ListenableFuture.class.cast(returnVal)));
+}

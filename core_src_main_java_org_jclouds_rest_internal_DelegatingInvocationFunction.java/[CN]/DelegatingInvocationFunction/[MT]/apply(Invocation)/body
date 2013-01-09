@@ -1,0 +1,5 @@
+{
+  if (in.getInvokable().isAnnotationPresent(Provides.class))   return Result.success(lookupValueFromGuice(in.getInvokable()));
+ else   if (in.getInvokable().isAnnotationPresent(Delegate.class))   return Result.success(propagateContextToDelegate(in));
+  return methodInvoker.apply(in);
+}

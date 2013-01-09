@@ -10,9 +10,9 @@
   }
 );
   bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
-  bindClientAndAsyncClient(binder(),SessionClient.class,SessionAsyncClient.class);
-  bindClientAndAsyncClient(binder(),CloudStackDomainClient.class,CloudStackDomainAsyncClient.class);
-  bindClientAndAsyncClient(binder(),CloudStackGlobalClient.class,CloudStackGlobalAsyncClient.class);
+  bindHttpApi(binder(),SessionClient.class,SessionAsyncClient.class);
+  bindHttpApi(binder(),CloudStackDomainClient.class,CloudStackDomainAsyncClient.class);
+  bindHttpApi(binder(),CloudStackGlobalClient.class,CloudStackGlobalAsyncClient.class);
   bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(InvalidateSessionAndRetryOn401AndLogoutOnClose.class);
   super.configure();
 }

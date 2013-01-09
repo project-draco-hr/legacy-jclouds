@@ -1,5 +1,6 @@
 {
   Invokable<?,?> invoked=invocation.getInvokable();
+  Set<String> acceptHeaders=getAcceptHeaders.apply(invocation);
   ResponseParser annotation=invoked.getAnnotation(ResponseParser.class);
   if (annotation == null) {
     if (invoked.getReturnType().equals(void.class) || invoked.getReturnType().equals(futureVoidLiteral)) {
@@ -14,10 +15,10 @@
  else     if (invoked.getReturnType().equals(HttpResponse.class) || invoked.getReturnType().equals(futureHttpResponseLiteral)) {
       return Key.get(Class.class.cast(IdentityFunction.class));
     }
- else     if (RestAnnotationProcessor.getAcceptHeaders(invocation).contains(APPLICATION_JSON)) {
+ else     if (acceptHeaders.contains(APPLICATION_JSON)) {
       return getJsonParserKeyForMethod(invoked);
     }
- else     if (RestAnnotationProcessor.getAcceptHeaders(invocation).contains(APPLICATION_XML) || invoked.isAnnotationPresent(JAXBResponseParser.class)) {
+ else     if (acceptHeaders.contains(APPLICATION_XML) || invoked.isAnnotationPresent(JAXBResponseParser.class)) {
       return getJAXBParserKeyForMethod(invoked);
     }
  else     if (invoked.getReturnType().equals(String.class) || invoked.getReturnType().equals(futureStringLiteral)) {

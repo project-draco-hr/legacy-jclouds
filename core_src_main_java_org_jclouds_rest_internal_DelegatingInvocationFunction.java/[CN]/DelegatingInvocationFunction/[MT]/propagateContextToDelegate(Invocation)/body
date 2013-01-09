@@ -1,0 +1,17 @@
+{
+  Class<?> returnType=unwrapIfOptional(caller.getInvokable().getReturnType());
+  Function<Invocation,Result> delegate;
+  setCaller.enter(enclosingType,caller);
+  try {
+    @SuppressWarnings("unchecked") Key<Function<Invocation,Result>> delegateType=(Key<Function<Invocation,Result>>)methodInvokerFor(returnType);
+    delegate=injector.getInstance(delegateType);
+  }
+  finally {
+    setCaller.exit();
+  }
+  Object result=FunctionalReflection.newProxy(returnType,delegate);
+  if (isReturnTypeOptional(caller.getInvokable())) {
+    result=optionalConverter.apply(InvocationSuccess.create(caller,result));
+  }
+  return result;
+}

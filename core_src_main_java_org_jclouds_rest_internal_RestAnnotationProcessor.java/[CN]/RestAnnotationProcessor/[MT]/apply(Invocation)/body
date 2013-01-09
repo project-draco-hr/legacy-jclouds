@@ -8,7 +8,7 @@
     if (endpoint.isPresent())     logger.trace("using endpoint %s from invocation.getArgs() for %s",endpoint,invocation);
   }
  else   if (caller != null) {
-    endpoint=getEndpointFor(caller);
+    endpoint=getEndpointFor(callerEnclosingType,caller);
     if (endpoint.isPresent())     logger.trace("using endpoint %s from caller %s for %s",endpoint,caller,invocation);
  else     endpoint=findEndpoint(invocation);
   }
@@ -16,21 +16,21 @@
     endpoint=findEndpoint(invocation);
   }
   if (!endpoint.isPresent())   throw new NoSuchElementException(format("no endpoint found for %s",invocation));
-  GeneratedHttpRequest.Builder requestBuilder=GeneratedHttpRequest.builder().caller(caller);
+  GeneratedHttpRequest.Builder<A> requestBuilder=GeneratedHttpRequest.builder(enclosingType).invocation(invocation).callerEnclosingType(callerEnclosingType).caller(caller);
   if (r != null) {
     requestBuilder.fromHttpRequest(r);
   }
  else {
     requestBuilder.method(tryFindHttpMethod(invocation.getInvokable()).get());
   }
-  requestBuilder.invocation(invocation).filters(getFiltersIfAnnotated(invocation));
+  requestBuilder.filters(getFiltersIfAnnotated(invocation));
   Multimap<String,Object> tokenValues=LinkedHashMultimap.create();
   tokenValues.put(Constants.PROPERTY_API_VERSION,apiVersion);
   tokenValues.put(Constants.PROPERTY_BUILD_VERSION,buildVersion);
   UriBuilder uriBuilder=uriBuilder(endpoint.get().toString());
   overridePathEncoding(uriBuilder,invocation);
-  if (caller != null)   tokenValues.putAll(addPathAndGetTokens(caller,uriBuilder));
-  tokenValues.putAll(addPathAndGetTokens(invocation,uriBuilder));
+  if (caller != null)   tokenValues.putAll(addPathAndGetTokens(callerEnclosingType,caller,uriBuilder));
+  tokenValues.putAll(addPathAndGetTokens(enclosingType,invocation,uriBuilder));
   Multimap<String,Object> formParams=addFormParams(tokenValues,invocation);
   Multimap<String,Object> queryParams=addQueryParams(tokenValues,invocation);
   Multimap<String,String> headers=buildHeaders(tokenValues,invocation);
@@ -85,7 +85,7 @@
   if (payload != null) {
     requestBuilder.payload(payload);
   }
-  GeneratedHttpRequest request=requestBuilder.build();
+  GeneratedHttpRequest<A> request=requestBuilder.build();
   org.jclouds.rest.MapBinder mapBinder=getMapPayloadBinderOrNull(invocation);
   if (mapBinder != null) {
     Map<String,Object> mapParams=buildPayloadParams(invocation);
