@@ -3,7 +3,7 @@
   for (  Parameter param : parametersWithAnnotation(invocation.getInvokable(),FormParam.class)) {
     FormParam formParam=param.getAnnotation(FormParam.class);
     String paramKey=formParam.value();
-    Optional<?> paramValue=getParamValue(invocation,param.getAnnotation(ParamParser.class),param.getPosition(),paramKey);
+    Optional<?> paramValue=getParamValue(invocation,param.getAnnotation(ParamParser.class),param.hashCode(),paramKey);
     if (paramValue.isPresent())     formParamValues.put(paramKey,paramValue.get().toString());
   }
   return formParamValues;

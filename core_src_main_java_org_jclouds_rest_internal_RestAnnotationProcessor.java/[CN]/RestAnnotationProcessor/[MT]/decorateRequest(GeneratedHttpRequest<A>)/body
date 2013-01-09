@@ -1,0 +1,44 @@
+{
+  Invocation invocation=request.getInvocation();
+  List<Object> args=request.getInvocation().getArgs();
+  Set<Parameter> binderOrWrapWith=ImmutableSet.copyOf(concat(parametersWithAnnotation(invocation.getInvokable(),BinderParam.class),parametersWithAnnotation(invocation.getInvokable(),WrapWith.class)));
+  OUTER:   for (  Parameter entry : binderOrWrapWith) {
+    int position=entry.hashCode();
+    boolean shouldBreak=false;
+    Binder binder;
+    if (entry.isAnnotationPresent(BinderParam.class))     binder=injector.getInstance(entry.getAnnotation(BinderParam.class).value());
+ else     binder=injector.getInstance(BindToJsonPayloadWrappedWith.Factory.class).create(entry.getAnnotation(WrapWith.class).value());
+    Object arg=args.size() >= position + 1 ? args.get(position) : null;
+    if (args.size() >= position + 1 && arg != null) {
+      Class<?> parameterType=entry.getType().getRawType();
+      Class<? extends Object> argType=arg.getClass();
+      if (!argType.isArray() && parameterType.isArray()) {
+        int arrayLength=args.size() - invocation.getInvokable().getParameters().size() + 1;
+        if (arrayLength == 0)         break OUTER;
+        arg=(Object[])Array.newInstance(arg.getClass(),arrayLength);
+        System.arraycopy(args.toArray(),position,arg,0,arrayLength);
+        shouldBreak=true;
+      }
+ else       if (argType.isArray() && parameterType.isArray()) {
+      }
+ else {
+        if (arg.getClass().isArray()) {
+          Object[] payloadArray=(Object[])arg;
+          arg=payloadArray.length > 0 ? payloadArray[0] : null;
+        }
+      }
+      if (arg != null) {
+        request=binder.bindToRequest(request,arg);
+      }
+      if (shouldBreak)       break OUTER;
+    }
+ else {
+      if (position + 1 == invocation.getInvokable().getParameters().size() && entry.getType().isArray())       continue OUTER;
+      if (entry.isAnnotationPresent(Nullable.class)) {
+        continue OUTER;
+      }
+      checkNotNull(arg,invocation.getInvokable().getName() + " parameter " + (position + 1));
+    }
+  }
+  return request;
+}

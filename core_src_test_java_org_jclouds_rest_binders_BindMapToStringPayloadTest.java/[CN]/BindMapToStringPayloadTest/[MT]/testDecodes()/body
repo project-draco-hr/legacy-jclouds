@@ -1,7 +1,7 @@
 {
   Invokable<?,Object> testPayload=Invokable.from(TestPayload.class.getMethod("changeAdminPass",String.class));
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder().invocation(Invocation.create(testPayload,ImmutableList.<Object>of("foo"))).method("POST").endpoint("http://localhost").build();
-  GeneratedHttpRequest newRequest=binder().bindToRequest(request,ImmutableMap.<String,Object>of("adminPass","foo"));
+  GeneratedHttpRequest<TestPayload> request=GeneratedHttpRequest.builder(TypeToken.of(TestPayload.class)).invocation(Invocation.create(testPayload,ImmutableList.<Object>of("foo"))).method("POST").endpoint("http://localhost").build();
+  GeneratedHttpRequest<TestPayload> newRequest=binder().bindToRequest(request,ImmutableMap.<String,Object>of("adminPass","foo"));
   assertEquals(newRequest.getRequestLine(),request.getRequestLine());
   assertEquals(newRequest.getPayload().getRawContent(),"{\"changePassword\":{\"adminPass\":\"foo\"}}");
 }

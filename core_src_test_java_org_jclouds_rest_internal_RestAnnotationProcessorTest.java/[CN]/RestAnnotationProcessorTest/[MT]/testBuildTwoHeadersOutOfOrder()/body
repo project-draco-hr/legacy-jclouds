@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestHeader.class.getMethod("twoHeadersOutOfOrder",String.class,String.class));
-  Multimap<String,String> headers=processor.createRequest(method,ImmutableList.<Object>of("robot","eggs")).getHeaders();
+  Multimap<String,String> headers=processor(TestHeader.class).createRequest(method,ImmutableList.<Object>of("robot","eggs")).getHeaders();
   assertEquals(headers.size(),1);
   assertEquals(headers.get("x-amz-copy-source"),ImmutableList.of("/eggs/robot"));
 }

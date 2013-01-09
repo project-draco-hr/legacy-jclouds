@@ -1,7 +1,7 @@
 {
   Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("testGeneric3"));
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.of());
+  GeneratedHttpRequest request=processor(TestPut.class).createRequest(method,ImmutableList.of());
   assertResponseParserClassEquals(method,request,ParseJson.class);
-  Function<HttpResponse,Map<String,String>> parser=(Function<HttpResponse,Map<String,String>>)TransformerForRequest.createResponseParser(parserFactory,injector,request);
+  Function<HttpResponse,?> parser=transformer(TestPut.class).apply(request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()),ImmutableMap.of("foo","bar"));
 }
