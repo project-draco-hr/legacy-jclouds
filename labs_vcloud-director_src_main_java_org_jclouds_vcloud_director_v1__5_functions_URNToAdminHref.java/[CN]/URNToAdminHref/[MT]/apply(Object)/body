@@ -1,0 +1,7 @@
+{
+  checkArgument(checkNotNull(from,"urn") instanceof String,"urn is a String argument");
+  Entity entity=resolveEntityCache.getUnchecked(from.toString());
+  Optional<Link> link=Iterables.tryFind(entity.getLinks(),typeContainsAdmin);
+  checkArgument(link.isPresent(),"no admin link found for entity %s",entity);
+  return link.get().getHref();
+}

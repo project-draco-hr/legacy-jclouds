@@ -1,11 +1,11 @@
 {
-  Metadata oldMetadata=vAppTemplateApi.getMetadataApi(vAppTemplateUrn).get();
+  Metadata oldMetadata=context.getApi().getMetadataApi(vAppTemplateUrn).get();
   Map<String,String> oldMetadataMap=metadataToMap(oldMetadata);
   key=name("key-");
   val=name("value-");
-  final Task task=vAppTemplateApi.getMetadataApi(vAppTemplateUrn).putAll(ImmutableMap.of(key,val));
+  final Task task=context.getApi().getMetadataApi(vAppTemplateUrn).putAll(ImmutableMap.of(key,val));
   assertTaskSucceeds(task);
-  Metadata newMetadata=vAppTemplateApi.getMetadataApi(vAppTemplateUrn).get();
+  Metadata newMetadata=context.getApi().getMetadataApi(vAppTemplateUrn).get();
   Map<String,String> expectedMetadataMap=ImmutableMap.<String,String>builder().putAll(oldMetadataMap).put(key,val).build();
   checkMetadataFor("vAppTemplate",newMetadata,expectedMetadataMap);
 }

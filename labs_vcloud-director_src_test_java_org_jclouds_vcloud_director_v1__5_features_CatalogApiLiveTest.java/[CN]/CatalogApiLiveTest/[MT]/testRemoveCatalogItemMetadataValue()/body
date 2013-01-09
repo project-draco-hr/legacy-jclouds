@@ -1,7 +1,7 @@
 {
-  Task removeCatalogItemMetadataValue=catalogApi.getItemMetadataApi(catalogItem.getId()).remove("KEY");
+  Task removeCatalogItemMetadataValue=context.getApi().getMetadataApi(catalogItem.getId()).remove("KEY");
   checkTask(removeCatalogItemMetadataValue);
   assertTrue(retryTaskSuccess.apply(removeCatalogItemMetadataValue),String.format(TASK_COMPLETE_TIMELY,"removeCatalogItemMetadataValue"));
-  String removed=catalogApi.getItemMetadataApi(catalogItem.getId()).get("KEY");
+  String removed=context.getApi().getMetadataApi(catalogItem.getId()).get("KEY");
   assertNull(removed);
 }
