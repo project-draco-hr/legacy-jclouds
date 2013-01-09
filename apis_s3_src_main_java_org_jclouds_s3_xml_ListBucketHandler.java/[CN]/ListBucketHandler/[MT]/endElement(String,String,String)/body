@@ -16,7 +16,10 @@
  else   if (qName.equals("ETag")) {
     String currentETag=currentOrNull(currentText);
     builder.eTag(currentETag);
-    builder.contentMD5(base16().lowerCase().decode(Strings2.replaceAll(currentETag,'"',"")));
+    currentETag=Strings2.replaceAll(currentETag,'"',"");
+    if (!MULTIPART_BLOB_ETAG.matcher(currentETag).matches()) {
+      builder.contentMD5(base16().lowerCase().decode(currentETag));
+    }
   }
  else   if (qName.equals("Size")) {
     builder.contentLength(Long.valueOf(currentOrNull(currentText)));
