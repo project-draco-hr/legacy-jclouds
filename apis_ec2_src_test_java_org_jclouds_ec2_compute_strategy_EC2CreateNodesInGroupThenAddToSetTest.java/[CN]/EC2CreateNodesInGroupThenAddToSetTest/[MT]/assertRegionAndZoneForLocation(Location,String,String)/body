@@ -17,7 +17,7 @@
   expect(instanceClient.runInstancesInRegion(region,zone,imageId,1,input.count,ec2Options)).andReturn(Reservation.class.cast(reservation));
   expect(instance.getId()).andReturn(instanceCreatedId).atLeastOnce();
   LoginCredentials creds=LoginCredentials.builder().user("foo").privateKey("bar").build();
-  expect(strategy.instanceToCredentials.apply(instance)).andReturn(creds);
+  expect(strategy.instanceToCredentials.apply(instance)).andReturn(Optional.of(creds));
   expect(instance.getRegion()).andReturn(region).atLeastOnce();
   expect(strategy.credentialStore.put("node#" + region + "/"+ instanceCreatedId,creds)).andReturn(null);
   expect(strategy.presentInstances.apply(ImmutableSet.of(new RegionAndName(region,instanceCreatedId)))).andReturn(ImmutableSet.of(instance));
