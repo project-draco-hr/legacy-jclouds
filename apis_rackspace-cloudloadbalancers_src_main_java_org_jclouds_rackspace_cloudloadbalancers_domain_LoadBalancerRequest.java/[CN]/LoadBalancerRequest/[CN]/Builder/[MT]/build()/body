@@ -1,3 +1,8 @@
 {
-  return virtualIps == null ? new LoadBalancerRequest(name,protocol,port,algorithm,nodes,virtualIPType,virtualIPId) : new LoadBalancerRequest(name,protocol,port,algorithm,nodes,virtualIps);
+  if (virtualIps == null) {
+    return new LoadBalancerRequest(name,protocol,port,nodes,algorithm,timeout,halfClosed,sessionPersistence,connectionLogging,connectionThrottle,healthMonitor,accessRules,metadata,virtualIPType,virtualIPId);
+  }
+ else {
+    return new LoadBalancerRequest(name,protocol,port,nodes,algorithm,timeout,halfClosed,sessionPersistence,connectionLogging,connectionThrottle,healthMonitor,accessRules,metadata,virtualIps);
+  }
 }

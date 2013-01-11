@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/nodes/410");
   NodeApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("PUT").payload(payloadFromResource("/node-update.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).build()).getNodeApiForZoneAndLoadBalancer("DFW",2000);
-  NodeAttributes nodeAttributes=NodeAttributes.Builder.condition(NodeRequest.Condition.DISABLED).weight(20);
+  NodeAttributes nodeAttributes=NodeAttributes.Builder.condition(NodeRequest.Condition.DISABLED).type(NodeRequest.Type.SECONDARY).weight(20);
   api.update(410,nodeAttributes);
 }
