@@ -1,6 +1,6 @@
 {
   Statement command=exec("doFoo");
-  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(new LoginCredentials("tester","testpassword!",null,true)).build();
+  NodeMetadata node=new NodeMetadataBuilder().ids("id").status(Status.RUNNING).credentials(LoginCredentials.builder().user("tester").password("testpassword!").authenticateSudo(true).build()).build();
   SshClient sshClient=createMock(SshClient.class);
   InitScript init=InitScript.builder().name("jclouds-script-0").home("/tmp/jclouds-script-0").run(command).build();
   sshClient.connect();

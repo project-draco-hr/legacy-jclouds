@@ -1,13 +1,10 @@
 {
-  LoginCredentials expected=new LoginCredentials("ubuntu","password",null,false);
   Image image=createMock(Image.class);
   Template template=createMock(Template.class);
   expect(template.getImage()).andReturn(image);
   expect(image.getDefaultCredentials()).andReturn(expected);
   expect(template.getOptions()).andReturn(new TemplateOptions());
-  replay(template);
-  replay(image);
+  replay(template,image);
   assertEquals(fn.apply(template),expected);
-  verify(template);
-  verify(image);
+  verify(template,image);
 }

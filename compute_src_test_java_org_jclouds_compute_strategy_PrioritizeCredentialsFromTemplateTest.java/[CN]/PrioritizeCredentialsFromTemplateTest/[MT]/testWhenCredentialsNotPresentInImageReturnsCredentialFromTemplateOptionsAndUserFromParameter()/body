@@ -5,9 +5,8 @@
   expect(template.getImage()).andReturn(image);
   expect(image.getDefaultCredentials()).andReturn(null);
   expect(template.getOptions()).andReturn(TemplateOptions.Builder.overrideLoginUser("ubuntu"));
-  replay(template);
-  replay(image);
-  assertEquals(fn.apply(template,new LoginCredentials("foo","password",null,false)),expected);
+  replay(template,image);
+  assertEquals(fn.apply(template,LoginCredentials.builder().user("foo").password("password").build()),expected);
   verify(template);
   verify(image);
 }
