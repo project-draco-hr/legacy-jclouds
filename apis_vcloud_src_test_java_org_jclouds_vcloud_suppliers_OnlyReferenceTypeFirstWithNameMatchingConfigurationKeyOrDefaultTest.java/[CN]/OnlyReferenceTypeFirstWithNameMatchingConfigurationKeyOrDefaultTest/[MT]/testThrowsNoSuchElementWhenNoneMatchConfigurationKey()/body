@@ -1,10 +1,10 @@
 {
   ReferenceType reference1=new ReferenceTypeImpl("travis tritt",null,null);
   ReferenceType reference2=new ReferenceTypeImpl("hail mary",null,null);
-  new OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault(new ValueOfConfigurationKeyOrNull(Guice.createInjector(new AbstractModule(){
-    @Override protected void configure(){
+  new OnlyReferenceTypeFirstWithNameMatchingConfigurationKeyOrDefault(Guice.createInjector(new AbstractModule(){
+    protected void configure(){
       bindConstant().annotatedWith(Names.named("foo")).to(".*happy.*");
     }
   }
-)),"foo",Predicates.<ReferenceType>alwaysTrue()).apply(ImmutableList.<ReferenceType>of(reference1,reference2));
+).getInstance(ValueOfConfigurationKeyOrNull.class),"foo",Predicates.<ReferenceType>alwaysTrue()).apply(ImmutableList.<ReferenceType>of(reference1,reference2));
 }
