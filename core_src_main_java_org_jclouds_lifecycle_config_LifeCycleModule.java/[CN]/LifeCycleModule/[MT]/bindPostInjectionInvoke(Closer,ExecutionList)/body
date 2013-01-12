@@ -1,10 +1,10 @@
 {
   bindListener(any(),new TypeListener(){
     public <I>void hear(    TypeLiteral<I> injectableType,    TypeEncounter<I> encounter){
-      Set<Method> methods=Sets.newHashSet();
+      Set<Method> methods=newHashSet();
       Class<? super I> type=injectableType.getRawType();
       while (type != null) {
-        methods.addAll(Arrays.asList(type.getDeclaredMethods()));
+        methods.addAll(asList(type.getDeclaredMethods()));
         type=type.getSuperclass();
       }
       for (      final Method method : methods) {
@@ -49,14 +49,14 @@ catch (                IllegalAccessException e) {
                 }
  catch (                InvocationTargetException ie) {
                   Throwable e=ie.getTargetException();
-                  throw Throwables.propagate(e);
+                  throw propagate(e);
                 }
 catch (                IllegalAccessException e) {
-                  throw Throwables.propagate(e);
+                  throw propagate(e);
                 }
               }
             }
-,MoreExecutors.sameThreadExecutor());
+,sameThreadExecutor());
           }
         }
 );
