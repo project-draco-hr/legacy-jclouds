@@ -1,18 +1,14 @@
 {
-  try {
-    getApi().deletePath(path);
-  }
- catch (  KeyNotFoundException ex) {
-  }
   checkState(new RetryablePredicate<String>(new Predicate<String>(){
     public boolean apply(    String in){
       try {
-        return !getApi().pathExists(in);
+        sync.deletePath(in);
+        return !sync.pathExists(in);
       }
  catch (      ContainerNotFoundException e) {
         return true;
       }
     }
   }
-,INCONSISTENCY_WINDOW).apply(path),"%s still exists after deleting!",path);
+,3000).apply(path),"%s still exists after deleting!",path);
 }
