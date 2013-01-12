@@ -1,0 +1,10 @@
+{
+  AccessControlList acl=createMock(AccessControlList.class);
+  int attempts=5;
+  BackoffOnNotFoundWhenGetBucketACL backoff=new BackoffOnNotFoundWhenGetBucketACL(mock);
+  expect(mock.getBucketACL("foo")).andThrow(new ResourceNotFoundException()).times(attempts - 1);
+  expect(mock.getBucketACL("foo")).andReturn(acl);
+  replay(mock);
+  assertSame(backoff.load("foo"),acl);
+  verify(mock);
+}

@@ -1,0 +1,7 @@
+{
+  BackoffOnNotFoundWhenGetBucketACL backoff=new BackoffOnNotFoundWhenGetBucketACL(mock);
+  expect(mock.getBucketACL("foo")).andThrow(new UncheckedExecutionException(new TimeoutException()));
+  replay(mock);
+  backoff.load("foo");
+  verify(mock);
+}

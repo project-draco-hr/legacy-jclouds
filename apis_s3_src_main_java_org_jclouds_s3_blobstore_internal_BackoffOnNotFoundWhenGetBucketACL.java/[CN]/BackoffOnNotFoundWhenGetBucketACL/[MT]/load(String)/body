@@ -1,0 +1,13 @@
+{
+  ResourceNotFoundException last=null;
+  for (int currentTries=0; currentTries < maxTries; currentTries++) {
+    try {
+      return client.getBucketACL(bucketName);
+    }
+ catch (    ResourceNotFoundException e) {
+      imposeBackoffExponentialDelay(100l,200l,2,currentTries,maxTries);
+      last=e;
+    }
+  }
+  throw last;
+}

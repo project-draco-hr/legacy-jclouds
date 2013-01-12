@@ -1,8 +1,0 @@
-{
-  CacheLoader<String,Boolean> backoff=RetryingCacheLoaderDecorator.newDecorator().on(ResourceNotFoundException.class).exponentiallyBackoff().decorate(mock);
-  expect(mock.load("foo")).andThrow(new ResourceNotFoundException()).times(4);
-  expect(mock.load("foo")).andReturn(Boolean.TRUE);
-  replay(mock);
-  assertSame(backoff.load("foo"),Boolean.TRUE);
-  verify(mock);
-}
