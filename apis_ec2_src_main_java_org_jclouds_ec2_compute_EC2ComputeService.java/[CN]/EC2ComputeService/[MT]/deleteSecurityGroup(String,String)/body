@@ -1,6 +1,6 @@
 {
-  checkNotEmpty(region,"region");
-  checkNotEmpty(group,"group");
+  checkNotNull(emptyToNull(region),"region must be defined");
+  checkNotNull(emptyToNull(group),"group must be defined");
   String groupName=namingConvention.create().sharedNameForGroup(group);
   if (client.getSecurityGroupServices().describeSecurityGroupsInRegion(region,groupName).size() > 0) {
     logger.debug(">> deleting securityGroup(%s)",groupName);
