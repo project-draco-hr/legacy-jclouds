@@ -1,13 +1,13 @@
 {
   return filter(transformParallel(filter(from,new Predicate<CatalogItem>(){
-    @Override public boolean apply(    CatalogItem input){
+    public boolean apply(    CatalogItem input){
       return input.getEntity().getType().equals(VCloudMediaType.VAPPTEMPLATE_XML);
     }
   }
-),new Function<CatalogItem,Future<? extends VAppTemplate>>(){
-    @Override public Future<VAppTemplate> apply(    CatalogItem from){
+),new Function<CatalogItem,ListenableFuture<? extends VAppTemplate>>(){
+    public ListenableFuture<VAppTemplate> apply(    CatalogItem from){
       return aclient.getVAppTemplateClient().getVAppTemplate(from.getEntity().getHref());
     }
   }
-,executor,null,logger,"vappTemplates in"),Predicates.notNull());
+,userExecutor,null,logger,"vappTemplates in"),Predicates.notNull());
 }

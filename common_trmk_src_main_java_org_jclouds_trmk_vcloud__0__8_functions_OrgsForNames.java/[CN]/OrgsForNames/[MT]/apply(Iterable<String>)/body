@@ -1,8 +1,8 @@
 {
-  return transformParallel(from,new Function<String,Future<? extends Org>>(){
-    @Override public Future<? extends Org> apply(    String from){
+  return transformParallel(from,new Function<String,ListenableFuture<? extends Org>>(){
+    public ListenableFuture<? extends Org> apply(    String from){
       return aclient.findOrgNamed(from);
     }
   }
-,executor,null,logger,"organizations for names");
+,userExecutor,null,logger,"organizations for names");
 }

@@ -3,5 +3,5 @@
   int maxThreads=10;
   long keepAlive=ApiProxy.getCurrentEnvironment().getRemainingMillis();
   ExecutorService pool=newScalingThreadPool(0,maxThreads,keepAlive,factory);
-  return MoreExecutors.listeningDecorator(new DescribingExecutorService(pool));
+  return WithSubmissionTrace.wrap(MoreExecutors.listeningDecorator(pool));
 }

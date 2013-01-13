@@ -2,7 +2,7 @@
   String container=path.substring(0,path.indexOf('/'));
   path=path.substring(path.indexOf('/') + 1);
   try {
-    return Futures.compose(blobStore.getBlob(container,path),blob2Object,service);
+    return Futures.transform(blobStore.getBlob(container,path),blob2Object,userExecutor);
   }
  catch (  Exception e) {
     return immediateFailedFuture(Throwables.getRootCause(e));

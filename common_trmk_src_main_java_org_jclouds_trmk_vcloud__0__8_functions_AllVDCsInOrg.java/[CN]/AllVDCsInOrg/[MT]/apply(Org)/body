@@ -1,9 +1,8 @@
 {
-  Iterable<? extends org.jclouds.trmk.vcloud_0_8.domain.VDC> catalogItems=transformParallel(org.getVDCs().values(),new Function<ReferenceType,Future<? extends org.jclouds.trmk.vcloud_0_8.domain.VDC>>(){
-    @Override public Future<? extends org.jclouds.trmk.vcloud_0_8.domain.VDC> apply(    ReferenceType from){
+  return transformParallel(org.getVDCs().values(),new Function<ReferenceType,ListenableFuture<? extends org.jclouds.trmk.vcloud_0_8.domain.VDC>>(){
+    public ListenableFuture<? extends org.jclouds.trmk.vcloud_0_8.domain.VDC> apply(    ReferenceType from){
       return aclient.getVDC(from.getHref());
     }
   }
-,executor,null,logger,"vdcs in org " + org.getName());
-  return catalogItems;
+,userExecutor,null,logger,"vdcs in org " + org.getName());
 }

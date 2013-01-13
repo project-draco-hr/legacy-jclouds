@@ -1,6 +1,6 @@
 {
-  return FluentIterable.from(transformParallel(client.listStandardDrives(),new Function<String,Future<? extends DriveInfo>>(){
-    @Override public Future<DriveInfo> apply(    String input){
+  return FluentIterable.from(transformParallel(client.listStandardDrives(),new Function<String,ListenableFuture<? extends DriveInfo>>(){
+    @Override public ListenableFuture<DriveInfo> apply(    String input){
       try {
         return Futures.immediateFuture(cache.getUnchecked(input));
       }
@@ -16,5 +16,5 @@ catch (      UncheckedExecutionException e) {
       return "seedDriveCache()";
     }
   }
-,executor,null,logger,"drives")).filter(PREINSTALLED_DISK);
+,userExecutor,null,logger,"drives")).filter(PREINSTALLED_DISK);
 }

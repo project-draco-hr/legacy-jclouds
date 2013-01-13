@@ -1,7 +1,7 @@
 {
-  Map<String,Future<Void>> responses=newLinkedHashMap();
+  Map<String,ListenableFuture<Void>> responses=newLinkedHashMap();
   for (  String name : getNextNames(group,template,count)) {
-    responses.put(name,compose(createNodeInGroupWithNameAndTemplate(group,name,template),customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(template.getOptions(),goodNodes,badNodes,customizationResponses),executor));
+    responses.put(name,Futures.transform(createNodeInGroupWithNameAndTemplate(group,name,template),customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(template.getOptions(),goodNodes,badNodes,customizationResponses),userExecutor));
   }
   return responses;
 }

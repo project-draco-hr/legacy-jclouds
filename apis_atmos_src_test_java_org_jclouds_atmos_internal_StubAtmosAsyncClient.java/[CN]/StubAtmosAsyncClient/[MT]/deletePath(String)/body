@@ -1,11 +1,11 @@
 {
   if (path.indexOf('/') == path.length() - 1) {
-    return Futures.compose(blobStore.deleteContainerIfEmpty(path.substring(0,path.length() - 1)),new Function<Boolean,Void>(){
+    return Futures.transform(blobStore.deleteContainerIfEmpty(path.substring(0,path.length() - 1)),new Function<Boolean,Void>(){
       public Void apply(      Boolean from){
         return null;
       }
     }
-,service);
+,userExecutor);
   }
  else {
     String container=path.substring(0,path.indexOf('/'));

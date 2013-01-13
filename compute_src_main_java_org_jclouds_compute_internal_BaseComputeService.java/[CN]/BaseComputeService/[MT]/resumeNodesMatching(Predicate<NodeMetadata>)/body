@@ -1,11 +1,11 @@
 {
   logger.debug(">> resuming nodes matching(%s)",filter);
-  transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),new Function<NodeMetadata,Future<? extends Void>>(){
-    @Override public Future<Void> apply(    NodeMetadata from){
+  transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),new Function<NodeMetadata,ListenableFuture<? extends Void>>(){
+    @Override public ListenableFuture<Void> apply(    NodeMetadata from){
       resumeNode(from.getId());
       return immediateFuture(null);
     }
   }
-,executor,null,logger,"resumeNodesMatching(" + filter + ")");
+,userExecutor,null,logger,"resumeNodesMatching(" + filter + ")");
   logger.debug("<< resumed");
 }

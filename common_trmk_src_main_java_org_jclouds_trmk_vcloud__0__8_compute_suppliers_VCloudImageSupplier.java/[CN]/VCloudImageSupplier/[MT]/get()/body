@@ -1,9 +1,9 @@
 {
   Iterable<? extends Org> orgs=checkNotNull(orgMap.get().values(),"orgs");
-  Iterable<? extends Iterable<? extends Image>> images=transformParallel(orgs,new Function<Org,Future<? extends Iterable<? extends Image>>>(){
-    @Override public Future<Iterable<? extends Image>> apply(    final Org from){
+  Iterable<? extends Iterable<? extends Image>> images=transformParallel(orgs,new Function<Org,ListenableFuture<? extends Iterable<? extends Image>>>(){
+    @Override public ListenableFuture<Iterable<? extends Image>> apply(    final Org from){
       checkNotNull(from,"org");
-      return executor.submit(new Callable<Iterable<? extends Image>>(){
+      return userExecutor.submit(new Callable<Iterable<? extends Image>>(){
         @Override public Iterable<? extends Image> call() throws Exception {
           return imagesInOrg.apply(from);
         }
@@ -14,6 +14,6 @@
 );
     }
   }
-,executor,null,logger,"images in " + orgs);
+,userExecutor,null,logger,"images in " + orgs);
   return newLinkedHashSet(concat(images));
 }

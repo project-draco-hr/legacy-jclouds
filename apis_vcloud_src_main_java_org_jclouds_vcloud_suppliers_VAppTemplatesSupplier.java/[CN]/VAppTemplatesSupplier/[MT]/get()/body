@@ -1,19 +1,19 @@
 {
   Iterable<Org> orgs=checkNotNull(orgMap.get().values(),"orgs");
-  Iterable<? extends Iterable<VAppTemplate>> images=transformParallel(orgs,new Function<Org,Future<? extends Iterable<VAppTemplate>>>(){
-    @Override public Future<Iterable<VAppTemplate>> apply(    final Org from){
+  Iterable<? extends Iterable<VAppTemplate>> images=transformParallel(orgs,new Function<Org,ListenableFuture<? extends Iterable<VAppTemplate>>>(){
+    public ListenableFuture<Iterable<VAppTemplate>> apply(    final Org from){
       checkNotNull(from,"org");
-      return executor.submit(new Callable<Iterable<VAppTemplate>>(){
-        @Override public Iterable<VAppTemplate> call() throws Exception {
+      return userExecutor.submit(new Callable<Iterable<VAppTemplate>>(){
+        public Iterable<VAppTemplate> call() throws Exception {
           return imagesInOrg.apply(from);
         }
-        @Override public String toString(){
+        public String toString(){
           return "imagesInOrg(" + from.getHref() + ")";
         }
       }
 );
     }
   }
-,executor,null,logger,"images in " + orgs);
+,userExecutor,null,logger,"images in " + orgs);
   return newLinkedHashSet(concat(images));
 }

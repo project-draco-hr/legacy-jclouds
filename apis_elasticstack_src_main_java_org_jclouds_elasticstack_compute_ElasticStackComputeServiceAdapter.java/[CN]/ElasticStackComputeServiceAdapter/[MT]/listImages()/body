@@ -1,6 +1,6 @@
 {
-  return FluentIterable.from(transformParallel(preinstalledImages.keySet(),new Function<String,Future<? extends DriveInfo>>(){
-    @Override public Future<? extends DriveInfo> apply(    String input){
+  return FluentIterable.from(transformParallel(preinstalledImages.keySet(),new Function<String,ListenableFuture<? extends DriveInfo>>(){
+    @Override public ListenableFuture<? extends DriveInfo> apply(    String input){
       try {
         return Futures.immediateFuture(cache.getUnchecked(input));
       }
@@ -16,5 +16,5 @@ catch (      UncheckedExecutionException e) {
       return "seedDriveCache()";
     }
   }
-,executor,null,logger,"drives")).filter(notNull());
+,userExecutor,null,logger,"drives")).filter(notNull());
 }

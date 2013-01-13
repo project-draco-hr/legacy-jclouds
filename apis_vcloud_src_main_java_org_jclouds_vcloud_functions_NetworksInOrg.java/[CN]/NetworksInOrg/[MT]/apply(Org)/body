@@ -1,8 +1,8 @@
 {
-  return transformParallel(org.getNetworks().values(),new Function<ReferenceType,Future<? extends OrgNetwork>>(){
-    @Override public Future<? extends OrgNetwork> apply(    ReferenceType from){
+  return transformParallel(org.getNetworks().values(),new Function<ReferenceType,ListenableFuture<? extends OrgNetwork>>(){
+    public ListenableFuture<? extends OrgNetwork> apply(    ReferenceType from){
       return aclient.getNetworkClient().getNetwork(from.getHref());
     }
   }
-,executor,null,logger,"OrgNetworks in org " + org.getName());
+,userExecutor,null,logger,"OrgNetworks in org " + org.getName());
 }

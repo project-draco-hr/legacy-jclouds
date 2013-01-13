@@ -1,19 +1,19 @@
 {
   FluentIterable<URI> uris=FluentIterable.from(from).filter(new Predicate<Location>(){
-    @Override public boolean apply(    Location input){
+    public boolean apply(    Location input){
       return input.getScope() == LocationScope.ZONE;
     }
   }
 ).transform(new Function<Location,URI>(){
-    @Override public URI apply(    Location from){
+    public URI apply(    Location from){
       return URI.create(from.getParent().getId());
     }
   }
 );
-  return transformParallel(uris,new Function<URI,Future<? extends Org>>(){
-    @Override public Future<Org> apply(    URI from){
+  return transformParallel(uris,new Function<URI,ListenableFuture<? extends Org>>(){
+    public ListenableFuture<Org> apply(    URI from){
       return aclient.getOrgClient().getOrg(from);
     }
   }
-,executor,null,logger,"organizations for uris");
+,userExecutor,null,logger,"organizations for uris");
 }

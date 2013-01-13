@@ -1,6 +1,6 @@
 {
-  Iterable<? extends StorageMetadata> buckets=FutureIterables.<BucketMetadata,StorageMetadata>transformParallel(input,new Function<BucketMetadata,Future<? extends StorageMetadata>>(){
-    @Override public Future<? extends StorageMetadata> apply(    final BucketMetadata from){
+  Iterable<? extends StorageMetadata> buckets=FutureIterables.<BucketMetadata,StorageMetadata>transformParallel(input,new Function<BucketMetadata,ListenableFuture<? extends StorageMetadata>>(){
+    @Override public ListenableFuture<? extends StorageMetadata> apply(    final BucketMetadata from){
       return userExecutor.submit(new Callable<StorageMetadata>(){
         @Override public StorageMetadata call() throws Exception {
           return bucket2ResourceMd.apply(from);

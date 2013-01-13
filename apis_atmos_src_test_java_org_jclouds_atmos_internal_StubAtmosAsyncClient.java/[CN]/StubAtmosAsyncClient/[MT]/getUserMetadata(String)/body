@@ -3,11 +3,11 @@
  else {
     String container=path.substring(0,path.indexOf('/'));
     path=path.substring(path.indexOf('/') + 1);
-    return Futures.compose(blobStore.blobMetadata(container,path),new Function<BlobMetadata,UserMetadata>(){
+    return Futures.transform(blobStore.blobMetadata(container,path),new Function<BlobMetadata,UserMetadata>(){
       public UserMetadata apply(      BlobMetadata from){
         return blob2ObjectInfo.apply(from).getUserMetadata();
       }
     }
-,service);
+,userExecutor);
   }
 }

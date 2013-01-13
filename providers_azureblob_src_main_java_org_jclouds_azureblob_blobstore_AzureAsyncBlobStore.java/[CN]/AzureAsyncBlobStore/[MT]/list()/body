@@ -1,8 +1,8 @@
 {
-  return Futures.compose(async.listContainers(includeMetadata()),new Function<BoundedSet<ContainerProperties>,org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata>>(){
+  return transform(async.listContainers(includeMetadata()),new Function<BoundedSet<ContainerProperties>,org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata>>(){
     public org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata> apply(    BoundedSet<ContainerProperties> from){
       return new PageSetImpl<StorageMetadata>(Iterables.transform(from,container2ResourceMd),from.getNextMarker());
     }
   }
-,service);
+,userExecutor);
 }

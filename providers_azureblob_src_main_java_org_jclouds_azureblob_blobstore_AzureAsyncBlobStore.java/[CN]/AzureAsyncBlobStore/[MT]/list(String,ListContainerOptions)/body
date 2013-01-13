@@ -1,5 +1,5 @@
 {
   ListBlobsOptions azureOptions=blobStore2AzureContainerListOptions.apply(options);
   ListenableFuture<ListBlobsResponse> returnVal=async.listBlobs(container,azureOptions.includeMetadata());
-  return Futures.compose(returnVal,azure2BlobStoreResourceList,service);
+  return transform(returnVal,azure2BlobStoreResourceList,userExecutor);
 }

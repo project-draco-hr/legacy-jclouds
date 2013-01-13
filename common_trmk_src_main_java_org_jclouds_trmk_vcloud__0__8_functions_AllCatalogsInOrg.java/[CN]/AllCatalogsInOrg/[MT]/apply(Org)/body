@@ -1,9 +1,8 @@
 {
-  Iterable<? extends Catalog> catalogs=transformParallel(org.getCatalogs().values(),new Function<ReferenceType,Future<? extends Catalog>>(){
-    @SuppressWarnings("unchecked") @Override public Future<Catalog> apply(    ReferenceType from){
-      return (Future<Catalog>)aclient.getCatalog(from.getHref());
+  return transformParallel(org.getCatalogs().values(),new Function<ReferenceType,ListenableFuture<? extends Catalog>>(){
+    public ListenableFuture<? extends Catalog> apply(    ReferenceType from){
+      return aclient.getCatalog(from.getHref());
     }
   }
-,executor,null,logger,"catalogs in " + org.getName());
-  return catalogs;
+,userExecutor,null,logger,"catalogs in " + org.getName());
 }
