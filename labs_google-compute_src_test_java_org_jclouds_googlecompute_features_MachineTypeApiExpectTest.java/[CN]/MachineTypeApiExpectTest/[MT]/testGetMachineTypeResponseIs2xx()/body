@@ -1,0 +1,6 @@
+{
+  HttpRequest get=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/machineTypes/n1-standard-1").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/machinetype.json")).build();
+  MachineTypeApi machineTypeApi=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,get,operationResponse).getMachineTypeApiForProject("myproject");
+  assertEquals(machineTypeApi.get("n1-standard-1"),new ParseMachineTypeTest().expected());
+}

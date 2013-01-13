@@ -1,0 +1,9 @@
+{
+  PagedIterable<MachineType> machineTypes=api().list(new ListOptions.Builder().maxResults(1));
+  Iterator<IterableWithMarker<MachineType>> pageIterator=machineTypes.iterator();
+  assertTrue(pageIterator.hasNext());
+  IterableWithMarker<MachineType> singlePageIterator=pageIterator.next();
+  List<MachineType> machineTypeAsList=Lists.newArrayList(singlePageIterator);
+  assertSame(machineTypeAsList.size(),1);
+  this.machineType=Iterables.getOnlyElement(machineTypeAsList);
+}
