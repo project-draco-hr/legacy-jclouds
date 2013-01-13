@@ -1,0 +1,6 @@
+{
+  HttpRequest insert=HttpRequest.builder().method("POST").endpoint("https://www.googleapis.com/compute/v1beta13/projects/myproject/networks").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).payload(payloadFromResourceWithContentType("/network_insert.json",MediaType.APPLICATION_JSON)).build();
+  HttpResponse insertNetworkResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/operation.json")).build();
+  NetworkApi api=requestsSendResponses(requestForScopes(COMPUTE_SCOPE),TOKEN_RESPONSE,insert,insertNetworkResponse).getNetworkApiForProject("myproject");
+  assertEquals(api.createInIPv4Range("test-network","10.0.1.0/8"),new ParseOperationTest().expected());
+}
