@@ -6,7 +6,7 @@
   Function<HttpResponse,?> transformer=transformerForRequest.apply(request);
   logger.trace("<< response from %s is parsed by %s",name,transformer.getClass().getSimpleName());
   logger.debug(">> invoking %s",name);
-  ListenableFuture<?> result=transform(makeListenable(http.submit(new HttpCommand(request)),userThreads),transformer);
+  ListenableFuture<?> result=transform(http.submit(new HttpCommand(request)),transformer,userExecutor);
   FutureFallback<?> fallback=fallbacks.getUnchecked(invocation.getInvokable());
   if (fallback instanceof InvocationContext) {
     InvocationContext.class.cast(fallback).setContext(request);

@@ -1,0 +1,13 @@
+{
+  ExecutorServiceModule module=new ExecutorServiceModule(){
+    @Override protected void configure(){
+      bindConstant().annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).to(1);
+      bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);
+      super.configure();
+    }
+  }
+;
+  injector=Guice.createInjector(module);
+  assertNull(module.userExecutorFromConstructor);
+  assertNull(module.ioExecutorFromConstructor);
+}

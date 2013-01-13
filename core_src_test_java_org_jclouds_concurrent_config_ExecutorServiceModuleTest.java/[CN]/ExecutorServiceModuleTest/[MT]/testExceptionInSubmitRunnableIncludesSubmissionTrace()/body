@@ -1,0 +1,15 @@
+{
+  ListeningExecutorService user=injector.getInstance(Key.get(ListeningExecutorService.class,named(PROPERTY_USER_THREADS)));
+  ListeningExecutorService io=injector.getInstance(Key.get(ListeningExecutorService.class,named(PROPERTY_IO_WORKER_THREADS)));
+  for (  ListeningExecutorService exec : ImmutableList.of(user,io)) {
+    String submission=null;
+    try {
+      submission=getStackTraceAsString(incrementInitialElement(new RuntimeException(),2)).replaceFirst(".*\n","");
+      exec.submit(runnableThrowsRTE()).get();
+    }
+ catch (    ExecutionException e) {
+      assertTraceHasSubmission(getStackTraceAsString(e),submission);
+      assertTraceHasSubmission(getStackTraceAsString(e.getCause()),submission);
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  if (e.getCause() == null) {
+    return filterTrace(e);
+  }
+  Throwable cause=e.getCause();
+  StackTraceElement[] combined=filterTrace(concat(cause.getStackTrace(),submissionTrace,StackTraceElement.class));
+  cause.setStackTrace(combined);
+  return filterTrace(e);
+}
