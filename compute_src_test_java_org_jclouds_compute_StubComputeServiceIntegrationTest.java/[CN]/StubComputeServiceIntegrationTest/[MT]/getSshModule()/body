@@ -1,16 +1,16 @@
 {
   return new AbstractModule(){
     @Override protected void configure(){
-      bind(AdminAccess.Configuration.class).toInstance(new Configuration(){
-        @Override public Supplier<String> defaultAdminUsername(){
+      bind(AdminAccessConfiguration.class).toInstance(new AdminAccessConfiguration(){
+        public Supplier<String> defaultAdminUsername(){
           return Suppliers.ofInstance("defaultAdminUsername");
         }
-        @Override public Supplier<Map<String,String>> defaultAdminSshKeys(){
+        public Supplier<Map<String,String>> defaultAdminSshKeys(){
           return Suppliers.<Map<String,String>>ofInstance(ImmutableMap.of("public","publicKey","private",Pems.PRIVATE_PKCS1_MARKER));
         }
-        @Override public Function<String,String> cryptFunction(){
+        public Function<String,String> cryptFunction(){
           return new Function<String,String>(){
-            @Override public String apply(            String input){
+            public String apply(            String input){
               return String.format("crypt(%s)",input);
             }
           }
