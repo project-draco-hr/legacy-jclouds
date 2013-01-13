@@ -1,13 +1,13 @@
 {
   return transformParallel(filter(checkNotNull(from,"named resources"),new Predicate<ReferenceType>(){
-    @Override public boolean apply(    ReferenceType input){
+    public boolean apply(    ReferenceType input){
       return input.getType().equals(TerremarkVCloudMediaType.VAPPTEMPLATE_XML);
     }
   }
-),new Function<ReferenceType,Future<? extends VAppTemplate>>(){
-    @Override public Future<? extends VAppTemplate> apply(    ReferenceType from){
+),new Function<ReferenceType,ListenableFuture<? extends VAppTemplate>>(){
+    public ListenableFuture<? extends VAppTemplate> apply(    ReferenceType from){
       return aclient.getVAppTemplate(from.getHref());
     }
   }
-,executor,null,logger,"vappTemplates in");
+,userExecutor,null,logger,"vappTemplates in");
 }

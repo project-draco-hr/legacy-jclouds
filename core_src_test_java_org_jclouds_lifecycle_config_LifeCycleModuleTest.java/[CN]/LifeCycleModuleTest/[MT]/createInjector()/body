@@ -1,16 +1,11 @@
 {
-  Injector i=Guice.createInjector(new LifeCycleModule(){
-    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_USER_THREADS) int p(){
-      return 1;
-    }
-    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT) int p2(){
-      return 1;
-    }
-    @SuppressWarnings("unused") @Provides @Named(Constants.PROPERTY_IO_WORKER_THREADS) int p3(){
-      return 1;
+  Injector i=Guice.createInjector(new AbstractModule(){
+    protected void configure(){
+      bindConstant().annotatedWith(named(PROPERTY_IO_WORKER_THREADS)).to(1);
+      bindConstant().annotatedWith(named(PROPERTY_USER_THREADS)).to(1);
     }
   }
-,new ExecutorServiceModule());
+,new LifeCycleModule(),new ExecutorServiceModule());
   i.getInstance(ExecutionList.class).execute();
   return i;
 }

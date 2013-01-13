@@ -5,10 +5,10 @@
   String newImageId=novaApi.getServerApiForZone(sourceImageZoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),sourceImageZoneAndId.getId());
   final ZoneAndId targetImageZoneAndId=ZoneAndId.fromZoneAndId(sourceImageZoneAndId.getZone(),newImageId);
   logger.info(">> Registered new Image %s, waiting for it to become available.",newImageId);
-  return Futures.makeListenable(executor.submit(new Callable<Image>(){
+  return userExecutor.submit(new Callable<Image>(){
     @Override public Image call() throws Exception {
       return Retryables.retryGettingResultOrFailing(imageReadyPredicate,targetImageZoneAndId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
     }
   }
-),executor);
+);
 }

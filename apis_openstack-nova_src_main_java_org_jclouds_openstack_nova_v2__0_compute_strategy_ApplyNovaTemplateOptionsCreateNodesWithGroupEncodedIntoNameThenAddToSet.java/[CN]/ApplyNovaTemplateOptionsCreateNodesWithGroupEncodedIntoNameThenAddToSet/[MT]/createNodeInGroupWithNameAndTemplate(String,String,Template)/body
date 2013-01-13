@@ -1,8 +1,8 @@
 {
-  Future<AtomicReference<NodeMetadata>> future=super.createNodeInGroupWithNameAndTemplate(group,name,template);
+  ListenableFuture<AtomicReference<NodeMetadata>> future=super.createNodeInGroupWithNameAndTemplate(group,name,template);
   NovaTemplateOptions templateOptions=NovaTemplateOptions.class.cast(template.getOptions());
   if (templateOptions.shouldAutoAssignFloatingIp()) {
-    return Futures.compose(future,createAndAddFloatingIpToNode,executor);
+    return Futures.transform(future,createAndAddFloatingIpToNode,userExecutor);
   }
  else {
     return future;

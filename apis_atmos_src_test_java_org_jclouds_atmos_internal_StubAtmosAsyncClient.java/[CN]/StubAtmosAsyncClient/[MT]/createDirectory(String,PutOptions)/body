@@ -9,7 +9,7 @@
     container=directoryName;
     path=null;
   }
-  return Futures.compose(blobStore.createContainerInLocation(null,container),new Function<Boolean,URI>(){
+  return Futures.transform(blobStore.createContainerInLocation(null,container),new Function<Boolean,URI>(){
     public URI apply(    Boolean from){
       if (path != null) {
         Blob blob=blobStore.blobBuilder(path + "/").payload("").contentType("application/directory").build();
@@ -18,5 +18,5 @@
       return URI.create("http://stub/containers/" + container);
     }
   }
-,service);
+,userExecutor);
 }

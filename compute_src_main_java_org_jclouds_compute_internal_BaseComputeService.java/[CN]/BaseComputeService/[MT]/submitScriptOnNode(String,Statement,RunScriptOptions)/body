@@ -6,10 +6,10 @@
   final NodeMetadata node1=updateNodeWithCredentialsIfPresent(node,options);
   ListenableFuture<ExecResponse> response=runScriptOnNodeFactory.submit(node1,runScript,options);
   response.addListener(new Runnable(){
-    @Override public void run(){
+    public void run(){
       persistNodeCredentials.ifAdminAccess(runScript).apply(node1);
     }
   }
-,executor);
+,userExecutor);
   return response;
 }

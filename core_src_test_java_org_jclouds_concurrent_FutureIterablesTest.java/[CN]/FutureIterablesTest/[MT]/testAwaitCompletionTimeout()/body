@@ -1,9 +1,9 @@
 {
   final long timeoutMs=1000;
-  ExecutorService executorService=Executors.newSingleThreadExecutor();
-  Map<Void,Future<?>> responses=newHashMap();
+  ListeningExecutorService userExecutor=MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+  Map<Void,ListenableFuture<?>> responses=newHashMap();
   try {
-    responses.put(null,executorService.submit(new Runnable(){
+    responses.put(null,userExecutor.submit(new Runnable(){
       @Override public void run(){
         try {
           Thread.sleep(2 * timeoutMs);
@@ -13,7 +13,7 @@
       }
     }
 ));
-    Map<Void,Exception> errors=FutureIterables.awaitCompletion(responses,executorService,timeoutMs,Logger.CONSOLE,"");
+    Map<Void,Exception> errors=FutureIterables.awaitCompletion(responses,userExecutor,timeoutMs,Logger.NULL,"");
     if (!errors.isEmpty()) {
       throw errors.values().iterator().next();
     }
@@ -22,6 +22,6 @@
  catch (  TimeoutException te) {
   }
  finally {
-    executorService.shutdownNow();
+    userExecutor.shutdownNow();
   }
 }

@@ -3,7 +3,7 @@
     @Override public boolean apply(    Iterable<HostAndPort> input){
       Builder<ListenableFuture<?>> futures=ImmutableList.builder();
       for (      final HostAndPort socket : input) {
-        futures.add(executor.submit(new Runnable(){
+        futures.add(userExecutor.submit(new Runnable(){
           @Override public void run(){
             try {
               if (socketTester.apply(socket)) {

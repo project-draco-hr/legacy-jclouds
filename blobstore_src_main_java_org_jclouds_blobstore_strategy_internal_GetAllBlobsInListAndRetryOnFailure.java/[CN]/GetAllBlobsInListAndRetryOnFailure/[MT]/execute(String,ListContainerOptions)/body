@@ -1,7 +1,7 @@
 {
   Iterable<? extends BlobMetadata> list=getAllBlobMetadata.execute(container,options);
-  return transformParallel(list,new Function<BlobMetadata,Future<? extends Blob>>(){
-    @Override public Future<Blob> apply(    BlobMetadata from){
+  return transformParallel(list,new Function<BlobMetadata,ListenableFuture<? extends Blob>>(){
+    @Override public ListenableFuture<Blob> apply(    BlobMetadata from){
       return ablobstore.getBlob(container,from.getName());
     }
   }

@@ -1,8 +1,8 @@
 {
-  return Futures.compose(async.listOwnedBuckets(),new Function<Set<BucketMetadata>,org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata>>(){
+  return transform(async.listOwnedBuckets(),new Function<Set<BucketMetadata>,org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata>>(){
     public org.jclouds.blobstore.domain.PageSet<? extends StorageMetadata> apply(    Set<BucketMetadata> from){
       return convertBucketsToStorageMetadata.apply(from);
     }
   }
-,service);
+,userExecutor);
 }

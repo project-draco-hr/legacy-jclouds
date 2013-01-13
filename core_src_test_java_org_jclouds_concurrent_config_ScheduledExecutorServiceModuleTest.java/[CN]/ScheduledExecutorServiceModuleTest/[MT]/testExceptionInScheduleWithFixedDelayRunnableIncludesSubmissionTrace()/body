@@ -1,0 +1,12 @@
+{
+  ListeningScheduledExecutorService sched=injector.getInstance(Key.get(ListeningScheduledExecutorService.class,named(PROPERTY_SCHEDULER_THREADS)));
+  String submission=null;
+  try {
+    submission=getStackTraceAsString(incrementInitialElement(new RuntimeException(),2)).replaceFirst(".*\n","");
+    sched.scheduleWithFixedDelay(runnableThrowsRTE(),0,1,TimeUnit.MICROSECONDS).get();
+  }
+ catch (  ExecutionException e) {
+    assertTraceHasSubmission(getStackTraceAsString(e),submission);
+    assertTraceHasSubmission(getStackTraceAsString(e.getCause()),submission);
+  }
+}

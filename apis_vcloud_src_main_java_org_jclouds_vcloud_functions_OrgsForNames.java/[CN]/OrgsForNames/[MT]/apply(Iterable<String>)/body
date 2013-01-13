@@ -1,8 +1,8 @@
 {
-  return Iterables.filter(transformParallel(from,new Function<String,Future<? extends Org>>(){
-    @Override public Future<Org> apply(    String from){
+  return Iterables.filter(transformParallel(from,new Function<String,ListenableFuture<? extends Org>>(){
+    public ListenableFuture<Org> apply(    String from){
       return aclient.getOrgClient().findOrgNamed(from);
     }
   }
-,executor,null,logger,"organizations for names"),Predicates.notNull());
+,userExecutor,null,logger,"organizations for names"),Predicates.notNull());
 }

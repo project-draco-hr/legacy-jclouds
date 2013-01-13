@@ -1,5 +1,5 @@
 {
-  ExecutorService userThreads=MoreExecutors.sameThreadExecutor();
+  ListeningExecutorService userExecutor=MoreExecutors.sameThreadExecutor();
   Predicate<String> notRunningAnymore=Predicates.alwaysTrue();
   SudoAwareInitManager commandRunner=createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction").addMockedMethod("getStatement").addMockedMethod("getNode").addMockedMethod("toString").createStrictMock();
   InitScript initScript=createMockBuilder(InitScript.class).addMockedMethod("getInstanceName").createStrictMock();
@@ -8,7 +8,7 @@
   expect(commandRunner.runAction("exitstatus")).andReturn(new ExecResponse("444\n","",0));
   toStringAndEventBusExpectations(commandRunner,initScript);
   replay(commandRunner,initScript);
-  BlockUntilInitScriptStatusIsZeroThenReturnOutput future=new BlockUntilInitScriptStatusIsZeroThenReturnOutput(userThreads,eventBus,notRunningAnymore,commandRunner);
+  BlockUntilInitScriptStatusIsZeroThenReturnOutput future=new BlockUntilInitScriptStatusIsZeroThenReturnOutput(userExecutor,eventBus,notRunningAnymore,commandRunner);
   future.run();
   assertEquals(future.get(),new ExecResponse("stdout","stderr",444));
   verify(commandRunner,initScript);

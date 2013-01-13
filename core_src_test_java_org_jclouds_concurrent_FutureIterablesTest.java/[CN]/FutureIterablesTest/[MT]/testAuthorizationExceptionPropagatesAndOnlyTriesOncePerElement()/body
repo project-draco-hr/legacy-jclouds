@@ -1,13 +1,13 @@
 {
   final AtomicInteger counter=new AtomicInteger();
   try {
-    transformParallel(ImmutableSet.of("hello","goodbye"),new Function<String,Future<? extends String>>(){
-      @Override public Future<String> apply(      String input){
+    transformParallel(ImmutableSet.of("hello","goodbye"),new Function<String,ListenableFuture<? extends String>>(){
+      public ListenableFuture<String> apply(      String input){
         counter.incrementAndGet();
         return immediateFailedFuture(new AuthorizationException());
       }
     }
-,sameThreadExecutor(),null,Logger.CONSOLE,"");
+,sameThreadExecutor(),null,Logger.NULL,"");
     fail("Expected AuthorizationException");
   }
  catch (  AuthorizationException e) {

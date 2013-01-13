@@ -1,6 +1,6 @@
 {
-  Iterable<VirtualMachineTemplatesDto> templates=transformParallel(dcs,new Function<Datacenter,Future<? extends VirtualMachineTemplatesDto>>(){
-    @Override public Future<VirtualMachineTemplatesDto> apply(    final Datacenter input){
+  Iterable<VirtualMachineTemplatesDto> templates=transformParallel(dcs,new Function<Datacenter,ListenableFuture<? extends VirtualMachineTemplatesDto>>(){
+    @Override public ListenableFuture<VirtualMachineTemplatesDto> apply(    final Datacenter input){
       return context.getAsyncApi().getVirtualMachineTemplateApi().listVirtualMachineTemplates(parent.getId(),input.getId());
     }
   }

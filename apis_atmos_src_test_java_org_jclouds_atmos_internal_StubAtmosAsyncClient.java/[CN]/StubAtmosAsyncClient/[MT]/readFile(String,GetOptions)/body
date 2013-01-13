@@ -2,5 +2,5 @@
   String container=path.substring(0,path.indexOf('/'));
   String blobName=path.substring(path.indexOf('/') + 1);
   org.jclouds.blobstore.options.GetOptions getOptions=httpGetOptionsConverter.apply(options);
-  return Futures.compose(blobStore.getBlob(container,blobName,getOptions),blob2Object,service);
+  return Futures.transform(blobStore.getBlob(container,blobName,getOptions),blob2Object,userExecutor);
 }

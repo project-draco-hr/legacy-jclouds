@@ -1,13 +1,13 @@
 {
   return transformParallel(filter(from.values(),new Predicate<ReferenceType>(){
-    @Override public boolean apply(    ReferenceType input){
+    public boolean apply(    ReferenceType input){
       return input.getType().equals(VCloudMediaType.CATALOGITEM_XML);
     }
   }
-),new Function<ReferenceType,Future<? extends CatalogItem>>(){
-    @Override public Future<CatalogItem> apply(    ReferenceType from){
+),new Function<ReferenceType,ListenableFuture<? extends CatalogItem>>(){
+    public ListenableFuture<CatalogItem> apply(    ReferenceType from){
       return aclient.getCatalogClient().getCatalogItem(from.getHref());
     }
   }
-,executor,null,logger,"catalogItems in " + from.getHref());
+,userExecutor,null,logger,"catalogItems in " + from.getHref());
 }

@@ -1,6 +1,6 @@
 {
   ControllableSocketOpen socketTester=new ControllableSocketOpen(ImmutableMap.of(HostAndPort.fromParts("1.2.3.4",22),new SlowCallable<Boolean>(true,1500),HostAndPort.fromParts("1.2.3.5",22),new SlowCallable<Boolean>(true,1000)));
-  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,nodeRunning,threadPool);
+  OpenSocketFinder finder=new ConcurrentOpenSocketFinder(socketTester,nodeRunning,userExecutor);
   HostAndPort result=finder.findOpenSocketOnNode(node,22,2000,MILLISECONDS);
   assertEquals(result,HostAndPort.fromParts("1.2.3.5",22));
 }

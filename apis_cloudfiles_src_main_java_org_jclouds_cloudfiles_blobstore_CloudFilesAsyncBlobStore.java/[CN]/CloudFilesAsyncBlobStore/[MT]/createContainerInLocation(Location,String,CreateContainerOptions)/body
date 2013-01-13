@@ -1,6 +1,6 @@
 {
   ListenableFuture<Boolean> returnVal=createContainerInLocation(location,container);
-  if (options.isPublicRead())   return Futures.compose(createContainerInLocation(location,container),new Function<Boolean,Boolean>(){
+  if (options.isPublicRead())   return transform(createContainerInLocation(location,container),new Function<Boolean,Boolean>(){
     @Override public Boolean apply(    Boolean input){
       if (Boolean.TRUE.equals(input)) {
         return enableCDNAndCache.apply(container) != null;
@@ -8,6 +8,6 @@
       return false;
     }
   }
-,service);
+,userExecutor);
   return returnVal;
 }

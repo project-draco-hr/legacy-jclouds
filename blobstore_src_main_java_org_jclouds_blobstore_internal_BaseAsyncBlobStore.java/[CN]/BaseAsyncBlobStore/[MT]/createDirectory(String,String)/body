@@ -1,5 +1,5 @@
 {
-  return blobUtils.directoryExists(containerName,directory) ? Futures.immediateFuture((Void)null) : org.jclouds.concurrent.Futures.makeListenable(service.submit(new Callable<Void>(){
+  return blobUtils.directoryExists(containerName,directory) ? Futures.immediateFuture((Void)null) : userExecutor.submit(new Callable<Void>(){
     public Void call() throws Exception {
       blobUtils.createDirectory(containerName,directory);
       return null;
@@ -8,5 +8,5 @@
       return "createDirectory(" + containerName + ","+ directory+ ")";
     }
   }
-),service);
+);
 }

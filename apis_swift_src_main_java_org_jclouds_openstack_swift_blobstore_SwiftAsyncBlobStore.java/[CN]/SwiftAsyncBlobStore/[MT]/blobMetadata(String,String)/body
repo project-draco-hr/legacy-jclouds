@@ -1,8 +1,8 @@
 {
-  return Futures.compose(async.getObjectInfo(container,key),new Function<MutableObjectInfoWithMetadata,BlobMetadata>(){
+  return transform(async.getObjectInfo(container,key),new Function<MutableObjectInfoWithMetadata,BlobMetadata>(){
     @Override public BlobMetadata apply(    MutableObjectInfoWithMetadata from){
       return object2BlobMd.apply(from);
     }
   }
-,service);
+,userExecutor);
 }

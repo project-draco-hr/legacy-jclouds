@@ -1,10 +1,7 @@
 {
-  Set<LoadBalancerMetadata> loadBalancerMetadatas=Sets.newHashSet();
+  Builder<LoadBalancerMetadata> loadBalancers=ImmutableSet.<LoadBalancerMetadata>builder();
   for (  String zone : zones.get()) {
-    FluentIterable<LoadBalancerMetadata> lbm=aclient.getLoadBalancerApiForZone(zone).list().concat().transform(converter);
-    for (    LoadBalancerMetadata loadBalancerMetadata : lbm) {
-      loadBalancerMetadatas.add(loadBalancerMetadata);
-    }
+    loadBalancers.addAll(aclient.getLoadBalancerApiForZone(zone).list().concat().transform(converter));
   }
-  return loadBalancerMetadatas;
+  return loadBalancers.build();
 }

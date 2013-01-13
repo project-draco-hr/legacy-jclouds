@@ -4,16 +4,16 @@
   checkNotNull(options,"options");
   Map<NodeMetadata,ExecResponse> goodNodes=newLinkedHashMap();
   Map<NodeMetadata,Exception> badNodes=newLinkedHashMap();
-  Map<NodeMetadata,Future<ExecResponse>> responses=newLinkedHashMap();
+  Map<NodeMetadata,ListenableFuture<ExecResponse>> responses=newLinkedHashMap();
   Map<?,Exception> exceptions=ImmutableMap.<Object,Exception>of();
   initAdminAccess.visit(runScript);
   Iterable<? extends RunScriptOnNode> scriptRunners=transformNodesIntoInitializedScriptRunners(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),runScript,options,badNodes);
   if (Iterables.size(scriptRunners) > 0) {
     for (    RunScriptOnNode runner : scriptRunners) {
-      responses.put(runner.getNode(),executor.submit(new RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap(runner,goodNodes,badNodes)));
+      responses.put(runner.getNode(),userExecutor.submit(new RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap(runner,goodNodes,badNodes)));
     }
     try {
-      exceptions=awaitCompletion(responses,executor,null,logger,"runScriptOnNodesMatching(" + filter + ")");
+      exceptions=awaitCompletion(responses,userExecutor,null,logger,"runScriptOnNodesMatching(" + filter + ")");
     }
  catch (    TimeoutException te) {
       throw propagate(te);

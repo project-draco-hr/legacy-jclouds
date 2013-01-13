@@ -1,7 +1,7 @@
 {
-  Map<NodeMetadata,Future<Void>> responses=newLinkedHashMap();
+  Map<NodeMetadata,ListenableFuture<Void>> responses=newLinkedHashMap();
   for (  NodeMetadata node : runningNodes) {
-    responses.put(node,executor.submit(customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(options,new AtomicReference<NodeMetadata>(node),goodNodes,badNodes,customizationResponses)));
+    responses.put(node,userExecutor.submit(customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory.create(options,new AtomicReference<NodeMetadata>(node),goodNodes,badNodes,customizationResponses)));
   }
   return responses;
 }

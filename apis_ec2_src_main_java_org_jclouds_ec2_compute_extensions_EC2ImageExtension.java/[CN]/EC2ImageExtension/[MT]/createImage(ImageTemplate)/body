@@ -5,10 +5,10 @@
   final String region=parts[0];
   String instanceId=parts[1];
   final String imageId=ec2Client.getAMIServices().createImageInRegion(region,cloneTemplate.getName(),instanceId,CreateImageOptions.NONE);
-  return Futures.makeListenable(executor.submit(new Callable<Image>(){
+  return userExecutor.submit(new Callable<Image>(){
     @Override public Image call() throws Exception {
       return Retryables.retryGettingResultOrFailing(imageReadyPredicate,region + "/" + imageId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
     }
   }
-),executor);
+);
 }

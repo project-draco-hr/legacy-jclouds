@@ -1,11 +1,11 @@
 {
   logger.debug(">> suspending nodes matching(%s)",filter);
-  transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),new Function<NodeMetadata,Future<? extends Void>>(){
-    @Override public Future<Void> apply(    NodeMetadata from){
+  transformParallel(nodesMatchingFilterAndNotTerminatedExceptionIfNotFound(filter),new Function<NodeMetadata,ListenableFuture<? extends Void>>(){
+    @Override public ListenableFuture<Void> apply(    NodeMetadata from){
       suspendNode(from.getId());
       return immediateFuture(null);
     }
   }
-,executor,null,logger,"suspendNodesMatching(" + filter + ")");
+,userExecutor,null,logger,"suspendNodesMatching(" + filter + ")");
   logger.debug("<< suspended");
 }

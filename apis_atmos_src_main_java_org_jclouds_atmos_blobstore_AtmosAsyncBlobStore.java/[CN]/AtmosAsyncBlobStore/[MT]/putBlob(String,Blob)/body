@@ -5,7 +5,7 @@
   }
  catch (  CacheLoader.InvalidCacheLoadException e) {
   }
-  return Futures.makeListenable(service.submit(new Callable<String>(){
+  return userExecutor.submit(new Callable<String>(){
     @Override public String call() throws Exception {
       return AtmosUtils.putBlob(sync,crypto,blob2Object,container,blob,options);
     }
@@ -13,5 +13,5 @@
       return "putBlob(" + container + ","+ blob.getMetadata().getName()+ ")";
     }
   }
-),service);
+);
 }

@@ -7,7 +7,7 @@
   int maxErrors=3;
   for (int numErrors=0; numErrors < maxErrors; ) {
     PageSet<? extends StorageMetadata> listing;
-    Future<PageSet<? extends StorageMetadata>> listFuture=connection.list(containerName,options);
+    ListenableFuture<PageSet<? extends StorageMetadata>> listFuture=connection.list(containerName,options);
     try {
       listing=listFuture.get(maxTime,TimeUnit.MILLISECONDS);
     }
@@ -51,7 +51,7 @@ case CONTAINER:
 }
 }
 }
-Map<StorageMetadata,Future<?>> responses=Maps.newHashMap();
+Map<StorageMetadata,ListenableFuture<?>> responses=Maps.newHashMap();
 for (StorageMetadata md : listing) {
 String fullPath=parentIsFolder(options,md) ? options.getDir() + "/" + md.getName() : md.getName();
 switch (md.getType()) {
@@ -84,7 +84,7 @@ retryHandler.imposeBackoffExponentialDelay(numErrors,message);
 continue;
 }
  finally {
-for (Future<?> future : responses.values()) {
+for (ListenableFuture<?> future : responses.values()) {
 future.cancel(true);
 }
 }

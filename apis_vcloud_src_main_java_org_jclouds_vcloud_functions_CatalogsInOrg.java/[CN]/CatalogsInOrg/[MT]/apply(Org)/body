@@ -1,8 +1,8 @@
 {
-  return transformParallel(org.getCatalogs().values(),new Function<ReferenceType,Future<? extends Catalog>>(){
-    @Override public Future<Catalog> apply(    ReferenceType from){
+  return transformParallel(org.getCatalogs().values(),new Function<ReferenceType,ListenableFuture<? extends Catalog>>(){
+    public ListenableFuture<Catalog> apply(    ReferenceType from){
       return aclient.getCatalogClient().getCatalog(from.getHref());
     }
   }
-,executor,null,logger,"catalogs in " + org.getName());
+,userExecutor,null,logger,"catalogs in " + org.getName());
 }

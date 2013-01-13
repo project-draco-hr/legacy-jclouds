@@ -1,8 +1,8 @@
 {
-  return Futures.compose(blobStore.blobMetadata(bucketName,key),new Function<BlobMetadata,ObjectMetadata>(){
-    @Override public ObjectMetadata apply(    BlobMetadata from){
+  return transform(blobStore.blobMetadata(bucketName,key),new Function<BlobMetadata,ObjectMetadata>(){
+    public ObjectMetadata apply(    BlobMetadata from){
       return blob2ObjectMetadata.apply(from);
     }
   }
-,service);
+,userExecutor);
 }
