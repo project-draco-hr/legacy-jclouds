@@ -1,0 +1,14 @@
+{
+  checkState(new RetryablePredicate<String>(new Predicate<String>(){
+    public boolean apply(    String in){
+      try {
+        sync.deletePath(in);
+        return !sync.pathExists(in);
+      }
+ catch (      ContainerNotFoundException e) {
+        return true;
+      }
+    }
+  }
+,3000).apply(path),"%s still exists after deleting!",path);
+}

@@ -1,0 +1,7 @@
+{
+  int attempts=5;
+  BackoffOnNotFoundWhenGetBucketACL backoff=new BackoffOnNotFoundWhenGetBucketACL(mock);
+  expect(mock.getBucketACL("foo")).andThrow(new ResourceNotFoundException()).times(attempts);
+  replay(mock);
+  backoff.load("foo");
+}

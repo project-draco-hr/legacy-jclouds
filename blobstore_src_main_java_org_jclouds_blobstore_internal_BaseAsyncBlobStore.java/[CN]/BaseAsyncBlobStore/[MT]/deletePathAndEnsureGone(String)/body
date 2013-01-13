@@ -1,0 +1,14 @@
+{
+  checkState(new RetryablePredicate<String>(new Predicate<String>(){
+    public boolean apply(    String in){
+      try {
+        clearContainer(in,recursive());
+        return deleteAndVerifyContainerGone(in);
+      }
+ catch (      ContainerNotFoundException e) {
+        return true;
+      }
+    }
+  }
+,30000).apply(path),"%s still exists after deleting!",path);
+}
