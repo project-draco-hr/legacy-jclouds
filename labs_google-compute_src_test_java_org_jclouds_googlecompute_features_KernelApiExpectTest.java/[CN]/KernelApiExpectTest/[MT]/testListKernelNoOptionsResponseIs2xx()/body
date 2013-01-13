@@ -1,0 +1,6 @@
+{
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/kernels").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/kernel_list.json")).build();
+  KernelApi kernelApi=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,list,operationResponse).getKernelApiForProject("myproject");
+  assertEquals(kernelApi.listFirstPage().toString(),new ParseKernelListTest().expected().toString());
+}
