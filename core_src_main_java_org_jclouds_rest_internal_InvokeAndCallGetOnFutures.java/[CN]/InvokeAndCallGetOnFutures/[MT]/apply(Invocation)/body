@@ -5,11 +5,11 @@
     returnVal=target.invoke(receiver,in.getArgs().toArray());
   }
  catch (  InvocationTargetException e) {
-    return Result.fail(e);
+    throw propagate(e.getCause());
   }
 catch (  IllegalAccessException e) {
-    return Result.fail(e);
+    throw new Error("Method became inaccessible: " + toString(),e);
   }
-  if (!isFuture(target))   return Result.success(returnVal);
-  return Result.success(Futures.getUnchecked(ListenableFuture.class.cast(returnVal)));
+  if (!isFuture(target))   return returnVal;
+  return getUnchecked(ListenableFuture.class.cast(returnVal));
 }
