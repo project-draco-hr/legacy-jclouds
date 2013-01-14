@@ -1,0 +1,27 @@
+{
+  if (argv == null) {
+    argv=NO_ARGS;
+  }
+  if (argv.length == 0 && invoked.getName().equals("hashCode")) {
+    return hashCode();
+  }
+  if (argv.length == 1 && invoked.getName().equals("equals") && invoked.getParameterTypes()[0] == Object.class) {
+    Object arg=argv[0];
+    return proxy.getClass().isInstance(arg) && equals(Proxy.getInvocationHandler(arg));
+  }
+  if (argv.length == 0 && invoked.getName().equals("toString")) {
+    return toString();
+  }
+  List<Object> args=Arrays.asList(argv);
+  if (all(args,notNull()))   args=ImmutableList.copyOf(args);
+ else   args=Collections.unmodifiableList(args);
+  Invokable<?,Object> invokable=Invokable.from(invoked);
+  Invocation invocation=Invocation.create(invokable,args);
+  try {
+    return handle(invocation);
+  }
+ catch (  Throwable e) {
+    propagateIfPossible(e,invocation.getInvokable().getExceptionTypes());
+    throw e;
+  }
+}

@@ -4,16 +4,11 @@
  else   args=Collections.unmodifiableList(args);
   Invokable<?,Object> invokable=Invokable.from(invoked);
   Invocation invocation=Invocation.create(invokable,args);
-  Result result;
   try {
-    result=invocationFunction.apply(invocation);
+    return invocationFunction.apply(invocation);
   }
  catch (  RuntimeException e) {
-    result=Result.fail(e);
+    propagateIfPossible(e,invocation.getInvokable().getExceptionTypes());
+    throw propagate(e);
   }
-  if (result.getThrowable().isPresent()) {
-    propagateIfPossible(result.getThrowable().get(),invocation.getInvokable().getExceptionTypes());
-    throw propagate(result.getThrowable().get());
-  }
-  return result.getResult().orNull();
 }
