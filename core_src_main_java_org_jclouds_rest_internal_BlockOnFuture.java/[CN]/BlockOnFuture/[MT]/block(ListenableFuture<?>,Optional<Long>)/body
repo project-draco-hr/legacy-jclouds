@@ -2,20 +2,18 @@
   try {
     if (timeoutNanos.isPresent()) {
       logger.debug(">> blocking on %s for %s",future,timeoutNanos);
-      return Result.success(future.get(timeoutNanos.get(),TimeUnit.NANOSECONDS));
+      return Result.success(getUninterruptibly(future,timeoutNanos.get(),NANOSECONDS));
     }
  else {
       logger.debug(">> blocking on %s",future);
-      return Result.success(future.get());
+      return Result.success(getUninterruptibly(future));
     }
   }
  catch (  ExecutionException e) {
-    return Result.fail(e.getCause());
-  }
-catch (  InterruptedException e) {
-    return Result.fail(e);
+    throw propagateCause(e);
   }
 catch (  TimeoutException e) {
-    return Result.fail(e);
+    future.cancel(true);
+    throw new UncheckedTimeoutException(e);
   }
 }

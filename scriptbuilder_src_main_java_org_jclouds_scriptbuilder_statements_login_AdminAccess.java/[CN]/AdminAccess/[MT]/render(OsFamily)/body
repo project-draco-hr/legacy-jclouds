@@ -1,9 +1,8 @@
 {
   checkNotNull(family,"family");
   if (family == OsFamily.WINDOWS)   throw new UnsupportedOperationException("windows not yet implemented");
-  checkArgument(!"root".equals(config.getAdminUsername()),"cannot create admin user 'root'; " + "ensure jclouds is not running as root, or specify an explicit non-root username in AdminAccess");
-  if (Iterables.any(Lists.newArrayList(config.getAdminUsername(),config.getAdminPassword(),config.getAdminPublicKey(),config.getAdminPrivateKey(),config.getLoginPassword()),Predicates.isNull()))   init(new DefaultConfiguration());
-  checkNotNull(config.getAdminUsername(),"adminUsername");
+  checkState(!any(newArrayList(config.getAdminUsername(),config.getAdminPassword(),config.getAdminPublicKey(),config.getAdminPrivateKey(),config.getLoginPassword()),isNull()),"please call init() first");
+  checkNotRoot(config.getAdminUsername());
   checkNotNull(config.getAdminPassword(),"adminPassword");
   checkNotNull(config.getAdminPublicKey(),"adminPublicKey");
   checkNotNull(config.getAdminPrivateKey(),"adminPrivateKey");
@@ -20,10 +19,10 @@
     statements.add(SudoStatements.createWheel());
     userBuilder.group("wheel");
   }
-  statements.add(userBuilder.build().cryptFunction(config.getCryptFunction()));
-  if (config.shouldLockSsh())   statements.add(SshStatements.lockSshd());
+  statements.add(userBuilder.cryptFunction(config.getCryptFunction()).build());
+  if (config.shouldLockSsh())   statements.add(lockSshd());
   if (config.shouldResetLoginPassword()) {
-    statements.add(ShadowStatements.resetLoginUserPasswordTo(config.getLoginPassword()).cryptFunction(config.getCryptFunction()));
+    statements.add(resetLoginUserPasswordTo(config.getCryptFunction(),config.getLoginPassword()));
   }
   return new StatementList(statements.build()).render(family);
 }
