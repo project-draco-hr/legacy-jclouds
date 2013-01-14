@@ -2,6 +2,6 @@
   super.setupContext();
   imageId=view.getComputeService().templateBuilder().build().getImage().getId();
   client=view.unwrap(ElasticStackApiMetadata.CONTEXT_TOKEN).getApi();
-  driveNotClaimed=new RetryablePredicate<DriveInfo>(Predicates.not(new DriveClaimed(client)),maxDriveImageTime,1,TimeUnit.SECONDS);
-  socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),maxDriveImageTime,1,TimeUnit.SECONDS);
+  driveNotClaimed=retry(Predicates.not(new DriveClaimed(client)),maxDriveImageTime,1,SECONDS);
+  socketTester=retry(new InetSocketAddressConnect(),maxDriveImageTime,1,SECONDS);
 }

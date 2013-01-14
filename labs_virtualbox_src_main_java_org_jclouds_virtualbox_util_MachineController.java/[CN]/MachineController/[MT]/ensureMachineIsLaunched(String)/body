@@ -19,7 +19,7 @@
   }
   String guestAdditionsInstalled=machineUtils.sharedLockMachineAndApplyToSession(vmName,new Function<ISession,String>(){
     @Override public String apply(    ISession session){
-      new RetryableNumTimesPredicate<Integer>(new FacilitiesPredicate(session),5,3L,TimeUnit.SECONDS).apply(4);
+      retry(new FacilitiesPredicate(session),15,3,SECONDS).apply(4);
       String guestAdditionsInstalled=session.getConsole().getGuest().getAdditionsVersion();
       return guestAdditionsInstalled;
     }

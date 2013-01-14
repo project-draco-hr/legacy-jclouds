@@ -1,0 +1,9 @@
+{
+  return retry(new Predicate<Server.State>(){
+    public boolean apply(    Server.State value){
+      ServerStatus status=api.getStatus(serverId,ServerStatusOptions.Builder.state());
+      return status.getState() == value;
+    }
+  }
+,300,10,TimeUnit.SECONDS);
+}

@@ -1,5 +1,5 @@
 {
   super.setupContext();
   client=view.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi();
-  activeTester=new RetryablePredicate<SpotInstanceRequest>(new SpotInstanceRequestActive(client),SPOT_DELAY_SECONDS,1,1,TimeUnit.SECONDS);
+  activeTester=retry(new SpotInstanceRequestActive(client),SPOT_DELAY_SECONDS,1,1,SECONDS);
 }

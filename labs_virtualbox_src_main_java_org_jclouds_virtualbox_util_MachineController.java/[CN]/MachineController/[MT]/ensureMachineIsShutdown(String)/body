@@ -6,6 +6,6 @@
     }
   }
 );
-  checkState(new RetryableNumTimesPredicate<MachineState>(new MachineStatePredicate(manager.get().getVBox(),vmName),5,3L,TimeUnit.SECONDS).apply(MachineState.PoweredOff),"vm(%s) is not shutdown correctly",vmName);
+  checkState(retry(new MachineStatePredicate(manager.get().getVBox(),vmName),15,3,SECONDS).apply(MachineState.PoweredOff),"vm(%s) is not shutdown correctly",vmName);
   return checkNotNull(session,"session");
 }

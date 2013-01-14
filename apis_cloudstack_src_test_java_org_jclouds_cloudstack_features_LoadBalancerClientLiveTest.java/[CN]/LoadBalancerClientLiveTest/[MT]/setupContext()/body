@@ -1,6 +1,6 @@
 {
   super.setupContext();
-  loadBalancerRuleActive=new RetryablePredicate<LoadBalancerRule>(new LoadBalancerRuleActive(client),60,1,1,TimeUnit.SECONDS);
+  loadBalancerRuleActive=retry(new LoadBalancerRuleActive(client),60,1,1,SECONDS);
   prefix+="rule";
   try {
     network=find(client.getNetworkClient().listNetworks(),Predicates.and(hasLoadBalancerService(),isVirtualNetwork(),new Predicate<Network>(){

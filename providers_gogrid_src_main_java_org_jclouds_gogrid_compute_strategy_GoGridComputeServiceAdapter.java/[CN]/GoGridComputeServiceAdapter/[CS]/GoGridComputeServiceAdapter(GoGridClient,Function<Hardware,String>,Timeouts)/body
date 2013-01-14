@@ -1,6 +1,6 @@
 {
   this.client=checkNotNull(client,"client");
   this.sizeToRam=checkNotNull(sizeToRam,"sizeToRam");
-  this.serverLatestJobCompleted=new RetryablePredicate<Server>(new ServerLatestJobCompleted(client.getJobServices()),timeouts.nodeRunning * 9l / 10l);
-  this.serverLatestJobCompletedShort=new RetryablePredicate<Server>(new ServerLatestJobCompleted(client.getJobServices()),timeouts.nodeRunning * 1l / 10l);
+  this.serverLatestJobCompleted=retry(new ServerLatestJobCompleted(client.getJobServices()),timeouts.nodeRunning * 9l / 10l);
+  this.serverLatestJobCompletedShort=retry(new ServerLatestJobCompleted(client.getJobServices()),timeouts.nodeRunning * 1l / 10l);
 }

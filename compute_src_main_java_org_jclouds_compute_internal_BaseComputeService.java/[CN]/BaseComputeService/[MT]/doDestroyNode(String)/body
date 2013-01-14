@@ -2,8 +2,8 @@
   checkNotNull(id,"id");
   logger.debug(">> destroying node(%s)",id);
   final AtomicReference<NodeMetadata> node=Atomics.newReference();
-  RetryablePredicate<String> tester=new RetryablePredicate<String>(new Predicate<String>(){
-    @Override public boolean apply(    String input){
+  Predicate<String> tester=retry(new Predicate<String>(){
+    public boolean apply(    String input){
       try {
         NodeMetadata md=destroyNodeStrategy.destroyNode(id);
         if (md != null)         node.set(md);
@@ -15,7 +15,7 @@
       }
     }
   }
-,timeouts.nodeTerminated,1000,TimeUnit.MILLISECONDS);
+,timeouts.nodeTerminated,1000,MILLISECONDS);
   boolean successful=tester.apply(id) && (node.get() == null || nodeTerminated.apply(node));
   if (successful)   credentialStore.remove("node#" + id);
   logger.debug("<< destroyed node(%s) success(%s)",id,successful);

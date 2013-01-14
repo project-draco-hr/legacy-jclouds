@@ -1,8 +1,8 @@
 {
-  assertTrue(new RetryablePredicate<ServerImage>(new Predicate<ServerImage>(){
-    @Override public boolean apply(    ServerImage input){
+  assertTrue(retry(new Predicate<ServerImage>(){
+    public boolean apply(    ServerImage input){
       return Iterables.getOnlyElement(restContext.getApi().getImageServices().getImagesById(input.getId())).getState() == state;
     }
   }
-,600,1,TimeUnit.SECONDS).apply(image));
+,600,1,SECONDS).apply(image));
 }

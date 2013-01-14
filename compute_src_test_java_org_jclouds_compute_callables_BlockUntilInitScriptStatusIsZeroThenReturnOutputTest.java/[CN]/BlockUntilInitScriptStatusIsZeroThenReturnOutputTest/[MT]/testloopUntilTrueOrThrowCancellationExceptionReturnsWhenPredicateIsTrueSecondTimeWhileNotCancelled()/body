@@ -1,0 +1,17 @@
+{
+  AbstractFuture<ExecResponse> future=new AbstractFuture<ExecResponse>(){
+    @Override public boolean isCancelled(){
+      return false;
+    }
+  }
+;
+  Predicate<String> predicate=new Predicate<String>(){
+    AtomicBoolean bool=new AtomicBoolean();
+    @Override public boolean apply(    String input){
+      return bool.getAndSet(true);
+    }
+  }
+;
+  Predicate<String> pred=loopUntilTrueOrThrowCancellationException(predicate,1,1,future);
+  assertEquals(pred.apply("foo"),true);
+}

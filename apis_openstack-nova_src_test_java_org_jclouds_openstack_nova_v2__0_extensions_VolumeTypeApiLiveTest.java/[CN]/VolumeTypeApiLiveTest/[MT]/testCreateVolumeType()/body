@@ -1,8 +1,8 @@
 {
   if (volumeTypeOption.isPresent()) {
     testVolumeType=volumeTypeOption.get().create("jclouds-test-1",CreateVolumeTypeOptions.Builder.specs(ImmutableMap.of("test","value1")));
-    assertTrue(new RetryablePredicate<VolumeTypeApi>(new Predicate<VolumeTypeApi>(){
-      @Override public boolean apply(      VolumeTypeApi volumeTypeApi){
+    assertTrue(retry(new Predicate<VolumeTypeApi>(){
+      public boolean apply(      VolumeTypeApi volumeTypeApi){
         return volumeTypeApi.get(testVolumeType.getId()) != null;
       }
     }

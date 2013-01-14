@@ -1,0 +1,11 @@
+{
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess);
+  requestResponseMap.put(serverDetail,serverDetailResponse).build();
+  requestResponseMap.put(createImage,createImageResponse).build();
+  requestResponseMap.put(getImage,getImageResponse).build();
+  ImageExtension apiThatCreatesImage=requestsSendResponses(requestResponseMap.build()).getImageExtension().get();
+  ImageTemplate newImageTemplate=apiThatCreatesImage.buildImageTemplateFromNode("test","az-1.region-a.geo-1/71752");
+  Image image=Futures.getUnchecked(apiThatCreatesImage.createImage(newImageTemplate));
+  assertEquals(image.getId(),"az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f5736d2a2");
+}

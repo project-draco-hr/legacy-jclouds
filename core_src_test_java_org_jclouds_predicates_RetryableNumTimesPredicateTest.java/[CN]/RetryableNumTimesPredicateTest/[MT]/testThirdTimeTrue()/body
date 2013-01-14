@@ -1,9 +1,0 @@
-{
-  RepeatedAttemptsPredicate rawPredicate=new RepeatedAttemptsPredicate(2);
-  RetryableNumTimesPredicate<String> predicate=new RetryableNumTimesPredicate<String>(rawPredicate,4,1,TimeUnit.SECONDS);
-  stopwatch.start();
-  predicate.apply("");
-  long duration=stopwatch.elapsedMillis();
-  assertOrdered(2500 - EARLY_RETURN_GRACE,duration,2500 + SLOW_BUILD_SERVER_GRACE);
-  assertCallTimes(rawPredicate.callTimes,0,1000,1000 + 1500);
-}

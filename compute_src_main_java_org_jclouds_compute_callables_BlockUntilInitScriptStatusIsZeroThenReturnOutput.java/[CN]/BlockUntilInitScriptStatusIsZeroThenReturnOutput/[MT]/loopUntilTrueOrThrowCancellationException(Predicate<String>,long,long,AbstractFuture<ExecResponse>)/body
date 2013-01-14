@@ -1,0 +1,9 @@
+{
+  return retry(Predicates.<String>and(predicate,new Predicate<String>(){
+    public boolean apply(    String in){
+      if (futureWhichMightBeCancelled.isCancelled())       throw new CancellationException(futureWhichMightBeCancelled + " is cancelled");
+      return true;
+    }
+  }
+),period,maxPeriod,MILLISECONDS);
+}

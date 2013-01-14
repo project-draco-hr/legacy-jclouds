@@ -1,0 +1,11 @@
+{
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  requestResponseMap.put(initialAuth,responseWithAuth);
+  requestResponseMap.put(getServerDetail,getServerResponse).build();
+  requestResponseMap.put(createImage,createImageResponse).build();
+  requestResponseMap.put(getImage,getImageResponse).build();
+  ImageExtension apiThatCreatesImage=requestsSendResponses(requestResponseMap.build()).getImageExtension().get();
+  ImageTemplate newImageTemplate=apiThatCreatesImage.buildImageTemplateFromNode("test","1234");
+  Image image=Futures.getUnchecked(apiThatCreatesImage.createImage(newImageTemplate));
+  assertEquals(image.getId(),"2");
+}

@@ -8,12 +8,12 @@
   }
   CloudWatch.putMetricData(api,null,metrics,namespace);
   ListMetricsOptions lmo=ListMetricsOptions.Builder.namespace(namespace).dimension(new Dimension("BaseMetricName",metricName));
-  boolean success=new RetryablePredicate<ListMetricsOptions>(new Predicate<ListMetricsOptions>(){
-    @Override public boolean apply(    ListMetricsOptions options){
+  boolean success=retry(new Predicate<ListMetricsOptions>(){
+    public boolean apply(    ListMetricsOptions options){
       return Iterables.size(CloudWatch.listMetrics(api,null,options)) == 11;
     }
   }
-,20,1,TimeUnit.MINUTES).apply(lmo);
+,20,1,MINUTES).apply(lmo);
   if (!success) {
     Assert.fail("Unable to gather the created CloudWatch data within the time (20m) allotted.");
   }

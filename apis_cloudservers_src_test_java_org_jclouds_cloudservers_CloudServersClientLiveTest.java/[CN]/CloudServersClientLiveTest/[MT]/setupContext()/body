@@ -4,6 +4,6 @@
   client=injector.getInstance(CloudServersClient.class);
   sshFactory=injector.getInstance(SshClient.Factory.class);
   SocketOpen socketOpen=injector.getInstance(SocketOpen.class);
-  socketTester=new RetryablePredicate<HostAndPort>(socketOpen,120,1,TimeUnit.SECONDS);
+  socketTester=retry(socketOpen,120,1,SECONDS);
   injector.injectMembers(socketOpen);
 }

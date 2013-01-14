@@ -1,5 +1,5 @@
 {
   AtomicReference<Operation> operationReference=new AtomicReference<Operation>(operation);
-  Retryables.retry(operationDonePredicate,operationReference,maxWaitSeconds,1,TimeUnit.SECONDS);
+  retry(operationDonePredicate,maxWaitSeconds,1,SECONDS).apply(operationReference);
   return operationReference.get();
 }

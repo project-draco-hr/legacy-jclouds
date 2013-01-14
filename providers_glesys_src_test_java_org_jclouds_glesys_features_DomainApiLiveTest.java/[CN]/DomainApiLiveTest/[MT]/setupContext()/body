@@ -2,18 +2,18 @@
   super.setupContext();
   testDomain=identity.toLowerCase() + "-domain.jclouds.org";
   api=gleContext.getApi().getDomainApi();
-  domainCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+  domainCounter=retry(new Predicate<Integer>(){
     public boolean apply(    Integer value){
       return api.list().size() == value;
     }
   }
-,30,1,TimeUnit.SECONDS);
-  recordCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+,30,1,SECONDS);
+  recordCounter=retry(new Predicate<Integer>(){
     public boolean apply(    Integer value){
       return api.listRecords(testDomain).size() == value;
     }
   }
-,30,1,TimeUnit.SECONDS);
+,30,1,SECONDS);
   try {
     api.delete(testDomain);
   }

@@ -1,17 +1,9 @@
 {
   final Volume volume=getPreferredVolume();
-  Snapshot snapshot=Retryables.retryGettingResultOrFailing(new PredicateCallable<Snapshot>(){
-    public Snapshot call(){
-      logger.info("creating snapshot from volume %s",volume);
-      AsyncCreateResponse job=client.getSnapshotClient().createSnapshot(volume.getId());
-      assertTrue(jobComplete.apply(job.getJobId()));
-      return findSnapshotWithId(job.getId());
-    }
-    protected void onFailure(){
-      logger.info("failed creating snapshot (retrying): %s",getLastFailure());
-    }
-  }
-,null,60 * 1000,"failed to create snapshot");
+  logger.info("creating snapshot from volume %s",volume);
+  AsyncCreateResponse job=client.getSnapshotClient().createSnapshot(volume.getId());
+  assertTrue(jobComplete.apply(job.getJobId()));
+  Snapshot snapshot=findSnapshotWithId(job.getId());
   logger.info("created snapshot %s from volume %s",snapshot,volume);
   checkSnapshot(snapshot);
   client.getSnapshotClient().deleteSnapshot(snapshot.getId());

@@ -2,8 +2,8 @@
   if (volumeApi.isPresent()) {
     CreateVolumeOptions options=CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume").availabilityZone(zone);
     testVolume=volumeApi.get().create(1,options);
-    assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
-      @Override public boolean apply(      VolumeApi volumeApi){
+    assertTrue(retry(new Predicate<VolumeApi>(){
+      public boolean apply(      VolumeApi volumeApi){
         return volumeApi.get(testVolume.getId()).getStatus() == Volume.Status.AVAILABLE;
       }
     }
