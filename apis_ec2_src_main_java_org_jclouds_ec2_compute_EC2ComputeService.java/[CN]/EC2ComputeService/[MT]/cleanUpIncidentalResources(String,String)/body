@@ -1,19 +1,18 @@
 {
-  final int maxAttempts=3;
-  Retryables.retryNumTimes(new Predicate<Void>(){
-    @Override public boolean apply(    Void input){
+  retry(new Predicate<RegionAndName>(){
+    public boolean apply(    RegionAndName input){
       try {
-        logger.debug(">> deleting incidentalResources(%s @ %s)",region,group);
-        deleteSecurityGroup(region,group);
-        deleteKeyPair(region,group);
-        logger.debug("<< deleted incidentalResources(%s @ %s)",region,group);
+        logger.debug(">> deleting incidentalResources(%s)",input);
+        deleteSecurityGroup(input.getRegion(),input.getName());
+        deleteKeyPair(input.getRegion(),input.getName());
+        logger.debug("<< deleted incidentalResources(%s)",input);
         return true;
       }
  catch (      IllegalStateException e) {
-        logger.debug("<< inUse incidentalResources(%s @ %s)",region,group);
+        logger.debug("<< inUse incidentalResources(%s @ %s)",input);
         return false;
       }
     }
   }
-,(Void)null,maxAttempts);
+,SECONDS.toMillis(3),50,1000,MILLISECONDS).apply(new RegionAndName(region,group));
 }

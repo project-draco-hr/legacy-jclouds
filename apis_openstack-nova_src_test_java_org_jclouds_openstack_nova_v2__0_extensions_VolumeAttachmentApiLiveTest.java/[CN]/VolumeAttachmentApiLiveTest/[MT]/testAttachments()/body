@@ -9,8 +9,8 @@
       VolumeAttachment testAttachment=volumeAttachmentApi.get().attachVolumeToServerAsDevice(testVolume.getId(),serverId,"/dev/vdf");
       assertNotNull(testAttachment.getId());
       assertEquals(testAttachment.getVolumeId(),testVolume.getId());
-      assertTrue(new RetryablePredicate<VolumeAttachmentApi>(new Predicate<VolumeAttachmentApi>(){
-        @Override public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
+      assertTrue(retry(new Predicate<VolumeAttachmentApi>(){
+        public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
           return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() > before;
         }
       }
@@ -34,8 +34,8 @@
       }
       assertTrue(foundIt,"Failed to find the attachment we created in listAttachments() response");
       volumeAttachmentApi.get().detachVolumeFromServer(testVolume.getId(),serverId);
-      assertTrue(new RetryablePredicate<VolumeAttachmentApi>(new Predicate<VolumeAttachmentApi>(){
-        @Override public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
+      assertTrue(retry(new Predicate<VolumeAttachmentApi>(){
+        public boolean apply(        VolumeAttachmentApi volumeAttachmentApi){
           return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() == before;
         }
       }

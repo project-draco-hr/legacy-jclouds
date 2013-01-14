@@ -2,12 +2,14 @@
   checkState(template instanceof CloneImageTemplate," ec2 only supports creating images through cloning.");
   CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
   String[] parts=AWSUtils.parseHandle(cloneTemplate.getSourceNodeId());
-  final String region=parts[0];
+  String region=parts[0];
   String instanceId=parts[1];
-  final String imageId=ec2Client.getAMIServices().createImageInRegion(region,cloneTemplate.getName(),instanceId,CreateImageOptions.NONE);
+  String imageId=ec2Client.getAMIServices().createImageInRegion(region,cloneTemplate.getName(),instanceId,CreateImageOptions.NONE);
+  final AtomicReference<Image> image=new AtomicReference<Image>(new ImageBuilder().location(find(locations.get(),idEquals(region))).id(region + "/" + imageId).providerId(imageId).description(cloneTemplate.getName()).operatingSystem(OperatingSystem.builder().description(cloneTemplate.getName()).build()).status(Image.Status.PENDING).build());
   return userExecutor.submit(new Callable<Image>(){
     @Override public Image call() throws Exception {
-      return Retryables.retryGettingResultOrFailing(imageReadyPredicate,region + "/" + imageId,maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
+      if (imageAvailablePredicate.apply(image))       return image.get();
+      throw new UncheckedTimeoutException("Image was not created within the time limit: " + image.get());
     }
   }
 );

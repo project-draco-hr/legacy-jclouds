@@ -1,9 +1,9 @@
 {
   this.api=checkNotNull(api,"api");
   this.asyncApi=checkNotNull(asyncApi,"asyncApi");
-  this.serverStopped=new RetryablePredicate<String>(checkNotNull(serverStopped),timeouts.nodeSuspended);
-  this.serverCreated=new RetryablePredicate<String>(checkNotNull(serverStopped),timeouts.nodeRunning);
-  this.systemNormal=new RetryablePredicate<String>(checkNotNull(systemNormal),timeouts.nodeTerminated);
+  this.serverStopped=retry(checkNotNull(serverStopped),timeouts.nodeSuspended);
+  this.serverCreated=retry(checkNotNull(serverStopped),timeouts.nodeRunning);
+  this.systemNormal=retry(checkNotNull(systemNormal),timeouts.nodeTerminated);
   this.toFirewallId=checkNotNull(toFirewallId,"ResourceIdToFirewallId");
   this.toSystemId=checkNotNull(toSystemId,"ResourceIdToSystemId");
 }

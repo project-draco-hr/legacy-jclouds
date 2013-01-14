@@ -1,0 +1,21 @@
+{
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  requestResponseMap.put(describeRegionsRequest,describeRegionsResponse);
+  requestResponseMap.put(describeAvailabilityZonesRequest,describeAvailabilityZonesResponse);
+  requestResponseMap.put(describeImagesRequest,describeImagesResponse);
+  requestResponseMap.put(createKeyPairRequest,createKeyPairResponse);
+  requestResponseMap.put(createSecurityGroupRequest,createSecurityGroupResponse);
+  requestResponseMap.put(describeSecurityGroupRequest,describeSecurityGroupResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequest22,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(describeInstanceRequest,describeInstanceResponse);
+  HttpRequest createImageRequest=formSigner.filter(HttpRequest.builder().method("POST").endpoint("https://ec2." + region + ".amazonaws.com/").addHeader("Host","ec2." + region + ".amazonaws.com").addFormParam("Action","CreateImage").addFormParam("InstanceId","i-2baa5550").addFormParam("Name","test").build());
+  HttpResponse createImageResponse=HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("<CreateImageResponse><imageId>ami-be3adfd7</imageId></CreateImageResponse>",MediaType.APPLICATION_XML)).build();
+  requestResponseMap.put(createImageRequest,createImageResponse);
+  HttpRequest describeImageRequest=formSigner.filter(HttpRequest.builder().method("POST").endpoint("https://ec2." + region + ".amazonaws.com/").addHeader("Host","ec2." + region + ".amazonaws.com").addFormParam("Action","DescribeImages").addFormParam("ImageId.1","ami-be3adfd7").build());
+  requestResponseMap.put(describeImageRequest,describeImagesResponse);
+  ImageExtension apiThatCreatesImage=requestsSendResponses(requestResponseMap.build()).getImageExtension().get();
+  ImageTemplate newImageTemplate=apiThatCreatesImage.buildImageTemplateFromNode("test","us-east-1/i-2baa5550");
+  Image image=Futures.getUnchecked(apiThatCreatesImage.createImage(newImageTemplate));
+  assertEquals(image.getId(),"us-east-1/ami-be3adfd7");
+}

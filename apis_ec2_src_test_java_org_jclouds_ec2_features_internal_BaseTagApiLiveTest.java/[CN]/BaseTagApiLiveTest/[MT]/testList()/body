@@ -1,6 +1,6 @@
 {
-  assertTrue(new RetryablePredicate<Iterable<Tag>>(new Predicate<Iterable<Tag>>(){
-    @Override public boolean apply(    Iterable<Tag> input){
+  assertTrue(retry(new Predicate<Iterable<Tag>>(){
+    public boolean apply(    Iterable<Tag> input){
       return api().list().filter(new Predicate<Tag>(){
         @Override public boolean apply(        Tag in){
           return in.getResourceId().equals(resource.id);
@@ -9,5 +9,5 @@
 ).toSet().equals(input);
     }
   }
-,600,200,200,TimeUnit.MILLISECONDS).apply(ImmutableSet.of(tag,tag2)));
+,600,200,200,MILLISECONDS).apply(ImmutableSet.of(tag,tag2)));
 }

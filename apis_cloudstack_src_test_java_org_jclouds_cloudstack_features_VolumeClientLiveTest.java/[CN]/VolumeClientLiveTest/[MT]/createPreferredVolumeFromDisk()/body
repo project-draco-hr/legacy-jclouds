@@ -1,11 +1,6 @@
 {
-  return Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
-    public Volume call(){
-      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",getPreferredDiskOffering().getId(),zoneId);
-      assertTrue(jobComplete.apply(job.getJobId()));
-      logger.info("created volume " + job.getId());
-      return findVolumeWithId(job.getId());
-    }
-  }
-,null,60 * 1000,"failed to create volume");
+  AsyncCreateResponse job=client.getVolumeClient().createVolumeFromDiskOfferingInZone(prefix + "-jclouds-volume",getPreferredDiskOffering().getId(),zoneId);
+  assertTrue(jobComplete.apply(job.getJobId()));
+  logger.info("created volume " + job.getId());
+  return findVolumeWithId(job.getId());
 }

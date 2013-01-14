@@ -2,7 +2,7 @@
   String[] parts=AWSUtils.parseHandle(id);
   String region=parts[0];
   String instanceId=parts[1];
-  Reservation<? extends RunningInstance> instance=Iterables.getOnlyElement(ec2Client.getInstanceServices().describeInstancesInRegion(region,instanceId));
+  Reservation<? extends RunningInstance> instance=getOnlyElement(ec2Client.getInstanceServices().describeInstancesInRegion(region,instanceId));
   if (instance == null)   throw new NoSuchElementException("Cannot find server with id: " + id);
   CloneImageTemplate template=new ImageTemplateBuilder.CloneImageTemplateBuilder().nodeId(id).name(name).build();
   return template;

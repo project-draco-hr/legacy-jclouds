@@ -1,9 +1,9 @@
 {
   api.resize(archiveUser,20);
-  assertTrue(new RetryablePredicate<String>(new Predicate<String>(){
+  assertTrue(retry(new Predicate<String>(){
     public boolean apply(    String value){
       return api.get(archiveUser) != null && value.equals(api.get(archiveUser).getTotalSize());
     }
   }
-,30,1,TimeUnit.SECONDS).apply("20 GB"));
+,30,1,SECONDS).apply("20 GB"));
 }

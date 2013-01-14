@@ -1,6 +1,6 @@
 {
   super.setupContext();
   client=view.unwrap(AWSEC2ApiMetadata.CONTEXT_TOKEN).getApi();
-  availableTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupAvailable(client),60,1,TimeUnit.SECONDS);
-  deletedTester=new RetryablePredicate<PlacementGroup>(new PlacementGroupDeleted(client),60,1,TimeUnit.SECONDS);
+  availableTester=retry(new PlacementGroupAvailable(client),60,1,SECONDS);
+  deletedTester=retry(new PlacementGroupDeleted(client),60,1,SECONDS);
 }

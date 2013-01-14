@@ -4,11 +4,11 @@
   api=gleContext.getApi().getEmailAccountApi();
   deleteAll();
   createDomain(testDomain);
-  emailAccountCounter=new RetryablePredicate<Integer>(new Predicate<Integer>(){
+  emailAccountCounter=retry(new Predicate<Integer>(){
     public boolean apply(    Integer value){
       return api.listDomain(testDomain).size() == value;
     }
   }
-,180,5,TimeUnit.SECONDS);
+,180,5,SECONDS);
   assertTrue(emailAccountCounter.apply(0));
 }

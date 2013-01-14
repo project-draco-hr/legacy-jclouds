@@ -1,17 +1,9 @@
 {
   logger.info("testCreateVolumeFromSnapshotInZoneAndDeleteVolume (takes ~3m)");
   assertNotNull(getPreferredSnapshot());
-  Volume volume=Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
-    public Volume call(){
-      AsyncCreateResponse job=client.getVolumeClient().createVolumeFromSnapshotInZone(prefix + "-jclouds-volume",getPreferredSnapshot().getId(),zoneId);
-      assertTrue(jobComplete.apply(job.getJobId()));
-      return findVolumeWithId(job.getId());
-    }
-    protected void onFailure(){
-      logger.debug("failed creating volume (retrying): %s",getLastFailure());
-    }
-  }
-,null,60 * 1000,"failed to create volume");
+  AsyncCreateResponse job=client.getVolumeClient().createVolumeFromSnapshotInZone(prefix + "-jclouds-volume",getPreferredSnapshot().getId(),zoneId);
+  assertTrue(jobComplete.apply(job.getJobId()));
+  Volume volume=findVolumeWithId(job.getId());
   checkVolume(volume);
   client.getVolumeClient().deleteVolume(volume.getId());
 }

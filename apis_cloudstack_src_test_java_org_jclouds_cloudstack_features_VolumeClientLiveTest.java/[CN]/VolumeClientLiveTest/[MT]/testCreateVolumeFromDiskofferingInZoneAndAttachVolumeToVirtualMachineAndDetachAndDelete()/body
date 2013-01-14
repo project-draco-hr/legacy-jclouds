@@ -3,36 +3,18 @@
   final Volume volume=createPreferredVolumeFromDisk();
   try {
     checkVolume(volume);
-    final VirtualMachine virtualMachine=getPreferredVirtualMachine();
-    Volume attachedVolume=Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
-      public Volume call(){
-        logger.info("attaching volume %s to vm %s",volume,virtualMachine);
-        AsyncCreateResponse job=client.getVolumeClient().attachVolume(volume.getId(),virtualMachine.getId());
-        assertTrue(jobComplete.apply(job.getJobId()));
-        return findVolumeWithId(volume.getId());
-      }
-      int failures=0;
-      protected void onFailure(){
-        logger.info("failed attaching volume (retrying): %s",getLastFailure());
-        if (failures++ == 0)         logger.warn(getLastFailure(),"first failure attaching volume");
-      }
-    }
-,null,60 * 1000,"failed to attach volume");
+    VirtualMachine virtualMachine=getPreferredVirtualMachine();
+    logger.info("attaching volume %s to vm %s",volume,virtualMachine);
+    AsyncCreateResponse job=client.getVolumeClient().attachVolume(volume.getId(),virtualMachine.getId());
+    assertTrue(jobComplete.apply(job.getJobId()));
+    Volume attachedVolume=findVolumeWithId(volume.getId());
     checkVolume(attachedVolume);
     assertEquals(virtualMachine.getId(),attachedVolume.getVirtualMachineId());
     assertNotNull(attachedVolume.getAttached());
-    Volume detachedVolume=Retryables.retryGettingResultOrFailing(new PredicateCallable<Volume>(){
-      public Volume call(){
-        logger.info("detaching volume %s from vm %s",volume,virtualMachine);
-        AsyncCreateResponse job=client.getVolumeClient().detachVolume(volume.getId());
-        assertTrue(jobComplete.apply(job.getJobId()));
-        return findVolumeWithId(volume.getId());
-      }
-      protected void onFailure(){
-        logger.debug("failed detaching volume (retrying): %s",getLastFailure());
-      }
-    }
-,null,60 * 1000,"failed to detach volume");
+    logger.info("detaching volume %s from vm %s",volume,virtualMachine);
+    job=client.getVolumeClient().detachVolume(volume.getId());
+    assertTrue(jobComplete.apply(job.getJobId()));
+    Volume detachedVolume=findVolumeWithId(volume.getId());
     checkVolume(detachedVolume);
     assertNull(detachedVolume.getAttached());
   }

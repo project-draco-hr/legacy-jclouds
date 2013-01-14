@@ -4,10 +4,10 @@
   assertEquals(testServer2.getHostname(),"jclouds-test2");
   assertTrue(testServer2.getIps().isEmpty());
   testServerId2=testServer2.getId();
-  RetryablePredicate<Server.State> cloneChecker=new ServerStatusChecker(api,testServerId2,300,10,TimeUnit.SECONDS);
+  Predicate<State> cloneChecker=statusChecker(api,testServerId2);
   assertTrue(cloneChecker.apply(Server.State.STOPPED));
   api.start(testServer2.getId());
-  cloneChecker=new RetryablePredicate<Server.State>(new Predicate<Server.State>(){
+  cloneChecker=retry(new Predicate<Server.State>(){
     public boolean apply(    Server.State value){
       ServerStatus status=api.getStatus(testServerId2,ServerStatusOptions.Builder.state());
       if (status.getState() == value) {
@@ -17,6 +17,6 @@
       return false;
     }
   }
-,600,30,TimeUnit.SECONDS);
+,600,30,SECONDS);
   assertTrue(cloneChecker.apply(Server.State.RUNNING));
 }

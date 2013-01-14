@@ -1,17 +1,17 @@
 {
   super.setupContext();
   securityGroup=createSecurityGroupAndAuthorizeIngressToAll(INSTANCE);
-  socketTester=new RetryablePredicate<HostAndPort>(new InetSocketAddressConnect(),180,1,1,TimeUnit.SECONDS);
-  instanceAvailable=new RetryablePredicate<Instance>(new Predicate<Instance>(){
-    @Override public boolean apply(    Instance input){
+  socketTester=retry(new InetSocketAddressConnect(),180,1,1,SECONDS);
+  instanceAvailable=retry(new Predicate<Instance>(){
+    public boolean apply(    Instance input){
       return api().get(input.getId()).getStatus() == Instance.Status.AVAILABLE;
     }
   }
-,600,5,5,TimeUnit.SECONDS);
-  instanceGone=new RetryablePredicate<Instance>(new Predicate<Instance>(){
-    @Override public boolean apply(    Instance input){
+,600,5,5,SECONDS);
+  instanceGone=retry(new Predicate<Instance>(){
+    public boolean apply(    Instance input){
       return api().get(input.getId()) == null;
     }
   }
-,600,5,5,TimeUnit.SECONDS);
+,600,5,5,SECONDS);
 }

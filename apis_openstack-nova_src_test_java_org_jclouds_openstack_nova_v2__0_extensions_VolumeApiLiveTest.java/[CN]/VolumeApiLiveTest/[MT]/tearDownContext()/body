@@ -3,8 +3,8 @@
     if (testSnapshot != null) {
       final String snapshotId=testSnapshot.getId();
       assertTrue(volumeOption.get().deleteSnapshot(snapshotId));
-      assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
-        @Override public boolean apply(        VolumeApi volumeApi){
+      assertTrue(retry(new Predicate<VolumeApi>(){
+        public boolean apply(        VolumeApi volumeApi){
           return volumeOption.get().getSnapshot(snapshotId) == null;
         }
       }
@@ -13,8 +13,8 @@
     if (testVolume != null) {
       final String volumeId=testVolume.getId();
       assertTrue(volumeOption.get().delete(volumeId));
-      assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
-        @Override public boolean apply(        VolumeApi volumeApi){
+      assertTrue(retry(new Predicate<VolumeApi>(){
+        public boolean apply(        VolumeApi volumeApi){
           return volumeOption.get().get(volumeId) == null;
         }
       }

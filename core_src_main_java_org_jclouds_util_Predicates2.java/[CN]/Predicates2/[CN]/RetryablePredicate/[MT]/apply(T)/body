@@ -1,0 +1,37 @@
+{
+  try {
+    long i=1l;
+    for (Date end=new Date(System.currentTimeMillis() + timeout); before(end); Thread.sleep(nextMaxInterval(i++,end))) {
+      if (findOrBreak.apply(input)) {
+        return true;
+      }
+ else       if (atOrAfter(end)) {
+        return false;
+      }
+    }
+  }
+ catch (  InterruptedException e) {
+    logger.warn(e,"predicate %s on %s interrupted, returning false",input,findOrBreak);
+    Thread.currentThread().interrupt();
+  }
+catch (  RuntimeException e) {
+    if (getFirstThrowableOfType(e,ExecutionException.class) != null) {
+      logger.warn(e,"predicate %s on %s errored [%s], returning false",input,findOrBreak,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,IllegalStateException.class) != null) {
+      logger.warn(e,"predicate %s on %s illegal state [%s], returning false",input,findOrBreak,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,CancellationException.class) != null) {
+      logger.warn(e,"predicate %s on %s cancelled [%s], returning false",input,findOrBreak,e.getMessage());
+      return false;
+    }
+ else     if (getFirstThrowableOfType(e,TimeoutException.class) != null) {
+      logger.warn(e,"predicate %s on %s timed out [%s], returning false",input,findOrBreak,e.getMessage());
+      return false;
+    }
+ else     throw e;
+  }
+  return false;
+}

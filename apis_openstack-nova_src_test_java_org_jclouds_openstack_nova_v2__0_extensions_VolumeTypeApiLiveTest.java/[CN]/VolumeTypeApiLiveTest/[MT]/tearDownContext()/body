@@ -3,8 +3,8 @@
     if (testVolumeType != null) {
       final String id=testVolumeType.getId();
       assertTrue(volumeTypeOption.get().delete(id));
-      assertTrue(new RetryablePredicate<VolumeTypeApi>(new Predicate<VolumeTypeApi>(){
-        @Override public boolean apply(        VolumeTypeApi volumeApi){
+      assertTrue(retry(new Predicate<VolumeTypeApi>(){
+        public boolean apply(        VolumeTypeApi volumeApi){
           return volumeApi.get(id) == null;
         }
       }

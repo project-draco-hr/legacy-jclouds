@@ -2,8 +2,8 @@
   checkNotNull(id,"id");
   logger.debug(">> destroying load balancer(%s)",id);
   final AtomicReference<LoadBalancerMetadata> loadBalancer=Atomics.newReference();
-  RetryablePredicate<String> tester=new RetryablePredicate<String>(new Predicate<String>(){
-    @Override public boolean apply(    String input){
+  Predicate<String> tester=retry(new Predicate<String>(){
+    public boolean apply(    String input){
       try {
         LoadBalancerMetadata md=destroyLoadBalancerStrategy.destroyLoadBalancer(id);
         if (md != null)         loadBalancer.set(md);
@@ -15,7 +15,7 @@
       }
     }
   }
-,3000,1000,TimeUnit.MILLISECONDS);
+,3000,1000,MILLISECONDS);
   boolean successful=tester.apply(id) && loadBalancer.get() == null;
   logger.debug("<< destroyed load balancer(%s) success(%s)",id,successful);
 }

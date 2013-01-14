@@ -7,8 +7,8 @@
     assertNotNull(testSnapshot.getStatus());
     assertTrue(testSnapshot.getSize() > -1);
     assertNotNull(testSnapshot.getCreated());
-    assertTrue(new RetryablePredicate<VolumeApi>(new Predicate<VolumeApi>(){
-      @Override public boolean apply(      VolumeApi volumeApi){
+    assertTrue(retry(new Predicate<VolumeApi>(){
+      public boolean apply(      VolumeApi volumeApi){
         return volumeOption.get().getSnapshot(snapshotId).getStatus() == Volume.Status.AVAILABLE;
       }
     }

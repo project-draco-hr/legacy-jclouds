@@ -2,7 +2,7 @@
   SocketOpen socketOpen=createMock(SocketOpen.class);
   expect(socketOpen.apply(HostAndPort.fromParts("144.175.1.1",22))).andReturn(true).times(5);
   replay(socketOpen);
-  socketTester=new RetryablePredicate<HostAndPort>(socketOpen,1,1,TimeUnit.MILLISECONDS);
+  socketTester=retry(socketOpen,1,1,MILLISECONDS);
   openSocketFinder=new OpenSocketFinder(){
     @Override public HostAndPort findOpenSocketOnNode(    NodeMetadata node,    int port,    long timeoutValue,    TimeUnit timeUnits){
       return HostAndPort.fromParts("144.175.1.1",8080);

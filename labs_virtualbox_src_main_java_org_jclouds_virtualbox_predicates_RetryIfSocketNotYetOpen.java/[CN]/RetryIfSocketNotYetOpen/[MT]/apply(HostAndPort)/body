@@ -1,8 +1,7 @@
 {
   logger.debug(">> blocking on socket %s for %d %s",socket,timeoutValue,timeoutUnits);
   long period=timeoutUnits.convert(1,TimeUnit.SECONDS);
-  RetryablePredicate<HostAndPort> tester=new RetryablePredicate<HostAndPort>(socketTester,timeoutValue,period,timeoutUnits);
-  boolean passed=tester.apply(socket);
+  boolean passed=retry(socketTester,timeoutValue,period,timeoutUnits).apply(socket);
   if (passed)   logger.debug("<< socket %s opened",socket);
  else   logger.warn("<< socket %s didn't open after %d %s",socket,timeoutValue,timeoutUnits);
   return passed;

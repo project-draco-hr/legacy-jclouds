@@ -3,7 +3,7 @@
   this.guestLoginDelay=guestLoginDelay;
   this.productPackageSupplier=checkNotNull(productPackageSupplier,"productPackageSupplier");
   checkArgument(guestLoginDelay > 500,"guestOrderDelay must be in milliseconds and greater than 500");
-  this.loginDetailsTester=new RetryablePredicate<VirtualGuest>(virtualGuestHasLoginDetailsPresent,guestLoginDelay);
+  this.loginDetailsTester=retry(virtualGuestHasLoginDetailsPresent,guestLoginDelay);
   this.cpuPattern=Pattern.compile(checkNotNull(cpuRegex,"cpuRegex"));
   this.prices=checkNotNull(prices,"prices");
   this.portSpeed=portSpeed;

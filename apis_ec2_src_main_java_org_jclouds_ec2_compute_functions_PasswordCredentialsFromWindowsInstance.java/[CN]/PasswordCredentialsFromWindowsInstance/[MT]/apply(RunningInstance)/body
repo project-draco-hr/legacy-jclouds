@@ -17,7 +17,7 @@
     }
   }
 ;
-  RetryablePredicate<String> passwordReadyRetryable=new RetryablePredicate<String>(passwordReady,600,10,TimeUnit.SECONDS);
+  Predicate<String> passwordReadyRetryable=retry(passwordReady,600,10,SECONDS);
   logger.debug(">> awaiting password data for instance(%s/%s)",instance.getRegion(),instance.getId());
   if (passwordReadyRetryable.apply(instance.getId())) {
     credentials=pwDataToLoginCredentials.apply(new PasswordDataAndPrivateKey(data.get(),privateKey));

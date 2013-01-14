@@ -1,10 +1,12 @@
 {
   checkState(template instanceof CloneImageTemplate," openstack-nova only supports creating images through cloning.");
   CloneImageTemplate cloneTemplate=(CloneImageTemplate)template;
-  final org.jclouds.cloudservers.domain.Image image=client.createImageFromServer(cloneTemplate.getName(),Integer.parseInt(cloneTemplate.getSourceNodeId()));
+  org.jclouds.cloudservers.domain.Image csImage=client.createImageFromServer(cloneTemplate.getName(),Integer.parseInt(cloneTemplate.getSourceNodeId()));
+  final AtomicReference<Image> image=new AtomicReference<Image>(new ImageBuilder().location(location.get()).ids(csImage.getId() + "").description(cloneTemplate.getName()).operatingSystem(OperatingSystem.builder().description(cloneTemplate.getName()).build()).status(Image.Status.PENDING).build());
   return userExecutor.submit(new Callable<Image>(){
     @Override public Image call() throws Exception {
-      return Retryables.retryGettingResultOrFailing(imageAvailablePredicate,image.getId(),maxWait,waitPeriod,TimeUnit.SECONDS,"Image was not created within the time limit, Giving up! [Limit: " + maxWait + " secs.]");
+      if (imageAvailablePredicate.apply(image))       return image.get();
+      throw new UncheckedTimeoutException("Image was not created within the time limit: " + image.get());
     }
   }
 );
