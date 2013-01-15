@@ -1,0 +1,12 @@
+{
+  JsonObject ruleObject=new JsonObject();
+  ruleObject.addProperty("IPProtocol",src.getIPProtocol().value());
+  if (src.getPorts() != null && !src.getPorts().isEmpty()) {
+    JsonArray ports=new JsonArray();
+    for (    Range<Integer> range : src.getPorts().asRanges()) {
+      ports.add(new JsonPrimitive(range.lowerEndpoint() == range.upperEndpoint() ? range.lowerEndpoint() + "" : range.lowerEndpoint() + "-" + range.upperEndpoint()));
+    }
+    ruleObject.add("ports",ports);
+  }
+  return ruleObject;
+}
