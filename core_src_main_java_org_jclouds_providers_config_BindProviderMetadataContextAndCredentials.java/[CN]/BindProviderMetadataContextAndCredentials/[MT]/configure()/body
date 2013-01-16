@@ -4,9 +4,9 @@
   toBind.putAll(providerMetadata.getApiMetadata().getDefaultProperties());
   toBind.putAll(providerMetadata.getDefaultProperties());
   Names.bindProperties(binder(),toBind);
-  bind(Credentials.class).annotatedWith(Provider.class).toInstance(creds);
-  bindConstant().annotatedWith(Identity.class).to(creds.identity);
-  bind(String.class).annotatedWith(Credential.class).toProvider(com.google.inject.util.Providers.of(creds.credential));
+  bind(new TypeLiteral<Supplier<Credentials>>(){
+  }
+).annotatedWith(Provider.class).toInstance(creds);
   bindConstant().annotatedWith(Provider.class).to(providerMetadata.getId());
   bind(new TypeLiteral<Set<String>>(){
   }
