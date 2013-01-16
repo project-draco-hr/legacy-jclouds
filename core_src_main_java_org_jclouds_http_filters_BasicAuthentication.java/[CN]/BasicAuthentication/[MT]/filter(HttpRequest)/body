@@ -1,3 +1,4 @@
 {
-  return request.toBuilder().replaceHeader(AUTHORIZATION,header).build();
+  Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+  return request.toBuilder().replaceHeader(AUTHORIZATION,basic(currentCreds.identity,currentCreds.credential)).build();
 }

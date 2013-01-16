@@ -2,9 +2,8 @@
   assertNotNull(crypto);
   assertNotNull(module);
   String cert="/certs/jclouds-test-fgcp.p12";
-  String keyPassword="jcloudsjclouds";
   URL url=this.getClass().getResource(cert);
   String certPath=url.getFile();
-  KeyStore ks=module.provideKeyStore(crypto,certPath,keyPassword);
+  KeyStore ks=new KeyStoreSupplier(crypto,Suppliers.ofInstance(new Credentials(certPath,"jcloudsjclouds"))).get();
   assertNotNull(ks.getCertificate("test-fgcp"),"cert with alias");
 }

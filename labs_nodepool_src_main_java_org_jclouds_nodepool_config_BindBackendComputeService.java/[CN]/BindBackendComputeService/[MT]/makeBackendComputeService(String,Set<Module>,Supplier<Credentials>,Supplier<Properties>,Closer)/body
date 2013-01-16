@@ -1,0 +1,11 @@
+{
+  return Suppliers.memoize(new Supplier<ComputeService>(){
+    @Override public ComputeService get(){
+      Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+      ComputeServiceContext ctx=ContextBuilder.newBuilder(provider).credentials(currentCreds.identity,currentCreds.credential).overrides(overrides.get()).modules(modules).buildView(ComputeServiceContext.class);
+      closer.addToClose(ctx);
+      return ctx.getComputeService();
+    }
+  }
+);
+}

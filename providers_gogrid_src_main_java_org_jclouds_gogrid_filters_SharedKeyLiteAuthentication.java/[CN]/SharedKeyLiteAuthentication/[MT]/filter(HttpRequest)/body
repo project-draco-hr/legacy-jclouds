@@ -1,7 +1,7 @@
 {
   String toSign=createStringToSign();
   String signatureMd5=getMd5For(toSign);
-  request=request.toBuilder().replaceQueryParams(ImmutableMap.of("sig",signatureMd5,"api_key",apiKey)).build();
+  request=request.toBuilder().replaceQueryParams(ImmutableMap.of("sig",signatureMd5,"api_key",creds.get().identity)).build();
   utils.logRequest(signatureLog,request,"<<");
   return request;
 }

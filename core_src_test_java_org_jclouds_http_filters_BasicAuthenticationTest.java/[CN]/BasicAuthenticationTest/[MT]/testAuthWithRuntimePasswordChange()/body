@@ -1,0 +1,15 @@
+{
+  Supplier<Credentials> credentialRotation=new Supplier<Credentials>(){
+    Deque<Credentials> rotation=newArrayDeque(asList(credential1,credential2));
+    public Credentials get(){
+      return rotation.poll();
+    }
+  }
+;
+  BasicAuthentication filter=new BasicAuthentication(credentialRotation);
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint("http://localhost").build();
+  request=filter.filter(request);
+  assertEquals(request.getFirstHeaderOrNull(AUTHORIZATION),"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+  request=filter.filter(request);
+  assertEquals(request.getFirstHeaderOrNull(AUTHORIZATION),"Basic TGl0dGxlOk1lcm1haWQ=");
+}

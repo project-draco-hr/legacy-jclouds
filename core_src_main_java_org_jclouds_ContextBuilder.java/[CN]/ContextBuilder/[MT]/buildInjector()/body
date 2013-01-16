@@ -4,7 +4,7 @@
   ImmutableSet<String> optionalKeys=apiMetadata.getCredentialName().isPresent() ? ImmutableSet.<String>of() : ImmutableSet.of(PROPERTY_CREDENTIAL);
   Properties resolved=resolveProperties(unexpanded,providerId,keysToResolve,optionalKeys);
   Properties expanded=expandProperties(resolved);
-  Credentials creds=new Credentials(getAndRemove(expanded,PROPERTY_IDENTITY),getAndRemove(expanded,PROPERTY_CREDENTIAL));
+  Supplier<Credentials> credentialsSupplier=buildCredentialsSupplier(expanded);
   ProviderMetadata providerMetadata=new UpdateProviderMetadataFromProperties(apiMetadata,this.providerMetadata).apply(expanded);
-  return buildInjector(name.or(String.valueOf(Objects.hashCode(providerMetadata.getId(),providerMetadata.getEndpoint(),providerMetadata.getApiMetadata().getVersion(),creds.identity))),providerMetadata,creds,modules);
+  return buildInjector(name.or(String.valueOf(Objects.hashCode(providerMetadata.getId(),providerMetadata.getEndpoint(),providerMetadata.getApiMetadata().getVersion(),credentialsSupplier))),providerMetadata,credentialsSupplier,modules);
 }

@@ -2,5 +2,5 @@
   String requestedResource=new StringBuilder().append("/rest/namespace/").append(path).toString();
   String expires=timeStampProvider.get().toString();
   String signature=signString(createStringToSign(requestedResource,expires));
-  return uriBuilder(provider.get()).replaceQuery(ImmutableMap.of("uid",uid,"expires",expires,"signature",signature)).appendPath(requestedResource).build();
+  return uriBuilder(provider.get()).replaceQuery(ImmutableMap.of("uid",creds.get().identity,"expires",expires,"signature",signature)).appendPath(requestedResource).build();
 }

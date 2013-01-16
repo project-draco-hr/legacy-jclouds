@@ -1,4 +1,8 @@
 {
+  Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+  String accessKeyId=currentCreds.identity.substring(currentCreds.identity.indexOf(':') + 1);
+  String secretKey=currentCreds.credential;
+  String tenantId=access.get().getToken().getTenant().get().getId();
   HttpRequest.Builder<?> builder=request.toBuilder();
   builder.filters(filter(request.getFilters(),not(instanceOf(AuthenticateRequest.class))));
   long expiresInSeconds=unixEpochTimestampProvider.get() + timeInSeconds;

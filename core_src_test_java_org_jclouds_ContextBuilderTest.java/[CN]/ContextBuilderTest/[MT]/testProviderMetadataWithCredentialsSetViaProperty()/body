@@ -3,6 +3,8 @@
   overrides.setProperty(Constants.PROPERTY_IDENTITY,"foo");
   overrides.setProperty(Constants.PROPERTY_CREDENTIAL,"BAR");
   ContextBuilder withCredsInProps=testContextBuilder().overrides(overrides);
-  String identity=withCredsInProps.buildInjector().getInstance(Key.get(String.class,Identity.class));
-  assertEquals(identity,"foo");
+  Credentials creds=withCredsInProps.buildInjector().getInstance(Key.get(new TypeLiteral<Supplier<Credentials>>(){
+  }
+,Provider.class)).get();
+  assertEquals(creds,new Credentials("foo","BAR"));
 }

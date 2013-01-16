@@ -1,4 +1,5 @@
 {
-  String header=credentialIsToken ? tokenAuth(credential) : basic(identity,credential);
+  Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+  String header=credentialIsToken ? tokenAuth(currentCreds.credential) : basic(currentCreds.identity,currentCreds.credential);
   return request.toBuilder().replaceHeader(credentialIsToken ? HttpHeaders.COOKIE : HttpHeaders.AUTHORIZATION,header).build();
 }

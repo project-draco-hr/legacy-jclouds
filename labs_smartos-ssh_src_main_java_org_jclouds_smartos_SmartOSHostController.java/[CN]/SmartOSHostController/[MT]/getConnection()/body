@@ -1,6 +1,7 @@
 {
   if (_connection == null) {
-    LoginCredentials credentials=new LoginCredentials.Builder().user(username).password(password).build();
+    Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+    LoginCredentials credentials=new LoginCredentials.Builder().user(currentCreds.identity).password(currentCreds.credential).build();
     _connection=getSshClientFactory().create(HostAndPort.fromParts(hostname,22),credentials);
     _connection.connect();
   }
