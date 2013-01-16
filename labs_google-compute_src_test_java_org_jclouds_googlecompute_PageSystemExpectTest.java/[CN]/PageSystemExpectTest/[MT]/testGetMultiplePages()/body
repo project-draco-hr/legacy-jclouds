@@ -1,0 +1,17 @@
+{
+  HttpRequest list1=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/images?maxResults=3").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpRequest list2=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/images?pageToken" + "=CgVJTUFHRRIbZ29vZ2xlLmNlbnRvcy02LTItdjIwMTIwNjIx&maxResults=3").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpRequest list3=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/images?pageToken" + "=CgVJTUFHRRIbZ29vZ2xlLmdjZWwtMTAtMDQtdjIwMTIxMTA2&maxResults=3").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse list1response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_multiple_page_1.json")).build();
+  HttpResponse list2Response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_multiple_page_2.json")).build();
+  HttpResponse list3Response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_single_page.json")).build();
+  ImageApi imageApi=orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,list1,list1response,list2,list2Response,list3,list3Response).getImageApiForProject("myproject");
+  PagedIterable<Image> images=imageApi.list(new ListOptions.Builder().maxResults(3));
+  int imageCounter=0;
+  for (  IterableWithMarker<Image> page : images) {
+    for (    Image image : page) {
+      imageCounter++;
+    }
+  }
+  assertSame(imageCounter,9);
+}

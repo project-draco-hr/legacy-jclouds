@@ -1,0 +1,6 @@
+{
+  HttpRequest get=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/google/images/centos-6-2-v20120326").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(404).build();
+  ImageApi imageApi=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,get,operationResponse).getImageApiForProject("google");
+  assertNull(imageApi.get("centos-6-2-v20120326"));
+}
