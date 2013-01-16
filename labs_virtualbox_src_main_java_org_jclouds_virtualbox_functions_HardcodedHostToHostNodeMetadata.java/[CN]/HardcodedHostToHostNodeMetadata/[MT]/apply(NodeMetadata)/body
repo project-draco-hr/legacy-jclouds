@@ -1,4 +1,7 @@
 {
+  Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
+  String username=currentCreds.identity;
+  String password=currentCreds.credential.equals("CHANGE_ME") ? "" : currentCreds.credential;
   LoginCredentials.Builder credentialsBuilder=LoginCredentials.builder(host.getCredentials()).user(username);
   if (!password.isEmpty())   credentialsBuilder.password(password);
   return NodeMetadataBuilder.fromNodeMetadata(host).credentials(credentialsBuilder.build()).publicAddresses(ImmutableList.of(providerSupplier.get().getHost())).build();

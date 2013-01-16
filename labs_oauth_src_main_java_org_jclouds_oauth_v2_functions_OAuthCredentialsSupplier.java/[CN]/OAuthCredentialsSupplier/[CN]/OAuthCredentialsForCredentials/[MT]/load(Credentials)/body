@@ -1,0 +1,21 @@
+{
+  try {
+    String identity=in.identity;
+    String privateKeyInPemFormat=in.credential;
+    if (keyFactoryAlgorithm.equals(NO_ALGORITHM)) {
+      return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat).build();
+    }
+    KeyFactory keyFactory=KeyFactory.getInstance(keyFactoryAlgorithm);
+    PrivateKey privateKey=keyFactory.generatePrivate(privateKeySpec(newStringPayload(privateKeyInPemFormat)));
+    return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat).privateKey(privateKey).build();
+  }
+ catch (  NoSuchAlgorithmException e) {
+    throw propagate(e);
+  }
+catch (  InvalidKeySpecException e) {
+    throw propagate(e);
+  }
+catch (  IOException e) {
+    throw propagate(e);
+  }
+}

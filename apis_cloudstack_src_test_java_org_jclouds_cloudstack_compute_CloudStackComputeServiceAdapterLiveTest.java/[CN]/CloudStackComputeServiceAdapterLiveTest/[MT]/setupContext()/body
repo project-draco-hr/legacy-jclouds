@@ -3,7 +3,6 @@
   Module module=new AbstractModule(){
     @Override protected void configure(){
       bindProperties(binder(),setupProperties());
-      bind(String.class).annotatedWith(Identity.class).toInstance(identity);
       bind(new TypeLiteral<Supplier<User>>(){
       }
 ).annotatedWith(Memoized.class).to(GetCurrentUser.class).in(Scopes.SINGLETON);
@@ -31,6 +30,9 @@
       }
 ).to(ZoneIdToZoneSupplier.class);
       install(new FactoryModuleBuilder().build(StaticNATVirtualMachineInNetwork.Factory.class));
+    }
+    @Provides @Singleton Supplier<Credentials> supplyCredentials(){
+      return Suppliers.ofInstance(new Credentials(identity,credential));
     }
     @Provides @Singleton protected Predicate<String> jobComplete(    JobComplete jobComplete){
       return retry(jobComplete,1200,1,5,SECONDS);
