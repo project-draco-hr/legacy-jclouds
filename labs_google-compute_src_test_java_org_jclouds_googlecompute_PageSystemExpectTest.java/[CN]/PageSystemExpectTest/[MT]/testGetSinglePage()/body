@@ -1,0 +1,8 @@
+{
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/images").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/image_list_single_page.json")).build();
+  ImageApi imageApi=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,list,operationResponse).getImageApiForProject("myproject");
+  PagedIterable<Image> images=imageApi.list();
+  assertSame(images.size(),1);
+  assertSame(images.concat().size(),3);
+}
