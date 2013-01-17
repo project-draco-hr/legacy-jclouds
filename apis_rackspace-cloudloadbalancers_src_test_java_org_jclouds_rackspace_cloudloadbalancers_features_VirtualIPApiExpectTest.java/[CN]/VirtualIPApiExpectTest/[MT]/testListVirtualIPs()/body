@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/virtualips");
+  VirtualIPApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/virtualips-list.json")).build()).getVirtualIPApiForZoneAndLoadBalancer("DFW",2000);
+  Iterable<VirtualIPWithId> virtualIPs=api.list();
+  assertEquals(virtualIPs,getVirtualIPs());
+}

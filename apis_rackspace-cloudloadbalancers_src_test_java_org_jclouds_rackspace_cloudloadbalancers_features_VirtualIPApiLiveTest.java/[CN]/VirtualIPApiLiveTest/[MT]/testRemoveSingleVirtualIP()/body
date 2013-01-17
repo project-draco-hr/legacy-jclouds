@@ -1,0 +1,8 @@
+{
+  Iterable<VirtualIPWithId> actualVirtualIPs=clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).list();
+  VirtualIPWithId removedVirtualIP=Iterables.getFirst(actualVirtualIPs,null);
+  assertTrue(clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).remove(removedVirtualIP.getId()));
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  actualVirtualIPs=clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).list();
+  assertEquals(Iterators.size(actualVirtualIPs.iterator()),4);
+}
