@@ -1,0 +1,10 @@
+{
+  clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).create(VirtualIP.publicIPv6());
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).create(VirtualIP.publicIPv6());
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).create(VirtualIP.publicIPv6());
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  Iterable<VirtualIPWithId> actualVirtualIPs=clbApi.getVirtualIPApiForZoneAndLoadBalancer(zone,lb.getId()).list();
+  assertEquals(Iterators.size(actualVirtualIPs.iterator()),5);
+}
