@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/nodes/410/metadata");
+  NodeApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("POST").endpoint(endpoint).payload(payloadFromResourceWithContentType("/metadata-create.json",MediaType.APPLICATION_JSON)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/metadata-list.json")).build()).getNodeApiForZoneAndLoadBalancer("DFW",2000);
+  Metadata metadata=api.createMetadata(410,getExpectedMetadata());
+  assertEquals(metadata,getExpectedMetadataWithIds());
+}
