@@ -1,14 +1,16 @@
 {
   if (from == null)   return null;
+  String containerName=from.getContainer();
+  if (containerName == null)   return null;
   try {
-    URI uri=cdnContainer.getUnchecked(from.getContainer());
+    URI uri=cdnContainer.getUnchecked(containerName);
     if (uri == NEGATIVE_ENTRY) {
       return null;
     }
     return uriBuilder(uri).clearQuery().appendPath(from.getName()).build();
   }
  catch (  CacheLoader.InvalidCacheLoadException e) {
-    cdnContainer.put(from.getContainer(),NEGATIVE_ENTRY);
+    cdnContainer.put(containerName,NEGATIVE_ENTRY);
     return null;
   }
 catch (  NullPointerException e) {
