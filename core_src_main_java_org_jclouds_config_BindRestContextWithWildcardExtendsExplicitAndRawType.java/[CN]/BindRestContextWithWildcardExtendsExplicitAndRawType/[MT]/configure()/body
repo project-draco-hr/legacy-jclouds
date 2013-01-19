@@ -1,5 +1,5 @@
 {
-  TypeToken<?> concreteType=BaseRestApiMetadata.contextToken(TypeToken.of(restApiMetadata.getApi()),TypeToken.of(restApiMetadata.getAsyncApi()));
+  TypeToken<?> concreteType=BaseRestApiMetadata.contextToken(typeTokenOf(restApiMetadata.getApi()),TypeToken.of(restApiMetadata.getAsyncApi()));
   bind(TypeLiteral.get(concreteType.getType())).to(TypeLiteral.class.cast(TypeLiteral.get(Types.newParameterizedType(RestContextImpl.class,restApiMetadata.getApi(),restApiMetadata.getAsyncApi()))));
   if (!concreteType.equals(restApiMetadata.getContext())) {
     bind(TypeLiteral.get(restApiMetadata.getContext().getType())).to(TypeLiteral.class.cast(TypeLiteral.get(Types.newParameterizedType(RestContextImpl.class,restApiMetadata.getApi(),restApiMetadata.getAsyncApi()))));
