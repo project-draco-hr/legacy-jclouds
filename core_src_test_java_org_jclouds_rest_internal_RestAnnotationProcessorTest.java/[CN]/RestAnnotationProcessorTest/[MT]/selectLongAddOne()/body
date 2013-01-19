@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("selectLongAddOne"));
-  GeneratedHttpRequest request=processor(TestPut.class).createRequest(method,ImmutableList.of());
-  Function<HttpResponse,?> parser=transformer(TestPut.class).apply(request);
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.of());
+  Function<HttpResponse,?> parser=transformer.apply(request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ \"destroyvirtualmachineresponse\" : {\"jobid\":4} }").build()),Long.valueOf(5));
 }

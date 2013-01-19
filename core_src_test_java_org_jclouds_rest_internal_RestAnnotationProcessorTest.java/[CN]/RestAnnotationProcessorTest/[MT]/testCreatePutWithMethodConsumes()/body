@@ -1,10 +1,10 @@
 {
   Invokable<?,?> method=Invokable.from(TestPut.class.getMethod("putWithMethodBinderConsumes",String.class));
-  GeneratedHttpRequest request=processor(TestPut.class).createRequest(method,ImmutableList.<Object>of("data"));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("data"));
   assertRequestLineEquals(request,"PUT http://localhost:9999/data HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: application/json\n");
   assertPayloadEquals(request,"{\"fooble\":\"data\"}","application/json",false);
   assertResponseParserClassEquals(method,request,ParseJson.class);
-  Function<HttpResponse,?> parser=transformer(TestPut.class).apply(request);
+  Function<HttpResponse,?> parser=transformer.apply(request);
   assertEquals(View.class.cast(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build())).foo,"bar");
 }

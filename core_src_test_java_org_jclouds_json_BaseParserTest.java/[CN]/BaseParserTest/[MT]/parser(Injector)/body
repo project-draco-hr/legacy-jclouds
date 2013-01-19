@@ -1,16 +1,6 @@
 {
-  TypeToken<TransformerForRequest<T>> token=new TypeToken<TransformerForRequest<T>>(){
-    private static final long serialVersionUID=1L;
-  }
-.where(new TypeParameter<T>(){
-  }
-,new TypeToken<T>(getClass()){
-    private static final long serialVersionUID=1L;
-  }
-);
-  Key<TransformerForRequest<T>> xform=(Key<TransformerForRequest<T>>)Key.get(token.getType());
   try {
-    return (Function<HttpResponse,T>)i.createChildInjector(new SaxParserModule()).getInstance(xform).getTransformerForMethod(Invocation.create(Invokable.from(getClass().getMethod("expected")),ImmutableList.of()),i);
+    return (Function<HttpResponse,T>)i.createChildInjector(new SaxParserModule()).getInstance(TransformerForRequest.class).getTransformerForMethod(Invocation.create(Invokable.from(getClass().getMethod("expected")),ImmutableList.of()),i);
   }
  catch (  Exception e) {
     throw Throwables.propagate(e);

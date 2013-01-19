@@ -1,4 +1,4 @@
 {
-  Optional<Consumes> accept=Optional.fromNullable(invocation.getInvokable().getAnnotation(Consumes.class)).or(Optional.fromNullable(enclosingType.getAnnotation(Consumes.class)));
+  Optional<Consumes> accept=Optional.fromNullable(invocation.getInvokable().getAnnotation(Consumes.class)).or(Optional.fromNullable(invocation.getInvokable().getOwnerType().getRawType().getAnnotation(Consumes.class)));
   return (accept.isPresent()) ? ImmutableSet.copyOf(accept.get().value()) : ImmutableSet.<String>of();
 }
