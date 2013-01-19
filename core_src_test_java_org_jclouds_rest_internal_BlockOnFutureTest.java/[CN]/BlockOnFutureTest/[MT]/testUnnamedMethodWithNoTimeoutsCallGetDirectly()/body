@@ -2,7 +2,7 @@
   future=createMock(ListenableFuture.class);
   expect(future.get()).andReturn("foo");
   replay(future);
-  Function<ListenableFuture<?>,Object> noOverrides=new BlockOnFuture(ImmutableMap.<String,Long>of(),enclosingType,get);
+  Function<ListenableFuture<?>,Object> noOverrides=new BlockOnFuture(ImmutableMap.<String,Long>of(),get);
   assertEquals(noOverrides.apply(future),"foo");
   verify(future);
 }

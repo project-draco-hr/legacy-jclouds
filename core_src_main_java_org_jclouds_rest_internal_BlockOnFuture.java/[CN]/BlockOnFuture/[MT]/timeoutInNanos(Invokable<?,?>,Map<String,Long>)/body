@@ -6,7 +6,7 @@
     timeoutMillis=fromNullable(timeouts.get(commandName)).or(defaultMillis);
   }
  else {
-    String className=enclosingType.getRawType().getSimpleName().replace("AsyncClient","Client").replace("AsyncApi","Api");
+    String className=invoked.getOwnerType().getRawType().getSimpleName().replace("AsyncClient","Client").replace("AsyncApi","Api");
     timeoutMillis=fromNullable(timeouts.get(className + "." + invoked.getName())).or(fromNullable(timeouts.get(className))).or(defaultMillis);
   }
   if (timeoutMillis.isPresent())   return Optional.of(TimeUnit.MILLISECONDS.toNanos(timeoutMillis.get()));

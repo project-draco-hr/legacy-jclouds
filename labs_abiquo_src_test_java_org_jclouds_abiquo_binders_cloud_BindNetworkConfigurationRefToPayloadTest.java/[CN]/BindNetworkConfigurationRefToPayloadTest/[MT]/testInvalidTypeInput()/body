@@ -2,7 +2,7 @@
   VirtualMachineDto vm=CloudResources.virtualMachinePut();
   Object network=new Object();
   Invokable<?,?> method=Invokable.from(TestNetworkConfig.class.getMethod("withAll",VirtualMachineDto.class,VLANNetworkDto.class));
-  GeneratedHttpRequest request=GeneratedHttpRequest.builder(TestNetworkConfig.class).invocation(Invocation.create(method,ImmutableList.<Object>of(vm,network))).method(HttpMethod.GET).endpoint(URI.create("http://localhost")).build();
+  GeneratedHttpRequest request=GeneratedHttpRequest.builder().invocation(Invocation.create(method,ImmutableList.<Object>of(vm,network))).method(HttpMethod.GET).endpoint(URI.create("http://localhost")).build();
   BindNetworkConfigurationRefToPayload binder=new BindNetworkConfigurationRefToPayload(new JAXBParser("false"));
   binder.bindToRequest(request,network);
 }

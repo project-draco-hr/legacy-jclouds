@@ -2,7 +2,7 @@
   Invokable<?,?> method=Invokable.from(TestTransformers.class.getMethod("put",PayloadEnclosing.class));
   PayloadEnclosing payloadEnclosing=new PayloadEnclosingImpl(newInputStreamPayload(Strings2.toInputStream("whoops")));
   calculateMD5(payloadEnclosing);
-  GeneratedHttpRequest request=processor(TestTransformers.class).createRequest(method,ImmutableList.<Object>of(payloadEnclosing));
+  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(payloadEnclosing));
   assertRequestLineEquals(request,"PUT http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"whoops","application/unknown",true);
