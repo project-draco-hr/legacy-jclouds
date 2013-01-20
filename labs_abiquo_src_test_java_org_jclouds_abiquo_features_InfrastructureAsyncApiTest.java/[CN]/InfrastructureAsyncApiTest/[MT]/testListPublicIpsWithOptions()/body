@@ -1,7 +1,7 @@
 {
   IpOptions options=IpOptions.builder().startWith(10).build();
   Invokable<?,?> method=method(InfrastructureAsyncApi.class,"listPublicIps",VLANNetworkDto.class,IpOptions.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(NetworkResources.publicNetworkPut(),options));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of(NetworkResources.publicNetworkPut(),options)));
   assertRequestLineEquals(request,"GET http://localhost/api/admin/datacenters/1/network/1/ips?startwith=10 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + PublicIpsDto.BASE_MEDIA_TYPE + "\n");
   assertPayloadEquals(request,null,null,false);
