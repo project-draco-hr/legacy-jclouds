@@ -1,0 +1,9 @@
+{
+  super(utils,contentMetadataCodec,ioExecutor,retryHandler,ioRetryHandler,errorHandler,wire);
+  if (utils.getMaxConnections() > 0)   System.setProperty("http.maxConnections",String.valueOf(checkNotNull(utils,"utils").getMaxConnections()));
+  this.untrustedSSLContextProvider=checkNotNull(untrustedSSLContextProvider,"untrustedSSLContextProvider");
+  this.verifier=checkNotNull(verifier,"verifier");
+  this.proxyForURI=checkNotNull(proxyForURI,"proxyForURI");
+  this.methodField=HttpURLConnection.class.getDeclaredField("method");
+  methodField.setAccessible(true);
+}

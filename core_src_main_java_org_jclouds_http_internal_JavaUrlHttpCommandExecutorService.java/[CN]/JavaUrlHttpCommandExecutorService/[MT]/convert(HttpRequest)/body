@@ -1,28 +1,7 @@
 {
   boolean chunked="chunked".equals(request.getFirstHeaderOrNull("Transfer-Encoding"));
   URL url=request.getEndpoint().toURL();
-  HttpURLConnection connection;
-  if (utils.useSystemProxies()) {
-    System.setProperty("java.net.useSystemProxies","true");
-    Iterable<Proxy> proxies=ProxySelector.getDefault().select(request.getEndpoint());
-    Proxy proxy=getLast(proxies);
-    connection=(HttpURLConnection)url.openConnection(proxy);
-  }
- else   if (utils.getProxyHost() != null) {
-    SocketAddress addr=new InetSocketAddress(utils.getProxyHost(),utils.getProxyPort());
-    Proxy proxy=new Proxy(Proxy.Type.HTTP,addr);
-    Authenticator authenticator=new Authenticator(){
-      public PasswordAuthentication getPasswordAuthentication(){
-        return new PasswordAuthentication(utils.getProxyUser(),utils.getProxyPassword().toCharArray());
-      }
-    }
-;
-    Authenticator.setDefault(authenticator);
-    connection=(HttpURLConnection)url.openConnection(proxy);
-  }
- else {
-    connection=(HttpURLConnection)url.openConnection();
-  }
+  HttpURLConnection connection=(HttpURLConnection)url.openConnection(proxyForURI.apply(request.getEndpoint()));
   if (connection instanceof HttpsURLConnection) {
     HttpsURLConnection sslCon=(HttpsURLConnection)connection;
     if (utils.relaxHostname())     sslCon.setHostnameVerifier(verifier);

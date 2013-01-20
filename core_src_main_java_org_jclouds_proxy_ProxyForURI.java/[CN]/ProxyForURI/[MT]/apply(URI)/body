@@ -1,0 +1,25 @@
+{
+  if (config.useSystem()) {
+    System.setProperty("java.net.useSystemProxies","true");
+    Iterable<Proxy> proxies=ProxySelector.getDefault().select(endpoint);
+    return getLast(proxies);
+  }
+ else   if (config.getProxy().isPresent()) {
+    SocketAddress addr=new InetSocketAddress(config.getProxy().get().getHostText(),config.getProxy().get().getPort());
+    Proxy proxy=new Proxy(config.getType(),addr);
+    final Optional<Credentials> creds=config.getCredentials();
+    if (creds.isPresent()) {
+      Authenticator authenticator=new Authenticator(){
+        public PasswordAuthentication getPasswordAuthentication(){
+          return new PasswordAuthentication(creds.get().identity,creds.get().credential.toCharArray());
+        }
+      }
+;
+      Authenticator.setDefault(authenticator);
+    }
+    return proxy;
+  }
+ else {
+    return Proxy.NO_PROXY;
+  }
+}

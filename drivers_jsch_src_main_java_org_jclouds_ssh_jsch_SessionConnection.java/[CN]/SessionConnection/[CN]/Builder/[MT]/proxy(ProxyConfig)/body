@@ -1,0 +1,17 @@
+{
+  Optional<HostAndPort> proxyEndpoint=proxyConfig.getProxy();
+  if (!proxyEndpoint.isPresent())   return proxy((Proxy)null);
+  Optional<Credentials> creds=proxyConfig.getCredentials();
+switch (proxyConfig.getType()) {
+case HTTP:
+    ProxyHTTP httpProxy=new ProxyHTTP(proxyEndpoint.get().getHostText(),proxyEndpoint.get().getPort());
+  if (creds.isPresent())   httpProxy.setUserPasswd(creds.get().identity,creds.get().credential);
+return proxy(httpProxy);
+case SOCKS:
+ProxySOCKS5 socksProxy=new ProxySOCKS5(proxyEndpoint.get().getHostText(),proxyEndpoint.get().getPort());
+if (creds.isPresent()) socksProxy.setUserPasswd(creds.get().identity,creds.get().credential);
+return proxy(socksProxy);
+default :
+throw new IllegalArgumentException(proxyConfig.getType() + " not supported");
+}
+}

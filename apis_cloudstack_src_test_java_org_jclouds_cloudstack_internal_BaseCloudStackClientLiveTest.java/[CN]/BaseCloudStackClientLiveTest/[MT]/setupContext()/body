@@ -22,7 +22,8 @@
   }
   injector=cloudStackContext.utils().injector();
   sshFactory=injector.getInstance(SshClient.Factory.class);
-  socketTester=retry(new InetSocketAddressConnect(),180,1,1,SECONDS);
+  SocketOpen socketOpen=context.utils().injector().getInstance(SocketOpen.class);
+  socketTester=retry(socketOpen,180,1,1,SECONDS);
   injector.injectMembers(socketTester);
   jobComplete=retry(new JobComplete(client),1200,1,5,SECONDS);
   injector.injectMembers(jobComplete);

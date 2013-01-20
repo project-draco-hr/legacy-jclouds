@@ -1,7 +1,8 @@
 {
   super.setupContext();
   securityGroup=createSecurityGroupAndAuthorizeIngressToAll(INSTANCE);
-  socketTester=retry(new InetSocketAddressConnect(),180,1,1,SECONDS);
+  SocketOpen socketOpen=context.utils().injector().getInstance(SocketOpen.class);
+  socketTester=retry(socketOpen,180,1,1,SECONDS);
   instanceAvailable=retry(new Predicate<Instance>(){
     public boolean apply(    Instance input){
       return api().get(input.getId()).getStatus() == Instance.Status.AVAILABLE;
