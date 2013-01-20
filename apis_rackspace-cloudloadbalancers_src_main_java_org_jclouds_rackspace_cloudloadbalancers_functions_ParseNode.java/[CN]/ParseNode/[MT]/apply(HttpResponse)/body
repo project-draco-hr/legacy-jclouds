@@ -1,0 +1,7 @@
+{
+  Map<String,NodeWithCLBMetadata> map=json.apply(response);
+  if (map == null || map.size() == 0)   return null;
+  NodeWithCLBMetadata nodeWithCLBMetadata=Iterables.get(map.values(),0);
+  Node node=Node.builder().address(nodeWithCLBMetadata.getAddress()).port(nodeWithCLBMetadata.getPort()).condition(nodeWithCLBMetadata.getCondition()).type(nodeWithCLBMetadata.getType()).weight(nodeWithCLBMetadata.getWeight()).id(nodeWithCLBMetadata.id).status(nodeWithCLBMetadata.status).metadata(ParseMetadata.transformCLBMetadataToMetadata(nodeWithCLBMetadata.metadata)).build();
+  return node;
+}

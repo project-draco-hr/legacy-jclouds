@@ -1,0 +1,19 @@
+{
+  Map<String,List<CLBMetadata>> clbMetadata;
+  try {
+    Type clbMetadataType=new TypeLiteral<Map<String,List<CLBMetadata>>>(){
+    }
+.getType();
+    clbMetadata=apply(response.getPayload().getInput(),clbMetadataType);
+  }
+ catch (  IOException e) {
+    StringBuilder message=new StringBuilder();
+    message.append("Error parsing response");
+    logger.error(e,message.toString());
+    throw new HttpResponseException(message.toString() + "\n" + response,null,response,e);
+  }
+ finally {
+    releasePayload(response);
+  }
+  return transformCLBMetadataToMetadata(clbMetadata.get("metadata"));
+}
