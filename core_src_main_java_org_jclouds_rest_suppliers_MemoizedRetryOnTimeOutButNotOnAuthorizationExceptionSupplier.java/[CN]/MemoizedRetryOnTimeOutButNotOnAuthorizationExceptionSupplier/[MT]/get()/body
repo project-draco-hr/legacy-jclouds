@@ -1,16 +1,8 @@
 {
   try {
-    T returnVal=cache.get("FOO");
-    return returnVal;
+    return cache.get("FOO").orNull();
   }
- catch (  UncheckedExecutionException e) {
-    NullValueException nullV=getFirstThrowableOfType(e,NullValueException.class);
-    if (nullV != null) {
-      return null;
-    }
-    throw propagate(e.getCause());
-  }
-catch (  ExecutionException e) {
+ catch (  ExecutionException e) {
     throw propagate(e.getCause());
   }
 }

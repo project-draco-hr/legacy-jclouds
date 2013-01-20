@@ -1,9 +1,7 @@
 {
   if (authException.get() != null)   throw authException.get();
   try {
-    V value=delegate.get();
-    if (value == null)     throw new NullValueException();
-    return value;
+    return Optional.fromNullable(delegate.get());
   }
  catch (  Exception e) {
     AuthorizationException aex=getFirstThrowableOfType(e,AuthorizationException.class);
