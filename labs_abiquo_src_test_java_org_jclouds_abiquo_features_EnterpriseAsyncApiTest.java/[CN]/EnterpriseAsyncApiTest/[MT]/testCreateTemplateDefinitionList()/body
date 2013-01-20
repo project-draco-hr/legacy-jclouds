@@ -2,7 +2,7 @@
   EnterpriseDto enterprise=EnterpriseResources.enterprisePut();
   TemplateDefinitionListDto template=EnterpriseResources.templateListPost();
   Invokable<?,?> method=method(EnterpriseAsyncApi.class,"createTemplateDefinitionList",EnterpriseDto.class,TemplateDefinitionListDto.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(enterprise,template));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of(enterprise,template)));
   assertRequestLineEquals(request,"POST http://localhost/api/admin/enterprises/1/appslib/templateDefinitionLists HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + TemplateDefinitionListDto.BASE_MEDIA_TYPE + "\n");
   assertPayloadEquals(request,withHeader(EnterpriseResources.templateListPostPayload()),TemplateDefinitionListDto.class,TemplateDefinitionListDto.BASE_MEDIA_TYPE,false);

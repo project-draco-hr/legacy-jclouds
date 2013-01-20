@@ -1,7 +1,7 @@
 {
   IpOptions options=IpOptions.builder().startWith(10).build();
   Invokable<?,?> method=method(CloudAsyncApi.class,"listPrivateNetworkIps",VLANNetworkDto.class,IpOptions.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(NetworkResources.privateNetworkPut(),options));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of(NetworkResources.privateNetworkPut(),options)));
   assertRequestLineEquals(request,"GET http://localhost/api/cloud/virtualdatacenters/1/privatenetworks/1/ips?startwith=10 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + PrivateIpsDto.BASE_MEDIA_TYPE + "\n");
   assertPayloadEquals(request,null,null,false);
