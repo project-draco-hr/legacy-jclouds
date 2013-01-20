@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=method(TestPost.class,"postWithPath",String.class,MapBinder.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("data",new org.jclouds.rest.MapBinder(){
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of("data",new org.jclouds.rest.MapBinder(){
     @Override public <R extends HttpRequest>R bindToRequest(    R request,    Map<String,Object> postParams){
       request.setPayload((String)postParams.get("fooble"));
       return request;
@@ -9,7 +9,7 @@
       throw new RuntimeException("this shouldn't be used in POST");
     }
   }
-));
+)));
   assertRequestLineEquals(request,"POST http://localhost:9999/data HTTP/1.1");
   assertPayloadEquals(request,"data","application/unknown",false);
 }

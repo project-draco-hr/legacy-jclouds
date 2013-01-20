@@ -1,7 +1,7 @@
 {
   PrefixOptions options=new PrefixOptions().withPrefix("1");
   Invokable<?,?> method=method(TestRequest.class,"get",String.class,HttpRequestOptions.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("1",options));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of("1",options)));
   assertRequestLineEquals(request,"GET http://localhost:9999/1?prefix=1 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: localhost:9999\n");
   assertPayloadEquals(request,null,null,false);

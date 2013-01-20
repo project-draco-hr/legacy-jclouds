@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=method(TestPut.class,"testUnwrap");
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.of());
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method));
   assertResponseParserClassEquals(method,request,UnwrapOnlyJsonValue.class);
   Function<HttpResponse,?> parser=transformer.apply(request);
   assertEquals(parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload("{ foo:\"bar\"}").build()),"bar");

@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=method(TestMultipartForm.class,"withParamStringPart",String.class,String.class);
-  GeneratedHttpRequest httpRequest=processor.createRequest(method,ImmutableList.<Object>of("name","foobledata"));
+  GeneratedHttpRequest httpRequest=processor.apply(Invocation.create(method,ImmutableList.<Object>of("name","foobledata")));
   assertRequestLineEquals(httpRequest,"POST http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(httpRequest,"");
   assertPayloadEquals(httpRequest,"----JCLOUDS--\r\n" + "Content-Disposition: form-data; name=\"name\"\r\n" + "\r\n"+ "name\r\n"+ "----JCLOUDS--\r\n"+ "Content-Disposition: form-data; name=\"file\"\r\n"+ "\r\n"+ "foobledata\r\n"+ "----JCLOUDS----\r\n","multipart/form-data; boundary=--JCLOUDS--",false);

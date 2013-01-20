@@ -2,6 +2,6 @@
   Predicate<String> predicate=retry(Predicates.<String>alwaysFalse(),3,1,SECONDS);
   stopwatch.start();
   predicate.apply("");
-  long duration=stopwatch.elapsedMillis();
+  long duration=stopwatch.elapsed(MILLISECONDS);
   assertOrdered(3000 - EARLY_RETURN_GRACE,duration,3000 + SLOW_BUILD_SERVER_GRACE);
 }

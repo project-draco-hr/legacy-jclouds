@@ -1,7 +1,5 @@
 {
-  Invokable<?,?> method=method(TestQuery.class,"queryParamIterable",Iterable.class);
-  Set<String> bars=ImmutableSortedSet.<String>of("1");
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(bars));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method(TestQuery.class,"queryParamIterable",Iterable.class),ImmutableList.<Object>of(ImmutableSet.of("1"))));
   assertEquals(request.getEndpoint().getHost(),"localhost");
   assertEquals(request.getEndpoint().getPath(),"/");
   assertEquals(request.getEndpoint().getQuery(),"x-ms-version=2009-07-17&foo=1");
