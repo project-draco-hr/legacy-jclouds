@@ -1,0 +1,16 @@
+{
+  for (  Invokable<?,?> invoked : methods(sync)) {
+    if (!objectMethods.contains(invoked)) {
+      try {
+        Invokable<?,?> delegatedMethod=method(async,invoked.getName(),getParameterTypes(invoked));
+        checkArgument(delegatedMethod.getExceptionTypes().equals(invoked.getExceptionTypes()),"invoked %s has different typed exceptions than delegated invoked %s",invoked,delegatedMethod);
+        invoked.setAccessible(true);
+        delegatedMethod.setAccessible(true);
+        cache.put(invoked,delegatedMethod);
+      }
+ catch (      SecurityException e) {
+        throw propagate(e);
+      }
+    }
+  }
+}
