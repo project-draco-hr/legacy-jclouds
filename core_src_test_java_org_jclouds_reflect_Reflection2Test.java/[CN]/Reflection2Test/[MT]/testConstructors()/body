@@ -1,0 +1,9 @@
+{
+  Set<String> ctorParams=FluentIterable.from(constructors(TypeToken.of(HashSet.class))).transform(new Function<Invokable<?,?>,Iterable<Parameter>>(){
+    public Iterable<Parameter> apply(    Invokable<?,?> input){
+      return input.getParameters();
+    }
+  }
+).transform(toStringFunction()).toSet();
+  assertEquals(ctorParams,ImmutableSet.of("[]","[java.util.Collection<? extends E> arg0]","[int arg0, float arg1]","[int arg0]","[int arg0, float arg1, boolean arg2]"));
+}

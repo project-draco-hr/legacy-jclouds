@@ -1,62 +1,29 @@
 {
   bindListener(any(),new TypeListener(){
     public <I>void hear(    TypeLiteral<I> injectableType,    TypeEncounter<I> encounter){
-      Set<Method> methods=newHashSet();
-      Class<? super I> type=injectableType.getRawType();
-      while (type != null) {
-        methods.addAll(asList(type.getDeclaredMethods()));
-        type=type.getSuperclass();
-      }
-      for (      final Method method : methods) {
-        invokePostConstructMethodAfterInjection(encounter,method);
-        associatePreDestroyWithCloser(closer,encounter,method);
-      }
-    }
-    private <I>void associatePreDestroyWithCloser(    final Closer closer,    TypeEncounter<I> encounter,    final Method method){
-      PreDestroy preDestroy=method.getAnnotation(PreDestroy.class);
-      if (preDestroy != null) {
-        encounter.register(new InjectionListener<I>(){
-          public void afterInjection(          final I injectee){
-            closer.addToClose(new Closeable(){
-              public void close() throws IOException {
-                try {
-                  method.invoke(injectee);
-                }
- catch (                InvocationTargetException ie) {
-                  Throwable e=ie.getTargetException();
-                  throw new IOException(e.getMessage());
-                }
-catch (                IllegalAccessException e) {
-                  throw new IOException(e.getMessage());
-                }
-              }
-            }
-);
-          }
-        }
-);
-      }
-    }
-    private <I>void invokePostConstructMethodAfterInjection(    TypeEncounter<I> encounter,    final Method method){
-      PostConstruct postConstruct=method.getAnnotation(PostConstruct.class);
-      if (postConstruct != null) {
+      Collection<? extends Invokable<? super I,Object>> methods=methods(injectableType.getRawType());
+      for (      final Invokable<? super I,Object> method : filter(methods,isPostConstruct)) {
         encounter.register(new InjectionListener<I>(){
           public void afterInjection(          final I injectee){
             list.add(new Runnable(){
               public void run(){
-                try {
-                  method.invoke(injectee);
-                }
- catch (                InvocationTargetException ie) {
-                  Throwable e=ie.getTargetException();
-                  throw propagate(e);
-                }
-catch (                IllegalAccessException e) {
-                  throw propagate(e);
-                }
+                invokeOnInjectee(method,injectee);
               }
             }
 ,sameThreadExecutor());
+          }
+        }
+);
+      }
+      for (      final Invokable<? super I,Object> method : filter(methods,isPreDestroy)) {
+        encounter.register(new InjectionListener<I>(){
+          public void afterInjection(          final I injectee){
+            closer.addToClose(new Closeable(){
+              public void close() throws IOException {
+                invokeOnInjectee(method,injectee);
+              }
+            }
+);
           }
         }
 );

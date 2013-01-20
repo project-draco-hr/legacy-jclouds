@@ -1,9 +1,4 @@
 {
-  Set<String> methodNames=FluentIterable.from(methods(Set.class)).transform(new Function<Invokable<?,?>,String>(){
-    public String apply(    Invokable<?,?> input){
-      return input.getName();
-    }
-  }
-).transform(toStringFunction()).toSet();
-  assertEquals(methodNames,ImmutableSet.of("add","equals","hashCode","clear","isEmpty","contains","addAll","size","toArray","iterator","remove","removeAll","containsAll","retainAll"));
+  Set<String> methodNames=FluentIterable.from(methods(Set.class)).transform(invokableToName).transform(toStringFunction()).toSet();
+  assertEquals(methodNames,setMethods);
 }
