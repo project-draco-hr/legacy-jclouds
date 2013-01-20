@@ -2,7 +2,7 @@
   DiskManagementDto first=CloudResources.hardDiskPut();
   DiskManagementDto second=CloudResources.hardDiskPut();
   second.getEditLink().setHref(second.getEditLink().getHref() + "second");
-  Invokable<?,?> method=Invokable.from(CloudAsyncApi.class.getMethod("replaceHardDisks",VirtualMachineDto.class,DiskManagementDto[].class));
+  Invokable<?,?> method=method(CloudAsyncApi.class,"replaceHardDisks",VirtualMachineDto.class,DiskManagementDto[].class);
   GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(CloudResources.virtualMachinePut(),new DiskManagementDto[]{first,second}));
   String editLink=CloudResources.hardDiskPut().getEditLink().getHref();
   assertRequestLineEquals(request,"PUT http://localhost/api/cloud/virtualdatacenters/1/virtualappliances/1/virtualmachines/1/storage/disks HTTP/1.1");

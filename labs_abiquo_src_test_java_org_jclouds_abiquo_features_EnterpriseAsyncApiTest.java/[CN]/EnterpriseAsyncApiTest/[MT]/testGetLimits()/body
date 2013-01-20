@@ -1,7 +1,7 @@
 {
   EnterpriseDto enterprise=EnterpriseResources.enterprisePut();
   DatacenterDto datacenter=InfrastructureResources.datacenterPut();
-  Invokable<?,?> method=Invokable.from(EnterpriseAsyncApi.class.getMethod("getLimits",EnterpriseDto.class,DatacenterDto.class));
+  Invokable<?,?> method=method(EnterpriseAsyncApi.class,"getLimits",EnterpriseDto.class,DatacenterDto.class);
   GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(enterprise,datacenter));
   String limitsUri=enterprise.searchLink("limits").getHref();
   String requestURI=String.format("GET %s?datacenter=%d HTTP/1.1",limitsUri,datacenter.getId());
