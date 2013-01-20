@@ -1,21 +1,9 @@
 {
   injector=ContextBuilder.newBuilder(AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(Callee.class,AsyncCallee.class,"http://localhost:9999")).modules(ImmutableSet.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
-    @Override protected void configure(){
-      bind(new TypeLiteral<Set<String>>(){
-      }
-).toInstance(ImmutableSet.of("foo"));
-      bind(new TypeLiteral<Set<String>>(){
-      }
-).annotatedWith(Names.named("bar")).toInstance(ImmutableSet.of("bar"));
+    protected void configure(){
       bind(new TypeLiteral<Supplier<URI>>(){
       }
 ).annotatedWith(Localhost2.class).toInstance(Suppliers.ofInstance(URI.create("http://localhost:1111")));
-    }
-    @Provides @Named("exception") Set<String> exception(){
-      throw new AuthorizationException();
-    }
-    @Provides @Named("NoSuchElementException") Set<String> noSuchElementException(){
-      throw new NoSuchElementException();
     }
   }
 )).buildInjector();

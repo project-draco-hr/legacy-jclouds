@@ -1,7 +1,7 @@
 {
   EnterpriseDto enterprise=EnterpriseResources.enterprisePut();
   UserDto user=EnterpriseResources.userPost();
-  Invokable<?,?> method=Invokable.from(EnterpriseAsyncApi.class.getMethod("createUser",EnterpriseDto.class,UserDto.class));
+  Invokable<?,?> method=method(EnterpriseAsyncApi.class,"createUser",EnterpriseDto.class,UserDto.class);
   GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(enterprise,user));
   assertRequestLineEquals(request,"POST http://localhost/api/admin/enterprises/1/users HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + UserDto.BASE_MEDIA_TYPE + "\n");

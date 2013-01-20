@@ -1,7 +1,7 @@
 {
   RESTLink link=new RESTLink("edit","http://foo/bar");
   link.setType(DatacentersDto.BASE_MEDIA_TYPE);
-  Invokable<?,?> method=Invokable.from(AbiquoHttpAsyncClient.class.getMethod("get",RESTLink.class));
+  Invokable<?,?> method=method(AbiquoHttpAsyncClient.class,"get",RESTLink.class);
   GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(link));
   assertRequestLineEquals(request,"GET http://foo/bar HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Accept: " + DatacentersDto.BASE_MEDIA_TYPE + "\n");
