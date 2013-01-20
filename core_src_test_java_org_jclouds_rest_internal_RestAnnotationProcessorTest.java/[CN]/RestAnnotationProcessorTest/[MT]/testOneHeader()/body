@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=method(TestHeaders.class,"oneHeader",String.class);
-  Multimap<String,String> headers=processor.createRequest(method,ImmutableList.<Object>of("robot")).getHeaders();
+  Multimap<String,String> headers=processor.apply(Invocation.create(method,ImmutableList.<Object>of("robot"))).getHeaders();
   assertEquals(headers.size(),1);
   assertEquals(headers.get("header"),ImmutableList.of("robot"));
 }

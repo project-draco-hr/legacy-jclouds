@@ -1,6 +1,6 @@
 {
   Invokable<?,?> method=method(TestTransformers.class,"putXfer",Payload.class);
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(newStringPayload("whoops")));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of(newStringPayload("whoops"))));
   assertRequestLineEquals(request,"PUT http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Transfer-Encoding: chunked\n");
   assertPayloadEquals(request,"whoops","application/unknown",false);

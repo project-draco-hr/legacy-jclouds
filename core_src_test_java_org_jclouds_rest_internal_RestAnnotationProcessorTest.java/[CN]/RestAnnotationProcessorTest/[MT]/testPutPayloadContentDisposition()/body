@@ -2,7 +2,7 @@
   Invokable<?,?> method=method(TestTransformers.class,"put",Payload.class);
   Payload payload=newStringPayload("whoops");
   payload.getContentMetadata().setContentDisposition("attachment; filename=photo.jpg");
-  GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of(payload));
+  GeneratedHttpRequest request=processor.apply(Invocation.create(method,ImmutableList.<Object>of(payload)));
   assertRequestLineEquals(request,"PUT http://localhost:9999 HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"");
   assertPayloadEquals(request,"whoops","application/unknown","attachment; filename=photo.jpg",null,null,false);
