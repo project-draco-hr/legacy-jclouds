@@ -1,7 +1,12 @@
 {
+  params.removeAll(SIGNATURE);
+  params.removeAll(SECURITY_TOKEN);
+  Credentials current=creds.get();
+  if (current instanceof TemporaryCredentials) {
+    params.put(SECURITY_TOKEN,TemporaryCredentials.class.cast(current).getSessionToken());
+  }
   params.replaceValues(SIGNATURE_METHOD,ImmutableList.of("HmacSHA256"));
   params.replaceValues(SIGNATURE_VERSION,ImmutableList.of("2"));
   params.replaceValues(TIMESTAMP,ImmutableList.of(dateService.get()));
   params.replaceValues(AWS_ACCESS_KEY_ID,ImmutableList.of(creds.get().identity));
-  params.removeAll(SIGNATURE);
 }

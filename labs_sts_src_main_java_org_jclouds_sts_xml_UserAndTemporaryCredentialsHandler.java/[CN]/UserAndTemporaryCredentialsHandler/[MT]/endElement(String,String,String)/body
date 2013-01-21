@@ -1,0 +1,25 @@
+{
+  if (inCreds) {
+    if (qName.equals("Credentials")) {
+      inCreds=false;
+      builder.credentials(credsHandler.getResult());
+    }
+ else {
+      credsHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("Arn")) {
+    arn=currentOrNull(currentText);
+  }
+ else   if (qName.endsWith("Id")) {
+    id=currentOrNull(currentText);
+  }
+ else   if (qName.endsWith("User")) {
+    builder.user(User.fromIdAndArn(id,arn));
+    id=arn=null;
+  }
+ else   if (qName.equals("PackedPolicySize")) {
+    builder.packedPolicySize(Integer.parseInt(currentOrNull(currentText)));
+  }
+  currentText=new StringBuilder();
+}

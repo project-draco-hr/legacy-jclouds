@@ -8,10 +8,6 @@
   String signature=sign(stringToSign);
   addSignature(decodedParams,signature);
   request=setPayload(request,decodedParams);
-  Credentials current=creds.get();
-  if (current instanceof TemporaryCredentials) {
-    request=replaceSecurityTokenHeader(request,TemporaryCredentials.class.cast(current));
-  }
   utils.logRequest(signatureLog,request,"<<");
   return request;
 }
