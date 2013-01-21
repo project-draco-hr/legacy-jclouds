@@ -3,8 +3,10 @@
   this.delay=delay;
   this.timeout=timeout;
   this.attemptsBeforeDeactivation=attemptsBeforeDeactivation;
-  this.bodyRegex=bodyRegex;
-  this.statusRegex=statusRegex;
-  this.path=path;
-  this.hostHeader=hostHeader;
+  this.bodyRegex=Optional.fromNullable(bodyRegex);
+  this.statusRegex=Optional.fromNullable(statusRegex);
+  this.path=Optional.fromNullable(path);
+  this.hostHeader=Optional.fromNullable(hostHeader);
+  if (!isValid())   if (type.equals(Type.CONNECT))   throw new IllegalArgumentException("Only delay, timeout, and attemptsBeforeDeactivation must be set.");
+ else   throw new IllegalArgumentException("At least delay, timeout, attemptsBeforeDeactivation, and path must be set.");
 }
