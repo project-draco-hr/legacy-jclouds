@@ -1,0 +1,9 @@
+{
+  InputStream is=getClass().getResourceAsStream("/federation_token.xml");
+  UserAndTemporaryCredentials expected=expected();
+  UserAndTemporaryCredentialsHandler handler=injector.getInstance(UserAndTemporaryCredentialsHandler.class);
+  UserAndTemporaryCredentials result=factory.create(handler).parse(is);
+  assertEquals(result,expected);
+  assertEquals(result.getUser(),expected.getUser());
+  assertEquals(result.getPackedPolicySize(),expected.getPackedPolicySize());
+}
