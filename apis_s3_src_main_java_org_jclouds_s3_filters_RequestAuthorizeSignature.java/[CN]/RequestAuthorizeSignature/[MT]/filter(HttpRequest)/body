@@ -1,5 +1,9 @@
 {
   request=replaceDateHeader(request);
+  Credentials current=creds.get();
+  if (current instanceof TemporaryCredentials) {
+    request=replaceSecurityTokenHeader(request,TemporaryCredentials.class.cast(current));
+  }
   String signature=calculateSignature(createStringToSign(request));
   request=replaceAuthorizationHeader(request,signature);
   utils.logRequest(signatureLog,request,"<<");
