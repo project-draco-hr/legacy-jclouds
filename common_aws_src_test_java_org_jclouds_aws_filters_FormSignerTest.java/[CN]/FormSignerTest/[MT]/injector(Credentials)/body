@@ -1,0 +1,10 @@
+{
+  return ContextBuilder.newBuilder(AnonymousProviderMetadata.forClientMappedToAsyncClientOnEndpoint(IntegrationTestClient.class,IntegrationTestAsyncClient.class,"http://localhost")).credentialsSupplier(Suppliers.<Credentials>ofInstance(creds)).apiVersion("apiVersion").modules(ImmutableList.<Module>of(new MockModule(),new NullLoggingModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(RequestSigner.class).to(FormSigner.class);
+      bind(String.class).annotatedWith(Names.named(PROPERTY_HEADER_TAG)).toInstance("amz");
+      bind(String.class).annotatedWith(TimeStamp.class).toInstance("2009-11-08T15:54:08.897Z");
+    }
+  }
+)).buildInjector();
+}
