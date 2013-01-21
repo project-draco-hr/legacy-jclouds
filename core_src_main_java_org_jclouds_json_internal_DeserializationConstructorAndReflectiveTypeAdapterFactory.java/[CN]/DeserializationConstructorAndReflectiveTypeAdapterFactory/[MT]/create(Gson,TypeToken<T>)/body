@@ -1,11 +1,10 @@
 {
-  Class<? super T> raw=type.getRawType();
-  Constructor<? super T> deserializationCtor=constructorFieldNamingPolicy.getDeserializationConstructor(raw);
+  com.google.common.reflect.TypeToken<T> token=typeToken(type.getType());
+  Invokable<T,T> deserializationCtor=constructorFieldNamingPolicy.getDeserializer(token);
   if (deserializationCtor == null) {
     return null;
   }
  else {
-    deserializationCtor.setAccessible(true);
-    return new DeserializeWithParameterizedConstructorSerializeWithDelegate<T>(delegateFactory.create(gson,type),deserializationCtor,getParameterReaders(gson,type,deserializationCtor));
+    return new DeserializeIntoParameterizedConstructor<T>(delegateFactory.create(gson,type),deserializationCtor,getParameterReaders(gson,deserializationCtor));
   }
 }

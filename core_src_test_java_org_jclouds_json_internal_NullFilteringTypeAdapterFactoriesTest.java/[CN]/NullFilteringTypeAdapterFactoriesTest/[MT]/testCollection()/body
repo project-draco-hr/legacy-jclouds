@@ -1,0 +1,10 @@
+{
+  Collection<String> noNulls=collection.fromJson("[\"value\",\"a test string!\"]",collectionType);
+  assertEquals(noNulls,ImmutableList.of("value","a test string!"));
+  Collection<String> withNull=collection.fromJson("[null,\"a test string!\"]",collectionType);
+  assertEquals(withNull,ImmutableList.of("a test string!"));
+  Collection<String> withDupes=collection.fromJson("[\"value\",\"value\"]",collectionType);
+  assertEquals(withDupes,ImmutableList.of("value","value"));
+  Collection<Resource> resources=collection.fromJson("[{\"id\":\"i-foo\",\"name\":\"foo\"},{\"id\":\"i-bar\",\"name\":\"bar\"}]",collectionResourceType);
+  assertEquals(resources,ImmutableList.of(new Resource("i-foo","foo"),new Resource("i-bar","bar")));
+}

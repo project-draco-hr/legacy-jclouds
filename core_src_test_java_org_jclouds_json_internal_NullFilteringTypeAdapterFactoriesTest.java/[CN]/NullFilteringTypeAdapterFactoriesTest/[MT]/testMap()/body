@@ -1,0 +1,10 @@
+{
+  Map<String,String> noNulls=map.fromJson("{\"value\":\"a test string!\"}",mapType);
+  assertEquals(noNulls,ImmutableMap.of("value","a test string!"));
+  Map<String,String> withNull=map.fromJson("{\"value\":null}",mapType);
+  assertEquals(withNull,ImmutableMap.of());
+  Map<String,String> withEmpty=map.fromJson("{\"value\":\"\"}",mapType);
+  assertEquals(withEmpty,ImmutableMap.of("value",""));
+  Map<String,Resource> resources=map.fromJson("{\"i-foo\":{\"id\":\"i-foo\",\"name\":\"foo\"},\"i-bar\":{\"id\":\"i-bar\",\"name\":\"bar\"}}",mapResourceType);
+  assertEquals(resources,ImmutableMap.of("i-foo",new Resource("i-foo","foo"),"i-bar",new Resource("i-bar","bar")));
+}

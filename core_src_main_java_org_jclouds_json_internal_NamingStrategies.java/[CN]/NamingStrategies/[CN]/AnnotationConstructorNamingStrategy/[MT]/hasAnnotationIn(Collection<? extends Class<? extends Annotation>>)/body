@@ -1,0 +1,13 @@
+{
+  return new Predicate<Invokable<?,?>>(){
+    public boolean apply(    Invokable<?,?> input){
+      return FluentIterable.from(Arrays.asList(input.getAnnotations())).transform(new Function<Annotation,Class<? extends Annotation>>(){
+        public Class<? extends Annotation> apply(        Annotation input){
+          return input.annotationType();
+        }
+      }
+).anyMatch(in(markers));
+    }
+  }
+;
+}

@@ -1,15 +1,15 @@
 {
-  ConstructorFieldNamingStrategy strategy=new AnnotationConstructorNamingStrategy(ImmutableSet.of(Inject.class),ImmutableSet.of(new ExtractNamed()));
-  Constructor<? super SimpleTest> constructor=strategy.getDeserializationConstructor(SimpleTest.class);
+  AnnotationConstructorNamingStrategy strategy=new AnnotationConstructorNamingStrategy(ImmutableSet.of(Inject.class),ImmutableSet.of(new ExtractNamed()));
+  Invokable<SimpleTest,SimpleTest> constructor=strategy.getDeserializer(typeToken(SimpleTest.class));
   assertNotNull(constructor);
-  assertEquals(constructor.getParameterTypes().length,5);
+  assertEquals(constructor.getParameters().size(),5);
   assertEquals(strategy.translateName(constructor,0),"aa");
   assertEquals(strategy.translateName(constructor,1),"bb");
   assertEquals(strategy.translateName(constructor,2),"cc");
   assertEquals(strategy.translateName(constructor,3),"dd");
-  Constructor<? super MixedConstructorTest> mixedCtor=strategy.getDeserializationConstructor(MixedConstructorTest.class);
+  Invokable<MixedConstructorTest,MixedConstructorTest> mixedCtor=strategy.getDeserializer(typeToken(MixedConstructorTest.class));
   assertNotNull(mixedCtor);
-  assertEquals(mixedCtor.getParameterTypes().length,4);
+  assertEquals(mixedCtor.getParameters().size(),4);
   assertEquals(strategy.translateName(mixedCtor,0),"aardvark");
   assertEquals(strategy.translateName(mixedCtor,1),"bat");
   assertEquals(strategy.translateName(mixedCtor,2),"cat");
