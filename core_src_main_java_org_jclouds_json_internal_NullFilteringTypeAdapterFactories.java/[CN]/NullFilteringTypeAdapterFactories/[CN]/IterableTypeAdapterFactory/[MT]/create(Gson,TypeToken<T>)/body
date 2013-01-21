@@ -1,0 +1,7 @@
+{
+  Type type=ownerType.getType();
+  if (ownerType.getRawType() != declaring || !(type instanceof ParameterizedType))   return null;
+  Type elementType=((ParameterizedType)type).getActualTypeArguments()[0];
+  TypeAdapter<?> elementAdapter=gson.getAdapter(TypeToken.get(elementType));
+  return (TypeAdapter<T>)newAdapter(elementAdapter);
+}

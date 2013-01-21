@@ -1,0 +1,10 @@
+{
+  FluentIterable<String> noNulls=fluentIterable.fromJson("[\"value\",\"a test string!\"]",fluentIterableType);
+  assertEquals(noNulls.toList(),ImmutableList.of("value","a test string!"));
+  FluentIterable<String> withNull=fluentIterable.fromJson("[null,\"a test string!\"]",fluentIterableType);
+  assertEquals(withNull.toList(),ImmutableList.of("a test string!"));
+  FluentIterable<String> withDupes=fluentIterable.fromJson("[\"value\",\"value\"]",fluentIterableType);
+  assertEquals(withDupes.toList(),ImmutableList.of("value","value"));
+  FluentIterable<Resource> resources=fluentIterable.fromJson("[{\"id\":\"i-foo\",\"name\":\"foo\"},{\"id\":\"i-bar\",\"name\":\"bar\"}]",fluentIterableResourceType);
+  assertEquals(resources.toList(),ImmutableList.of(new Resource("i-foo","foo"),new Resource("i-bar","bar")));
+}

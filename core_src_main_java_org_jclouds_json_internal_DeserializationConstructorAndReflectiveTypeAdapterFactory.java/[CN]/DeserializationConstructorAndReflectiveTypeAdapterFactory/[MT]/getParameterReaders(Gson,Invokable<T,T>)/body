@@ -1,0 +1,11 @@
+{
+  Builder<String,ParameterReader<?>> result=ImmutableMap.builder();
+  for (  Parameter param : deserializationCtor.getParameters()) {
+    TypeAdapter<?> adapter=context.getAdapter(TypeToken.get(param.getType().getType()));
+    String parameterName=constructorFieldNamingPolicy.translateName(deserializationCtor,param.hashCode());
+    checkArgument(parameterName != null,deserializationCtor + " parameter " + 0+ " failed to be named by "+ constructorFieldNamingPolicy);
+    @SuppressWarnings({"rawtypes","unchecked"}) ParameterReader<?> parameterReader=new ParameterReader(param.hashCode(),parameterName,adapter);
+    result.put(parameterReader.name,parameterReader);
+  }
+  return result.build();
+}

@@ -1,0 +1,23 @@
+{
+  if (in.peek() == JsonToken.BEGIN_OBJECT) {
+    Builder<E> builder=ImmutableSet.<E>builder();
+    boolean foundValues=false;
+    in.beginObject();
+    while (in.hasNext()) {
+      String name=in.nextName();
+      if (Objects.equal("values",name)) {
+        foundValues=true;
+        builder.addAll(delegate.read(in));
+      }
+ else {
+        in.skipValue();
+      }
+    }
+    checkState(foundValues,"Expected BEGIN_ARRAY or the object to contain an array called 'values'");
+    in.endObject();
+    return builder.build();
+  }
+ else {
+    return delegate.read(in);
+  }
+}

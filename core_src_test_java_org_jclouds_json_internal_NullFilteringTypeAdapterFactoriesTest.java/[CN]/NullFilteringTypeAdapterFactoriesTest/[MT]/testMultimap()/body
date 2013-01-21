@@ -1,0 +1,14 @@
+{
+  Multimap<String,String> noNulls=multimap.fromJson("{\"value\":[\"a test string!\"]}",multimapType);
+  assertEquals(noNulls,ImmutableMultimap.of("value","a test string!"));
+  Multimap<String,String> withNull=multimap.fromJson("{\"value\":[null]}",multimapType);
+  assertEquals(withNull,ImmutableMultimap.of());
+  Multimap<String,String> withEmpty=multimap.fromJson("{\"value\":[\"\"]}",multimapType);
+  assertEquals(withEmpty,ImmutableMultimap.of("value",""));
+  Multimap<String,String> withDupes=multimap.fromJson("{\"key\":[\"value\",\"value\"]}",multimapType);
+  assertEquals(withDupes.get("key"),ImmutableList.of("value","value"));
+  Multimap<String,Resource> resources=multimap.fromJson("{\"i-foo\":[{\"id\":\"i-foo\",\"name\":\"foo\"}],\"i-bar\":[{\"id\":\"i-bar\",\"name\":\"bar\"}]}",multimapResourceType);
+  assertEquals(resources,ImmutableMultimap.of("i-foo",new Resource("i-foo","foo"),"i-bar",new Resource("i-bar","bar")));
+  Multimap<String,Resource> resourceDupes=multimap.fromJson("{\"i-foo\":[{\"id\":\"i-foo\",\"name\":\"foo\"},{\"id\":\"i-bar\",\"name\":\"bar\"}]}",multimapResourceType);
+  assertEquals(resourceDupes.get("i-foo"),ImmutableList.of(new Resource("i-foo","foo"),new Resource("i-bar","bar")));
+}

@@ -1,0 +1,10 @@
+{
+  Set<String> noNulls=set.fromJson("[\"value\",\"a test string!\"]",setType);
+  assertEquals(noNulls,ImmutableSet.of("value","a test string!"));
+  Set<String> withNull=set.fromJson("[null,\"a test string!\"]",setType);
+  assertEquals(withNull,ImmutableSet.of("a test string!"));
+  Set<String> withDupes=set.fromJson("[\"value\",\"value\"]",setType);
+  assertEquals(withDupes,ImmutableSet.of("value"));
+  Set<Resource> resources=set.fromJson("[{\"id\":\"i-foo\",\"name\":\"foo\"},{\"id\":\"i-bar\",\"name\":\"bar\"}]",setResourceType);
+  assertEquals(resources,ImmutableSet.of(new Resource("i-foo","foo"),new Resource("i-bar","bar")));
+}

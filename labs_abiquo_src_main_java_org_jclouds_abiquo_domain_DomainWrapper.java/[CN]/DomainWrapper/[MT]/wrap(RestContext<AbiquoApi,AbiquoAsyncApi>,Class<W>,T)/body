@@ -3,13 +3,13 @@
     return null;
   }
   try {
-    Constructor<W> cons=wrapperClass.getDeclaredConstructor(RestContext.class,target.getClass());
-    if (!cons.isAccessible()) {
-      cons.setAccessible(true);
-    }
-    return cons.newInstance(context,target);
+    Invokable<W,W> cons=constructor(wrapperClass,RestContext.class,target.getClass());
+    return cons.invoke(null,context,target);
   }
- catch (  Exception ex) {
-    throw new WrapperException(wrapperClass,target,ex);
+ catch (  InvocationTargetException e) {
+    throw new WrapperException(wrapperClass,target,e.getTargetException());
+  }
+catch (  IllegalAccessException e) {
+    throw new WrapperException(wrapperClass,target,e);
   }
 }
