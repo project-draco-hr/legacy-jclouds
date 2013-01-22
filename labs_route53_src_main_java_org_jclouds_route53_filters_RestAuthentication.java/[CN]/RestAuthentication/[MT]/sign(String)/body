@@ -1,0 +1,12 @@
+{
+  try {
+    ByteProcessor<byte[]> hmacSHA256=asByteProcessor(crypto.hmacSHA256(creds.get().credential.getBytes(UTF_8)));
+    return base64().encode(readBytes(toInputStream(toSign),hmacSHA256));
+  }
+ catch (  InvalidKeyException e) {
+    throw propagate(e);
+  }
+catch (  IOException e) {
+    throw propagate(e);
+  }
+}
