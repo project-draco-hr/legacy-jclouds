@@ -1,0 +1,8 @@
+{
+  HttpRequest insert=HttpRequest.builder().method("POST").endpoint("https://www.googleapis.com/compute/v1beta13/projects/myproject/instances").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).payload(payloadFromResourceWithContentType("/instance_insert.json",MediaType.APPLICATION_JSON)).build();
+  HttpResponse insertInstanceResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/operation.json")).build();
+  InstanceApi api=requestsSendResponses(requestForScopes(COMPUTE_SCOPE),TOKEN_RESPONSE,insert,insertInstanceResponse).getInstanceApiForProject("myproject");
+  Instance instance=new ParseInstanceTest().expected();
+  InstanceTemplate options=new InstanceTemplate.Builder().fromInstance(instance).network(instance.getNetworkInterfaces().iterator().next().getNetwork()).addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE,URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/disks/test"));
+  assertEquals(api.createInZone(instance.getName(),options,"us-central1-a"),new ParseOperationTest().expected());
+}

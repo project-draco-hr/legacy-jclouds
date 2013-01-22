@@ -1,0 +1,6 @@
+{
+  HttpRequest list=HttpRequest.builder().method("GET").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/instances").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/instance_list.json")).build();
+  InstanceApi api=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,list,operationResponse).getInstanceApiForProject("myproject");
+  assertEquals(api.listFirstPage().toString(),new ParseInstanceListTest().expected().toString());
+}
