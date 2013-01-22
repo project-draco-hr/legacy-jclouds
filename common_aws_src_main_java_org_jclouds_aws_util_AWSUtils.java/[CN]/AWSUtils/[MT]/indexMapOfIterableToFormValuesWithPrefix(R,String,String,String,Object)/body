@@ -3,11 +3,12 @@
   Map<Object,Iterable<Object>> map=(Map<Object,Iterable<Object>>)input;
   Builder<String,String> builder=ImmutableMultimap.builder();
   int i=1;
-  for (  Object k : map.keySet()) {
-    builder.put(prefix + "." + i+ "."+ keySuffix,checkNotNull(k.toString(),keySuffix.toLowerCase() + "s[" + i+ "]"));
-    if (!Iterables.isEmpty(map.get(k))) {
+  for (  Map.Entry<Object,Iterable<Object>> entry : map.entrySet()) {
+    builder.put(prefix + "." + i+ "."+ keySuffix,checkNotNull(entry.getKey().toString(),keySuffix.toLowerCase() + "s[" + i+ "]"));
+    Iterable<Object> iterable=entry.getValue();
+    if (!Iterables.isEmpty(iterable)) {
       int j=1;
-      for (      Object v : map.get(k)) {
+      for (      Object v : iterable) {
         builder.put(prefix + "." + i+ "."+ valueSuffix+ "."+ j,v.toString());
         j++;
       }
