@@ -1,0 +1,9 @@
+{
+  File file=File.createTempFile("testimg","png");
+  file.deleteOnExit();
+  Random random=new Random();
+  byte[] buffer=new byte[random.nextInt(2 * 1024 * 1024)];
+  random.nextBytes(buffer);
+  Files.copy(ByteStreams.newInputStreamSupplier(buffer),file);
+  return new FileInputStream(file);
+}
