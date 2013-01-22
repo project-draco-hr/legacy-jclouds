@@ -1,0 +1,15 @@
+{
+  File resourceDir=new File(TestUtils.TARGET_RESOURCE_DIR);
+  if (resourceDir.exists()) {
+    Utils.deleteRecursively(resourceDir);
+  }
+  if (!resourceDir.mkdir()) {
+    throw new IOException("Could not create: " + TARGET_RESOURCE_DIR);
+  }
+  Random random=new Random();
+  for (  File file : IMAGE_RESOURCES) {
+    byte[] buffer=new byte[random.nextInt(2 * 1024 * 1024)];
+    random.nextBytes(buffer);
+    Files.copy(ByteStreams.newInputStreamSupplier(buffer),file);
+  }
+}
