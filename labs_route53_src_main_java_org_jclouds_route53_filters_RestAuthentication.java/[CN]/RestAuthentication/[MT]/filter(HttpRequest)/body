@@ -1,0 +1,9 @@
+{
+  Credentials current=creds.get();
+  if (current instanceof TemporaryCredentials) {
+    request=replaceSecurityTokenHeader(request,TemporaryCredentials.class.cast(current));
+  }
+  request=replaceDateHeader(request,timeStampProvider.get());
+  String signature=sign(createStringToSign(request));
+  return replaceAuthorizationHeader(request,signature);
+}

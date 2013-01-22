@@ -1,0 +1,15 @@
+{
+  if (inZone) {
+    if (qName.equals("HostedZone")) {
+      inZone=false;
+      builder.zone(zoneHandler.getResult());
+    }
+ else {
+      zoneHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("NameServer")) {
+    builder.addNameServer(SaxUtils.currentOrNull(currentText));
+  }
+  currentText=new StringBuilder();
+}
