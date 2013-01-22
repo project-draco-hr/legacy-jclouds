@@ -3,12 +3,12 @@
     HostAggregateApi api=apiOption.get();
     for (    Map<String,String> theMetaData : ImmutableSet.of(ImmutableMap.of("somekey","somevalue"),ImmutableMap.of("somekey","some other value","anotherkey","another val"))) {
       HostAggregate details=api.setMetadata(testAggregate.getId(),theMetaData);
-      for (      String key : theMetaData.keySet()) {
-        assertEquals(details.getMetadata().get(key),theMetaData.get(key));
+      for (      Map.Entry<String,String> entry : theMetaData.entrySet()) {
+        assertEquals(details.getMetadata().get(entry.getKey()),entry.getValue());
       }
       details=api.get(testAggregate.getId());
-      for (      String key : theMetaData.keySet()) {
-        assertEquals(details.getMetadata().get(key),theMetaData.get(key));
+      for (      Map.Entry<String,String> entry : theMetaData.entrySet()) {
+        assertEquals(details.getMetadata().get(entry.getKey()),entry.getValue());
       }
     }
   }

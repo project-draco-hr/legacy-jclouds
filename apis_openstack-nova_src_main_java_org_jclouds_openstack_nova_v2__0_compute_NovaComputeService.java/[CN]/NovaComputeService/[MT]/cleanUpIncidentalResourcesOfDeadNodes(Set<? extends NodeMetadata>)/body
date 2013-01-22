@@ -1,6 +1,6 @@
 {
   Multimap<String,String> zoneToZoneAndGroupNames=orphanedGroupsByZoneId.apply(deadNodes);
-  for (  String zoneId : zoneToZoneAndGroupNames.keySet()) {
-    cleanOrphanedGroupsInZone(ImmutableSet.copyOf(zoneToZoneAndGroupNames.get(zoneId)),zoneId);
+  for (  Map.Entry<String,Collection<String>> entry : zoneToZoneAndGroupNames.asMap().entrySet()) {
+    cleanOrphanedGroupsInZone(ImmutableSet.copyOf(entry.getValue()),entry.getKey());
   }
 }
