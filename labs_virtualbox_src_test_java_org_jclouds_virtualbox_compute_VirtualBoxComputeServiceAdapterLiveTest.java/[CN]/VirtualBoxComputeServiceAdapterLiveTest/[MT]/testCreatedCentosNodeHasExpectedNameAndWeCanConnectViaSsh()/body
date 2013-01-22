@@ -1,0 +1,10 @@
+{
+  String group="foo";
+  String name="centos6-" + new Random(100).nextInt();
+  Template template=view.getComputeService().templateBuilder().imageId("centos-6.3-amd64").build();
+  centos=adapter.createNodeWithGroupEncodedIntoName(group,name,template);
+  assertTrue(centos.getNode().getName().contains(group));
+  assertTrue(centos.getNode().getName().contains(name));
+  assertTrue(centos.getNode().getName().startsWith(VIRTUALBOX_NODE_PREFIX));
+  doConnectViaSsh(centos.getNode(),prioritizeCredentialsFromTemplate.apply(template,centos.getCredentials()));
+}

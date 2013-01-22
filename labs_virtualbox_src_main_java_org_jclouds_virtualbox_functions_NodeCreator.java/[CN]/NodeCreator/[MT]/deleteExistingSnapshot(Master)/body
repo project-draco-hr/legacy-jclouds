@@ -1,0 +1,16 @@
+{
+  if (master.getMachine().getCurrentSnapshot() != null) {
+    ISession session;
+    try {
+      session=manager.get().getSessionObject();
+      master.getMachine().lockMachine(session,LockType.Write);
+      IProgress progress=session.getConsole().deleteSnapshot(master.getMachine().getCurrentSnapshot().getId());
+      progress.waitForCompletion(-1);
+      session.unlockMachine();
+    }
+ catch (    Exception e) {
+      throw new RuntimeException("error opening vbox machine session: " + e.getMessage(),e);
+    }
+    logger.debug("<< deleted an existing snapshot of vm(%s)",master.getMachine().getName());
+  }
+}
