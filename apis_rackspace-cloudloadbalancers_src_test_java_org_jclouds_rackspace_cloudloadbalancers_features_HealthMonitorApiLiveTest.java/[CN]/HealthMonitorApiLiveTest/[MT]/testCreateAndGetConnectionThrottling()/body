@@ -1,0 +1,6 @@
+{
+  clbApi.getHealthMonitorApiForZoneAndLoadBalancer(zone,lb.getId()).createOrUpdate(HealthMonitorApiExpectTest.getConnectHealthMonitor());
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  HealthMonitor healthMonitor=clbApi.getHealthMonitorApiForZoneAndLoadBalancer(zone,lb.getId()).get();
+  assertEquals(healthMonitor,HealthMonitorApiExpectTest.getConnectHealthMonitor());
+}
