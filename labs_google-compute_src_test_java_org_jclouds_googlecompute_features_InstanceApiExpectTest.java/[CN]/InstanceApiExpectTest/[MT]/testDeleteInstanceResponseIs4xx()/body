@@ -1,0 +1,6 @@
+{
+  HttpRequest delete=HttpRequest.builder().method("DELETE").endpoint("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/instances/test-instance").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
+  HttpResponse deleteResponse=HttpResponse.builder().statusCode(404).build();
+  InstanceApi api=requestsSendResponses(requestForScopes(COMPUTE_SCOPE),TOKEN_RESPONSE,delete,deleteResponse).getInstanceApiForProject("myproject");
+  assertNull(api.delete("test-instance"));
+}

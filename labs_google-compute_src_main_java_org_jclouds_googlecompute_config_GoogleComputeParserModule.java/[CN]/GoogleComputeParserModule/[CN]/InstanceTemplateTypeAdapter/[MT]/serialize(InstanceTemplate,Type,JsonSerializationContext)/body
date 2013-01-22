@@ -1,0 +1,22 @@
+{
+  InstanceTemplateInternal template=new InstanceTemplateInternal(src);
+  JsonObject instance=(JsonObject)context.serialize(template,InstanceTemplateInternal.class);
+  JsonArray networkInterfaces=new JsonArray();
+  networkInterfaces.add(context.serialize(src.getNetwork(),InstanceTemplate.Network.class));
+  instance.add("networkInterfaces",networkInterfaces);
+  if (src.getDisks() != null && !src.getDisks().isEmpty()) {
+    JsonArray disks=new JsonArray();
+    for (    InstanceTemplate.PersistentDisk persistentDisk : src.getDisks()) {
+      JsonObject disk=(JsonObject)context.serialize(persistentDisk,InstanceTemplate.PersistentDisk.class);
+      disk.addProperty("type","PERSISTENT");
+      disks.add(disk);
+    }
+    instance.add("disks",disks);
+  }
+  if (src.getMetadata() != null && !src.getMetadata().isEmpty()) {
+    JsonObject metadata=(JsonObject)context.serialize(new Metadata(src.getMetadata()));
+    instance.add("metadata",metadata);
+    return instance;
+  }
+  return instance;
+}

@@ -1,0 +1,17 @@
+{
+  Instance.Builder instanceBuilder=((Instance)context.deserialize(json,InstanceInternal.class)).toBuilder();
+  JsonObject object=(JsonObject)json;
+  if (object.get("disks") != null) {
+    JsonArray disks=(JsonArray)object.get("disks");
+    for (    JsonElement element : disks) {
+      JsonObject disk=(JsonObject)element;
+      if (disk.get("type").getAsString().equals("PERSISTENT")) {
+        instanceBuilder.addDisk((Instance.PersistentAttachedDisk)context.deserialize(disk,Instance.PersistentAttachedDisk.class));
+      }
+ else {
+        instanceBuilder.addDisk((Instance.AttachedDisk)context.deserialize(disk,Instance.AttachedDisk.class));
+      }
+    }
+  }
+  return Instance.builder().fromInstance(instanceBuilder.build()).build();
+}
