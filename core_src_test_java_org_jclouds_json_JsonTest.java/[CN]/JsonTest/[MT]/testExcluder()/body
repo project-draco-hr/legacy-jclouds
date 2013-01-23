@@ -1,0 +1,10 @@
+{
+  Json excluder=Guice.createInjector(new GsonModule(),new AbstractModule(){
+    protected void configure(){
+      bind(DefaultExclusionStrategy.class).to(ExcludeStringValue.class);
+    }
+  }
+).getInstance(Json.class);
+  ObjectNoDefaultConstructor obj=new ObjectNoDefaultConstructor("foo",1);
+  assertEquals(excluder.toJson(obj),"{\"intValue\":1}");
+}
