@@ -3,7 +3,7 @@
   try {
     Signature signer=signerCache.get(checkNotNull(creds.get(),"credential supplier returned null"));
     signer.update(stringToSign.getBytes(UTF_8));
-    signed=base64().encode(signer.sign());
+    signed=base64().withSeparator("\n",61).encode(signer.sign());
   }
  catch (  SignatureException e) {
     throw new HttpException("error signing request",e);
