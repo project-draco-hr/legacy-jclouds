@@ -1,0 +1,6 @@
+{
+  String base64Chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789%2B/=";
+  URI uri=URI.create("http://goo.com:443?header1=value1");
+  HttpRequest request=HttpRequest.builder().method("GET").endpoint(uri).addQueryParam("header2",base64Chars).build();
+  assertEquals(request.getRequestLine(),"GET http://goo.com:443?header1=value1&header2=ABCDEFGHIJKLMNOPQRSTUVWXYZ%0Aabcdefghijklmnopqrstuvwxyz%0A0123456789%2B/%3D HTTP/1.1");
+}
