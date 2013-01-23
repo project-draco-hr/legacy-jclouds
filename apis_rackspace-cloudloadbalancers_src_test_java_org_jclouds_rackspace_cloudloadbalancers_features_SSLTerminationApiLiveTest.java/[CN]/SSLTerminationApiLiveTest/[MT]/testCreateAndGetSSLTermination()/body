@@ -1,0 +1,6 @@
+{
+  clbApi.getSSLTerminationApiForZoneAndLoadBalancer(zone,lb.getId()).createOrUpdate(SSLTerminationApiExpectTest.getSSLTermination());
+  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  SSLTermination sslTermination=clbApi.getSSLTerminationApiForZoneAndLoadBalancer(zone,lb.getId()).get();
+  assertEquals(sslTermination,SSLTerminationApiExpectTest.getSSLTermination());
+}
