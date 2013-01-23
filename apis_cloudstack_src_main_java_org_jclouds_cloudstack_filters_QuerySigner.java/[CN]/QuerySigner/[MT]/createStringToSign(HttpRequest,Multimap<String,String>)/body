@@ -1,7 +1,8 @@
 {
   utils.logRequest(signatureLog,request,">>");
-  String queryLine=encodeQueryLine(TreeMultimap.create(decodedParams),ImmutableList.<Character>of());
-  String stringToSign=queryLine.toLowerCase();
+  ImmutableSortedSet.Builder<String> builder=ImmutableSortedSet.naturalOrder();
+  for (  Map.Entry<String,String> entry : decodedParams.entries())   builder.add(entry.getKey() + "=" + Strings2.urlEncode(entry.getValue()));
+  String stringToSign=Joiner.on('&').join(builder.build()).toLowerCase();
   if (signatureWire.enabled())   signatureWire.output(stringToSign);
   return stringToSign;
 }
