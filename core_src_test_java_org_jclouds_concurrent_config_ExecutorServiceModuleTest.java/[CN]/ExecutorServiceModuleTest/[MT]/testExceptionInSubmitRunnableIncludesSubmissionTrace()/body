@@ -4,7 +4,7 @@
   for (  ListeningExecutorService exec : ImmutableList.of(user,io)) {
     String submission=null;
     try {
-      submission=getStackTraceAsString(incrementInitialElement(new RuntimeException(),2)).replaceFirst(".*\n","");
+      submission=getStackTraceAsString(incrementInitialElement(new RuntimeException(),2)).replaceFirst(format(".*%s",LINE_SEPARATOR),"");
       exec.submit(runnableThrowsRTE()).get();
     }
  catch (    ExecutionException e) {
