@@ -1,0 +1,30 @@
+{
+  LoadingCache<TypeToken<?>,Set<Invokable<?,?>>> methodsForTypeTokenBackup=getStaticField(Reflection2.class,"methodsForTypeToken");
+  final Method[] methods=ChildOverridesAndNarrowsMethod.class.getDeclaredMethods();
+  try {
+    setStaticField(Reflection2.class,"methodsForTypeToken",CacheBuilder.newBuilder().build(new CacheLoader<TypeToken<?>,Set<Invokable<?,?>>>(){
+      @Override public Set<Invokable<?,?>> load(      TypeToken<?> key) throws Exception {
+        if (!key.equals(TypeToken.of(ChildOverridesAndNarrowsMethod.class))) {
+          fail(format("expected only key %s to be requested, but was %s",TypeToken.of(ChildOverridesAndNarrowsMethod.class),key));
+        }
+        return ImmutableSet.<Invokable<?,?>>of(Invokable.from(methods[0]),Invokable.from(methods[1]));
+      }
+    }
+));
+    assertEquals(Reflection2.method(ChildOverridesAndNarrowsMethod.class,"method"),Invokable.from(ChildOverridesAndNarrowsMethod.class.getMethod("method")));
+    Reflection2Test.<LoadingCache<?,?>>getStaticField(Reflection2.class,"methodForParams").invalidateAll();
+    setStaticField(Reflection2.class,"methodsForTypeToken",CacheBuilder.newBuilder().build(new CacheLoader<TypeToken<?>,Set<Invokable<?,?>>>(){
+      @Override public Set<Invokable<?,?>> load(      TypeToken<?> key) throws Exception {
+        if (!key.equals(TypeToken.of(ChildOverridesAndNarrowsMethod.class))) {
+          fail(format("expected only key %s to be requested, but was %s",TypeToken.of(ChildOverridesAndNarrowsMethod.class),key));
+        }
+        return ImmutableSet.<Invokable<?,?>>of(Invokable.from(methods[1]),Invokable.from(methods[0]));
+      }
+    }
+));
+    assertEquals(Reflection2.method(ChildOverridesAndNarrowsMethod.class,"method"),Invokable.from(ChildOverridesAndNarrowsMethod.class.getMethod("method")));
+  }
+  finally {
+    setStaticField(Reflection2.class,"methodsForTypeToken",methodsForTypeTokenBackup);
+  }
+}
