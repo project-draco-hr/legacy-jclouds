@@ -2,7 +2,7 @@
   VmSpec vmSpec=masterSpec.getVmSpec();
   IsoSpec isoSpec=masterSpec.getIsoSpec();
   String masterName=vmSpec.getVmName();
-  IMachine masterMachine=createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(masterSpec);
+  IMachine masterMachine=checkNotNull(createAndRegisterMachineFromIsoIfNotAlreadyExists.apply(masterSpec),"master machine");
   machineController.ensureMachineIsLaunched(masterName);
   String installationKeySequence=isoSpec.getInstallationKeySequence().replace("PRECONFIGURATION_URL",preconfigurationUrl);
   configureOsInstallationWithKeyboardSequence(masterName,installationKeySequence);

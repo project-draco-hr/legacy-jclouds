@@ -8,4 +8,11 @@
   hostVersion=Iterables.get(Splitter.on('-').split(view.utils().injector().getInstance(Key.get(String.class,BuildVersion.class))),0);
   operatingSystemIso=String.format("%s/%s.iso",isosDir,template.getImage().getName());
   guestAdditionsIso=String.format("%s/VBoxGuestAdditions_%s.iso",isosDir,hostVersion);
+  keystrokeSequence="";
+  try {
+    keystrokeSequence=Strings2.toStringAndClose(getClass().getResourceAsStream("/default-keystroke-sequence"));
+  }
+ catch (  IOException e) {
+    throw new RuntimeException("error reading default-keystroke-sequence file");
+  }
 }

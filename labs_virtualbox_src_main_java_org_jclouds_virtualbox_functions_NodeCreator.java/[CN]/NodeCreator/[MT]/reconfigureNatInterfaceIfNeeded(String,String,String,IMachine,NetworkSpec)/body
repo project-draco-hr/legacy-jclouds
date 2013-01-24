@@ -1,0 +1,18 @@
+{
+  final String scriptName="nat";
+  final String folder="redHatAndDerivatives";
+  if (osTypeId.contains("RedHat")) {
+    File scriptFile=copyScriptToWorkingDir(folder,scriptName);
+    copyToNodeAndExecScript(guestOsUser,guestOsPassword,clone.getName(),scriptFile);
+  }
+ else   if (osTypeId.contains("Ubuntu") || osTypeId.contains("Debian")) {
+    NodeMetadata partialNodeMetadata=buildPartialNodeMetadata(clone,guestOsUser,guestOsPassword);
+    Optional<NetworkInterfaceCard> optionalNatIfaceCard=Iterables.tryFind(networkSpec.getNetworkInterfaceCards(),new Predicate<NetworkInterfaceCard>(){
+      @Override public boolean apply(      NetworkInterfaceCard nic){
+        return nic.getNetworkAdapter().getNetworkAttachmentType().equals(NetworkAttachmentType.NAT);
+      }
+    }
+);
+    checkState(networkUtils.enableNetworkInterface(partialNodeMetadata,optionalNatIfaceCard.get()),"cannot enable NAT Interface on vm(%s)",clone.getName());
+  }
+}

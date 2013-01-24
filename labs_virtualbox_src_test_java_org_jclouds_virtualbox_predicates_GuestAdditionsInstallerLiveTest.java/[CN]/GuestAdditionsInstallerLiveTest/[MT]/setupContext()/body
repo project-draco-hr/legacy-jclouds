@@ -4,8 +4,6 @@
   String instanceName=VIRTUALBOX_IMAGE_PREFIX + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN,getClass().getSimpleName());
   StorageController ideController=StorageController.builder().name("IDE Controller").bus(StorageBus.IDE).attachISO(0,0,operatingSystemIso).attachHardDisk(HardDisk.builder().diskpath(adminDisk(instanceName)).controllerPort(0).deviceSlot(1).autoDelete(true).build()).attachISO(1,1,guestAdditionsIso).build();
   instanceVmSpec=VmSpec.builder().id(instanceName).name(instanceName).osTypeId("").memoryMB(512).cleanUpMode(CleanupMode.Full).controller(ideController).forceOverwrite(true).build();
-  Function<String,String> configProperties=injector.getInstance(ValueOfConfigurationKeyOrNull.class);
-  IsoSpec isoSpec=IsoSpec.builder().sourcePath(operatingSystemIso).installationScript(configProperties.apply(VIRTUALBOX_INSTALLATION_KEY_SEQUENCE).replace("HOSTNAME",instanceVmSpec.getVmName())).build();
   NetworkAdapter networkAdapter=NetworkAdapter.builder().networkAttachmentType(NetworkAttachmentType.HostOnly).build();
   NetworkInterfaceCard networkInterfaceCard=NetworkInterfaceCard.builder().addNetworkAdapter(networkAdapter).addHostInterfaceName("vboxnet0").slot(0L).build();
   instanceNetworkSpec=NetworkSpec.builder().addNIC(networkInterfaceCard).build();
