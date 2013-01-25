@@ -1,0 +1,9 @@
+{
+  final Method[] methods=ChildOverridesAndNarrowsMethod.class.getDeclaredMethods();
+  setStaticField(Reflection2.class,"methodsForTypeToken",keyOverridingCache(TypeToken.of(ChildOverridesAndNarrowsMethod.class),ImmutableSet.<Invokable<?,?>>of(Invokable.from(methods[0]),Invokable.from(methods[1]))));
+  Invokable<?,Object> mostSpecificMethod=Invokable.from(ChildOverridesAndNarrowsMethod.class.getMethod("method"));
+  assertEquals(Reflection2.method(ChildOverridesAndNarrowsMethod.class,"method"),mostSpecificMethod);
+  Reflection2OverriddenMethodTest.<LoadingCache<?,?>>getStaticField(Reflection2.class,"methodForParams").invalidateAll();
+  setStaticField(Reflection2.class,"methodsForTypeToken",keyOverridingCache(TypeToken.of(ChildOverridesAndNarrowsMethod.class),ImmutableSet.<Invokable<?,?>>of(Invokable.from(methods[1]),Invokable.from(methods[0]))));
+  assertEquals(Reflection2.method(ChildOverridesAndNarrowsMethod.class,"method"),mostSpecificMethod);
+}
