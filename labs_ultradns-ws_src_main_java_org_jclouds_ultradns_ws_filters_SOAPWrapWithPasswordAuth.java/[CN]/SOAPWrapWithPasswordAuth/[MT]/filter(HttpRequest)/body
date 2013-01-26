@@ -1,0 +1,8 @@
+{
+  checkNotNull(request.getPayload(),"request is not ready to wrap; payload not present");
+  Credentials current=creds.get();
+  String body=request.getPayload().getRawContent().toString();
+  Payload wrappedPayload=Payloads.newStringPayload(new StringBuilder().append(format(SOAP_PREFIX,current.identity,current.credential)).append(body).append(SOAP_SUFFIX).toString());
+  wrappedPayload.getContentMetadata().setContentType("application/xml");
+  return request.toBuilder().payload(wrappedPayload).build();
+}
