@@ -1,0 +1,27 @@
+{
+  Calendar calendar=Calendar.getInstance();
+  calendar.add(Calendar.DATE,-1);
+  Date yesterday=calendar.getTime();
+  Date today=new Date();
+  FluentIterable<LoadBalancer> loadBalancers=clbApi.getReportApiForZone(zone).listBillableLoadBalancers(yesterday,today).concat();
+  assertNotNull(loadBalancers);
+  HistoricalUsage historicalUsage=clbApi.getReportApiForZone(zone).getHistoricalUsage(yesterday,today);
+  assertNotEquals(historicalUsage.getAccountId(),0);
+  FluentIterable<LoadBalancerUsage> loadBalancerUsages=clbApi.getReportApiForZone(zone).listLoadBalancerUsage(lb.getId(),yesterday,today).concat();
+  assertNotNull(loadBalancerUsages);
+  loadBalancerUsages=clbApi.getReportApiForZone(zone).listCurrentLoadBalancerUsage(lb.getId()).concat();
+  assertNotNull(loadBalancerUsages);
+  try {
+    LoadBalancerStats loadBalancerStats=clbApi.getReportApiForZone(zone).getLoadBalancerStats(lb.getId());
+    assertNotNull(loadBalancerStats);
+  }
+ catch (  HttpResponseException e) {
+    if (e.getResponse().getStatusCode() != 500) {
+      throw e;
+    }
+  }
+  Iterable<Protocol> protocols=clbApi.getReportApiForZone(zone).listProtocols();
+  assertTrue(!Iterables.isEmpty(protocols));
+  Iterable<String> algorithms=clbApi.getReportApiForZone(zone).listAlgorithms();
+  assertTrue(!Iterables.isEmpty(algorithms));
+}
