@@ -1,0 +1,11 @@
+{
+  URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/stats");
+  ReportApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/report-loadbalancerstats-get.json")).build()).getReportApiForZone("DFW");
+  LoadBalancerStats loadBalancerStats=api.getLoadBalancerStats(2000);
+  assertEquals(loadBalancerStats.getConnectTimeOut(),2);
+  assertEquals(loadBalancerStats.getConnectError(),0);
+  assertEquals(loadBalancerStats.getConnectFailure(),0);
+  assertEquals(loadBalancerStats.getDataTimedOut(),10);
+  assertEquals(loadBalancerStats.getKeepAliveTimedOut(),0);
+  assertEquals(loadBalancerStats.getMaxConn(),22);
+}
