@@ -1,0 +1,8 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (equalsOrSuffix(qName,"GeneralZoneProperties")) {
+    Type type=Type.valueOf(checkNotNull(attributes.get("zoneType"),"zoneType").toUpperCase());
+    int count=Integer.parseInt(checkNotNull(attributes.get("resourceRecordCount"),"resourceRecordCount"));
+    zone=ZoneProperties.builder().name(attributes.get("name")).typeCode(type.getCode()).resourceRecordCount(count).modified(dateService.iso8601DateParse(attributes.get("modified"))).build();
+  }
+}

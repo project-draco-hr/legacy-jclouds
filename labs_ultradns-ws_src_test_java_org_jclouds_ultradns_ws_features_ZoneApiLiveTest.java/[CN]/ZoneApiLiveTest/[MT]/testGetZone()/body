@@ -1,0 +1,10 @@
+{
+  for (  Zone zone : api().listByAccount(account.getId())) {
+    ZoneProperties zoneProperties=api().get(zone.getName());
+    assertEquals(zoneProperties.getName(),zone.getName());
+    assertEquals(zoneProperties.getType(),zone.getType());
+    assertEquals(zoneProperties.getTypeCode(),zone.getTypeCode());
+    checkNotNull(zoneProperties.getModified(),"Modified cannot be null for a Zone %s",zone);
+    assertTrue(zoneProperties.getResourceRecordCount() >= 0,"ResourceRecordCount must be positive or zero for a Zone " + zone);
+  }
+}
