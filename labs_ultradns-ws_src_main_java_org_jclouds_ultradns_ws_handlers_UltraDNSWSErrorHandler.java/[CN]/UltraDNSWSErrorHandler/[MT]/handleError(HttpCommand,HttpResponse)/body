@@ -1,0 +1,24 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  try {
+    byte[] data=closeClientButKeepContentStream(response);
+    String message=data != null ? new String(data) : null;
+    if (message != null) {
+      exception=new HttpResponseException(command,response,message);
+      String contentType=response.getPayload().getContentMetadata().getContentType();
+      if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1)) {
+        UltraDNSWSError error=factory.create(handlers.get()).parse(message);
+        if (error != null) {
+          exception=refineException(new UltraDNSWSResponseException(command,response,error));
+        }
+      }
+    }
+ else {
+      exception=new HttpResponseException(command,response);
+    }
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}
