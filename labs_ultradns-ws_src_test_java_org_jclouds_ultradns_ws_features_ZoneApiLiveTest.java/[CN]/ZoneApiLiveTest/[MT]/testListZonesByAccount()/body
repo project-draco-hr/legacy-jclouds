@@ -1,0 +1,9 @@
+{
+  FluentIterable<Zone> response=api().listByAccount(account.getId());
+  for (  Zone zone : response) {
+    checkZone(zone);
+  }
+  if (response.anyMatch(typeEquals(PRIMARY))) {
+    assertEquals(api().listByAccountAndType(account.getId(),PRIMARY).toSet(),response.filter(typeEquals(PRIMARY)).toSet());
+  }
+}
