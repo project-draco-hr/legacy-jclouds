@@ -12,11 +12,11 @@
     assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
     metadata=clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).getMetadata(node.getId());
     assertEquals(metadata.get("key1"),"key1-updated");
-    assertTrue(clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).removeMetadatum(node.getId(),metadata.getId("key1")));
+    assertTrue(clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).deleteMetadatum(node.getId(),metadata.getId("key1")));
     assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
     metadata=clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).getMetadata(node.getId());
     assertNull(metadata.get("key1"));
-    assertTrue(clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).removeMetadata(node.getId(),ImmutableList.<Integer>of(metadata.getId("key2"),metadata.getId("key3"))));
+    assertTrue(clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).deleteMetadata(node.getId(),ImmutableList.<Integer>of(metadata.getId("key2"),metadata.getId("key3"))));
     assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
     metadata=clbApi.getNodeApiForZoneAndLoadBalancer(lb.getRegion(),lb.getId()).getMetadata(node.getId());
     assertEquals(metadata.size(),0);
