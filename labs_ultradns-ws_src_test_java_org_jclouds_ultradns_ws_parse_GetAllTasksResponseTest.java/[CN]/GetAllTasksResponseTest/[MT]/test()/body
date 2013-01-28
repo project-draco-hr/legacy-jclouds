@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/tasks.xml");
+  FluentIterable<Task> expected=expected();
+  TaskListHandler handler=injector.getInstance(TaskListHandler.class);
+  FluentIterable<Task> result=factory.create(handler).parse(is);
+  assertEquals(result.toSet().toString(),expected.toSet().toString());
+}
