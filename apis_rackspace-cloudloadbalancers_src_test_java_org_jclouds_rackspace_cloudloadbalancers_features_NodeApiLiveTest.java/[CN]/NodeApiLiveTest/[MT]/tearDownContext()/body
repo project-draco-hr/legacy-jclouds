@@ -4,7 +4,7 @@
     LoadBalancerApi lbClient=clbApi.getLoadBalancerApiForZone(lb.getRegion());
     if (lbClient.get(lb.getId()).getStatus() != Status.DELETED) {
       assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-      lbClient.remove(lb.getId());
+      lbClient.delete(lb.getId());
     }
     assertTrue(awaitDeleted(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
   }

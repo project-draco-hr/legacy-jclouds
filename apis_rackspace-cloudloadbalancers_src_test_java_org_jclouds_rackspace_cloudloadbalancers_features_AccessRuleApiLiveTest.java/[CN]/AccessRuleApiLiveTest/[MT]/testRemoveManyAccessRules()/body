@@ -5,7 +5,7 @@
   List<Integer> removedAccessRuleIds=ImmutableList.<Integer>of(removedAccessRule1.getId(),removedAccessRule2.getId());
   accessRules.remove(removedAccessRule1.getAddress());
   accessRules.remove(removedAccessRule2.getAddress());
-  assertTrue(clbApi.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).remove(removedAccessRuleIds));
+  assertTrue(clbApi.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).delete(removedAccessRuleIds));
   assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
   assertExpectedAccessRules(accessRules);
 }
