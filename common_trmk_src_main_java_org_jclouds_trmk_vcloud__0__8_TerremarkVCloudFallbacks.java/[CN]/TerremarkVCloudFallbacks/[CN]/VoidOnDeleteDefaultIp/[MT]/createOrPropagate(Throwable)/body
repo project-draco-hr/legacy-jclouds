@@ -1,0 +1,10 @@
+{
+  if (checkNotNull(t,"throwable") instanceof HttpResponseException) {
+    HttpResponseException hre=HttpResponseException.class.cast(t);
+    if (hre.getResponse().getStatusCode() == 503 || hre.getResponse().getStatusCode() == 401 || MESSAGE_PATTERN.matcher(hre.getMessage()).matches())     return null;
+  }
+ else   if (t instanceof AuthorizationException) {
+    return null;
+  }
+  throw propagate(t);
+}

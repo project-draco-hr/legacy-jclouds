@@ -1,16 +1,3 @@
 {
-  Throwable exception=find(getCausalChain(from),isNotAvailableException(from),null);
-  if (exception != null) {
-    if (exception instanceof HttpResponseException) {
-      HttpResponseException responseException=(HttpResponseException)exception;
-      HttpResponse response=responseException.getResponse();
-      if (response != null && response.getStatusCode() >= 500 && response.getStatusCode() < 600) {
-        return immediateFuture(false);
-      }
-    }
- else {
-      return immediateFuture(false);
-    }
-  }
-  throw propagate(from);
+  return immediateFuture(createOrPropagate(from));
 }
