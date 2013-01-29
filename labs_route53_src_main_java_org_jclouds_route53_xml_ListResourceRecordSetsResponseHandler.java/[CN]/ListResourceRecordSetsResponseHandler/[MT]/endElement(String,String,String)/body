@@ -1,0 +1,23 @@
+{
+  if (inResourceRecordSets) {
+    if (qName.equals("ResourceRecordSets")) {
+      inResourceRecordSets=false;
+    }
+ else     if (qName.equals("ResourceRecordSet")) {
+      builder.add(resourceRecordSetHandler.getResult());
+    }
+ else {
+      resourceRecordSetHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("NextRecordName")) {
+    builder.nextRecordName(currentOrNull(currentText));
+  }
+ else   if (qName.equals("NextRecordType")) {
+    builder.nextRecordType(Type.valueOf(currentOrNull(currentText)));
+  }
+ else   if (qName.equals("NextRecordIdentifier")) {
+    builder.nextRecordIdentifier(currentOrNull(currentText));
+  }
+  currentText=new StringBuilder();
+}
