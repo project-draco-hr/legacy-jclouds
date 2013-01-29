@@ -1,0 +1,10 @@
+{
+  Invokable<?,?> invoked=invocation.getInvokable();
+  if (invoked.isAnnotationPresent(Named.class)) {
+    return invoked.getAnnotation(Named.class).value();
+  }
+ else {
+    String className=invoked.getOwnerType().getRawType().getSimpleName().replace("AsyncClient","Client").replace("AsyncApi","Api");
+    return className + "." + invoked.getName();
+  }
+}

@@ -6,7 +6,15 @@
   install(new GsonModule());
   install(new SetCaller.Module());
   install(new FactoryModuleBuilder().build(BindToJsonPayloadWrappedWith.Factory.class));
-  install(new FactoryModuleBuilder().build(BlockOnFuture.Factory.class));
+  bind(new TypeLiteral<Function<HttpRequest,Function<HttpResponse,?>>>(){
+  }
+).to(TransformerForRequest.class);
+  bind(new TypeLiteral<org.jclouds.Fallback<Object>>(){
+  }
+).to(MapHttp4xxCodesToExceptions.class);
+  bind(new TypeLiteral<Function<Invocation,HttpRequest>>(){
+  }
+).to(RestAnnotationProcessor.class);
   bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
   bindHttpApi(binder(),HttpClient.class,HttpAsyncClient.class);
   bind(new TypeLiteral<AtomicReference<AuthorizationException>>(){

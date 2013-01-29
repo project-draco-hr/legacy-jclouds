@@ -1,0 +1,8 @@
+{
+  IllegalStateException exception=new IllegalStateException();
+  expect(http.submit(new HttpCommand(getRequest))).andReturn(Futures.<HttpResponse>immediateFailedFuture(exception));
+  expect(fallback.create(exception)).andReturn(Futures.<HttpResponse>immediateFuture(fallbackResponse));
+  future=createMock(ListenableFuture.class);
+  replay(http,timeLimiter,fallback,config,future);
+  assertEquals(ListenableFuture.class.cast(invokeHttpMethod.apply(asyncGet)).get(),fallbackResponse);
+}

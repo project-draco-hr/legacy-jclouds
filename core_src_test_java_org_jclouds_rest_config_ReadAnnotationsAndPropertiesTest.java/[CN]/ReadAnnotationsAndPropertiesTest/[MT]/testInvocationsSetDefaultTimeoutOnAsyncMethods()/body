@@ -1,0 +1,13 @@
+{
+  final Properties props=new Properties();
+  props.setProperty("jclouds.timeouts.default","250");
+  Injector injector=Guice.createInjector(new AbstractModule(){
+    protected void configure(){
+      Names.bindProperties(binder(),props);
+    }
+  }
+);
+  ReadAnnotationsAndProperties config=new ReadAnnotationsAndProperties(injector,new FilterStringsBoundToInjectorByName(injector),defaultFallback);
+  assertEquals(config.getTimeoutNanos(asyncGet),Optional.of(250000000l));
+  assertEquals(config.getTimeoutNanos(asyncNamedGet),Optional.of(250000000l));
+}
