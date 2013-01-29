@@ -1,0 +1,8 @@
+{
+  String commandName=config.getCommandName(invocation);
+  HttpCommand command=toCommand(commandName,invocation);
+  Function<HttpResponse,?> transformer=getTransformer(commandName,command);
+  org.jclouds.Fallback<?> fallback=getFallback(commandName,invocation,command);
+  logger.debug(">> submitting %s",commandName);
+  return withFallback(transform(http.submit(command),transformer,userExecutor),fallback);
+}

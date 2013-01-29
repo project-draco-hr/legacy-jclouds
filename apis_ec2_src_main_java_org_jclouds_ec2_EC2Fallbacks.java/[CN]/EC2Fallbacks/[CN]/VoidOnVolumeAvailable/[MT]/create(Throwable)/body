@@ -1,7 +1,3 @@
 {
-  if (checkNotNull(t,"throwable") instanceof AWSResponseException) {
-    AWSResponseException e=AWSResponseException.class.cast(t);
-    if (Predicates.in(ImmutableSet.of("IncorrectState","available")).apply(e.getError().getCode()))     return immediateFuture(null);
-  }
-  throw propagate(t);
+  return immediateFuture(createOrPropagate(t));
 }

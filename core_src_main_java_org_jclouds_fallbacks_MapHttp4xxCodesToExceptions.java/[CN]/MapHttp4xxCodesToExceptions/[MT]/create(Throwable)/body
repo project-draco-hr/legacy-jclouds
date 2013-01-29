@@ -1,17 +1,3 @@
 {
-  propagateIfRetryAfter.create(t);
-  if (t instanceof HttpResponseException) {
-    HttpResponseException responseException=HttpResponseException.class.cast(t);
-    if (responseException.getResponse() != null) switch (responseException.getResponse().getStatusCode()) {
-case 401:
-      throw new AuthorizationException(responseException);
-case 403:
-    throw new AuthorizationException(responseException);
-case 404:
-  throw new ResourceNotFoundException(responseException);
-case 409:
-throw new IllegalStateException(responseException);
-}
-}
-throw propagate(t);
+  return immediateFuture(createOrPropagate(t));
 }

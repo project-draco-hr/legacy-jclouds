@@ -1,0 +1,15 @@
+{
+  String commandName=getCommandName(in);
+  Optional<Long> defaultMillis=fromNullable(timeouts.get("default"));
+  Optional<Long> timeoutMillis=fromNullable(timeouts.get(commandName));
+  Invokable<?,?> invoked=in.getInvokable();
+  if (invoked.isAnnotationPresent(Named.class)) {
+    timeoutMillis=timeoutMillis.or(defaultMillis);
+  }
+ else {
+    String className=invoked.getOwnerType().getRawType().getSimpleName().replace("AsyncClient","Client").replace("AsyncApi","Api");
+    timeoutMillis=timeoutMillis.or(fromNullable(timeouts.get(className))).or(defaultMillis);
+  }
+  if (timeoutMillis.isPresent())   return Optional.of(MILLISECONDS.toNanos(timeoutMillis.get()));
+  return Optional.absent();
+}

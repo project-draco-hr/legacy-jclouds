@@ -1,8 +1,11 @@
 {
   if (isFuture(in.getInvokable())) {
-    return createFuture(in);
+    return submit(in);
   }
-  Invocation async=Invocation.create(checkNotNull(sync2AsyncInvokables.getIfPresent(in.getInvokable()),"invokable %s not in %s",in.getInvokable(),sync2AsyncInvokables),in.getArgs());
-  checkState(isFuture(async.getInvokable()),"not a future: %s",async);
-  return blocker.create(async).apply(createFuture(async));
+  Invocation async=toAsync(in);
+  Optional<Long> timeoutNanos=config.getTimeoutNanos(async);
+  if (timeoutNanos.isPresent()) {
+    return invokeWithTimeout(async,timeoutNanos.get());
+  }
+  return invoke(async);
 }

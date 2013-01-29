@@ -1,0 +1,9 @@
+{
+  if (checkNotNull(t,"throwable") instanceof AzureStorageResponseException) {
+    AzureStorageResponseException responseException=AzureStorageResponseException.class.cast(t);
+    if ("ContainerAlreadyExists".equals(responseException.getError().getCode())) {
+      return false;
+    }
+  }
+  throw propagate(t);
+}

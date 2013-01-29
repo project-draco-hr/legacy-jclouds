@@ -1,43 +1,8 @@
 {
-  HttpResponse response=null;
-  for (; ; ) {
-    HttpRequest request=command.getCurrentRequest();
-    Q nativeRequest=null;
-    try {
-      for (      HttpRequestFilter filter : request.getFilters()) {
-        request=filter.filter(request);
-      }
-      checkRequestHasContentLengthOrChunkedEncoding(request,"After filtering, the request has neither chunked encoding nor content length: " + request);
-      logger.debug("Sending request %s: %s",request.hashCode(),request.getRequestLine());
-      wirePayloadIfEnabled(wire,request);
-      utils.logRequest(headerLog,request,">>");
-      nativeRequest=convert(request);
-      response=invoke(nativeRequest);
-      logger.debug("Receiving response %s: %s",request.hashCode(),response.getStatusLine());
-      utils.logResponse(headerLog,response,"<<");
-      if (response.getPayload() != null && wire.enabled())       wire.input(response);
-      nativeRequest=null;
-      int statusCode=response.getStatusCode();
-      if (statusCode >= 300) {
-        if (shouldContinue(response))         continue;
- else         break;
-      }
- else {
-        break;
-      }
-    }
- catch (    Exception e) {
-      IOException ioe=Throwables2.getFirstThrowableOfType(e,IOException.class);
-      if (ioe != null && ioRetryHandler.shouldRetryRequest(command,ioe)) {
-        continue;
-      }
-      command.setException(new HttpResponseException(e.getMessage() + " connecting to " + command.getCurrentRequest().getRequestLine(),command,null,e));
-      break;
-    }
- finally {
-      cleanup(nativeRequest);
-    }
+  try {
+    return invoke(command);
   }
-  if (command.getException() != null)   throw command.getException();
-  return response;
+  finally {
+    if (command.getException() != null)     throw command.getException();
+  }
 }

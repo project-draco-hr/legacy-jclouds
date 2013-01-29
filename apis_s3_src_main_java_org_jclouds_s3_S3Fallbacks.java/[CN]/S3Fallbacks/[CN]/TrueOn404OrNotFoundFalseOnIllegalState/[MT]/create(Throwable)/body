@@ -1,6 +1,3 @@
 {
-  if (getFirstThrowableOfType(checkNotNull(t,"throwable"),IllegalStateException.class) != null)   return immediateFuture(false);
-  if (getFirstThrowableOfType(t,ContainerNotFoundException.class) != null)   return immediateFuture(true);
-  if (returnValueOnCodeOrNull(t,true,equalTo(404)) != null)   return immediateFuture(true);
-  throw propagate(t);
+  return immediateFuture(createOrPropagate(t));
 }
