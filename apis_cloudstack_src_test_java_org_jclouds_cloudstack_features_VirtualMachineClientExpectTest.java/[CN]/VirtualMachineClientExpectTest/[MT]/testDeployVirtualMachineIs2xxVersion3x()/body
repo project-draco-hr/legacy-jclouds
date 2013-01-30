@@ -1,0 +1,6 @@
+{
+  HttpResponse deployVirtualMachineInZoneResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/deployvirtualmachineresponse.json")).build();
+  VirtualMachineClient client=requestSendsResponse(deployVirtualMachineInZone,deployVirtualMachineInZoneResponse);
+  AsyncCreateResponse async=client.deployVirtualMachineInZone("zone1","serviceOffering1","template1");
+  assertEquals(async,AsyncCreateResponse.builder().id("1234").jobId("50006").build());
+}
