@@ -3,15 +3,20 @@
   builder.name(from.getName());
   builder.description(from.getUrn());
   builder.is64Bit(true);
+  OsFamily family=UNRECOGNIZED;
+  String version="";
   List<String> pieces=ImmutableList.copyOf(Splitter.on(':').split(from.getUrn()));
   if (pieces.get(2).indexOf('-') != -1) {
     List<String> osFamVersion=ImmutableList.copyOf(Splitter.on('-').split(pieces.get(2)));
-    OsFamily family=OsFamily.fromValue(osFamVersion.get(0));
-    builder.family(family);
-    if (family != OsFamily.UNRECOGNIZED)     builder.version(ComputeServiceUtils.parseVersionOrReturnEmptyString(family,osFamVersion.get(1),osVersionMap));
+    family=fromValue(osFamVersion.get(0));
+    if (family != UNRECOGNIZED)     version=osFamVersion.get(1);
   }
  else {
-    builder.family(OsFamily.fromValue(pieces.get(2)));
+    family=fromValue(pieces.get(2));
   }
+  builder.family(family);
+  if (family != UNRECOGNIZED)   version=parseVersionOrReturnEmptyString(family,version,osVersionMap);
+  if ("".equals(version))   version=from.getVersion();
+  builder.version(version);
   return builder.build();
 }
