@@ -1,0 +1,22 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  try {
+    byte[] data=closeClientButKeepContentStream(response);
+    String message=data != null ? new String(data) : null;
+    if (message != null) {
+      exception=new HttpResponseException(command,response,message);
+      if (message.indexOf("ErrorResponse") != -1) {
+        AWSError error=factory.create(handlers.get()).parse(message);
+        exception=refineException(new AWSResponseException(command,response,error));
+      }
+ else       if (message.indexOf("InvalidChangeBatch") != -1) {
+        ImmutableList<String> errors=factory.create(batchHandlers.get()).parse(message);
+        exception=new InvalidChangeBatchException(errors,new HttpResponseException(command,response));
+      }
+    }
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}

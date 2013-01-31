@@ -1,0 +1,6 @@
+{
+  InputStream is=getClass().getResourceAsStream("/invalid_change_batch.xml");
+  InvalidChangeBatchHandler handler=injector.getInstance(InvalidChangeBatchHandler.class);
+  ImmutableList<String> result=factory.create(handler).parse(is);
+  assertEquals(result,ImmutableList.of("Tried to create resource record set duplicate.example.com. type A, but it already exists","Tried to delete resource record set noexist.example.com. type A, but it was not found"));
+}

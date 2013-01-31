@@ -1,0 +1,6 @@
+{
+  HttpResponse response=HttpResponse.builder().statusCode(400).payload(payloadFromResource("/invalid_change_batch.xml")).build();
+  function.handleError(command,response);
+  InvalidChangeBatchException exception=InvalidChangeBatchException.class.cast(command.getException());
+  assertEquals(exception.getMessages(),ImmutableSet.of("Tried to create resource record set duplicate.example.com. type A, but it already exists","Tried to delete resource record set noexist.example.com. type A, but it was not found"));
+}

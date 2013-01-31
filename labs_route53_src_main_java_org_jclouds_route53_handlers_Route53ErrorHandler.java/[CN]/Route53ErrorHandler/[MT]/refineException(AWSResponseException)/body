@@ -1,0 +1,13 @@
+{
+  int statusCode=in.getResponse().getStatusCode();
+  String errorCode=in.getError().getCode();
+  String message=in.getError().getMessage();
+  if (statusCode == 403 || "RequestExpired".equals(errorCode))   return new AuthorizationException(message,in);
+  if (statusCode == 400) {
+    if (ImmutableSet.of("InvalidAction","AccessDenied").contains(errorCode))     return new UnsupportedOperationException(message,in);
+ else     if ("Throttling".equals(errorCode))     return new InsufficientResourcesException(message,in);
+ else     if (message.indexOf("not found") != -1)     return new ResourceNotFoundException(message,in);
+    return new IllegalArgumentException(message,in);
+  }
+  return in;
+}
