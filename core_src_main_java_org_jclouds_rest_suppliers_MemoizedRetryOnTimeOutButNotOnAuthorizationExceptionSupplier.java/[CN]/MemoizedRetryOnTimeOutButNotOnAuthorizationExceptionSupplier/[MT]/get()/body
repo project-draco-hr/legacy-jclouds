@@ -2,7 +2,10 @@
   try {
     return cache.get("FOO").orNull();
   }
- catch (  ExecutionException e) {
+ catch (  UncheckedExecutionException e) {
+    throw propagate(e.getCause());
+  }
+catch (  ExecutionException e) {
     throw propagate(e.getCause());
   }
 }
