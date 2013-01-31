@@ -1,4 +1,17 @@
 {
-  DatacenterAndId datacenterAndId=DatacenterAndId.fromSlashEncoded(id);
-  cloudApiApi.getMachineApiForDatacenter(datacenterAndId.getDatacenter()).delete(datacenterAndId.getId());
+  final AtomicReference<MachineInDatacenter> machine=new AtomicReference<MachineInDatacenter>(getNode(id));
+  if (machine.get() == null)   return;
+  if (machine.get().get().getState() == State.RUNNING) {
+    logger.debug(">> stopping machine(%s) current state(%s)",machine.get().getId(),machine.get().get().getState());
+    cloudApiApi.getMachineApiForDatacenter(machine.get().getDatacenter()).stop(machine.get().getId());
+  }
+  checkState(retry(new Predicate<String>(){
+    public boolean apply(    String id){
+      machine.set(getNode(id));
+      return machine == null || machine.get().get().getState() != State.RUNNING;
+    }
+  }
+,timeouts.nodeSuspended).apply(id),"<< unable to stop machine(%s) current state(%s)",machine.get().getId(),machine.get().get().getState());
+  logger.debug(">> deleting machine(%s) current state(%s)",machine.get().getId(),machine.get().get().getState());
+  cloudApiApi.getMachineApiForDatacenter(machine.get().getDatacenter()).delete(machine.get().getId());
 }
