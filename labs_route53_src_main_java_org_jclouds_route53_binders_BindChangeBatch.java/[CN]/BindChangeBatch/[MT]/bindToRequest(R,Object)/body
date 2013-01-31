@@ -1,0 +1,13 @@
+{
+  ChangeBatch from=ChangeBatch.class.cast(payload);
+  StringBuilder b=new StringBuilder();
+  b.append("<ChangeResourceRecordSetsRequest xmlns=\"https://route53.amazonaws.com/doc/2012-02-29/\"><ChangeBatch>");
+  if (from.getComment().isPresent())   b.append("<Comment>").append(from.getComment().get()).append("</Comment>");
+  b.append("<Changes>");
+  for (  ActionOnResourceRecordSet change : from)   b.append("<Change>").append("<Action>").append(change.getAction()).append("</Action>").append(xml.apply(change.getRRS())).append("</Change>");
+  b.append("</Changes>");
+  b.append("</ChangeBatch></ChangeResourceRecordSetsRequest>");
+  Payload xmlPayload=newStringPayload(b.toString());
+  xmlPayload.getContentMetadata().setContentType("application/xml");
+  return (R)request.toBuilder().payload(xmlPayload).build();
+}

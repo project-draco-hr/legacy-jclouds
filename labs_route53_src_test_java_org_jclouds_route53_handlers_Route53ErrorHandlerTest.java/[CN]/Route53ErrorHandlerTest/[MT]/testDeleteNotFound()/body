@@ -1,0 +1,8 @@
+{
+  HttpResponse response=HttpResponse.builder().statusCode(400).payload(payloadFromStringWithContentType("<ErrorResponse><Error><Type>Sender</Type><Code>InvalidChangeBatch</Code>" + "<Message>Tried to delete resource record set krank.foo.bar., type TXT but it was not found</Message>" + "</Error></ErrorResponse>","application/xml")).build();
+  function.handleError(command,response);
+  assertEquals(command.getException().getClass(),ResourceNotFoundException.class);
+  assertEquals(command.getException().getMessage(),"Tried to delete resource record set krank.foo.bar., type TXT but it was not found");
+  AWSResponseException exception=AWSResponseException.class.cast(command.getException().getCause());
+  assertEquals(exception.getError().getCode(),"InvalidChangeBatch");
+}

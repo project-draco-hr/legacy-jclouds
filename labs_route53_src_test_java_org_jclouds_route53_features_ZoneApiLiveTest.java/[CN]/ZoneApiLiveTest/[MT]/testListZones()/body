@@ -1,14 +1,8 @@
 {
-  IterableWithMarker<Zone> response=api().list().get(0);
-  for (  Zone zone : response) {
+  ImmutableList<Zone> zones=api().list().concat().toList();
+  getAnonymousLogger().info("zones: " + zones.size());
+  for (  Zone zone : zones) {
     checkZone(zone);
-  }
-  if (response.size() > 0) {
-    Zone zone=response.iterator().next();
     assertEquals(api().get(zone.getId()).getZone(),zone);
-  }
-  response=api().list(ListZonesOptions.Builder.afterMarker(response.nextMarker().orNull()));
-  for (  Zone zone : response) {
-    checkZone(zone);
   }
 }
