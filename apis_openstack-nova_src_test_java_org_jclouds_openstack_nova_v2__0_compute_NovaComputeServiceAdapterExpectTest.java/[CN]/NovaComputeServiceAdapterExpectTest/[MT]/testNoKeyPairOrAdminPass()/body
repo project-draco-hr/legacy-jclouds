@@ -1,16 +1,11 @@
 {
-  HttpRequest createServer=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"key_name\":\"foo\"}}","application/json")).build();
+  HttpRequest createServer=HttpRequest.builder().method("POST").endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\"}}","application/json")).build();
   HttpResponse createServerResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server_no_adminpass.json","application/json; charset=UTF-8")).build();
   Map<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess).put(extensionsOfNovaRequest,extensionsOfNovaResponse).put(listDetail,listDetailResponse).put(listFlavorsDetail,listFlavorsDetailResponse).put(createServer,createServerResponse).put(serverDetail,serverDetailResponse).build();
   Injector forSecurityGroups=requestsSendResponses(requestResponseMap);
   Template template=forSecurityGroups.getInstance(TemplateBuilder.class).build();
-  template.getOptions().as(NovaTemplateOptions.class).keyPairName("foo");
   NovaComputeServiceAdapter adapter=forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
-  LoadingCache<ZoneAndName,KeyPair> keyPairCache=forSecurityGroups.getInstance(Key.get(new TypeLiteral<LoadingCache<ZoneAndName,KeyPair>>(){
-  }
-));
-  keyPairCache.put(ZoneAndName.fromZoneAndName("az-1.region-a.geo-1","foo"),KeyPair.builder().name("foo").privateKey("privateKey").build());
   NodeAndInitialCredentials<ServerInZone> server=adapter.createNodeWithGroupEncodedIntoName("test","test-e92",template);
   assertNotNull(server);
-  assertEquals(server.getCredentials(),LoginCredentials.builder().privateKey("privateKey").build());
+  assertNull(server.getCredentials());
 }
