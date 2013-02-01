@@ -1,0 +1,7 @@
+{
+  SessionApi sessionApi=createMock(SessionApi.class);
+  expect(sessionApi.login(creds)).andReturn(session);
+  replay(sessionApi);
+  assertSame(SessionManager.buildCache(sessionApi).apply(creds),session);
+  verify(sessionApi);
+}
