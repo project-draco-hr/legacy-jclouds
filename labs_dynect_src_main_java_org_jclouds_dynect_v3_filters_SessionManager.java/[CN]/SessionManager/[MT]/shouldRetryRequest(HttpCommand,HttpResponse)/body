@@ -1,0 +1,15 @@
+{
+  boolean retry=false;
+  try {
+    if (response.getStatusCode() == 401) {
+      closeClientButKeepContentStream(response);
+      logger.debug("invalidating session");
+      sessionCache.invalidateAll();
+      retry=super.shouldRetryRequest(command,response);
+    }
+    return retry;
+  }
+  finally {
+    releasePayload(response);
+  }
+}

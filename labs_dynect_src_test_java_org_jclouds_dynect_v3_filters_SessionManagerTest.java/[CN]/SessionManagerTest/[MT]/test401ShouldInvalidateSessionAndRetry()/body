@@ -1,0 +1,16 @@
+{
+  HttpCommand command=createMock(HttpCommand.class);
+  Supplier<Credentials> creds=createMock(Supplier.class);
+  LoadingCache<Credentials,Session> sessionCache=createMock(LoadingCache.class);
+  SessionApi sessionApi=createMock(SessionApi.class);
+  sessionCache.invalidateAll();
+  expectLastCall();
+  expect(command.incrementFailureCount()).andReturn(1);
+  expect(command.isReplayable()).andReturn(true);
+  expect(command.getFailureCount()).andReturn(1).atLeastOnce();
+  replay(creds,sessionCache,sessionApi,command);
+  HttpResponse response=HttpResponse.builder().statusCode(401).build();
+  SessionManager retry=new SessionManager(creds,sessionCache,sessionApi);
+  assertTrue(retry.shouldRetryRequest(command,response));
+  verify(creds,sessionCache,sessionApi,command);
+}
