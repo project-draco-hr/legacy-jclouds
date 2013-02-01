@@ -14,7 +14,6 @@
   }
   connection.setConnectTimeout(utils.getConnectionTimeout());
   connection.setReadTimeout(utils.getSocketOpenTimeout());
-  connection.setDoOutput(true);
   connection.setAllowUserInteraction(false);
   connection.setInstanceFollowRedirects(false);
   try {
@@ -24,7 +23,7 @@
     try {
       methodField.set(connection,request.getMethod());
     }
- catch (    Exception e1) {
+ catch (    IllegalAccessException e1) {
       logger.error(e,"could not set request method: ",request.getMethod());
       propagate(e1);
     }
@@ -40,8 +39,9 @@
   if (connection.getRequestProperty(USER_AGENT) == null) {
     connection.setRequestProperty(USER_AGENT,DEFAULT_USER_AGENT);
   }
-  if (request.getPayload() != null) {
-    MutableContentMetadata md=request.getPayload().getContentMetadata();
+  Payload payload=request.getPayload();
+  if (payload != null) {
+    MutableContentMetadata md=payload.getContentMetadata();
     for (    Map.Entry<String,String> entry : contentMetadataCodec.toHeaders(md).entries()) {
       connection.setRequestProperty(entry.getKey(),entry.getValue());
     }
@@ -49,25 +49,17 @@
       connection.setChunkedStreamingMode(8196);
     }
  else {
-      Long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
-      connection.setRequestProperty(CONTENT_LENGTH,length.toString());
+      long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
       checkArgument(length < Integer.MAX_VALUE,"JDK 1.6 does not support >2GB chunks. Use chunked encoding, if possible.");
-      connection.setFixedLengthStreamingMode(length.intValue());
-      if (length.intValue() > 0) {
-        connection.setRequestProperty("Expect","100-continue");
+      connection.setRequestProperty(CONTENT_LENGTH,length + "");
+      if (length > 0) {
+        writePayloadToConnection(payload,connection);
       }
-    }
-    CountingOutputStream out=new CountingOutputStream(connection.getOutputStream());
-    try {
-      request.getPayload().writeTo(out);
-    }
- catch (    IOException e) {
-      throw new RuntimeException(String.format("error after writing %d/%s bytes to %s",out.getCount(),md.getContentLength(),request.getRequestLine()),e);
     }
   }
  else {
     connection.setRequestProperty(CONTENT_LENGTH,"0");
-    if (connection.getRequestMethod().equals("POST") || connection.getRequestMethod().equals("PUT"))     connection.setFixedLengthStreamingMode(0);
+    if (ImmutableSet.of("POST","PUT").contains(connection.getRequestMethod()))     connection.setFixedLengthStreamingMode(0);
   }
   return connection;
 }
