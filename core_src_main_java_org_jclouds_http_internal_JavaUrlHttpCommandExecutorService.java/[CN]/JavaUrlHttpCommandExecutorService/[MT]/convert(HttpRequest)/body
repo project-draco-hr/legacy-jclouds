@@ -51,18 +51,16 @@
  else {
       long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
       checkArgument(length < Integer.MAX_VALUE,"JDK 1.6 does not support >2GB chunks. Use chunked encoding, if possible.");
-      connection.setRequestProperty(CONTENT_LENGTH,length + "");
       if (length > 0) {
         writePayloadToConnection(payload,connection);
+      }
+ else {
+        writeNothing(connection);
       }
     }
   }
  else {
-    connection.setRequestProperty(CONTENT_LENGTH,"0");
-    if (ImmutableSet.of("POST","PUT").contains(connection.getRequestMethod())) {
-      connection.setFixedLengthStreamingMode(0);
-      connection.setDoOutput(true);
-    }
+    writeNothing(connection);
   }
   return connection;
 }
