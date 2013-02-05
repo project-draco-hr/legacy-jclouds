@@ -1,0 +1,8 @@
+{
+  HttpRequest thaw=HttpRequest.builder().method("PUT").endpoint("https://api2.dynect.net/REST/Zone/jclouds.org").addHeader("API-Version","3.3.7").addHeader(ACCEPT,APPLICATION_JSON).addHeader("Auth-Token",authToken).payload(stringPayload("{\"thaw\":true}")).build();
+  HttpResponse redirectResponse=HttpResponse.builder().statusCode(317).addHeader(LOCATION,"https://api2.dynect.net/REST/Job/1234").build();
+  HttpRequest job=HttpRequest.builder().method("GET").endpoint("https://api2.dynect.net/REST/Job/1234").addHeader("API-Version","3.3.7").addHeader(ACCEPT,APPLICATION_JSON).addHeader("Auth-Token",authToken).payload(emptyJsonPayload()).build();
+  HttpResponse success=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/delete_zone.json",APPLICATION_JSON)).build();
+  DynECTApi apiThatRedirects=requestsSendResponses(createSession,createSessionResponse,thaw,redirectResponse,job,success);
+  apiThatRedirects.getZoneApi().thaw("jclouds.org");
+}
