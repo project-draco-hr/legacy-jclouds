@@ -1,4 +1,4 @@
 {
-  firewall=firewall.toBuilder().allowed(ImmutableSet.of(Firewall.Rule.builder().IPProtocol(IPProtocol.TCP).addPort(23).build())).build();
-  assertOperationDoneSucessfully(api().update(firewall.getName(),firewall),TIME_WAIT);
+  FirewallOptions firewall=new FirewallOptions().name(FIREWALL_NAME).network(getNetworkUrl(getUserProject(),FIREWALL_NETWORK_NAME)).addSourceRange("10.0.0.0/8").addSourceTag("tag1").addTargetTag("tag2").allowedRules(ImmutableSet.of(Firewall.Rule.builder().IPProtocol(IPProtocol.TCP).addPort(23).build()));
+  assertOperationDoneSucessfully(api().update(FIREWALL_NAME,firewall),TIME_WAIT);
 }

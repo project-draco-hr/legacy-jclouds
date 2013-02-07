@@ -2,7 +2,9 @@
   InstanceTemplateInternal template=new InstanceTemplateInternal(src);
   JsonObject instance=(JsonObject)context.serialize(template,InstanceTemplateInternal.class);
   JsonArray networkInterfaces=new JsonArray();
-  networkInterfaces.add(context.serialize(src.getNetwork(),InstanceTemplate.Network.class));
+  for (  InstanceTemplate.NetworkInterface networkInterface : template.getNetworkInterfaces()) {
+    networkInterfaces.add(context.serialize(networkInterface,InstanceTemplate.NetworkInterface.class));
+  }
   instance.add("networkInterfaces",networkInterfaces);
   if (src.getDisks() != null && !src.getDisks().isEmpty()) {
     JsonArray disks=new JsonArray();
