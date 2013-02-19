@@ -1,0 +1,42 @@
+{
+  for (  String zone : context.getApi().getZoneApi().list()) {
+    RecordApi api=context.getApi().getRecordApiForZone(zone);
+    ImmutableList<RecordId> records=api.list().toList();
+    getAnonymousLogger().info("zone: " + zone + " record count: "+ records.size());
+    for (    RecordId recordId : records) {
+      Record<? extends Map<String,Object>> record;
+      if ("AAAA".equals(recordId.getType())) {
+        record=checkAAAARecord(api.getAAAA(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("A".equals(recordId.getType())) {
+        record=checkARecord(api.getA(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("CNAME".equals(recordId.getType())) {
+        record=checkCNAMERecord(api.getCNAME(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("MX".equals(recordId.getType())) {
+        record=checkMXRecord(api.getMX(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("NS".equals(recordId.getType())) {
+        record=checkNSRecord(api.getNS(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("PTR".equals(recordId.getType())) {
+        record=checkPTRRecord(api.getPTR(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("SOA".equals(recordId.getType())) {
+        record=checkSOARecord(api.getSOA(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("SRV".equals(recordId.getType())) {
+        record=checkSRVRecord(api.getSRV(recordId.getFQDN(),recordId.getId()));
+      }
+ else       if ("TXT".equals(recordId.getType())) {
+        record=checkTXTRecord(api.getTXT(recordId.getFQDN(),recordId.getId()));
+      }
+ else {
+        record=api.get(recordId);
+      }
+      assertEquals(record,recordId);
+      checkRecord(record);
+    }
+  }
+}
