@@ -1,0 +1,18 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  try {
+    byte[] data=closeClientButKeepContentStream(response);
+    String message=data != null ? new String(data) : null;
+    if (message != null) {
+      exception=new HttpResponseException(command,response,message);
+      if (message.indexOf(JOB_STILL_RUNNING) != -1)       exception=new IllegalStateException(JOB_STILL_RUNNING,exception);
+    }
+ else {
+      exception=new HttpResponseException(command,response);
+    }
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}
