@@ -1,5 +1,0 @@
-{
-  HttpResponse batchErrorFound=HttpResponse.builder().statusCode(400).payload(payloadFromResourceWithContentType("/invalid_change_batch.xml","application/xml")).build();
-  Route53Api fails=requestSendsResponse(apply,batchErrorFound);
-  fails.getRecordSetApiForZone("Z1PA6795UKMFR9").apply(ChangeBatch.builder().delete(RecordSet.builder().name("jclouds.org.").type(Type.TXT).add("my texts").build()).create(RecordSet.builder().name("jclouds.org.").type(Type.TXT).add("my better texts").build()).build());
-}

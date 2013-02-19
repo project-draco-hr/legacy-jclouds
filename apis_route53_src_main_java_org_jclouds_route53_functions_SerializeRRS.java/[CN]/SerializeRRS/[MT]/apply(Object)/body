@@ -1,5 +1,5 @@
 {
-  RecordSet rrs=RecordSet.class.cast(checkNotNull(in,"rrs"));
+  ResourceRecordSet rrs=ResourceRecordSet.class.cast(checkNotNull(in,"rrs"));
   StringBuilder builder=new StringBuilder().append("<ResourceRecordSet>");
   builder.append("<Name>").append(rrs.getName()).append("</Name>");
   builder.append("<Type>").append(rrs.getType()).append("</Type>");
@@ -16,7 +16,7 @@
     builder.append("</AliasTarget>");
   }
  else {
-    builder.append("<TTL>").append(rrs.getTTL().or(0)).append("</TTL>");
+    builder.append("<TTL>").append(rrs.getTTL().or(UnsignedInteger.ZERO)).append("</TTL>");
     builder.append("<ResourceRecords>");
     for (    String record : rrs.getValues())     builder.append("<ResourceRecord>").append("<Value>").append(record).append("</Value>").append("</ResourceRecord>");
     builder.append("</ResourceRecords>");

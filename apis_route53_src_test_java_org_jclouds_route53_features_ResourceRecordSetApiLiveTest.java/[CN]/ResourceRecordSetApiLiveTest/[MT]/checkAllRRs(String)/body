@@ -1,0 +1,8 @@
+{
+  HostedZone zone=context.getApi().getHostedZoneApi().get(zoneId).getZone();
+  List<ResourceRecordSet> records=api(zone.getId()).list().concat().toList();
+  assertEquals(zone.getResourceRecordSetCount(),records.size());
+  for (  ResourceRecordSet rrs : records) {
+    checkRRS(rrs);
+  }
+}

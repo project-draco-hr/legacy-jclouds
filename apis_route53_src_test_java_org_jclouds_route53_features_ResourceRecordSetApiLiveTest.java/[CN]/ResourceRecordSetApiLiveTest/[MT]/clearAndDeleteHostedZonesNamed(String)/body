@@ -1,0 +1,8 @@
+{
+  for (  HostedZone zone : context.getApi().getHostedZoneApi().list().concat().filter(nameEquals(name))) {
+    getAnonymousLogger().info("clearing and deleting zone: " + zone);
+    Set<ResourceRecordSet> remaining=refresh(zone.getId()).concat().filter(not(requiredRRTypes)).toSet();
+    if (!remaining.isEmpty())     sync(api(zone.getId()).apply(deleteAll(remaining)));
+    sync(context.getApi().getHostedZoneApi().delete(zone.getId()));
+  }
+}

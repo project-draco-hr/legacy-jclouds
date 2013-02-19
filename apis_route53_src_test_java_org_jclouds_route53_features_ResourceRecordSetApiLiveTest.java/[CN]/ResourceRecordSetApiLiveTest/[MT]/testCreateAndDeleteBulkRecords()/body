@@ -1,0 +1,21 @@
+{
+  String name=System.getProperty("user.name").replace('.','-') + ".bulk.route53test.jclouds.org.";
+  clearAndDeleteHostedZonesNamed(name);
+  ImmutableList<ResourceRecordSet> records=ImmutableList.<ResourceRecordSet>builder().add(ResourceRecordSet.builder().name("dom1." + name).type("TXT").add("\"somehow\" \" somewhere\"").build()).add(ResourceRecordSet.builder().name("dom2." + name).type("TXT").add("\"goodies\"").build()).build();
+  String nonce=name + " @ " + new Date();
+  String comment=name + " for " + JcloudsVersion.get();
+  NewHostedZone newHostedZone=context.getApi().getHostedZoneApi().createWithReferenceAndComment(name,nonce,comment);
+  String zoneId=newHostedZone.getZone().getId();
+  getAnonymousLogger().info("created zone: " + newHostedZone);
+  try {
+    assertTrue(inSync.apply(newHostedZone.getChange()),"zone didn't sync " + newHostedZone);
+    sync(api(zoneId).apply(createAll(records)));
+    checkAllRRs(zoneId);
+    sync(api(zoneId).apply(deleteAll(records)));
+    PagedIterable<ResourceRecordSet> refreshed=refresh(zoneId);
+    assertTrue(refreshed.concat().filter(not(requiredRRTypes)).isEmpty(),"zone still has optional records: " + refreshed);
+  }
+  finally {
+    clearAndDeleteHostedZonesNamed(name);
+  }
+}
