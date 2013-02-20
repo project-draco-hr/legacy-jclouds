@@ -5,7 +5,9 @@
     String message=data != null ? new String(data) : null;
     if (message != null) {
       exception=new HttpResponseException(command,response,message);
-      if (message.indexOf(JOB_STILL_RUNNING) != -1)       exception=new IllegalStateException(JOB_STILL_RUNNING,exception);
+      if (message.indexOf(JOB_STILL_RUNNING) != -1)       exception=new JobStillRunningException(JOB_STILL_RUNNING,exception);
+ else       if (message.indexOf(OPERATION_BLOCKED) != -1)       exception=new JobStillRunningException(OPERATION_BLOCKED,exception);
+ else       if (message.indexOf(TARGET_EXISTS) != -1)       exception=new TargetExistsException(TARGET_EXISTS,exception);
     }
  else {
       exception=new HttpResponseException(command,response);
