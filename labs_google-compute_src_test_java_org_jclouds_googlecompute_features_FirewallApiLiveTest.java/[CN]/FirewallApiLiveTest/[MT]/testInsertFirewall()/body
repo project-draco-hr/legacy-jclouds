@@ -1,3 +1,5 @@
 {
-  assertOperationDoneSucessfully(api().create(firewall),TIME_WAIT);
+  assertOperationDoneSucessfully(context.getApi().getNetworkApiForProject(getUserProject()).createInIPv4Range(FIREWALL_NETWORK_NAME,IPV4_RANGE),TIME_WAIT);
+  FirewallOptions firewall=new FirewallOptions().addAllowedRule(Firewall.Rule.builder().IPProtocol(IPProtocol.TCP).addPort(22).build()).addSourceRange("10.0.0.0/8").addSourceTag("tag1").addTargetTag("tag2");
+  assertOperationDoneSucessfully(api().createInNetwork(FIREWALL_NAME,getNetworkUrl(getUserProject(),FIREWALL_NETWORK_NAME),firewall),TIME_WAIT);
 }

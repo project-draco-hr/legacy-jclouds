@@ -2,7 +2,6 @@
   HttpRequest insert=HttpRequest.builder().method("POST").endpoint("https://www.googleapis.com/compute/v1beta13/projects/myproject/instances").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).payload(payloadFromResourceWithContentType("/instance_insert.json",MediaType.APPLICATION_JSON)).build();
   HttpResponse insertInstanceResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/operation.json")).build();
   InstanceApi api=requestsSendResponses(requestForScopes(COMPUTE_SCOPE),TOKEN_RESPONSE,insert,insertInstanceResponse).getInstanceApiForProject("myproject");
-  Instance instance=new ParseInstanceTest().expected();
-  InstanceTemplate options=new InstanceTemplate.Builder().fromInstance(instance).network(instance.getNetworkInterfaces().iterator().next().getNetwork()).addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE,URI.create("https://www.googleapis.com/compute/v1beta13/projects/myproject/disks/test"));
-  assertEquals(api.createInZone(instance.getName(),options,"us-central1-a"),new ParseOperationTest().expected());
+  InstanceTemplate options=InstanceTemplate.builder().forMachineType("n1-standard-1").addNetworkInterface(URI.create("https://www.googleapis" + ".com/compute/v1beta13/projects/myproject/networks/default"),Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT).description("desc").image(URI.create("https://www.googleapis" + ".com/compute/v1beta13/projects/google/images/gcel-12-04-v20121106")).addDisk(InstanceTemplate.PersistentDisk.Mode.READ_WRITE,create("https://www.googleapis.com/compute/v1beta13/projects/myproject/disks/test")).addTag("aTag").addServiceAccount(Instance.ServiceAccount.builder().email("default").addScopes("myscope").build()).addMetadata("aKey","aValue");
+  assertEquals(api.createInZone("test-0",options,"us-central1-a"),new ParseOperationTest().expected());
 }

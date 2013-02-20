@@ -1,6 +1,5 @@
 {
-  HttpRequest get=HttpRequest.builder().method("GET").endpoint(ZONES_URL_PREFIX + "/us-central2-a").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).build();
   HttpResponse operationResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/zone_get.json")).build();
-  ZoneApi api=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,get,operationResponse).getZoneApiForProject("google");
+  ZoneApi api=requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE,GET_ZONE_REQ,operationResponse).getZoneApiForProject("google");
   assertEquals(api.get("us-central2-a"),new ParseZoneTest().expected());
 }
