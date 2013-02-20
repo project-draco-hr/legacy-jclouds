@@ -1,0 +1,21 @@
+{
+  checkNotNull(rrs.getName(),"Name: ResourceRecordSet %s",rrs);
+  checkNotNull(rrs.getType(),"Type: ResourceRecordSet %s",rrs);
+  checkNotNull(rrs.getTTL(),"TTL: ResourceRecordSet %s",rrs);
+  checkNotNull(rrs.getAliasTarget(),"AliasTarget: ResourceRecordSet %s",rrs);
+  if (rrs.getAliasTarget().isPresent()) {
+    assertTrue(rrs.getValues().isEmpty(),"Values present on aliasTarget ResourceRecordSet: " + rrs);
+  }
+ else {
+    assertTrue(!rrs.getValues().isEmpty(),"Values absent on ResourceRecordSet: " + rrs);
+  }
+  if (rrs instanceof RecordSubset) {
+    checkNotNull(RecordSubset.class.cast(rrs).getId(),"Id: ResourceRecordSubset %s",rrs);
+  }
+  if (rrs instanceof Weighted) {
+    checkNotNull(Weighted.class.cast(rrs).getWeight(),"Weight: ResourceRecordSubset %s",rrs);
+  }
+  if (rrs instanceof Latency) {
+    checkNotNull(Latency.class.cast(rrs).getRegion(),"Region: ResourceRecordSubset %s",rrs);
+  }
+}

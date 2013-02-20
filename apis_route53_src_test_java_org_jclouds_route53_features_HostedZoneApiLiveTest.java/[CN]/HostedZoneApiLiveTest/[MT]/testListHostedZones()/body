@@ -1,0 +1,8 @@
+{
+  ImmutableList<HostedZone> zones=api().list().concat().toList();
+  getAnonymousLogger().info("zones: " + zones.size());
+  for (  HostedZone zone : zones) {
+    checkHostedZone(zone);
+    assertEquals(api().get(zone.getId()).getZone(),zone);
+  }
+}
