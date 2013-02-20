@@ -1,14 +1,14 @@
 {
   MultipartUploadSlicingAlgorithm strategy=new MultipartUploadSlicingAlgorithm();
-  long length=MultipartUploadStrategy.MAX_PART_SIZE * MultipartUploadSlicingAlgorithm.DEFAULT_MAGNITUDE_BASE;
+  long length=MultipartUpload.MAX_PART_SIZE * MultipartUploadSlicingAlgorithm.DEFAULT_MAGNITUDE_BASE;
   long chunkSize=strategy.calculateChunkSize(length);
-  assertEquals(chunkSize,MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(chunkSize,MultipartUpload.MAX_PART_SIZE);
   assertEquals(strategy.getParts(),MultipartUploadSlicingAlgorithm.DEFAULT_MAGNITUDE_BASE - 1);
-  assertEquals(strategy.getRemaining(),MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(strategy.getRemaining(),MultipartUpload.MAX_PART_SIZE);
   assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
   length+=1;
   chunkSize=strategy.calculateChunkSize(length);
-  assertEquals(chunkSize,MultipartUploadStrategy.MAX_PART_SIZE);
+  assertEquals(chunkSize,MultipartUpload.MAX_PART_SIZE);
   assertEquals(strategy.getParts(),MultipartUploadSlicingAlgorithm.DEFAULT_MAGNITUDE_BASE);
   assertEquals(strategy.getRemaining(),1);
   assertEquals(chunkSize * strategy.getParts() + strategy.getRemaining(),length);
