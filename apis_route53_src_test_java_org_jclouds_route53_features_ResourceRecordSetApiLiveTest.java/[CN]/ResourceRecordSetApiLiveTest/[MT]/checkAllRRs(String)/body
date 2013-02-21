@@ -3,6 +3,7 @@
   List<ResourceRecordSet> records=api(zone.getId()).list().concat().toList();
   assertEquals(zone.getResourceRecordSetCount(),records.size());
   for (  ResourceRecordSet rrs : records) {
+    recordTypeCounts.getUnchecked(rrs.getType()).addAndGet(rrs.getAliasTarget().isPresent() ? 1 : rrs.getValues().size());
     checkRRS(rrs);
   }
 }
