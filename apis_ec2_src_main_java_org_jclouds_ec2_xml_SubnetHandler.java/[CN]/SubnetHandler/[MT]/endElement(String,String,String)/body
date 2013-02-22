@@ -1,0 +1,28 @@
+{
+  if (equalsOrSuffix(qName,"tagSet")) {
+    inTagSet=false;
+    builder.tags(tagSetHandler.getResult());
+  }
+ else   if (inTagSet) {
+    tagSetHandler.endElement(uri,name,qName);
+  }
+ else   if (equalsOrSuffix(qName,"subnetId")) {
+    builder.subnetId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"state")) {
+    builder.subnetState(Subnet.State.fromValue(currentOrNull(currentText)));
+  }
+ else   if (equalsOrSuffix(qName,"vpcId")) {
+    builder.vpcId(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"cidrBlock")) {
+    builder.cidrBlock(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"availableIpAddressCount")) {
+    builder.availableIpAddressCount(Integer.parseInt(currentOrNull(currentText)));
+  }
+ else   if (equalsOrSuffix(qName,"availabilityZone")) {
+    builder.availabilityZone(currentOrNull(currentText));
+  }
+  currentText=new StringBuilder();
+}

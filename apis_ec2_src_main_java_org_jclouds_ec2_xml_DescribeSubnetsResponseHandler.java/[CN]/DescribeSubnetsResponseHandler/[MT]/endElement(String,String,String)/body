@@ -1,0 +1,16 @@
+{
+  if (equalsOrSuffix(qName,"subnetSet")) {
+    inSubnetSet=false;
+  }
+ else   if (equalsOrSuffix(qName,"tagSet")) {
+    inTagSet=false;
+    subnetHandler.endElement(uri,name,qName);
+  }
+ else   if (equalsOrSuffix(qName,"item") && !inTagSet) {
+    subnets.add(subnetHandler.getResult());
+  }
+ else   if (inSubnetSet) {
+    subnetHandler.endElement(uri,name,qName);
+  }
+  currentText=new StringBuilder();
+}
