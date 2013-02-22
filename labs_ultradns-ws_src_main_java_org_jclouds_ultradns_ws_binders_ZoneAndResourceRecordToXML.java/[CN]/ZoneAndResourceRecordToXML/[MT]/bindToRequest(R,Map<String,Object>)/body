@@ -1,0 +1,10 @@
+{
+  String zoneName=postParams.get("zoneName").toString();
+  ResourceRecord record=ResourceRecord.class.cast(postParams.get("resourceRecord"));
+  String xml=toXML(zoneName,record);
+  Optional<?> guid=Optional.fromNullable(postParams.get("guid"));
+  if (guid.isPresent()) {
+    xml=update(guid.get(),xml);
+  }
+  return (R)request.toBuilder().payload(xml).build();
+}

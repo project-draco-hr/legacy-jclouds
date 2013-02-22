@@ -1,0 +1,16 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (equalsOrSuffix(qName,"ResourceRecord")) {
+    rrm.zoneId(attributes.get("ZoneId"));
+    rrm.guid(attributes.get("Guid"));
+    rrm.zoneName(attributes.get("ZoneName"));
+    rrm.created(dateService.iso8601DateParse(attributes.get("Created")));
+    rrm.modified(dateService.iso8601DateParse(attributes.get("Modified")));
+    rr.type(UnsignedInteger.valueOf(attributes.get("Type")));
+    rr.name(attributes.get("DName"));
+    rr.ttl(UnsignedInteger.valueOf(attributes.get("TTL")));
+  }
+ else   if (equalsOrSuffix(qName,"InfoValues")) {
+    rr.rdata(attributes.values());
+  }
+}
