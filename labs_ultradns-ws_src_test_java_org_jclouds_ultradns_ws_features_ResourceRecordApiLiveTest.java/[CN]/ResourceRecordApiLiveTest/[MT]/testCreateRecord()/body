@@ -1,0 +1,11 @@
+{
+  guid=api(zoneName).create(mx);
+  getAnonymousLogger().info("created record: " + guid);
+  try {
+    api(zoneName).create(mx);
+    fail();
+  }
+ catch (  ResourceAlreadyExistsException e) {
+  }
+  assertTrue(listRRs(mx).anyMatch(equalTo(mx)));
+}

@@ -1,0 +1,9 @@
+{
+  for (  Zone zone : context.getApi().getZoneApi().listByAccount(account.getId())) {
+    zones.incrementAndGet();
+    for (    ResourceRecordMetadata rr : api(zone.getName()).list()) {
+      recordTypeCounts.getUnchecked(rr.getRecord().getType()).incrementAndGet();
+      checkResourceRecordMetadata(rr);
+    }
+  }
+}
