@@ -1,0 +1,21 @@
+{
+  try {
+    api().createInAccount(name,account.getId());
+    ZoneProperties newZone=api().get(name);
+    getAnonymousLogger().info("created zone: " + newZone);
+    try {
+      api().createInAccount(name,account.getId());
+      fail();
+    }
+ catch (    ResourceAlreadyExistsException e) {
+    }
+    assertEquals(newZone.getName(),name);
+    assertEquals(newZone.getType(),Type.PRIMARY);
+    assertEquals(newZone.getTypeCode(),Type.PRIMARY.getCode());
+    checkNotNull(newZone.getModified(),"Modified cannot be null for a Zone %s",newZone);
+    assertEquals(newZone.getResourceRecordCount(),5);
+  }
+  finally {
+    api().delete(name);
+  }
+}
