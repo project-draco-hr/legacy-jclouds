@@ -4,6 +4,8 @@
   String fileName=buildPathStartingFromBaseDir(container,blobKey);
   logger.debug("Deleting blob %s",fileName);
   File fileToBeDeleted=new File(fileName);
-  fileToBeDeleted.delete();
+  if (!fileToBeDeleted.delete()) {
+    logger.debug("Could not delete %s",fileToBeDeleted);
+  }
   removeDirectoriesTreeOfBlobKey(container,blobKey);
 }

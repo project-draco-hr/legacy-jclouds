@@ -6,7 +6,13 @@
     KeyStore keyStore=KeyStore.getInstance("PKCS12");
     File certFile=new File(checkNotNull(cert));
     if (certFile.isFile()) {
-      keyStore.load(new FileInputStream(certFile),keyStorePassword.toCharArray());
+      FileInputStream stream=new FileInputStream(certFile);
+      try {
+        keyStore.load(stream,keyStorePassword.toCharArray());
+      }
+  finally {
+        stream.close();
+      }
     }
  else {
       int privateKeyBeginIdx=cert.indexOf("-----BEGIN PRIVATE KEY");
