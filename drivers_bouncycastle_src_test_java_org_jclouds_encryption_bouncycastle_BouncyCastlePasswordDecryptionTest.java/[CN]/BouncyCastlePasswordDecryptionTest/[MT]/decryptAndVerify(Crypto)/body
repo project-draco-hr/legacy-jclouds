@@ -1,0 +1,11 @@
+{
+  KeySpec keySpec=Pems.privateKeySpec(PRIVATE_KEY);
+  KeyFactory kf=crypto.rsaKeyFactory();
+  PrivateKey privKey=kf.generatePrivate(keySpec);
+  Cipher cipher=crypto.cipher("RSA");
+  cipher.init(Cipher.DECRYPT_MODE,privKey);
+  byte[] cipherText=base64().decode(ENCRYPTED_PASSWORD);
+  byte[] plainText=cipher.doFinal(cipherText);
+  String password=new String(plainText,Charsets.US_ASCII);
+  assertEquals(password,"u4.y9mb;nR.");
+}
