@@ -1,14 +1,9 @@
 {
-  IterableWithMarker<User> response=api().list().get(0);
-  for (  User user : response) {
+  ImmutableList<User> users=api().list().concat().toList();
+  getAnonymousLogger().info("users: " + users.size());
+  for (  User user : users) {
     checkUser(user);
-  }
-  if (Iterables.size(response) > 0) {
-    User user=response.iterator().next();
-    Assert.assertEquals(api().get(user.getName().get()),user);
-  }
-  response=api().list(ListUsersOptions.Builder.afterMarker(response.nextMarker().orNull()));
-  for (  User user : response) {
-    checkUser(user);
+    assertEquals(api().get(user.getId()),user);
+    if (user.getPath().isPresent())     assertEquals(api().listPathPrefix(user.getPath().get()).toSet(),ImmutableSet.of(user));
   }
 }
