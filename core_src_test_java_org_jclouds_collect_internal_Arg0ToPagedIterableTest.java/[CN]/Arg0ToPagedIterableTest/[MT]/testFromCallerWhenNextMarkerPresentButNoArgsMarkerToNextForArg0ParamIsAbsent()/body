@@ -1,0 +1,12 @@
+{
+  GeneratedHttpRequest request=callerArgs(ImmutableList.of());
+  final IterableWithMarker<String> next=IterableWithMarkers.from(ImmutableSet.of("baz"));
+  TestCallerArg0 converter=new TestCallerArg0(request){
+    @Override protected Function<Object,IterableWithMarker<String>> markerToNextForArg0(    Optional<Object> arg0){
+      assertEquals(arg0,Optional.absent());
+      return Functions.constant(next);
+    }
+  }
+;
+  assertEquals(converter.apply(IterableWithMarkers.from(ImmutableSet.of("foo","bar"),"marker")).concat().toSet(),ImmutableSet.of("foo","bar","baz"));
+}
