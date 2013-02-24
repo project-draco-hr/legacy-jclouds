@@ -1,0 +1,8 @@
+{
+  ImmutableSet<Subnet> subnets=api().list().toSet();
+  getAnonymousLogger().info("subnets: " + subnets.size());
+  for (  Subnet subnet : subnets) {
+    checkSubnet(subnet);
+    assertEquals(api().filter(new SubnetFilterBuilder().subnetId(subnet.getSubnetId()).build()).get(0),subnet);
+  }
+}

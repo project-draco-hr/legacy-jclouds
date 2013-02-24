@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/describe_subnets.xml","text/xml")).build();
+  EC2Api apiWhenExist=requestSendsResponse(list,listResponse);
+  assertEquals(apiWhenExist.getSubnetApi().get().list().toString(),new DescribeSubnetsResponseTest().expected().toString());
+}
