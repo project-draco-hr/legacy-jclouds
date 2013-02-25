@@ -1,0 +1,13 @@
+{
+  String name=System.getProperty("user.name").replace('.','-') + ".role.iamtest.jclouds.org.";
+  Role newRole;
+  try {
+    newRole=api().createWithPolicy(name,policy);
+    getAnonymousLogger().info("created role: " + newRole);
+    checkRole(newRole);
+  }
+  finally {
+    api().delete(name);
+    assertNull(api().get(name));
+  }
+}
