@@ -1,0 +1,14 @@
+{
+  try {
+    createRoleWithPolicy(name);
+    api().addRole(name,name);
+    InstanceProfile updated=api().get(name);
+    RoleApiLiveTest.checkRole(updated.getRoles().get(0));
+    api().removeRole(name,name);
+    updated=api().get(name);
+    assertEquals(updated.getRoles(),ImmutableList.of());
+  }
+  finally {
+    tearDownRoleWithPolicy(name);
+  }
+}
