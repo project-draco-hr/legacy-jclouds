@@ -17,7 +17,9 @@
   }
  catch (  IOException ex) {
     if (outputFile != null) {
-      outputFile.delete();
+      if (!outputFile.delete()) {
+        logger.debug("Could not delete %s",outputFile);
+      }
     }
     throw ex;
   }

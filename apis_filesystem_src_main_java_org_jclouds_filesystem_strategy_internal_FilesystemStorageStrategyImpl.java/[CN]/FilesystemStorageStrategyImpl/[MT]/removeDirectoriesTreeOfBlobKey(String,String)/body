@@ -3,11 +3,14 @@
   if (!normalizedBlobKey.contains(File.separator))   return;
   File file=new File(normalizedBlobKey);
   String parentPath=file.getParent();
-  if (null != parentPath || "".equals(parentPath)) {
+  if (!isNullOrEmpty(parentPath)) {
     File directory=new File(buildPathStartingFromBaseDir(container,parentPath));
     String[] children=directory.list();
     if (null == children || children.length == 0) {
-      directory.delete();
+      if (!directory.delete()) {
+        logger.debug("Could not delete %s",directory);
+        return;
+      }
       removeDirectoriesTreeOfBlobKey(container,parentPath);
     }
   }
