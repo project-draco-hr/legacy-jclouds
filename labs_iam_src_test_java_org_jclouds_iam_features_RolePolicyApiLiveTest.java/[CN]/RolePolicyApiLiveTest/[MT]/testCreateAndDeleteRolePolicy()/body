@@ -1,0 +1,19 @@
+{
+  String roleName=System.getProperty("user.name").replace('.','-') + ".role_policy.iamtest.jclouds.org.";
+  Role newRole;
+  try {
+    newRole=context.getApi().getRoleApi().createWithPolicy(roleName,assumeRolePolicy);
+    getAnonymousLogger().info("created role: " + newRole);
+    api(roleName).create("S3Access",s3Policy);
+    Policy newPolicy=api(roleName).get("S3Access");
+    getAnonymousLogger().info("created policy: " + newPolicy);
+    checkPolicy(newPolicy);
+    assertEquals(newPolicy.getDocument(),s3Policy);
+    api(roleName).delete("S3Access");
+    assertNull(api(roleName).get("S3Access"));
+  }
+  finally {
+    api(roleName).delete("S3Access");
+    context.getApi().getRoleApi().delete(roleName);
+  }
+}
