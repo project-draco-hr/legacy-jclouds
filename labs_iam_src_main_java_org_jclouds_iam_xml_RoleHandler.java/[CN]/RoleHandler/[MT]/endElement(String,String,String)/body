@@ -1,0 +1,26 @@
+{
+  if (qName.equals("Path")) {
+    builder.path(currentOrNull(currentText));
+  }
+ else   if (qName.equals("RoleName")) {
+    builder.name(currentOrNull(currentText));
+  }
+ else   if (qName.equals("RoleId")) {
+    builder.id(currentOrNull(currentText));
+  }
+ else   if (qName.equals("Arn")) {
+    builder.arn(currentOrNull(currentText));
+  }
+ else   if (qName.equals("AssumeRolePolicyDocument")) {
+    builder.assumeRolePolicy(urlDecode(currentOrNull(currentText)));
+  }
+ else   if (qName.equals("CreateDate")) {
+    try {
+      builder.createDate(dateService.iso8601SecondsDateParse(currentOrNull(currentText)));
+    }
+ catch (    IllegalArgumentException e) {
+      builder.createDate(dateService.iso8601DateParse(currentOrNull(currentText)));
+    }
+  }
+  currentText=new StringBuilder();
+}

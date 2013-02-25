@@ -1,0 +1,5 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/list_roles.xml","text/xml")).build();
+  IAMApi apiWhenExist=requestSendsResponse(listPathPrefix,listResponse);
+  assertEquals(apiWhenExist.getRoleApi().listPathPrefix("/subdivision").get(0).toString(),new ListRolesResponseTest().expected().toString());
+}
