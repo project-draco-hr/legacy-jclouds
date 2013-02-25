@@ -4,6 +4,9 @@
   for (  User user : users) {
     checkUser(user);
     assertEquals(api().get(user.getId()),user);
-    if (user.getPath().isPresent())     assertEquals(api().listPathPrefix(user.getPath().get()).toSet(),ImmutableSet.of(user));
+    if (user.getPath().isPresent()) {
+      ImmutableSet<User> usersAtPath=api().listPathPrefix(user.getPath().get()).concat().toSet();
+      assertTrue(usersAtPath.contains(user),user + " not in " + usersAtPath);
+    }
   }
 }
