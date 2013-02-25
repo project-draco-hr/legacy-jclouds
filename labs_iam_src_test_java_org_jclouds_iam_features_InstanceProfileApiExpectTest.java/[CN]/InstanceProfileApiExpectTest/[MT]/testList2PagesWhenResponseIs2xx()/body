@@ -1,0 +1,7 @@
+{
+  HttpResponse listResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/list_instance_profiles_marker.xml","text/xml")).build();
+  HttpRequest list2=HttpRequest.builder().method("POST").endpoint("https://iam.amazonaws.com/").addHeader("Host","iam.amazonaws.com").addFormParam("Action","ListInstanceProfiles").addFormParam("Marker","MARKER").addFormParam("Signature","x7G5OvKxTIMEjl58OVurKrwf7wEA7exXSml63T89mSY%3D").addFormParam("SignatureMethod","HmacSHA256").addFormParam("SignatureVersion","2").addFormParam("Timestamp","2009-11-08T15%3A54%3A08.897Z").addFormParam("Version","2010-05-08").addFormParam("AWSAccessKeyId","identity").build();
+  HttpResponse list2Response=HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/list_instance_profiles.xml","text/xml")).build();
+  IAMApi apiWhenExist=requestsSendResponses(list,listResponse,list2,list2Response);
+  assertEquals(apiWhenExist.getInstanceProfileApi().list().concat().toList(),ImmutableList.copyOf(Iterables.concat(new ListInstanceProfilesResponseTest().expected(),new ListInstanceProfilesResponseTest().expected())));
+}

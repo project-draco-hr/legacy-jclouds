@@ -1,0 +1,18 @@
+{
+  if (inInstanceProfiles) {
+    if (qName.equals("Roles"))     inRoles=false;
+    if (qName.equals("InstanceProfiles")) {
+      inInstanceProfiles=false;
+    }
+ else     if (qName.equals("member") && !inRoles) {
+      instanceProfiles.add(instanceProfileHandler.getResult());
+    }
+ else {
+      instanceProfileHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("Marker")) {
+    afterMarker=currentOrNull(currentText);
+  }
+  currentText=new StringBuilder();
+}
