@@ -1,0 +1,11 @@
+{
+  InputStream is=getClass().getResourceAsStream("/credentials.xml");
+  SessionCredentials expected=expected();
+  SessionCredentialsHandler handler=injector.getInstance(SessionCredentialsHandler.class);
+  SessionCredentials result=factory.create(handler).parse(is);
+  assertEquals(result,expected);
+  assertEquals(result.getAccessKeyId(),expected.getAccessKeyId());
+  assertEquals(result.getSecretAccessKey(),expected.getSecretAccessKey());
+  assertEquals(result.getSessionToken(),expected.getSessionToken());
+  assertEquals(result.getExpiration(),expected.getExpiration());
+}
