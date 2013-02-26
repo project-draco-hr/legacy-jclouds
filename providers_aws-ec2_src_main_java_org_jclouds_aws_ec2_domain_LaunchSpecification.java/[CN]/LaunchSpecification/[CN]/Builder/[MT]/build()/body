@@ -1,3 +1,16 @@
 {
-  return new LaunchSpecification(instanceType,imageId,kernelId,ramdiskId,availabilityZone,subnetId,keyName,securityGroupIdToNames.build(),blockDeviceMappings.build(),monitoringEnabled,securityGroupIds.build(),securityGroupNames.build(),userData);
+  Optional<IAMInstanceProfileRequest> iamInstanceProfile;
+  if (iamInstanceProfileArn != null && iamInstanceProfileName != null) {
+    iamInstanceProfile=Optional.of(IAMInstanceProfileRequest.forArnAndName(iamInstanceProfileArn,iamInstanceProfileName));
+  }
+ else   if (iamInstanceProfileArn != null) {
+    iamInstanceProfile=Optional.of(IAMInstanceProfileRequest.forArn(iamInstanceProfileArn));
+  }
+ else   if (iamInstanceProfileName != null) {
+    iamInstanceProfile=Optional.of(IAMInstanceProfileRequest.forName(iamInstanceProfileName));
+  }
+ else {
+    iamInstanceProfile=Optional.absent();
+  }
+  return new LaunchSpecification(instanceType,imageId,kernelId,ramdiskId,availabilityZone,subnetId,keyName,securityGroupIdToNames.build(),blockDeviceMappings.build(),monitoringEnabled,securityGroupIds.build(),securityGroupNames.build(),userData,iamInstanceProfile);
 }

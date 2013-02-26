@@ -12,6 +12,12 @@
  else   if (equalsOrSuffix(qName,"groupName") && inPlacement) {
     builder.placementGroup(currentOrNull(currentText));
   }
+ else   if (equalsOrSuffix(qName,"arn") && inIamInstanceProfile) {
+    builder.iamInstanceProfileArn(currentOrNull(currentText));
+  }
+ else   if (equalsOrSuffix(qName,"id") && inIamInstanceProfile) {
+    builder.iamInstanceProfileId(currentOrNull(currentText));
+  }
  else   if (equalsOrSuffix(qName,"groupName")) {
 switch (itemDepth) {
 case 2:
@@ -43,6 +49,9 @@ inInstancesSet=false;
 }
  else if (equalsOrSuffix(qName,"placement")) {
 inPlacement=false;
+}
+ else if (equalsOrSuffix(qName,"iamInstanceProfile")) {
+inIamInstanceProfile=false;
 }
  else if (equalsOrSuffix(qName,"ownerId")) {
 ownerId=currentOrNull(currentText);

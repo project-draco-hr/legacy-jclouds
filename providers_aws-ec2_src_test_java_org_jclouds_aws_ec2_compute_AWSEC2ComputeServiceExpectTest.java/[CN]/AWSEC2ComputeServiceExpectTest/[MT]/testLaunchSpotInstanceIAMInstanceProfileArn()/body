@@ -1,0 +1,19 @@
+{
+  HttpRequest requestSpotInstancesRequest=formSigner.filter(HttpRequest.builder().method("POST").endpoint("https://ec2." + region + ".amazonaws.com/").addHeader("Host","ec2." + region + ".amazonaws.com").addFormParam("Action","RequestSpotInstances").addFormParam("InstanceCount","1").addFormParam("LaunchSpecification.IamInstanceProfile.Arn",iamInstanceProfileArn).addFormParam("LaunchSpecification.ImageId","ami-be3adfd7").addFormParam("LaunchSpecification.InstanceType","m1.small").addFormParam("LaunchSpecification.Placement.AvailabilityZone","us-east-1a").addFormParam("LaunchSpecification.SecurityGroup.1","jclouds#test").addFormParam("LaunchSpecification.UserData","I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK").addFormParam("SpotPrice","1.0").build());
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder();
+  requestResponseMap.put(describeRegionsRequest,describeRegionsResponse);
+  requestResponseMap.put(describeAvailabilityZonesRequest,describeAvailabilityZonesResponse);
+  requestResponseMap.put(describeImagesRequest,describeImagesResponse);
+  requestResponseMap.put(createKeyPairRequest,createKeyPairResponse);
+  requestResponseMap.put(createSecurityGroupRequest,createSecurityGroupResponse);
+  requestResponseMap.put(describeSecurityGroupRequest,describeSecurityGroupResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequest22,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup,authorizeSecurityGroupIngressResponse);
+  requestResponseMap.put(requestSpotInstancesRequest,requestSpotInstancesResponse);
+  requestResponseMap.put(describeSpotInstanceRequest,describeSpotInstanceResponse);
+  ComputeService createsSpotInstance=requestsSendResponses(requestResponseMap.build());
+  Template template=createsSpotInstance.templateBuilder().locationId("us-east-1a").build();
+  template.getOptions().as(AWSEC2TemplateOptions.class).spotPrice(1f).iamInstanceProfileArn(iamInstanceProfileArn).noKeyPair().blockUntilRunning(false);
+  NodeMetadata node=Iterables.getOnlyElement(createsSpotInstance.createNodesInGroup("test",1,template));
+  assertEquals(node.getId(),"us-east-1/sir-228e6406");
+}

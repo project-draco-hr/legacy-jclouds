@@ -1,10 +1,12 @@
 {
   InputStream is=getClass().getResourceAsStream("/request_spot_instances-ebs.xml");
-  SpotInstanceRequest expected=SpotInstanceRequest.builder().region("us-east-1").id("sir-228e6406").spotPrice(0.001f).type(Type.ONE_TIME).state(State.OPEN).rawState("open").launchSpecification(LaunchSpecification.builder().imageId("ami-595a0a1c").securityGroupIdToName("sg-83e1c4ea","default").instanceType("m1.large").mapNewVolumeToDevice("/dev/sda1",1,true).mapEBSSnapshotToDevice("/dev/sda2","snap-1ea27576",1,true).mapEphemeralDeviceToDevice("/dev/sda3","vre1").monitoringEnabled(false).build()).createTime(new SimpleDateFormatDateService().iso8601DateParse("2011-03-08T03:30:36.000Z")).productDescription("Linux/UNIX").build();
+  SpotInstanceRequest expected=SpotInstanceRequest.builder().region("us-east-1").id("sir-228e6406").spotPrice(0.001f).type(Type.ONE_TIME).state(State.OPEN).rawState("open").launchSpecification(LaunchSpecification.builder().imageId("ami-595a0a1c").securityGroupIdToName("sg-83e1c4ea","default").instanceType("m1.large").mapNewVolumeToDevice("/dev/sda1",1,true).mapEBSSnapshotToDevice("/dev/sda2","snap-1ea27576",1,true).mapEphemeralDeviceToDevice("/dev/sda3","vre1").monitoringEnabled(false).iamInstanceProfileArn("arn:aws:iam::123456789012:instance-profile/application_abc/component_xyz/Webserver").iamInstanceProfileName("Webserver").build()).createTime(new SimpleDateFormatDateService().iso8601DateParse("2011-03-08T03:30:36.000Z")).productDescription("Linux/UNIX").build();
   SpotInstanceHandler handler=injector.getInstance(SpotInstanceHandler.class);
   addDefaultRegionToHandler(handler);
   SpotInstanceRequest result=factory.create(handler).parse(is);
   assertEquals(result.toString(),expected.toString());
   assertEquals(result.getState(),State.OPEN);
   assertEquals(result.getRawState(),"open");
+  assertEquals(result.getLaunchSpecification().getIAMInstanceProfile().get().getArn().get(),"arn:aws:iam::123456789012:instance-profile/application_abc/component_xyz/Webserver");
+  assertEquals(result.getLaunchSpecification().getIAMInstanceProfile().get().getName().get(),"Webserver");
 }

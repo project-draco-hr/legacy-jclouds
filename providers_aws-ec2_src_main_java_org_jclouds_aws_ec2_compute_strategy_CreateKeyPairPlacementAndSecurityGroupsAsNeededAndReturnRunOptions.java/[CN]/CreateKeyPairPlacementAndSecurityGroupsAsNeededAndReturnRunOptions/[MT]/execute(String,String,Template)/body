@@ -2,6 +2,9 @@
   AWSRunInstancesOptions instanceOptions=AWSRunInstancesOptions.class.cast(super.execute(region,group,template));
   String placementGroupName=template.getHardware().getId().startsWith("cc") ? createNewPlacementGroupUnlessUserSpecifiedOtherwise(region,group,template.getOptions()) : null;
   if (placementGroupName != null)   instanceOptions.inPlacementGroup(placementGroupName);
-  if (AWSEC2TemplateOptions.class.cast(template.getOptions()).isMonitoringEnabled())   instanceOptions.enableMonitoring();
+  AWSEC2TemplateOptions awsTemplateOptions=AWSEC2TemplateOptions.class.cast(template.getOptions());
+  if (awsTemplateOptions.isMonitoringEnabled())   instanceOptions.enableMonitoring();
+  if (awsTemplateOptions.getIAMInstanceProfileArn() != null)   instanceOptions.withIAMInstanceProfileArn(awsTemplateOptions.getIAMInstanceProfileArn());
+  if (awsTemplateOptions.getIAMInstanceProfileName() != null)   instanceOptions.withIAMInstanceProfileName(awsTemplateOptions.getIAMInstanceProfileName());
   return instanceOptions;
 }
