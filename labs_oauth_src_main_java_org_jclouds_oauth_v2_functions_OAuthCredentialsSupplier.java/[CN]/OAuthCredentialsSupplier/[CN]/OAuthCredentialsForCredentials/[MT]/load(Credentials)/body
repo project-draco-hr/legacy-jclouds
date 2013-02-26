@@ -9,13 +9,13 @@
     PrivateKey privateKey=keyFactory.generatePrivate(privateKeySpec(newStringPayload(privateKeyInPemFormat)));
     return new OAuthCredentials.Builder().identity(identity).credential(privateKeyInPemFormat).privateKey(privateKey).build();
   }
- catch (  NoSuchAlgorithmException e) {
+ catch (  IOException e) {
     throw propagate(e);
   }
-catch (  InvalidKeySpecException e) {
-    throw propagate(e);
+catch (  GeneralSecurityException e) {
+    throw new AuthorizationException("security exception loading credentials. " + e.getMessage(),e);
   }
-catch (  IOException e) {
-    throw propagate(e);
+catch (  IllegalArgumentException e) {
+    throw new AuthorizationException("cannot parse pk. " + e.getMessage(),e);
   }
 }
