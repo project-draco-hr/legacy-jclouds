@@ -1,6 +1,6 @@
 {
   String arnToAssume=getTestArn();
-  UserAndTemporaryCredentials role=api().assumeRole(arnToAssume,"session",new AssumeRoleOptions().durationSeconds(MINUTES.toSeconds(15)));
+  UserAndSessionCredentials role=api().assumeRole(arnToAssume,"session",new AssumeRoleOptions().durationSeconds(MINUTES.toSeconds(15)));
   checkTemporaryCredentials(role.getCredentials());
   assertTrue(role.getUser().getId().contains("session"),role + " id incorrect");
   assertTrue(role.getUser().getArn().contains("session"),role + " arn incorrect");
