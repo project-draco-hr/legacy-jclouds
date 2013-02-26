@@ -1,14 +1,17 @@
 {
   checkArgument(checkNotNull(input,"input") instanceof Map,"this binder is only valid for Map");
   Map<String,BlockDevice> blockDeviceMapping=(Map<String,BlockDevice>)input;
-  ImmutableMap.Builder<String,String> builder=ImmutableMap.builder();
+  Multimap<String,String> original=queryParser().apply(request.getPayload().getRawContent().toString());
+  ImmutableMultimap.Builder<String,String> builder=ImmutableMultimap.builder();
+  builder.putAll("Action","ModifyInstanceAttribute");
   int amazonOneBasedIndex=1;
   for (  Entry<String,BlockDevice> ebsBlockDeviceName : blockDeviceMapping.entrySet()) {
-    builder.put(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDeviceName.getValue().getVolumeId());
     builder.put(format(deviceNamePattern,amazonOneBasedIndex),ebsBlockDeviceName.getKey());
     builder.put(format(deleteOnTerminationPattern,amazonOneBasedIndex),String.valueOf(ebsBlockDeviceName.getValue().isDeleteOnTermination()));
+    builder.put(format(volumeIdPattern,amazonOneBasedIndex),ebsBlockDeviceName.getValue().getVolumeId());
     amazonOneBasedIndex++;
   }
-  Multimap<String,String> forms=Multimaps.forMap(builder.build());
-  return forms.size() == 0 ? request : (R)request.toBuilder().replaceFormParams(forms).build();
+  builder.putAll("InstanceId",original.get("InstanceId"));
+  request.setPayload(newUrlEncodedFormPayload(builder.build()));
+  return request;
 }

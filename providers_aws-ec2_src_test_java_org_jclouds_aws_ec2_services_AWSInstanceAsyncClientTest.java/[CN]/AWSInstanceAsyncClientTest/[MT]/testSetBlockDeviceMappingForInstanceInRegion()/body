@@ -3,10 +3,10 @@
   Map<String,BlockDevice> mapping=Maps.newLinkedHashMap();
   mapping.put("/dev/sda1",new BlockDevice("vol-test1",true));
   GeneratedHttpRequest request=processor.createRequest(method,Lists.<Object>newArrayList(null,"1",mapping));
-  filter.filter(request);
+  request=(GeneratedHttpRequest)request.getFilters().get(0).filter(request);
   assertRequestLineEquals(request,"POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
   assertNonPayloadHeadersEqual(request,"Host: ec2.us-east-1.amazonaws.com\n");
-  assertPayloadEquals(request,"Action=ModifyInstanceAttribute&BlockDeviceMapping.1.DeviceName=/dev/sda1&BlockDeviceMapping.1.Ebs.DeleteOnTermination=true&BlockDeviceMapping.1.Ebs.VolumeId=vol-test1&InstanceId=1&Signature=qqJpPk8UmhPY9Jica0JSADEZiY3eHf9WETm%2B5tLT0NE%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2009-11-08T15%3A54%3A08.897Z&Version=2011-05-15&AWSAccessKeyId=identity","application/x-www-form-urlencoded",false);
+  assertPayloadEquals(request,filter.filter(setBlockDeviceMapping).getPayload().getRawContent().toString(),"application/x-www-form-urlencoded",false);
   assertResponseParserClassEquals(method,request,ReleasePayloadAndReturn.class);
   assertSaxResponseParserClassEquals(method,null);
   assertFallbackClassEquals(method,null);
