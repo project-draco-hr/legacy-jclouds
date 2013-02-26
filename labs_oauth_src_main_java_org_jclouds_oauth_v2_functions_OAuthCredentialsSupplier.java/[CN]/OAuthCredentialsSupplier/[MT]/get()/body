@@ -1,3 +1,12 @@
 {
-  return keyCache.getUnchecked(checkNotNull(creds.get(),"credential supplier returned null"));
+  try {
+    return keyCache.getUnchecked(checkNotNull(creds.get(),"credential supplier returned null"));
+  }
+ catch (  UncheckedExecutionException e) {
+    Throwable authorizationException=getFirstThrowableOfType(e,AuthorizationException.class);
+    if (authorizationException != null) {
+      throw ((AuthorizationException)authorizationException);
+    }
+    throw propagate(e);
+  }
 }
