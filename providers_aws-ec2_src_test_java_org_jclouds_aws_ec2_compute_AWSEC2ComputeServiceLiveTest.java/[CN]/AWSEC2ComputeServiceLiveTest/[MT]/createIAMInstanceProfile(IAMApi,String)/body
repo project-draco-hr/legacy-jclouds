@@ -1,0 +1,10 @@
+{
+  String roleName=name + "route53";
+  api.getRoleApi().createWithPolicy(roleName,assumeRolePolicy);
+  api.getPolicyApiForRole(roleName).create("route53-readonly",route53Policy);
+  api.getInstanceProfileApi().create(name);
+  api.getInstanceProfileApi().addRole(name,roleName);
+  InstanceProfile updated=api.getInstanceProfileApi().get(name);
+  getAnonymousLogger().info("created instanceProfile: " + updated);
+  return updated;
+}

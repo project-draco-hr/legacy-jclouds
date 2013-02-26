@@ -2,6 +2,9 @@
   if (qName.equals("blockDeviceMapping")) {
     inBlockDeviceMapping=false;
   }
+ else   if (equalsOrSuffix(qName,"iamInstanceProfile")) {
+    inIamInstanceProfile=false;
+  }
  else   if (qName.equals("item") && inBlockDeviceMapping) {
     try {
       builder.blockDeviceMapping(blockDeviceMappingBuilder.build());
@@ -9,6 +12,12 @@
   finally {
       blockDeviceMappingBuilder.clear();
     }
+  }
+ else   if (equalsOrSuffix(qName,"arn") && inIamInstanceProfile) {
+    builder.iamInstanceProfileArn(currentOrNull());
+  }
+ else   if (equalsOrSuffix(qName,"name") && inIamInstanceProfile) {
+    builder.iamInstanceProfileName(currentOrNull());
   }
  else   if (qName.equals("deviceName")) {
     blockDeviceMappingBuilder.deviceName(currentOrNull());

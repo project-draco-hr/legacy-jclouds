@@ -1,3 +1,9 @@
 {
-  return new Builder().instanceType(in.getInstanceType()).imageId(in.getImageId()).kernelId(in.getKernelId()).ramdiskId(in.getRamdiskId()).availabilityZone(in.getAvailabilityZone()).subnetId(in.getSubnetId()).keyName(in.getKeyName()).securityGroupIdToNames(in.getSecurityGroupIdToNames()).securityGroupIds(in.getSecurityGroupIds()).securityGroupNames(in.getSecurityGroupNames()).blockDeviceMappings(in.getBlockDeviceMappings()).monitoringEnabled(in.isMonitoringEnabled()).userData(in.getUserData());
+  Builder builder=new Builder();
+  builder.instanceType(in.getInstanceType()).imageId(in.getImageId()).kernelId(in.getKernelId()).ramdiskId(in.getRamdiskId()).availabilityZone(in.getAvailabilityZone()).subnetId(in.getSubnetId()).keyName(in.getKeyName()).securityGroupIdToNames(in.getSecurityGroupIdToNames()).securityGroupIds(in.getSecurityGroupIds()).securityGroupNames(in.getSecurityGroupNames()).blockDeviceMappings(in.getBlockDeviceMappings()).monitoringEnabled(in.isMonitoringEnabled()).userData(in.getUserData());
+  if (in.getIAMInstanceProfile().isPresent()) {
+    builder.iamInstanceProfileArn(in.getIAMInstanceProfile().get().getArn().orNull());
+    builder.iamInstanceProfileName(in.getIAMInstanceProfile().get().getName().orNull());
+  }
+  return builder;
 }

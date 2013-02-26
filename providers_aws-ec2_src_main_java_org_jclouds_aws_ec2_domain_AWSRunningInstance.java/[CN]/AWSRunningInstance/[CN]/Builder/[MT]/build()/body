@@ -1,3 +1,7 @@
 {
-  return new AWSRunningInstance(region,securityGroupIdToNames,amiLaunchIndex,dnsName,imageId,instanceId,instanceState,rawState,instanceType,ipAddress,kernelId,keyName,launchTime,availabilityZone,virtualizationType,platform,privateDnsName,privateIpAddress,ramdiskId,reason,rootDeviceType,rootDeviceName,ebsBlockDevices,monitoringState,placementGroup,productCodes,subnetId,spotInstanceRequestId,vpcId,hypervisor,tags);
+  Optional<IAMInstanceProfile> iamInstanceProfile=Optional.absent();
+  if (iamInstanceProfileArn != null && iamInstanceProfileId != null) {
+    iamInstanceProfile=Optional.of(IAMInstanceProfile.forArnAndId(iamInstanceProfileArn,iamInstanceProfileId));
+  }
+  return new AWSRunningInstance(region,securityGroupIdToNames,amiLaunchIndex,dnsName,imageId,instanceId,instanceState,rawState,instanceType,ipAddress,kernelId,keyName,launchTime,availabilityZone,virtualizationType,platform,privateDnsName,privateIpAddress,ramdiskId,reason,rootDeviceType,rootDeviceName,ebsBlockDevices,monitoringState,placementGroup,productCodes,subnetId,spotInstanceRequestId,vpcId,hypervisor,tags,iamInstanceProfile);
 }
