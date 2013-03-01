@@ -1,0 +1,7 @@
+{
+  Properties overrides=new Properties();
+  overrides.setProperty(PROPERTY_CONNECTION_TIMEOUT,"1000");
+  overrides.setProperty(PROPERTY_SO_TIMEOUT,"0");
+  overrides.setProperty(PROPERTY_MAX_RETRIES,"1");
+  return ContextBuilder.newBuilder("dynect").credentials("jclouds:joe","letmein").endpoint(uri).overrides(overrides).modules(ImmutableSet.<Module>of(new ExecutorServiceModule(sameThreadExecutor(),sameThreadExecutor()))).build(DynECTApiMetadata.CONTEXT_TOKEN).getApi();
+}
