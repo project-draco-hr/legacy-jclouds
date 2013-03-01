@@ -1,0 +1,12 @@
+{
+  String containerName=getContainerName();
+  try {
+    BlobStore blobStore=view.getBlobStore();
+    blobStore.createDirectory(containerName,"someDir");
+    blobStore.removeBlob(containerName,"someDir/");
+    assertEquals(blobStore.directoryExists(containerName,"someDir"),false);
+  }
+  finally {
+    returnContainer(containerName);
+  }
+}
