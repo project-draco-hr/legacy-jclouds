@@ -1,0 +1,8 @@
+{
+  Job job=api(zoneFQDN).scheduleDelete(id);
+  checkNotNull(job,"unable to delete record %s",id);
+  getAnonymousLogger().info("deleted record: " + job);
+  assertEquals(job.getStatus(),Status.SUCCESS);
+  assertEquals(context.getApi().getJob(job.getId()),job);
+  zoneApi().publish(zoneFQDN);
+}

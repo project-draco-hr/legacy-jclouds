@@ -1,0 +1,18 @@
+{
+  createZone();
+  Job job=null;
+  while (true) {
+    try {
+      job=api(zoneFQDN).scheduleCreate(record);
+      break;
+    }
+ catch (    JobStillRunningException e) {
+      continue;
+    }
+  }
+  checkNotNull(job,"unable to create record %s",record);
+  getAnonymousLogger().info("created record: " + job);
+  assertEquals(job.getStatus(),Status.SUCCESS);
+  assertEquals(context.getApi().getJob(job.getId()),job);
+  zoneApi().publish(zoneFQDN);
+}
