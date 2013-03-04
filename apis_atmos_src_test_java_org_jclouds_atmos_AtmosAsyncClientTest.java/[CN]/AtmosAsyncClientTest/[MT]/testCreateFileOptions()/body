@@ -2,7 +2,7 @@
   Invokable<?,?> method=method(AtmosAsyncClient.class,"createFile",String.class,AtmosObject.class,PutOptions[].class);
   GeneratedHttpRequest request=processor.createRequest(method,ImmutableList.<Object>of("dir",blobToObject.apply(BindBlobToMultipartFormTest.TEST_BLOB),PutOptions.Builder.publicRead()));
   assertRequestLineEquals(request,"POST https://accesspoint.atmosonline.com/rest/namespace/dir/hello HTTP/1.1");
-  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\nx-emc-groupacl: other=READ\nx-emc-useracl: root=FULL_CONTROL\n");
+  assertNonPayloadHeadersEqual(request,HttpHeaders.ACCEPT + ": */*\nExpect: 100-continue\nx-emc-groupacl: other=READ\nx-emc-useracl: root=FULL_CONTROL\n");
   assertPayloadEquals(request,"hello","text/plain",false);
   assertResponseParserClassEquals(method,request,ParseURIFromListOrLocationHeaderIf20x.class);
   assertSaxResponseParserClassEquals(method,null);

@@ -5,9 +5,10 @@
   S3Client client=getContext(server.getUrl("/")).getApi();
   S3Object fileInDir=client.newS3Object();
   fileInDir.getMetadata().setKey("someDir/fileName");
-  fileInDir.setPayload(new byte[]{});
+  fileInDir.setPayload(new byte[]{1,2,3,4});
   assertEquals(client.putObject("bucket",fileInDir),"ABCDEF");
   RecordedRequest request=server.takeRequest();
   assertEquals(request.getRequestLine(),"PUT /bucket/someDir/fileName HTTP/1.1");
+  assertEquals(request.getHeaders(EXPECT),ImmutableList.of("100-continue"));
   server.shutdown();
 }
