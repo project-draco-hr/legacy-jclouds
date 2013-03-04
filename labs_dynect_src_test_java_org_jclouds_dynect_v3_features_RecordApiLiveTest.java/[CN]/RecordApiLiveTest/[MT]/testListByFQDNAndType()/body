@@ -1,0 +1,10 @@
+{
+  id=api(zoneFQDN).listByFQDNAndType(record.getFQDN(),record.getType()).toList().get(0);
+  getAnonymousLogger().info(id.toString());
+  Record<? extends Map<String,Object>> newRecord=api(zoneFQDN).get(id);
+  assertEquals(newRecord.getFQDN(),record.getFQDN());
+  assertEquals(newRecord.getType(),record.getType());
+  assertEquals(newRecord.getTTL(),record.getTTL());
+  assertEquals(newRecord.getRData(),record.getRData());
+  checkRecord(newRecord);
+}
