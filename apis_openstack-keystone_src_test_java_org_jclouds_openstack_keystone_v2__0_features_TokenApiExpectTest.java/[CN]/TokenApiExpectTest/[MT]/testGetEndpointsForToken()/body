@@ -1,5 +1,5 @@
 {
-  TokenApi api=requestsSendResponses(keystoneAuthWithUsernameAndPassword,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/tokens/XXXXXX/endpoints").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_endpoints.json",APPLICATION_JSON)).build()).getTokenApi().get();
+  TokenApi api=requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,responseWithKeystoneAccess,authenticatedGET().endpoint(endpoint + "/v2.0/tokens/XXXXXX/endpoints").build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/user_endpoints.json",APPLICATION_JSON)).build()).getTokenApi().get();
   Set<? extends Endpoint> endpoints=api.listEndpointsForToken("XXXXXX");
   assertEquals(endpoints,ImmutableSet.of(Endpoint.builder().publicURL(URI.create("https://csnode.jclouds.org/v2.0/")).adminURL(URI.create("https://csnode.jclouds.org:35357/v2.0/")).region("region-a.geo-1").id("2.0").versionId("2.0").build()));
 }
