@@ -2,5 +2,6 @@
   if (family == OsFamily.WINDOWS) {
     throw new UnsupportedOperationException("windows not yet implemented");
   }
-  return super.render(family);
+  Statement statement=version.isPresent() ? exec(String.format("gem install chef -v '%s' --no-rdoc --no-ri",version.get())) : exec("gem install chef --no-rdoc --no-ri");
+  return statement.render(family);
 }

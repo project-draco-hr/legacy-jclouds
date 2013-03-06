@@ -1,0 +1,22 @@
+{
+  if (family == OsFamily.WINDOWS) {
+    throw new UnsupportedOperationException("windows not yet implemented");
+  }
+  URI rubygemsUri=URI.create(String.format(RUBYGEMS_URI_TEMPLATE,version.or(DEFAULT_RUBYGEMS_VERSION)));
+  ImmutableList.Builder<Statement> statements=ImmutableList.builder();
+  statements.add(exec("if ! hash gem 2>/dev/null; then"));
+  statements.add(exec("("));
+  statements.add(extractTargzAndFlattenIntoDirectory(rubygemsUri,"/tmp/rubygems"));
+  statements.add(exec("{cd} /tmp/rubygems"));
+  statements.add(exec("ruby setup.rb --no-format-executable"));
+  statements.add(exec("{rm} -fr /tmp/rubygems"));
+  statements.add(exec(")"));
+  statements.add(exec("fi"));
+  if (updateSystem) {
+    statements.add(updateSystemVersion.isPresent() ? exec("gem update --system " + updateSystemVersion.get()) : exec("gem update --system"));
+  }
+  if (updateExistingGems) {
+    statements.add(exec("gem update --no-rdoc --no-ri"));
+  }
+  return new StatementList(statements.build()).render(family);
+}
