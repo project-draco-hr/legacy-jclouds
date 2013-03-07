@@ -1,0 +1,7 @@
+{
+  InputStream is=getClass().getResourceAsStream("/lbpools.xml");
+  FluentIterable<LBPool> expected=expected();
+  LBPoolListHandler handler=injector.getInstance(LBPoolListHandler.class);
+  FluentIterable<LBPool> result=factory.create(handler).parse(is);
+  assertEquals(result.toSet().toString(),expected.toSet().toString());
+}
