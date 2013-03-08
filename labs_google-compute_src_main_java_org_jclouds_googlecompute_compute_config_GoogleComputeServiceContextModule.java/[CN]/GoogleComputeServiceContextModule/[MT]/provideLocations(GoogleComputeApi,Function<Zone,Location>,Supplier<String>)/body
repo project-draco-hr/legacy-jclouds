@@ -1,0 +1,13 @@
+{
+  return new Supplier<Map<URI,? extends Location>>(){
+    @Override public Map<URI,? extends Location> get(){
+      return uniqueIndex(transform(api.getZoneApiForProject(userProject.get()).list().concat(),zoneToLocation),new Function<Location,URI>(){
+        @Override public URI apply(        Location input){
+          return (URI)input.getMetadata().get("selfLink");
+        }
+      }
+);
+    }
+  }
+;
+}

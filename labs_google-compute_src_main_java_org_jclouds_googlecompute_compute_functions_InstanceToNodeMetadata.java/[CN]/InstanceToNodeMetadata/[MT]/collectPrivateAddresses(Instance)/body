@@ -1,0 +1,9 @@
+{
+  ImmutableSet.Builder<String> privateAddressesBuilder=ImmutableSet.builder();
+  for (  Instance.NetworkInterface networkInterface : input.getNetworkInterfaces()) {
+    if (networkInterface.getNetworkIP().isPresent()) {
+      privateAddressesBuilder.add(networkInterface.getNetworkIP().get());
+    }
+  }
+  return privateAddressesBuilder.build();
+}
