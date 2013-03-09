@@ -1,0 +1,16 @@
+{
+  ImageBuilder builder=new ImageBuilder().id(image.getName()).name(image.getName()).providerId(image.getId()).description(image.getDescription().orNull()).status(Status.AVAILABLE).location(GOOGLE_PROVIDER_LOCATION).uri(image.getSelfLink());
+  List<String> splits=Lists.newArrayList(image.getName().split("-"));
+  OperatingSystem.Builder osBuilder=defaultOperatingSystem(image);
+  if (splits == null || splits.size() == 0 || splits.size() < 3) {
+    return builder.operatingSystem(osBuilder.build()).build();
+  }
+  OsFamily family=OsFamily.fromValue(splits.get(0));
+  if (family != OsFamily.UNRECOGNIZED) {
+    osBuilder.family(family);
+  }
+  String version=on(".").join(limit(skip(splits,1),splits.size() - 2));
+  osBuilder.version(version);
+  builder.version(getLast(splits));
+  return builder.operatingSystem(osBuilder.build()).build();
+}

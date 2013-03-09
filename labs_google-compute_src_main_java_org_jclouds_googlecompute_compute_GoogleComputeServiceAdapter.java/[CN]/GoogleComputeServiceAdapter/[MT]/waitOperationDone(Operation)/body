@@ -1,0 +1,10 @@
+{
+  AtomicReference<Operation> operationRef=new AtomicReference<Operation>(operation);
+  if (!retryOperationDonePredicate.apply(operationRef)) {
+    throw new UncheckedTimeoutException("operation did not reach DONE state" + operationRef.get());
+  }
+  if (operationRef.get().getHttpError().isPresent()) {
+    HttpResponse response=operationRef.get().getHttpError().get();
+    throw new IllegalStateException("operation failed. Http Error Code: " + response.getStatusCode() + " HttpError: "+ response.getMessage());
+  }
+}

@@ -1,0 +1,12 @@
+{
+  ImmutableMap<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().put(requestForScopes(COMPUTE_READONLY_SCOPE),TOKEN_RESPONSE).put(LIST_ZONES_REQ,LIST_ZONES_RESPONSE).put(LIST_INSTANCES_REQUEST,LIST_INSTANCES_RESPONSE).put(LIST_PROJECT_IMAGES_REQUEST,LIST_PROJECT_IMAGES_RESPONSE).put(LIST_GOOGLE_IMAGES_REQUEST,LIST_GOOGLE_IMAGES_RESPONSE).put(LIST_MACHINE_TYPES_REQUEST,LIST_MACHINE_TYPES_RESPONSE).build();
+  ComputeService apiWhenServersExist=requestsSendResponses(requestResponseMap);
+  Set<? extends Location> locations=apiWhenServersExist.listAssignableLocations();
+  assertNotNull(locations);
+  assertEquals(locations.size(),2);
+  assertEquals(locations.iterator().next().getId(),"us-central1-a");
+  assertNotNull(apiWhenServersExist.listNodes());
+  assertEquals(apiWhenServersExist.listNodes().size(),1);
+  assertEquals(apiWhenServersExist.listNodes().iterator().next().getId(),"test-0");
+  assertEquals(apiWhenServersExist.listNodes().iterator().next().getName(),"test-0");
+}

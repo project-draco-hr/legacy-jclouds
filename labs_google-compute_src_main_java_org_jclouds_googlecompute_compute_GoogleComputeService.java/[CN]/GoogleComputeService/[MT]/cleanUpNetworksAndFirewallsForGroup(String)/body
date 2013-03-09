@@ -1,0 +1,15 @@
+{
+  String resourceName=namingConvention.create().sharedNameForGroup(groupName);
+  AtomicReference<Operation> operation=new AtomicReference<Operation>(api.getFirewallApiForProject(project.get()).delete(resourceName));
+  retry(operationDonePredicate,operationCompleteCheckTimeout,operationCompleteCheckInterval,MILLISECONDS).apply(operation);
+  if (operation.get().getHttpError().isPresent()) {
+    HttpResponse response=operation.get().getHttpError().get();
+    logger.warn("delete orphaned firewall failed. Http Error Code: " + response.getStatusCode() + " HttpError: "+ response.getMessage());
+  }
+  operation=new AtomicReference<Operation>(api.getNetworkApiForProject(project.get()).delete(resourceName));
+  retry(operationDonePredicate,operationCompleteCheckTimeout,operationCompleteCheckInterval,MILLISECONDS).apply(operation);
+  if (operation.get().getHttpError().isPresent()) {
+    HttpResponse response=operation.get().getHttpError().get();
+    logger.warn("delete orphaned network failed. Http Error Code: " + response.getStatusCode() + " HttpError: "+ response.getMessage());
+  }
+}

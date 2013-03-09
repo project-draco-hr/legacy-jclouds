@@ -1,0 +1,9 @@
+{
+  Properties properties=new Properties();
+  properties.setProperty("oauth.identity","MOMMA");
+  properties.setProperty("oauth.credential","MiA");
+  ComputeService client=requestsSendResponses(ImmutableMap.<HttpRequest,HttpResponse>of(),createModule(),properties);
+  Template template=client.templateBuilder().build();
+  Template toMatch=client.templateBuilder().imageId(template.getImage().getId()).build();
+  assertEquals(toMatch.getImage(),template.getImage());
+}
