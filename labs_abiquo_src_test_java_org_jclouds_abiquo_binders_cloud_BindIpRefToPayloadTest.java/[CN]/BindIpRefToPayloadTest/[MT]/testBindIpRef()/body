@@ -1,8 +1,0 @@
-{
-  PrivateIpDto ip=NetworkResources.privateIpPut();
-  RESTLink selfLink=ip.searchLink("self");
-  BindIpRefToPayload binder=new BindIpRefToPayload(new JAXBParser("false"));
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
-  request=binder.bindToRequest(request,ip);
-  assertPayloadEquals(request.getPayload(),withHeader("<links><link href=\"" + selfLink.getHref() + "\" rel=\""+ selfLink.getTitle()+ "\"/></links>"),LinksDto.class);
-}

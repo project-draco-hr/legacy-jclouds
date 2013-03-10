@@ -1,7 +1,0 @@
-{
-  Ip<?,?> ip=getLast(vdc.getDefaultNetwork().listUnusedIps());
-  AsyncTask task=vm.setNics(Lists.<Ip<?,?>>newArrayList(ip));
-  assertNotNull(task);
-  monitoringService.getVirtualMachineMonitor().awaitState(MAX_WAIT,TimeUnit.MINUTES,VirtualMachineState.OFF,vm);
-  assertNotNull(vm.findAttachedNic(IpPredicates.address(ip.getIp())));
-}

@@ -1,9 +1,0 @@
-{
-  List<Vm> vms=vApp.getChildren().getVms();
-  Set<URI> vmHrefs=toHrefs(vms);
-  QueryResultRecords queryResult=queryApi.vmsQuery(String.format("containerName==%s",vApp.getName()));
-  Set<URI> hrefs=toHrefs(queryResult);
-  assertRecordTypes(queryResult,Arrays.asList(VCloudDirectorMediaType.VM,null),QueryResultVMRecord.class);
-  String message="VMs query result should equal vms of vApp " + vApp.getName() + " ("+ vmHrefs+ "); but only has "+ hrefs;
-  assertTrue(ImmutableSet.copyOf(hrefs).equals(ImmutableSet.copyOf(vmHrefs)),message);
-}

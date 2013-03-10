@@ -1,6 +1,0 @@
-{
-  long now=TimeUnit.SECONDS.convert(ticker.read(),TimeUnit.NANOSECONDS);
-  Header header=new Header.Builder().signerAlgorithm(signatureAlgorithm).type(tokenRequestFormat.getTypeName()).build();
-  ClaimSet claimSet=new ClaimSet.Builder(this.tokenRequestFormat.requiredClaims()).addClaim("iss",credentialsSupplier.get().identity).addClaim("scope",getOAuthScopes(request)).addClaim("aud",assertionTargetDescription).emissionTime(now).expirationTime(now + tokenDuration).addAllClaims(additionalClaims).build();
-  return new TokenRequest.Builder().header(header).claimSet(claimSet).build();
-}

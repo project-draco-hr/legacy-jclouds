@@ -1,9 +1,0 @@
-{
-  vm=powerOnVm(vmUrn);
-  UndeployVAppParams params=UndeployVAppParams.builder().build();
-  Task undeploy=vmApi.undeploy(vmUrn,params);
-  assertTrue(retryTaskSuccess.apply(undeploy),String.format(TASK_COMPLETE_TIMELY,"undeploy"));
-  vm=vmApi.get(vmUrn);
-  assertFalse(vm.isDeployed(),String.format(OBJ_FIELD_EQ,VM,"deployed","FALSE",vm.isDeployed().toString()));
-  assertVmStatus(vmUrn,Status.POWERED_OFF);
-}

@@ -1,9 +1,0 @@
-{
-  HttpRequest request=buildGETWithQuery("Action=GetPublicIPAttributes" + "&publicIp=123.45.67.89");
-  HttpResponse response=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/GetPublicIPAttributes-response.xml")).build();
-  PublicIPAddressApi api=requestSendsResponse(request,response).getPublicIPAddressApi();
-  PublicIP ip=api.get("123.45.67.89");
-  assertNotNull(ip,"ip");
-  assertEquals(ip.getAddress(),"123.45.67.89");
-  assertEquals(ip.getVersion(),PublicIP.Version.IPv4);
-}

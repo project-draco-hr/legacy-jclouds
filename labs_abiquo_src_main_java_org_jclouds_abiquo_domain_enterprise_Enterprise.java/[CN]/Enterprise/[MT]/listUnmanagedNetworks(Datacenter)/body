@@ -1,7 +1,0 @@
-{
-  DatacenterLimitsDto limitForDatacenter=getLimits(datacenter);
-  ExtendedUtils utils=(ExtendedUtils)context.getUtils();
-  HttpResponse response=utils.getAbiquoHttpClient().get(limitForDatacenter.searchLink("externalnetworks"));
-  ParseXMLWithJAXB<VLANNetworksDto> parser=new ParseXMLWithJAXB<VLANNetworksDto>(utils.getXml(),TypeLiteral.get(VLANNetworksDto.class));
-  return wrap(context,UnmanagedNetwork.class,parser.apply(response).getCollection());
-}

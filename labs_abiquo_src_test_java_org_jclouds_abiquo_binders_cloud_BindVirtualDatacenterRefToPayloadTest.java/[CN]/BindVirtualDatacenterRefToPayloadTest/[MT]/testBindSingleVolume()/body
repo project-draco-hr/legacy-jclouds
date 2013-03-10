@@ -1,7 +1,0 @@
-{
-  VirtualDatacenterDto vdc=CloudResources.virtualDatacenterPut();
-  BindVirtualDatacenterRefToPayload binder=new BindVirtualDatacenterRefToPayload(new JAXBParser("false"));
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
-  request=binder.bindToRequest(request,vdc);
-  assertPayloadEquals(request.getPayload(),withHeader("<links><link href=\"" + vdc.getEditLink().getHref() + "\" rel=\"virtualdatacenter\"/></links>"),LinksDto.class);
-}

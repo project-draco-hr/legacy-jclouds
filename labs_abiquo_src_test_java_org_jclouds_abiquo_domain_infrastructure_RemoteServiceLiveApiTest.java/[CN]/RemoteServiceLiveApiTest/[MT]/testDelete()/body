@@ -1,9 +1,0 @@
-{
-  RemoteService rs=env.datacenter.findRemoteService(type(RemoteServiceType.BPM_SERVICE));
-  rs.delete();
-  RemoteServiceDto deleted=env.infrastructureApi.getRemoteService(env.datacenter.unwrap(),RemoteServiceType.BPM_SERVICE);
-  assertNull(deleted);
-  URI endpoint=URI.create(env.context.getApiContext().getProviderMetadata().getEndpoint());
-  RemoteService bpm=RemoteService.builder(env.context.getApiContext(),env.datacenter).type(RemoteServiceType.BPM_SERVICE).ip(endpoint.getHost()).build();
-  bpm.save();
-}

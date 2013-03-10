@@ -1,9 +1,0 @@
-{
-  Iterable<RacksDto> racks=transformParallel(datacenters,new Function<Datacenter,ListenableFuture<? extends RacksDto>>(){
-    @Override public ListenableFuture<RacksDto> apply(    final Datacenter input){
-      return context.getAsyncApi().getInfrastructureApi().listRacks(input.unwrap());
-    }
-  }
-,userExecutor,maxTime,logger,"getting racks");
-  return DomainWrapper.join(racks);
-}

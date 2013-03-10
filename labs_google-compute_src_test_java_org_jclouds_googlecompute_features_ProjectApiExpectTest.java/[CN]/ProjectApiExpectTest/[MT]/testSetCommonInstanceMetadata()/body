@@ -1,6 +1,0 @@
-{
-  HttpRequest setMetadata=HttpRequest.builder().method("POST").endpoint(PROJECTS_URL_PREFIX + "/myproject/setCommonInstanceMetadata").addHeader("Accept","application/json").addHeader("Authorization","Bearer " + TOKEN).payload(payloadFromResourceWithContentType("/metadata.json",MediaType.APPLICATION_JSON)).build();
-  HttpResponse setMetadataResponse=HttpResponse.builder().statusCode(200).payload(payloadFromResource("/operation.json")).build();
-  ProjectApi api=requestsSendResponses(requestForScopes(GoogleComputeConstants.COMPUTE_SCOPE),TOKEN_RESPONSE,setMetadata,setMetadataResponse).getProjectApi();
-  assertEquals(api.setCommonInstanceMetadata("myproject",new ParseMetadataTest().expected()),new ParseOperationTest().expected());
-}

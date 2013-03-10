@@ -1,8 +1,0 @@
-{
-  DeployVAppParams params=DeployVAppParams.builder().deploymentLeaseSeconds((int)TimeUnit.SECONDS.convert(1L,TimeUnit.HOURS)).notForceCustomization().notPowerOn().build();
-  Task deployVm=vmApi.deploy(vmUrn,params);
-  assertTrue(retryTaskSuccessLong.apply(deployVm),String.format(TASK_COMPLETE_TIMELY,"deployVm"));
-  vm=vmApi.get(vmUrn);
-  assertTrue(vm.isDeployed(),String.format(OBJ_FIELD_EQ,VM,"deployed","TRUE",vm.isDeployed().toString()));
-  assertVmStatus(vmUrn,Status.POWERED_OFF);
-}

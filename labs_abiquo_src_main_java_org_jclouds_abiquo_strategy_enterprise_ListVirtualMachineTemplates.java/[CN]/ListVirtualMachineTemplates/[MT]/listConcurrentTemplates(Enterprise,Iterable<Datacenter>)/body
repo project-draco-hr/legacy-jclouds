@@ -1,9 +1,0 @@
-{
-  Iterable<VirtualMachineTemplatesDto> templates=transformParallel(dcs,new Function<Datacenter,ListenableFuture<? extends VirtualMachineTemplatesDto>>(){
-    @Override public ListenableFuture<VirtualMachineTemplatesDto> apply(    final Datacenter input){
-      return context.getAsyncApi().getVirtualMachineTemplateApi().listVirtualMachineTemplates(parent.getId(),input.getId());
-    }
-  }
-,userExecutor,maxTime,logger,"getting virtual machine templates");
-  return DomainWrapper.join(templates);
-}
