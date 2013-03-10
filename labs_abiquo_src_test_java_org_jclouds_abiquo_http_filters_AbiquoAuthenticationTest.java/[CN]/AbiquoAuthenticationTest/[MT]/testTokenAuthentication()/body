@@ -1,8 +1,0 @@
-{
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://foo")).build();
-  AbiquoAuthentication filter=new AbiquoAuthentication(ofInstance(new Credentials("token-identity","token")),true);
-  HttpRequest filtered=filter.filter(request);
-  HttpRequest expected=request.toBuilder().replaceHeader(HttpHeaders.COOKIE,AbiquoAuthentication.tokenAuth("token")).build();
-  assertFalse(filtered.getHeaders().containsKey(HttpHeaders.AUTHORIZATION));
-  assertEquals(filtered,expected);
-}

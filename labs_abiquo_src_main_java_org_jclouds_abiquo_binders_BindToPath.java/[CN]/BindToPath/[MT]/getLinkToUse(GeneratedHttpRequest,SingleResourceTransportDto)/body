@@ -1,9 +1,0 @@
-{
-  int argIndex=request.getInvocation().getArgs().indexOf(payload);
-  Annotation[] annotations=request.getInvocation().getInvokable().getParameters().get(argIndex).getAnnotations();
-  EndpointLink linkName=(EndpointLink)Iterables.find(Arrays.asList(annotations),Predicates.instanceOf(EndpointLink.class),null);
-  if (linkName == null) {
-    throw new BindException(request,"Expected a EndpointLink annotation but not found in the parameter");
-  }
-  return checkNotNull(payload.searchLink(linkName.value()),"No link was found in object with rel: " + linkName);
-}

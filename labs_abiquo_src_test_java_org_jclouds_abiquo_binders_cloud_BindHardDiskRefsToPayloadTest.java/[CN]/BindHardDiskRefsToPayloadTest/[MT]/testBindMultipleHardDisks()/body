@@ -1,7 +1,0 @@
-{
-  DiskManagementDto hardDisk=CloudResources.hardDiskPut();
-  BindHardDiskRefsToPayload binder=new BindHardDiskRefsToPayload(new JAXBParser("false"));
-  HttpRequest request=HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost")).build();
-  request=binder.bindToRequest(request,new DiskManagementDto[]{hardDisk,hardDisk});
-  assertPayloadEquals(request.getPayload(),withHeader("<links><link href=\"" + hardDisk.getEditLink().getHref() + "\" rel=\""+ binder.getRelToUse(hardDisk)+ "\"/></links>"),LinksDto.class);
-}

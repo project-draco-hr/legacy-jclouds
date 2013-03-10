@@ -1,8 +1,0 @@
-{
-  logger.trace("looking for status on task %s",checkNotNull(taskId,"taskId"));
-  Task task=refresh(taskId);
-  if (task == null)   return false;
-  logger.trace("%s: looking for task status %s: currently: %s",task.getId(),Task.Status.SUCCESS,task.getStatus());
-  if (task.getError() != null)   throw new IllegalStateException(String.format("task %s failed with exception %s",task.getId(),task.getError().toString()));
-  return task.getStatus() == Task.Status.SUCCESS;
-}

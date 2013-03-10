@@ -1,9 +1,0 @@
-{
-  checkArgument(checkNotNull(input,"input") instanceof VLANNetworkDto,"this binder is only valid for VLANNetworkDto objects");
-  VLANNetworkDto network=(VLANNetworkDto)input;
-  checkArgument(network.getType() == NetworkType.UNMANAGED,"this binder is only valid for UNMANAGED networks");
-  RESTLink ipsLink=checkNotNull(network.searchLink("ips"),"VLANNetworkDto must have an ips link");
-  LinksDto refs=new LinksDto();
-  refs.addLink(new RESTLink("unmanagedip",ipsLink.getHref()));
-  return super.bindToRequest(request,refs);
-}

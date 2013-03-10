@@ -1,6 +1,0 @@
-{
-  HttpRequest create=HttpRequest.builder().method("POST").endpoint("https://api.joyentcloud.com/my/keys").addHeader("X-Api-Version","~6.5").addHeader("Accept","application/json").addHeader("Authorization","Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").payload(payloadFromStringWithContentType("{\"name\":\"rsa\",\"key\":\"ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0A5Pf5Cq...\"}","application/json")).build();
-  HttpResponse createResponse=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/key.json","application/json; charset=UTF-8")).build();
-  JoyentCloudApi apiWithNewKey=requestsSendResponses(getDatacenters,getDatacentersResponse,create,createResponse);
-  assertEquals(apiWithNewKey.getKeyApi().create(new ParseKeyTest().expected()).toString(),new ParseKeyTest().expected().toString());
-}

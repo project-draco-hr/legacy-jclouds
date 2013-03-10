@@ -1,9 +1,0 @@
-{
-  InfrastructureApi api=requestSendsResponse(HttpRequest.builder().method("GET").endpoint(URI.create("http://localhost/api/admin/datacenters/1/networkservicetypes/1")).addHeader("Authorization",basicAuth).addHeader("Accept",normalize(NetworkServiceTypeDto.MEDIA_TYPE)).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/payloads/nst-edit.xml",normalize(NetworkServiceTypeDto.MEDIA_TYPE))).build());
-  DatacenterDto datacenter=new DatacenterDto();
-  datacenter.addLink(new RESTLink("networkservicetypes","http://localhost/api/admin/datacenters/1/networkservicetypes"));
-  NetworkServiceTypeDto created=api.getNetworkServiceType(datacenter,1);
-  assertNotNull(created.getId());
-  assertEquals(created.getName(),"Service Network");
-  assertEquals(created.isDefaultNST(),true);
-}

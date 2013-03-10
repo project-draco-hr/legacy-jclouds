@@ -1,9 +1,0 @@
-{
-  Credentials currentCreds=checkNotNull(creds.get(),"credential supplier returned null");
-  if (currentCreds.identity.indexOf(':') == -1) {
-    throw new AuthorizationException(String.format("Identity %s does not match format tenantId:username",currentCreds.identity),null);
-  }
-  String tenantId=currentCreds.identity.substring(0,currentCreds.identity.indexOf(':'));
-  String username=currentCreds.identity.substring(currentCreds.identity.indexOf(':') + 1);
-  return request.toBuilder().replaceHeader("TID",tenantId).replaceHeader(AUTHORIZATION,basic(username,currentCreds.credential)).build();
-}
