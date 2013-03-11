@@ -1,12 +1,12 @@
 {
-  aRecord1=api(zoneName).addARecordWithAddressAndTTL(aPoolId,"1.2.3.4",UnsignedInteger.ONE);
+  aRecord1=api(zoneName).addARecordWithAddressAndTTL(aPoolId,"1.2.3.4",1);
   getAnonymousLogger().info("created A record: " + aRecord1);
   assertTrue(listRRs(aPoolId).anyMatch(equalTo(rrBuilder().name(hostname).type("A").ttl(1).rdata("1.2.3.4").build())));
-  aRecord2=api(zoneName).addARecordWithAddressAndTTL(aPoolId,"3.4.5.6",UnsignedInteger.ONE);
+  aRecord2=api(zoneName).addARecordWithAddressAndTTL(aPoolId,"3.4.5.6",1);
   assertTrue(listRRs(aPoolId).anyMatch(equalTo(rrBuilder().name(hostname).type("A").ttl(1).rdata("3.4.5.6").build())));
   getAnonymousLogger().info("created A record: " + aRecord1);
   try {
-    api(zoneName).addARecordWithAddressAndTTL(aPoolId,"1.2.3.4",UnsignedInteger.ONE);
+    api(zoneName).addARecordWithAddressAndTTL(aPoolId,"1.2.3.4",1);
     fail();
   }
  catch (  ResourceAlreadyExistsException e) {
