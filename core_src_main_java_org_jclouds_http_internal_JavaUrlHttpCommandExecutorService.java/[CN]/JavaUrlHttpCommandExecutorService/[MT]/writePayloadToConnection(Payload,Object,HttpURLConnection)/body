@@ -1,0 +1,11 @@
+{
+  connection.setDoOutput(true);
+  CountingOutputStream out=new CountingOutputStream(connection.getOutputStream());
+  try {
+    payload.writeTo(out);
+  }
+ catch (  IOException e) {
+    logger.error(e,"error after writing %d/%s bytes to %s",out.getCount(),lengthDesc,connection.getURL());
+    throw e;
+  }
+}

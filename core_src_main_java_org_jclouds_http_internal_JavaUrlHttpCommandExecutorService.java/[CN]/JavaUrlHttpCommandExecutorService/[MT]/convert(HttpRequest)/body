@@ -47,12 +47,15 @@
     }
     if (chunked) {
       connection.setChunkedStreamingMode(8196);
+      writePayloadToConnection(payload,"streaming",connection);
     }
  else {
-      long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
+      Long length=checkNotNull(md.getContentLength(),"payload.getContentLength");
       checkArgument(length < Integer.MAX_VALUE,"JDK 1.6 does not support >2GB chunks. Use chunked encoding, if possible.");
       if (length > 0) {
-        writePayloadToConnection(payload,connection);
+        connection.setRequestProperty(CONTENT_LENGTH,length.toString());
+        connection.setFixedLengthStreamingMode(length.intValue());
+        writePayloadToConnection(payload,length,connection);
       }
  else {
         writeNothing(connection);
