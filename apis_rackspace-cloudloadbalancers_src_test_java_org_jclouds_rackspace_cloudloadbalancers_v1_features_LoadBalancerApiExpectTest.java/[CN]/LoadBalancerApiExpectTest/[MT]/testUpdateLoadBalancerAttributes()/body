@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000");
   LoadBalancerApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("PUT").payload(payloadFromResource("/loadbalancer-update.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(202).payload("").build()).getLoadBalancerApiForZone("DFW");
-  LoadBalancerAttributes lbAttrs=LoadBalancerAttributes.Builder.name("foo").protocol("HTTPS").port(443).algorithm(LoadBalancer.Algorithm.RANDOM);
-  api.update(2000,lbAttrs);
+  LoadBalancerUpdate lbUpdate=LoadBalancerUpdate.Builder.name("foo").protocol("HTTPS").port(443).algorithm(LoadBalancer.Algorithm.RANDOM);
+  api.update(2000,lbUpdate);
 }
