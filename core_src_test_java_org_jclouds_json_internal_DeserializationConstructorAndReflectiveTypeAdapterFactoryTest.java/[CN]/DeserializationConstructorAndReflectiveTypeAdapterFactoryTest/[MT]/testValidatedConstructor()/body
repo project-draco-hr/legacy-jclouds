@@ -1,5 +1,5 @@
 {
-  TypeAdapter<ValidatedConstructor> adapter=parameterizedCtorFactory.create(gson,TypeToken.get(ValidatedConstructor.class));
-  assertEquals(new ValidatedConstructor(0,1),adapter.fromJson("{\"foo\":0,\"bar\":1}"));
-  adapter.fromJson("{\"foo\":-1,\"bar\":1}");
+  Gson gson=new GsonBuilder().registerTypeAdapterFactory(parameterizedCtorFactory).registerTypeAdapterFactory(new OptionalTypeAdapterFactory()).create();
+  assertEquals(new ValidatedConstructor(Optional.of(0),1),gson.fromJson("{\"foo\":0,\"bar\":1}",ValidatedConstructor.class));
+  gson.fromJson("{\"bar\":1}",ValidatedConstructor.class);
 }

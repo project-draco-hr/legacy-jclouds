@@ -34,7 +34,10 @@
   }
   for (  Parameter param : params) {
     if (param.getType().getRawType().isPrimitive()) {
-      checkArgument(values[param.hashCode()] != null,"Primitive param[" + param.hashCode() + "] in constructor "+ parameterizedCtor+ " cannot be absent!");
+      checkArgument(values[param.hashCode()] != null,"Primitive param[%s] in constructor %s cannot be absent!",param.hashCode(),parameterizedCtor);
+    }
+ else     if (param.getType().getRawType() == Optional.class && values[param.hashCode()] == null) {
+      values[param.hashCode()]=Optional.absent();
     }
   }
   in.endObject();
