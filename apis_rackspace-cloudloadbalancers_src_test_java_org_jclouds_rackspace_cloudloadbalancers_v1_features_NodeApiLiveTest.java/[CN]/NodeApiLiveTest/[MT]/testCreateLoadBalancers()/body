@@ -3,7 +3,7 @@
   Logger.getAnonymousLogger().info("running against zones " + clbApi.getConfiguredZones());
   for (  String zone : clbApi.getConfiguredZones()) {
     Logger.getAnonymousLogger().info("starting lb in zone " + zone);
-    LoadBalancer lb=clbApi.getLoadBalancerApiForZone(zone).create(LoadBalancerRequest.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(NodeRequest.builder().address("192.168.1.1").port(8080).build()).build());
+    LoadBalancer lb=clbApi.getLoadBalancerApiForZone(zone).create(LoadBalancerCreate.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(NodeAdd.builder().address("192.168.1.1").port(8080).build()).build());
     nodes.put(lb,new HashSet<Node>());
     assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
   }

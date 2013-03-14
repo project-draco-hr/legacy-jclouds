@@ -1,6 +1,6 @@
 {
   for (  LoadBalancer lb : lbs) {
-    clbApi.getLoadBalancerApiForZone(lb.getRegion()).update(lb.getId(),LoadBalancerAttributes.Builder.name("foo" + "-" + lb.getRegion()));
+    clbApi.getLoadBalancerApiForZone(lb.getRegion()).update(lb.getId(),LoadBalancerUpdate.Builder.name("foo" + "-" + lb.getRegion()));
     assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
     LoadBalancer newLb=clbApi.getLoadBalancerApiForZone(lb.getRegion()).get(lb.getId());
     checkLBInRegion(newLb.getRegion(),newLb,"foo" + "-" + lb.getRegion());
