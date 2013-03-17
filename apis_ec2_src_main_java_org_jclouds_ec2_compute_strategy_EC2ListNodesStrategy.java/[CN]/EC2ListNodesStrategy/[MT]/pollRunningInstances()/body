@@ -1,9 +1,4 @@
 {
-  Iterable<? extends Set<? extends Reservation<? extends RunningInstance>>> reservations=transformParallel(regions.get(),new Function<String,ListenableFuture<? extends Set<? extends Reservation<? extends RunningInstance>>>>(){
-    @Override public ListenableFuture<? extends Set<? extends Reservation<? extends RunningInstance>>> apply(    String from){
-      return client.getInstanceServices().describeInstancesInRegion(from);
-    }
-  }
-,userExecutor,maxTime,logger,"reservations");
+  Iterable<? extends Set<? extends Reservation<? extends RunningInstance>>> reservations=transform(regions.get(),allInstancesInRegion());
   return concat(concat(reservations));
 }

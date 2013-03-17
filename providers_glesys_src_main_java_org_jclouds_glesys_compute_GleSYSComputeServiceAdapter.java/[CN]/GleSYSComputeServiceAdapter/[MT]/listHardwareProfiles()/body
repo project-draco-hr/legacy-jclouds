@@ -8,7 +8,7 @@
       if (template.getPlatform().equals(platformToArgs.getKey()) && diskSizeGB >= template.getMinDiskSize() && memorySizeMB >= template.getMinMemSize())       templatesSupportedBuilder.add(template.getName());
     }
     ImmutableSet<String> templatesSupported=templatesSupportedBuilder.build();
-    if (templatesSupported.size() > 0)     hardwareToReturn.add(new HardwareBuilder().ids(String.format("datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)",datacenter,platformToArgs.getKey(),cpuCores,memorySizeMB,diskSizeGB)).ram(memorySizeMB).processors(ImmutableList.of(new Processor(cpuCores,1.0))).volumes(ImmutableList.<Volume>of(new VolumeImpl((float)diskSizeGB,true,true))).hypervisor(platformToArgs.getKey()).location(Iterables.find(locationsSet,LocationPredicates.idEquals(datacenter))).supportsImage(ImagePredicates.idIn(templatesSupported)).build());
+    if (templatesSupported.size() > 0)     hardwareToReturn.add(new HardwareBuilder().ids(String.format("datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)",datacenter,platformToArgs.getKey(),cpuCores,memorySizeMB,diskSizeGB)).ram(memorySizeMB).processors(ImmutableList.of(new Processor(cpuCores,1.0))).volumes(ImmutableList.<Volume>of(new VolumeImpl((float)diskSizeGB,true,true))).hypervisor(platformToArgs.getKey()).location(find(locationsSet,LocationPredicates.idEquals(datacenter))).supportsImage(ImagePredicates.idIn(templatesSupported)).build());
   }
   return hardwareToReturn.build();
 }

@@ -1,9 +1,4 @@
 {
-  Iterable<? extends AWSRunningInstance> spots=filter(transform(concat(transformParallel(regions.get(),new Function<String,ListenableFuture<? extends Set<SpotInstanceRequest>>>(){
-    @Override public ListenableFuture<? extends Set<SpotInstanceRequest>> apply(    String from){
-      return client.getSpotInstanceServices().describeSpotInstanceRequestsInRegion(from);
-    }
-  }
-,userExecutor,maxTime,logger,"reservations")),spotConverter),notNull());
+  Iterable<? extends AWSRunningInstance> spots=filter(transform(concat(transform(regions.get(),allSpotInstancesInRegion())),spotConverter),notNull());
   return concat(super.pollRunningInstances(),spots);
 }

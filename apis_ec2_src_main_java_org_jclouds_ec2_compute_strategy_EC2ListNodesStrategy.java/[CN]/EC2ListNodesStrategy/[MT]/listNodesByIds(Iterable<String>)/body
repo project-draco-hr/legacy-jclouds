@@ -1,0 +1,11 @@
+{
+  Multimap<String,String> idsByHandles=index(ids,splitHandle(1));
+  Multimap<String,String> idsByRegions=transformValues(idsByHandles,splitHandle(0));
+  Multimap<String,String> idsByConfiguredRegions=filterKeys(idsByRegions,in(regions.get()));
+  if (idsByConfiguredRegions.isEmpty()) {
+    return ImmutableSet.of();
+  }
+  Iterable<? extends RunningInstance> instances=pollRunningInstancesByRegionsAndIds(idsByConfiguredRegions);
+  Iterable<? extends NodeMetadata> nodes=transform(filter(instances,notNull()),runningInstanceToNodeMetadata);
+  return ImmutableSet.copyOf(nodes);
+}
