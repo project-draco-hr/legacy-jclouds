@@ -1,10 +1,10 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers");
   LoadBalancerApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("POST").payload(payloadFromResource("/loadbalancer-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/loadbalancer-get.json")).build()).getLoadBalancerApiForZone("DFW");
-  NodeAdd nodeAdd1=NodeAdd.builder().address("10.1.1.1").condition(Node.Condition.ENABLED).port(80).build();
-  NodeAdd nodeAdd2=NodeAdd.builder().address("10.1.1.2").condition(Node.Condition.ENABLED).port(80).build();
-  Set<NodeAdd> nodeAdds=Sets.newHashSet(nodeAdd1,nodeAdd2);
-  LoadBalancerCreate lbCreate=LoadBalancerCreate.builder().name("sample-loadbalancer").protocol("HTTP").port(80).algorithm(LoadBalancer.Algorithm.RANDOM).virtualIPType(VirtualIP.Type.PUBLIC).nodes(nodeAdds).build();
-  LoadBalancer loadBalancer=api.create(lbCreate);
+  AddNode addNode1=AddNode.builder().address("10.1.1.1").condition(Node.Condition.ENABLED).port(80).build();
+  AddNode addNode2=AddNode.builder().address("10.1.1.2").condition(Node.Condition.ENABLED).port(80).build();
+  Set<AddNode> addNodes=Sets.newHashSet(addNode1,addNode2);
+  CreateLoadBalancer createLB=CreateLoadBalancer.builder().name("sample-loadbalancer").protocol("HTTP").port(80).algorithm(LoadBalancer.Algorithm.RANDOM).virtualIPType(VirtualIP.Type.PUBLIC).nodes(addNodes).build();
+  LoadBalancer loadBalancer=api.create(createLB);
   assertEquals(loadBalancer,getExpectedLoadBalancer());
 }

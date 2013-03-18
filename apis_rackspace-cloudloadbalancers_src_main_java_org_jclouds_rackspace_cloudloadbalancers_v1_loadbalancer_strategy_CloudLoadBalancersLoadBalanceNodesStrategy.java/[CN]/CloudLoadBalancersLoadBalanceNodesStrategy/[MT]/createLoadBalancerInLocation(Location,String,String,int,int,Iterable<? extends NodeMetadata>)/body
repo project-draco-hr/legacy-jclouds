@@ -1,8 +1,8 @@
 {
   String region=checkNotNull(location,"location").getId();
-  LoadBalancer lb=client.getLoadBalancerApiForZone(region).create(LoadBalancerCreate.builder().name(name).protocol(protocol.toUpperCase()).port(loadBalancerPort).virtualIPType(Type.PUBLIC).nodes(Iterables.transform(nodes,new Function<NodeMetadata,NodeAdd>(){
-    @Override public NodeAdd apply(    NodeMetadata arg0){
-      return NodeAdd.builder().address(Iterables.get(arg0.getPrivateAddresses(),0)).port(instancePort).build();
+  LoadBalancer lb=client.getLoadBalancerApiForZone(region).create(CreateLoadBalancer.builder().name(name).protocol(protocol.toUpperCase()).port(loadBalancerPort).virtualIPType(Type.PUBLIC).nodes(Iterables.transform(nodes,new Function<NodeMetadata,AddNode>(){
+    @Override public AddNode apply(    NodeMetadata arg0){
+      return AddNode.builder().address(Iterables.get(arg0.getPrivateAddresses(),0)).port(instancePort).build();
     }
   }
 )).build());
