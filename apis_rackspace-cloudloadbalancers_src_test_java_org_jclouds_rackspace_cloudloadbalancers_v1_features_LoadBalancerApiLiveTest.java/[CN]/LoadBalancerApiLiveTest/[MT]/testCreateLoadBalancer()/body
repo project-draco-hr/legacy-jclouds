@@ -1,7 +1,7 @@
 {
   for (  String zone : clbApi.getConfiguredZones()) {
     Logger.getAnonymousLogger().info("starting lb in region " + zone);
-    LoadBalancer lb=clbApi.getLoadBalancerApiForZone(zone).create(LoadBalancerCreate.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(NodeAdd.builder().address("192.168.1.1").port(8080).build()).build());
+    LoadBalancer lb=clbApi.getLoadBalancerApiForZone(zone).create(CreateLoadBalancer.builder().name(prefix + "-" + zone).protocol("HTTP").port(80).virtualIPType(Type.PUBLIC).node(AddNode.builder().address("192.168.1.1").port(8080).build()).build());
     checkLBInRegion(zone,lb,prefix + "-" + zone);
     assertEquals(lb.getStatus(),LoadBalancer.Status.BUILD);
     lbs.add(lb);
