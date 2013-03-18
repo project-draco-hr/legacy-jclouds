@@ -1,5 +1,8 @@
 {
-  if (config.useSystem()) {
+  if (!useProxyForSockets && "socket".equals(endpoint.getScheme())) {
+    return Proxy.NO_PROXY;
+  }
+ else   if (config.useSystem()) {
     System.setProperty("java.net.useSystemProxies","true");
     Iterable<Proxy> proxies=ProxySelector.getDefault().select(endpoint);
     return getLast(proxies);
