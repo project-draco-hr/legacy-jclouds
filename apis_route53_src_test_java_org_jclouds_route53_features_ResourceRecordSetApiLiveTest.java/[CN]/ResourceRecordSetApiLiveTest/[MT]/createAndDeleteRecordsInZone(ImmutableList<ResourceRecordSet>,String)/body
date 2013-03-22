@@ -1,0 +1,7 @@
+{
+  sync(api(zoneId).apply(createAll(records)));
+  checkAllRRs(zoneId);
+  sync(api(zoneId).apply(deleteAll(records)));
+  PagedIterable<ResourceRecordSet> refreshed=refresh(zoneId);
+  assertTrue(refreshed.concat().filter(not(requiredRRTypes)).isEmpty(),"zone still has optional records: " + refreshed);
+}
