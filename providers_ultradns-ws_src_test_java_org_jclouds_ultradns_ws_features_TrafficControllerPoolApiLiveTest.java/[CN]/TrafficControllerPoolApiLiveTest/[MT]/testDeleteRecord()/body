@@ -1,0 +1,15 @@
+{
+  api(zoneName).deleteRecord(cname1);
+  assertTrue(api(zoneName).listRecords(poolId).anyMatch(new Predicate<TrafficControllerPoolRecord>(){
+    public boolean apply(    TrafficControllerPoolRecord in){
+      return cname2.equals(in.getId());
+    }
+  }
+));
+  assertFalse(api(zoneName).listRecords(poolId).anyMatch(new Predicate<TrafficControllerPoolRecord>(){
+    public boolean apply(    TrafficControllerPoolRecord in){
+      return cname1.equals(in.getId());
+    }
+  }
+));
+}
