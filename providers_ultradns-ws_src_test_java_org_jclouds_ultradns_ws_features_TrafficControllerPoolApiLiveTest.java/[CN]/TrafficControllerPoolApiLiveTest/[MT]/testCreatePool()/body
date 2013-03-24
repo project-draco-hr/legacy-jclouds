@@ -7,8 +7,15 @@
   }
  catch (  ResourceAlreadyExistsException e) {
   }
-  Optional<TrafficControllerPool> pool=getPoolById(poolId);
+  try {
+    api(zoneName).createPoolForHostname("pool1",hostname);
+    fail();
+  }
+ catch (  ResourceAlreadyExistsException e) {
+  }
+  Optional<TrafficControllerPool> pool=getPoolByZoneAndId(zoneName,poolId);
   assertTrue(pool.isPresent());
+  assertEquals(pool.get().getId(),poolId);
   assertEquals(pool.get().getName(),"pool");
   assertEquals(pool.get().getDName(),hostname);
   checkTCPool(pool.get());
