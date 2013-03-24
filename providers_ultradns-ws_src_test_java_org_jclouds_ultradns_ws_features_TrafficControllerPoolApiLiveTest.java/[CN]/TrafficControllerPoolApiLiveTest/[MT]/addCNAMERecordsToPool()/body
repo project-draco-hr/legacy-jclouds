@@ -1,0 +1,24 @@
+{
+  cname1=api(zoneName).addRecordToPoolWithTTL("www.foo.com.",poolId,30);
+  getAnonymousLogger().info("created CNAME record: " + cname1);
+  assertTrue(api(zoneName).listRecords(poolId).anyMatch(new Predicate<TrafficControllerPoolRecord>(){
+    public boolean apply(    TrafficControllerPoolRecord in){
+      return cname1.equals(in.getId()) && "www.foo.com.".equals(in.getPointsTo()) && "CNAME".equals(in.getType());
+    }
+  }
+));
+  try {
+    api(zoneName).addRecordToPoolWithTTL("www.foo.com.",poolId,30);
+    fail();
+  }
+ catch (  ResourceAlreadyExistsException e) {
+  }
+  cname2=api(zoneName).addRecordToPoolWithTTL("www.bar.com.",poolId,30);
+  getAnonymousLogger().info("created CNAME record: " + cname2);
+  assertTrue(api(zoneName).listRecords(poolId).anyMatch(new Predicate<TrafficControllerPoolRecord>(){
+    public boolean apply(    TrafficControllerPoolRecord in){
+      return cname2.equals(in.getId()) && "www.bar.com.".equals(in.getPointsTo()) && "CNAME".equals(in.getType());
+    }
+  }
+));
+}
