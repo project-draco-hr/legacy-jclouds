@@ -1,0 +1,11 @@
+{
+  String recordId=api(zoneName).addRecordToPoolWithTTL(pointsTo,poolId,ttl);
+  getAnonymousLogger().info("created " + type + " record: "+ recordId);
+  TrafficControllerPoolRecord record=checkPoolRecordConsistent(zoneName,getRecordById(recordId).get());
+  PoolRecordSpec recordSpec=checkPoolRecordSpec(api(zoneName).getRecordSpec(recordId));
+  assertEquals(record.getPointsTo(),pointsTo);
+  assertEquals(record.getType(),type);
+  assertEquals(record.getWeight(),2);
+  assertEquals(recordSpec.getTTL(),ttl);
+  return record;
+}

@@ -1,0 +1,10 @@
+{
+  Optional<TrafficControllerPool> pool=getPoolByZoneAndId(zoneName,record.getPoolId());
+  assertTrue(pool.isPresent(),"could not get pool for " + record);
+  assertEquals(record.getDescription(),pool.get().getName());
+  PoolRecordSpec spec=checkPoolRecordSpec(api(zoneName).getRecordSpec(record.getId()));
+  assertEquals(record.getDescription(),spec.getDescription());
+  assertEquals(record.getWeight(),spec.getWeight());
+  assertEquals(record.isProbingEnabled(),spec.isProbingEnabled());
+  return checkTrafficControllerPoolRecord(record);
+}

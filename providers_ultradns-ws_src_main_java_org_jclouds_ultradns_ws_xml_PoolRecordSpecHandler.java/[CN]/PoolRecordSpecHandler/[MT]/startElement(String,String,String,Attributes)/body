@@ -1,0 +1,9 @@
+{
+  if (!equalsOrSuffix(qName,"PoolRecordSpecData")) {
+    return;
+  }
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  builder.description(attributes.get("description")).state(attributes.get("recordState"));
+  builder.probingEnabled(trueIfEnabled(attributes,"probing")).allFailEnabled(trueIfEnabled(attributes,"allFail"));
+  builder.weight(asInt(attributes,"weight")).failOverDelay(asInt(attributes,"failOverDelay")).threshold(asInt(attributes,"threshold")).ttl(asInt(attributes,"ttl"));
+}
