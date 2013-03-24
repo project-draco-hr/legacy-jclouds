@@ -1,0 +1,14 @@
+{
+  StringBuilder xml=new StringBuilder();
+  xml.append(format(HEADER,postParams.get("poolRecordID")));
+  UpdatePoolRecord update=UpdatePoolRecord.class.cast(postParams.get("update"));
+  xml.append("<pointsTo>").append(update.getPointsTo()).append("</pointsTo>");
+  xml.append("<priority>").append(update.getPriority()).append("</priority>");
+  xml.append("<failOverDelay>").append(update.getFailOverDelay()).append("</failOverDelay>");
+  xml.append("<ttl>").append(update.getTTL()).append("</ttl>");
+  xml.append("<weight>").append(update.getWeight()).append("</weight>");
+  xml.append("<mode>").append(update.getMode()).append("</mode>");
+  xml.append("<threshold>").append(update.getThreshold()).append("</threshold>");
+  xml.append(FOOTER);
+  return (R)request.toBuilder().payload(xml.toString()).build();
+}
