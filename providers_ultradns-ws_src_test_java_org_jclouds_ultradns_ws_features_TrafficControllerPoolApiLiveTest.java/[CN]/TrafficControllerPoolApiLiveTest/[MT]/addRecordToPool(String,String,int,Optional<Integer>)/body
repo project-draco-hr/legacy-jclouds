@@ -1,11 +1,17 @@
 {
-  String recordId=api(zoneName).addRecordToPoolWithTTL(pointsTo,poolId,ttl);
+  String recordId;
+  if (weight.isPresent()) {
+    recordId=api(zoneName).addRecordToPoolWithTTLAndWeight(pointsTo,poolId,ttl,weight.get());
+  }
+ else {
+    recordId=api(zoneName).addRecordToPoolWithTTL(pointsTo,poolId,ttl);
+  }
   getAnonymousLogger().info("created " + type + " record: "+ recordId);
   TrafficControllerPoolRecord record=checkPoolRecordConsistent(zoneName,getRecordById(recordId).get());
   PoolRecordSpec recordSpec=checkPoolRecordSpec(api(zoneName).getRecordSpec(recordId));
   assertEquals(record.getPointsTo(),pointsTo);
   assertEquals(record.getType(),type);
-  assertEquals(record.getWeight(),2);
+  assertEquals(record.getWeight(),weight.or(2).intValue());
   assertEquals(recordSpec.getTTL(),ttl);
   return record;
 }
