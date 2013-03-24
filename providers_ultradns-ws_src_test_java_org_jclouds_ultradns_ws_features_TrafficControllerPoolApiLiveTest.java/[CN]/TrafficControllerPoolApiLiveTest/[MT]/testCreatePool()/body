@@ -1,0 +1,15 @@
+{
+  poolId=api(zoneName).createPoolForHostname("pool",hostname);
+  getAnonymousLogger().info("created tc pool: " + poolId);
+  try {
+    api(zoneName).createPoolForHostname("pool",hostname);
+    fail();
+  }
+ catch (  ResourceAlreadyExistsException e) {
+  }
+  Optional<TrafficControllerPool> pool=getPoolById(poolId);
+  assertTrue(pool.isPresent());
+  assertEquals(pool.get().getName(),"pool");
+  assertEquals(pool.get().getDName(),hostname);
+  checkTCPool(pool.get());
+}
