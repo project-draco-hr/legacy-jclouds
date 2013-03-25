@@ -1,5 +1,9 @@
 {
   if (!HttpRequest.NON_PAYLOAD_METHODS.contains(connection.getRequestMethod())) {
     connection.setRequestProperty(CONTENT_LENGTH,"0");
+    if ("POST".equals(connection.getRequestMethod())) {
+      connection.setFixedLengthStreamingMode(0);
+      connection.setDoOutput(true);
+    }
   }
 }
