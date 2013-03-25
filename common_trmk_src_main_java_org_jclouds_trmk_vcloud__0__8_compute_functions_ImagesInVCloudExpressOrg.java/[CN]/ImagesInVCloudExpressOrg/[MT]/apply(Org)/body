@@ -1,5 +1,5 @@
 {
   Iterable<? extends CatalogItem> catalogs=allCatalogItemsInOrg.apply(from);
   Iterable<? extends VAppTemplate> vAppTemplates=vAppTemplatesForCatalogItems.apply(catalogs);
-  return Iterables.transform(vAppTemplates,imageForVAppTemplateProvider.get().withParent(from));
+  return FluentIterable.from(vAppTemplates).transform(imageForVAppTemplateProvider.get().withParent(from)).filter(notNull());
 }
