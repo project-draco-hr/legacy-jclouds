@@ -1,16 +1,19 @@
 {
+  String message=exception.getError().getDescription().or(exception.getMessage());
 switch (exception.getError().getCode()) {
-case TASK_NOT_FOUND:
+case UNKNOWN:
+    if (!exception.getError().getDescription().isPresent())     return exception;
+  if (exception.getError().getDescription().get().indexOf("Cannot find") == -1)   return exception;
 case ZONE_NOT_FOUND:
 case RESOURCE_RECORD_NOT_FOUND:
 case ACCOUNT_NOT_FOUND:
 case POOL_NOT_FOUND:
 case POOL_RECORD_NOT_FOUND:
-    return new ResourceNotFoundException(exception.getError().getDescription(),exception);
+return new ResourceNotFoundException(message,exception);
 case ZONE_ALREADY_EXISTS:
 case RESOURCE_RECORD_ALREADY_EXISTS:
 case POOL_ALREADY_EXISTS:
-  return new ResourceAlreadyExistsException(exception.getError().getDescription(),exception);
+return new ResourceAlreadyExistsException(message,exception);
 }
 return exception;
 }
