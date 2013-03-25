@@ -1,0 +1,14 @@
+{
+  Object org=postParams.get("orgName");
+  Object tasksList=postParams.get("tasksListName");
+  if (org == null && tasksList == null)   return (R)request.toBuilder().endpoint(defaultTasksList.get().getHref()).build();
+ else   if (org == null)   org=defaultOrg.get().getName();
+  try {
+    Map<String,ReferenceType> tasksLists=checkNotNull(orgMap.get().get(org)).getTasksLists();
+    URI endpoint=tasksList == null ? Iterables.getLast(tasksLists.values()).getHref() : tasksLists.get(tasksList).getHref();
+    return (R)request.toBuilder().endpoint(endpoint).build();
+  }
+ catch (  NullPointerException e) {
+    throw new NoSuchElementException(org + "/" + tasksList+ " not found in "+ orgMap.get());
+  }
+}
