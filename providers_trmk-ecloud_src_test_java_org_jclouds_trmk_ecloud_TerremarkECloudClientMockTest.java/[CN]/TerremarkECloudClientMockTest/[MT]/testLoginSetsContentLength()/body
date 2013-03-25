@@ -1,0 +1,21 @@
+{
+  MockWebServer server=new MockWebServer();
+  AtomicReference<URL> url=setURLReplacingDispatcher(server);
+  server.enqueue(new MockResponse().setResponseCode(200).setBody(versionXML));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("x-vcloud-authorization","cookie").setBody("<OrgList />"));
+  server.play();
+  url.set(server.getUrl("/"));
+  TerremarkECloudClient api=mockTerremarkECloudClient(url.get().toString());
+  try {
+    api.listOrgs();
+  }
+  finally {
+    RecordedRequest getVersions=server.takeRequest();
+    assertEquals(getVersions.getRequestLine(),"GET /versions HTTP/1.1");
+    RecordedRequest login=server.takeRequest();
+    assertEquals(login.getRequestLine(),"POST /v0.8/login HTTP/1.1");
+    assertEquals(login.getHeader("Authorization"),"Basic dXNlcjpwYXNzd29yZA==");
+    assertEquals(login.getHeader("Content-Length"),"0");
+    server.shutdown();
+  }
+}
