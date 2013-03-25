@@ -1,0 +1,10 @@
+{
+  HttpRequest request=HttpRequest.builder().method("POST").endpoint("https://ultra-api.ultradns.com:8443/UltraDNS_WS/v01").addHeader("Host","ultra-api.ultradns.com:8443").payload(payloadFromResource("/list_tasks.xml")).build();
+  HttpCommand command=new HttpCommand(request);
+  HttpResponse response=HttpResponse.builder().message("Server Error").statusCode(500).payload(payloadFromResource("/server_fault.xml")).build();
+  function.handleError(command,response);
+  assertEquals(command.getException().getClass(),UltraDNSWSResponseException.class);
+  assertEquals(command.getException().getMessage(),"Error 0");
+  UltraDNSWSResponseException exception=UltraDNSWSResponseException.class.cast(command.getException());
+  assertEquals(exception.getError().getCode(),0);
+}
