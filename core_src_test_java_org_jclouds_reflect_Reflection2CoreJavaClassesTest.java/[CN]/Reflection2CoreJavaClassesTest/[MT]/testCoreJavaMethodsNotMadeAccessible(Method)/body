@@ -1,0 +1,24 @@
+{
+  SecurityManager mockSecurityManager=createNiceMock(SecurityManager.class);
+  mockSecurityManager.checkPermission(new ReflectPermission("suppressAccessChecks"));
+  expectLastCall().andStubAnswer(new IAnswer<Void>(){
+    @Override public Void answer() throws Throwable {
+      try {
+        throw new Exception();
+      }
+ catch (      Exception exception) {
+        for (        StackTraceElement element : exception.getStackTrace()) {
+          if (element.getMethodName().equals(testMethod.getName())) {
+            throw new AssertionError("checkPermission(new ReflectPermission(\"suppressAccessChecks\")) should not be called");
+          }
+        }
+      }
+      return null;
+    }
+  }
+);
+  replay(mockSecurityManager);
+  System.setSecurityManager(mockSecurityManager);
+  securityManagerOverridden=true;
+  methods(Enum.class);
+}
