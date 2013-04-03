@@ -1,3 +1,9 @@
 {
-  return new InputStreamSupplierPayload(ByteStreams.slice(InputSuppliers.of(content),offset,length));
+  try {
+    ByteStreams.skipFully(content,offset);
+  }
+ catch (  IOException ioe) {
+    throw Throwables.propagate(ioe);
+  }
+  return new InputStreamPayload(ByteStreams.limit(content,length));
 }
