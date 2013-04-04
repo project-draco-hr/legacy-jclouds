@@ -1,7 +1,8 @@
 {
   if (!HttpRequest.NON_PAYLOAD_METHODS.contains(connection.getRequestMethod())) {
     connection.setRequestProperty(CONTENT_LENGTH,"0");
-    if ("POST".equals(connection.getRequestMethod())) {
+    String method=connection.getRequestMethod();
+    if ("POST".equals(method) || "PUT".equals(method)) {
       connection.setFixedLengthStreamingMode(0);
       connection.setDoOutput(true);
     }
