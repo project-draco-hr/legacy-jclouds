@@ -1,0 +1,8 @@
+{
+  ListeningExecutorService executor=createMock(ListeningExecutorService.class);
+  expect(executor.shutdownNow()).andReturn(ImmutableList.<Runnable>of()).atLeastOnce();
+  replay(executor);
+  DelegatingApi api=ContextBuilder.newBuilder(provider).modules(ImmutableSet.<Module>builder().add(new ExecutorServiceModule(executor,executor)).build()).buildApi(DelegatingApi.class);
+  api.close();
+  verify(executor);
+}
