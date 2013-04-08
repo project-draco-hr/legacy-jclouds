@@ -1,0 +1,10 @@
+{
+  if (equalsOrSuffix(qName,"DirectionalDNSGroupDetail")) {
+    group.name(attrs.getValue("GroupName"));
+  }
+ else   if (equalsOrSuffix(qName,"RegionForNewGroups")) {
+    Iterable<String> territories=Splitter.on(';').split(attrs.getValue("TerritoryName"));
+    Region region=Region.builder().name(attrs.getValue("RegionName")).territoryNames(territories).build();
+    group.addRegion(region);
+  }
+}

@@ -1,0 +1,12 @@
+{
+  HttpRequest request=HttpRequest.builder().method(POST).endpoint("https://ultra-api.ultradns.com:8443/UltraDNS_WS/v01").addHeader(HOST,"ultra-api.ultradns.com:8443").payload(payloadFromResource("/delete_lbpool.xml")).build();
+  HttpCommand command=new HttpCommand(request);
+  HttpResponse response=HttpResponse.builder().message(INTERNAL_SERVER_ERROR.getReasonPhrase()).statusCode(INTERNAL_SERVER_ERROR.getStatusCode()).payload(payloadFromResource("/directionalpool_doesnt_exist.xml")).build();
+  function.handleError(command,response);
+  assertEquals(command.getException().getClass(),ResourceNotFoundException.class);
+  assertEquals(command.getException().getMessage(),"No Pool or Multiple pools of same type exists for the PoolName : foo.jclouds.org.");
+  UltraDNSWSResponseException exception=UltraDNSWSResponseException.class.cast(command.getException().getCause());
+  assertEquals(exception.getMessage(),"Error 2142: No Pool or Multiple pools of same type exists for the PoolName : foo.jclouds.org.");
+  assertEquals(exception.getError().getDescription().get(),"No Pool or Multiple pools of same type exists for the PoolName : foo.jclouds.org.");
+  assertEquals(exception.getError().getCode(),2142);
+}

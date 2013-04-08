@@ -1,0 +1,11 @@
+{
+  for (  Zone zone : api.getZoneApi().listByAccount(account.getId())) {
+    for (    DirectionalPool pool : api.getDirectionalPoolApiForZone(zone.getName()).list()) {
+      for (      DirectionalRecordType type : EnumSet.allOf(DirectionalRecordType.class)) {
+        for (        String groupName : api().listGroupNamesByRecordNameAndType(pool.getName(),type.getCode())) {
+          allGroups.add(DirectionalGroupCoordinates.builder().zoneName(zone.getName()).recordName(pool.getName()).recordType(type.getCode()).groupName(groupName).build());
+        }
+      }
+    }
+  }
+}
