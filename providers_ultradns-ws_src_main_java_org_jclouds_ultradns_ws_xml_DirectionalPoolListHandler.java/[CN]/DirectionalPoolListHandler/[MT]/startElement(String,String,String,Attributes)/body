@@ -1,0 +1,11 @@
+{
+  if (equalsOrSuffix(qName,"DirectionalPoolData")) {
+    Map<String,String> attributes=cleanseAttributes(attrs);
+    DirectionalPool.Builder pool=DirectionalPool.builder().zoneId(attributes.get("Zoneid")).id(attributes.get("dirpoolid")).name(attributes.get("Pooldname")).description(attributes.get("Description"));
+    String type=attributes.get("DirPoolType");
+    if (type != null)     pool.type(Type.valueOf(type));
+    String tieBreak=attributes.get("TieBreak");
+    if (tieBreak != null)     pool.tieBreak(TieBreak.valueOf(tieBreak));
+    pools.add(pool.build());
+  }
+}

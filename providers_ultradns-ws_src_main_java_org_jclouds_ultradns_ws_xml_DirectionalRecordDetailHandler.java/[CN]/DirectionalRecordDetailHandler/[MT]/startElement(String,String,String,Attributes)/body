@@ -1,0 +1,28 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (attributes.containsKey("ZoneName")) {
+    zoneName=attributes.get("ZoneName");
+    dname=attributes.get("DName");
+    drd.zoneName(zoneName).name(dname);
+  }
+  if (attributes.containsKey("DirPoolRecordId")) {
+    drd.id(attributes.get("DirPoolRecordId"));
+  }
+  if (attributes.containsKey("GroupId")) {
+    drd.group(DirectionalGroup.builder().id(attributes.get("GroupId")).name(attributes.get("GroupName")).description(attributes.get("GroupDescription")).build());
+  }
+  if (attributes.containsKey("GeolocationGroupId")) {
+    drd.geolocationGroup(DirectionalGroup.builder().id(attributes.get("GeolocationGroupId")).name(attributes.get("GeolocationGroupName")).description(attributes.get("GeolocationGroupDescription")).build());
+  }
+  if (attributes.containsKey("SourceIPGroupId")) {
+    drd.sourceIpGroup(DirectionalGroup.builder().id(attributes.get("SourceIPGroupId")).name(attributes.get("SourceIPGroupName")).description(attributes.get("SourceIPGroupDescription")).build());
+  }
+  if (attributes.containsKey("recordType")) {
+    dr.type(attributes.get("recordType"));
+    dr.ttl(Integer.parseInt(attributes.get("TTL")));
+    dr.noResponseRecord("true".equalsIgnoreCase(attributes.get("noResponseRecord")));
+  }
+  if (equalsOrSuffix(qName,"InfoValues")) {
+    dr.rdata(attributes.values());
+  }
+}
