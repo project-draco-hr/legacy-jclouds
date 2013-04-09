@@ -1,0 +1,20 @@
+{
+  final AtomicReference<URL> url=new AtomicReference<URL>();
+  final QueueDispatcher dispatcher=new QueueDispatcher(){
+    protected final BlockingQueue<MockResponse> responseQueue=new LinkedBlockingQueue<MockResponse>();
+    @Override public MockResponse dispatch(    RecordedRequest request) throws InterruptedException {
+      MockResponse response=responseQueue.take();
+      if (response.getBody() != null) {
+        String newBody=new String(response.getBody()).replace("URL",url.get().toString());
+        response=response.setBody(newBody);
+      }
+      return response;
+    }
+    @Override public void enqueueResponse(    MockResponse response){
+      responseQueue.add(response);
+    }
+  }
+;
+  server.setDispatcher(dispatcher);
+  return url;
+}

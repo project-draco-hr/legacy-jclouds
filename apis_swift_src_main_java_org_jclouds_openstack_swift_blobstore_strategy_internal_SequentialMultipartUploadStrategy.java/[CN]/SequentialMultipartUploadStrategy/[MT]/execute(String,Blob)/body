@@ -1,0 +1,26 @@
+{
+  String key=blob.getMetadata().getName();
+  Payload payload=blob.getPayload();
+  Long length=payload.getContentMetadata().getContentLength();
+  checkNotNull(length,"please invoke payload.getContentMetadata().setContentLength(length) prior to multipart upload");
+  long chunkSize=algorithm.calculateChunkSize(length);
+  int partCount=algorithm.getParts();
+  if (partCount > 0) {
+    int part;
+    while ((part=algorithm.getNextPart()) <= partCount) {
+      Payload chunkedPart=slicer.slice(payload,algorithm.getNextChunkOffset(),chunkSize);
+      Blob blobPart=blobBuilders.get().name(key + PART_SEPARATOR + part).payload(chunkedPart).contentDisposition(key + PART_SEPARATOR + part).build();
+      client.putObject(container,blob2Object.apply(blobPart));
+    }
+    long remaining=algorithm.getRemaining();
+    if (remaining > 0) {
+      Payload chunkedPart=slicer.slice(payload,algorithm.getNextChunkOffset(),remaining);
+      Blob blobPart=blobBuilders.get().name(key + PART_SEPARATOR + part).payload(chunkedPart).contentDisposition(key + PART_SEPARATOR + part).build();
+      client.putObject(container,blob2Object.apply(blobPart));
+    }
+    return client.putObjectManifest(container,key);
+  }
+ else {
+    return client.putObject(container,blob2Object.apply(blob));
+  }
+}
