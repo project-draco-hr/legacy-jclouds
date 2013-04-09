@@ -1,0 +1,37 @@
+{
+  MockWebServer server=new MockWebServer();
+  AtomicReference<URL> url=setURLReplacingDispatcher(server);
+  server.enqueue(new MockResponse().setResponseCode(200).setBody(authResponse));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("ETag","a00"));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("ETag","b00"));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("ETag","fff"));
+  server.play();
+  url.set(server.getUrl("/"));
+  byte[] bytes="0123456789abcdef".getBytes(Charsets.US_ASCII);
+  int partSize=bytes.length / 2;
+  SequentialMultipartUploadStrategy api=mockSequentialMultipartUploadStrategy(url.get().toString(),partSize);
+  try {
+    assertEquals(api.execute("container",new BlobBuilderImpl().name("foo").payload(bytes).build()),"fff");
+  }
+  finally {
+    RecordedRequest authRequest=server.takeRequest();
+    assertEquals(authRequest.getRequestLine(),"POST /tokens HTTP/1.1");
+    assertEquals(new String(authRequest.getBody()),authRequestBody);
+    assertEquals(authRequest.getHeader("Content-Length"),String.valueOf(authRequestBody.length()));
+    RecordedRequest part1=server.takeRequest();
+    assertEquals(part1.getRequestLine(),"PUT /container/foo/1 HTTP/1.1");
+    assertEquals(part1.getHeader("X-Auth-Token"),token);
+    assertEquals(part1.getHeader("Content-Length"),String.valueOf(partSize));
+    assertEquals(new String(part1.getBody()),"01234567");
+    RecordedRequest part2=server.takeRequest();
+    assertEquals(part2.getRequestLine(),"PUT /container/foo/2 HTTP/1.1");
+    assertEquals(part2.getHeader("X-Auth-Token"),token);
+    assertEquals(part2.getHeader("Content-Length"),String.valueOf(partSize));
+    assertEquals(new String(part2.getBody()),"89abcdef");
+    RecordedRequest manifest=server.takeRequest();
+    assertEquals(manifest.getRequestLine(),"PUT /container/foo HTTP/1.1");
+    assertEquals(manifest.getHeader("X-Auth-Token"),token);
+    assertEquals(manifest.getHeader("Content-Length"),"0");
+    server.shutdown();
+  }
+}

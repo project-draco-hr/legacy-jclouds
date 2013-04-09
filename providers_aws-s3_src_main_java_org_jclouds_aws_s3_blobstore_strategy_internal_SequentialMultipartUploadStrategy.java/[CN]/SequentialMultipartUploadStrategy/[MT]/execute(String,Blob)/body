@@ -1,0 +1,30 @@
+{
+  String key=blob.getMetadata().getName();
+  Payload payload=blob.getPayload();
+  Long length=payload.getContentMetadata().getContentLength();
+  checkNotNull(length,"please invoke payload.getContentMetadata().setContentLength(length) prior to multipart upload");
+  long chunkSize=algorithm.calculateChunkSize(length);
+  int partCount=algorithm.getParts();
+  if (partCount > 0) {
+    String uploadId=client.initiateMultipartUpload(container,ObjectMetadataBuilder.create().key(key).build());
+    try {
+      SortedMap<Integer,String> etags=Maps.newTreeMap();
+      int part;
+      while ((part=algorithm.getNextPart()) <= partCount) {
+        prepareUploadPart(container,key,uploadId,part,payload,algorithm.getNextChunkOffset(),chunkSize,etags);
+      }
+      long remaining=algorithm.getRemaining();
+      if (remaining > 0) {
+        prepareUploadPart(container,key,uploadId,part,payload,algorithm.getNextChunkOffset(),remaining,etags);
+      }
+      return client.completeMultipartUpload(container,key,uploadId,etags);
+    }
+ catch (    RuntimeException ex) {
+      client.abortMultipartUpload(container,key,uploadId);
+      throw ex;
+    }
+  }
+ else {
+    return client.putObject(container,blobToObject.apply(blob));
+  }
+}
