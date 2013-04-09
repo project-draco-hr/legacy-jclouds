@@ -1,0 +1,32 @@
+{
+  MockWebServer server=new MockWebServer();
+  server.enqueue(new MockResponse().setResponseCode(200).setBody("<UploadId>upload-id</UploadId>"));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("ETag","a00"));
+  server.enqueue(new MockResponse().setResponseCode(200).addHeader("ETag","b00"));
+  server.enqueue(new MockResponse().setResponseCode(200).setBody("<ETag>fff</ETag>"));
+  server.play();
+  byte[] bytes="0123456789abcdef".getBytes(Charsets.US_ASCII);
+  int partSize=bytes.length / 2;
+  SequentialMultipartUploadStrategy api=mockSequentialMultipartUploadStrategy(server.getUrl("/").toString(),partSize);
+  try {
+    assertEquals(api.execute("container",new BlobBuilderImpl().name("foo").payload(bytes).build()),"fff");
+  }
+  finally {
+    RecordedRequest initiate=server.takeRequest();
+    assertEquals(initiate.getRequestLine(),"POST /container/foo?uploads HTTP/1.1");
+    assertEquals(initiate.getHeader("Content-Length"),"0");
+    RecordedRequest part1=server.takeRequest();
+    assertEquals(part1.getRequestLine(),"PUT /container/foo?partNumber=1&uploadId=upload-id HTTP/1.1");
+    assertEquals(part1.getHeader("Content-Length"),String.valueOf(partSize));
+    assertEquals(new String(part1.getBody()),"01234567");
+    RecordedRequest part2=server.takeRequest();
+    assertEquals(part2.getRequestLine(),"PUT /container/foo?partNumber=2&uploadId=upload-id HTTP/1.1");
+    assertEquals(part2.getHeader("Content-Length"),String.valueOf(partSize));
+    assertEquals(new String(part2.getBody()),"89abcdef");
+    RecordedRequest manifest=server.takeRequest();
+    assertEquals(manifest.getRequestLine(),"POST /container/foo?uploadId=upload-id HTTP/1.1");
+    assertEquals(manifest.getHeader("Content-Length"),"161");
+    assertEquals(new String(manifest.getBody()),"<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>a00</ETag></Part><Part><PartNumber>2</PartNumber><ETag>b00</ETag></Part></CompleteMultipartUpload>");
+    server.shutdown();
+  }
+}
