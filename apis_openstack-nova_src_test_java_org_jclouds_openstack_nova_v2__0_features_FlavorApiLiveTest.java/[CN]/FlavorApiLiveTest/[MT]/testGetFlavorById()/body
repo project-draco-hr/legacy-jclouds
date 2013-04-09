@@ -1,9 +1,9 @@
 {
   for (  String zoneId : zones) {
-    FlavorApi api=this.api.getFlavorApiForZone(zoneId);
-    Set<? extends Flavor> response=api.listInDetail().concat().toSet();
+    FlavorApi flavorApi=api.getFlavorApiForZone(zoneId);
+    Set<? extends Flavor> response=flavorApi.listInDetail().concat().toSet();
     for (    Flavor flavor : response) {
-      Flavor details=api.get(flavor.getId());
+      Flavor details=flavorApi.get(flavor.getId());
       assertNotNull(details);
       assertEquals(details.getId(),flavor.getId());
       assertEquals(details.getName(),flavor.getName());
