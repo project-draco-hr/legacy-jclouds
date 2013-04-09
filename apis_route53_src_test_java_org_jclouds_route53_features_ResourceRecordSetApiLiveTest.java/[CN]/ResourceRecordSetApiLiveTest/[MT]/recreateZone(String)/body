@@ -2,7 +2,7 @@
   clearAndDeleteHostedZonesNamed(name);
   String nonce=name + " @ " + new Date();
   String comment=name + " for " + JcloudsVersion.get();
-  NewHostedZone newHostedZone=context.getApi().getHostedZoneApi().createWithReferenceAndComment(name,nonce,comment);
+  NewHostedZone newHostedZone=api.getHostedZoneApi().createWithReferenceAndComment(name,nonce,comment);
   getAnonymousLogger().info("created zone: " + newHostedZone);
   assertTrue(inSync.apply(newHostedZone.getChange()),"zone didn't sync " + newHostedZone);
   return newHostedZone.getZone().getId();

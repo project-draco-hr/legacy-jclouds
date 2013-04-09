@@ -1,22 +1,22 @@
 {
   for (  LoadBalancer lb : lbs) {
     Map<String,String> metadataMap=ImmutableMap.<String,String>of("key1","value1","key2","value2","key3","value3");
-    Metadata metadata=clbApi.getLoadBalancerApiForZone(lb.getRegion()).createMetadata(lb.getId(),metadataMap);
+    Metadata metadata=api.getLoadBalancerApiForZone(lb.getRegion()).createMetadata(lb.getId(),metadataMap);
     assertEquals(metadata,getExpectedMetadata());
-    assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-    metadata=clbApi.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    metadata=api.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
     assertEquals(metadata,getExpectedMetadata());
-    assertTrue(clbApi.getLoadBalancerApiForZone(lb.getRegion()).updateMetadatum(lb.getId(),metadata.getId("key1"),"key1-updated"));
-    assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-    metadata=clbApi.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
+    assertTrue(api.getLoadBalancerApiForZone(lb.getRegion()).updateMetadatum(lb.getId(),metadata.getId("key1"),"key1-updated"));
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    metadata=api.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
     assertEquals(metadata.get("key1"),"key1-updated");
-    assertTrue(clbApi.getLoadBalancerApiForZone(lb.getRegion()).deleteMetadatum(lb.getId(),metadata.getId("key1")));
-    assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-    metadata=clbApi.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
+    assertTrue(api.getLoadBalancerApiForZone(lb.getRegion()).deleteMetadatum(lb.getId(),metadata.getId("key1")));
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    metadata=api.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
     assertNull(metadata.get("key1"));
-    assertTrue(clbApi.getLoadBalancerApiForZone(lb.getRegion()).deleteMetadata(lb.getId(),ImmutableList.<Integer>of(metadata.getId("key2"),metadata.getId("key3"))));
-    assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
-    metadata=clbApi.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
+    assertTrue(api.getLoadBalancerApiForZone(lb.getRegion()).deleteMetadata(lb.getId(),ImmutableList.<Integer>of(metadata.getId("key2"),metadata.getId("key3"))));
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    metadata=api.getLoadBalancerApiForZone(lb.getRegion()).getMetadata(lb.getId());
     assertEquals(metadata.size(),0);
   }
 }

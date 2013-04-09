@@ -1,7 +1,6 @@
 {
   super.setupContext();
-  cloudSigmaContext=view.unwrap();
-  client=cloudSigmaContext.getApi();
+  client=view.utils().injector().getInstance(CloudSigmaClient.class);
   driveNotClaimed=retry(Predicates.not(new DriveClaimed(client)),maxDriveImageTime,1,SECONDS);
   SocketOpen socketOpten=context.utils().injector().getInstance(SocketOpen.class);
   socketTester=retry(socketOpten,maxDriveImageTime,1,SECONDS);

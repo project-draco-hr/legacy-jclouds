@@ -1,7 +1,7 @@
 {
   super.setupContext();
   imageId=view.getComputeService().templateBuilder().build().getImage().getId();
-  client=view.unwrap(ElasticStackApiMetadata.CONTEXT_TOKEN).getApi();
+  client=view.utils().injector().getInstance(ElasticStackClient.class);
   driveNotClaimed=retry(Predicates.not(new DriveClaimed(client)),maxDriveImageTime,1,SECONDS);
   SocketOpen socketOpen=context.utils().injector().getInstance(SocketOpen.class);
   socketTester=retry(socketOpen,maxDriveImageTime,1,SECONDS);

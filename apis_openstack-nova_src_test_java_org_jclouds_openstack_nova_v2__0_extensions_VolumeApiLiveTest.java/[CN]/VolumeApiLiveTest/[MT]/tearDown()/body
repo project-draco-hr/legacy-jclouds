@@ -1,0 +1,25 @@
+{
+  if (volumeOption.isPresent()) {
+    if (testSnapshot != null) {
+      final String snapshotId=testSnapshot.getId();
+      assertTrue(volumeOption.get().deleteSnapshot(snapshotId));
+      assertTrue(retry(new Predicate<VolumeApi>(){
+        public boolean apply(        VolumeApi volumeApi){
+          return volumeOption.get().getSnapshot(snapshotId) == null;
+        }
+      }
+,30 * 1000L).apply(volumeOption.get()));
+    }
+    if (testVolume != null) {
+      final String volumeId=testVolume.getId();
+      assertTrue(volumeOption.get().delete(volumeId));
+      assertTrue(retry(new Predicate<VolumeApi>(){
+        public boolean apply(        VolumeApi volumeApi){
+          return volumeOption.get().get(volumeId) == null;
+        }
+      }
+,180 * 1000L).apply(volumeOption.get()));
+    }
+  }
+  super.tearDown();
+}

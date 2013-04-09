@@ -4,12 +4,12 @@
     Set<Node> nodeSet=entry.getValue();
     String region=lb.getRegion();
     Logger.getAnonymousLogger().info("starting node on loadbalancer " + lb.getId() + " in region "+ region);
-    Set<Node> newNodes=clbApi.getNodeApiForZoneAndLoadBalancer(region,lb.getId()).add(ImmutableSet.<AddNode>of(AddNode.builder().address("192.168.1.2").port(8080).build()));
+    Set<Node> newNodes=api.getNodeApiForZoneAndLoadBalancer(region,lb.getId()).add(ImmutableSet.<AddNode>of(AddNode.builder().address("192.168.1.2").port(8080).build()));
     for (    Node n : newNodes) {
       assertEquals(n.getStatus(),Node.Status.ONLINE);
       nodeSet.add(n);
-      assertEquals(clbApi.getNodeApiForZoneAndLoadBalancer(region,lb.getId()).get(n.getId()).getStatus(),Node.Status.ONLINE);
+      assertEquals(api.getNodeApiForZoneAndLoadBalancer(region,lb.getId()).get(n.getId()).getStatus(),Node.Status.ONLINE);
     }
-    assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
   }
 }

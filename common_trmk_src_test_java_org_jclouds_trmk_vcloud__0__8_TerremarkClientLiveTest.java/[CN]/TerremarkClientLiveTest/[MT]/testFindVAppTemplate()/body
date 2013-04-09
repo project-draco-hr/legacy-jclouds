@@ -1,12 +1,12 @@
 {
-  for (  Org org : listOrgs()) {
+  for (  Org org : orgs) {
     for (    ReferenceType cat : org.getCatalogs().values()) {
-      Catalog response=connection.getCatalog(cat.getHref());
+      Catalog response=api.getCatalog(cat.getHref());
       for (      ReferenceType resource : response.values()) {
         if (resource.getType().equals(TerremarkVCloudMediaType.CATALOGITEM_XML)) {
-          CatalogItem item=connection.getCatalogItem(resource.getHref());
+          CatalogItem item=api.getCatalogItem(resource.getHref());
           if (item.getEntity().getType().equals(TerremarkVCloudMediaType.VAPPTEMPLATE_XML)) {
-            assertNotNull(connection.findVAppTemplateInOrgCatalogNamed(org.getName(),response.getName(),item.getEntity().getName()));
+            assertNotNull(api.findVAppTemplateInOrgCatalogNamed(org.getName(),response.getName(),item.getEntity().getName()));
           }
         }
       }

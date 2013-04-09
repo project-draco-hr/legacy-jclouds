@@ -1,19 +1,19 @@
 {
-  ServerDetails testServer2=api.clone(serverId,testHostName2,CloneServerOptions.Builder.cpucores(1));
+  ServerDetails testServer2=serverApi.clone(serverId,testHostName2,CloneServerOptions.Builder.cpucores(1));
   assertNotNull(testServer2.getId());
   assertEquals(testServer2.getHostname(),"jclouds-test2");
   assertTrue(testServer2.getIps().isEmpty());
   testServerId2=testServer2.getId();
-  Predicate<State> cloneChecker=statusChecker(api,testServerId2);
+  Predicate<State> cloneChecker=statusChecker(serverApi,testServerId2);
   assertTrue(cloneChecker.apply(Server.State.STOPPED));
-  api.start(testServer2.getId());
+  serverApi.start(testServer2.getId());
   cloneChecker=retry(new Predicate<Server.State>(){
     public boolean apply(    Server.State value){
-      ServerStatus status=api.getStatus(testServerId2,ServerStatusOptions.Builder.state());
+      ServerStatus status=serverApi.getStatus(testServerId2,ServerStatusOptions.Builder.state());
       if (status.getState() == value) {
         return true;
       }
-      api.start(testServerId2);
+      serverApi.start(testServerId2);
       return false;
     }
   }

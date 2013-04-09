@@ -1,10 +1,10 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType cat : org.getCatalogs().values()) {
-      Catalog response=connection.getCatalog(cat.getHref());
+      Catalog response=api.getCatalog(cat.getHref());
       for (      ReferenceType resource : response.values()) {
         if (resource.getType().equals(TerremarkVCloudMediaType.CATALOGITEM_XML)) {
-          CatalogItem item=connection.findCatalogItemInOrgCatalogNamed(org.getName(),response.getName(),resource.getName());
+          CatalogItem item=api.findCatalogItemInOrgCatalogNamed(org.getName(),response.getName(),resource.getName());
           verifyCatalogItem(item);
         }
       }

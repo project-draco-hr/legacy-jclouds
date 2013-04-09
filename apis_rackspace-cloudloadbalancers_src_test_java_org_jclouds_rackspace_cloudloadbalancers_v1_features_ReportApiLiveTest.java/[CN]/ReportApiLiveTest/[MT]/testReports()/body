@@ -3,16 +3,16 @@
   calendar.add(Calendar.DATE,-1);
   Date yesterday=calendar.getTime();
   Date today=new Date();
-  FluentIterable<LoadBalancer> loadBalancers=clbApi.getReportApiForZone(zone).listBillableLoadBalancers(yesterday,today).concat();
+  FluentIterable<LoadBalancer> loadBalancers=api.getReportApiForZone(zone).listBillableLoadBalancers(yesterday,today).concat();
   assertNotNull(loadBalancers);
-  HistoricalUsage historicalUsage=clbApi.getReportApiForZone(zone).getHistoricalUsage(yesterday,today);
+  HistoricalUsage historicalUsage=api.getReportApiForZone(zone).getHistoricalUsage(yesterday,today);
   assertNotEquals(historicalUsage.getAccountId(),0);
-  FluentIterable<LoadBalancerUsage> loadBalancerUsages=clbApi.getReportApiForZone(zone).listLoadBalancerUsage(lb.getId(),yesterday,today).concat();
+  FluentIterable<LoadBalancerUsage> loadBalancerUsages=api.getReportApiForZone(zone).listLoadBalancerUsage(lb.getId(),yesterday,today).concat();
   assertNotNull(loadBalancerUsages);
-  loadBalancerUsages=clbApi.getReportApiForZone(zone).listCurrentLoadBalancerUsage(lb.getId()).concat();
+  loadBalancerUsages=api.getReportApiForZone(zone).listCurrentLoadBalancerUsage(lb.getId()).concat();
   assertNotNull(loadBalancerUsages);
   try {
-    LoadBalancerStats loadBalancerStats=clbApi.getReportApiForZone(zone).getLoadBalancerStats(lb.getId());
+    LoadBalancerStats loadBalancerStats=api.getReportApiForZone(zone).getLoadBalancerStats(lb.getId());
     assertNotNull(loadBalancerStats);
   }
  catch (  HttpResponseException e) {
@@ -20,8 +20,8 @@
       throw e;
     }
   }
-  Iterable<Protocol> protocols=clbApi.getReportApiForZone(zone).listProtocols();
+  Iterable<Protocol> protocols=api.getReportApiForZone(zone).listProtocols();
   assertTrue(!Iterables.isEmpty(protocols));
-  Iterable<String> algorithms=clbApi.getReportApiForZone(zone).listAlgorithms();
+  Iterable<String> algorithms=api.getReportApiForZone(zone).listAlgorithms();
   assertTrue(!Iterables.isEmpty(algorithms));
 }

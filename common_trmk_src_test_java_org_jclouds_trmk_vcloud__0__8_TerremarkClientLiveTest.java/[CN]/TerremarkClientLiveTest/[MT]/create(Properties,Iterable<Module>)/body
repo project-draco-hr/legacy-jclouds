@@ -1,0 +1,9 @@
+{
+  Injector injector=newBuilder().modules(modules).overrides(props).buildInjector();
+  sshFactory=injector.getInstance(SshClient.Factory.class);
+  socketTester=retry(injector.getInstance(SocketOpen.class),300,10,SECONDS);
+  successTester=retry(injector.getInstance(TaskSuccess.class),650,10,SECONDS);
+  api=injector.getInstance(TerremarkVCloudClient.class);
+  orgs=listOrgs();
+  return api;
+}

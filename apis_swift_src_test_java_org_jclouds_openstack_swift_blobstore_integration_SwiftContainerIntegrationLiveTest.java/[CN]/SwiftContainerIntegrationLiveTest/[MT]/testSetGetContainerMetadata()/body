@@ -1,11 +1,10 @@
 {
-  BlobStore blobStore=view.getBlobStore();
-  RestContext<CommonSwiftClient,CommonSwiftAsyncClient> swift=blobStore.getContext().unwrap();
+  CommonSwiftClient swift=view.utils().injector().getInstance(CommonSwiftClient.class);
   String containerName=getContainerName();
-  assertTrue(swift.getApi().createContainer(containerName));
+  assertTrue(swift.createContainer(containerName));
   ImmutableMap<String,String> metadata=ImmutableMap.<String,String>of("key1","value1","key2","value2");
-  assertTrue(swift.getApi().setContainerMetadata(containerName,metadata));
-  ContainerMetadata containerMetadata=swift.getApi().getContainerMetadata(containerName);
+  assertTrue(swift.setContainerMetadata(containerName,metadata));
+  ContainerMetadata containerMetadata=swift.getContainerMetadata(containerName);
   assertEquals(containerMetadata.getMetadata().get("key1"),"value1");
   assertEquals(containerMetadata.getMetadata().get("key2"),"value2");
 }

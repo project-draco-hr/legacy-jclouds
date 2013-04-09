@@ -1,9 +1,9 @@
 {
-  Set<Network> networks=domainAdminContext.getApi().getNetworkClient().listNetworks(ListNetworksOptions.Builder.isDefault(false).isSystem(false).zoneId(zoneId).trafficType(TrafficType.GUEST));
+  Set<Network> networks=domainAdminClient.getNetworkClient().listNetworks(ListNetworksOptions.Builder.isDefault(false).isSystem(false).zoneId(zoneId).trafficType(TrafficType.GUEST));
   URI broadcastUri=URI.create("vlan://" + vlanId);
   for (  Network net : networks) {
     if (broadcastUri.equals(net.getBroadcastURI())) {
-      String jobId=domainAdminContext.getApi().getNetworkClient().deleteNetwork(net.getId());
+      String jobId=domainAdminClient.getNetworkClient().deleteNetwork(net.getId());
       adminJobComplete.apply(jobId);
     }
   }

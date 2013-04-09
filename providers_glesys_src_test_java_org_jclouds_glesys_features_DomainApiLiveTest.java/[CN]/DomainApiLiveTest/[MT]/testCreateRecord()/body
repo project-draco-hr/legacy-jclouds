@@ -1,8 +1,8 @@
 {
-  int before=api.listRecords(testDomain).size();
-  api.createRecord(testDomain,"test","A","127.0.0.1");
+  int before=domainApi.listRecords(testDomain).size();
+  domainApi.createRecord(testDomain,"test","A","127.0.0.1");
   assertTrue(recordCounter.apply(before + 1));
-  for (  DomainRecord record : api.listRecords(testDomain)) {
+  for (  DomainRecord record : domainApi.listRecords(testDomain)) {
     if ("test".equals(record.getHost())) {
       assertEquals(record.getType(),"A");
       assertEquals(record.getData(),"127.0.0.1");

@@ -1,0 +1,12 @@
+{
+  for (  Entry<LoadBalancer,Set<Node>> entry : nodes.entrySet()) {
+    LoadBalancer lb=entry.getKey();
+    LoadBalancerApi lbClient=api.getLoadBalancerApiForZone(lb.getRegion());
+    if (lbClient.get(lb.getId()).getStatus() != Status.DELETED) {
+      assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+      lbClient.delete(lb.getId());
+    }
+    assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+  }
+  super.tearDown();
+}
