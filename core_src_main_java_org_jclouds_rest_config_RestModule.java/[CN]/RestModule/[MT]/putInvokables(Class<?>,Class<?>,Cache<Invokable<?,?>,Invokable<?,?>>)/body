@@ -1,7 +1,7 @@
 {
   for (  Invokable<?,?> invoked : methods(sync)) {
     Invokable<?,?> delegatedMethod=method(async,invoked.getName(),getParameterTypes(invoked));
-    checkArgument(delegatedMethod.getExceptionTypes().equals(invoked.getExceptionTypes()),"invoked %s has different typed exceptions than target %s",invoked,delegatedMethod);
+    checkArgument(delegatedMethod.getExceptionTypes().equals(invoked.getExceptionTypes()) || isCloseable(delegatedMethod),"invoked %s has different typed exceptions than target %s",invoked,delegatedMethod);
     cache.put(invoked,delegatedMethod);
   }
 }

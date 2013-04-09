@@ -1,5 +1,21 @@
 {
-  if (invocation.getInvokable().isAnnotationPresent(Provides.class))   return lookupValueFromGuice(invocation.getInvokable());
- else   if (invocation.getInvokable().isAnnotationPresent(Delegate.class))   return propagateContextToDelegate(invocation);
-  return methodInvoker.apply(invocation);
+  Invokable<?,?> invokable=invocation.getInvokable();
+  if (CLOSE.equals(invokable)) {
+    try {
+      injector.getInstance(Closer.class).close();
+      return null;
+    }
+ catch (    Throwable e) {
+      throw propagate(e);
+    }
+  }
+ else   if (invokable.isAnnotationPresent(Provides.class)) {
+    return lookupValueFromGuice(invokable);
+  }
+ else   if (invokable.isAnnotationPresent(Delegate.class)) {
+    return propagateContextToDelegate(invocation);
+  }
+ else {
+    return methodInvoker.apply(invocation);
+  }
 }
