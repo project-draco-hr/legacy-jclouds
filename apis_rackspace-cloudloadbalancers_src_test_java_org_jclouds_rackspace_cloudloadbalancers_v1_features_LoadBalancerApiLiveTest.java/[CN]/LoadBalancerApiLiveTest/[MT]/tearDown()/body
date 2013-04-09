@@ -1,0 +1,8 @@
+{
+  for (  LoadBalancer lb : lbs) {
+    assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+    api.getLoadBalancerApiForZone(lb.getRegion()).delete(lb.getId());
+    assertTrue(awaitDeleted(api.getLoadBalancerApiForZone(lb.getRegion())).apply(lb));
+  }
+  super.tearDown();
+}

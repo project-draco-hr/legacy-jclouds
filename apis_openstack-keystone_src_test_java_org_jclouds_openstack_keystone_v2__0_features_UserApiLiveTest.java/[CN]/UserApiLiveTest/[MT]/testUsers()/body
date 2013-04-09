@@ -1,10 +1,10 @@
 {
-  UserApi api=keystoneContext.getApi().getUserApi().get();
-  Set<? extends User> users=api.list().concat().toSet();
+  UserApi userApi=api.getUserApi().get();
+  Set<? extends User> users=userApi.list().concat().toSet();
   assertNotNull(users);
   assertFalse(users.isEmpty());
   for (  User user : users) {
-    User aUser=api.get(user.getId());
+    User aUser=userApi.get(user.getId());
     assertEquals(aUser,user);
   }
 }

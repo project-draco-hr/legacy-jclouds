@@ -1,0 +1,14 @@
+{
+  super.setup();
+  testDomain=hostName + ".test.jclouds.org";
+  emailAccountApi=api.getEmailAccountApi();
+  deleteAll();
+  createDomain(testDomain);
+  emailAccountCounter=retry(new Predicate<Integer>(){
+    public boolean apply(    Integer value){
+      return emailAccountApi.listDomain(testDomain).size() == value.intValue();
+    }
+  }
+,180,5,SECONDS);
+  assertTrue(emailAccountCounter.apply(0));
+}

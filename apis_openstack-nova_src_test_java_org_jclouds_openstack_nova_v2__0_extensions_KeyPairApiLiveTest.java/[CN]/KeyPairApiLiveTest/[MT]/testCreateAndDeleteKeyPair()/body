@@ -1,15 +1,15 @@
 {
   final String KEYPAIR_NAME="testkp";
-  for (  String zoneId : novaContext.getApi().getConfiguredZones()) {
-    KeyPairApi api=novaContext.getApi().getKeyPairExtensionForZone(zoneId).get();
+  for (  String zoneId : api.getConfiguredZones()) {
+    KeyPairApi keyPairApi=api.getKeyPairExtensionForZone(zoneId).get();
     KeyPair keyPair=null;
     try {
-      keyPair=api.create(KEYPAIR_NAME);
+      keyPair=keyPairApi.create(KEYPAIR_NAME);
       assertNotNull(keyPair);
     }
   finally {
       if (keyPair != null) {
-        api.delete(KEYPAIR_NAME);
+        keyPairApi.delete(KEYPAIR_NAME);
       }
     }
   }

@@ -1,13 +1,13 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType tasksList : org.getTasksLists().values()) {
-      org.jclouds.trmk.vcloud_0_8.domain.TasksList response=connection.findTasksListInOrgNamed(org.getName(),tasksList.getName());
+      org.jclouds.trmk.vcloud_0_8.domain.TasksList response=api.findTasksListInOrgNamed(org.getName(),tasksList.getName());
       assertNotNull(response);
       assertNotNull(response.getLocation());
       assertNotNull(response.getTasks());
       if (response.getTasks().size() > 0) {
         Task task=response.getTasks().last();
-        assertEquals(connection.getTask(task.getHref()).getHref(),task.getHref());
+        assertEquals(api.getTask(task.getHref()).getHref(),task.getHref());
       }
     }
   }

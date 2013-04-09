@@ -1,15 +1,15 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType vdc : org.getVDCs().values()) {
-      VDC response=connection.getVDC(vdc.getHref());
+      VDC response=api.getVDC(vdc.getHref());
       for (      ReferenceType net : response.getAvailableNetworks().values()) {
-        RestContext<S,A> newContext=null;
+        TerremarkVCloudClient newApi=null;
         try {
-          newContext=createView(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,net.getName())),setupModules()).unwrap();
-          assertEquals(newContext.getApi().findNetworkInOrgVDCNamed(null,null,net.getName()),connection.getNetwork(net.getHref()));
+          newApi=create(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_NETWORK,net.getName())),setupModules());
+          assertEquals(newApi.findNetworkInOrgVDCNamed(null,null,net.getName()),api.getNetwork(net.getHref()));
         }
   finally {
-          newContext.close();
+          newApi.close();
         }
       }
     }

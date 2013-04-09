@@ -1,13 +1,13 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType tasksList : org.getTasksLists().values()) {
-      RestContext<S,A> newContext=null;
+      TerremarkVCloudClient newApi=null;
       try {
-        newContext=createView(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_TASKSLIST,tasksList.getName())),setupModules()).unwrap();
-        assertEquals(newContext.getApi().findTasksListInOrgNamed(null,null),connection.getTasksList(tasksList.getHref()));
+        newApi=create(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_TASKSLIST,tasksList.getName())),setupModules());
+        assertEquals(newApi.findTasksListInOrgNamed(null,null),api.getTasksList(tasksList.getHref()));
       }
   finally {
-        newContext.close();
+        newApi.close();
       }
     }
   }

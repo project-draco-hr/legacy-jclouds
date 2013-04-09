@@ -1,18 +1,18 @@
 {
-  assertTrue(api.listAliasesInDomain(testDomain).isEmpty());
-  EmailAlias alias=api.createAlias("test2@" + testDomain,"test@" + testDomain);
+  assertTrue(emailAccountApi.listAliasesInDomain(testDomain).isEmpty());
+  EmailAlias alias=emailAccountApi.createAlias("test2@" + testDomain,"test@" + testDomain);
   assertEquals(alias.getAlias(),"test2@" + testDomain);
   assertEquals(alias.getForwardTo(),"test@" + testDomain);
-  EmailAlias aliasFromList=Iterables.getOnlyElement(api.listAliasesInDomain(testDomain));
+  EmailAlias aliasFromList=Iterables.getOnlyElement(emailAccountApi.listAliasesInDomain(testDomain));
   assertEquals(aliasFromList,alias);
-  EmailOverview overview=api.getOverview();
+  EmailOverview overview=emailAccountApi.getOverview();
   assertEquals(1,overview.getSummary().getAliases());
-  alias=api.updateAlias("test2@" + testDomain,"test1@" + testDomain);
-  overview=api.getOverview();
+  alias=emailAccountApi.updateAlias("test2@" + testDomain,"test1@" + testDomain);
+  overview=emailAccountApi.getOverview();
   assertEquals(1,overview.getSummary().getAliases());
-  aliasFromList=Iterables.getOnlyElement(api.listAliasesInDomain(testDomain));
+  aliasFromList=Iterables.getOnlyElement(emailAccountApi.listAliasesInDomain(testDomain));
   assertEquals(aliasFromList,alias);
-  api.delete("test2@" + testDomain);
-  overview=api.getOverview();
+  emailAccountApi.delete("test2@" + testDomain);
+  overview=emailAccountApi.getOverview();
   assertEquals(0,overview.getSummary().getAliases());
 }

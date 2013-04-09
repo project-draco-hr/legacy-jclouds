@@ -1,13 +1,13 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType vdc : org.getVDCs().values()) {
-      RestContext<S,A> newContext=null;
+      TerremarkVCloudClient newApi=null;
       try {
-        newContext=createView(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName())),setupModules()).unwrap();
-        assertEquals(newContext.getApi().findVDCInOrgNamed(null,null),connection.getVDC(vdc.getHref()));
+        newApi=create(overrideDefaults(ImmutableMap.of(VCloudConstants.PROPERTY_VCLOUD_DEFAULT_ORG,org.getName(),VCloudConstants.PROPERTY_VCLOUD_DEFAULT_VDC,vdc.getName())),setupModules());
+        assertEquals(newApi.findVDCInOrgNamed(null,null),api.getVDC(vdc.getHref()));
       }
   finally {
-        newContext.close();
+        newApi.close();
       }
     }
   }

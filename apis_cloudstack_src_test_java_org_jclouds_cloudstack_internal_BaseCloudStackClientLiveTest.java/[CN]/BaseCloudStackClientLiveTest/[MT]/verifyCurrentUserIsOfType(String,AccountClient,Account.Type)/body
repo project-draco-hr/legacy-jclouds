@@ -1,0 +1,15 @@
+{
+  Iterable<User> users=Iterables.concat(accountClient.listAccounts());
+  Predicate<User> apiKeyMatches=UserPredicates.apiKeyEquals(identity);
+  User currentUser;
+  try {
+    currentUser=Iterables.find(users,apiKeyMatches);
+  }
+ catch (  NoSuchElementException e) {
+    throw new NoSuchElementException(String.format("none of the following users match %s: %s",apiKeyMatches,users));
+  }
+  if (currentUser.getAccountType() != type) {
+    Logger.getAnonymousLogger().warning(String.format("Expecting an user with type %s. Got: %s",type.toString(),currentUser.toString()));
+  }
+  return currentUser;
+}

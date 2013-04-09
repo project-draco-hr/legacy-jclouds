@@ -1,17 +1,17 @@
 {
-  Org org=connection.findOrgNamed(null);
+  Org org=api.findOrgNamed(null);
   try {
-    key=connection.generateKeyPairInOrg(org.getHref(),"livetest",false);
+    key=api.generateKeyPairInOrg(org.getHref(),"livetest",false);
   }
  catch (  IllegalStateException e) {
-    key=connection.findKeyPairInOrg(org.getHref(),"livetest");
-    connection.deleteKeyPair(key.getId());
-    key=connection.generateKeyPairInOrg(org.getHref(),"livetest",false);
+    key=api.findKeyPairInOrg(org.getHref(),"livetest");
+    api.deleteKeyPair(key.getId());
+    key=api.generateKeyPairInOrg(org.getHref(),"livetest",false);
   }
   assertNotNull(key);
   assertEquals(key.getName(),"livetest");
   assertNotNull(key.getPrivateKey());
   assertNotNull(key.getFingerPrint());
   assertEquals(key.isDefault(),false);
-  assertEquals(key.getFingerPrint(),connection.findKeyPairInOrg(org.getHref(),key.getName()).getFingerPrint());
+  assertEquals(key.getFingerPrint(),api.findKeyPairInOrg(org.getHref(),key.getName()).getFingerPrint());
 }

@@ -1,15 +1,15 @@
 {
   for (  Org org : orgs) {
     for (    ReferenceType vdc : org.getVDCs().values()) {
-      VDC response=connection.getVDC(vdc.getHref());
+      VDC response=api.getVDC(vdc.getHref());
       for (      ReferenceType resource : response.getAvailableNetworks().values()) {
         if (resource.getType().equals(TerremarkVCloudMediaType.NETWORK_XML)) {
           try {
-            Network net=connection.getNetwork(resource.getHref());
+            Network net=api.getNetwork(resource.getHref());
             assertNotNull(net);
             assertNotNull(net.getName());
             assertNotNull(net.getHref());
-            assertEquals(connection.findNetworkInOrgVDCNamed(org.getName(),response.getName(),net.getName()),net);
+            assertEquals(api.findNetworkInOrgVDCNamed(org.getName(),response.getName(),net.getName()),net);
           }
  catch (          AuthorizationException e) {
           }

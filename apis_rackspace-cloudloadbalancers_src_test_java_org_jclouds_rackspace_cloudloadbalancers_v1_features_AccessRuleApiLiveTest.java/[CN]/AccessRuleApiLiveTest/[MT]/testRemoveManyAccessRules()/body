@@ -1,11 +1,11 @@
 {
-  Iterable<AccessRuleWithId> actualAccessList=clbApi.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).list();
+  Iterable<AccessRuleWithId> actualAccessList=api.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).list();
   AccessRuleWithId removedAccessRule1=Iterables.getFirst(actualAccessList,null);
   AccessRuleWithId removedAccessRule2=Iterables.getLast(actualAccessList);
   List<Integer> removedAccessRuleIds=ImmutableList.<Integer>of(removedAccessRule1.getId(),removedAccessRule2.getId());
   accessRules.remove(removedAccessRule1.getAddress());
   accessRules.remove(removedAccessRule2.getAddress());
-  assertTrue(clbApi.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).delete(removedAccessRuleIds));
-  assertTrue(awaitAvailable(clbApi.getLoadBalancerApiForZone(zone)).apply(lb));
+  assertTrue(api.getAccessRuleApiForZoneAndLoadBalancer(zone,lb.getId()).delete(removedAccessRuleIds));
+  assertTrue(awaitAvailable(api.getLoadBalancerApiForZone(zone)).apply(lb));
   assertExpectedAccessRules(accessRules);
 }
