@@ -1,0 +1,7 @@
+{
+  if (methodInvoker.getClass().getTypeParameters().length == 2) {
+    if (syncToAsync.containsValue(returnType))     return Key.get(Types.newParameterizedType(methodInvoker.getClass(),returnType,returnType));
+    return Key.get(Types.newParameterizedType(methodInvoker.getClass(),returnType,checkNotNull(syncToAsync.get(returnType),"need async type of %s for %s",returnType,methodInvoker.getClass())));
+  }
+  return super.methodInvokerFor(returnType);
+}

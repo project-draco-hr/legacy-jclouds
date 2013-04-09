@@ -1,0 +1,18 @@
+{
+  Iterable<Module> defaultModules=transform(apiMetadata.getDefaultModules(),new Function<Class<? extends Module>,Module>(){
+    @Override public Module apply(    Class<? extends Module> arg0){
+      try {
+        return arg0.newInstance();
+      }
+ catch (      InstantiationException e) {
+        throw propagate(e);
+      }
+catch (      IllegalAccessException e) {
+        throw propagate(e);
+      }
+    }
+  }
+);
+  if (restModuleSpecifiedByUser)   defaultModules=filter(defaultModules,and(not(configuresApi),not(configuresRest)));
+  return defaultModules;
+}

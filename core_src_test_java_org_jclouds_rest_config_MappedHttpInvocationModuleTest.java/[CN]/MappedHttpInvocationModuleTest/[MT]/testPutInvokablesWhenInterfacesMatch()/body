@@ -1,0 +1,16 @@
+{
+  Cache<Invokable<?,?>,Invokable<?,?>> cache=CacheBuilder.newBuilder().build();
+  MappedHttpInvocationModule.putInvokables(Sync.class,Async.class,cache);
+  assertEquals(cache.size(),1);
+  Invokable<?,?> sync=cache.asMap().keySet().iterator().next();
+  assertEquals(sync.getOwnerType().getRawType(),Sync.class);
+  assertEquals(sync.getName(),"get");
+  assertEquals(sync.getReturnType(),TypeToken.of(String.class));
+  Invokable<?,?> async=cache.getIfPresent(sync);
+  assertEquals(async.getOwnerType().getRawType(),Async.class);
+  assertEquals(async.getName(),"get");
+  assertEquals(async.getReturnType(),new TypeToken<ListenableFuture<String>>(){
+    private static final long serialVersionUID=1L;
+  }
+);
+}

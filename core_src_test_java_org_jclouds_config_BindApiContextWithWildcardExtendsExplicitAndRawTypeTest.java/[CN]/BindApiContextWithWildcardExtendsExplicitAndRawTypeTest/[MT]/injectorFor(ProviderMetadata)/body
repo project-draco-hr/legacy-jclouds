@@ -1,0 +1,10 @@
+{
+  return Guice.createInjector(new BindNameToContext("test"),new BindProviderMetadataContextAndCredentials(md,ofInstance(new Credentials("user","pass"))),new BindApiContextWithWildcardExtendsExplicitAndRawType(HttpApiMetadata.class.cast(md.getApiMetadata())),new MockModule(),new AbstractModule(){
+    @Override protected void configure(){
+      bind(Utils.class).toInstance(createMock(Utils.class));
+      bind(IntegrationTestClient.class).toInstance(createMock(IntegrationTestClient.class));
+      bind(IntegrationTestAsyncClient.class).toInstance(createMock(IntegrationTestAsyncClient.class));
+    }
+  }
+);
+}

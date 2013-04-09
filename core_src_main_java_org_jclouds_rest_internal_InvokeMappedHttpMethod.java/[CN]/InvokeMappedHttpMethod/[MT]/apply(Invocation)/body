@@ -1,0 +1,11 @@
+{
+  if (isFuture(in.getInvokable())) {
+    return submit(in);
+  }
+  Invocation async=toAsync(in);
+  Optional<Long> timeoutNanos=config.getTimeoutNanos(async);
+  if (timeoutNanos.isPresent()) {
+    return invokeWithTimeout(async,timeoutNanos.get());
+  }
+  return invoke(async);
+}
