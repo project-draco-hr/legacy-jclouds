@@ -1,7 +1,7 @@
 {
-  HttpRequest request=HttpRequest.builder().method("POST").endpoint("https://ultra-api.ultradns.com:8443/UltraDNS_WS/v01").addHeader("Host","ultra-api.ultradns.com:8443").payload(payloadFromResource("/create_rrpool_a.xml")).build();
+  HttpRequest request=HttpRequest.builder().method(POST).endpoint("https://ultra-api.ultradns.com:8443/UltraDNS_WS/v01").addHeader(HOST,"ultra-api.ultradns.com:8443").payload(payloadFromResource("/create_rrpool_a.xml")).build();
   HttpCommand command=new HttpCommand(request);
-  HttpResponse response=HttpResponse.builder().message("Server Error").statusCode(500).payload(payloadFromResource("/lbpool_already_exists.xml")).build();
+  HttpResponse response=HttpResponse.builder().message(INTERNAL_SERVER_ERROR.getReasonPhrase()).statusCode(INTERNAL_SERVER_ERROR.getStatusCode()).payload(payloadFromResource("/lbpool_already_exists.xml")).build();
   function.handleError(command,response);
   assertEquals(command.getException().getClass(),ResourceAlreadyExistsException.class);
   assertEquals(command.getException().getMessage(),"Pool already created for this host name : www.rrpool.adrianc.rrpool.ultradnstest.jclouds.org.");
