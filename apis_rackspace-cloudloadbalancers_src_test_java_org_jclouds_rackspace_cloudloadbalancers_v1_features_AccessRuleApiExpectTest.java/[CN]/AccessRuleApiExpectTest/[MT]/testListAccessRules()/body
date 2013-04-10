@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/accesslist");
-  AccessRuleApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/accesslist-list.json")).build()).getAccessRuleApiForZoneAndLoadBalancer("DFW",2000);
+  AccessRuleApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/accesslist-list.json")).build()).getAccessRuleApiForZoneAndLoadBalancer("DFW",2000);
   Iterable<AccessRuleWithId> accessList=api.list();
   assertEquals(accessList,getAccessRules());
 }

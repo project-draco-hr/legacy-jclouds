@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers");
-  LoadBalancerApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("POST").payload(payloadFromResource("/loadbalancer-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/loadbalancer-get.json")).build()).getLoadBalancerApiForZone("DFW");
+  LoadBalancerApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(POST).payload(payloadFromResource("/loadbalancer-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/loadbalancer-get.json")).build()).getLoadBalancerApiForZone("DFW");
   AddNode addNode1=AddNode.builder().address("10.1.1.1").condition(Node.Condition.ENABLED).port(80).build();
   AddNode addNode2=AddNode.builder().address("10.1.1.2").condition(Node.Condition.ENABLED).port(80).build();
   Set<AddNode> addNodes=Sets.newHashSet(addNode1,addNode2);

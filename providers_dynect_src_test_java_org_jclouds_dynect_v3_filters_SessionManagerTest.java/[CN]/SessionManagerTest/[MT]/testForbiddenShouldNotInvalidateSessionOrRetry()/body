@@ -4,7 +4,7 @@
   LoadingCache<Credentials,Session> sessionCache=createMock(LoadingCache.class);
   SessionApi sessionApi=createMock(SessionApi.class);
   replay(creds,sessionCache,sessionApi,command);
-  HttpResponse response=HttpResponse.builder().statusCode(403).build();
+  HttpResponse response=HttpResponse.builder().statusCode(FORBIDDEN.getStatusCode()).build();
   SessionManager retry=new SessionManager(creds,sessionCache,sessionApi);
   assertFalse(retry.shouldRetryRequest(command,response));
   verify(creds,sessionCache,sessionApi,command);

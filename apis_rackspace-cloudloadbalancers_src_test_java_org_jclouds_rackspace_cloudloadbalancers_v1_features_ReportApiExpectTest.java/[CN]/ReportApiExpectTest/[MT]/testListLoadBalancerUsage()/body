@@ -5,7 +5,7 @@
   Date today=new Date();
   String query=new StringBuilder().append("?startTime=").append(new DateParser().apply(aWeekAgo)).append("&endTime=").append(new DateParser().apply(today)).toString();
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/usage" + query);
-  ReportApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/report-loadbalancerusage-list.json")).build()).getReportApiForZone("DFW");
+  ReportApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/report-loadbalancerusage-list.json")).build()).getReportApiForZone("DFW");
   FluentIterable<LoadBalancerUsage> loadBalancerUsages=api.listLoadBalancerUsage(2000,aWeekAgo,today).concat();
   assertEquals(Iterables.size(loadBalancerUsages),25);
 }

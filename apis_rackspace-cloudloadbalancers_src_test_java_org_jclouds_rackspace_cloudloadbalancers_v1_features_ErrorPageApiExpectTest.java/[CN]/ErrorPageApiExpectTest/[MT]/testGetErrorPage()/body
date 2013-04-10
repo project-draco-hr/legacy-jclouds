@@ -1,6 +1,6 @@
 {
   URI endpoint=URI.create("https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/123123/loadbalancers/2000/errorpage");
-  ErrorPageApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromStringWithContentType("{\"errorpage\":{\"content\":\"" + contentEscaped + "\"}}",MediaType.APPLICATION_JSON)).build()).getErrorPageApiForZoneAndLoadBalancer("DFW",2000);
+  ErrorPageApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromStringWithContentType("{\"errorpage\":{\"content\":\"" + contentEscaped + "\"}}",APPLICATION_JSON)).build()).getErrorPageApiForZoneAndLoadBalancer("DFW",2000);
   String content=api.get();
   assertEquals(content,contentExpected);
 }
