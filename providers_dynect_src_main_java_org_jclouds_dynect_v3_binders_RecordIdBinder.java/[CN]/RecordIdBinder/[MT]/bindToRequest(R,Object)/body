@@ -1,0 +1,5 @@
+{
+  RecordId valueToAppend=RecordId.class.cast(checkNotNull(recordId,"recordId"));
+  URI path=uriBuilder(request.getEndpoint()).appendPath("/{type}Record/{zone}/{fqdn}/{id}").build(ImmutableMap.<String,Object>builder().put("type",valueToAppend.getType()).put("zone",valueToAppend.getZone()).put("fqdn",valueToAppend.getFQDN()).put("id",valueToAppend.getId()).build());
+  return (R)request.toBuilder().endpoint(path).build();
+}
