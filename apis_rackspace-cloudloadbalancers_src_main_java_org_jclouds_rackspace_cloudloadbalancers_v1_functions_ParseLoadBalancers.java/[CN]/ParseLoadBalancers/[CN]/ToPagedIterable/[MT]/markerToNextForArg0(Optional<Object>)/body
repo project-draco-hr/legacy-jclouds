@@ -1,0 +1,14 @@
+{
+  String zone=arg0.isPresent() ? arg0.get().toString() : null;
+  final LoadBalancerApi loadBalancerApi=api.getLoadBalancerApiForZone(zone);
+  return new Function<Object,IterableWithMarker<LoadBalancer>>(){
+    @Override public IterableWithMarker<LoadBalancer> apply(    Object input){
+      IterableWithMarker<LoadBalancer> list=loadBalancerApi.list(marker(input.toString()));
+      return list;
+    }
+    @Override public String toString(){
+      return "list()";
+    }
+  }
+;
+}

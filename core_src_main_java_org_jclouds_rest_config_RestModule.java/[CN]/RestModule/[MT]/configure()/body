@@ -1,7 +1,4 @@
 {
-  bind(new TypeLiteral<Map<Class<?>,Class<?>>>(){
-  }
-).toInstance(sync2Async);
   install(new SaxParserModule());
   install(new GsonModule());
   install(new SetCaller.Module());
@@ -9,9 +6,6 @@
   bind(new TypeLiteral<Function<HttpRequest,Function<HttpResponse,?>>>(){
   }
 ).to(TransformerForRequest.class);
-  bind(new TypeLiteral<Function<Invocation,Object>>(){
-  }
-).to(InvokeHttpMethod.class);
   bind(new TypeLiteral<org.jclouds.Fallback<Object>>(){
   }
 ).to(MapHttp4xxCodesToExceptions.class);
@@ -19,7 +13,6 @@
   }
 ).to(RestAnnotationProcessor.class);
   bind(IdentityFunction.class).toInstance(IdentityFunction.INSTANCE);
-  bindHttpApi(binder(),HttpClient.class,HttpAsyncClient.class);
   bind(new TypeLiteral<AtomicReference<AuthorizationException>>(){
   }
 ).toInstance(authException);

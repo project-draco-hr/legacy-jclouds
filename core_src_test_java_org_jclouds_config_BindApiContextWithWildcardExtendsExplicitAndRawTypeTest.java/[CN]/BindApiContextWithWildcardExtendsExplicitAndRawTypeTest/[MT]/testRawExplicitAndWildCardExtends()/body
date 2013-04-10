@@ -1,0 +1,11 @@
+{
+  ProviderMetadata md=AnonymousProviderMetadata.forApiOnEndpoint(IntegrationTestClient.class,"http://localhost");
+  TypeToken<? extends Context> wildCardExtendsType=new TypeToken<ApiContext<? extends IntegrationTestClient>>(){
+    private static final long serialVersionUID=1L;
+  }
+;
+  md=md.toBuilder().apiMetadata(md.getApiMetadata().toBuilder().context(wildCardExtendsType).build()).build();
+  ExpectedBindingsWithWildCardExtends bindings=injectorFor(md).getInstance(ExpectedBindingsWithWildCardExtends.class);
+  assertEquals(bindings.raw,bindings.explicit);
+  assertEquals(bindings.explicit,bindings.wildcardExtends);
+}

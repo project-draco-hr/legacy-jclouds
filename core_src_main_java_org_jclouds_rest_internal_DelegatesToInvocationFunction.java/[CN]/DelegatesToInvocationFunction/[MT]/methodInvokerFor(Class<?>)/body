@@ -4,9 +4,6 @@ case 0:
     return Key.get(methodInvoker.getClass());
 case 1:
   return Key.get(Types.newParameterizedType(methodInvoker.getClass(),returnType));
-case 2:
-if (syncToAsync.containsValue(returnType)) return Key.get(Types.newParameterizedType(methodInvoker.getClass(),returnType,returnType));
-return Key.get(Types.newParameterizedType(methodInvoker.getClass(),returnType,checkNotNull(syncToAsync.get(returnType),"need async type of %s for %s",returnType,methodInvoker.getClass())));
 }
 throw new IllegalArgumentException(returnType + " has too many type parameters");
 }

@@ -1,0 +1,7 @@
+{
+  HttpRequest request=command.getCurrentRequest();
+  org.jclouds.Fallback<?> fallback=config.getFallback(invocation);
+  if (fallback instanceof InvocationContext)   InvocationContext.class.cast(fallback).setContext(request);
+  logger.trace("<< exceptions from %s are parsed by %s",commandName,fallback.getClass().getSimpleName());
+  return fallback;
+}

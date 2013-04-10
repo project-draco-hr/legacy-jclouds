@@ -1,0 +1,8 @@
+{
+  IllegalStateException exception=new IllegalStateException();
+  expect(config.getTimeoutNanos(asyncGet)).andReturn(Optional.<Long>absent());
+  expect(http.invoke(new HttpCommand(getRequest))).andThrow(exception);
+  expect(fallback.createOrPropagate(exception)).andReturn(fallbackResponse);
+  replay(http,timeLimiter,fallback,config,future);
+  assertEquals(invokeHttpMethod.apply(get),fallbackResponse);
+}

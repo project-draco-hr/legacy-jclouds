@@ -1,6 +1,6 @@
 {
   IllegalStateException exception=new IllegalStateException();
-  expect(config.getTimeoutNanos(asyncGet)).andReturn(Optional.of(250000000l));
+  expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000l));
   InvokeAndTransform invoke=invokeHttpMethod.new InvokeAndTransform("ns:get",getCommand);
   expect(timeLimiter.callWithTimeout(invoke,250000000,TimeUnit.NANOSECONDS,true)).andThrow(exception);
   expect(fallback.createOrPropagate(exception)).andReturn(fallbackResponse);

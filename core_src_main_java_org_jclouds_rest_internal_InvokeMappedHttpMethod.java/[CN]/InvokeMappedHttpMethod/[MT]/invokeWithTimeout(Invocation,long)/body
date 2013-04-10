@@ -1,0 +1,17 @@
+{
+  String commandName=config.getCommandName(invocation);
+  HttpCommand command=toCommand(commandName,invocation);
+  org.jclouds.Fallback<?> fallback=getFallback(commandName,invocation,command);
+  logger.debug(">> blocking on %s for %s",invocation,limitNanos);
+  try {
+    return timeLimiter.callWithTimeout(new InvokeAndTransform(commandName,command),limitNanos,NANOSECONDS,true);
+  }
+ catch (  Throwable t) {
+    try {
+      return fallback.createOrPropagate(t);
+    }
+ catch (    Exception e) {
+      throw propagate(e);
+    }
+  }
+}

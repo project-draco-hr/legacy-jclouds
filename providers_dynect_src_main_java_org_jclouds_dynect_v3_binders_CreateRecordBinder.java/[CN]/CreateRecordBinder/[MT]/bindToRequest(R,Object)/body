@@ -1,0 +1,5 @@
+{
+  CreateRecord<?> in=CreateRecord.class.cast(checkNotNull(arg,"record to create"));
+  URI path=uriBuilder(request.getEndpoint()).build(ImmutableMap.<String,Object>builder().put("type",in.getType()).put("fqdn",in.getFQDN()).build());
+  return (R)request.toBuilder().endpoint(path).payload(json.toJson(ImmutableMap.of("rdata",in.getRData(),"ttl",in.getTTL()))).build();
+}

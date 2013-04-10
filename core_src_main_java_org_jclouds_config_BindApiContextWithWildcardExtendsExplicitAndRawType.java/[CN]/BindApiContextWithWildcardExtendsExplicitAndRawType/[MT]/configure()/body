@@ -1,0 +1,8 @@
+{
+  TypeToken<?> concreteType=BaseHttpApiMetadata.contextToken(typeToken(httpApiMetadata.getApi()));
+  bind(TypeLiteral.get(concreteType.getType())).to(TypeLiteral.class.cast(TypeLiteral.get(Types.newParameterizedType(ApiContextImpl.class,httpApiMetadata.getApi()))));
+  if (!concreteType.equals(httpApiMetadata.getContext())) {
+    bind(TypeLiteral.get(httpApiMetadata.getContext().getType())).to(TypeLiteral.class.cast(TypeLiteral.get(Types.newParameterizedType(ApiContextImpl.class,httpApiMetadata.getApi()))));
+  }
+  bind(TypeLiteral.get(ApiContext.class)).to(TypeLiteral.class.cast(TypeLiteral.get(Types.newParameterizedType(ApiContextImpl.class,httpApiMetadata.getApi()))));
+}
