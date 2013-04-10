@@ -1,6 +1,7 @@
 {
   MockWebServer server=new MockWebServer();
   server.enqueue(new MockResponse().setBody("").addHeader(ETAG,"ABCDEF"));
+  server.enqueue(new MockResponse());
   server.play();
   S3Client client=getS3Client(server.getUrl("/"));
   S3Object nada=client.newS3Object();
