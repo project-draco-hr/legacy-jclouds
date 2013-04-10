@@ -1,0 +1,33 @@
+{
+  for (  Zone zone : api.getZoneApi().listByAccount(account.getId())) {
+    for (    DirectionalPool pool : api(zone.getName()).list()) {
+      for (      DirectionalRecordType type : EnumSet.allOf(DirectionalRecordType.class)) {
+        for (        DirectionalRecordDetail rr : api(zone.getName()).listRecordsByNameAndType(pool.getName(),type.getCode())) {
+          checkDirectionalRecordDetail(rr);
+          Iterable<DirectionalGroup> groups=Optional.presentInstances(ImmutableSet.of(rr.getGroup(),rr.getGeolocationGroup(),rr.getGeolocationGroup()));
+          assertFalse(Iterables.isEmpty(groups),"No groups " + rr);
+          for (          DirectionalGroup group : groups) {
+            allDirectionalGroups.add(group);
+            assertNotNull(group.getId(),"Id cannot be null " + group);
+            assertNotNull(group.getName(),"Name cannot be null " + group);
+          }
+          assertEquals(rr.getZoneName(),zone.getName());
+          assertEquals(rr.getName(),pool.getName());
+switch (pool.getType()) {
+case GEOLOCATION:
+            assertNotNull(rr.getGeolocationGroup().or(rr.getGroup()).orNull(),"GeolocationGroup or Group must be present " + rr);
+          assertNull(rr.getSourceIpGroup().orNull(),"SourceIpGroup must be absent " + rr);
+        break;
+case SOURCEIP:
+      assertNotNull(rr.getSourceIpGroup().orNull(),"SourceIpGroup must be present " + rr);
+    assertNull(rr.getGeolocationGroup().orNull(),"GeolocationGroup must be absent " + rr);
+  break;
+case MIXED:
+assertNotNull(rr.getGeolocationGroup().or(rr.getSourceIpGroup()).or(rr.getGroup()).orNull(),"GeolocationGroup, SourceIpGroup or Group must be present " + rr);
+break;
+}
+}
+}
+}
+}
+}
