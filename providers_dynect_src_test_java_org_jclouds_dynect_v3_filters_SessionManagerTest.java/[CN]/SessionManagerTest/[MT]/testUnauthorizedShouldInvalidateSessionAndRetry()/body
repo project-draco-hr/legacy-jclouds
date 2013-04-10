@@ -9,7 +9,7 @@
   expect(command.isReplayable()).andReturn(true);
   expect(command.getFailureCount()).andReturn(1).atLeastOnce();
   replay(creds,sessionCache,sessionApi,command);
-  HttpResponse response=HttpResponse.builder().statusCode(401).build();
+  HttpResponse response=HttpResponse.builder().statusCode(UNAUTHORIZED.getStatusCode()).build();
   SessionManager retry=new SessionManager(creds,sessionCache,sessionApi);
   assertTrue(retry.shouldRetryRequest(command,response));
   verify(creds,sessionCache,sessionApi,command);
