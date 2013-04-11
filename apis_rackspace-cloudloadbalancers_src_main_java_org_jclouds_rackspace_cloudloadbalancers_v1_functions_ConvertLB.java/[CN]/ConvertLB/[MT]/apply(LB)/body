@@ -13,6 +13,9 @@
  else     builder.virtualIPs(lb.virtualIps);
     if (lb.metadata == null)     builder.metadata(new Metadata());
  else     builder.metadata(ParseMetadata.transformCLBMetadataToMetadata(lb.metadata));
+    int indexOfLB=endpoint.toString().lastIndexOf(LOAD_BALANCERS);
+    String path=endpoint.toString().substring(0,indexOfLB + LOAD_BALANCERS.length());
+    builder.uri(URI.create(path + "/" + lb.id));
     return builder.build();
   }
  catch (  NullPointerException e) {
