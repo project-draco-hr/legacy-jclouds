@@ -4,9 +4,9 @@
       for (      DirectionalRecordType type : EnumSet.allOf(DirectionalRecordType.class)) {
         for (        DirectionalRecordDetail rr : api(zone.getName()).listRecordsByNameAndType(pool.getName(),type.getCode())) {
           checkDirectionalRecordDetail(rr);
-          Iterable<DirectionalGroup> groups=Optional.presentInstances(ImmutableSet.of(rr.getGroup(),rr.getGeolocationGroup(),rr.getGeolocationGroup()));
+          Iterable<IdAndName> groups=Optional.presentInstances(ImmutableSet.of(rr.getGroup(),rr.getGeolocationGroup(),rr.getGeolocationGroup()));
           assertFalse(Iterables.isEmpty(groups),"No groups " + rr);
-          for (          DirectionalGroup group : groups) {
+          for (          IdAndName group : groups) {
             allDirectionalGroups.add(group);
             assertNotNull(group.getId(),"Id cannot be null " + group);
             assertNotNull(group.getName(),"Name cannot be null " + group);
