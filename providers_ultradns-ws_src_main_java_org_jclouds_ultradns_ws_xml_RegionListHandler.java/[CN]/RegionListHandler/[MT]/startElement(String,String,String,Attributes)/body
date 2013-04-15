@@ -1,9 +1,7 @@
 {
   if (equalsOrSuffix(qName,"Region")) {
     Map<String,String> attributes=cleanseAttributes(attrs);
-    int id=Integer.parseInt(attributes.get("RegionID"));
-    Iterable<String> territories=Splitter.on(';').split(attributes.get("TerritoryName"));
-    Region region=Region.builder().name(attributes.get("RegionName")).territoryNames(territories).build();
-    regions.put(id,region);
+    IdAndName region=IdAndName.fromIdAndName(attributes.get("RegionID"),attributes.get("RegionName"));
+    regions.putAll(region,Splitter.on(';').split(attributes.get("TerritoryName")));
   }
 }
