@@ -1,14 +1,14 @@
 {
-  poolId=api(zoneName).createPoolForHostname("pool",hostname);
+  poolId=api(zoneName).createPoolForDNameAndType("pool",dname,IPV4);
   getAnonymousLogger().info("created tc pool: " + poolId);
   try {
-    api(zoneName).createPoolForHostname("pool",hostname);
+    api(zoneName).createPoolForDNameAndType("pool",dname,IPV4);
     fail();
   }
  catch (  ResourceAlreadyExistsException e) {
   }
   try {
-    api(zoneName).createPoolForHostname("pool1",hostname);
+    api(zoneName).createPoolForDNameAndType("pool1",dname,IPV4);
     fail();
   }
  catch (  ResourceAlreadyExistsException e) {
@@ -17,6 +17,6 @@
   assertTrue(pool.isPresent());
   assertEquals(pool.get().getId(),poolId);
   assertEquals(pool.get().getName(),"pool");
-  assertEquals(pool.get().getDName(),hostname);
+  assertEquals(pool.get().getDName(),dname);
   checkTCPool(pool.get());
 }

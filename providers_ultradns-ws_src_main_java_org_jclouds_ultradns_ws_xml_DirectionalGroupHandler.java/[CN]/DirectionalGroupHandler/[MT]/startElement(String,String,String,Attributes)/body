@@ -1,0 +1,11 @@
+{
+  if (equalsOrSuffix(qName,"DirectionalDNSGroupDetail")) {
+    group.name(attrs.getValue("GroupName"));
+    group.description(attrs.getValue("Description"));
+  }
+ else   if (equalsOrSuffix(qName,"RegionForNewGroups")) {
+    String regionName=attrs.getValue("RegionName");
+    Iterable<String> territories=Splitter.on(';').split(attrs.getValue("TerritoryName"));
+    group.mapRegionToTerritories(regionName,ImmutableSortedSet.copyOf(territories));
+  }
+}

@@ -1,0 +1,28 @@
+{
+  Map<String,String> attributes=cleanseAttributes(attrs);
+  if (attributes.containsKey("ZoneName")) {
+    zoneName=attributes.get("ZoneName");
+    dname=attributes.get("DName");
+    drd.zoneName(zoneName).name(dname);
+  }
+  if (attributes.containsKey("DirPoolRecordId")) {
+    drd.id(attributes.get("DirPoolRecordId"));
+  }
+  if (attributes.containsKey("GroupId")) {
+    drd.group(create(attributes.get("GroupId"),attributes.get("GroupName")));
+  }
+  if (attributes.containsKey("GeolocationGroupId")) {
+    drd.geolocationGroup(create(attributes.get("GeolocationGroupId"),attributes.get("GeolocationGroupName")));
+  }
+  if (attributes.containsKey("SourceIPGroupId")) {
+    drd.sourceIpGroup(create(attributes.get("SourceIPGroupId"),attributes.get("SourceIPGroupName")));
+  }
+  if (attributes.containsKey("recordType")) {
+    dr.type(attributes.get("recordType"));
+    dr.ttl(Integer.parseInt(attributes.get("TTL")));
+    dr.noResponseRecord("true".equalsIgnoreCase(attributes.get("noResponseRecord")));
+  }
+  if (equalsOrSuffix(qName,"InfoValues")) {
+    dr.rdata(attributes.values());
+  }
+}
