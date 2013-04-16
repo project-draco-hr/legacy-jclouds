@@ -1,9 +1,9 @@
 {
   PoolRecordSpec spec=api(zoneName).getRecordSpec(cname2);
-  UpdatePoolRecord update=UpdatePoolRecord.builder().from(spec).pointsTo("www.baz.com.").weight(98).ttl(200).build();
+  UpdatePoolRecord update=UpdatePoolRecord.builder().from(spec).rdata("www.baz.com.").weight(98).ttl(200).build();
   api(zoneName).updateRecord(cname2,update);
-  TrafficControllerPoolRecord record=getRecordById(cname2).get();
-  assertEquals(record.getPointsTo(),"www.baz.com.");
+  TrafficControllerPoolRecordDetail record=getRecordById(cname2).get();
+  assertEquals(record.getRecord().getRData(),"www.baz.com.");
   spec=api(zoneName).getRecordSpec(cname2);
   assertEquals(spec.getWeight(),98);
   assertEquals(spec.getTTL(),200);

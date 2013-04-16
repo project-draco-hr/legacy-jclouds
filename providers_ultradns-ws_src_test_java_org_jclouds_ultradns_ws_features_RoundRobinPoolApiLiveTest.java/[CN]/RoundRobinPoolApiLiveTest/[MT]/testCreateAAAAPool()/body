@@ -1,8 +1,8 @@
 {
-  aaaaPoolId=api(zoneName).createAAAAPoolForHostname("AAAA pool",hostname);
+  aaaaPoolId=api(zoneName).createAAAAPoolForDName("AAAA pool",dname);
   getAnonymousLogger().info("created AAAA rr pool: " + aaaaPoolId);
   try {
-    api(zoneName).createAAAAPoolForHostname("AAAA pool",hostname);
+    api(zoneName).createAAAAPoolForDName("AAAA pool",dname);
     fail();
   }
  catch (  ResourceAlreadyExistsException e) {
@@ -10,5 +10,5 @@
   Optional<RoundRobinPool> aPool=getPoolById(aaaaPoolId);
   assertTrue(aPool.isPresent());
   assertEquals(aPool.get().getName(),"AAAA pool");
-  assertEquals(aPool.get().getDName(),hostname);
+  assertEquals(aPool.get().getDName(),dname);
 }

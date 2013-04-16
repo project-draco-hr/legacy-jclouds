@@ -1,8 +1,8 @@
 {
   for (  Zone zone : api.getZoneApi().listByAccount(account.getId())) {
     for (    DirectionalPool pool : api(zone.getName()).list()) {
-      for (      DirectionalRecordType type : EnumSet.allOf(DirectionalRecordType.class)) {
-        for (        DirectionalRecordDetail rr : api(zone.getName()).listRecordsByNameAndType(pool.getName(),type.getCode())) {
+      for (      RecordType type : EnumSet.allOf(RecordType.class)) {
+        for (        DirectionalPoolRecordDetail rr : api(zone.getName()).listRecordsByNameAndType(pool.getDName(),type.getCode())) {
           checkDirectionalRecordDetail(rr);
           Iterable<IdAndName> groups=Optional.presentInstances(ImmutableSet.of(rr.getGroup(),rr.getGeolocationGroup(),rr.getGeolocationGroup()));
           assertFalse(Iterables.isEmpty(groups),"No groups " + rr);
@@ -12,7 +12,7 @@
             assertNotNull(group.getName(),"Name cannot be null " + group);
           }
           assertEquals(rr.getZoneName(),zone.getName());
-          assertEquals(rr.getName(),pool.getName());
+          assertEquals(rr.getName(),pool.getDName());
 switch (pool.getType()) {
 case GEOLOCATION:
             assertNotNull(rr.getGeolocationGroup().or(rr.getGroup()).orNull(),"GeolocationGroup or Group must be present " + rr);
