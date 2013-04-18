@@ -1,0 +1,7 @@
+{
+  eu=DirectionalGroup.builder().name("EU").description("Clients we classify as being in Europe").mapRegion("Europe").build();
+  nebraska=DirectionalGroup.builder().name("Canary").description("Clients who are testing our service").mapRegionToTerritory(REGION_US,"Nebraska").build();
+  Multimap<IdAndName,String> availableRegions=api.getRegionsByIdAndName();
+  Iterable<String> usTerritories=filterKeys(availableRegions,IdAndName.nameEqualTo(REGION_US)).values();
+  us=DirectionalGroup.builder().name("US").description("Clients we classify as being in US").mapRegionToTerritories(REGION_US,filter(usTerritories,not(equalTo("Nebraska")))).build();
+}

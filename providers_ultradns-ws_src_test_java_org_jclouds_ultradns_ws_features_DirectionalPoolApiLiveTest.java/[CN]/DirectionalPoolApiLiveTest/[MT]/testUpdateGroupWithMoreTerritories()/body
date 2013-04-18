@@ -1,0 +1,8 @@
+{
+  DirectionalGroup withUtah=nebraska.toBuilder().mapRegionToTerritory(REGION_US,"Utah").build();
+  api(zoneName).updateRecordAndGroup(cnameCanary,cnameRecordCanary,withUtah);
+  getAnonymousLogger().info("update CNAME record in ipv4 pool: " + cnameCanary);
+  checkRecordConsistent(dname,cnameCanary,cnameRecordCanary,withUtah);
+  checkGroupByDNameAndIdContainsTerritory(dname,cnameCanary,"Nebraska");
+  checkGroupByDNameAndIdContainsTerritory(dname,cnameCanary,"Utah");
+}

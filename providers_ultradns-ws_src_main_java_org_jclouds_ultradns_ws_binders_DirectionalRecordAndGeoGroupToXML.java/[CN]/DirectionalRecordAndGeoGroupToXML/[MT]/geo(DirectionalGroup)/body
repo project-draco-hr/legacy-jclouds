@@ -1,0 +1,12 @@
+{
+  StringBuilder groupData=new StringBuilder();
+  groupData.append("<GeolocationGroupDetails groupName=\"").append(group.getName()).append('"');
+  if (group.getDescription().isPresent())   groupData.append(" description=\"").append(group.getDescription().get()).append('"');
+  groupData.append(" >");
+  for (  Entry<String,Collection<String>> region : group.asMap().entrySet()) {
+    groupData.append("<GeolocationGroupDefinitionData regionName=\"").append(region.getKey()).append('"');
+    groupData.append(" territoryNames=\"").append(Joiner.on(';').join(region.getValue())).append("\" />");
+  }
+  groupData.append("</GeolocationGroupDetails>");
+  return groupData.toString();
+}

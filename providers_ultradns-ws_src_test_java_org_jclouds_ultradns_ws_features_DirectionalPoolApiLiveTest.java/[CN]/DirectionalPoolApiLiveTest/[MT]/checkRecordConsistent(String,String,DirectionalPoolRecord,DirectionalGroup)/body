@@ -1,0 +1,13 @@
+{
+  DirectionalPoolRecordDetail recordDetail=getRecordByDNameAndId(dname,recordId).get();
+  checkDirectionalRecordDetail(recordDetail);
+  IdAndName rGroup=recordDetail.getGeolocationGroup().get();
+  assertEquals(rGroup.getName(),group.getName());
+  if (!group.containsValue("all"))   assertEquals(groupApi().get(rGroup.getId()),group);
+  assertFalse(recordDetail.getGroup().isPresent());
+  assertFalse(recordDetail.getSourceIpGroup().isPresent());
+  assertEquals(recordDetail.getName(),dname);
+  assertEquals(recordDetail.getZoneName(),zoneName);
+  assertEquals(recordDetail.getRecord(),record);
+  return recordDetail;
+}

@@ -1,0 +1,13 @@
+{
+  aPoolId=api(zoneName).createForDNameAndType("Geo pool","a-" + dname,IPV4.getCode());
+  getAnonymousLogger().info("created Geo pool: " + aPoolId);
+  a1Prod=api(zoneName).addFirstRecordInNonConfiguredGroup(aPoolId,a1RecordProd);
+  getAnonymousLogger().info("created A record in ipv4 pool: " + a1Prod);
+  checkRecordConsistentInNonConfiguredGroup("a-" + dname,a1Prod,a1RecordProd);
+  checkGroupByDNameAndIdContainsTerritory("a-" + dname,a1Prod,"Nebraska");
+  a1Canary=api(zoneName).addRecordIntoNewGroup(aPoolId,a1RecordCanary,nebraska);
+  getAnonymousLogger().info("created A record in ipv4 pool: " + a1Canary);
+  checkRecordConsistent("a-" + dname,a1Canary,a1RecordCanary,nebraska);
+  checkGroupByDNameAndIdContainsTerritory("a-" + dname,a1Canary,"Nebraska");
+  checkGroupByDNameAndIdDoesntContainTerritory("a-" + dname,a1Prod,"Nebraska");
+}

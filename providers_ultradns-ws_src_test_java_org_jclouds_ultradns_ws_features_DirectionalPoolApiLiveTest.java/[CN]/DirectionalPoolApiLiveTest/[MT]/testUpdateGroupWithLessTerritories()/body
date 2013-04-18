@@ -1,0 +1,5 @@
+{
+  Multimap<String,String> minusUtah=ImmutableMultimap.<String,String>builder().putAll("United States (US)",filter(us.get(REGION_US),not(equalTo("Utah")))).build();
+  api(zoneName).updateRecordAndGroup(cnameUS,cnameRecordUS,us.toBuilder().regionToTerritories(minusUtah).build());
+  checkGroupByDNameAndIdDoesntContainTerritory(dname,cnameUS,"Utah");
+}

@@ -1,0 +1,10 @@
+{
+  DirectionalGroup withUtah=nebraska.toBuilder().mapRegionToTerritory(REGION_US,"Utah").build();
+  checkGroupByDNameAndIdContainsTerritory(dname,cnameUS,"Utah");
+  try {
+    api(zoneName).updateRecordAndGroup(cnameCanary,cnameRecordCanary,withUtah);
+  }
+  finally {
+    checkRecordConsistent(dname,cnameCanary,cnameRecordCanary,nebraska);
+  }
+}
