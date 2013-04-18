@@ -5,7 +5,7 @@
   String newImageId=novaApi.getServerApiForZone(sourceImageZoneAndId.getZone()).createImageFromServer(cloneTemplate.getName(),sourceImageZoneAndId.getId());
   final ZoneAndId targetImageZoneAndId=ZoneAndId.fromZoneAndId(sourceImageZoneAndId.getZone(),newImageId);
   logger.info(">> Registered new Image %s, waiting for it to become available.",newImageId);
-  final AtomicReference<Image> image=new AtomicReference<Image>(new ImageBuilder().location(find(locations.get(),idEquals(targetImageZoneAndId.getZone()))).id(targetImageZoneAndId.slashEncode()).providerId(targetImageZoneAndId.getId()).description(cloneTemplate.getName()).operatingSystem(OperatingSystem.builder().description(cloneTemplate.getName()).build()).status(Image.Status.PENDING).build());
+  final AtomicReference<Image> image=Atomics.newReference(new ImageBuilder().location(find(locations.get(),idEquals(targetImageZoneAndId.getZone()))).id(targetImageZoneAndId.slashEncode()).providerId(targetImageZoneAndId.getId()).description(cloneTemplate.getName()).operatingSystem(OperatingSystem.builder().description(cloneTemplate.getName()).build()).status(Image.Status.PENDING).build());
   return userExecutor.submit(new Callable<Image>(){
     @Override public Image call() throws Exception {
       if (imageAvailablePredicate.apply(image))       return image.get();
