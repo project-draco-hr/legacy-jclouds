@@ -2,10 +2,10 @@
   for (  Zone zone : api.getZoneApi().listByAccount(account.getId())) {
     for (    DirectionalPool pool : api(zone.getName()).list()) {
       for (      RecordType type : EnumSet.allOf(RecordType.class)) {
-        for (        DirectionalPoolRecordDetail rr : api(zone.getName()).listRecordsByNameAndType(pool.getDName(),type.getCode())) {
+        for (        DirectionalPoolRecordDetail rr : api(zone.getName()).listRecordsByDNameAndType(pool.getDName(),type.getCode())) {
           checkDirectionalRecordDetail(rr);
           Iterable<IdAndName> groups=Optional.presentInstances(ImmutableSet.of(rr.getGroup(),rr.getGeolocationGroup(),rr.getGeolocationGroup()));
-          assertFalse(Iterables.isEmpty(groups),"No groups " + rr);
+          assertFalse(isEmpty(groups),"No groups " + rr);
           for (          IdAndName group : groups) {
             allDirectionalGroups.add(group);
             assertNotNull(group.getId(),"Id cannot be null " + group);

@@ -1,21 +1,21 @@
 {
   try {
-    api().createInAccount(name,account.getId());
-    ZoneProperties newZone=api().get(name);
+    api().createInAccount(zoneName,account.getId());
+    ZoneProperties newZone=api().get(zoneName);
     getAnonymousLogger().info("created zone: " + newZone);
     try {
-      api().createInAccount(name,account.getId());
+      api().createInAccount(zoneName,account.getId());
       fail();
     }
  catch (    ResourceAlreadyExistsException e) {
     }
-    assertEquals(newZone.getName(),name);
+    assertEquals(newZone.getName(),zoneName);
     assertEquals(newZone.getType(),Type.PRIMARY);
     assertEquals(newZone.getTypeCode(),Type.PRIMARY.getCode());
     assertNotNull(newZone.getModified(),"Modified cannot be null for " + newZone);
     assertEquals(newZone.getResourceRecordCount(),5);
   }
   finally {
-    api().delete(name);
+    api().delete(zoneName);
   }
 }

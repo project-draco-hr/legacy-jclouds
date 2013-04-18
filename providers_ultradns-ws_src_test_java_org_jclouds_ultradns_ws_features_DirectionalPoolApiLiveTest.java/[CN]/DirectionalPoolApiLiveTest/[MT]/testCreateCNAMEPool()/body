@@ -1,0 +1,11 @@
+{
+  cnamePoolId=api(zoneName).createForDNameAndType("Geo pool",dname,IPV4.getCode());
+  getAnonymousLogger().info("created Geo pool: " + cnamePoolId);
+  Optional<DirectionalPool> ipv4Pool=getPoolById(cnamePoolId);
+  assertTrue(ipv4Pool.isPresent());
+  assertEquals(ipv4Pool.get().getZoneId(),zoneId);
+  assertEquals(ipv4Pool.get().getName().get(),"Geo pool");
+  assertEquals(ipv4Pool.get().getDName(),dname);
+  assertEquals(ipv4Pool.get().getType(),Type.GEOLOCATION);
+  assertEquals(ipv4Pool.get().getTieBreak(),TieBreak.GEOLOCATION);
+}

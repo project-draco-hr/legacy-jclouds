@@ -1,0 +1,7 @@
+{
+  String geoGroupId=getRecordByDNameAndId(dname,cnameCanary).get().getGeolocationGroup().get().getId();
+  cname2Canary=api(zoneName).addRecordIntoExistingGroup(cnamePoolId,cname2RecordCanary,geoGroupId);
+  getAnonymousLogger().info("created CNAME record in ipv4 pool: " + cname2Canary);
+  DirectionalPoolRecordDetail detail=checkRecordConsistentInNonConfiguredGroup(dname,cname2Canary,cname2RecordCanary);
+  assertEquals(detail.getGroup().get().getId(),geoGroupId);
+}

@@ -1,0 +1,14 @@
+{
+  if (poolId == null) {
+    if (group != null)     return format(UPDATE_TEMPLATE,recordId,updateRecord(record),geo(group));
+    return format(UPDATE_TEMPLATE,recordId,updateRecord(record),"");
+  }
+  if (group == null && groupId == null) {
+    return format(ADD_TEMPLATE,format("<AddDirectionalRecordData directionalPoolId=\"%s\" createAllNonConfiguredGrp=\"true\">",poolId),createRecord(record),"");
+  }
+  String addRecordToPool=format("<AddDirectionalRecordData directionalPoolId=\"%s\">",poolId);
+  if (groupId != null) {
+    return format(ADD_TEMPLATE,addRecordToPool,createRecord(record),format(EXISTINGGROUP_TEMPLATE,groupId,""));
+  }
+  return format(ADD_TEMPLATE,addRecordToPool,createRecord(record),format(NEWGROUP_TEMPLATE,geo(group)));
+}

@@ -1,0 +1,14 @@
+{
+  DirectionalPoolRecordDetail recordDetail=getRecordByDNameAndId(dname,recordId).get();
+  checkDirectionalRecordDetail(recordDetail);
+  IdAndName rGroup=recordDetail.getGroup().get();
+  assertEquals(rGroup.getName(),"All Non-Configured Regions");
+  DirectionalGroup allNonConfigured=groupApi().get(rGroup.getId());
+  assertEquals(allNonConfigured.getName(),"All Non-Configured Regions");
+  assertEquals(allNonConfigured.size(),323);
+  assertFalse(recordDetail.getGeolocationGroup().isPresent());
+  assertFalse(recordDetail.getSourceIpGroup().isPresent());
+  assertEquals(recordDetail.getZoneName(),zoneName);
+  assertEquals(recordDetail.getRecord(),record);
+  return recordDetail;
+}

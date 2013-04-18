@@ -1,0 +1,12 @@
+{
+  StringBuilder groupData=new StringBuilder();
+  groupData.append("<DirectionalDNSGroupDetail GroupName=\"").append(group.getName()).append('"');
+  if (group.getDescription().isPresent())   groupData.append(" Description=\"").append(group.getDescription().get()).append('"');
+  groupData.append(" ><DirectionalDNSRegion>");
+  for (  Entry<String,Collection<String>> region : group.asMap().entrySet()) {
+    groupData.append("<RegionForNewGroups RegionName=\"").append(region.getKey()).append('"');
+    groupData.append(" TerritoryName=\"").append(Joiner.on(';').join(region.getValue())).append("\" />");
+  }
+  groupData.append("</DirectionalDNSRegion></DirectionalDNSGroupDetail>");
+  return groupData.toString();
+}
