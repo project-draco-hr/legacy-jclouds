@@ -1,0 +1,28 @@
+{
+  CreepyGeoRegionGroup creepyGeoRegionGroup=context.deserialize(json,CreepyGeoRegionGroup.class);
+  GeoRegionGroup.Builder builder=GeoRegionGroup.builder();
+  builder.name(creepyGeoRegionGroup.name);
+  builder.serviceName(creepyGeoRegionGroup.service_name);
+  builder.countries(creepyGeoRegionGroup.countries);
+  ImmutableList.Builder<RecordSet> rsets=ImmutableList.builder();
+  for (  Entry<String,List<Map<String,Object>>> entry : creepyGeoRegionGroup.rdata.entrySet()) {
+    if (entry.getValue().isEmpty())     continue;
+    String type=entry.getKey().substring(0,entry.getKey().indexOf('_')).toUpperCase();
+    int ttl=creepyGeoRegionGroup.ttl.get(type.toLowerCase() + "_ttl");
+    RecordSet.Builder rset=RecordSet.builder();
+    rset.type(type);
+    rset.ttl(ttl);
+    List<Integer> weights=creepyGeoRegionGroup.weight.get(type.toLowerCase() + "_weight");
+    if (weights == null)     weights=ImmutableList.of();
+    List<String> labels=creepyGeoRegionGroup.label.get(type.toLowerCase() + "_label");
+    for (int i=0; i < entry.getValue().size(); i++) {
+      Builder elementBuilder=Value.builder().rdata(entry.getValue().get(i));
+      if (i < labels.size())       elementBuilder.label(labels.get(i));
+      if (i < weights.size())       elementBuilder.weight(weights.get(i));
+      rset.add(elementBuilder.build());
+    }
+    rsets.add(rset.build());
+  }
+  builder.recordSets(rsets.build());
+  return builder.build();
+}
