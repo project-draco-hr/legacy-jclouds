@@ -1,0 +1,21 @@
+{
+  Set<RecordDetail> recordDetails=api.getRecordApiForDomain(domainId).list().concat().toSet();
+  Map<String,Record> idsToRecords=RecordFunctions.toRecordMap(recordDetails);
+  Map<String,Record> updateRecords=Maps.transformValues(idsToRecords,updateTTLAndComment(35813,"New TTL"));
+  awaitComplete(api,api.getRecordApiForDomain(domainId).update(updateRecords));
+  RecordDetail record=api.getRecordApiForDomain(domainId).get(aRecordId);
+  Date now=new Date();
+  assertNotNull(record.getId());
+  assertEquals(record.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(record.getType(),"A");
+  assertEquals(record.getData(),"10.0.0.1");
+  assertEquals(record.getTTL(),35813);
+  assertEquals(record.getComment(),"New TTL");
+  assertTrue(record.getCreated().before(now));
+  assertTrue(record.getUpdated().before(now));
+  recordDetails=api.getRecordApiForDomain(domainId).list().concat().toSet();
+  for (  RecordDetail recordDetail : recordDetails) {
+    assertEquals(recordDetail.getTTL(),35813);
+    assertEquals(recordDetail.getComment(),"New TTL");
+  }
+}

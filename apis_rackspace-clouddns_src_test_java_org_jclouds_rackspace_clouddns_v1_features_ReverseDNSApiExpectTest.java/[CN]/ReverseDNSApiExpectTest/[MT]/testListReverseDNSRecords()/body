@@ -1,0 +1,10 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/rdns/cloudServersOpenStack?href=https%3A//dfw.servers.api.rackspacecloud.com/v2/123123/servers/f5fb9334-b4f0-49d0-a2cc-57a5772dc7d1");
+  ReverseDNSApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-list.json")).build()).getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+  ImmutableList<RecordDetail> records=api.list(SERVER_URI).concat().toList();
+  assertEquals(records.size(),2);
+  for (  RecordDetail record : records) {
+    assertTrue(record.getType().contains("PTR"));
+    assertTrue(record.getName().contains(JCLOUDS_EXAMPLE));
+  }
+}

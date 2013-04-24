@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(PUT).payload(payloadFromResource("/domain-update-ttl.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-update-response.json")).build()).getDomainApi();
+  List<Integer> ids=ImmutableList.of(3650906,3650908);
+  Job job=api.updateTTL(ids,1234567);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

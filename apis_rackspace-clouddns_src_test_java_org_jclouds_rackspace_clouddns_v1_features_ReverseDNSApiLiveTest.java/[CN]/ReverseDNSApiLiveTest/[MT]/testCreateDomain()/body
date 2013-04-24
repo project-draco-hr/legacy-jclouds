@@ -1,0 +1,9 @@
+{
+  CreateDomain createDomain=CreateDomain.builder().name(JCLOUDS_EXAMPLE).email("jclouds@" + JCLOUDS_EXAMPLE).ttl(60000).build();
+  Iterable<CreateDomain> createDomains=ImmutableList.of(createDomain);
+  Domain domain=awaitComplete(api,api.getDomainApi().create(createDomains)).iterator().next();
+  assertEquals(domain.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(domain.getEmail(),"jclouds@" + JCLOUDS_EXAMPLE);
+  assertTrue(domain.getRecords().isEmpty());
+  domainId=domain.getId();
+}

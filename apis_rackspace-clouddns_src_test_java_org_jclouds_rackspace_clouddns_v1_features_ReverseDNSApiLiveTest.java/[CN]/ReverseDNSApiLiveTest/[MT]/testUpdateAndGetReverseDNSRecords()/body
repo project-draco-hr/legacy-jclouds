@@ -1,0 +1,16 @@
+{
+  Record updatePTRRecordIPv4=Record.builder().type("PTR").name(JCLOUDS_EXAMPLE).data(serverIPv4).ttl(12358).build();
+  Map<String,Record> idsToRecords=ImmutableMap.<String,Record>of(ptrRecordIPv4Id,updatePTRRecordIPv4);
+  awaitComplete(api,api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).update(serverURI,idsToRecords));
+  RecordDetail record=api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).get(serverURI,ptrRecordIPv4Id);
+  Date now=new Date();
+  assertNotNull(record.getId());
+  assertEquals(record.getType(),"PTR");
+  assertEquals(record.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(record.getData(),serverIPv4);
+  assertEquals(record.getTTL(),12358);
+  assertNull(record.getPriority());
+  assertNull(record.getComment());
+  assertTrue(record.getCreated().before(now));
+  assertTrue(record.getUpdated().before(now));
+}

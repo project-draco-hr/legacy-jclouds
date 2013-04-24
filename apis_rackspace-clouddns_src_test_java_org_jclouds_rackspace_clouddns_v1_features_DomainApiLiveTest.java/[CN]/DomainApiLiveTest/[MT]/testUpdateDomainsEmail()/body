@@ -1,0 +1,8 @@
+{
+  List<Integer> ids=ImmutableList.of(testDomains.get(JCLOUDS_EXAMPLE).getId(),testDomains.get("alt-" + JCLOUDS_EXAMPLE).getId());
+  awaitComplete(api,api.getDomainApi().updateEmail(ids,"jclouds-up@" + JCLOUDS_EXAMPLE));
+  Domain jclouds=api.getDomainApi().get(testDomains.get(JCLOUDS_EXAMPLE).getId());
+  Domain altjclouds=api.getDomainApi().get(testDomains.get("alt-" + JCLOUDS_EXAMPLE).getId());
+  assertEquals(jclouds.getEmail(),"jclouds-up@" + JCLOUDS_EXAMPLE);
+  assertEquals(altjclouds.getEmail(),"jclouds-up@" + JCLOUDS_EXAMPLE);
+}

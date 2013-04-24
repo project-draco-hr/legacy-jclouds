@@ -1,0 +1,9 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-list.json")).build()).getDomainApi();
+  ImmutableList<Domain> domains=api.list().concat().toList();
+  assertEquals(domains.size(),4);
+  for (  Domain domain : domains) {
+    assertTrue(domain.getName().contains(JCLOUDS_EXAMPLE));
+  }
+}

@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records?id=A-9846146&id=MX-9846146");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("DELETE").replaceHeader("Accept",MediaType.WILDCARD).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/records-delete.json")).build()).getRecordApiForDomain(3650908);
+  List<String> recordIds=ImmutableList.<String>of("A-9846146","MX-9846146");
+  Job<?> job=api.delete(recordIds);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

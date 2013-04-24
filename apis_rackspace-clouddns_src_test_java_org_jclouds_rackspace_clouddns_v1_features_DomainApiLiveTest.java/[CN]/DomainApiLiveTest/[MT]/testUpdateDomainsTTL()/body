@@ -1,0 +1,8 @@
+{
+  List<Integer> ids=ImmutableList.of(testDomains.get(JCLOUDS_EXAMPLE).getId(),testDomains.get("alt-" + JCLOUDS_EXAMPLE).getId());
+  awaitComplete(api,api.getDomainApi().updateTTL(ids,1234567));
+  Domain jclouds=api.getDomainApi().get(testDomains.get(JCLOUDS_EXAMPLE).getId());
+  Domain altjclouds=api.getDomainApi().get(testDomains.get("alt-" + JCLOUDS_EXAMPLE).getId());
+  assertEquals(jclouds.getTTL(),1234567);
+  assertEquals(altjclouds.getTTL(),1234567);
+}

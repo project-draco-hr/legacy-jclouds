@@ -1,0 +1,74 @@
+{
+  Domain domain=testDomains.get(JCLOUDS_EXAMPLE);
+  Domain jclouds=api.getDomainApi().get(domain.getId());
+  Thread.sleep(1000);
+  Date now=new Date();
+  assertTrue(jclouds.getId() > 0);
+  assertTrue(jclouds.getAccountId() > 0);
+  assertEquals(jclouds.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(jclouds.getEmail(),"jclouds1@" + JCLOUDS_EXAMPLE);
+  assertEquals(jclouds.getComment().get(),"Hello Domain 1");
+  assertEquals(jclouds.getTTL(),600001);
+  assertTrue(jclouds.getCreated().before(now));
+  assertTrue(jclouds.getUpdated().before(now));
+  assertEquals(jclouds.getSubdomains().size(),2);
+  Subdomain devjclouds=null;
+  Subdomain testjclouds=null;
+  for (  Subdomain subdomain : jclouds.getSubdomains()) {
+    if (subdomain.getName().equals("dev." + JCLOUDS_EXAMPLE)) {
+      devjclouds=subdomain;
+    }
+ else     if (subdomain.getName().equals("test." + JCLOUDS_EXAMPLE)) {
+      testjclouds=subdomain;
+    }
+  }
+  assertTrue(devjclouds.getId() > 0);
+  assertEquals(devjclouds.getName(),"dev." + JCLOUDS_EXAMPLE);
+  assertEquals(devjclouds.getEmail(),"jclouds@" + JCLOUDS_EXAMPLE);
+  assertEquals(devjclouds.getComment().get(),"Hello dev subdomain");
+  assertTrue(devjclouds.getCreated().before(now));
+  assertTrue(devjclouds.getUpdated().before(now));
+  assertTrue(testjclouds.getId() > 0);
+  assertEquals(testjclouds.getName(),"test." + JCLOUDS_EXAMPLE);
+  assertEquals(testjclouds.getEmail(),"jclouds@" + JCLOUDS_EXAMPLE);
+  assertEquals(testjclouds.getComment().get(),"Hello test subdomain");
+  assertTrue(testjclouds.getCreated().before(now));
+  assertTrue(testjclouds.getUpdated().before(now));
+  assertEquals(jclouds.getRecords().size(),4);
+  RecordDetail mxRecord=null;
+  RecordDetail aRecord=null;
+  RecordDetail nsRecord=null;
+  for (  RecordDetail record : jclouds.getRecords()) {
+    if (record.getType().equals("MX")) {
+      mxRecord=record;
+    }
+ else     if (record.getType().equals("A")) {
+      aRecord=record;
+    }
+ else     if (record.getType().equals("NS")) {
+      nsRecord=record;
+    }
+  }
+  assertNotNull(mxRecord.getId());
+  assertEquals(mxRecord.getType(),"MX");
+  assertEquals(mxRecord.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(mxRecord.getPriority().intValue(),11235);
+  assertEquals(mxRecord.getComment(),"MX Record");
+  assertEquals(mxRecord.getTTL(),60000);
+  assertTrue(mxRecord.getCreated().before(now));
+  assertTrue(mxRecord.getUpdated().before(now));
+  assertNotNull(aRecord.getId());
+  assertEquals(aRecord.getType(),"A");
+  assertEquals(aRecord.getName(),JCLOUDS_EXAMPLE);
+  assertNull(aRecord.getPriority());
+  assertEquals(aRecord.getComment(),"A Record");
+  assertEquals(aRecord.getTTL(),60000);
+  assertTrue(aRecord.getCreated().before(now));
+  assertTrue(aRecord.getUpdated().before(now));
+  assertNotNull(nsRecord.getId());
+  assertEquals(nsRecord.getType(),"NS");
+  assertEquals(nsRecord.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(nsRecord.getTTL(),600001);
+  assertTrue(nsRecord.getCreated().before(now));
+  assertTrue(nsRecord.getUpdated().before(now));
+}

@@ -1,0 +1,37 @@
+{
+  Record createPTRRecordIPv4=Record.builder().type("PTR").name(JCLOUDS_EXAMPLE).data(serverIPv4).ttl(11235).build();
+  Record createPTRRecordIPv6=Record.builder().type("PTR").name(JCLOUDS_EXAMPLE).data(serverIPv6).comment("Hello IPv6").build();
+  List<Record> createRecords=ImmutableList.of(createPTRRecordIPv4,createPTRRecordIPv6);
+  Set<RecordDetail> records=awaitComplete(api,api.getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK).create(serverURI,createRecords));
+  Date now=new Date();
+  RecordDetail ptrRecordIPv4=null;
+  RecordDetail ptrRecordIPv6=null;
+  for (  RecordDetail record : records) {
+    if (record.getData().equals(serverIPv4)) {
+      ptrRecordIPv4=record;
+      ptrRecordIPv4Id=record.getId();
+    }
+ else {
+      ptrRecordIPv6=record;
+      ptrRecordIPv6Id=record.getId();
+    }
+  }
+  assertNotNull(ptrRecordIPv4.getId());
+  assertEquals(ptrRecordIPv4.getType(),"PTR");
+  assertEquals(ptrRecordIPv4.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(ptrRecordIPv4.getData(),serverIPv4);
+  assertEquals(ptrRecordIPv4.getTTL(),11235);
+  assertNull(ptrRecordIPv4.getPriority());
+  assertNull(ptrRecordIPv4.getComment());
+  assertTrue(ptrRecordIPv4.getCreated().before(now));
+  assertTrue(ptrRecordIPv4.getUpdated().before(now));
+  assertNotNull(ptrRecordIPv6.getId());
+  assertEquals(ptrRecordIPv6.getType(),"PTR");
+  assertEquals(ptrRecordIPv6.getName(),JCLOUDS_EXAMPLE);
+  assertNotNull(ptrRecordIPv6.getData());
+  assertTrue(ptrRecordIPv6.getTTL() > 0);
+  assertNull(ptrRecordIPv6.getPriority());
+  assertEquals(ptrRecordIPv6.getComment(),"Hello IPv6");
+  assertTrue(ptrRecordIPv6.getCreated().before(now));
+  assertTrue(ptrRecordIPv6.getUpdated().before(now));
+}

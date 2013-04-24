@@ -1,0 +1,7 @@
+{
+  AtomicReference<Job<T>> jobRef=Atomics.newReference(job);
+  if (!retry(jobCompleted(api),600,2,2,SECONDS).apply(jobRef)) {
+    throw new TimeoutException("Timeout on: " + jobRef.get());
+  }
+  return jobRef.get().getResource().orNull();
+}

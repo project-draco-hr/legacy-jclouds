@@ -1,0 +1,12 @@
+{
+  List<String> contents=ImmutableList.<String>of("imp-" + JCLOUDS_EXAMPLE + ".      3600  IN SOA   ns.rackspace.com. jclouds.imp-"+ JCLOUDS_EXAMPLE+ ". 1363882703 3600 3600 3600 3600","imp-" + JCLOUDS_EXAMPLE + ".      600   IN A  50.56.174.152");
+  Domain domain=awaitComplete(api,api.getDomainApi().importFormat(contents,Domain.Format.BIND_9));
+  RecordDetail record=domain.getRecords().iterator().next();
+  assertEquals(domain.getName(),"imp-" + JCLOUDS_EXAMPLE);
+  assertEquals(domain.getEmail(),"jclouds@imp-" + JCLOUDS_EXAMPLE);
+  assertEquals(record.getType(),"A");
+  assertEquals(record.getData(),"50.56.174.152");
+  assertEquals(record.getTTL(),600);
+  testDomains=Maps.newHashMap(testDomains);
+  testDomains.put(domain.getName(),domain);
+}

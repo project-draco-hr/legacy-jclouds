@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains?id=3650907&id=3650906&id=3650908&id=3650909&deleteSubdomains=true");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("DELETE").replaceHeader("Accept",MediaType.WILDCARD).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-delete.json")).build()).getDomainApi();
+  List<Integer> domainIds=ImmutableList.<Integer>of(3650907,3650906,3650908,3650909);
+  Job job=api.delete(domainIds,true);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

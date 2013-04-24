@@ -1,0 +1,17 @@
+{
+  Iterable<Integer> ids=Iterable.class.cast(postParams.get("ids"));
+  String key, value, updateTemplate;
+  if (postParams.get("emailAddress") != null) {
+    updateTemplate="{\"id\":%s,\"%s\":\"%s\"}";
+    key="emailAddress";
+  }
+ else   if (postParams.get("ttl") != null) {
+    updateTemplate="{\"id\":%s,\"%s\":%s}";
+    key="ttl";
+  }
+ else {
+    throw new IllegalStateException("emailAddress or ttl not found in " + postParams);
+  }
+  value=postParams.get(key).toString();
+  return (R)request.toBuilder().payload(toJSON(ids,updateTemplate,key,value)).build();
+}

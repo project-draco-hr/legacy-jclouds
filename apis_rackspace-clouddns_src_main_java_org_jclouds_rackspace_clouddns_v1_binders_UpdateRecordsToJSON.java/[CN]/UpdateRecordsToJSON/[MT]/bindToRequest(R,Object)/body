@@ -1,0 +1,10 @@
+{
+  checkArgument(checkNotNull(input,"input") instanceof Map,"This binder is only valid for Map<String, Record>");
+  checkNotNull(request,"request");
+  Map<String,Record> idsToRecords=(Map<String,Record>)input;
+  List<UpdateRecord> updateRecords=toUpdateRecordList(idsToRecords);
+  String json=jsonBinder.toJson(ImmutableMap.of("records",updateRecords));
+  request.setPayload(json);
+  request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
+  return request;
+}

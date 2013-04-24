@@ -1,0 +1,14 @@
+{
+  checkNotNull(jobRef,"job must be defined");
+  if (status.equals(jobRef.get().getStatus())) {
+    return true;
+  }
+ else {
+    jobRef.set(cloudDNSApi.getJob(jobRef.get().getId()));
+    checkNotNull(jobRef.get(),"Job %s not found.",jobRef.get().getId());
+    if (jobRef.get().getError().isPresent()) {
+      throw new CloudDNSExceptions.JobErrorException(jobRef.get().getError().get());
+    }
+    return status.equals(jobRef.get().getStatus());
+  }
+}

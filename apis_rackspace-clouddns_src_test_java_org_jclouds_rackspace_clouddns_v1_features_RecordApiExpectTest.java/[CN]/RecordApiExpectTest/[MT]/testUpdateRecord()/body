@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records/SRV-21858");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(PUT).payload(payloadFromResourceWithContentType("/record-update.json",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-update-response.json")).build()).getRecordApiForDomain(3650908);
+  Record record=Record.builder().name("_sip._udp." + JCLOUDS_EXAMPLE).ttl(86401).data("1 3444 sip." + JCLOUDS_EXAMPLE).priority(12358).comment("Updated Protocol to UDP").build();
+  Job<Void> job=api.update("SRV-21858",record);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

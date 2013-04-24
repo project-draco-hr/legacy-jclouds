@@ -1,0 +1,46 @@
+{
+  if (response == null) {
+    return null;
+  }
+ else   if (requestUrl.contains("import")) {
+    Type type=new TypeLiteral<Map<String,Set<ParseDomain.RawDomain>>>(){
+    }
+.getType();
+    Map<String,Set<RawDomain>> domainMap=json.fromJson(response.toString(),type);
+    Domain domain=Iterators.getOnlyElement(domainMap.get("domains").iterator()).getDomain();
+    return domain;
+  }
+ else   if (requestUrl.contains("export")) {
+    Type type=new TypeLiteral<Map<String,String>>(){
+    }
+.getType();
+    Map<String,String> exportMap=json.fromJson(response.toString(),type);
+    String contents=exportMap.get("contents");
+    List<String> contentsAsList=Lists.newArrayList(Splitter.on("\n").omitEmptyStrings().split(contents));
+    return contentsAsList;
+  }
+ else   if (response.toString().contains("domains")) {
+    Type type=new TypeLiteral<Map<String,Set<RawDomain>>>(){
+    }
+.getType();
+    Map<String,Set<RawDomain>> domainMap=json.fromJson(response.toString(),type);
+    Set<Domain> domains=FluentIterable.from(domainMap.get("domains")).transform(toDomain).toSet();
+    return domains;
+  }
+ else   if (response.toString().contains("records")) {
+    Type type=new TypeLiteral<Map<String,Set<RawRecord>>>(){
+    }
+.getType();
+    Map<String,Set<RawRecord>> recordMap=json.fromJson(response.toString(),type);
+    Set<RecordDetail> records=FluentIterable.from(recordMap.get("records")).transform(toRecordDetails).toSet();
+    if (isCreateSingleRecord) {
+      return Iterables.getOnlyElement(records);
+    }
+ else {
+      return records;
+    }
+  }
+ else {
+    throw new IllegalStateException("Job parsing problem. Did not recognize any type in job response.\n" + response.toString());
+  }
+}
