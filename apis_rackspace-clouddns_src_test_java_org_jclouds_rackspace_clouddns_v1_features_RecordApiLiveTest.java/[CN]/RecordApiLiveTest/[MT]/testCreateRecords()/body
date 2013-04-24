@@ -1,0 +1,47 @@
+{
+  Record createMXRecord=Record.builder().type("MX").name(JCLOUDS_EXAMPLE).data("mail." + JCLOUDS_EXAMPLE).comment("MX Record").priority(11235).build();
+  Record createARecord=Record.builder().type("A").name(JCLOUDS_EXAMPLE).data("10.0.0.1").build();
+  Record createSRVRecord=Record.builder().type("SRV").name("_sip._tcp." + JCLOUDS_EXAMPLE).ttl(86400).data("1 3443 sip." + JCLOUDS_EXAMPLE).priority(11235).comment("Updated Protocol to UDP").build();
+  List<Record> createRecords=ImmutableList.of(createMXRecord,createARecord,createSRVRecord);
+  Set<RecordDetail> records=awaitComplete(api,api.getRecordApiForDomain(domainId).create(createRecords));
+  Thread.sleep(1000);
+  Date now=new Date();
+  RecordDetail mxRecord=null;
+  RecordDetail aRecord=null;
+  RecordDetail srvRecord=null;
+  for (  RecordDetail record : records) {
+    if (record.getType().equals("MX")) {
+      mxRecord=record;
+    }
+ else     if (record.getType().equals("A")) {
+      aRecord=record;
+    }
+ else     if (record.getType().equals("SRV")) {
+      srvRecord=record;
+    }
+  }
+  assertNotNull(mxRecord.getId());
+  assertEquals(mxRecord.getType(),"MX");
+  assertEquals(mxRecord.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(mxRecord.getPriority().intValue(),11235);
+  assertEquals(mxRecord.getComment(),"MX Record");
+  assertEquals(mxRecord.getTTL(),60000);
+  assertTrue(mxRecord.getCreated().before(now));
+  assertTrue(mxRecord.getUpdated().before(now));
+  assertNotNull(aRecord.getId());
+  assertEquals(aRecord.getType(),"A");
+  assertEquals(aRecord.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(aRecord.getData(),"10.0.0.1");
+  assertNull(aRecord.getPriority());
+  assertEquals(aRecord.getTTL(),60000);
+  assertTrue(aRecord.getCreated().before(now));
+  assertTrue(aRecord.getUpdated().before(now));
+  assertNotNull(srvRecord.getId());
+  assertEquals(srvRecord.getType(),"SRV");
+  assertEquals(srvRecord.getName(),"_sip._tcp." + JCLOUDS_EXAMPLE);
+  assertEquals(srvRecord.getData(),"1 3443 sip." + JCLOUDS_EXAMPLE);
+  assertEquals(srvRecord.getPriority().intValue(),11235);
+  assertEquals(srvRecord.getTTL(),86400);
+  assertTrue(srvRecord.getCreated().before(now));
+  assertTrue(srvRecord.getUpdated().before(now));
+}

@@ -1,0 +1,8 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/changes?changes=2013-03-22T03%3A39%3A31Z");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-list-changes.json")).build()).getDomainApi();
+  Calendar cal=Calendar.getInstance(new SimpleTimeZone(0,"GMT"));
+  cal.set(2013,2,22,3,39,31);
+  DomainChange domainChange=api.listChanges(3650908,cal.getTime());
+  assertEquals(domainChange.getChanges().size(),25);
+}

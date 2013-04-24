@@ -1,0 +1,8 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/import");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(POST).payload(payloadFromResource("/domain-import.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-import-response.json")).build()).getDomainApi();
+  List<String> contents=ImmutableList.<String>of("jclouds-example.com.      3600  IN SOA   ns.rackspace.com. jclouds.jclouds-example.com. 1363882703 3600 3600 3600 3600","jclouds-example.com.      600   IN A  50.56.174.152");
+  Job<Domain> job=api.importFormat(contents,Domain.Format.BIND_9);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+  assertEquals(job.getResource().get().getName(),JCLOUDS_EXAMPLE);
+}

@@ -1,0 +1,11 @@
+{
+  List<RecordDetail> records=api.getRecordApiForDomain(domainId).listByType("SRV").concat().toList();
+  assertEquals(records.size(),1);
+  srvRecordId=records.get(0).getId();
+  records=api.getRecordApiForDomain(domainId).listByTypeAndData("A","10.0.0.1").concat().toList();
+  assertEquals(records.size(),1);
+  aRecordId=records.get(0).getId();
+  records=api.getRecordApiForDomain(domainId).listByNameAndType(JCLOUDS_EXAMPLE,"MX").concat().toList();
+  assertEquals(records.size(),1);
+  mxRecordId=records.get(0).getId();
+}

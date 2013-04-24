@@ -1,0 +1,15 @@
+{
+  Record record=Record.builder().name("_sip._udp." + JCLOUDS_EXAMPLE).ttl(86401).data("1 3444 sip." + JCLOUDS_EXAMPLE).priority(12358).comment("Updated Protocol to UDP").build();
+  awaitComplete(api,api.getRecordApiForDomain(domainId).update(srvRecordId,record));
+  RecordDetail srvRecord=api.getRecordApiForDomain(domainId).get(srvRecordId);
+  Date now=new Date();
+  assertNotNull(srvRecord.getId());
+  assertEquals(srvRecord.getType(),"SRV");
+  assertEquals(srvRecord.getName(),"_sip._udp." + JCLOUDS_EXAMPLE);
+  assertEquals(srvRecord.getData(),"1 3444 sip." + JCLOUDS_EXAMPLE);
+  assertEquals(srvRecord.getPriority().intValue(),12358);
+  assertEquals(srvRecord.getTTL(),86401);
+  assertEquals(srvRecord.getComment(),"Updated Protocol to UDP");
+  assertTrue(srvRecord.getCreated().before(now));
+  assertTrue(srvRecord.getUpdated().before(now));
+}

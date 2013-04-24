@@ -1,0 +1,8 @@
+{
+  UpdateDomain updateDomain=UpdateDomain.builder().email("jclouds3@" + JCLOUDS_EXAMPLE).ttl(600003).comment("Hello Domain Update 3").build();
+  awaitComplete(api,api.getDomainApi().update(testDomains.get(JCLOUDS_EXAMPLE).getId(),updateDomain));
+  Domain jclouds=api.getDomainApi().get(testDomains.get(JCLOUDS_EXAMPLE).getId());
+  assertEquals(jclouds.getEmail(),"jclouds3@" + JCLOUDS_EXAMPLE);
+  assertEquals(jclouds.getComment().get(),"Hello Domain Update 3");
+  assertEquals(jclouds.getTTL(),600003);
+}

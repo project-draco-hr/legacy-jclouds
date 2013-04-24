@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/limits/types");
+  LimitApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/limit-types-list.json")).build()).getLimitApi();
+  Iterable<String> limitTypes=api.listTypes();
+  assertEquals(Iterables.size(limitTypes),3);
+}

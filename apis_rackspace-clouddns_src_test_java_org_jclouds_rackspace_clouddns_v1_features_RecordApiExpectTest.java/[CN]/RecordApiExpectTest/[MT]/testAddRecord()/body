@@ -1,0 +1,37 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(POST).payload(payloadFromResource("/record-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-create-response.json")).build()).getRecordApiForDomain(3650908);
+  Record createMXRecord=Record.builder().type("MX").name(JCLOUDS_EXAMPLE).data("mail." + JCLOUDS_EXAMPLE).comment("MX Record").priority(11235).build();
+  Record createARecord=Record.builder().type("A").name(JCLOUDS_EXAMPLE).data("10.0.0.1").build();
+  List<Record> createRecords=ImmutableList.of(createMXRecord,createARecord);
+  Job<Set<RecordDetail>> job=api.create(createRecords);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+  assertTrue(job.getResource().isPresent());
+  Set<RecordDetail> records=job.getResource().get();
+  Date now=new Date();
+  RecordDetail mxRecord=null;
+  RecordDetail aRecord=null;
+  for (  RecordDetail record : records) {
+    if (record.getType().equals("MX")) {
+      mxRecord=record;
+    }
+ else     if (record.getType().equals("A")) {
+      aRecord=record;
+    }
+  }
+  assertNotNull(mxRecord.getId());
+  assertEquals(mxRecord.getType(),"MX");
+  assertEquals(mxRecord.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(mxRecord.getPriority().intValue(),11235);
+  assertEquals(mxRecord.getComment(),"MX Record");
+  assertEquals(mxRecord.getTTL(),60000);
+  assertTrue(mxRecord.getCreated().before(now));
+  assertTrue(mxRecord.getUpdated().before(now));
+  assertNotNull(aRecord.getId());
+  assertEquals(aRecord.getType(),"A");
+  assertEquals(aRecord.getName(),JCLOUDS_EXAMPLE);
+  assertNull(aRecord.getPriority());
+  assertEquals(aRecord.getTTL(),60000);
+  assertTrue(aRecord.getCreated().before(now));
+  assertTrue(aRecord.getUpdated().before(now));
+}

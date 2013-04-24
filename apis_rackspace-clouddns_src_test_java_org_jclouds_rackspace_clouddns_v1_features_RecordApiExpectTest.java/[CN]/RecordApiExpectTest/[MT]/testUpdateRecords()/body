@@ -1,0 +1,9 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(PUT).payload(payloadFromResourceWithContentType("/records-update.json",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/records-update-response.json")).build()).getRecordApiForDomain(3650908);
+  Record updateARecord=Record.builder().comment("Multi-record Update").build();
+  Record updateMXRecord=Record.builder().comment("Multi-record Update").build();
+  Map<String,Record> updateRecords=ImmutableMap.<String,Record>of("A-9846146",updateARecord,"MX-9846146",updateMXRecord);
+  Job<?> job=api.update(updateRecords);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

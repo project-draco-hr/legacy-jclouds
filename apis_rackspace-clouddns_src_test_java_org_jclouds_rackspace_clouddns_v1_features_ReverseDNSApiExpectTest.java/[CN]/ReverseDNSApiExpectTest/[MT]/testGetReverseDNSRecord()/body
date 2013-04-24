@@ -1,0 +1,15 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/rdns/cloudServersOpenStack/PTR-557437?href=https%3A//dfw.servers.api.rackspacecloud.com/v2/123123/servers/f5fb9334-b4f0-49d0-a2cc-57a5772dc7d1");
+  ReverseDNSApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-get.json")).build()).getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+  RecordDetail record=api.get(SERVER_URI,"PTR-557437");
+  Date now=new Date();
+  assertEquals(record.getId(),"PTR-557437");
+  assertEquals(record.getType(),"PTR");
+  assertEquals(record.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(record.getData(),"166.78.146.80");
+  assertEquals(record.getTTL(),11235);
+  assertNull(record.getPriority());
+  assertNull(record.getComment());
+  assertTrue(record.getCreated().before(now));
+  assertTrue(record.getUpdated().before(now));
+}

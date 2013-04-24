@@ -1,0 +1,13 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records?name=jclouds-example.com&type=A&data=10.0.1.0");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-list-with-filter.json")).build()).getRecordApiForDomain(3650908);
+  RecordDetail record=api.getByNameAndTypeAndData(JCLOUDS_EXAMPLE,"A","10.0.1.0");
+  Date now=new Date();
+  assertEquals(record.getId(),"A-9846146");
+  assertEquals(record.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(record.getType(),"A");
+  assertEquals(record.getData(),"10.0.1.0");
+  assertEquals(record.getTTL(),60000);
+  assertTrue(record.getCreated().before(now));
+  assertTrue(record.getUpdated().before(now));
+}

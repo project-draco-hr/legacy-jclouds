@@ -1,0 +1,40 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/rdns");
+  ReverseDNSApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(POST).payload(payloadFromResource("/record-ptr-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-create-response.json")).build()).getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+  Record createPTRRecordIPv4=Record.builder().type("PTR").name(JCLOUDS_EXAMPLE).data("166.78.146.80").ttl(11235).build();
+  Record createPTRRecordIPv6=Record.builder().type("PTR").name(JCLOUDS_EXAMPLE).data("2001:4800:7812:0514:9a32:3c2a:ff04:aed2").comment("Hello IPv6").build();
+  List<Record> createRecords=ImmutableList.of(createPTRRecordIPv4,createPTRRecordIPv6);
+  Job<Set<RecordDetail>> job=api.create(SERVER_URI,createRecords);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+  assertTrue(job.getResource().isPresent());
+  Set<RecordDetail> records=job.getResource().get();
+  Date now=new Date();
+  RecordDetail ptrRecordIPv4=null;
+  RecordDetail ptrRecordIPv6=null;
+  for (  RecordDetail record : records) {
+    if (record.getData().startsWith("166")) {
+      ptrRecordIPv4=record;
+    }
+ else     if (record.getData().startsWith("2001")) {
+      ptrRecordIPv6=record;
+    }
+  }
+  assertNotNull(ptrRecordIPv4.getId());
+  assertEquals(ptrRecordIPv4.getType(),"PTR");
+  assertEquals(ptrRecordIPv4.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(ptrRecordIPv4.getData(),"166.78.146.80");
+  assertEquals(ptrRecordIPv4.getTTL(),11235);
+  assertNull(ptrRecordIPv4.getPriority());
+  assertNull(ptrRecordIPv4.getComment());
+  assertTrue(ptrRecordIPv4.getCreated().before(now));
+  assertTrue(ptrRecordIPv4.getUpdated().before(now));
+  assertNotNull(ptrRecordIPv6.getId());
+  assertEquals(ptrRecordIPv6.getType(),"PTR");
+  assertEquals(ptrRecordIPv6.getName(),JCLOUDS_EXAMPLE);
+  assertEquals(ptrRecordIPv6.getData(),"2001:4800:7812:514:9a32:3c2a:ff04:aed2");
+  assertTrue(ptrRecordIPv6.getTTL() > 0);
+  assertNull(ptrRecordIPv6.getPriority());
+  assertEquals(ptrRecordIPv6.getComment(),"Hello IPv6");
+  assertTrue(ptrRecordIPv6.getCreated().before(now));
+  assertTrue(ptrRecordIPv6.getUpdated().before(now));
+}

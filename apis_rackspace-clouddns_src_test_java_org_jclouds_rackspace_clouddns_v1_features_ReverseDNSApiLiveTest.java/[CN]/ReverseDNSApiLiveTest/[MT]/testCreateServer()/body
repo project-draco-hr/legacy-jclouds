@@ -1,0 +1,19 @@
+{
+  Properties overrides=new Properties();
+  overrides.setProperty(ComputeServiceProperties.POLL_INITIAL_PERIOD,"10000");
+  overrides.setProperty(ComputeServiceProperties.POLL_MAX_PERIOD,"10000");
+  ComputeServiceContext context=ContextBuilder.newBuilder("rackspace-cloudservers-us").credentials(identity,credential).overrides(overrides).buildView(ComputeServiceContext.class);
+  computeService=context.getComputeService();
+  nova=context.unwrap();
+  Template template=computeService.templateBuilder().smallest().build();
+  NodeMetadata nodeMetadata=computeService.createNodesInGroup("jclouds-reverse-dns-test",1,template).iterator().next();
+  serverId=nodeMetadata.getId();
+  serverURI=nodeMetadata.getUri();
+  ServerApi serverApi=nova.getApi().getServerApiForZone(nodeMetadata.getLocation().getParent().getId());
+  Server server=serverApi.get(nodeMetadata.getProviderId());
+  serverIPv4=server.getAccessIPv4();
+  serverIPv6=server.getAccessIPv6();
+  System.out.println("serverURI = " + serverURI);
+  System.out.println("serverIPv4 = " + serverIPv4);
+  System.out.println("serverIPv6 = " + serverIPv6);
+}

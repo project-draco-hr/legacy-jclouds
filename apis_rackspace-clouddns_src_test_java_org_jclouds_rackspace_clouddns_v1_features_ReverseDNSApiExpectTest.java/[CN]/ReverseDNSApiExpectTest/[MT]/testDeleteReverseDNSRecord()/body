@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/rdns/cloudServersOpenStack?href=https%3A//dfw.servers.api.rackspacecloud.com/v2/123123/servers/f5fb9334-b4f0-49d0-a2cc-57a5772dc7d1&ip=166.78.146.80");
+  ReverseDNSApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(DELETE).replaceHeader(HttpHeaders.ACCEPT,MediaType.WILDCARD).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-ptr-delete.json")).build()).getReverseDNSApiForService(CLOUD_SERVERS_OPEN_STACK);
+  Job<Void> job=api.delete(SERVER_URI,"166.78.146.80");
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

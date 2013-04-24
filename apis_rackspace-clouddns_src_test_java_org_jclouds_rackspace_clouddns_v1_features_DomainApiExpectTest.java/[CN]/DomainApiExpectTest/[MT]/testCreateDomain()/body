@@ -1,0 +1,22 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(POST).payload(payloadFromResource("/domain-create.json")).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-create-response.json")).build()).getDomainApi();
+  Record createMXRecord=Record.builder().type("MX").name(JCLOUDS_EXAMPLE).data("mail." + JCLOUDS_EXAMPLE).priority(11235).build();
+  Record createARecord=Record.builder().type("A").name(JCLOUDS_EXAMPLE).data("10.0.0.1").build();
+  List<Record> createRecords=ImmutableList.of(createMXRecord,createARecord);
+  CreateSubdomain createSubdomain1=CreateSubdomain.builder().name("dev." + JCLOUDS_EXAMPLE).email("jclouds@" + JCLOUDS_EXAMPLE).comment("Hello dev subdomain").build();
+  CreateSubdomain createSubdomain2=CreateSubdomain.builder().name("test." + JCLOUDS_EXAMPLE).email("jclouds@" + JCLOUDS_EXAMPLE).comment("Hello test subdomain").build();
+  List<CreateSubdomain> createSubdomains=ImmutableList.of(createSubdomain1,createSubdomain2);
+  CreateDomain createDomain1=CreateDomain.builder().name(JCLOUDS_EXAMPLE).email("jclouds@" + JCLOUDS_EXAMPLE).ttl(600000).comment("Hello Domain").subdomains(createSubdomains).records(createRecords).build();
+  CreateDomain createDomain2=CreateDomain.builder().name("x" + JCLOUDS_EXAMPLE).email("jclouds@" + JCLOUDS_EXAMPLE).ttl(600000).comment("Hello Domain").build();
+  Iterable<CreateDomain> createDomains=ImmutableList.of(createDomain1,createDomain2);
+  Job<Set<Domain>> job=api.create(createDomains);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+  assertTrue(job.getResource().isPresent());
+  Map<String,Domain> domains=DomainFunctions.toDomainMap(job.getResource().get());
+  assertEquals(domains.get(JCLOUDS_EXAMPLE).getId(),3650906);
+  assertEquals(domains.get(JCLOUDS_EXAMPLE).getEmail(),"jclouds@jclouds-example.com");
+  assertEquals(domains.get(JCLOUDS_EXAMPLE).getSubdomains().size(),2);
+  assertEquals(domains.get(JCLOUDS_EXAMPLE).getRecords().size(),2);
+  assertEquals(domains.get("x" + JCLOUDS_EXAMPLE).getId(),3650909);
+}

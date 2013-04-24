@@ -1,0 +1,9 @@
+{
+  CreateDomain createDomain=CreateDomain.builder().name("simple-" + JCLOUDS_EXAMPLE).email("simple-jclouds@" + JCLOUDS_EXAMPLE).build();
+  Iterable<CreateDomain> createDomains=ImmutableList.of(createDomain);
+  Domain domain=awaitComplete(api,api.getDomainApi().create(createDomains)).iterator().next();
+  assertEquals(domain.getName(),"simple-" + JCLOUDS_EXAMPLE);
+  assertEquals(domain.getEmail(),"simple-jclouds@" + JCLOUDS_EXAMPLE);
+  testDomains=Maps.newHashMap(testDomains);
+  testDomains.put(domain.getName(),domain);
+}

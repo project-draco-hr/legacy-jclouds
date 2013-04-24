@@ -1,0 +1,13 @@
+{
+  checkArgument(checkNotNull(postParams.get("href"),"href") instanceof URI,"href is only valid for a URI!");
+  checkArgument(checkNotNull(postParams.get("idsToRecords"),"idsToRecords") instanceof Map,"records is only valid for a Map!");
+  checkNotNull(postParams.get("serviceName"),"serviceName");
+  Map<String,Record> idsToRecords=Map.class.cast(postParams.get("idsToRecords"));
+  List<UpdateRecord> updateRecords=UpdateRecordsToJSON.toUpdateRecordList(idsToRecords);
+  URI deviceURI=URI.class.cast(postParams.get("href"));
+  String serviceName=postParams.get("serviceName").toString();
+  String json=toJSON(updateRecords,deviceURI,serviceName);
+  request.setPayload(json);
+  request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
+  return (R)request.toBuilder().payload(json).build();
+}

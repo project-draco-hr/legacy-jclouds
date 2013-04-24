@@ -1,0 +1,6 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908/records/A-9846146");
+  RecordApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method("DELETE").replaceHeader("Accept",MediaType.WILDCARD).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/record-delete.json")).build()).getRecordApiForDomain(3650908);
+  Job<?> job=api.delete("A-9846146");
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

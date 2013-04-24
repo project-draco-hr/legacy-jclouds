@@ -1,0 +1,15 @@
+{
+  List<UpdateRecord> updateRecords=Lists.newArrayList();
+  for (  String recordId : idsToRecords.keySet()) {
+    Record record=idsToRecords.get(recordId);
+    UpdateRecord updateRecord=new UpdateRecord();
+    updateRecord.id=recordId;
+    updateRecord.name=record.getName();
+    updateRecord.ttl=record.getTTL().isPresent() ? record.getTTL().get() : null;
+    updateRecord.data=record.getData();
+    updateRecord.priority=record.getPriority();
+    updateRecord.comment=record.getComment();
+    updateRecords.add(updateRecord);
+  }
+  return updateRecords;
+}

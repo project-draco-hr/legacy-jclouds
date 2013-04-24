@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().method(PUT).payload(payloadFromResourceWithContentType("/domain-update.json",MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-update-response.json")).build()).getDomainApi();
+  UpdateDomain updateDomain=UpdateDomain.builder().email("everett@" + JCLOUDS_EXAMPLE).ttl(600001).comment("Hello Domain Update").build();
+  Job job=api.update(3650908,updateDomain);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+}

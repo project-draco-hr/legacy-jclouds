@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/status/bfbd6ec8-5d4c-49f8-97b5-aa5bfd3e95a4?showDetails=true");
+  CloudDNSApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(200).payload(payloadFromResource("/job.json")).build());
+  Job<Domain> job=api.getJob("bfbd6ec8-5d4c-49f8-97b5-aa5bfd3e95a4");
+  assertEquals(job.getStatus(),Job.Status.RUNNING);
+  assertFalse(job.getResource().isPresent());
+}

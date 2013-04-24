@@ -1,0 +1,7 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3651323/export");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-export.json")).build()).getDomainApi();
+  Job<List<String>> job=api.exportFormat(3651323,Domain.Format.BIND_9);
+  assertEquals(job.getStatus(),Job.Status.COMPLETED);
+  assertEquals(job.getResource().get().size(),5);
+}

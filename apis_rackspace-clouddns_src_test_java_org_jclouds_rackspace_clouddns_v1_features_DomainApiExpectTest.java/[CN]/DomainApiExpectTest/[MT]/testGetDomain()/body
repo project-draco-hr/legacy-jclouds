@@ -1,0 +1,9 @@
+{
+  URI endpoint=URI.create("https://dns.api.rackspacecloud.com/v1.0/123123/domains/3650908?showRecords=true&showSubdomains=true");
+  DomainApi api=requestsSendResponses(rackspaceAuthWithUsernameAndApiKey,responseWithAccess,authenticatedGET().endpoint(endpoint).build(),HttpResponse.builder().statusCode(OK.getStatusCode()).payload(payloadFromResource("/domain-get.json")).build()).getDomainApi();
+  Domain domain=api.get(3650908);
+  assertEquals(domain.getName(),"test." + JCLOUDS_EXAMPLE);
+  assertEquals(domain.getRecords().size(),2);
+  assertEquals(domain.getComment().get(),"Hello test subdomain");
+  assertEquals(domain.getTTL(),3600);
+}
