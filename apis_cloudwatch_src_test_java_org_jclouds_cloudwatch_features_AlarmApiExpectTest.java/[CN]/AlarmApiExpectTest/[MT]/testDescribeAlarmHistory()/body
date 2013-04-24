@@ -1,0 +1,9 @@
+{
+  String alarmName="TestAlarmName";
+  HistoryItemType historyItemType=HistoryItemType.ACTION;
+  int maxRecords=10;
+  String endDateStr="2013-01-02T00:00:00.000Z";
+  String startDateStr="2013-01-01T00:00:00.000Z";
+  CloudWatchApi cloudWatchApi=requestSendsResponse(alarmRequest(ImmutableMap.<String,String>builder().put("Action","DescribeAlarmHistory").put("AlarmName",alarmName).put("EndDate","2013-01-02T00%3A00%3A00.000Z").put("HistoryItemType",historyItemType.toString()).put("MaxRecords",Integer.toString(maxRecords)).put("StartDate","2013-01-01T00%3A00%3A00.000Z").put("Signature","O2u9yIQvCuVpKdUeUDJcswri0YD0sD4%2B/SR5TtYbPeQ%3D").build()),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/DescribeAlarmHistoryResponse.xml","text/xml")).build());
+  assertEquals(new ListAlarmHistoryResponseHandlerTest().expected().toString(),cloudWatchApi.getAlarmApiForRegion(null).listHistory(new ListAlarmHistoryOptions().alarmName("TestAlarmName").endDate(dateService.iso8601DateParse(endDateStr)).historyItemType(HistoryItemType.ACTION).maxRecords(maxRecords).startDate(dateService.iso8601DateParse(startDateStr))).get(0).toString());
+}

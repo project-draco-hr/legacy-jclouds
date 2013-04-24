@@ -1,0 +1,50 @@
+{
+  boolean actionsEnabled=false;
+  Set<String> alarmActions=ImmutableSet.of("TestAlarmAction1","TestAlarmAction2");
+  String alarmDescription="TestAlarmDescription";
+  String alarmName="TestAlarmName";
+  ComparisonOperator comparisonOperator=ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD;
+  Set<Dimension> dimensions=ImmutableSet.of(new Dimension("TestDimension1","TestValue1"),new Dimension("TestDimension2","TestValue2"));
+  int evaluationPeriods=360;
+  Set<String> insufficientDataActions=ImmutableSet.of("TestInsufficientDataAction1","TestInsufficientDataAction2");
+  String metricName="TestMetricName";
+  String namespace=Namespaces.AUTO_SCALING;
+  Set<String> okActions=ImmutableSet.of("TestOKAction1","TestOKAction2");
+  int period=300;
+  Statistics statistic=Statistics.SAMPLE_COUNT;
+  double threshold=1.0;
+  Unit unit=Unit.BITS;
+  Multimap<String,String> formParameters=new SaveAlarmOptions().actionsEnabled(actionsEnabled).alarmActions(alarmActions).alarmDescription(alarmDescription).alarmName(alarmName).comparisonOperator(comparisonOperator).dimensions(dimensions).evaluationPeriods(evaluationPeriods).insufficientDataActions(insufficientDataActions).metricName(metricName).namespace(namespace).okActions(okActions).period(period).statistic(statistic).threshold(threshold).unit(unit).buildFormParameters();
+  int alarmActionIndex=1;
+  int dimensionIndex=1;
+  int insufficientDataActionIndex=1;
+  int okActionIndex=1;
+  for (  String alarmAction : alarmActions) {
+    assertEquals(formParameters.get("AlarmActions.member." + alarmActionIndex),ImmutableSet.of(alarmAction));
+    alarmActionIndex++;
+  }
+  for (  Dimension dimension : dimensions) {
+    assertEquals(formParameters.get("Dimensions.member." + dimensionIndex + ".Name"),ImmutableSet.of(dimension.getName()));
+    assertEquals(formParameters.get("Dimensions.member." + dimensionIndex + ".Value"),ImmutableSet.of(dimension.getValue()));
+    dimensionIndex++;
+  }
+  for (  String insufficientDataAction : insufficientDataActions) {
+    assertEquals(formParameters.get("InsufficientDataActions.member." + insufficientDataActionIndex),ImmutableSet.of(insufficientDataAction));
+    insufficientDataActionIndex++;
+  }
+  for (  String okAction : okActions) {
+    assertEquals(formParameters.get("OKActions.member." + okActionIndex),ImmutableSet.of(okAction));
+    okActionIndex++;
+  }
+  assertEquals(formParameters.get("ActionsEnabled"),ImmutableSet.of(Boolean.toString(actionsEnabled)));
+  assertEquals(formParameters.get("AlarmDescription"),ImmutableSet.of(alarmDescription));
+  assertEquals(formParameters.get("AlarmName"),ImmutableSet.of(alarmName));
+  assertEquals(formParameters.get("ComparisonOperator"),ImmutableSet.of(comparisonOperator.toString()));
+  assertEquals(formParameters.get("EvaluationPeriods"),ImmutableSet.of(Integer.toString(evaluationPeriods)));
+  assertEquals(formParameters.get("MetricName"),ImmutableSet.of(metricName));
+  assertEquals(formParameters.get("Namespace"),ImmutableSet.of(namespace));
+  assertEquals(formParameters.get("Period"),ImmutableSet.of(Integer.toString(period)));
+  assertEquals(formParameters.get("Statistic"),ImmutableSet.of(statistic.toString()));
+  assertEquals(formParameters.get("Threshold"),ImmutableSet.of(Double.toString(threshold)));
+  assertEquals(formParameters.get("Unit"),ImmutableSet.of(unit.toString()));
+}

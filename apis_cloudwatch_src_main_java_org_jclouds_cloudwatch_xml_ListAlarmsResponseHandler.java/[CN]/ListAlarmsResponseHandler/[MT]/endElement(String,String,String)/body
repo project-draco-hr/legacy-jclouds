@@ -1,0 +1,17 @@
+{
+  if (inMetricAlarms) {
+    if (qName.equals("MetricAlarms")) {
+      inMetricAlarms=false;
+    }
+ else     if (qName.equals("member") && !metricAlarmHandler.shouldHandleMemberTag()) {
+      alarms.add(metricAlarmHandler.getResult());
+    }
+ else {
+      metricAlarmHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("NextToken")) {
+    nextToken=SaxUtils.currentOrNull(currentText);
+  }
+  currentText=new StringBuilder();
+}

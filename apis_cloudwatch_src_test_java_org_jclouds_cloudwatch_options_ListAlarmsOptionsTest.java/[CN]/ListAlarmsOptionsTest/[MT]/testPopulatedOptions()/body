@@ -1,0 +1,17 @@
+{
+  String actionPrefix="TestActionPrefix";
+  String alarmNamePrefix="TestAlarmNamePrefix";
+  Set<String> alarmNames=ImmutableSet.of("TestAlarmName1","TestAlarmName2");
+  int maxRecords=5;
+  Alarm.State state=Alarm.State.ALARM;
+  int alarmNameIndex=1;
+  Multimap<String,String> formParameters=new ListAlarmsOptions().actionPrefix(actionPrefix).alarmNamePrefix(alarmNamePrefix).alarmNames(alarmNames).maxRecords(maxRecords).state(state).buildFormParameters();
+  assertEquals(formParameters.get("ActionPrefix"),ImmutableSet.of(actionPrefix));
+  assertEquals(formParameters.get("AlarmNamePrefix"),ImmutableSet.of(alarmNamePrefix));
+  assertEquals(formParameters.get("MaxRecords"),ImmutableSet.of(Integer.toString(maxRecords)));
+  assertEquals(formParameters.get("StateValue"),ImmutableSet.of(state.toString()));
+  for (  String alarmName : alarmNames) {
+    assertEquals(formParameters.get("AlarmNames.member." + alarmNameIndex),ImmutableSet.of(alarmName));
+    alarmNameIndex++;
+  }
+}

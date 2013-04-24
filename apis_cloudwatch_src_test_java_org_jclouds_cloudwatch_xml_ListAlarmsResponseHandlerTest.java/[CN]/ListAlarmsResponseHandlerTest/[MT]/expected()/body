@@ -1,0 +1,7 @@
+{
+  Set<Alarm> alarms=Sets.newLinkedHashSet();
+  for (int i=1; i <= 2; i++) {
+    alarms.add(new Alarm(i == 1,ImmutableSet.of("TestAction1","TestAction2"),"TestAlarmARN" + i,dateService.iso8601SecondsDateParse("2013-01-0" + i + "T00:00:00Z"),"This is test alarm " + i + ".","TestAlarmName" + i,i == 1 ? ComparisonOperator.GREATER_THAN_THRESHOLD : ComparisonOperator.LESS_THAN_THRESHOLD,ImmutableSet.of(new Dimension("TestDimensionName1","TestDimensionValue1"),new Dimension("TestDimensionName2","TestDimensionValue2")),60 * i,ImmutableSet.of("TestAction1","TestAction2"),"TestMetricName" + i,i == 1 ? Namespaces.EC2 : Namespaces.EBS,ImmutableSet.of("TestAction1","TestAction2"),60 * i,"This is state reason " + i + ".",Optional.of("{\"reason\": \"" + i + "\"}"),dateService.iso8601SecondsDateParse("2013-01-0" + i + "T00:00:00Z"),i == 1 ? Alarm.State.OK : Alarm.State.ALARM,i == 1 ? Statistics.SAMPLE_COUNT : Statistics.AVERAGE,Double.valueOf(Integer.toString(i)),i == 1 ? Optional.of(Unit.SECONDS) : Optional.of(Unit.COUNT_PER_SECOND)));
+  }
+  return IterableWithMarkers.from(alarms);
+}

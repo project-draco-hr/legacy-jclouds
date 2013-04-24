@@ -1,0 +1,13 @@
+{
+  Exception exception=new HttpResponseException(command,response);
+  try {
+    if (response.getPayload() != null) {
+      AWSError error=factory.create(handlers.get()).parse(new String(closeClientButKeepContentStream(response)));
+      exception=refineException(new AWSResponseException(command,response,error));
+    }
+  }
+  finally {
+    releasePayload(response);
+    command.setException(exception);
+  }
+}

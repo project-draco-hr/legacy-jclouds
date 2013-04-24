@@ -45,9 +45,14 @@
     performDefaultMetricsTests(response);
     for (    Metric metric : response) {
       Set<Dimension> dimensions=metric.getDimensions();
-      checkArgument(dimensions.size() == 1,"There should only be one Dimension.");
-      Dimension dimension=dimensions.iterator().next();
-      checkArgument(dimension.equals(testDimension),"The retrieved Dimension and test Dimension should be equal.");
+      boolean dimensionFound=false;
+      for (      Dimension dimension : dimensions) {
+        if (dimension.getName().equals(testDimensionName)) {
+          dimensionFound=true;
+          break;
+        }
+      }
+      checkArgument(dimensionFound,"All metrics should have the " + testDimensionName + " Dimension.Name.");
     }
   }
 }

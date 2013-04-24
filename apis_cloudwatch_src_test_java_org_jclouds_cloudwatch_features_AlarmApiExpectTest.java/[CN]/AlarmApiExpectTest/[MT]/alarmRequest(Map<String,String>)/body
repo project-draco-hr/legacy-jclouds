@@ -1,0 +1,13 @@
+{
+  Map<String,String> sortedArguments=Maps.newTreeMap();
+  Map<String,String> defaultArguments=ImmutableMap.<String,String>builder().put("SignatureMethod","HmacSHA256").put("SignatureVersion","2").put("Timestamp","2009-11-08T15%3A54%3A08.897Z").put("Version","2010-08-01").build();
+  sortedArguments.putAll(arguments);
+  for (  Map.Entry<String,String> defaultArgument : defaultArguments.entrySet()) {
+    if (!sortedArguments.containsKey(defaultArgument.getKey())) {
+      sortedArguments.put(defaultArgument.getKey(),defaultArgument.getValue());
+    }
+  }
+  Map<String,String> realArguments=Maps.newLinkedHashMap(sortedArguments);
+  realArguments.put("AWSAccessKeyId","identity");
+  return HttpRequest.builder().method("POST").endpoint("https://monitoring.us-east-1.amazonaws.com/").addHeader("Host","monitoring.us-east-1.amazonaws.com").payload(payloadFromStringWithContentType(Joiner.on("&").withKeyValueSeparator("=").join(realArguments).trim(),"application/x-www-form-urlencoded")).build();
+}

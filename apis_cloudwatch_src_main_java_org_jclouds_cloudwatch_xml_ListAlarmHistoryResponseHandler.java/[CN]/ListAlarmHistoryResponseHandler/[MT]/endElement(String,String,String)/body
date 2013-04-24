@@ -1,0 +1,17 @@
+{
+  if (inAlarmHistoryItems) {
+    if (qName.equals("AlarmHistoryItems")) {
+      inAlarmHistoryItems=false;
+    }
+ else     if (qName.equals("member")) {
+      alarmHistoryItems.add(alarmHistoryItemHandler.getResult());
+    }
+ else {
+      alarmHistoryItemHandler.endElement(uri,name,qName);
+    }
+  }
+ else   if (qName.equals("NextToken")) {
+    nextToken=SaxUtils.currentOrNull(currentText);
+  }
+  currentText=new StringBuilder();
+}

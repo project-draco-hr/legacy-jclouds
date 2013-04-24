@@ -1,0 +1,116 @@
+{
+  api().save(new SaveAlarmOptions().actionsEnabled(true).alarmDescription("This is a test alarm for jclouds.").alarmName(alarmName).comparisonOperator(ComparisonOperator.GREATER_THAN_THRESHOLD).evaluationPeriods(5).metricName(metricName).namespace(namespace).period(60).statistic(Statistics.SAMPLE_COUNT).threshold(1.0));
+  ListAlarmsOptions dmo=new ListAlarmsOptions().alarmName(alarmName);
+  boolean success=retry(new Predicate<ListAlarmsOptions>(){
+    public boolean apply(    ListAlarmsOptions options){
+      return Iterables.size(api().list(options).get(0)) == 1;
+    }
+  }
+,5,1,MINUTES).apply(dmo);
+  if (!success) {
+    Assert.fail("Unable to create the test CloudWatch alarm within the time (5m) allotted.");
+  }
+  success=retry(new Predicate<Void>(){
+    public boolean apply(    Void arg){
+      for (      IterableWithMarker<Alarm> page : api().list()) {
+        for (        Alarm alarm : page) {
+          if (alarm.getAlarmName().equals(alarmName)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  }
+,5,1,MINUTES).apply(null);
+  if (!success) {
+    Assert.fail("Unable to create the test CloudWatch alarm within the time (5m) allotted.");
+  }
+  ListAlarmsForMetric dafmo=new ListAlarmsForMetric().metricName(metricName).namespace(namespace);
+  success=retry(new Predicate<ListAlarmsForMetric>(){
+    public boolean apply(    ListAlarmsForMetric options){
+      for (      Alarm alarm : api().listForMetric(options)) {
+        if (alarm.getAlarmName().equals(alarmName)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+,5,1,MINUTES).apply(dafmo);
+  if (!success) {
+    Assert.fail("Unable to create the test CloudWatch alarm history item within the time (5m) allotted.");
+  }
+  api().setState(alarmName,"Updating the state.",null,Alarm.State.OK);
+  ListAlarmHistoryOptions daho=new ListAlarmHistoryOptions().alarmName(alarmName);
+  success=retry(new Predicate<ListAlarmHistoryOptions>(){
+    public boolean apply(    ListAlarmHistoryOptions options){
+      for (      IterableWithMarker<AlarmHistoryItem> page : api().listHistory(options)) {
+        for (        AlarmHistoryItem alarmHistoryItem : page) {
+          if (alarmHistoryItem.getAlarmName().equals(alarmName)) {
+            JsonObject historyData=new JsonParser().parse(alarmHistoryItem.getHistoryData()).getAsJsonObject();
+            if (historyData.has("newState") && historyData.getAsJsonObject("newState").has("stateReason") && historyData.getAsJsonObject("newState").get("stateReason").getAsString().equals("Updating the state.")) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }
+,5,1,MINUTES).apply(daho);
+  if (!success) {
+    Assert.fail("Unable to create the test CloudWatch alarm history item within the time (5m) allotted.");
+  }
+  success=retry(new Predicate<Void>(){
+    public boolean apply(    Void arg){
+      for (      IterableWithMarker<AlarmHistoryItem> page : api().listHistory()) {
+        for (        AlarmHistoryItem alarmHistoryItem : page) {
+          if (alarmHistoryItem.getAlarmName().equals(alarmName)) {
+            JsonObject historyData=new JsonParser().parse(alarmHistoryItem.getHistoryData()).getAsJsonObject();
+            if (historyData.has("newState") && historyData.getAsJsonObject("newState").has("stateReason") && historyData.getAsJsonObject("newState").get("stateReason").getAsString().equals("Updating the state.")) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }
+,5,1,MINUTES).apply(null);
+  if (!success) {
+    Assert.fail("Unable to create the test CloudWatch alarm history item within the time (5m) allotted.");
+  }
+  api().disable(ImmutableSet.of(alarmName));
+  success=retry(new Predicate<ListAlarmsOptions>(){
+    public boolean apply(    ListAlarmsOptions options){
+      Iterable<Alarm> alarms=api().list(options).get(0);
+      return Iterables.size(alarms) == 1 && !alarms.iterator().next().areActionsEnabled();
+    }
+  }
+,5,1,MINUTES).apply(dmo);
+  if (!success) {
+    Assert.fail("Unable to validate the test CloudWatch alarm disablement within the time (5m) allotted.");
+  }
+  api().enable(ImmutableSet.of(alarmName));
+  success=retry(new Predicate<ListAlarmsOptions>(){
+    public boolean apply(    ListAlarmsOptions options){
+      IterableWithMarker<Alarm> alarms=api().list(options).get(0);
+      return Iterables.size(alarms) == 1 && alarms.iterator().next().areActionsEnabled();
+    }
+  }
+,5,1,MINUTES).apply(dmo);
+  if (!success) {
+    Assert.fail("Unable to validate the test CloudWatch alarm enablement within the time (5m) allotted.");
+  }
+  api().delete(ImmutableSet.of(alarmName));
+  success=retry(new Predicate<ListAlarmsOptions>(){
+    public boolean apply(    ListAlarmsOptions options){
+      return Iterables.size(api().list(options).get(0)) == 0;
+    }
+  }
+,5,1,MINUTES).apply(dmo);
+  if (!success) {
+    Assert.fail("Unable to delete the test CloudWatch alarm within the time (5m) allotted.");
+  }
+}

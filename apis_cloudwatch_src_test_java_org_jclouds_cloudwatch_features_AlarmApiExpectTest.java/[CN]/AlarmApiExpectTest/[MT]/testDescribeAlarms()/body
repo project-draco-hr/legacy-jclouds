@@ -1,0 +1,9 @@
+{
+  String actionPrefix="TestActionPrefix";
+  String alarmNamePrefix="TestAlarmNamePrefix";
+  Set<String> alarmNames=ImmutableSet.of("TestAlarmName1","TestAlarmName2");
+  int maxRecords=10;
+  Alarm.State state=Alarm.State.ALARM;
+  CloudWatchApi cloudWatchApi=requestSendsResponse(alarmRequest(ImmutableMap.<String,String>builder().put("Action","DescribeAlarms").put("ActionPrefix",actionPrefix).put("AlarmNamePrefix",alarmNamePrefix).put("AlarmNames.member.1","TestAlarmName1").put("AlarmNames.member.2","TestAlarmName2").put("MaxRecords",Integer.toString(maxRecords)).put("StateValue",state.toString()).put("Signature","jPP1enbHPfOphIZv796W0KN4/EsLdPp6nK1qpbt5Dog%3D").build()),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/DescribeAlarmsResponse.xml","text/xml")).build());
+  assertEquals(new ListAlarmsResponseHandlerTest().expected().toString(),cloudWatchApi.getAlarmApiForRegion(null).list(new ListAlarmsOptions().actionPrefix(actionPrefix).alarmNamePrefix(alarmNamePrefix).alarmNames(alarmNames).maxRecords(maxRecords).state(state)).get(0).toString());
+}
