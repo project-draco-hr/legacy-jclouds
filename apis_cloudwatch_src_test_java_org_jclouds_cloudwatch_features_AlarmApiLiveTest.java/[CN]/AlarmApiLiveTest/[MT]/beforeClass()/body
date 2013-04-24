@@ -1,0 +1,16 @@
+{
+  IterableWithMarker<Metric> metrics=metricApi().list(new ListMetricsOptions().metricName(metricName));
+  if (Iterables.size(metrics) == 0) {
+    metricApi().putMetricsInNamespace(ImmutableSet.of(MetricDatum.builder().metricName(metricName).statisticValues(StatisticValues.builder().maximum(4.0).minimum(1.0).sampleCount(4.0).sum(10.0).build()).dimension(new Dimension("BaseMetricName",metricName)).dimension(new Dimension("TestDimension2","TEST2")).unit(Unit.COUNT).timestamp(new Date()).build()),namespace);
+    ListMetricsOptions lmo=ListMetricsOptions.Builder.namespace(namespace).metricName(metricName);
+    boolean success=retry(new Predicate<ListMetricsOptions>(){
+      public boolean apply(      ListMetricsOptions options){
+        return Iterables.size(metricApi().list(options)) == 1;
+      }
+    }
+,5,1,MINUTES).apply(lmo);
+    if (!success) {
+      Assert.fail("Unable to create the test CloudWatch metric within the time (5m) allotted.");
+    }
+  }
+}

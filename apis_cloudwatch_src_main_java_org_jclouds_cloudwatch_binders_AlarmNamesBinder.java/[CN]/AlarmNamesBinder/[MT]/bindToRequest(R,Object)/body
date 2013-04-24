@@ -1,0 +1,10 @@
+{
+  Iterable<String> alarmNames=(Iterable<String>)checkNotNull(input,"alarm names must be set");
+  ImmutableMultimap.Builder<String,String> formParameters=ImmutableMultimap.builder();
+  int alarmNameIndex=1;
+  for (  String alarmName : alarmNames) {
+    formParameters.put("AlarmNames.member." + alarmNameIndex,alarmName);
+    alarmNameIndex++;
+  }
+  return (R)request.toBuilder().replaceFormParams(formParameters.build()).build();
+}

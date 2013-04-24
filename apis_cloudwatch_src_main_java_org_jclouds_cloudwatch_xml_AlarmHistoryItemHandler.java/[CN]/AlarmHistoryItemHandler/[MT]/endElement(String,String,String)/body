@@ -1,0 +1,21 @@
+{
+  if (qName.equals("AlarmName")) {
+    alarmName=SaxUtils.currentOrNull(currentText);
+  }
+ else   if (qName.equals("HistoryData")) {
+    String rawJson=SaxUtils.currentOrNull(currentText);
+    if (rawJson != null) {
+      historyData=rawJson.trim();
+    }
+  }
+ else   if (qName.equals("HistoryItemType")) {
+    historyItemType=HistoryItemType.fromValue(SaxUtils.currentOrNull(currentText));
+  }
+ else   if (qName.equals("HistorySummary")) {
+    historySummary=SaxUtils.currentOrNull(currentText);
+  }
+ else   if (qName.equals("Timestamp")) {
+    timestamp=dateService.iso8601DateParse(currentText.toString().trim());
+  }
+  currentText=new StringBuilder();
+}

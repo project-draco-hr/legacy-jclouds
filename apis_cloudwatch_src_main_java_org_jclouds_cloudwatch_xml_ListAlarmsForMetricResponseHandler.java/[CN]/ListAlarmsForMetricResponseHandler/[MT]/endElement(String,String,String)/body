@@ -1,0 +1,14 @@
+{
+  if (inMetricAlarms) {
+    if (qName.equals("MetricAlarms")) {
+      inMetricAlarms=false;
+    }
+ else     if (qName.equals("member") && !metricAlarmHandler.shouldHandleMemberTag()) {
+      alarms.add(metricAlarmHandler.getResult());
+    }
+ else {
+      metricAlarmHandler.endElement(uri,name,qName);
+    }
+  }
+  currentText=new StringBuilder();
+}

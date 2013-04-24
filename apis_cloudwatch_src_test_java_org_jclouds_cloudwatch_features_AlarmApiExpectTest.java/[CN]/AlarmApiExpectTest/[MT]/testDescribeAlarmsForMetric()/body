@@ -1,0 +1,9 @@
+{
+  String metricName="TestMetricName";
+  String namespace=Namespaces.EC2;
+  int period=60;
+  Statistics statistics=Statistics.SAMPLE_COUNT;
+  Unit unit=Unit.SECONDS;
+  CloudWatchApi cloudWatchApi=requestSendsResponse(alarmRequest(ImmutableMap.<String,String>builder().put("Action","DescribeAlarmsForMetric").put("Dimensions.member.1.Name","TestDimensionName1").put("Dimensions.member.1.Value","TestDimensionValue1").put("Dimensions.member.2.Name","TestDimensionName2").put("Dimensions.member.2.Value","TestDimensionValue2").put("MetricName",metricName).put("Namespace",namespace).put("Period",Integer.toString(period)).put("Statistic",statistics.toString()).put("Unit",unit.toString()).put("Signature","y%2BpU0Lp6AAO2QSrNld1VQY4DhKVHcyn44dIfnrmJhpg%3D").build()),HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/DescribeAlarmsForMetricResponse.xml","text/xml")).build());
+  assertEquals(new ListAlarmsForMetricResponseHandlerTest().expected().toString(),cloudWatchApi.getAlarmApiForRegion(null).listForMetric(new ListAlarmsForMetric().dimensions(ImmutableSet.of(new Dimension("TestDimensionName1","TestDimensionValue1"),new Dimension("TestDimensionName2","TestDimensionValue2"))).metricName(metricName).namespace(namespace).period(period).statistic(statistics).unit(unit)).toString());
+}

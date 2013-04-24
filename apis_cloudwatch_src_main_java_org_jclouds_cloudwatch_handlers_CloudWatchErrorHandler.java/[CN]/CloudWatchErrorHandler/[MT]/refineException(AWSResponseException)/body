@@ -1,0 +1,14 @@
+{
+  int statusCode=in.getResponse().getStatusCode();
+  String errorCode=in.getError().getCode();
+  String message=in.getError().getMessage();
+  if (statusCode == 400) {
+    if ("LimitExceeded".equals(errorCode)) {
+      return new InsufficientResourcesException(message,in);
+    }
+ else     if ("InvalidFormat".equals(errorCode)) {
+      return new IllegalArgumentException(message,in);
+    }
+  }
+  return in;
+}

@@ -1,0 +1,13 @@
+{
+  String alarmName="TestAlarmName";
+  Date endDate=new Date(new Date().getTime() + 5000);
+  HistoryItemType historyItemType=HistoryItemType.ACTION;
+  int maxRecords=5;
+  Date startDate=new Date();
+  Multimap<String,String> formParameters=new ListAlarmHistoryOptions().alarmName(alarmName).endDate(endDate).historyItemType(historyItemType).maxRecords(maxRecords).startDate(startDate).buildFormParameters();
+  assertEquals(formParameters.get("AlarmName"),ImmutableSet.of(alarmName));
+  assertEquals(formParameters.get("EndDate"),ImmutableSet.of(dateService.iso8601DateFormat(endDate)));
+  assertEquals(formParameters.get("HistoryItemType"),ImmutableSet.of(historyItemType.toString()));
+  assertEquals(formParameters.get("MaxRecords"),ImmutableSet.of(Integer.toString(maxRecords)));
+  assertEquals(formParameters.get("StartDate"),ImmutableSet.of(dateService.iso8601DateFormat(startDate)));
+}

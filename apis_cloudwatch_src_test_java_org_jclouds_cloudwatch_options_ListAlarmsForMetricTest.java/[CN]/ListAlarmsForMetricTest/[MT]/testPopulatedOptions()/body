@@ -1,0 +1,20 @@
+{
+  Set<Dimension> dimensions=ImmutableSet.of(new Dimension("TestDimension1","TestValue1"),new Dimension("TestDimension2","TestValue2"));
+  String metricName="TestMetricName";
+  String namespace=Namespaces.EC2;
+  int period=60;
+  Statistics statistic=Statistics.AVERAGE;
+  Unit unit=Unit.COUNT;
+  Multimap<String,String> formParameters=new ListAlarmsForMetric().dimensions(dimensions).metricName(metricName).namespace(namespace).period(period).statistic(statistic).unit(unit).buildFormParameters();
+  int dimensionIndex=1;
+  for (  Dimension dimension : dimensions) {
+    assertEquals(formParameters.get("Dimensions.member." + dimensionIndex + ".Name"),ImmutableSet.of(dimension.getName()));
+    assertEquals(formParameters.get("Dimensions.member." + dimensionIndex + ".Value"),ImmutableSet.of(dimension.getValue()));
+    dimensionIndex++;
+  }
+  assertEquals(formParameters.get("MetricName"),ImmutableSet.of(metricName));
+  assertEquals(formParameters.get("Namespace"),ImmutableSet.of(namespace));
+  assertEquals(formParameters.get("Period"),ImmutableSet.of(Integer.toString(period)));
+  assertEquals(formParameters.get("Statistic"),ImmutableSet.of(statistic.toString()));
+  assertEquals(formParameters.get("Unit"),ImmutableSet.of(unit.toString()));
+}

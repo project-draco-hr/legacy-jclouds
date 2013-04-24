@@ -1,0 +1,5 @@
+{
+  Payload payload=payloadFromResourceWithContentType("/VoidResponse.xml","text/xml");
+  CloudWatchApi cloudWatchApi=requestSendsResponse(setAlarmStateRequest,HttpResponse.builder().payload(payload).statusCode(200).build());
+  cloudWatchApi.getAlarmApiForRegion(null).setState("TestAlarmName","TestStateReason","{\"reason\": \"Some reason\"}",Alarm.State.OK);
+}
