@@ -1,12 +1,12 @@
 {
-  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().putAll(defaultTemplateTryStack);
+  Builder<HttpRequest,HttpResponse> requestResponseMap=ImmutableMap.<HttpRequest,HttpResponse>builder().putAll(defaultTemplateOpenStack);
   requestResponseMap.put(list,notFound);
   requestResponseMap.put(createWithPrefixOnGroup,securityGroupCreated);
   requestResponseMap.put(createRuleForDefaultPort22,securityGroupRuleCreated);
   requestResponseMap.put(getSecurityGroup,securityGroupWithPort22);
   requestResponseMap.put(create,keyPairWithPrivateKey);
   requestResponseMap.put(serverDetail,serverDetailResponse);
-  HttpRequest createServerWithGeneratedKeyPair=HttpRequest.builder().method("POST").endpoint("https://nova-api.trystack.org:9774/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}","application/json")).build();
+  HttpRequest createServerWithGeneratedKeyPair=HttpRequest.builder().method("POST").endpoint("https://nova-api.openstack.org:9774/v1.1/3456/servers").addHeader("Accept","application/json").addHeader("X-Auth-Token",authToken).payload(payloadFromStringWithContentType("{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}","application/json")).build();
   HttpResponse createdServer=HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted").payload(payloadFromResourceWithContentType("/new_server.json","application/json; charset=UTF-8")).build();
   requestResponseMap.put(createServerWithGeneratedKeyPair,createdServer);
   ComputeService apiThatCreatesNode=requestsSendResponses(requestResponseMap.build(),new AbstractModule(){
